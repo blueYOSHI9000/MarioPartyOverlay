@@ -1,0 +1,100 @@
+@font-face {
+font-family: "Mario";
+src: url("font.ttf");
+}
+.turns {
+	font-size: 20px; /* === CHANGE THIS NUMBER WHEN USING A DIFFERENT FONT === (30px for "Super Mario 256 Bold" Font) */
+	font-family: 'Mario';
+	color: white;
+}
+.counterText {
+	font-size: 22px; /* === CHANGE THIS NUMBER WHEN USING A DIFFERENT FONT === (35px for "Super Mario 256 Bold" Font) */
+	color: white;
+	font-family: 'Mario';
+	position: relative;
+	top: -4px; /* === CHANGE THIS NUMBER WHEN USING A DIFFERENT FONT === This changes the position, the lower it is (-1 is lower than 1) the higher the number is */
+}
+#turnText {
+	margin-top: 60px;
+	font-size: 30px; /* === CHANGE THIS AND THE NUMBER BELOW (#curTurnText) TO CHANGE THE TURN TEXT SIZE === */
+}
+#curTurnText {
+	font-size: 30px;
+}
+
+
+.characterImg {
+	margin-right: 50px;
+	height: 120px;
+}
+.player {
+	float: left;
+	margin-top: 30px;
+}
+.counterDisplay {
+	height: 35px;
+	margin-left: 15px;
+}
+.whiteText {
+	color: white;
+}
+.numInput {
+	width: 40px;
+}
+.turnInput {
+	margin-bottom: 30px;
+}
+.inputText {
+	color: white;
+	margin-left: 70px;
+}
+.firstInputText {
+	color: white;
+}
+.comText {
+	margin-left: 70px;
+	color: white;
+}
+.changesButton {
+	margin-right: 40px;
+}
+.turnInputText {
+	color: white;
+}
+.inputVariable {
+	display: none;
+}
+
+
+#minigameExplanation {
+	margin-left: 95px;
+}
+#candyExplanation {
+	margin-left: 100px;
+}
+#shoppingExplanation {
+	margin-left: 150px;
+}
+#changesBorderTop {
+	border-top: 2px;
+	border-color: white;
+	border-top-style: solid;
+	width: 973px;
+	margin-top: 3px;
+}
+#changesBorderBottom {
+	border-top: 2px;
+	border-color: white;
+	border-top-style: solid;
+	width: 973px;
+	margin-top: 3px;
+}
+#coinStar {
+	height: 35px;
+	margin-left: 30px;
+}
+#coinStarCharacter {
+	height: 40px;
+	position: relative;
+	top: 3px;
+}
