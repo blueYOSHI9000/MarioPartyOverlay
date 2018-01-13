@@ -23,35 +23,9 @@
 
 <body id="htmlTag" style="background-image: url(img/background.jpg)"> <!-- === CHANGE BACKGROUND HERE === Replace the number after "background", remember that it needs to be a HTML Color Code! There are enough generators out there, just search on google to find one -->
 	<!-- Tutorial -->
-	<button id="button" onclick="showhide()"> Show/Hide Tutorial </button>
+	<a href="https://github.com/blueYOSHI9000/MarioPartyOverlay">Tutorial</a>
 	<button id="button" onclick="bgOnOff()"> Background on/off </button> <input type="number" name="invisible" id="invisible" value="1" style="display: none;">
 	<button id="button" onclick="enableInteract()"> Enable & disable Drag 'n' Drop (reload to reset positions)</button>
-	<!-- <button id="button" onclick="interactLoad()" >Enable Drag 'n' Drop (reload page to disable)</button> -->
-	<div id="tutorial" style="background: #d2d2d2; margin-bottom: 10px; display: none;"> <b>OBS Tutorial:</b> Run the website on Firefox (or Chrome but OBS doesn't detect that for me). Add a "Window Capture" of the Firefox window. Rightclick > Filters and add "Color Key" (NOT "Chroma Key"!). <br />
-	Now, there are multiple possibilities, you might try some out for yourself or use one of these: "Similarity" on 1 and "Smoothness" on 1000; "Similarity" on 384 and "Smoothness" on 195. (in case your using a different language of OBS: "Similarity" is the first option and "smoothness" the second, the rest should be obvious) <br />
-	When selecting the Windows Capture, there are 8 dots at the side, hold "ALT" on your keyboard and cut it to your desire. You might as well copy the Windows Capture to display each character at a different place. <br />
-	You might as well change the background color: Open "index.html" with a editor, at the very top you can see a small explanation. <br />
-	Change Font or Images: Just replace the file with the same name, simple as that! In case the font is too small, open "CSS.css" and there are two numbers you need to change, there's a explanation too! <br /> <br />
-
-	<b>Mario Party Overlay Tutorial:</b> I won't explain how you need to change some stuff, I mean, just try the buttons out! It's not like there's a self-destruction button or something... Basics: Change everything at the top and record everything at the bottom. <i>If something isn't obvious, please contact me so I can add it to the Tutorial!!</i> <br /> 
-	- Coin Star: You can choose the character there, the "???" are there for the first round when everyone got the same amount of coins. <br />
-	- Bonus Star List: All Counters are based on Bonus Stars, there's a full list avaible at the <a href="https://www.mariowiki.com/Bonus_Star#Introduced_in_Mario_Party">Super Mario Wiki.</a> <br />
-	- On/Off Buttons: With these you can hide or show certain Counters if you don't need them. You'll also see in which Mario Parties you can get that Bonus Star. <br />
-	- Restrictions: There are some restrictions, however, none of them should be annoying, rather the opposite! Example: You can't set the "Current Turn" higher than the "Max. Turn". If there are restrictions that shouldn't be there, please contact me so I can remove them. <br />
-	- Drag 'n' Drop: There's a button at the very top that can enable and disable drag 'n' drop, with that you can place all the counters wherever you want! Sadly, sometimes the hitboxes are too big for it, I have no idea how to fix that, i'm sorry!! Also, to reset positions you need to reload which also resets all the counters. <br /> <br />
-
-	<b>Replace or change Stuff:</b> Everything is super easy to change! You can add new stuff without even knowing how to code! Tho' it is way easier if you know the basics. <br />
-	- Graphics & Font: Replace the file you want to replace. Nothing more, it's that easy! However, it is recommended to choose square graphics (both sides got the same length) so it looks better. In case you changed a Font, maybe it's too big or too small, in that case: Open "CSS.css" with a editor (preferably a code editor but not required!), there you already see a bit of text in between some ===, that tells you what to do. <br />
-	- Add new Characters: Pretty easy, code editor highly recommened tho'! Anyway, open "index.html" and croll down, at some point you should see some character names popping up, if you can'st see them, look for a <code> <option> </code> tag at the left side. Then just add a new row below the last character and before the <code> </select> </code> tag. Insert <code> <option value="[yourcharacter]">[Your Character]</option> </code> (note that the first charcter name needs to be lowercase and the same name as your image (without .png at the end)), then scroll down a bit more and do the same. You need to do that 5 times, the last one is almost at the very end. After that, put the character image inside the "img" folder and a COM version inside the "com" folder and everything should work.
-	- Add new counters: Tutorial coming soon&trade;, it's a pretty long tutorial and currently just don't have motivation to write that... however, if there aren't too many requests (probably not), just contact me and I can do it for you if I <i>kinda</i> like the idea. Also, keep in mind you can just replace the graphics of another counter if you don't need that one! <!--Open "index.html" with a editor and you see a tutorial at the top, may seem very complicated, but isn't once you know how it works! Oh, it also requires A LOT of copy paste and editing single numbers!--> <br /> <br />
-
-	<b>Planned Features:</b> If something isn't here and you feel like it could be useful, just contact me and I may add it some day! <br />
-	- MP 9 & 10: These just work completely different and so need to rewrite a lot. <br /> <br />
-
-	Created by <a href="https://www.twitter.com/blueyoshi9000yt">blueYOSHI9000</a> | Version 1.1 (Changelog in the readme.txt file) <br />
-	Character Sprites ripped by <a href="https://www.vg-resource.com/user-7.html"> Random Talking Bush </a> and edited by <a href="https://twitter.com/Der_RicoDexter"> RicoDexter</a> & <a href="https://www.twitter.com/blueyoshi9000yt">blueYOSHI9000</a> <br />
-	<a href="http://interactjs.io/"> Interact.js (the thing that enables drag 'n' drop) </a>
-	</div>
 
 	<!-- Player Explanation (Character: - Computer: etc) -->
 	<div class="playerExplanation">
