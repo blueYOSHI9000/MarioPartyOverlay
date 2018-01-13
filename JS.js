@@ -370,10 +370,10 @@ function bgOnOff ()
 {
 
 	if (document.getElementById('invisible').value == 1) {
-		document.getElementById('htmlTag').style = "background-image: url(img/background.jpg);"
+		document.getElementById('htmlTag').style = "background: #0000ff;"
 		document.getElementById('invisible').value++
 	} else {
-		document.getElementById('htmlTag').style = "background: #0000ff;"
+		document.getElementById('htmlTag').style = "background-image: url(img/background.jpg);"
 		document.getElementById('invisible').value--
 	}
 	console.log(document.getElementById('invisible').value)
