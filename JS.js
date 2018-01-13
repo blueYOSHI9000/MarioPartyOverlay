@@ -1,7 +1,8 @@
 // === INSERT BELOW THIS LINE ===
 
 
-
+//Create a if() for everything inside the interact.js funtion. Activate the if through a button press
+//OR call the interact.jx function through a button press nd create a setInterval inside it.
 
 
 //Input Buttons
@@ -377,6 +378,65 @@ function bgOnOff ()
 	}
 	console.log(document.getElementById('invisible').value)
 }
+
+//Enable Interact.js
+var enableInteractVar = false
+
+function enableInteract () {
+	if (enableInteractVar == false) {
+	enableInteractVar = true
+	} else if (enableInteractVar == true) {
+		enableInteractVar = false
+	}
+}
+
+// === INTERACT.JS - DONT CHANGE ANYTHING ===
+// target elements with the "draggable" class
+interact('.draggable')
+	.draggable({
+		// enable inertial throwing
+		inertia: true,
+		// keep the element within the area of it's parent
+		/* restrict: {
+			restriction: "parent",
+			endOnly: true,
+			elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+		},*/ 
+		// enable autoScroll
+		autoScroll: true,
+
+		// call this function on every dragmove event
+		onmove: dragMoveListener,
+		// call this function on every dragend event
+		onend: function (event) {
+		var textEl = event.target.querySelector('p');
+
+		textEl && (textEl.textContent =
+			'moved a distance of '
+			+ (Math.sqrt(Math.pow(event.pageX - event.x0, 2) +
+				Math.pow(event.pageY - event.y0, 2) | 0))
+				.toFixed(2) + 'px');
+	}
+});
+
+	function dragMoveListener (event) {
+	if (enableInteractVar == true) {
+		var target = event.target,
+			// keep the dragged position in the data-x/data-y attributes
+			x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+			y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+		// translate the element
+		target.style.webkitTransform =
+		target.style.transform =
+			'translate(' + x + 'px, ' + y + 'px)';
+
+		// update the posiion attributes
+		target.setAttribute('data-x', x);
+		target.setAttribute('data-y', y);
+	}
+}
+// === INTERACT.JS END ===
 
 // === CHANGE THE NUMBERS FOR FASTER/SLOWER UPDATE TIME === (1000 = 1 second)
 
