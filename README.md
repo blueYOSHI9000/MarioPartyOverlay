@@ -45,7 +45,7 @@ If something isn't here and you feel like it could be useful, just contact me an
   
 # Credits
 Created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000yt) | Version 1.1 (Changelog at the bottom)
-Character Sprites ripped by [Random Talking Bush](https://www.vg-resource.com/user-7.html) and edited by[RicoDexter](https://twitter.com/Der_RicoDexter) & [blueYOSHI9000](https://www.twitter.com/blueyoshi9000yt)
+Character Sprites ripped by [Random Talking Bush](https://www.vg-resource.com/user-7.html) and edited by [RicoDexter](https://twitter.com/Der_RicoDexter) & [blueYOSHI9000](https://www.twitter.com/blueyoshi9000yt)
 
 [Font](http://www.mediafire.com/file/phz4t7pyqqbqxou/Mario+Party+Overlay.zip)
 
