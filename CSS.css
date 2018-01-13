@@ -1,6 +1,6 @@
 @font-face {
 font-family: "Mario";
-src: url("font.ttf");
+src: url("img/font.ttf");
 }
 .turns {
 	font-size: 20px; /* === CHANGE THIS NUMBER WHEN USING A DIFFERENT FONT === (30px for "Super Mario 256 Bold" Font) */
