@@ -4,17 +4,6 @@
 //Create a if() for everything inside the interact.js funtion. Activate the if through a button press
 //OR call the interact.jx function through a button press nd create a setInterval inside it.
 
-//Font import because CSS doesnt work ._.
-import myfont from 'font.ttf';
-injectGlobal`
-  @font-face {
-    font-family: 'Mario';
-    src: url(${myFont}) format('truetype');
-    font-weight: normal;
-    font-style: normal;
-  }
-`;
-
 //Input Buttons
 function counterButtons (player, button, counter) {
 	if (button == 'P10') {
