@@ -383,9 +383,11 @@ var enableInteractVar = false
 
 function enableInteract () {
 	if (enableInteractVar == false) {
-	enableInteractVar = true
+		enableInteractVar = true
+		document.getElementById('enableInteractButton').innerHTML = "Disable Drag 'n' Drop (reload to reset positions)"
 	} else if (enableInteractVar == true) {
 		enableInteractVar = false
+		document.getElementById('enableInteractButton').innerHTML = "Enable Drag 'n' Drop (reload to reset positions)"
 	}
 }
 
