@@ -81,6 +81,84 @@ function displayOnOff (counter, scounter, no10) {
 	}
 }
 
+//Bonus star highlight
+function startHighlight () {
+	var color = '#ff0000'
+
+	if (document.getElementById('enableHighlight').checked == true) {
+		highlightOn = true
+		if (document.getElementById('happeningVar').value == 1 ) {
+			highlight('Happening', color)
+		}
+		if (document.getElementById('minigameVar').value == 1 ) {
+			highlight('Minigame', color)
+		}
+		if (document.getElementById('redSpaceVar').value == 1 ) {
+			highlight('RedSpace', color)
+		}
+		if (document.getElementById('runningVar').value == 1 ) {
+			highlight('Running', color)
+		}
+		if (document.getElementById('shoppingVar').value == 1 ) {
+			highlight('Shopping', color)
+		}
+		if (document.getElementById('orbVar').value == 1 ) {
+			highlight('Orb', color)
+		}
+		if (document.getElementById('candyVar').value == 1 ) {
+			highlight('Candy', color)
+		}
+	}
+
+		/*if (document.getElementById('coinStarCharSelect').value != 'question') {
+			document.getElementById('coinStarText').style.color = color
+		} else {
+			document.getElementById('coinStarText').style.color = 'white'
+		}*/
+}
+
+function highlight (counter, color) {
+	var counterP1 = document.getElementById('p1' + counter + 'Text').innerHTML
+	var counterP2 = document.getElementById('p2' + counter + 'Text').innerHTML
+	var counterP3 = document.getElementById('p3' + counter + 'Text').innerHTML
+	var counterP4 = document.getElementById('p4' + counter + 'Text').innerHTML
+
+	var counterNum = Math.max(counterP1, counterP2, counterP3, counterP4)
+	//console.log('counterNum: ' + counterNum + ' - counterP4: ' + counterP4)
+
+	if (counterP1 == 0 && counterP2 == 0 && counterP3 == 0 && counterP4 == 0) {
+		document.getElementById('p1' + counter + 'Text').style.color = 'white'
+		document.getElementById('p2' + counter + 'Text').style.color = 'white'
+		document.getElementById('p3' + counter + 'Text').style.color = 'white'
+		document.getElementById('p4' + counter + 'Text').style.color = 'white'
+	} else {
+		if (counterNum == counterP1) {
+			document.getElementById('p1' + counter + 'Text').style.color = color
+		} else {
+			document.getElementById('p1' + counter + 'Text').style.color = 'white'
+		}
+
+		if (counterNum == counterP2) {
+			document.getElementById('p2' + counter + 'Text').style.color = color
+		} else {
+			document.getElementById('p2' + counter + 'Text').style.color = 'white'
+		}
+
+		if (counterNum == counterP3) {
+			document.getElementById('p3' + counter + 'Text').style.color = color
+		} else {
+			document.getElementById('p3' + counter + 'Text').style.color = 'white'
+		}
+
+		if (counterNum == counterP4) {
+			document.getElementById('p4' + counter + 'Text').style.color = color
+		} else {
+			document.getElementById('p4' + counter + 'Text').style.color = 'white'
+		}
+	}
+}
+
+
 //Changes Character Images
 function p1ImgSelect() {
 	var character = document.getElementById('p1Select').value
@@ -440,6 +518,7 @@ interact('.draggable')
 // === INTERACT.JS END ===
 
 // === CHANGE THE NUMBERS FOR FASTER/SLOWER UPDATE TIME === (1000 = 1 second)
+setInterval(startHighlight, 500) //Counter Highlight to show who will get the Bonus Star
 
 setInterval(p1HappeningFun, 1000) //Player 1 Happening Counter
 setInterval(p2HappeningFun, 1000) //Player 2 Happening Counter
