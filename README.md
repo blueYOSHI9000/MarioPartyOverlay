@@ -18,6 +18,8 @@ I won't explain how you need to change some stuff, I mean, just try the buttons 
 
 **- Restrictions:** There are some restrictions, however, none of them should be annoying, rather the opposite! Example: You can't set the "Current Turn" higher than the "Max. Turn". If there are restrictions that shouldn't be there, please contact me so I can remove them.
 
+**- Hightlight:** There's a highlight feature which should be on by default. It automatically turns the counters to red if it's the highest number to show who got the bonus star. It's possible to activate and deactivate it at the top, Firefox (and possibly other non-Chrome browsers too) remember if it was on or off the last time. However, you need to reload the site to deactivate it, else the numbers keep being red.
+
 **- Drag 'n' Drop:** There's a button at the very top that can enable and disable drag 'n' drop, with that you can place all the counters wherever you want! Sadly, sometimes the hitboxes are too big for it, I have no idea how to fix that, i'm sorry!! Also, to reset positions you need to reload which also resets all the counters.
 
 ## Replace or change Stuff:
@@ -52,6 +54,10 @@ Character Sprites ripped by [Random Talking Bush](https://www.vg-resource.com/us
 [Interact.js (the thing that enables drag 'n' drop)](http://interactjs.io/)
 
 # Changelog
+v1.2
+     Added: Counter Highlights
+     Bugfix: Firefox now resets the Computer Display when reloading
+
 v1.1
      Added: Drag 'n' Drop
 
