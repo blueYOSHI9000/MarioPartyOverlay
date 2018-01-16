@@ -28,6 +28,7 @@
 	</form>
 	<button id="button" onclick="bgOnOff()"> Background on/off </button> <input type="number" name="invisible" id="invisible" value="1" style="display: none;">
 	<button id="button" onclick="enableInteract()"> Enable & disable Drag 'n' Drop (reload to reset positions)</button>
+	<b class="whiteText"> Enable Counter Highlight: </b> <input type="checkbox" checked="true" autocomplete="on" id="enableHighlight"> <small class="whiteText">(reload to deactivate it)</small>
 
 	<!-- Player Explanation (Character: - Computer: etc) -->
 	<div class="playerExplanation">
@@ -60,7 +61,7 @@
 			<option value="koopakid">Koopa Kid</option>
 		</select>
 
-		<b class="comText"> P1: </b> <input type="checkbox" id="p1Com" class="checkbox">
+		<b class="comText"> P1: </b> <input type="checkbox" id="p1Com" class="checkbox" autocomplete="off">
 
 		<b class="inputText" id="p1HappeningInputTextBefore"> P1:</b>
 		<input type="button" value="-" onclick="counterButtons('p1', 'M', 'Happening')" id="p1HappeningInputM">
@@ -100,7 +101,7 @@
 			<option value="koopakid">Koopa Kid</option>
 		</select>
 
-		<b class="comText"> P2: </b> <input type="checkbox" id="p2Com" class="checkbox">
+		<b class="comText"> P2: </b> <input type="checkbox" id="p2Com" class="checkbox" autocomplete="off">
 
 		<b class="inputText" id="p2HappeningInputTextBefore"> P2:</b>
 		<input type="button" value="-" onclick="counterButtons('p2', 'M', 'Happening')" id="p2HappeningInputM">
@@ -140,7 +141,7 @@
 			<option value="koopakid">Koopa Kid</option>
 		</select>
 
-		<b class="comText"> P3: </b> <input type="checkbox" id="p3Com" class="checkbox">
+		<b class="comText"> P3: </b> <input type="checkbox" id="p3Com" class="checkbox" autocomplete="off">
 
 		<b class="inputText" id="p3HappeningInputTextBefore"> P3:</b>
 		<input type="button" value="-" onclick="counterButtons('p3', 'M', 'Happening')" id="p3HappeningInputM">
@@ -178,7 +179,7 @@
 			<option value="koopakid">Koopa Kid</option>
 		</select>
 
-		<b class="comText"> P4: </b> <input type="checkbox" id="p4Com" class="checkbox">
+		<b class="comText"> P4: </b> <input type="checkbox" id="p4Com" class="checkbox" autocomplete="off">
 
 		<b class="inputText" id="p4HappeningInputTextBefore"> P4:</b>
 		<input type="button" value="-" onclick="counterButtons('p4', 'M', 'Happening')" id="p4HappeningInputM">
