@@ -5,7 +5,7 @@ Mario Party Overlay is a (offline-)website to display which character gets the b
 
 ## Download
 You can download this through Github, however, then you still require internet since some files aren't included here and instead load them from a different website.
-[Mediafire download](http://www.mediafire.com/file/phz4t7pyqqbqxou/Mario+Party+Overlay.zip)
+[Mediafire download](http://www.mediafire.com/file/df88uvfww49z41e/Mario_Party_Overlay%282%29.zip)
 
 # Mario Party Overlay Tutorial:
 I won't explain how you need to change some stuff, I mean, just try the buttons out! It's not like there's a self-destruction button or something... **Basics:** Change everything at the top and record everything at the bottom. *If something isn't obvious, please contact me so I can add it to the Tutorial!!*
