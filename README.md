@@ -19,23 +19,23 @@ Character Sprites ripped by [Random Talking Bush](https://www.vg-resource.com/us
 
 # Changelog
 
-v1.2.1
+v1.3 
+- Added: MP10 Characters
+- Added: Ability to hide anything MP9&10 related (because why not?)
 
+v1.2.1  
 - Added: Mario Party 9 Support
 - Added: Ability to reset the Highlight feature
 - Changed: Tutorial, now able to show and hide each tutorial
 
-v1.2
-
+v1.2  
 - Added: Counter Highlights
 - Bugfix: Firefox now resets the Computer Display when reloading
 
-v1.1
-
+v1.1  
 - Added: Drag 'n' Drop
 
-v1.0
-
+v1.0  
 - Changed: Literally everything
 - Added: Red Spaces, Running, Shopping, Orb and Candy counter
 - Added: On/Off buttons to hide and show counters
@@ -44,8 +44,7 @@ v1.0
 - Changed: Better Tutorial
 - Bugfix: Fixed the background, it got a better mirror effect now
 
-v0.2
-
+v0.2  
 - Added: Minigame Counter
 - Added: Max. Coins Counter
 - Added: Background
@@ -55,8 +54,7 @@ v0.2
 - Bugfix (already): Fixed so the Turn counter can count from 3-9, how did I even miss that...
 
 
-v0.1 (Inital Release)
-
+v0.1 (Inital Release)  
 - Added: Character Select (incl. COM)
 - Added: Happening Counter
 - Added: Turn Counter
