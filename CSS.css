@@ -70,8 +70,15 @@ src: url("font.ttf");
 .inputVariable {
 	display: none;
 }
+.explanationText {
+	color: white;
+	margin-left: 80px;
+}
 
 
+#runningExplanation {
+	margin-right: 90px;
+}
 #redSpaceButton {
 	margin-left: 40px;
 }
