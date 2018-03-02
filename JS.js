@@ -475,15 +475,68 @@ function bgOnOff ()
 	console.log(document.getElementById('invisible').value)
 }
 
-function getUrl(variable)
-{
-       var query = window.location.search.substring(1);
-       var vars = query.split("&");
-       for (var i=0;i<vars.length;i++) {
-               var pair = vars[i].split("=");
-               if(pair[0] == variable){return pair[1];}
-       }
-       return(false);
+//Deactivate MP9
+function getUrl(variable) {
+	var query = window.location.search.substring(1);
+	var vars = query.split("&");
+	for (var i=0;i<vars.length;i++) {
+		var pair = vars[i].split("=");
+		if(pair[0] == variable){return pair[1];}
+	}
+ 	return(false);
+}
+
+window.onload = function() {
+	noMP9()
+};
+
+function noMP9 () {
+	var playerNum = 1
+
+	if (getUrl('no9') == 1) {
+		for (let num = 1; num < 6; num++) {
+			if (num == 1) {
+				playerNum = 1
+			} else if (num == 2) {
+				playerNum = 2
+			} else if (num == 3) {
+				playerNum = 3
+			} else if (num == 4) {
+				playerNum = 4
+			} else if (num == 5) {
+				playerNum = 5
+			}
+
+			var charSelect = document.getElementById('p' + playerNum + 'Select')
+			if (playerNum == 5) {
+				charSelect = document.getElementById('coinStarCharSelect')
+			}
+			for (var i=0; i<charSelect.length; i++){
+				var opt = charSelect.options[i].value
+				if (opt == 'shyguy' || opt == 'kamek' || opt == 'koopa' || opt == 'rosalina' || opt == 'spike' )
+				charSelect.remove(i);
+			}
+		}
+		for (let num = 1; num < 8; num++) {
+			if (num == 1) {
+				delethis = document.getElementById('spinSpaceButton')
+			} else if (num == 2) {
+				delethis = document.getElementById('miniZtarButton')
+			} else if (num == 3) {
+				delethis = document.getElementById('specialDiceButton')
+			} else if (num == 4) {
+				delethis = document.getElementById('slowStarActivated')
+			} else if (num == 5) {
+				delethis = document.getElementById('minigameWinsActivated')
+			} else if (num == 6) {
+				delethis = document.getElementById('slowStarActivatedText')
+			} else if (num == 7) {
+				delethis = document.getElementById('minigameWinsActivatedText')
+			}
+
+			delethis.style = 'display: none;'
+		}
+	}
 }
 
 //Enable Interact.js
