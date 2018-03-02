@@ -2,7 +2,8 @@
 Mario Party Overlay is a (offline-)website to display which character gets the bonus stars in the Mario Party games 1-10 and DS. It's also possible to include this in a Stream through OBS or other streaming software. It's also possible to change everything, change graphics/font, add counters etc.  
 **Tutorial is on the site itself**
 
-**[Website](https://blueyoshi9000.github.io/MarioPartyOverlay/)**
+**[Website](https://blueyoshi9000.github.io/MarioPartyOverlay/)**  
+**[Website (without anything MP 9&10 related)](https://blueyoshi9000.github.io/MarioPartyOverlay/?no9=1)**
 
 ## Download
 You can download this through Github, however, then you still require internet since some files aren't included here and instead load them from a different website.
