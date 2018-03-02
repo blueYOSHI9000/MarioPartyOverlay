@@ -535,6 +535,8 @@ function noMP9 () {
 			}
 
 			delethis.style = 'display: none;'
+
+			document.getElementById('runningButton').innerHTML = ' Running (MP 7 & 8 & DS) on/off '
 		}
 	}
 }
