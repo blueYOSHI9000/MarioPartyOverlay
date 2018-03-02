@@ -23,6 +23,12 @@ src: url("font.ttf");
 }
 
 
+.hidden {
+	display: none;
+}
+.visible {
+	display: block;
+}
 .characterImg {
 	margin-right: 50px;
 	height: 120px;
@@ -46,7 +52,7 @@ src: url("font.ttf");
 }
 .inputText {
 	color: white;
-	margin-left: 70px;
+	margin-left: 50px;
 }
 .firstInputText {
 	color: white;
@@ -66,6 +72,15 @@ src: url("font.ttf");
 }
 
 
+#redSpaceButton {
+	margin-left: 40px;
+}
+#minigameWinsActivated {
+	margin-left: 40px;
+}
+#minigameButton {
+	margin-right: 0px;
+}
 #minigameExplanation {
 	margin-left: 95px;
 }

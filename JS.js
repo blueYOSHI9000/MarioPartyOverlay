@@ -1,13 +1,17 @@
 // === INSERT BELOW THIS LINE ===
 
 
-//Create a if() for everything inside the interact.js funtion. Activate the if through a button press
-//OR call the interact.jx function through a button press nd create a setInterval inside it.
+
+//Global Variables
 
 //Input Buttons
 function counterButtons (player, button, counter) {
 	if (button == 'P10') {
 		for (let num = 0; num < 10; num++) {
+			document.getElementById(player + counter + 'Input').value++
+		}
+	} else if (button == 'P6') {
+		for (let num = 0; num < 6; num++) {
 			document.getElementById(player + counter + 'Input').value++
 		}
 	} else if (button == 'P5') {
@@ -20,6 +24,10 @@ function counterButtons (player, button, counter) {
 		document.getElementById(player + counter + 'Input').value--
 	} else if (button == 'M5') {
 		for (let num = 0; num < 5; num++) {
+			document.getElementById(player + counter + 'Input').value--
+		}
+	} else if (button == 'M6') {
+		for (let num = 0; num < 6; num++) {
 			document.getElementById(player + counter + 'Input').value--
 		}
 	} else if (button == 'M10') {
@@ -78,15 +86,60 @@ function displayOnOff (counter, scounter, no10) {
 			document.getElementById('p' + playerNum + counter + 'InputM10').style = visible
 			document.getElementById('p' + playerNum + counter + 'InputP10').style = visible
 		}
+		if (counter == 'Running' && visible == 'display: none;') {
+			document.getElementById('p' + playerNum + counter + 'InputM6').style = 'display: none;'
+			document.getElementById('p' + playerNum + counter + 'InputP6').style = 'display: none;'
+			document.getElementById('slowStarActivated').checked = false
+		} else if (counter == 'Running' && visible == '') {
+			document.getElementById('p' + playerNum + counter + 'InputM6').style = ''
+			document.getElementById('p' + playerNum + counter + 'InputP6').style = ''
+		}
+	}
+}
+
+//Slow Star Display On/Off
+function slowStar () {
+	if (document.getElementById('runningVar').value == 2) {
+		displayOnOff('Running', 'running')
+	}
+
+	var playerNum = 1
+
+	for (let num = 1; num < 5; num++) {
+		if (num == 1) {
+			playerNum = 1
+		} else if (num == 2) {
+			playerNum = 2
+		} else if (num == 3) {
+			playerNum = 3
+		} else if (num == 4) {
+			playerNum = 4
+		}
+
+		if (document.getElementById('slowStarActivated').checked == true) {
+			document.getElementById('p' + playerNum + 'RunningInputM10').style = 'display: none;'
+			document.getElementById('p' + playerNum + 'RunningInputP10').style = 'display: none;'
+			document.getElementById('p' + playerNum + 'RunningInputM6').style = ''
+			document.getElementById('p' + playerNum + 'RunningInputP6').style = ''
+		} else {
+			document.getElementById('p' + playerNum + 'RunningInputM10').style = ''
+			document.getElementById('p' + playerNum + 'RunningInputP10').style = ''
+			document.getElementById('p' + playerNum + 'RunningInputM6').style = 'display: none;'
+			document.getElementById('p' + playerNum + 'RunningInputP6').style = 'display: none;'
+		}
 	}
 }
 
 //Bonus star highlight
-function startHighlight () {
+function startHighlight (resetHighlights) {
 	var color = '#ff0000'
+	if (resetHighlights) {
+		color = document.getElementById('p1HappeningText').style.color
+	}
 
-	if (document.getElementById('enableHighlight').checked == true) {
+	if (document.getElementById('enableHighlight').checked == true || resetHighlights) {
 		highlightOn = true
+		resetHighlights = false
 		if (document.getElementById('happeningVar').value == 1 ) {
 			highlight('Happening', color)
 		}
@@ -96,8 +149,10 @@ function startHighlight () {
 		if (document.getElementById('redSpaceVar').value == 1 ) {
 			highlight('RedSpace', color)
 		}
-		if (document.getElementById('runningVar').value == 1 ) {
+		if (document.getElementById('runningVar').value == 1 && document.getElementById('slowStarActivated').checked == false ) {
 			highlight('Running', color)
+		} else if (document.getElementById('runningVar').value == 1 && document.getElementById('slowStarActivated').checked == true ) {
+			slowHighlight(color)
 		}
 		if (document.getElementById('shoppingVar').value == 1 ) {
 			highlight('Shopping', color)
@@ -107,6 +162,18 @@ function startHighlight () {
 		}
 		if (document.getElementById('candyVar').value == 1 ) {
 			highlight('Candy', color)
+		}
+		if (document.getElementById('spinSpaceVar').value == 1 ) {
+			highlight('SpinSpace', color)
+		}
+		if (slowStarActivated == true) {
+			slowHighlight(color)
+		}
+		if (document.getElementById('miniZtarVar').value == 1 ) {
+			highlight('MiniZtar', color)
+		}
+		if (document.getElementById('specialDiceVar').value == 1 ) {
+			highlight('SpecialDice', color)
 		}
 	}
 
@@ -124,7 +191,6 @@ function highlight (counter, color) {
 	var counterP4 = document.getElementById('p4' + counter + 'Text').innerHTML
 
 	var counterNum = Math.max(counterP1, counterP2, counterP3, counterP4)
-	//console.log('counterNum: ' + counterNum + ' - counterP4: ' + counterP4)
 
 	if (counterP1 == 0 && counterP2 == 0 && counterP3 == 0 && counterP4 == 0) {
 		document.getElementById('p1' + counter + 'Text').style.color = 'white'
@@ -158,6 +224,77 @@ function highlight (counter, color) {
 	}
 }
 
+//Highlighting Slow & Running Star
+function slowHighlight (color) {
+	var counter = 'Running'
+
+	var counterP1 = document.getElementById('p1' + counter + 'Text').innerHTML
+	var counterP2 = document.getElementById('p2' + counter + 'Text').innerHTML
+	var counterP3 = document.getElementById('p3' + counter + 'Text').innerHTML
+	var counterP4 = document.getElementById('p4' + counter + 'Text').innerHTML
+
+	var counterNumMax = Math.max(counterP1, counterP2, counterP3, counterP4)
+	var counterNumMin = Math.min(counterP1, counterP2, counterP3, counterP4)
+
+
+	if (counterP1 == 0) {
+		document.getElementById('p1' + counter + 'Text').style.color = 'white'
+	} else if (counterNumMax == counterP1 || counterNumMin == counterP1) {
+		document.getElementById('p1' + counter + 'Text').style.color = color
+	} else {
+		document.getElementById('p1' + counter + 'Text').style.color = 'white'
+	}
+
+	if (counterP2 == 0) {
+		document.getElementById('p2' + counter + 'Text').style.color = 'white'
+	} else if (counterNumMax == counterP2 || counterNumMin == counterP2) {
+		document.getElementById('p2' + counter + 'Text').style.color = color
+	} else {
+		document.getElementById('p2' + counter + 'Text').style.color = 'white'
+	}
+
+	if (counterP3 == 0) {
+		document.getElementById('p3' + counter + 'Text').style.color = 'white'
+	} else if (counterNumMax == counterP3 || counterNumMin == counterP3) {
+		document.getElementById('p3' + counter + 'Text').style.color = color
+	} else {
+		document.getElementById('p3' + counter + 'Text').style.color = 'white'
+	}
+
+	if (counterP4 == 0) {
+		document.getElementById('p4' + counter + 'Text').style.color = 'white'
+	} else if (counterNumMax == counterP4 || counterNumMin == counterP4) {
+		document.getElementById('p4' + counter + 'Text').style.color = color
+	} else {
+		document.getElementById('p4' + counter + 'Text').style.color = 'white'
+	}
+}
+
+//Replaces Minigame Coins with Minigame Wins
+function minigameWins () {
+	var activated = document.getElementById('minigameWinsActivated').checked
+	var playerNum = 1
+	var source = 'img/minigamewins.png'
+
+	if (activated == true) {
+		source = 'img/minigamewins.png'
+	} else {
+		source = 'img/minigame.png'
+	}
+	
+	for (let num = 1; num < 5; num++) {
+		if (num == 1) {
+			playerNum = 1
+		} else if (num == 2) {
+			playerNum = 2
+		} else if (num == 3) {
+			playerNum = 3
+		} else if (num == 4) {
+			playerNum = 4
+		}
+		document.getElementById('p' + playerNum + 'MinigameDisplay').src = source
+	}
+}
 
 //Changes Character Images
 function p1ImgSelect() {
@@ -197,185 +334,56 @@ function p4ImgSelect() {
 	document.getElementById('p4Img').src = finalImage
 }
 
-// Changes Happening Display & Input
-function p1HappeningFun () {
-	var num = document.getElementById('p1HappeningInput').value
+//Changes Displays & Input
+function displayChange (playerNum, counter) {
+	var num = document.getElementById('p' + playerNum + counter + 'Input').value
 	if (num && num >= 0) {
-		document.getElementById("p1HappeningText").innerHTML=num;
-	}
-}
-function p2HappeningFun () {
-	var num = document.getElementById('p2HappeningInput').value
-	if (num && num >= 0) {
-		document.getElementById("p2HappeningText").innerHTML=num;
-	}
-}
-function p3HappeningFun () {
-	var num = document.getElementById('p3HappeningInput').value
-	if (num && num >= 0) {
-		document.getElementById("p3HappeningText").innerHTML=num;
-	}
-}
-function p4HappeningFun () {
-	var num = document.getElementById('p4HappeningInput').value
-	if (num && num >= 0) {
-		document.getElementById("p4HappeningText").innerHTML=num;
+		document.getElementById('p' + playerNum + counter + 'Text').innerHTML=num;
+	} else if (num && num <= 0) {
+		document.getElementById('p' + playerNum + counter + 'Input').value = 0
 	}
 }
 
-//Changes the Minigame Display & Input
-function p1Minigame () {
-	var num = document.getElementById('p1MinigameInput').value
-	if (num && num >= 0) {
-		document.getElementById("p1MinigameText").innerHTML=num;
-	}
-}
-function p2Minigame () {
-	var num = document.getElementById('p2MinigameInput').value
-	if (num && num >= 0) {
-		document.getElementById("p2MinigameText").innerHTML=num;
-	}
-}
-function p3Minigame () {
-	var num = document.getElementById('p3MinigameInput').value
-	if (num && num >= 0) {
-		document.getElementById("p3MinigameText").innerHTML=num;
-	}
-}
-function p4Minigame () {
-	var num = document.getElementById('p4MinigameInput').value
-	if (num && num >= 0) {
-		document.getElementById("p4MinigameText").innerHTML=num;
-	}
-}
+//Calls displayChange()
+function callDisplayChange () {
+	var counter = 'Happening'
+	var playerNum = 1
 
-//Changes the Red Spaces Display & Input
-function p1RedSpace () {
-	var num = document.getElementById('p1RedSpaceInput').value
-	if (num && num >= 0) {
-		document.getElementById("p1RedSpaceText").innerHTML=num;
-	}
-}
-function p2RedSpace () {
-	var num = document.getElementById('p2RedSpaceInput').value
-	if (num && num >= 0) {
-		document.getElementById("p2RedSpaceText").innerHTML=num;
-	}
-}
-function p3RedSpace () {
-	var num = document.getElementById('p3RedSpaceInput').value
-	if (num && num >= 0) {
-		document.getElementById("p3RedSpaceText").innerHTML=num;
-	}
-}
-function p4RedSpace () {
-	var num = document.getElementById('p4RedSpaceInput').value
-	if (num && num >= 0) {
-		document.getElementById("p4RedSpaceText").innerHTML=num;
-	}
-}
+	for (let num = 0; num < 10; num++) {
+		if (num == 0) {
+			counter  = 'Happening'
+		} else if (num == 1) {
+			counter = 'Minigame'
+		} else if (num == 2) {
+			counter = 'RedSpace'
+		} else if (num == 3) {
+			counter = 'Running'
+		} else if (num == 4) {
+			counter = 'Shopping'
+		} else if (num == 5) {
+			counter = 'Orb'
+		} else if (num == 6) {
+			counter = 'Candy'
+		} else if (num == 7) {
+			counter = 'SpinSpace'
+		} else if (num == 8) {
+			counter = 'MiniZtar'
+		} else if (num == 9) {
+			counter = 'SpecialDice'
+		}
 
-//Changes the Running Display & Input
-function p1Running () {
-	var num = document.getElementById('p1RunningInput').value
-	if (num && num >= 0) {
-		document.getElementById("p1RunningText").innerHTML=num;
-	}
-}
-function p2Running () {
-	var num = document.getElementById('p2RunningInput').value
-	if (num && num >= 0) {
-		document.getElementById("p2RunningText").innerHTML=num;
-	}
-}
-function p3Running () {
-	var num = document.getElementById('p3RunningInput').value
-	if (num && num >= 0) {
-		document.getElementById("p3RunningText").innerHTML=num;
-	}
-}
-function p4Running () {
-	var num = document.getElementById('p4RunningInput').value
-	if (num && num >= 0) {
-		document.getElementById("p4RunningText").innerHTML=num;
-	}
-}
-
-// Changes Shopping Display & Input
-function p1ShoppingFun () {
-	var num = document.getElementById('p1ShoppingInput').value
-	if (num && num >= 0) {
-		document.getElementById("p1ShoppingText").innerHTML=num;
-	}
-}
-function p2ShoppingFun () {
-	var num = document.getElementById('p2ShoppingInput').value
-	if (num && num >= 0) {
-		document.getElementById("p2ShoppingText").innerHTML=num;
-	}
-}
-function p3ShoppingFun () {
-	var num = document.getElementById('p3ShoppingInput').value
-	if (num && num >= 0) {
-		document.getElementById("p3ShoppingText").innerHTML=num;
-	}
-}
-function p4ShoppingFun () {
-	var num = document.getElementById('p4ShoppingInput').value
-	if (num && num >= 0) {
-		document.getElementById("p4ShoppingText").innerHTML=num;
-	}
-}
-
-//Changes the Orb Display & Input
-function p1Orb () {
-	var num = document.getElementById('p1OrbInput').value
-	if (num && num >= 0) {
-		document.getElementById("p1OrbText").innerHTML=num;
-	}
-}
-function p2Orb () {
-	var num = document.getElementById('p2OrbInput').value
-	if (num && num >= 0) {
-		document.getElementById("p2OrbText").innerHTML=num;
-	}
-}
-function p3Orb () {
-	var num = document.getElementById('p3OrbInput').value
-	if (num && num >= 0) {
-		document.getElementById("p3OrbText").innerHTML=num;
-	}
-}
-function p4Orb () {
-	var num = document.getElementById('p4OrbInput').value
-	if (num && num >= 0) {
-		document.getElementById("p4OrbText").innerHTML=num;
-	}
-}
-
-//Changes the Candy Display
-function p1Candy () {
-	var num = document.getElementById('p1CandyInput').value
-	if (num && num >= 0) {
-		document.getElementById("p1CandyText").innerHTML=num;
-	}
-}
-function p2Candy () {
-	var num = document.getElementById('p2CandyInput').value
-	if (num && num >= 0) {
-		document.getElementById("p2CandyText").innerHTML=num;
-	}
-}
-function p3Candy () {
-	var num = document.getElementById('p3CandyInput').value
-	if (num && num >= 0) {
-		document.getElementById("p3CandyText").innerHTML=num;
-	}
-}
-function p4Candy () {
-	var num = document.getElementById('p4CandyInput').value
-	if (num && num >= 0) {
-		document.getElementById("p4CandyText").innerHTML=num;
+		for (let num = 1; num < 5; num++) {
+			if (num == 1) {
+				playerNum = 1
+			} else if (num == 2) {
+				playerNum = 2
+			} else if (num == 3) {
+				playerNum = 3
+			} else if (num == 4) {
+				playerNum = 4
+			}
+			displayChange(playerNum, counter)
+		}
 	}
 }
 
@@ -431,14 +439,25 @@ function changesMargin () {
 }
 
 //Show/Hide Tutorial
-function showhide ()
-{
+function showhide () {
 	var div = document.getElementById("tutorial");
 	if (div.style.display !== "none") {
 		div.style.display = "none";
 	}
 	else {
 		div.style.display = "block";
+	}
+}
+
+function showHideTutorial (id) {
+	var div = document.getElementById(id).classList
+	console.log(div)
+	if (div == 'hidden') {
+		document.getElementById(id).classList.add('visible');
+		document.getElementById(id).classList.remove('hidden');
+	} else {
+		document.getElementById(id).classList.remove('visible');
+		document.getElementById(id).classList.add('hidden');
 	}
 }
 
@@ -454,6 +473,17 @@ function bgOnOff ()
 		document.getElementById('invisible').value--
 	}
 	console.log(document.getElementById('invisible').value)
+}
+
+function getUrl(variable)
+{
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return(false);
 }
 
 //Enable Interact.js
@@ -520,40 +550,7 @@ interact('.draggable')
 // === CHANGE THE NUMBERS FOR FASTER/SLOWER UPDATE TIME === (1000 = 1 second)
 setInterval(startHighlight, 500) //Counter Highlight to show who will get the Bonus Star
 
-setInterval(p1HappeningFun, 1000) //Player 1 Happening Counter
-setInterval(p2HappeningFun, 1000) //Player 2 Happening Counter
-setInterval(p3HappeningFun, 1000) //Player 3 Happening Counter
-setInterval(p4HappeningFun, 1000) //Player 4 Happening Counter
-
-setInterval(p1Minigame, 500)  //Player 1 Minigame Counter
-setInterval(p2Minigame, 500)  //Player 2 Minigame Counter
-setInterval(p3Minigame, 500)  //Player 3 Minigame Counter
-setInterval(p4Minigame, 500)  //Player 4 Minigame Counter
-
-setInterval(p1RedSpace, 1000)  //Player 1 Red Space Counter
-setInterval(p2RedSpace, 1000)  //Player 2 Red Space Counter
-setInterval(p3RedSpace, 1000)  //Player 3 Red Space Counter
-setInterval(p4RedSpace, 1000)  //Player 4 Red Space Counter
-
-setInterval(p1Running, 1000)  //Player 1 Running Counter
-setInterval(p2Running, 1000)  //Player 2 Running Counter
-setInterval(p3Running, 1000)  //Player 3 Running Counter
-setInterval(p4Running, 1000)  //Player 4 Running Counter
-
-setInterval(p1ShoppingFun, 1000)  //Player 1 Shopping Counter
-setInterval(p2ShoppingFun, 1000)  //Player 2 Shopping Counter
-setInterval(p3ShoppingFun, 1000)  //Player 3 Shopping Counter
-setInterval(p4ShoppingFun, 1000)  //Player 4 Shopping Counter
-
-setInterval(p1Orb, 1000) //Player 1 Orb Counter
-setInterval(p2Orb, 1000) //Player 2 Orb Counter
-setInterval(p3Orb, 1000) //Player 3 Orb Counter
-setInterval(p4Orb, 1000) //Player 4 Orb Counter
-
-setInterval(p1Candy, 1000) //Player 1 Candy Counter
-setInterval(p2Candy, 1000) //Player 2 Candy Counter
-setInterval(p3Candy, 1000) //Player 3 Candy Counter
-setInterval(p4Candy, 1000) //Player 4 Candy Counter
+setInterval(callDisplayChange, 1000) //Changes all Counters
 
 setInterval(p1ImgSelect, 1500) //Player 1 Character Select
 setInterval(p2ImgSelect, 1500) //Player 2 Character Select
