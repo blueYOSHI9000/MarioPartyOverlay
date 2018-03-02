@@ -7,7 +7,7 @@ Mario Party Overlay is a (offline-)website to display which character gets the b
 
 ## Download
 You can download this through Github, however, then you still require internet since some files aren't included here and instead load them from a different website.
-[Mediafire download](http://www.mediafire.com/file/df88uvfww49z41e/Mario_Party_Overlay%282%29.zip)
+[Download](https://github.com/blueYOSHI9000/MarioPartyOverlay/releases) (just click on the .zip file)
 
 # Credits
 Created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000yt) | Version 1.1 (Changelog at the bottom)  
