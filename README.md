@@ -1,5 +1,5 @@
 # What's Mario Party Overlay?
-Mario Party Overlay is a (offline-)website to display which character gets the bonus stars in the Mario Party games 1-8 and DS. 9 and 10 support is coming soon(tm). It's also possible to include this in a Stream through OBS or other streaming software. It's also possible to change everything, change graphics/font, add counters etc.
+Mario Party Overlay is a (offline-)website to display which character gets the bonus stars in the Mario Party games 1-8 and DS. 9 and 10 support is coming soon(tm). It's also possible to include this in a Stream through OBS or other streaming software. It's also possible to change everything, change graphics/font, add counters etc.  
 **Tutorial is on the site itself**
 
 **[Website](https://blueyoshi9000.github.io/MarioPartyOverlay/)**
@@ -9,12 +9,12 @@ You can download this through Github, however, then you still require internet s
 [Mediafire download](http://www.mediafire.com/file/df88uvfww49z41e/Mario_Party_Overlay%282%29.zip)
 
 # Credits
-Created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000yt) | Version 1.1 (Changelog at the bottom)
+Created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000yt) | Version 1.1 (Changelog at the bottom)  
 Character Sprites ripped by [Random Talking Bush](https://www.vg-resource.com/user-7.html) and edited by [RicoDexter](https://twitter.com/Der_RicoDexter) & [blueYOSHI9000](https://www.twitter.com/blueyoshi9000yt)
 
 [Font](http://www.mediafire.com/file/phz4t7pyqqbqxou/Mario+Party+Overlay.zip)
 
-[Interact.js (the thing that enables drag 'n' drop)](http://interactjs.io/)
+[Interact.js](http://interactjs.io/) (the thing that enables drag 'n' drop)
 
 # Changelog
 
