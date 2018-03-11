@@ -1,5 +1,5 @@
 # What's Mario Party Overlay?
-Mario Party Overlay is a (offline-)website to display which character gets the bonus stars in the Mario Party games 1-10 and DS. It's also possible to include this in a Stream through OBS or other streaming software. It's also possible to change everything, change graphics/font, add counters etc.  
+Mario Party Overlay is a (offline-)website to display which character gets the bonus stars in the Mario Party games 1-10 and DS. It's also possible to include this in a Stream through OBS or other streaming software.  
 **Tutorial is on the site itself**
 
 **[Website](https://blueyoshi9000.github.io/MarioPartyOverlay/)**  
@@ -10,7 +10,7 @@ You can download this through Github, however, then you still require internet s
 [Download](https://github.com/blueYOSHI9000/MarioPartyOverlay/releases) (just click on the .zip file)
 
 # Credits
-Created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000yt) | Version 1.1 (Changelog at the bottom)  
+Created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000) | Version 1.3.1 (Changelog at the bottom)  
 Character Sprites ripped by [Random Talking Bush](https://www.vg-resource.com/user-7.html) and edited by [RicoDexter](https://twitter.com/Der_RicoDexter) & [blueYOSHI9000](https://www.twitter.com/blueyoshi9000yt)
 
 [Font](http://www.mediafire.com/file/phz4t7pyqqbqxou/Mario+Party+Overlay.zip)
@@ -18,6 +18,10 @@ Character Sprites ripped by [Random Talking Bush](https://www.vg-resource.com/us
 [Interact.js](http://interactjs.io/) (the thing that enables drag 'n' drop)
 
 # Changelog
+
+v1.3.1
+- Added: Option to replace the Explanation Text with the Bonus Star names
+- Changed: Everything, counters update immediately and should have less lag overall on slower PCs
 
 v1.3 
 - Added: MP10 Characters

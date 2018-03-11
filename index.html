@@ -26,10 +26,11 @@
 	<button id="button" onclick="showhide()"> Show/Hide Tutorial </button>
 	<button id="button" onclick="bgOnOff()"> Background on/off </button>
 	<button id="enableInteractButton" onclick="enableInteract()"> Enable Drag 'n' Drop (reload to reset positions)</button>
-	<b class="whiteText"> Enable Counter Highlight: </b> <input type="checkbox" checked="true" autocomplete="on" id="enableHighlight"> <button id="button" onclick="startHighlight(true)"> Reset Highlights </button>
-	<form action="mobile.html">
+	<b class="whiteText"> Enable Counter Highlight: </b> <input type="checkbox" checked="true" autocomplete="on" id="enableHighlight" onchange="resetHighlights()">
+	<b class="whiteText"> Bonus Star names instead of Explanation: </b> <input type="checkbox" autocomplete="on" id="changeNames" onchange="changeNames()">
+	<!--<form action="mobile.html">
 		<input type="submit" value="Mobile Version" />
-	</form>
+	</form>-->
 	<div id="tutorial" style="background: #d2d2d2; margin-bottom: 10px; display: none;">
 		<button onclick="showHideTutorial('obsTutorial')">Show/Hide OBS Setup Tutorial</button> <div id="obsTutorial" class="hidden"> <b>OBS Setup Tutorial:</b> Run the website on Firefox (or Chrome but OBS doesn't detect that for me). Add a "Window Capture" of the Firefox window. Rightclick > Filters and add "Color Key" (NOT "Chroma Key"!). <br />
 		Now, there are multiple possibilities, you might try some out for yourself or use this one: "Similarity" on 131 and "Smoothness" on 575. (in case your using a different language of OBS: "Similarity" is the first option and "smoothness" the second, the rest should be obvious) <br />
@@ -52,10 +53,10 @@
 		- Add new counters: Tutorial coming soon&trade;, it's a pretty long tutorial and currently just don't have motivation to write that... however, if there aren't too many requests (probably not), just contact me and I can do it for you if I <i>kinda</i> like the idea. Also, keep in mind you can just replace the graphics of another counter if you don't need that one! <!--Open "index.html" with a editor and you see a tutorial at the top, may seem very complicated, but isn't once you know how it works! Oh, it also requires A LOT of copy paste and editing single numbers!--> </div> <br /> <br />
 
 		<b>Planned Features:</b> If something isn't here and you feel like it could be useful, just contact me and I may add it some day! <br />
-		- Mobile support <br /> <br />
+		- Mobile support (not going to happen) <br /> <br />
 
-		Created by <a href="https://www.twitter.com/blueyoshi9000yt">blueYOSHI9000</a> | Version 1.3 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md"> (Changelog) </a> <br />
-		Character Sprites ripped by <a href="https://www.vg-resource.com/user-7.html"> Random Talking Bush </a> and edited by <a href="https://twitter.com/Der_RicoDexter"> RicoDexter</a> & <a href="https://www.twitter.com/blueyoshi9000yt">blueYOSHI9000</a> <br />
+		Created by <a href="https://www.twitter.com/blueyoshi9000">blueYOSHI9000</a> | Version 1.3.1 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md"> (Changelog) </a> <br />
+		Character Sprites ripped by <a href="https://www.vg-resource.com/user-7.html"> Random Talking Bush </a> and edited by <a href="https://twitter.com/Der_RicoDexter"> RicoDexter</a> & <a href="https://www.twitter.com/blueyoshi9000">blueYOSHI9000</a> <br />
 		<a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx"> Standard font </a> <br />
 		<a href="http://interactjs.io/"> Interact.js</a> (the thing that enables drag 'n' drop)
 	</div>
@@ -64,7 +65,7 @@
 	<div class="playerExplanation">
 		<b class="whiteText""> Character: </b>
 		<b class="comText" style="margin-left: 80px;"> Computer: </b>
-		<b class="inputText" id="happeningExplanation"> Happening:</b>
+		<b class="inputText" id="happeningExplanation"> Happening: </b>
 		<b class="inputText" id="minigameExplanation"> Minigame Coins: </b>
 		<b class="inputText" style="display: none;" id="redSpaceExplanation"> Red Spaces: </b>
 	</div>
@@ -72,7 +73,7 @@
 	<!-- Player 1 Selection -->
 	<div class="player1">
 		<b class="whiteText""> P1: </b>
-		<select name="p1Select" id="p1Select" autocomplete="off">
+		<select name="p1Select" id="p1Select" autocomplete="off" onchange="imgSelect('p1')">
 			<option value="mario" selected>Mario</option>
 			<option value="luigi">Luigi</option>
 			<option value="peach">Peach</option>
@@ -96,7 +97,7 @@
 			<option value="koopakid">Koopa Kid</option>
 		</select>
 
-		<b class="comText"> P1: </b> <input type="checkbox" id="p1Com" autocomplete="off" class="checkbox">
+		<b class="comText"> P1: </b> <input type="checkbox" id="p1Com" autocomplete="off" class="checkbox" onchange="imgSelect('p1')">
 
 		<b class="inputText" id="p1HappeningInputTextBefore"> P1:</b>
 		<input type="button" value="-" onclick="counterButtons('p1', 'M', 'Happening')" id="p1HappeningInputM">
@@ -117,7 +118,7 @@
 	<!-- Player 2 Selection -->
 	<div class="player2">
 		<b class="whiteText"> P2: </b>
-		<select name="p2Select" id="p2Select" autocomplete="off">
+		<select name="p2Select" id="p2Select" autocomplete="off" onchange="imgSelect('p2')">
 			<option value="mario">Mario</option> 
 			<option value="luigi" selected>Luigi</option>
 			<option value="peach">Peach</option>
@@ -141,7 +142,7 @@
 			<option value="koopakid">Koopa Kid</option>
 		</select>
 
-		<b class="comText"> P2: </b> <input type="checkbox" id="p2Com" class="checkbox">
+		<b class="comText"> P2: </b> <input type="checkbox" id="p2Com" class="checkbox" onchange="imgSelect('p2')">
 
 		<b class="inputText" id="p2HappeningInputTextBefore"> P2:</b>
 		<input type="button" value="-" onclick="counterButtons('p2', 'M', 'Happening')" autocomplete="off" id="p2HappeningInputM">
@@ -162,7 +163,7 @@
 	<!-- Player 3 Selection -->
 	<div class="player3">
 			<b class="whiteText"> P3: </b>
-		<select name="p3Select" id="p3Select" autocomplete="off">
+		<select name="p3Select" id="p3Select" autocomplete="off" onchange="imgSelect('p3')">
 			<option value="mario">Mario</option> 
 			<option value="luigi">Luigi</option>
 			<option value="peach" selected>Peach</option>
@@ -186,7 +187,7 @@
 			<option value="koopakid">Koopa Kid</option>
 		</select>
 
-		<b class="comText"> P3: </b> <input type="checkbox" id="p3Com" class="checkbox">
+		<b class="comText"> P3: </b> <input type="checkbox" id="p3Com" class="checkbox" onchange="imgSelect('p3')">
 
 		<b class="inputText" id="p3HappeningInputTextBefore"> P3:</b>
 		<input type="button" value="-" onclick="counterButtons('p3', 'M', 'Happening')" autocomplete="off" id="p3HappeningInputM">
@@ -207,7 +208,7 @@
 	<!-- Player 4 Selection -->
 	<div class="player4">
 		<b class="whiteText"> P4: </b>
-		<select name="p4Select" id="p4Select" autocomplete="off">
+		<select name="p4Select" id="p4Select" autocomplete="off" onchange="imgSelect('p4')">
 			<option value="mario">Mario</option> 
 			<option value="luigi">Luigi</option>
 			<option value="peach">Peach</option>
@@ -231,7 +232,7 @@
 			<option value="koopakid">Koopa Kid</option>
 		</select>
 
-		<b class="comText"> P4: </b> <input type="checkbox" id="p4Com" class="checkbox">
+		<b class="comText"> P4: </b> <input type="checkbox" id="p4Com" class="checkbox" onchange="imgSelect('p4')">
 
 		<b class="inputText" id="p4HappeningInputTextBefore"> P4:</b>
 		<input type="button" value="-" onclick="counterButtons('p4', 'M', 'Happening')" autocomplete="off" id="p4HappeningInputM">
@@ -469,7 +470,7 @@
 	<input type="button" value="+" onclick="counterButtons('', 'P', 'coinStar')">
 	<input type="button" value="+10" onclick="counterButtons('', 'P10', 'coinStar')">
 
-	<select name="coinStarCharSelect" id="coinStarCharSelect" autocomplete="off">
+	<select name="coinStarCharSelect" id="coinStarCharSelect" autocomplete="off" onchange="coinStarCharImg()">
 		<option value="question" selected>???</option> 
 		<option value="mario">Mario</option> 
 		<option value="luigi">Luigi</option>
@@ -595,14 +596,14 @@
 	<!-- On/Off Variables -->
 	<input class="inputVariable" value="1" id="happeningVar">
 	<input class="inputVariable" value="1" id="minigameVar">
-	<input class="inputVariable" value="2" id="redSpaceVar">
-	<input class="inputVariable" value="2" id="runningVar">
-	<input class="inputVariable" value="2" id="shoppingVar">
-	<input class="inputVariable" value="2" id="orbVar">
-	<input class="inputVariable" value="2" id="candyVar">
-	<input class="inputVariable" value="2" id="spinSpaceVar">
-	<input class="inputVariable" value="2" id="miniZtarVar">
-	<input class="inputVariable" value="2" id="specialDiceVar">
+	<input class="inputVariable" value="0" id="redSpaceVar">
+	<input class="inputVariable" value="0" id="runningVar">
+	<input class="inputVariable" value="0" id="shoppingVar">
+	<input class="inputVariable" value="0" id="orbVar">
+	<input class="inputVariable" value="0" id="candyVar">
+	<input class="inputVariable" value="0" id="spinSpaceVar">
+	<input class="inputVariable" value="0" id="miniZtarVar">
+	<input class="inputVariable" value="0" id="specialDiceVar">
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/interact.js/1.2.6/interact.min.js"></script>
 	<script src="JS.js"></script>
