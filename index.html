@@ -21,12 +21,15 @@
 	<link rel="stylesheet" href="CSS.css">
 </head>
 
-<body id="htmlTag" style="background-image: url(img/background.jpg)"> <!-- === CHANGE BACKGROUND HERE === Replace the number after "background", remember that it needs to be a HTML Color Code! There are enough generators out there, just search on google to find one -->
+<body id="htmlTag" style="background: url(img/background.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"> <!-- === CHANGE BACKGROUND HERE === Replace the number after "background", remember that it needs to be a HTML Color Code! There are enough generators out there, just search on google to find one -->
 	<!-- Tutorial -->
 	<button id="button" onclick="showhide()"> Show/Hide Tutorial </button>
-	<button id="button" onclick="bgOnOff()"> Background on/off </button> <input type="number" name="invisible" id="invisible" value="1" style="display: none;">
+	<button id="button" onclick="bgOnOff()"> Background on/off </button>
 	<button id="enableInteractButton" onclick="enableInteract()"> Enable Drag 'n' Drop (reload to reset positions)</button>
 	<b class="whiteText"> Enable Counter Highlight: </b> <input type="checkbox" checked="true" autocomplete="on" id="enableHighlight"> <button id="button" onclick="startHighlight(true)"> Reset Highlights </button>
+	<form action="mobile.html">
+		<input type="submit" value="Mobile Version" />
+	</form>
 	<div id="tutorial" style="background: #d2d2d2; margin-bottom: 10px; display: none;">
 		<button onclick="showHideTutorial('obsTutorial')">Show/Hide OBS Setup Tutorial</button> <div id="obsTutorial" class="hidden"> <b>OBS Setup Tutorial:</b> Run the website on Firefox (or Chrome but OBS doesn't detect that for me). Add a "Window Capture" of the Firefox window. Rightclick > Filters and add "Color Key" (NOT "Chroma Key"!). <br />
 		Now, there are multiple possibilities, you might try some out for yourself or use this one: "Similarity" on 131 and "Smoothness" on 575. (in case your using a different language of OBS: "Similarity" is the first option and "smoothness" the second, the rest should be obvious) <br />

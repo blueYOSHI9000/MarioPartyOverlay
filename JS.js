@@ -4,6 +4,7 @@
 
 //Global Variables
 
+
 //Input Buttons
 function counterButtons (player, button, counter) {
 	if (button == 'P10') {
@@ -462,17 +463,17 @@ function showHideTutorial (id) {
 }
 
 //Background
+var bgImgOn = 1
 function bgOnOff ()
 {
 
-	if (document.getElementById('invisible').value == 1) {
-		document.getElementById('htmlTag').style = "background-image: url(img/background.jpg);"
-		document.getElementById('invisible').value++
-	} else {
+	if (bgImgOn == 1) {
 		document.getElementById('htmlTag').style = "background: #0000ff;"
-		document.getElementById('invisible').value--
+		bgImgOn = 0
+	} else {
+		document.getElementById('htmlTag').style = "background: url(img/background.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"
+		bgImgOn = 1
 	}
-	console.log(document.getElementById('invisible').value)
 }
 
 //Deactivate MP9
