@@ -19,6 +19,10 @@ Character Sprites ripped by [Random Talking Bush](https://www.vg-resource.com/us
 
 # Changelog
 
+v2.0
+- Added: Option to change the counter highlighting color
+- Fixed: Explanation text being displayed at the wrong spot
+
 v1.3.1
 - Added: Option to replace the Explanation Text with the Bonus Star names
 - Changed: Everything, counters update immediately and should have less lag overall on slower PCs
