@@ -26,7 +26,6 @@
 	<button id="button" onclick="showhide()"> Show/Hide Tutorial </button>
 	<button id="button" onclick="bgOnOff()"> Background on/off </button>
 	<button id="enableInteractButton" onclick="enableInteract()"> Enable Drag 'n' Drop (reload to reset positions)</button>
-	<b class="whiteText"> Enable Counter Highlight: </b> <input type="checkbox" checked="true" autocomplete="on" id="enableHighlight" onchange="resetHighlights()">
 	<b class="whiteText"> Bonus Star names instead of Explanation: </b> <input type="checkbox" autocomplete="on" id="changeNames" onchange="changeNames()">
 	<!--<form action="mobile.html">
 		<input type="submit" value="Mobile Version" />
@@ -43,466 +42,525 @@
 		- ? icon: The coin star uses a ? icon, that's there so you can use it whenever there's a tie (like at the beginning of the game), it's up to you if you use it or not. <br />
 		- On/Off Buttons: With these you can hide or show certain Counters if you don't need them. You'll also see in which Mario Parties you can get that Bonus Star. <br />
 		- Restrictions: There are some restrictions, however, none of them should be annoying, rather the opposite! Example: You can't set the "Current Turn" higher than the "Max. Turn". If there are restrictions that shouldn't be there, please contact me so I can remove them. <br />
-		- Hightlight: There's a highlight feature which should be on by default. It automatically turns the counters to red if it's the highest number to show who got the bonus star. It's possible to activate and deactivate it at the top, Firefox (and possibly other non-Chrome browsers too) remember if it was on or off the last time. Reminder that you need to click on "Reset Highlights" when you want to deactivate them! <br />
-		- Drag 'n' Drop: There's a button at the very top that can enable and disable drag 'n' drop, with that you can place all the counters wherever you want! Sadly, sometimes the hitboxes are too big for it, I have no idea how to fix that, i'm sorry!! Also, to reset positions you need to reload which also resets all the counters. <br />
+		- Hightlight: There's a highlight feature which should be on by default. It automatically turns the counters to your specified color (red by default) if it's the highest number to show who got the bonus star. It's possible to activate and deactivate it, Firefox (and possibly other non-Chrome browsers too) remember if it was on or off the last time, they also remember your color. <br />
+		- Drag 'n' Drop: There's a button at the very top that can enable and disable drag 'n' drop, with that you can place all the counters wherever you want! Also, to reset positions you need to reload which also resets all the counters. <br />
 		- Hide MP 9&10 options: If you don't like these games, just add "?no9=1" to the URL and it should work. </div> <br /> <br />
 
 		<button onclick="showHideTutorial('replaceTutorial')">Show/Hide How to change/replace stuff Tutorial:</button> <div id="replaceTutorial" class="hidden"> <b>Replace or change Stuff:</b> Everything is super easy to change! You can add new stuff without even knowing how to code! It is way easier if you know the basics tho'. <br />
 		- Graphics & Font: Replace the file you want to replace. Nothing more, it's that easy! However, it is recommended to choose square graphics (both sides got the same length) so it looks better. In case you changed a Font, maybe it's too big or too small, in that case: Open "CSS.css" with a editor (preferably a code editor but not required!), there you already see a bit of text in between some ===, that tells you what to do. <br />
-		- Add new Characters: Pretty easy, code editor highly recommened tho'! Anyway, open "index.html" and croll down, at some point you should see some character names popping up, if you can'st see them, look for a <code> "<option>"" </code> tag at the left side. Then just add a new row below the last character and before the <code> "</select>"" </code> tag. Insert <code> "<option value="[yourcharacter]">[Your Character]</option>"" </code> (note that the first charcter name needs to be lowercase and the same name as your image (without .png at the end)), then scroll down a bit more and do the same. You need to do that 5 times, the last one is almost at the very end. After that, put the character image inside the "img" folder and a COM version inside the "com" folder and everything should work.
+		- Add new Characters: Pretty easy, code editor highly recommened tho'! Anyway, open "index.html" and scroll down, at some point you should see some character names popping up, if you can't see them, look for a "&lt;option>" tag at the left side. Then just add a new row below the last character and before the "&lt;/select>" tag. Insert "&lt;option value="[yourcharacter]">[Your Character]&lt;/option>" (note that the first charcter name needs to be lowercase and the same name as your image (without .png at the end)), then scroll down a bit more and do the same. You need to do that 5 times, the last one is almost at the very end. After that, put the character image inside the "img" folder and a COM version inside the "com" folder and everything should work. <br />
 		- Add new counters: Tutorial coming soon&trade;, it's a pretty long tutorial and currently just don't have motivation to write that... however, if there aren't too many requests (probably not), just contact me and I can do it for you if I <i>kinda</i> like the idea. Also, keep in mind you can just replace the graphics of another counter if you don't need that one! <!--Open "index.html" with a editor and you see a tutorial at the top, may seem very complicated, but isn't once you know how it works! Oh, it also requires A LOT of copy paste and editing single numbers!--> </div> <br /> <br />
 
 		<b>Planned Features:</b> If something isn't here and you feel like it could be useful, just contact me and I may add it some day! <br />
+		- Text Output: Highly customizable text output to post all counters in a Twitch Chat or something <br />
 		- Mobile support (not going to happen) <br /> <br />
 
-		Created by <a href="https://www.twitter.com/blueyoshi9000">blueYOSHI9000</a> | Version 1.3.1 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md"> (Changelog) </a> <br />
+		Created by <a href="https://www.twitter.com/blueyoshi9000">blueYOSHI9000</a> | Version 2.0 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md"> (Changelog)</a> <br />
 		Character Sprites ripped by <a href="https://www.vg-resource.com/user-7.html"> Random Talking Bush </a> and edited by <a href="https://twitter.com/Der_RicoDexter"> RicoDexter</a> & <a href="https://www.twitter.com/blueyoshi9000">blueYOSHI9000</a> <br />
-		<a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx"> Standard font </a> <br />
+		<a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx"> Standard font</a> <br />
 		<a href="http://interactjs.io/"> Interact.js</a> (the thing that enables drag 'n' drop)
 	</div>
 
-	<!-- Player Explanation (Character: - Computer: etc) -->
-	<div class="playerExplanation">
-		<b class="whiteText""> Character: </b>
-		<b class="comText" style="margin-left: 80px;"> Computer: </b>
-		<b class="inputText" id="happeningExplanation"> Happening: </b>
-		<b class="inputText" id="minigameExplanation"> Minigame Coins: </b>
-		<b class="inputText" style="display: none;" id="redSpaceExplanation"> Red Spaces: </b>
-	</div>
-
-	<!-- Player 1 Selection -->
-	<div class="player1">
-		<b class="whiteText""> P1: </b>
-		<select name="p1Select" id="p1Select" autocomplete="off" onchange="imgSelect('p1')">
-			<option value="mario" selected>Mario</option>
-			<option value="luigi">Luigi</option>
-			<option value="peach">Peach</option>
-			<option value="yoshi">Yoshi</option>
-			<option value="wario">Wario</option>
-			<option value="waluigi">Waluigi</option>
-			<option value="rosalina">Rosalina</option>
-			<option value="daisy">Daisy</option>
-			<option value="toad">Toad</option>
-			<option value="toadette">Toadette</option>
-			<option value="dk">Donkey Kong</option>
-			<option value="koopa">Koopa</option>
-			<option value="boo">Boo</option>
-			<option value="spike">Spike</option>
-			<option value="drybones">Dry Bones</option>
-			<option value="blooper">Blooper</option>
-			<option value="shyguy">Shy Guy</option>
-			<option value="hammerbro">Hammer Bro</option>
-			<option value="kamek">Kamek</option>
-			<option value="birdo">Birdo</option>
-			<option value="koopakid">Koopa Kid</option>
-		</select>
-
-		<b class="comText"> P1: </b> <input type="checkbox" id="p1Com" autocomplete="off" class="checkbox" onchange="imgSelect('p1')">
-
-		<b class="inputText" id="p1HappeningInputTextBefore"> P1:</b>
-		<input type="button" value="-" onclick="counterButtons('p1', 'M', 'Happening')" id="p1HappeningInputM">
-		<input type="number" value="0" class="numInput" id="p1HappeningInput" autocomplete="off">
-		<input type="button" value="+" onclick="counterButtons('p1', 'P', 'Happening')" id="p1HappeningInputP">
-
-		<b class="inputText" id="p1MinigameInputTextBefore"> P1:</b>
-		<input type="button" value="-10" onclick="counterButtons('p1', 'M10', 'Minigame')" id="p1MinigameInputM10"> <input type="button" value="-" onclick="counterButtons('p1', 'M', 'Minigame')" class="minigameInput" id="p1MinigameInputM">
-		<input type="number" value="0" class="numInput" id="p1MinigameInput" autocomplete="off">
-		<input type="button" value="+" onclick="counterButtons('p1', 'P', 'Minigame')" class="minigameInput" id="p1MinigameInputP"> <input type="button" value="+10" onclick="counterButtons('p1', 'P10', 'Minigame')" class="minigameInput" id="p1MinigameInputP10">
-
-		<b class="inputText" id="p1RedSpaceInputTextBefore" style="display: none;"> P1:</b>
-		<input type="button" value="-" onclick="counterButtons('p1', 'M', 'RedSpace')" id="p1RedSpaceInputM" class="redSpaceInput" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p1RedSpaceInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p1', 'P', 'RedSpace')" id="p1RedSpaceInputP" class="redSpaceInput" style="display: none;">
-	</div>
-
-	<!-- Player 2 Selection -->
-	<div class="player2">
-		<b class="whiteText"> P2: </b>
-		<select name="p2Select" id="p2Select" autocomplete="off" onchange="imgSelect('p2')">
-			<option value="mario">Mario</option> 
-			<option value="luigi" selected>Luigi</option>
-			<option value="peach">Peach</option>
-			<option value="yoshi">Yoshi</option>
-			<option value="wario">Wario</option>
-			<option value="waluigi">Waluigi</option>
-			<option value="rosalina">Rosalina</option>
-			<option value="daisy">Daisy</option>
-			<option value="toad">Toad</option>
-			<option value="toadette">Toadette</option>
-			<option value="dk">Donkey Kong</option>
-			<option value="koopa">Koopa</option>
-			<option value="boo">Boo</option>
-			<option value="spike">Spike</option>
-			<option value="drybones">Dry Bones</option>
-			<option value="blooper">Blooper</option>
-			<option value="shyguy">Shy Guy</option>
-			<option value="hammerbro">Hammer Bro</option>
-			<option value="kamek">Kamek</option>
-			<option value="birdo">Birdo</option>
-			<option value="koopakid">Koopa Kid</option>
-		</select>
-
-		<b class="comText"> P2: </b> <input type="checkbox" id="p2Com" class="checkbox" onchange="imgSelect('p2')">
-
-		<b class="inputText" id="p2HappeningInputTextBefore"> P2:</b>
-		<input type="button" value="-" onclick="counterButtons('p2', 'M', 'Happening')" autocomplete="off" id="p2HappeningInputM">
-		<input type="number" value="0" class="numInput" id="p2HappeningInput" autocomplete="off">
-		<input type="button" value="+" onclick="counterButtons('p2', 'P', 'Happening')" id="p2HappeningInputP">
-
-		<b class="inputText" id="p2MinigameInputTextBefore"> P2:</b>
-		<input type="button" value="-10" onclick="counterButtons('p2', 'M10', 'Minigame')" id="p2MinigameInputM10"> <input type="button" value="-" onclick="counterButtons('p2', 'M', 'Minigame')" id="p2MinigameInputM">
-		<input type="number" value="0" class="numInput" id="p2MinigameInput" autocomplete="off">
-		<input type="button" value="+" onclick="counterButtons('p2', 'P', 'Minigame')" id="p2MinigameInputP"> <input type="button" value="+10" onclick="counterButtons('p2', 'P10', 'Minigame')" id="p2MinigameInputP10">
-
-		<b class="inputText" id="p2RedSpaceInputTextBefore" style="display: none;"> P2:</b>
-		<input type="button" value="-" onclick="counterButtons('p2', 'M', 'RedSpace')" id="p2RedSpaceInputM" class="redSpaceInput" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p2RedSpaceInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p2', 'P', 'RedSpace')" id="p2RedSpaceInputP" class="redSpaceInput" style="display: none;">
-	</div>
-
-	<!-- Player 3 Selection -->
-	<div class="player3">
-			<b class="whiteText"> P3: </b>
-		<select name="p3Select" id="p3Select" autocomplete="off" onchange="imgSelect('p3')">
-			<option value="mario">Mario</option> 
-			<option value="luigi">Luigi</option>
-			<option value="peach" selected>Peach</option>
-			<option value="yoshi">Yoshi</option>
-			<option value="wario">Wario</option>
-			<option value="waluigi">Waluigi</option>
-			<option value="rosalina">Rosalina</option>
-			<option value="daisy">Daisy</option>
-			<option value="toad">Toad</option>
-			<option value="toadette">Toadette</option>
-			<option value="dk">Donkey Kong</option>
-			<option value="koopa">Koopa</option>
-			<option value="boo">Boo</option>
-			<option value="spike">Spike</option>
-			<option value="drybones">Dry Bones</option>
-			<option value="blooper">Blooper</option>
-			<option value="shyguy">Shy Guy</option>
-			<option value="hammerbro">Hammer Bro</option>
-			<option value="kamek">Kamek</option>
-			<option value="birdo">Birdo</option>
-			<option value="koopakid">Koopa Kid</option>
-		</select>
-
-		<b class="comText"> P3: </b> <input type="checkbox" id="p3Com" class="checkbox" onchange="imgSelect('p3')">
-
-		<b class="inputText" id="p3HappeningInputTextBefore"> P3:</b>
-		<input type="button" value="-" onclick="counterButtons('p3', 'M', 'Happening')" autocomplete="off" id="p3HappeningInputM">
-		<input type="number" value="0" class="numInput" id="p3HappeningInput" autocomplete="off">
-		<input type="button" value="+" onclick="counterButtons('p3', 'P', 'Happening')" id="p3HappeningInputP">
-
-		<b class="inputText" id="p3MinigameInputTextBefore"> P3:</b>
-		<input type="button" value="-10" onclick="counterButtons('p3', 'M10', 'Minigame')" id="p3MinigameInputM10"> <input type="button" value="-" onclick="counterButtons('p3', 'M', 'Minigame')" id="p3MinigameInputM">
-		<input type="number" value="0" class="numInput" id="p3MinigameInput" autocomplete="off">
-		<input type="button" value="+" onclick="counterButtons('p3', 'P', 'Minigame')" id="p3MinigameInputP"> <input type="button" value="+10" onclick="counterButtons('p3', 'P10', 'Minigame')" id="p3MinigameInputP10">
-
-		<b class="inputText" id="p3RedSpaceInputTextBefore" style="display: none;"> P3:</b>
-		<input type="button" value="-" onclick="counterButtons('p3', 'M', 'RedSpace')" id="p3RedSpaceInputM" class="redSpaceInput" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p3RedSpaceInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p3', 'P', 'RedSpace')" id="p3RedSpaceInputP" class="redSpaceInput" style="display: none;">
-	</div>
-
-	<!-- Player 4 Selection -->
-	<div class="player4">
-		<b class="whiteText"> P4: </b>
-		<select name="p4Select" id="p4Select" autocomplete="off" onchange="imgSelect('p4')">
-			<option value="mario">Mario</option> 
-			<option value="luigi">Luigi</option>
-			<option value="peach">Peach</option>
-			<option value="yoshi" selected>Yoshi</option>
-			<option value="wario">Wario</option>
-			<option value="waluigi">Waluigi</option>
-			<option value="rosalina">Rosalina</option>
-			<option value="daisy">Daisy</option>
-			<option value="toad">Toad</option>
-			<option value="toadette">Toadette</option>
-			<option value="dk">Donkey Kong</option>
-			<option value="koopa">Koopa</option>
-			<option value="boo">Boo</option>
-			<option value="spike">Spike</option>
-			<option value="drybones">Dry Bones</option>
-			<option value="blooper">Blooper</option>
-			<option value="shyguy">Shy Guy</option>
-			<option value="hammerbro">Hammer Bro</option>
-			<option value="kamek">Kamek</option>
-			<option value="birdo">Birdo</option>
-			<option value="koopakid">Koopa Kid</option>
-		</select>
-
-		<b class="comText"> P4: </b> <input type="checkbox" id="p4Com" class="checkbox" onchange="imgSelect('p4')">
-
-		<b class="inputText" id="p4HappeningInputTextBefore"> P4:</b>
-		<input type="button" value="-" onclick="counterButtons('p4', 'M', 'Happening')" autocomplete="off" id="p4HappeningInputM">
-		<input type="number" value="0" class="numInput" id="p4HappeningInput" autocomplete="off">
-		<input type="button" value="+" onclick="counterButtons('p4', 'P', 'Happening')" id="p4HappeningInputP">
-
-		<b class="inputText" id="p4MinigameInputTextBefore"> P4:</b>
-		<input type="button" value="-10" onclick="counterButtons('p4', 'M10', 'Minigame')" id="p4MinigameInputM10"> <input type="button" value="-" onclick="counterButtons('p4', 'M', 'Minigame')" id="p4MinigameInputM">
-		<input type="number" value="0" class="numInput" id="p4MinigameInput" autocomplete="off">
-		<input type="button" value="+" onclick="counterButtons('p4', 'P', 'Minigame')" id="p4MinigameInputP"> <input type="button" value="+10" onclick="counterButtons('p4', 'P10', 'Minigame')" id="p4MinigameInputP10">
-
-		<b class="inputText" id="p4RedSpaceInputTextBefore" style="display: none;"> P4:</b>
-		<input type="button" value="-" onclick="counterButtons('p4', 'M', 'RedSpace')" id="p4RedSpaceInputM" class="redSpaceInput" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p4RedSpaceInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p4', 'P', 'RedSpace')" id="p4RedSpaceInputP" class="redSpaceInput" style="display: none;">
-	</div>
-
-	<!-- Player Explanation #2 -->
-	<div id="changesBorderTop"></div>
-
-	<div class="playerExplanation">
-		<b class="firstInputText" style="display: none;" id="runningExplanation"> Total Dice Num.: </b>
-		<b class="explanationText" style="display: none;" id="shoppingExplanation"> Total Coins spent: </b>
-		<b class="explanationText" style="display: none;" id="orbExplanation"> Total Orbs used: </b>
-		<b class="explanationText" style="display: none;" id="candyExplanation"> Total Candies used: </b>
-		<b class="explanationText" style="display: none;" id="spinSpaceExplanation"> Spin Spaces: </b>
-		<b class="explanationText" style="display: none;" id="miniZtarExplanation"> Mini Ztars collected: </b>
-		<b class="explanationText" style="display: none;" id="specialDiceExplanation"> Total Special Dices used: </b>
-
-		<input type="button" style="visibility: hidden;">
-	</div>
-
-	<!-- Player 1 Selection #2 -->
-	<div class="player1">
-		<b class="firstInputText" id="p1RunningInputTextBefore" style="display: none;"> P1:</b>
-		<input type="button" value="-10" onclick="counterButtons('p1', 'M10', 'Running')" class="runningInput" id="p1RunningInputM10" style="display: none;">
-		<input type="button" value="-6" onclick="counterButtons('p1', 'M6', 'Running')" class="runningInput" id="p1RunningInputM6" style="display: none;">
-		<input type="button" value="-" onclick="counterButtons('p1', 'M', 'Running')" class="runningInput" id="p1RunningInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p1RunningInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p1', 'P', 'Running')" class="runningInput" id="p1RunningInputP" style="display: none;">
-		<input type="button" value="+6" onclick="counterButtons('p1', 'P6', 'Running')" class="runningInput" id="p1RunningInputP6" style="display: none;">
-		<input type="button" value="+10" onclick="counterButtons('p1', 'P10', 'Running')" class="runningInput" id="p1RunningInputP10" style="display: none;">
-
-		<b class="inputText" id="p1ShoppingInputTextBefore" style="display: none;"> P1:</b>
-		<input type="button" value="-10" onclick="counterButtons('p1', 'M10', 'Shopping')" class="shoppingInput" id="p1ShoppingInputM10" style="display: none;">
-		<input type="button" value="-5" onclick="counterButtons('p1', 'M5', 'Shopping')" class="shoppingInput" id="p1ShoppingInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p1ShoppingInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+5" onclick="counterButtons('p1', 'P5', 'Shopping')" class="shoppingInput" id="p1ShoppingInputP" style="display: none;">
-		<input type="button" value="+10" onclick="counterButtons('p1', 'P10', 'Shopping')" class="shoppingInput" id="p1ShoppingInputP10" style="display: none;">
-
-		<b class="inputText" id="p1OrbInputTextBefore" style="display: none;"> P1:</b>
-		<input type="button" value="-" onclick="counterButtons('p1', 'M', 'Orb')" class="orbInput" id="p1OrbInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p1OrbInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p1', 'P', 'Orb')" class="orbInput" id="p1OrbInputP" style="display: none;">
-
-		<b class="inputText" id="p1CandyInputTextBefore" style="display: none;"> P1:</b>
-		<input type="button" value="-" onclick="counterButtons('p1', 'M', 'Candy')" class="candyInput" id="p1CandyInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p1CandyInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p1', 'P', 'Candy')" class="candyInput" id="p1CandyInputP" style="display: none;">
-
-		<b class="inputText" id="p1SpinSpaceInputTextBefore" style="display: none;"> P1:</b>
-		<input type="button" value="-" onclick="counterButtons('p1', 'M', 'SpinSpace')" id="p1SpinSpaceInputM" class="spinSpaceInput" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p1SpinSpaceInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p1', 'P', 'SpinSpace')" id="p1SpinSpaceInputP" class="spinSpaceInput" style="display: none;">
-
-		<b class="inputText" id="p1MiniZtarInputTextBefore" style="display: none;"> P1:</b>
-		<input type="button" value="-5" onclick="counterButtons('p1', 'M5', 'MiniZtar')" class="miniZtarInput" id="p1MiniZtarInputM10" style="display: none;">
-		<input type="button" value="-" onclick="counterButtons('p1', 'M', 'MiniZtar')" class="miniZtarInput" id="p1MiniZtarInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p1MiniZtarInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p1', 'P', 'MiniZtar')" class="miniZtarInput" id="p1MiniZtarInputP" style="display: none;">
-		<input type="button" value="+5" onclick="counterButtons('p1', 'P5', 'MiniZtar')" class="miniZtarInput" id="p1MiniZtarInputP10" style="display: none;">
-
-		<b class="inputText" id="p1SpecialDiceInputTextBefore" style="display: none;"> P1:</b>
-		<input type="button" value="-" onclick="counterButtons('p1', 'M', 'SpecialDice')" class="specialDiceInput" id="p1SpecialDiceInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p1SpecialDiceInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p1', 'P', 'SpecialDice')" class="specialDiceInput" id="p1SpecialDiceInputP" style="display: none;">
-
-		<input type="button" style="visibility: hidden;">
-	</div>
-
-	<!-- Player 2 Selection #2 -->
-	<div class="player2">
-		<b class="firstInputText" id="p2RunningInputTextBefore" style="display: none;"> P2:</b>
-		<input type="button" value="-10" onclick="counterButtons('p2', 'M10', 'Running')" class="runningInput" id="p2RunningInputM10" style="display: none;">
-		<input type="button" value="-6" onclick="counterButtons('p2', 'M6', 'Running')" class="runningInput" id="p2RunningInputM6" style="display: none;">
-		<input type="button" value="-" onclick="counterButtons('p2', 'M', 'Running')" class="runningInput" id="p2RunningInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p2RunningInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p2', 'P', 'Running')" class="runningInput" id="p2RunningInputP" style="display: none;" style="display: none;">
-		<input type="button" value="+6" onclick="counterButtons('p2', 'P6', 'Running')" class="runningInput" id="p2RunningInputP6" style="display: none;">
-		<input type="button" value="+10" onclick="counterButtons('p2', 'P10', 'Running')" class="runningInput" id="p2RunningInputP10" style="display: none;">
-
-		<b class="inputText" id="p2ShoppingInputTextBefore" style="display: none;"> P2:</b>
-		<input type="button" value="-10" onclick="counterButtons('p2', 'M10', 'Shopping')" class="shoppingInput" id="p2ShoppingInputM10" style="display: none;">
-		<input type="button" value="-5" onclick="counterButtons('p2', 'M5', 'Shopping')" class="shoppingInput" id="p2ShoppingInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p2ShoppingInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+5" onclick="counterButtons('p2', 'P5', 'Shopping')" class="shoppingInput" id="p2ShoppingInputP" style="display: none;">
-		<input type="button" value="+10" onclick="counterButtons('p2', 'P10', 'Shopping')" class="shoppingInput" id="p2ShoppingInputP10" style="display: none;">
-
-		<b class="inputText" id="p2OrbInputTextBefore" style="display: none;"> P2:</b>
-		<input type="button" value="-" onclick="counterButtons('p2', 'M', 'Orb')" class="orbInput" id="p2OrbInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p2OrbInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p2', 'P', 'Orb')" class="orbInput" id="p2OrbInputP" style="display: none;">
-
-		<b class="inputText" id="p2CandyInputTextBefore" style="display: none;"> P2:</b>
-		<input type="button" value="-" onclick="counterButtons('p2', 'M', 'Candy')" class="candyInput" id="p2CandyInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p2CandyInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p2', 'P', 'Candy')" class="candyInput" id="p2CandyInputP" style="display: none;">
-
-		<b class="inputText" id="p2SpinSpaceInputTextBefore" style="display: none;"> P2:</b>
-		<input type="button" value="-" onclick="counterButtons('p2', 'M', 'SpinSpace')" id="p2SpinSpaceInputM" class="spinSpaceInput" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p2SpinSpaceInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p2', 'P', 'SpinSpace')" id="p2SpinSpaceInputP" class="spinSpaceInput" style="display: none;">
-
-		<b class="inputText" id="p2MiniZtarInputTextBefore" style="display: none;"> P2:</b>
-		<input type="button" value="-5" onclick="counterButtons('p2', 'M5', 'MiniZtar')" class="miniZtarInput" id="p2MiniZtarInputM10" style="display: none;">
-		<input type="button" value="-" onclick="counterButtons('p2', 'M', 'MiniZtar')" class="miniZtarInput" id="p2MiniZtarInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p2MiniZtarInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p2', 'P', 'MiniZtar')" class="miniZtarInput" id="p2MiniZtarInputP" style="display: none;">
-		<input type="button" value="+5" onclick="counterButtons('p2', 'P5', 'MiniZtar')" class="miniZtarInput" id="p2MiniZtarInputP10" style="display: none;">
-
-		<b class="inputText" id="p2SpecialDiceInputTextBefore" style="display: none;"> P2:</b>
-		<input type="button" value="-" onclick="counterButtons('p2', 'M', 'SpecialDice')" class="specialDiceInput" id="p2SpecialDiceInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p2SpecialDiceInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p2', 'P', 'SpecialDice')" class="specialDiceInput" id="p2SpecialDiceInputP" style="display: none;">
-
-		<input type="button" style="visibility: hidden;">
-	</div>
-
-	<!-- Player 3 Selection #2 -->
-	<div class="player3">
-		<b class="firstInputText" id="p3RunningInputTextBefore" style="display: none;"> P3:</b>
-		<input type="button" value="-10" onclick="counterButtons('p3', 'M10', 'Running')" class="runningInput" id="p3RunningInputM10" style="display: none;">
-		<input type="button" value="-6" onclick="counterButtons('p3', 'M6', 'Running')" class="runningInput" id="p3RunningInputM6" style="display: none;">
-		<input type="button" value="-" onclick="counterButtons('p3', 'M', 'Running')" class="runningInput" id="p3RunningInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p3RunningInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p3', 'P', 'Running')" class="runningInput" id="p3RunningInputP" style="display: none;">
-		<input type="button" value="+6" onclick="counterButtons('p3', 'P6', 'Running')" class="runningInput" id="p3RunningInputP6" style="display: none;">
-		<input type="button" value="+10" onclick="counterButtons('p3', 'P10', 'Running')" class="runningInput" id="p3RunningInputP10" style="display: none;">
-
-		<b class="inputText" id="p3ShoppingInputTextBefore" style="display: none;"> P3:</b>
-		<input type="button" value="-10" onclick="counterButtons('p3', 'M10', 'Shopping')" class="shoppingInput" id="p3ShoppingInputM10" style="display: none;">
-		<input type="button" value="-5" onclick="counterButtons('p3', 'M5', 'Shopping')" class="shoppingInput" id="p3ShoppingInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p3ShoppingInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+5" onclick="counterButtons('p3', 'P5', 'Shopping')" class="shoppingInput" id="p3ShoppingInputP" style="display: none;">
-		<input type="button" value="+10" onclick="counterButtons('p3', 'P10', 'Shopping')" class="shoppingInput" id="p3ShoppingInputP10" style="display: none;">
-
-		<b class="inputText" id="p3OrbInputTextBefore" style="display: none;"> P3:</b>
-		<input type="button" value="-" onclick="counterButtons('p3', 'M', 'Orb')" class="orbInput" id="p3OrbInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p3OrbInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p3', 'P', 'Orb')" class="orbInput" id="p3OrbInputP" style="display: none;">
-
-		<b class="inputText" id="p3CandyInputTextBefore" style="display: none;"> P3:</b>
-		<input type="button" value="-" onclick="counterButtons('p3', 'M', 'Candy')" class="candyInput" id="p3CandyInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p3CandyInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p3', 'P', 'Candy')" class="candyInput" id="p3CandyInputP" style="display: none;">
-
-		<b class="inputText" id="p3SpinSpaceInputTextBefore" style="display: none;"> P3:</b>
-		<input type="button" value="-" onclick="counterButtons('p3', 'M', 'SpinSpace')" id="p3SpinSpaceInputM" class="spinSpaceInput" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p3SpinSpaceInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p3', 'P', 'SpinSpace')" id="p3SpinSpaceInputP" class="spinSpaceInput" style="display: none;">
-
-		<b class="inputText" id="p3MiniZtarInputTextBefore" style="display: none;"> P4:</b>
-		<input type="button" value="-5" onclick="counterButtons('p3', 'M5', 'MiniZtar')" class="miniZtarInput" id="p3MiniZtarInputM10" style="display: none;">
-		<input type="button" value="-" onclick="counterButtons('p3', 'M', 'MiniZtar')" class="miniZtarInput" id="p3MiniZtarInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p3MiniZtarInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p3', 'P', 'MiniZtar')" class="miniZtarInput" id="p3MiniZtarInputP" style="display: none;">
-		<input type="button" value="+5" onclick="counterButtons('p3', 'P5', 'MiniZtar')" class="miniZtarInput" id="p3MiniZtarInputP10" style="display: none;">
-
-		<b class="inputText" id="p3SpecialDiceInputTextBefore" style="display: none;"> P3:</b>
-		<input type="button" value="-" onclick="counterButtons('p3', 'M', 'SpecialDice')" class="specialDiceInput" id="p3SpecialDiceInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p3SpecialDiceInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p3', 'P', 'SpecialDice')" class="specialDiceInput" id="p3SpecialDiceInputP" style="display: none;">
-
-		<input type="button" style="visibility: hidden;">
-	</div>
-
-	<!-- Player 4 Selection #2 -->
-	<div class="player4" id="player4">
-		<b class="firstInputText" id="p4RunningInputTextBefore" style="display: none;"> P4:</b>
-		<input type="button" value="-10" onclick="counterButtons('p4', 'M10', 'Running')" class="runningInput" id="p4RunningInputM10" style="display: none;">
-		<input type="button" value="-6" onclick="counterButtons('p4', 'M6', 'Running')" class="runningInput" id="p4RunningInputM6" style="display: none;">
-		<input type="button" value="-" onclick="counterButtons('p4', 'M', 'Running')" class="runningInput" id="p4RunningInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p4RunningInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p4', 'P', 'Running')" class="runningInput" id="p4RunningInputP" style="display: none;">
-		<input type="button" value="+6" onclick="counterButtons('p4', 'P6', 'Running')" class="runningInput" id="p4RunningInputP6" style="display: none;">
-		<input type="button" value="+10" onclick="counterButtons('p4', 'P10', 'Running')" class="runningInput" id="p4RunningInputP10" style="display: none;">
-
-		<b class="inputText" id="p4ShoppingInputTextBefore" style="display: none;"> P4:</b>
-		<input type="button" value="-10" onclick="counterButtons('p4', 'M10', 'Shopping')" class="shoppingInput" id="p4ShoppingInputM10" style="display: none;">
-		<input type="button" value="-5" onclick="counterButtons('p4', 'M5', 'Shopping')" class="shoppingInput" id="p4ShoppingInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p4ShoppingInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+5" onclick="counterButtons('p4', 'P5', 'Shopping')" class="shoppingInput" id="p4ShoppingInputP" style="display: none;">
-		<input type="button" value="+10" onclick="counterButtons('p4', 'P10', 'Shopping')" class="shoppingInput" id="p4ShoppingInputP10" style="display: none;">
-
-		<b class="inputText" id="p4OrbInputTextBefore" style="display: none;"> P4:</b>
-		<input type="button" value="-" onclick="counterButtons('p4', 'M', 'Orb')" class="orbInput" id="p4OrbInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p4OrbInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p4', 'P', 'Orb')" class="orbInput" id="p4OrbInputP" style="display: none;">
-
-		<b class="inputText" id="p4CandyInputTextBefore" style="display: none;"> P4:</b>
-		<input type="button" value="-" onclick="counterButtons('p4', 'M', 'Candy')" class="candyInput" id="p4CandyInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p4CandyInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p4', 'P', 'Candy')" class="candyInput" id="p4CandyInputP" style="display: none;">
-
-		<b class="inputText" id="p4SpinSpaceInputTextBefore" style="display: none;"> P4:</b>
-		<input type="button" value="-" onclick="counterButtons('p4', 'M', 'SpinSpace')" id="p4SpinSpaceInputM" class="spinSpaceInput" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p4SpinSpaceInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p4', 'P', 'SpinSpace')" id="p4SpinSpaceInputP" class="spinSpaceInput" style="display: none;">
-
-		<b class="inputText" id="p4MiniZtarInputTextBefore" style="display: none;"> P4:</b>
-		<input type="button" value="-5" onclick="counterButtons('p4', 'M5', 'MiniZtar')" class="miniZtarInput" id="p4MiniZtarInputM10" style="display: none;">
-		<input type="button" value="-" onclick="counterButtons('p4', 'M', 'MiniZtar')" class="miniZtarInput" id="p4MiniZtarInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p4MiniZtarInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p4', 'P', 'MiniZtar')" class="miniZtarInput" id="p4MiniZtarInputP" style="display: none;">
-		<input type="button" value="+5" onclick="counterButtons('p4', 'P5', 'MiniZtar')" class="miniZtarInput" id="p4MiniZtarInputP10" style="display: none;">
-
-		<b class="inputText" id="p4SpecialDiceInputTextBefore" style="display: none;"> P4:</b>
-		<input type="button" value="-" onclick="counterButtons('p4', 'M', 'SpecialDice')" class="specialDiceInput" id="p4SpecialDiceInputM" style="display: none;">
-		<input type="number" value="0" class="numInput" id="p4SpecialDiceInput" autocomplete="off" style="display: none;">
-		<input type="button" value="+" onclick="counterButtons('p4', 'P', 'SpecialDice')" class="specialDiceInput" id="p4SpecialDiceInputP" style="display: none;">
-
-		<input type="button" style="visibility: hidden;">
-	</div>
-
-	<!-- Current Turn Input -->
+	<!-- Selection #1 -->
+	<table class="selectionTable">
+		<tr>
+			<td> <b class="whiteText""> Character: </b> </td>
+			<td> <b class="comText"> Computer: </b> </td>
+			<td> <b class="inputText" id="happeningExplanation"> Happening: </b> </td>
+			<td> <b class="inputText" id="minigameExplanation"> Minigame Coins: </b> </td>
+			<td> <b class="inputText" style="display: none;" id="redSpaceExplanation"> Red Spaces: </b> </td>
+		</tr>
+		<tr>
+			<td>
+				<b class="whiteText""> P1: </b>
+				<select name="p1Select" id="p1Select" autocomplete="off" onchange="imgSelect('p1')">
+					<option value="mario" selected>Mario</option>
+					<option value="luigi">Luigi</option>
+					<option value="peach">Peach</option>
+					<option value="yoshi">Yoshi</option>
+					<option value="wario">Wario</option>
+					<option value="waluigi">Waluigi</option>
+					<option value="rosalina">Rosalina</option>
+					<option value="daisy">Daisy</option>
+					<option value="toad">Toad</option>
+					<option value="toadette">Toadette</option>
+					<option value="dk">Donkey Kong</option>
+					<option value="koopa">Koopa</option>
+					<option value="boo">Boo</option>
+					<option value="spike">Spike</option>
+					<option value="drybones">Dry Bones</option>
+					<option value="blooper">Blooper</option>
+					<option value="shyguy">Shy Guy</option>
+					<option value="hammerbro">Hammer Bro</option>
+					<option value="kamek">Kamek</option>
+					<option value="birdo">Birdo</option>
+					<option value="koopakid">Koopa Kid</option>
+				</select>
+			</td>
+			<td> <b class="comText"> P1: </b> <input type="checkbox" id="p1Com" autocomplete="off" class="checkbox" onchange="imgSelect('p1')"> </td>
+			<td>
+				<b class="inputText" id="p1HappeningInputTextBefore"> P1:</b>
+				<input type="button" value="-" onclick="counterButtons('p1', 'M', 'Happening')" id="p1HappeningInputM">
+				<input type="number" value="0" class="numInput" id="p1HappeningInput" autocomplete="off">
+				<input type="button" value="+" onclick="counterButtons('p1', 'P', 'Happening')" id="p1HappeningInputP">
+			</td>
+			<td>
+				<b class="inputText" id="p1MinigameInputTextBefore"> P1:</b>
+				<input type="button" value="-10" onclick="counterButtons('p1', 'M10', 'Minigame')" id="p1MinigameInputM10"> <input type="button" value="-" onclick="counterButtons('p1', 'M', 'Minigame')" class="minigameInput" id="p1MinigameInputM">
+				<input type="number" value="0" class="numInput" id="p1MinigameInput" autocomplete="off">
+				<input type="button" value="+" onclick="counterButtons('p1', 'P', 'Minigame')" class="minigameInput" id="p1MinigameInputP"> <input type="button" value="+10" onclick="counterButtons('p1', 'P10', 'Minigame')" class="minigameInput" id="p1MinigameInputP10">
+			</td>
+			<td>
+				<b class="inputText" id="p1RedSpaceInputTextBefore" style="display: none;"> P1:</b>
+				<input type="button" value="-" onclick="counterButtons('p1', 'M', 'RedSpace')" id="p1RedSpaceInputM" class="redSpaceInput" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p1RedSpaceInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p1', 'P', 'RedSpace')" id="p1RedSpaceInputP" class="redSpaceInput" style="display: none;">
+		</tr>
+		<tr>
+			<td>
+				<b class="whiteText"> P2: </b>
+				<select name="p2Select" id="p2Select" autocomplete="off" onchange="imgSelect('p2')">
+					<option value="mario">Mario</option> 
+					<option value="luigi" selected>Luigi</option>
+					<option value="peach">Peach</option>
+					<option value="yoshi">Yoshi</option>
+					<option value="wario">Wario</option>
+					<option value="waluigi">Waluigi</option>
+					<option value="rosalina">Rosalina</option>
+					<option value="daisy">Daisy</option>
+					<option value="toad">Toad</option>
+					<option value="toadette">Toadette</option>
+					<option value="dk">Donkey Kong</option>
+					<option value="koopa">Koopa</option>
+					<option value="boo">Boo</option>
+					<option value="spike">Spike</option>
+					<option value="drybones">Dry Bones</option>
+					<option value="blooper">Blooper</option>
+					<option value="shyguy">Shy Guy</option>
+					<option value="hammerbro">Hammer Bro</option>
+					<option value="kamek">Kamek</option>
+					<option value="birdo">Birdo</option>
+					<option value="koopakid">Koopa Kid</option>
+				</select>
+			</td>
+			<td> <b class="comText"> P2: </b> <input type="checkbox" id="p2Com" class="checkbox" onchange="imgSelect('p2')"> </td>
+			<td>			
+				<b class="inputText" id="p2HappeningInputTextBefore"> P2:</b>
+				<input type="button" value="-" onclick="counterButtons('p2', 'M', 'Happening')" autocomplete="off" id="p2HappeningInputM">
+				<input type="number" value="0" class="numInput" id="p2HappeningInput" autocomplete="off">
+				<input type="button" value="+" onclick="counterButtons('p2', 'P', 'Happening')" id="p2HappeningInputP">
+			</td>
+			<td>
+				<b class="inputText" id="p2MinigameInputTextBefore"> P2:</b>
+				<input type="button" value="-10" onclick="counterButtons('p2', 'M10', 'Minigame')" id="p2MinigameInputM10"> <input type="button" value="-" onclick="counterButtons('p2', 'M', 'Minigame')" id="p2MinigameInputM">
+				<input type="number" value="0" class="numInput" id="p2MinigameInput" autocomplete="off">
+				<input type="button" value="+" onclick="counterButtons('p2', 'P', 'Minigame')" id="p2MinigameInputP"> <input type="button" value="+10" onclick="counterButtons('p2', 'P10', 'Minigame')" id="p2MinigameInputP10">
+			</td>
+			<td>
+				<b class="inputText" id="p2RedSpaceInputTextBefore" style="display: none;"> P2:</b>
+				<input type="button" value="-" onclick="counterButtons('p2', 'M', 'RedSpace')" id="p2RedSpaceInputM" class="redSpaceInput" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p2RedSpaceInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p2', 'P', 'RedSpace')" id="p2RedSpaceInputP" class="redSpaceInput" style="display: none;">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<b class="whiteText"> P3: </b>
+				<select name="p3Select" id="p3Select" autocomplete="off" onchange="imgSelect('p3')">
+					<option value="mario">Mario</option> 
+					<option value="luigi">Luigi</option>
+					<option value="peach" selected>Peach</option>
+					<option value="yoshi">Yoshi</option>
+					<option value="wario">Wario</option>
+					<option value="waluigi">Waluigi</option>
+					<option value="rosalina">Rosalina</option>
+					<option value="daisy">Daisy</option>
+					<option value="toad">Toad</option>
+					<option value="toadette">Toadette</option>
+					<option value="dk">Donkey Kong</option>
+					<option value="koopa">Koopa</option>
+					<option value="boo">Boo</option>
+					<option value="spike">Spike</option>
+					<option value="drybones">Dry Bones</option>
+					<option value="blooper">Blooper</option>
+					<option value="shyguy">Shy Guy</option>
+					<option value="hammerbro">Hammer Bro</option>
+					<option value="kamek">Kamek</option>
+					<option value="birdo">Birdo</option>
+					<option value="koopakid">Koopa Kid</option>
+				</select>
+			</td>
+			<td> <b class="comText"> P3: </b> <input type="checkbox" id="p3Com" class="checkbox" onchange="imgSelect('p3')"> </td>
+			<td>
+				<b class="inputText" id="p3HappeningInputTextBefore"> P3:</b>
+				<input type="button" value="-" onclick="counterButtons('p3', 'M', 'Happening')" autocomplete="off" id="p3HappeningInputM">
+				<input type="number" value="0" class="numInput" id="p3HappeningInput" autocomplete="off">
+				<input type="button" value="+" onclick="counterButtons('p3', 'P', 'Happening')" id="p3HappeningInputP">
+			</td>
+			<td>
+				<b class="inputText" id="p3MinigameInputTextBefore"> P3:</b>
+				<input type="button" value="-10" onclick="counterButtons('p3', 'M10', 'Minigame')" id="p3MinigameInputM10"> <input type="button" value="-" onclick="counterButtons('p3', 'M', 'Minigame')" id="p3MinigameInputM">
+				<input type="number" value="0" class="numInput" id="p3MinigameInput" autocomplete="off">
+				<input type="button" value="+" onclick="counterButtons('p3', 'P', 'Minigame')" id="p3MinigameInputP"> <input type="button" value="+10" onclick="counterButtons('p3', 'P10', 'Minigame')" id="p3MinigameInputP10">
+			</td>
+			<td>
+				<b class="inputText" id="p3RedSpaceInputTextBefore" style="display: none;"> P3:</b>
+				<input type="button" value="-" onclick="counterButtons('p3', 'M', 'RedSpace')" id="p3RedSpaceInputM" class="redSpaceInput" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p3RedSpaceInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p3', 'P', 'RedSpace')" id="p3RedSpaceInputP" class="redSpaceInput" style="display: none;">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<b class="whiteText"> P4: </b>
+				<select name="p4Select" id="p4Select" autocomplete="off" onchange="imgSelect('p4')">
+					<option value="mario">Mario</option> 
+					<option value="luigi">Luigi</option>
+					<option value="peach">Peach</option>
+					<option value="yoshi" selected>Yoshi</option>
+					<option value="wario">Wario</option>
+					<option value="waluigi">Waluigi</option>
+					<option value="rosalina">Rosalina</option>
+					<option value="daisy">Daisy</option>
+					<option value="toad">Toad</option>
+					<option value="toadette">Toadette</option>
+					<option value="dk">Donkey Kong</option>
+					<option value="koopa">Koopa</option>
+					<option value="boo">Boo</option>
+					<option value="spike">Spike</option>
+					<option value="drybones">Dry Bones</option>
+					<option value="blooper">Blooper</option>
+					<option value="shyguy">Shy Guy</option>
+					<option value="hammerbro">Hammer Bro</option>
+					<option value="kamek">Kamek</option>
+					<option value="birdo">Birdo</option>
+					<option value="koopakid">Koopa Kid</option>
+				</select>
+			</td>
+			<td> <b class="comText"> P4: </b> <input type="checkbox" id="p4Com" class="checkbox" onchange="imgSelect('p4')"> </td>
+			<td>
+				<b class="inputText" id="p4HappeningInputTextBefore"> P4:</b>
+				<input type="button" value="-" onclick="counterButtons('p4', 'M', 'Happening')" autocomplete="off" id="p4HappeningInputM">
+				<input type="number" value="0" class="numInput" id="p4HappeningInput" autocomplete="off">
+				<input type="button" value="+" onclick="counterButtons('p4', 'P', 'Happening')" id="p4HappeningInputP">
+			</td>
+			<td>
+				<b class="inputText" id="p4MinigameInputTextBefore"> P4:</b>
+				<input type="button" value="-10" onclick="counterButtons('p4', 'M10', 'Minigame')" id="p4MinigameInputM10"> <input type="button" value="-" onclick="counterButtons('p4', 'M', 'Minigame')" id="p4MinigameInputM">
+				<input type="number" value="0" class="numInput" id="p4MinigameInput" autocomplete="off">
+				<input type="button" value="+" onclick="counterButtons('p4', 'P', 'Minigame')" id="p4MinigameInputP"> <input type="button" value="+10" onclick="counterButtons('p4', 'P10', 'Minigame')" id="p4MinigameInputP10">
+			</td>
+			<td>
+				<b class="inputText" id="p4RedSpaceInputTextBefore" style="display: none;"> P4:</b>
+				<input type="button" value="-" onclick="counterButtons('p4', 'M', 'RedSpace')" id="p4RedSpaceInputM" class="redSpaceInput" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p4RedSpaceInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p4', 'P', 'RedSpace')" id="p4RedSpaceInputP" class="redSpaceInput" style="display: none;">
+			</td>
+		</tr>
+	</table>
 	<div id="changesBorderBottom"></div>
-		<b class="turnInputText" style="margin-right: 6px;"> Current Turn:</b>
-		<input type="button" value="-" onclick="counterButtons('', 'M', 'curTurn')"> <input type="number" value="1" class="numInput" id="curTurnInput" autocomplete="off"> <input type="button" value="+" onclick="counterButtons('', 'P', 'curTurn')">
 
-	<!-- Coin Star Input -->
-	<b class="inputText"> Coin Star:</b>
-	<input type="button" value="-10" onclick="counterButtons('', 'M10', 'coinStar')">
-	<input type="button" value="-" onclick="counterButtons('', 'M', 'coinStar')">
-	<input type="number" value="10" class="numInput" id="coinStarInput" autocomplete="off">
-	<input type="button" value="+" onclick="counterButtons('', 'P', 'coinStar')">
-	<input type="button" value="+10" onclick="counterButtons('', 'P10', 'coinStar')">
+	<!-- Selection #2 -->
+	<table class="selectionTable">
+		<tr>
+			<td> <b class="firstInputText" style="display: none;" id="runningExplanation"> Total Dice Num.: </b> </td>
+			<td> <b class="explanationText" style="display: none;" id="shoppingExplanation"> Total Coins spent: </b> </td>
+			<td> <b class="explanationText" style="display: none;" id="orbExplanation"> Total Orbs used: </b> </td>
+			<td> <b class="explanationText" style="display: none;" id="candyExplanation"> Total Candies used: </b> </td>
+			<td> <b class="explanationText" style="display: none;" id="spinSpaceExplanation"> Spin Spaces: </b> </td>
+			<td> <b class="explanationText" style="display: none;" id="miniZtarExplanation"> Mini Ztars collected: </b> </td>
+			<td> <b class="explanationText" style="display: none;" id="specialDiceExplanation"> Total Special Dices used: </b> </td>
+		</tr>
+		<tr>
+			<td>
+				<b class="firstInputText" id="p1RunningInputTextBefore" style="display: none;"> P1:</b>
+				<input type="button" value="-10" onclick="counterButtons('p1', 'M10', 'Running')" class="runningInput" id="p1RunningInputM10" style="display: none;">
+				<input type="button" value="-6" onclick="counterButtons('p1', 'M6', 'Running')" class="runningInput" id="p1RunningInputM6" style="display: none;">
+				<input type="button" value="-" onclick="counterButtons('p1', 'M', 'Running')" class="runningInput" id="p1RunningInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p1RunningInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p1', 'P', 'Running')" class="runningInput" id="p1RunningInputP" style="display: none;">
+				<input type="button" value="+6" onclick="counterButtons('p1', 'P6', 'Running')" class="runningInput" id="p1RunningInputP6" style="display: none;">
+				<input type="button" value="+10" onclick="counterButtons('p1', 'P10', 'Running')" class="runningInput" id="p1RunningInputP10" style="display: none;">
+			</td>
+			<td>
 
-	<select name="coinStarCharSelect" id="coinStarCharSelect" autocomplete="off" onchange="coinStarCharImg()">
-		<option value="question" selected>???</option> 
-		<option value="mario">Mario</option> 
-		<option value="luigi">Luigi</option>
-		<option value="peach">Peach</option>
-		<option value="yoshi">Yoshi</option>
-		<option value="wario">Wario</option>
-		<option value="waluigi">Waluigi</option>
-		<option value="rosalina">Rosalina</option>
-		<option value="daisy">Daisy</option>
-		<option value="toad">Toad</option>
-		<option value="toadette">Toadette</option>
-		<option value="dk">Donkey Kong</option>
-		<option value="koopa">Koopa</option>
-		<option value="boo">Boo</option>
-		<option value="spike">Spike</option>
-		<option value="drybones">Dry Bones</option>
-		<option value="blooper">Blooper</option>
-		<option value="shyguy">Shy Guy</option>
-		<option value="hammerbro">Hammer Bro</option>
-		<option value="kamek">Kamek</option>
-		<option value="birdo">Birdo</option>
-		<option value="koopakid">Koopa Kid</option>
-	</select> <br />
+				<b class="inputText" id="p1ShoppingInputTextBefore" style="display: none;"> P1:</b>
+				<input type="button" value="-10" onclick="counterButtons('p1', 'M10', 'Shopping')" class="shoppingInput" id="p1ShoppingInputM10" style="display: none;">
+				<input type="button" value="-5" onclick="counterButtons('p1', 'M5', 'Shopping')" class="shoppingInput" id="p1ShoppingInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p1ShoppingInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+5" onclick="counterButtons('p1', 'P5', 'Shopping')" class="shoppingInput" id="p1ShoppingInputP" style="display: none;">
+				<input type="button" value="+10" onclick="counterButtons('p1', 'P10', 'Shopping')" class="shoppingInput" id="p1ShoppingInputP10" style="display: none;">
+			</td>
+			<td>
 
-	<!-- Max. Turn Input -->
-		<b class="turnInputText" style="margin-right: 24px;"> Max. Turn:</b>
-		<input type="button" value="-5" onclick="counterButtons('', 'M5', 'maxTurn')"> <input type="number" value="20" class="numInput" id="maxTurnInput" autocomplete="off"> <input type="button" value="+5" onclick="counterButtons('', 'P5', 'maxTurn')">
+				<b class="inputText" id="p1OrbInputTextBefore" style="display: none;"> P1:</b>
+				<input type="button" value="-" onclick="counterButtons('p1', 'M', 'Orb')" class="orbInput" id="p1OrbInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p1OrbInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p1', 'P', 'Orb')" class="orbInput" id="p1OrbInputP" style="display: none;">
+			</td>
+			<td>
+
+				<b class="inputText" id="p1CandyInputTextBefore" style="display: none;"> P1:</b>
+				<input type="button" value="-" onclick="counterButtons('p1', 'M', 'Candy')" class="candyInput" id="p1CandyInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p1CandyInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p1', 'P', 'Candy')" class="candyInput" id="p1CandyInputP" style="display: none;">
+			</td>
+			<td>
+
+				<b class="inputText" id="p1SpinSpaceInputTextBefore" style="display: none;"> P1:</b>
+				<input type="button" value="-" onclick="counterButtons('p1', 'M', 'SpinSpace')" id="p1SpinSpaceInputM" class="spinSpaceInput" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p1SpinSpaceInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p1', 'P', 'SpinSpace')" id="p1SpinSpaceInputP" class="spinSpaceInput" style="display: none;">
+			</td>
+			<td>
+
+				<b class="inputText" id="p1MiniZtarInputTextBefore" style="display: none;"> P1:</b>
+				<input type="button" value="-5" onclick="counterButtons('p1', 'M5', 'MiniZtar')" class="miniZtarInput" id="p1MiniZtarInputM10" style="display: none;">
+				<input type="button" value="-" onclick="counterButtons('p1', 'M', 'MiniZtar')" class="miniZtarInput" id="p1MiniZtarInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p1MiniZtarInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p1', 'P', 'MiniZtar')" class="miniZtarInput" id="p1MiniZtarInputP" style="display: none;">
+				<input type="button" value="+5" onclick="counterButtons('p1', 'P5', 'MiniZtar')" class="miniZtarInput" id="p1MiniZtarInputP10" style="display: none;">
+			</td>
+			<td>
+
+				<b class="inputText" id="p1SpecialDiceInputTextBefore" style="display: none;"> P1:</b>
+				<input type="button" value="-" onclick="counterButtons('p1', 'M', 'SpecialDice')" class="specialDiceInput" id="p1SpecialDiceInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p1SpecialDiceInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p1', 'P', 'SpecialDice')" class="specialDiceInput" id="p1SpecialDiceInputP" style="display: none;">
+			</td>
+			<td> <input type="button" style="visibility: hidden;"> </td>
+		</tr>
+		<tr>
+			<td>
+				<b class="firstInputText" id="p2RunningInputTextBefore" style="display: none;"> P2:</b>
+				<input type="button" value="-10" onclick="counterButtons('p2', 'M10', 'Running')" class="runningInput" id="p2RunningInputM10" style="display: none;">
+				<input type="button" value="-6" onclick="counterButtons('p2', 'M6', 'Running')" class="runningInput" id="p2RunningInputM6" style="display: none;">
+				<input type="button" value="-" onclick="counterButtons('p2', 'M', 'Running')" class="runningInput" id="p2RunningInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p2RunningInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p2', 'P', 'Running')" class="runningInput" id="p2RunningInputP" style="display: none;" style="display: none;">
+				<input type="button" value="+6" onclick="counterButtons('p2', 'P6', 'Running')" class="runningInput" id="p2RunningInputP6" style="display: none;">
+				<input type="button" value="+10" onclick="counterButtons('p2', 'P10', 'Running')" class="runningInput" id="p2RunningInputP10" style="display: none;">
+			</td>
+			<td>
+
+				<b class="inputText" id="p2ShoppingInputTextBefore" style="display: none;"> P2:</b>
+				<input type="button" value="-10" onclick="counterButtons('p2', 'M10', 'Shopping')" class="shoppingInput" id="p2ShoppingInputM10" style="display: none;">
+				<input type="button" value="-5" onclick="counterButtons('p2', 'M5', 'Shopping')" class="shoppingInput" id="p2ShoppingInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p2ShoppingInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+5" onclick="counterButtons('p2', 'P5', 'Shopping')" class="shoppingInput" id="p2ShoppingInputP" style="display: none;">
+				<input type="button" value="+10" onclick="counterButtons('p2', 'P10', 'Shopping')" class="shoppingInput" id="p2ShoppingInputP10" style="display: none;">
+			</td>
+			<td>
+
+				<b class="inputText" id="p2OrbInputTextBefore" style="display: none;"> P2:</b>
+				<input type="button" value="-" onclick="counterButtons('p2', 'M', 'Orb')" class="orbInput" id="p2OrbInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p2OrbInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p2', 'P', 'Orb')" class="orbInput" id="p2OrbInputP" style="display: none;">
+			</td>
+			<td>
+
+				<b class="inputText" id="p2CandyInputTextBefore" style="display: none;"> P2:</b>
+				<input type="button" value="-" onclick="counterButtons('p2', 'M', 'Candy')" class="candyInput" id="p2CandyInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p2CandyInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p2', 'P', 'Candy')" class="candyInput" id="p2CandyInputP" style="display: none;">
+			</td>
+			<td>
+
+				<b class="inputText" id="p2SpinSpaceInputTextBefore" style="display: none;"> P2:</b>
+				<input type="button" value="-" onclick="counterButtons('p2', 'M', 'SpinSpace')" id="p2SpinSpaceInputM" class="spinSpaceInput" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p2SpinSpaceInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p2', 'P', 'SpinSpace')" id="p2SpinSpaceInputP" class="spinSpaceInput" style="display: none;">
+			</td>
+			<td>
+
+				<b class="inputText" id="p2MiniZtarInputTextBefore" style="display: none;"> P2:</b>
+				<input type="button" value="-5" onclick="counterButtons('p2', 'M5', 'MiniZtar')" class="miniZtarInput" id="p2MiniZtarInputM10" style="display: none;">
+				<input type="button" value="-" onclick="counterButtons('p2', 'M', 'MiniZtar')" class="miniZtarInput" id="p2MiniZtarInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p2MiniZtarInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p2', 'P', 'MiniZtar')" class="miniZtarInput" id="p2MiniZtarInputP" style="display: none;">
+				<input type="button" value="+5" onclick="counterButtons('p2', 'P5', 'MiniZtar')" class="miniZtarInput" id="p2MiniZtarInputP10" style="display: none;">
+			</td>
+			<td>
+
+				<b class="inputText" id="p2SpecialDiceInputTextBefore" style="display: none;"> P2:</b>
+				<input type="button" value="-" onclick="counterButtons('p2', 'M', 'SpecialDice')" class="specialDiceInput" id="p2SpecialDiceInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p2SpecialDiceInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p2', 'P', 'SpecialDice')" class="specialDiceInput" id="p2SpecialDiceInputP" style="display: none;">
+			</td>
+			<td> <input type="button" style="visibility: hidden;"> </td>
+		</tr>
+		<tr>
+			<td>
+				<b class="firstInputText" id="p3RunningInputTextBefore" style="display: none;"> P3:</b>
+				<input type="button" value="-10" onclick="counterButtons('p3', 'M10', 'Running')" class="runningInput" id="p3RunningInputM10" style="display: none;">
+				<input type="button" value="-6" onclick="counterButtons('p3', 'M6', 'Running')" class="runningInput" id="p3RunningInputM6" style="display: none;">
+				<input type="button" value="-" onclick="counterButtons('p3', 'M', 'Running')" class="runningInput" id="p3RunningInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p3RunningInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p3', 'P', 'Running')" class="runningInput" id="p3RunningInputP" style="display: none;">
+				<input type="button" value="+6" onclick="counterButtons('p3', 'P6', 'Running')" class="runningInput" id="p3RunningInputP6" style="display: none;">
+				<input type="button" value="+10" onclick="counterButtons('p3', 'P10', 'Running')" class="runningInput" id="p3RunningInputP10" style="display: none;">
+			</td>
+			<td>
+				<b class="inputText" id="p3ShoppingInputTextBefore" style="display: none;"> P3:</b>
+				<input type="button" value="-10" onclick="counterButtons('p3', 'M10', 'Shopping')" class="shoppingInput" id="p3ShoppingInputM10" style="display: none;">
+				<input type="button" value="-5" onclick="counterButtons('p3', 'M5', 'Shopping')" class="shoppingInput" id="p3ShoppingInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p3ShoppingInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+5" onclick="counterButtons('p3', 'P5', 'Shopping')" class="shoppingInput" id="p3ShoppingInputP" style="display: none;">
+				<input type="button" value="+10" onclick="counterButtons('p3', 'P10', 'Shopping')" class="shoppingInput" id="p3ShoppingInputP10" style="display: none;">
+			</td>
+			<td>
+				<b class="inputText" id="p3OrbInputTextBefore" style="display: none;"> P3:</b>
+				<input type="button" value="-" onclick="counterButtons('p3', 'M', 'Orb')" class="orbInput" id="p3OrbInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p3OrbInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p3', 'P', 'Orb')" class="orbInput" id="p3OrbInputP" style="display: none;">
+			</td>
+			<td>
+				<b class="inputText" id="p3CandyInputTextBefore" style="display: none;"> P3:</b>
+				<input type="button" value="-" onclick="counterButtons('p3', 'M', 'Candy')" class="candyInput" id="p3CandyInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p3CandyInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p3', 'P', 'Candy')" class="candyInput" id="p3CandyInputP" style="display: none;">
+			</td>
+			<td>
+				<b class="inputText" id="p3SpinSpaceInputTextBefore" style="display: none;"> P3:</b>
+				<input type="button" value="-" onclick="counterButtons('p3', 'M', 'SpinSpace')" id="p3SpinSpaceInputM" class="spinSpaceInput" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p3SpinSpaceInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p3', 'P', 'SpinSpace')" id="p3SpinSpaceInputP" class="spinSpaceInput" style="display: none;">
+			</td>
+			<td>
+				<b class="inputText" id="p3MiniZtarInputTextBefore" style="display: none;"> P4:</b>
+				<input type="button" value="-5" onclick="counterButtons('p3', 'M5', 'MiniZtar')" class="miniZtarInput" id="p3MiniZtarInputM10" style="display: none;">
+				<input type="button" value="-" onclick="counterButtons('p3', 'M', 'MiniZtar')" class="miniZtarInput" id="p3MiniZtarInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p3MiniZtarInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p3', 'P', 'MiniZtar')" class="miniZtarInput" id="p3MiniZtarInputP" style="display: none;">
+				<input type="button" value="+5" onclick="counterButtons('p3', 'P5', 'MiniZtar')" class="miniZtarInput" id="p3MiniZtarInputP10" style="display: none;">
+			</td>
+			<td>
+				<b class="inputText" id="p3SpecialDiceInputTextBefore" style="display: none;"> P3:</b>
+				<input type="button" value="-" onclick="counterButtons('p3', 'M', 'SpecialDice')" class="specialDiceInput" id="p3SpecialDiceInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p3SpecialDiceInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p3', 'P', 'SpecialDice')" class="specialDiceInput" id="p3SpecialDiceInputP" style="display: none;">
+			</td>
+			<td> <input type="button" style="visibility: hidden;"> </td>
+		</tr>
+		<tr>
+			<td>
+				<b class="firstInputText" id="p4RunningInputTextBefore" style="display: none;"> P4:</b>
+				<input type="button" value="-10" onclick="counterButtons('p4', 'M10', 'Running')" class="runningInput" id="p4RunningInputM10" style="display: none;">
+				<input type="button" value="-6" onclick="counterButtons('p4', 'M6', 'Running')" class="runningInput" id="p4RunningInputM6" style="display: none;">
+				<input type="button" value="-" onclick="counterButtons('p4', 'M', 'Running')" class="runningInput" id="p4RunningInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p4RunningInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p4', 'P', 'Running')" class="runningInput" id="p4RunningInputP" style="display: none;">
+				<input type="button" value="+6" onclick="counterButtons('p4', 'P6', 'Running')" class="runningInput" id="p4RunningInputP6" style="display: none;">
+				<input type="button" value="+10" onclick="counterButtons('p4', 'P10', 'Running')" class="runningInput" id="p4RunningInputP10" style="display: none;">
+			</td>
+			<td>
+
+				<b class="inputText" id="p4ShoppingInputTextBefore" style="display: none;"> P4:</b>
+				<input type="button" value="-10" onclick="counterButtons('p4', 'M10', 'Shopping')" class="shoppingInput" id="p4ShoppingInputM10" style="display: none;">
+				<input type="button" value="-5" onclick="counterButtons('p4', 'M5', 'Shopping')" class="shoppingInput" id="p4ShoppingInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p4ShoppingInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+5" onclick="counterButtons('p4', 'P5', 'Shopping')" class="shoppingInput" id="p4ShoppingInputP" style="display: none;">
+				<input type="button" value="+10" onclick="counterButtons('p4', 'P10', 'Shopping')" class="shoppingInput" id="p4ShoppingInputP10" style="display: none;">
+			</td>
+			<td>
+
+				<b class="inputText" id="p4OrbInputTextBefore" style="display: none;"> P4:</b>
+				<input type="button" value="-" onclick="counterButtons('p4', 'M', 'Orb')" class="orbInput" id="p4OrbInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p4OrbInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p4', 'P', 'Orb')" class="orbInput" id="p4OrbInputP" style="display: none;">
+			</td>
+			<td>
+
+				<b class="inputText" id="p4CandyInputTextBefore" style="display: none;"> P4:</b>
+				<input type="button" value="-" onclick="counterButtons('p4', 'M', 'Candy')" class="candyInput" id="p4CandyInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p4CandyInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p4', 'P', 'Candy')" class="candyInput" id="p4CandyInputP" style="display: none;">
+			</td>
+			<td>
+
+				<b class="inputText" id="p4SpinSpaceInputTextBefore" style="display: none;"> P4:</b>
+				<input type="button" value="-" onclick="counterButtons('p4', 'M', 'SpinSpace')" id="p4SpinSpaceInputM" class="spinSpaceInput" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p4SpinSpaceInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p4', 'P', 'SpinSpace')" id="p4SpinSpaceInputP" class="spinSpaceInput" style="display: none;">
+			</td>
+			<td>
+
+				<b class="inputText" id="p4MiniZtarInputTextBefore" style="display: none;"> P4:</b>
+				<input type="button" value="-5" onclick="counterButtons('p4', 'M5', 'MiniZtar')" class="miniZtarInput" id="p4MiniZtarInputM10" style="display: none;">
+				<input type="button" value="-" onclick="counterButtons('p4', 'M', 'MiniZtar')" class="miniZtarInput" id="p4MiniZtarInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p4MiniZtarInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p4', 'P', 'MiniZtar')" class="miniZtarInput" id="p4MiniZtarInputP" style="display: none;">
+				<input type="button" value="+5" onclick="counterButtons('p4', 'P5', 'MiniZtar')" class="miniZtarInput" id="p4MiniZtarInputP10" style="display: none;">
+			</td>
+			<td>
+
+				<b class="inputText" id="p4SpecialDiceInputTextBefore" style="display: none;"> P4:</b>
+				<input type="button" value="-" onclick="counterButtons('p4', 'M', 'SpecialDice')" class="specialDiceInput" id="p4SpecialDiceInputM" style="display: none;">
+				<input type="number" value="0" class="numInput" id="p4SpecialDiceInput" autocomplete="off" style="display: none;">
+				<input type="button" value="+" onclick="counterButtons('p4', 'P', 'SpecialDice')" class="specialDiceInput" id="p4SpecialDiceInputP" style="display: none;">
+			</td>
+			<td> <input type="button" style="visibility: hidden;"> </td>
+		</tr>
+	</table>
+
+	<!-- Turn, Coinstar & Counter Highlighting Input -->
+	<div id="changesBorderBottom"></div>
+	<table class="selectionTable">
+		<tr>
+			<td>
+				<b class="turnInputText" style="margin-right: 6px;"> Current Turn:</b>
+				<input type="button" value="-" onclick="counterButtons('', 'M', 'curTurn')"> <input type="number" value="1" class="numInput" id="curTurnInput" autocomplete="off"> <input type="button" value="+" onclick="counterButtons('', 'P', 'curTurn')">
+			</td>
+			<td>
+				<b class="inputText"> Coin Star:</b>
+				<input type="button" value="-10" onclick="counterButtons('', 'M10', 'coinStar')">
+				<input type="button" value="-" onclick="counterButtons('', 'M', 'coinStar')">
+				<input type="number" value="10" class="numInput" id="coinStarInput" autocomplete="off">
+				<input type="button" value="+" onclick="counterButtons('', 'P', 'coinStar')">
+				<input type="button" value="+10" onclick="counterButtons('', 'P10', 'coinStar')">
+
+				<select name="coinStarCharSelect" id="coinStarCharSelect" autocomplete="off" onchange="coinStarCharImg()">
+					<option value="question" selected>???</option> 
+					<option value="mario">Mario</option> 
+					<option value="luigi">Luigi</option>
+					<option value="peach">Peach</option>
+					<option value="yoshi">Yoshi</option>
+					<option value="wario">Wario</option>
+					<option value="waluigi">Waluigi</option>
+					<option value="rosalina">Rosalina</option>
+					<option value="daisy">Daisy</option>
+					<option value="toad">Toad</option>
+					<option value="toadette">Toadette</option>
+					<option value="dk">Donkey Kong</option>
+					<option value="koopa">Koopa</option>
+					<option value="boo">Boo</option>
+					<option value="spike">Spike</option>
+					<option value="drybones">Dry Bones</option>
+					<option value="blooper">Blooper</option>
+					<option value="shyguy">Shy Guy</option>
+					<option value="hammerbro">Hammer Bro</option>
+					<option value="kamek">Kamek</option>
+					<option value="birdo">Birdo</option>
+					<option value="koopakid">Koopa Kid</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<b class="turnInputText" style="margin-right: 24px;"> Max. Turn:</b>
+				<input type="button" value="-5" onclick="counterButtons('', 'M5', 'maxTurn')"> <input type="number" value="20" class="numInput" id="maxTurnInput" autocomplete="off"> <input type="button" value="+5" onclick="counterButtons('', 'P5', 'maxTurn')">
+			</td>
+			<td>
+				<b class="inputText"> Enable Counter Highlight: </b> <input type="checkbox" checked="true" autocomplete="on" id="enableHighlight" onchange="resetHighlights()">
+				<input type="color" onchange="startHighlight(false, true)" value="#ff0000" autocomplete="on" id="highlightColor">
+			</td>
+		</tr>
+	</table>
 
 	<!-- Text output -->
 
 	<!-- Mario Party Changes -->
-	<div id="changesBorderTop"></div>
+	<div id="changesBorderBottom"></div>
 	<div class="marioPartyChanges">
 
 		<button class="changesButton" onclick="displayOnOff('Happening', 'happening', 'true')"> Happening (all MPs) on/off </button>

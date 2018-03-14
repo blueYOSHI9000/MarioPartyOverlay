@@ -73,13 +73,11 @@ src: url("font.ttf");
 }
 .explanationText {
 	color: white;
-	margin-left: 80px;
+	margin-left: 50px;
 }
 
 
-#runningExplanation {
-	margin-right: 90px;
-}
+
 #redSpaceButton {
 	margin-left: 40px;
 }
@@ -88,15 +86,6 @@ src: url("font.ttf");
 }
 #minigameButton {
 	margin-right: 0px;
-}
-#minigameExplanation {
-	margin-left: 95px;
-}
-#candyExplanation {
-	margin-left: 100px;
-}
-#shoppingExplanation {
-	margin-left: 150px;
 }
 #changesBorderTop {
 	border-top: 2px;

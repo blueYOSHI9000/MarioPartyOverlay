@@ -1,7 +1,3 @@
-// === INSERT BELOW THIS LINE ===
-
-
-
 //Global Variables
 var highlightColor = '#ff0000'
 
@@ -127,11 +123,15 @@ function resetHighlights () {
 	}
 }
 
-function startHighlight (resetHighlights) {
-		var originalHighlightColor = highlightColor
-	if (resetHighlights) {
+function startHighlight (resetHighlights, changeColor) {
+	var originalHighlightColor = highlightColor
+
+	if (resetHighlights == true) {
 		originalHighlightColor = highlightColor
 		highlightColor = 'white'
+	} else if (changeColor) {
+		highlightColor = document.getElementById('highlightColor').value
+		originalHighlightColor = highlightColor
 	}
 
 	if (document.getElementById('enableHighlight').checked == true || resetHighlights) {
