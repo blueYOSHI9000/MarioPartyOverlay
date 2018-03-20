@@ -1,12 +1,3 @@
-<!--
-	=== HOW TO CHANGE THE BACKGROUND COLOR ===
-	Scroll past this tutorial and the one below. Then you should see a text telling you what to do.
-
-
-	=== TUTORIAL ON HOW TO ADD NEW COUNTERS ===
-	
-	
--->
 <!doctype html>
 
 <html lang="en">
@@ -23,19 +14,24 @@
 
 <body id="htmlTag" style="background: url(img/background.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"> <!-- === CHANGE BACKGROUND HERE === Replace the number after "background", remember that it needs to be a HTML Color Code! There are enough generators out there, just search on google to find one -->
 	<!-- Tutorial -->
-	<button id="button" onclick="showhide()"> Show/Hide Tutorial </button>
-	<button id="button" onclick="bgOnOff()"> Background on/off </button>
+<div id="inputDiv">
+	<button class="button" onclick="showhide()"> Show/Hide Tutorial </button>
+	<button class="button" onclick="bgOnOff()"> Background on/off </button>
 	<button id="enableInteractButton" onclick="enableInteract()"> Enable Drag 'n' Drop (reload to reset positions)</button>
 	<b class="whiteText"> Bonus Star names instead of Explanation: </b> <input type="checkbox" autocomplete="on" id="changeNames" onchange="changeNames()">
 	<!--<form action="mobile.html">
 		<input type="submit" value="Mobile Version" />
 	</form>-->
 	<div id="tutorial" style="background: #d2d2d2; margin-bottom: 10px; display: none;">
-		<button onclick="showHideTutorial('obsTutorial')">Show/Hide OBS Setup Tutorial</button> <div id="obsTutorial" class="hidden"> <b>OBS Setup Tutorial:</b> Run the website on Firefox (or Chrome but OBS doesn't detect that for me). Add a "Window Capture" of the Firefox window. Rightclick > Filters and add "Color Key" (NOT "Chroma Key"!). <br />
+		Difference between the two OBS Tutorials: The first one requires you to open OBS in a Browser and then record that (useful for offline or non-twitch recordings/streams, or if you don't have many active viewers so you can easily update it manually), the second one uses the "Browser Source" feature of OBS, which got better a greenscreen effect but it's only possible to update it through Twitch (it's useful if you open MPO in a browser and deactivate commands in it in case MPO in OBS crashes or something). <br /> <br />
+
+		<button onclick="showHideTutorial('obsTutorial')">Show/Hide OBS in Browser Tutorial</button> <div id="obsTutorial" class="hidden"> <b>OBS in Browser Setup Tutorial:</b> Run the website on Firefox (or Chrome but OBS doesn't detect that for me). Add a "Window Capture" of the Firefox window. Rightclick > Filters and add "Color Key" (NOT "Chroma Key"!). <br />
 		Now, there are multiple possibilities, you might try some out for yourself or use this one: "Similarity" on 131 and "Smoothness" on 575. (in case your using a different language of OBS: "Similarity" is the first option and "smoothness" the second, the rest should be obvious) <br />
 		When selecting the Windows Capture, there are 8 dots at the side, hold "ALT" on your keyboard and cut it to your desire. You might as well copy the Windows Capture to display each character at a different place. <br />
 		You might as well change the background color: Open "index.html" with a editor, at the very top you can see a small explanation. <br />
 		Change Font or Images: Just replace the file with the same name, simple as that! In case the font is too small, open "CSS.css" and there are two numbers you need to change, there's a explanation too! </div> <br /> <br />
+
+		<button onclick="showHideTutorial('browserSourceTutorial')">Show/Hide OBS Browser Source (recommended) Tutorial</button> <div id="browserSourceTutorial" class="hidden"> <b>OBS Browser Source Tutorial:</b> First, open "obs.html" in a text editor and scroll to the very bottom. You should see "'botName', 'oauth', 'channel'" there, replace these with your bots name, the bots oauth token (link to get one is below) and the channel it should join. Then open obs.html in OBS' Browser Source. Set "width" to 1000 and "height" to 670, "refresh browser when scene becomes active" is useful to so all counters reset when you switch to that scene. Alternatively you can also go to "properties" and click "ok" to reset it. </div> <br /> <br />
 
 		<button onclick="showHideTutorial('mpoTutorial')">Show/Hide Mario Party Overlay Tutorial</button> <div id="mpoTutorial" class="hidden"> <b>Mario Party Overlay Tutorial:</b> I won't explain how you need to change some stuff, I mean, just try the buttons out! It's not like there's a self-destruction button or something... Basics: Change everything at the top and record everything at the bottom. <i>If something isn't obvious, please contact me so I can add it to the Tutorial!!</i> <br /> 
 		- Bonus Star List: All Counters are based on Bonus Stars, there's a full list avaible at the <a href="https://www.mariowiki.com/Bonus_Star#Introduced_in_Mario_Party">Super Mario Wiki.</a> <br />
@@ -46,19 +42,28 @@
 		- Drag 'n' Drop: There's a button at the very top that can enable and disable drag 'n' drop, with that you can place all the counters wherever you want! Also, to reset positions you need to reload which also resets all the counters. <br />
 		- Hide MP 9&10 options: If you don't like these games, just add "?no9=1" to the URL and it should work. </div> <br /> <br />
 
-		<button onclick="showHideTutorial('replaceTutorial')">Show/Hide How to change/replace stuff Tutorial:</button> <div id="replaceTutorial" class="hidden"> <b>Replace or change Stuff:</b> Everything is super easy to change! You can add new stuff without even knowing how to code! It is way easier if you know the basics tho'. <br />
+		<button onclick="showHideTutorial('replaceTutorial')">Show/Hide How to change/replace stuff Tutorial</button> <div id="replaceTutorial" class="hidden"> <b>Replace or change Stuff:</b> Everything is super easy to change! You can add new stuff without even knowing how to code! It is way easier if you know the basics tho'. <br />
 		- Graphics & Font: Replace the file you want to replace. Nothing more, it's that easy! However, it is recommended to choose square graphics (both sides got the same length) so it looks better. In case you changed a Font, maybe it's too big or too small, in that case: Open "CSS.css" with a editor (preferably a code editor but not required!), there you already see a bit of text in between some ===, that tells you what to do. <br />
 		- Add new Characters: Pretty easy, code editor highly recommened tho'! Anyway, open "index.html" and scroll down, at some point you should see some character names popping up, if you can't see them, look for a "&lt;option>" tag at the left side. Then just add a new row below the last character and before the "&lt;/select>" tag. Insert "&lt;option value="[yourcharacter]">[Your Character]&lt;/option>" (note that the first charcter name needs to be lowercase and the same name as your image (without .png at the end)), then scroll down a bit more and do the same. You need to do that 5 times, the last one is almost at the very end. After that, put the character image inside the "img" folder and a COM version inside the "com" folder and everything should work. <br />
 		- Add new counters: Tutorial coming soon&trade;, it's a pretty long tutorial and currently just don't have motivation to write that... however, if there aren't too many requests (probably not), just contact me and I can do it for you if I <i>kinda</i> like the idea. Also, keep in mind you can just replace the graphics of another counter if you don't need that one! <!--Open "index.html" with a editor and you see a tutorial at the top, may seem very complicated, but isn't once you know how it works! Oh, it also requires A LOT of copy paste and editing single numbers!--> </div> <br /> <br />
 
+		<button onclick="showHideTutorial('twitchTutorial')">Show/Hide Twitch Tutorial:</button> <div id="twitchTutorial" class="hidden"> <b>Twitch Tutorial:</b> Before anything else, you need to login, click on "Show/Hide twitch settings" and then enter your data (a link to get a oauth token is below, if it automatically gives you one without the need to log into twitch, open in it a private browser tab and try again (this is so you arent logged into twitch)), if you don't have a bot you can also use your own account. <b>MPO does not take ANY data from your account, it only reads and writes chat messages with it!</b> <br />
+		Now everything should already work, check out the commands site for all commands, it's linked below. This whole command system has a small permission system, you can give users the normal and admin permissions, check the commands site out for that, if you want to grant permament permission to someone, open "message.js" in a text editor and there's a small tutorial at the top. If you want to change or disable the chat messages, also open "message.js", tutorial for that is at the top too. </div> <br /> <br />
+
+
 		<b>Planned Features:</b> If something isn't here and you feel like it could be useful, just contact me and I may add it some day! <br />
-		- Text Output: Highly customizable text output to post all counters in a Twitch Chat or something <br />
 		- Mobile support (not going to happen) <br /> <br />
+
+		<a href="https://blueyoshi9000.github.io/MarioPartyOverlay/commands.html">Online Commands site</a> <br />
+		<a href="commands.html">Offline Commands site</a> <br /> <br />
+
+		<a href="https://twitchapps.com/tmi/" target="_blank">Get Twitch Token</a> <br /> <br />
 
 		Created by <a href="https://www.twitter.com/blueyoshi9000">blueYOSHI9000</a> | Version 2.0 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md"> (Changelog)</a> <br />
 		Character Sprites ripped by <a href="https://www.vg-resource.com/user-7.html"> Random Talking Bush </a> and edited by <a href="https://twitter.com/Der_RicoDexter"> RicoDexter</a> & <a href="https://www.twitter.com/blueyoshi9000">blueYOSHI9000</a> <br />
 		<a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx"> Standard font</a> <br />
-		<a href="http://interactjs.io/"> Interact.js</a> (the thing that enables drag 'n' drop)
+		<a href="http://interactjs.io/"> Interact.js</a> (the thing that enables drag 'n' drop) <br />
+		<a href="https://github.com/Skhmt/tapic"> tapic.js</a> (the thing that does everything twitch related)
 	</div>
 
 	<!-- Selection #1 -->
@@ -73,7 +78,7 @@
 		<tr>
 			<td>
 				<b class="whiteText""> P1: </b>
-				<select name="p1Select" id="p1Select" autocomplete="off" onchange="imgSelect('p1')">
+				<select name="p1Select" id="p1Select" autocomplete="off" onchange="imgSelect('1')">
 					<option value="mario" selected>Mario</option>
 					<option value="luigi">Luigi</option>
 					<option value="peach">Peach</option>
@@ -97,7 +102,7 @@
 					<option value="koopakid">Koopa Kid</option>
 				</select>
 			</td>
-			<td> <b class="comText"> P1: </b> <input type="checkbox" id="p1Com" autocomplete="off" class="checkbox" onchange="imgSelect('p1')"> </td>
+			<td> <b class="comText"> P1: </b> <input type="checkbox" id="p1Com" autocomplete="off" class="checkbox" onchange="imgSelect('1')"> </td>
 			<td>
 				<b class="inputText" id="p1HappeningInputTextBefore"> P1:</b>
 				<input type="button" value="-" onclick="counterButtons('p1', 'M', 'Happening')" id="p1HappeningInputM">
@@ -119,7 +124,7 @@
 		<tr>
 			<td>
 				<b class="whiteText"> P2: </b>
-				<select name="p2Select" id="p2Select" autocomplete="off" onchange="imgSelect('p2')">
+				<select name="p2Select" id="p2Select" autocomplete="off" onchange="imgSelect('2')">
 					<option value="mario">Mario</option> 
 					<option value="luigi" selected>Luigi</option>
 					<option value="peach">Peach</option>
@@ -143,7 +148,7 @@
 					<option value="koopakid">Koopa Kid</option>
 				</select>
 			</td>
-			<td> <b class="comText"> P2: </b> <input type="checkbox" id="p2Com" class="checkbox" onchange="imgSelect('p2')"> </td>
+			<td> <b class="comText"> P2: </b> <input type="checkbox" id="p2Com" class="checkbox" onchange="imgSelect('2')"> </td>
 			<td>			
 				<b class="inputText" id="p2HappeningInputTextBefore"> P2:</b>
 				<input type="button" value="-" onclick="counterButtons('p2', 'M', 'Happening')" autocomplete="off" id="p2HappeningInputM">
@@ -190,7 +195,7 @@
 					<option value="koopakid">Koopa Kid</option>
 				</select>
 			</td>
-			<td> <b class="comText"> P3: </b> <input type="checkbox" id="p3Com" class="checkbox" onchange="imgSelect('p3')"> </td>
+			<td> <b class="comText"> P3: </b> <input type="checkbox" id="p3Com" class="checkbox" onchange="imgSelect('3')"> </td>
 			<td>
 				<b class="inputText" id="p3HappeningInputTextBefore"> P3:</b>
 				<input type="button" value="-" onclick="counterButtons('p3', 'M', 'Happening')" autocomplete="off" id="p3HappeningInputM">
@@ -213,7 +218,7 @@
 		<tr>
 			<td>
 				<b class="whiteText"> P4: </b>
-				<select name="p4Select" id="p4Select" autocomplete="off" onchange="imgSelect('p4')">
+				<select name="p4Select" id="p4Select" autocomplete="off" onchange="imgSelect('4')">
 					<option value="mario">Mario</option> 
 					<option value="luigi">Luigi</option>
 					<option value="peach">Peach</option>
@@ -237,7 +242,7 @@
 					<option value="koopakid">Koopa Kid</option>
 				</select>
 			</td>
-			<td> <b class="comText"> P4: </b> <input type="checkbox" id="p4Com" class="checkbox" onchange="imgSelect('p4')"> </td>
+			<td> <b class="comText"> P4: </b> <input type="checkbox" id="p4Com" class="checkbox" onchange="imgSelect('4')"> </td>
 			<td>
 				<b class="inputText" id="p4HappeningInputTextBefore"> P4:</b>
 				<input type="button" value="-" onclick="counterButtons('p4', 'M', 'Happening')" autocomplete="off" id="p4HappeningInputM">
@@ -427,7 +432,7 @@
 				<input type="button" value="+" onclick="counterButtons('p3', 'P', 'SpinSpace')" id="p3SpinSpaceInputP" class="spinSpaceInput" style="display: none;">
 			</td>
 			<td>
-				<b class="inputText" id="p3MiniZtarInputTextBefore" style="display: none;"> P4:</b>
+				<b class="inputText" id="p3MiniZtarInputTextBefore" style="display: none;"> P3:</b>
 				<input type="button" value="-5" onclick="counterButtons('p3', 'M5', 'MiniZtar')" class="miniZtarInput" id="p3MiniZtarInputM10" style="display: none;">
 				<input type="button" value="-" onclick="counterButtons('p3', 'M', 'MiniZtar')" class="miniZtarInput" id="p3MiniZtarInputM" style="display: none;">
 				<input type="number" value="0" class="numInput" id="p3MiniZtarInput" autocomplete="off" style="display: none;">
@@ -512,7 +517,7 @@
 				<input type="button" value="-" onclick="counterButtons('', 'M', 'curTurn')"> <input type="number" value="1" class="numInput" id="curTurnInput" autocomplete="off"> <input type="button" value="+" onclick="counterButtons('', 'P', 'curTurn')">
 			</td>
 			<td>
-				<b class="inputText"> Coin Star:</b>
+				<b class="inputText"> Coin Star: </b>
 				<input type="button" value="-10" onclick="counterButtons('', 'M10', 'coinStar')">
 				<input type="button" value="-" onclick="counterButtons('', 'M', 'coinStar')">
 				<input type="number" value="10" class="numInput" id="coinStarInput" autocomplete="off">
@@ -544,6 +549,9 @@
 					<option value="koopakid">Koopa Kid</option>
 				</select>
 			</td>
+			<td>
+				<button class="button" onclick="twitchShowHide()" class="inputButton"> Show/Hide twitch settings </button>
+			</td>
 		</tr>
 		<tr>
 			<td>
@@ -557,7 +565,39 @@
 		</tr>
 	</table>
 
-	<!-- Text output -->
+	<!-- Twitch -->
+	<div id="twitchDiv" class="hidden">
+		<div id="changesBorderBottom"></div>
+		<table class="selectionTable">
+			<tr>
+				<td>
+					<b class="whiteText"> Twitch Bot Username: </b> <input id="twitchNameInput" value="">
+				</td>
+				<td>
+					<b class="inputText"> Add User temporary to whitelist: </b> <input id="tempWhitelist"> <button onclick="addWhitelist()"> Add </button>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b class="whiteText"> Twitch Bot Oauth Token: </b> <input type="Password" id="twitchPasswordInput" value="">
+				</td>
+				<td>
+					<b class="inputText"> Add Admin temporary to whitelist: </b> <input id="tempAdmin"> <button onclick="addAdmin()"> Add </button>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<b class="whiteText"> Twitch Channel: </b> <input id="twitchChannelInput" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button class="button" onclick="connectTwitch()"> Connect </button> <!--b class='wrong'>&#10006;</b> <b class='right'>&#10004;</b-->
+				</td>
+			</tr>
+		</table>
+		<div id="debugDiv"></div>
+	</div>
 
 	<!-- Mario Party Changes -->
 	<div id="changesBorderBottom"></div>
@@ -589,6 +629,7 @@
 
 		<input type="checkbox" id="slowStarActivated" onchange="slowStar()"> <b class="whiteText" id="slowStarActivatedText"> Slow (MP 9) on/off </b>
 	</div>
+</div>
 
 	<!-- Player Images & Happening & Minigame & Running Display -->
 	<div class="player"> <img src="img/mario.png" class="characterImg draggable" id="p1Img"> <br />
@@ -664,6 +705,8 @@
 	<input class="inputVariable" value="0" id="specialDiceVar">
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/interact.js/1.2.6/interact.min.js"></script>
+	<script src="tapic.min.js"></script>
+	<script src="messages.js"></script>
 	<script src="JS.js"></script>
 </body>
 </html>

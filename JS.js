@@ -323,13 +323,13 @@ function minigameWins () {
 
 //Changes Character Images
 function imgSelect(playerNum) {
-	var character = document.getElementById(playerNum + 'Select').value
-	if (document.getElementById(playerNum + 'Com').checked) {
+	var character = document.getElementById('p' + playerNum + 'Select').value
+	if (document.getElementById('p' + playerNum + 'Com').checked) {
 		var finalImage = "img/" + "com/" + character + ".png"
 	} else {
 		var finalImage = "img/" + character + ".png"
 	}
-	document.getElementById(playerNum + 'Img').src = finalImage
+	document.getElementById('p' + playerNum + 'Img').src = finalImage
 }
 
 //Changes Displays & Input
@@ -419,6 +419,7 @@ function coinStar () {
 function coinStarCharImg() {
 	var character = document.getElementById('coinStarCharSelect').value
 	var finalImage = "img/" + character + ".png"
+
 	document.getElementById('coinStarCharacter').src = finalImage
 }
 
@@ -494,6 +495,510 @@ function changeNames () {
 	}
 }
 
+// === Twitch Settings ===
+
+//Shows and hides the Twitch settings
+function twitchShowHide () {
+	var div = document.getElementById('twitchDiv').classList
+	console.log(div)
+	if (div == 'hidden') {
+		document.getElementById('twitchDiv').classList.add('visible');
+		document.getElementById('twitchDiv').classList.remove('hidden');
+	} else {
+		document.getElementById('twitchDiv').classList.remove('visible');
+		document.getElementById('twitchDiv').classList.add('hidden');
+	}
+}
+
+//Connects to Twitch (only executed once)
+function connectTwitch (botName, oauth, channelName) {
+	if (botName, oauth, channelName) {} else {
+		var botName = document.getElementById('twitchNameInput').value
+		var oauth = document.getElementById('twitchPasswordInput').value
+		var channelName = document.getElementById('twitchChannelInput').value
+	}
+
+	TAPIC.setup(oauth, function (botName) {
+
+		
+		TAPIC.setRefreshRate(10); 
+
+		TAPIC.joinChannel(channelName, function () {
+		sendMsg('connected')
+		TAPIC.listen('message', function (e) { newMessage(e.from, e.text, e.streamer, e.mod)})
+			
+		});
+	});
+}
+
+//Receives new Twitch Messages and checks if it's a MPO command
+function newMessage (user, text, streamer, mod) {
+	text = text.toLowerCase()
+	var lowerUser = user.toLowerCase()
+	//console.log('Username: ' + lowerUser + ', text: ' + text)
+
+	if (text.startsWith('!mpoa') && (arrCon(lowerUser, adminlist) || streamer == true || mod == true)) {
+		var arrText = text.split(' ')
+		editAdminMessage(arrText, lowerUser)
+	} else if (text.startsWith('!mpoa')) {
+		sendMsg('noPermission', user)
+	} else if (text.startsWith('!mpo') && (arrCon(lowerUser, userWhitelist) || streamer == true || mod == true)) {
+		var arrText = text.split(' ')
+		editMessage(arrText, lowerUser)
+
+	} else if (text.startsWith('!mpo')) {
+		sendMsg('noPermission', user)
+	}
+}
+
+//Checks the admin MPO commands
+function editAdminMessage (text, user) {
+	var action = 'nothing'
+	var player = 1
+
+	switch (text[1]) {
+		case 'character':
+		case 'char':
+			action = 'character'
+			break;
+		case 'computer':
+		case 'com':
+			action = 'computer'
+			break;
+		case 'maxturn':
+		case 'max':
+			action = 'maxturn'
+			break;
+		case 'activate':
+		case 'deactivate':
+		case 'enable':
+		case 'disable':
+			action = 'activate'
+			break;
+		case 'highlightcolor':
+		case 'highlight':
+			action = 'highlight'
+			break;
+		case 'adduser':
+			addWhitelist(text[2])
+			sendMsg('completed', user)
+			break;
+		case 'addadmin':
+			addAdmin(text[2])
+			sendMsg('completed', user)
+			break;
+		case 'addboth':
+		case 'adduseradmin':
+		case 'addadminuser':
+			addWhitelist(text[2])
+			addAdmin(text[2])
+			sendMsg('completed', user)
+			break;
+		default:
+			sendMsg('invalid', user, text[2])
+			return
+			break;
+	}
+
+	if (action == 'character') {
+		switch (text[2]) {
+		case '1':
+		case 'p1':
+			player = 1
+			break;
+		case '2':
+		case 'p2':
+			player = 2
+			break;
+		case '3':
+		case 'p3':
+			player = 3
+			break;
+		case '4':
+		case 'p4':
+			player = 4
+			break;
+		default:
+			sendMsg('invalid', user, text[2])
+			return
+			break;
+		}
+		var text4 = text[4]
+
+		if (text4 == 'com' || text4 == 'c') {
+			document.getElementById('p' + player + 'Com').checked = true
+		} else if (text4 == 'nocom' || text4 == 'nc' || text4 == 'n') {
+			document.getElementById('p' + player + 'Com').checked = false
+		}
+
+		document.getElementById('p' + player + 'Select').value = text[3]
+		imgSelect(player)
+		sendMsg('completed', user)
+	}
+
+	if (action == 'computer') {
+		switch (text[2]) {
+		case '1':
+		case 'p1':
+			player = 1
+			break;
+		case '2':
+		case 'p2':
+			player = 2
+			break;
+		case '3':
+		case 'p3':
+			player = 3
+			break;
+		case '4':
+		case 'p4':
+			player = 4
+			break;
+		default:
+			sendMsg('invalid', user, text[2])
+			return
+			break;
+		}
+
+		if (document.getElementById('p' + player + 'Com').checked == false) {
+			document.getElementById('p' + player + 'Com').checked = true
+		} else if (document.getElementById('p' + player + 'Com').checked == true) {
+			document.getElementById('p' + player + 'Com').checked = false
+		}
+		imgSelect(player)
+		sendMsg('completed', user)
+	}
+	if (action == 'maxturn') {
+		var number = text[2].slice(1)
+		var addNum = number++
+		
+		if (text[2].startsWith('p') || text[2].startsWith('+')) {
+			for (let num = 0; num < addNum; num++) {
+				document.getElementById('maxTurnInput').value++
+				turns()
+				sendMsg('completed', user)
+			}
+		} else if (text[2].startsWith('m') || text[2].startsWith('-')) {
+			for (let num = 0; num < addNum; num++) {
+				document.getElementById('maxTurnInput').value--
+				turns()
+				sendMsg('completed', user)
+			}
+		} else if (isNaN(text[2]) == false) {
+			document.getElementById('maxTurnInput').value = text[2]
+			turns()
+			sendMsg('completed', user)
+		} else {
+			sendMsg('invalid', user, text[2])
+		}
+	}
+
+	if (action == 'activate') {
+		switch (text[2]) {
+		case 'happening':
+		case 'hap':
+			displayOnOff('Happening', 'happening', 'true')
+			break;
+		case 'minigame':
+		case 'minigames':
+		case 'mini':
+			displayOnOff('Minigame', 'minigame')
+			break;
+		case 'minigamewin':
+		case 'minigamewins':
+		case 'miniwin':
+		case 'miniwins':
+			if (document.getElementById('minigameWinsActivated').checked == false) {
+				document.getElementById('minigameWinsActivated').checked = true
+			} else if (document.getElementById('minigameWinsActivated').checked == true) {
+				document.getElementById('minigameWinsActivated').checked = false
+			}
+			minigameWins()
+			break;
+		case 'redspace':
+		case 'redspaces':
+		case 'red':
+			displayOnOff('RedSpace', 'redSpace', 'true')
+			break;
+		case 'running':
+		case 'run':
+			displayOnOff('Running', 'running')
+			break;
+		case 'shopping':
+		case 'shop':
+			displayOnOff('Shopping', 'shopping')
+			break;
+		case 'orb':
+		case 'orbs':
+			displayOnOff('Orb', 'orb', 'true')
+			break;
+		case 'candy':
+		case 'candies':
+			displayOnOff('Candy', 'candy', 'true')
+			break;
+		case 'spinspace':
+		case 'spinspaces':
+		case 'spin':
+			displayOnOff('SpinSpace', 'spinSpace', 'true')
+			break;
+		case 'minus':
+		case 'miniztar':
+		case 'miniztars':
+		case 'ztars':
+		case 'ztar':
+			displayOnOff('MiniZtar', 'miniZtar')
+			break;
+		case 'specialdiceblock':
+		case 'specialdice':
+		case 'dice':
+			displayOnOff('SpecialDice', 'specialDice', 'true')
+			break;
+		case 'slowstar':
+		case 'slow':
+			if (document.getElementById('slowStarActivated').checked == false) {
+				document.getElementById('slowStarActivated').checked = true
+			} else if (document.getElementById('slowStarActivated').checked == true) {
+				document.getElementById('slowStarActivated').checked = false
+			}
+			slowStar()
+			slowHighlight(highlightColor)
+			break;
+		default:
+			sendMsg('invalid', user, text[2])
+			return
+			break;
+		}
+		sendMsg('completed', user)
+	}
+
+	if (action == 'highlight') {
+		if (text[2] == 'on') {
+			document.getElementById('enableHighlight').checked = true
+			resetHighlights()
+		} else if (text[2] == 'off') {
+			document.getElementById('enableHighlight').checked = false
+			resetHighlights()
+		} else if (text[2] != null) {
+				var color = text[2]
+			//}
+			document.getElementById('highlightColor').value = color
+			highlightColor = color
+
+			if (document.getElementById('enableHighlight').checked == true) {
+				resetHighlights()
+			}
+
+			if (document.getElementById('slowStarActivated').checked == true) {
+				slowHighlight(highlightColor)
+			}
+		} else {
+			sendMsg('invalid', user, text[2])
+		}
+		sendMsg('completed', user)
+	}
+}
+
+//Checks the normal MPO commands and updates the counters
+function editMessage (text, user) {
+	console.log('Array: ' + text)
+	var player = 1
+	var counter = 'Happening'
+
+	switch (text[1]) {
+		case '1':
+		case 'p1':
+			player = 1
+			break;
+		case '2':
+		case 'p2':
+			player = 2
+			break;
+		case '3':
+		case 'p3':
+			player = 3
+			break;
+		case '4':
+		case 'p4':
+			player = 4
+			break;
+		case 'turn':
+		case 'turns':
+			turnCoinMessage('turn', text)
+			return
+			break;
+		case 'coin':
+		case 'coins':
+		case 'coinstar':
+			turnCoinMessage('coin', text)
+			return
+			break;
+		case 'command':
+		case 'commands':
+		case 'help':
+			sendMsg('help', user)
+			return
+			break;
+		default:
+			sendMsg('invalid', user, text[1])
+			return
+			break;
+	}
+	switch (text[2]) {
+		case 'happening':
+		case 'hap':
+			counter = 'Happening'
+			break;
+		case 'minigame':
+		case 'minigames':
+		case 'mini':
+			counter = 'Minigame'
+			break;
+		case 'redspace':
+		case 'redspaces':
+		case 'red':
+			counter = 'RedSpace'
+			break;
+		case 'running':
+		case 'run':
+			counter = 'Running'
+			break;
+		case 'shopping':
+		case 'shop':
+			counter = 'Shopping'
+			break;
+		case 'orb':
+		case 'orbs':
+			counter = 'Orb'
+			break;
+		case 'candy':
+		case 'candies':
+			counter = 'Candy'
+			break;
+		case 'spinspace':
+		case 'spinspaces':
+		case 'spin':
+			counter = 'SpinSpace'
+			break;
+		case 'minus':
+		case 'miniztar':
+		case 'miniztars':
+		case 'ztars':
+		case 'ztar':
+			counter = 'MiniZtar'
+			break;
+		case 'specialdiceblock':
+		case 'specialdice':
+		case 'dice':
+			counter = 'SpecialDice'
+			break;
+		default:
+			sendMsg('invalid', user, text[2])
+			return
+			break;
+	}
+	
+	if (text[3]) {} else {
+		sendMsg('lastMissing', user)
+	}
+	
+
+	var number = text[3].slice(1)
+	var addNum = number++
+	var text3 = text[3]
+
+	if (text[3].startsWith('p') || text[3].startsWith('+')) {
+		for (let num = 0; num < addNum; num++) {
+			document.getElementById('p' + player + counter + 'Input').value++
+		}
+	} else if (text[3].startsWith('m') || text[3].startsWith('-')) {
+		for (let num = 0; num < addNum; num++) {
+			document.getElementById('p' + player + counter + 'Input').value--
+		}
+	} else if (isNaN(text[3]) == false) {
+		document.getElementById('p' + player + counter + 'Input').value = text[3]
+	} else {
+		sendMsg('invalid', user, text[2])
+	}
+
+	displayChange(player, counter)
+
+	if (document.getElementById('enableHighlight').checked == true) {
+		highlight(counter, highlightColor)
+	}
+
+	if (document.getElementById('slowStarActivated').checked == true) {
+		slowHighlight(highlightColor)
+	}
+	sendMsg('completed', user)
+}
+
+//Checks the normal MPO commands if it's turn/coin star related
+function turnCoinMessage (type, text) {
+	var number = text[2].slice(1)
+
+	var addNum = number++
+	if (type == 'turn') {
+		if (text[2].startsWith('p') || text[2].startsWith('+')) {
+			for (let num = 0; num < addNum; num++) {
+				document.getElementById('curTurnInput').value++
+			}
+		} else if (text[2].startsWith('m') || text[2].startsWith('-')) {
+			for (let num = 0; num < addNum; num++) {
+				document.getElementById('curTurnInput').value--
+			}
+		} else if (isNaN(text[2]) == false) {
+			document.getElementById('curTurnInput').value = text[2]
+		}
+		turns()
+	}
+
+	if (type == 'coin') {
+		if (text[2].startsWith('p') || text[2].startsWith('+')) {
+			for (let num = 0; num < addNum; num++) {
+				document.getElementById('coinStarInput').value++
+			}
+		} else if (text[2].startsWith('m') || text[2].startsWith('-')) {
+			for (let num = 0; num < addNum; num++) {
+				document.getElementById('coinStarInput').value--
+			}
+		} else if (isNaN(text[2]) == false) {
+			document.getElementById('coinStarInput').value = text[2]
+		}
+
+		var test = text[3]
+		if (test) {
+			document.getElementById('coinStarCharSelect').value = text[3]
+			coinStarCharImg()
+		}
+		coinStar()
+	}
+}
+
+//Add temporary to whitelist
+function addWhitelist (user) {
+	if (user) {
+		userWhitelist.push(user)
+	} else {
+		var newUser = document.getElementById('tempWhitelist').value
+		userWhitelist.push(newUser)
+	}
+}
+
+function addAdmin (admin) {
+	if (admin) {
+		adminlist.push(admin)
+	} else {
+		var newUser = document.getElementById('tempAdmin').value
+		adminlist.push(newUser)
+	}
+}
+
+//Array contains
+function arrCon(needle, arrhaystack)
+{
+    return (arrhaystack.indexOf(needle) > -1);
+}
+
 //Background
 var bgImgOn = 1
 function bgOnOff ()
@@ -508,7 +1013,7 @@ function bgOnOff ()
 	}
 }
 
-//Deactivate MP9
+//Get Variable in URL
 function getUrl(variable) {
 	var query = window.location.search.substring(1);
 	var vars = query.split("&");
@@ -519,10 +1024,12 @@ function getUrl(variable) {
  	return(false);
 }
 
+//Calls functions that check the URL
 window.onload = function() {
 	noMP9()
 };
 
+//Deactivates MP9
 function noMP9 () {
 	var playerNum = 1
 

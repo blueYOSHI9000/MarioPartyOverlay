@@ -13,11 +13,18 @@ You can download this through Github, however, then you still require internet s
 Created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000) | Version 1.3.1 (Changelog at the bottom)  
 Character Sprites ripped by [Random Talking Bush](https://www.vg-resource.com/user-7.html) and edited by [RicoDexter](https://twitter.com/Der_RicoDexter) & [blueYOSHI9000](https://www.twitter.com/blueyoshi9000yt)
 
-[Font](http://www.mediafire.com/file/phz4t7pyqqbqxou/Mario+Party+Overlay.zip)
+[Font](https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx)
 
-[Interact.js](http://interactjs.io/) (the thing that enables drag 'n' drop)
+[Interact.js](http://interactjs.io/) (the thing that enables drag 'n' drop)  
+[tapic.js](https://github.com/Skhmt/tapic) (the thing that does everything twitch related)
 
 # Changelog
+
+v3.0
+- Added: Twitch chat interaction, change everything through chat commands
+- Added: Twitch permission system so only accepted users can change stuff
+- Added: Option to use MPO in OBS' Browser Source (requires Twitch to do so tho')
+- Fixed: Wrong font link in this file
 
 v2.0
 - Added: Option to change the counter highlighting color
