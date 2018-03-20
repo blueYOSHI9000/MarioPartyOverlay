@@ -35,7 +35,7 @@ function sendMsg (action, user, error) {
 	if (action == 'connected') {
 
 		// = Connected message = Shows up when MPO is connected to twitch | Can't use "user" or "error"
-		send('MPO has succesfully connected to Twitch, please use the offline version of this, link is on the github page, else it could slow down due to Twitch API limit.')
+		send('MPO has succesfully connected to Twitch. Please use the offline version of this: link is on the github page, else it could slow down due to Twitch API limit.')
 	}
 
 	// === DISABLE MESSAGES ===
