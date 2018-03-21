@@ -804,46 +804,8 @@ function editMessage (text, user) {
 	var player = 1
 	var counter = 'Happening'
 
+
 	switch (text[1]) {
-		case '1':
-		case 'p1':
-			player = 1
-			break;
-		case '2':
-		case 'p2':
-			player = 2
-			break;
-		case '3':
-		case 'p3':
-			player = 3
-			break;
-		case '4':
-		case 'p4':
-			player = 4
-			break;
-		case 'turn':
-		case 'turns':
-			turnCoinMessage('turn', text)
-			return
-			break;
-		case 'coin':
-		case 'coins':
-		case 'coinstar':
-			turnCoinMessage('coin', text)
-			return
-			break;
-		case 'command':
-		case 'commands':
-		case 'help':
-			sendMsg('help', user)
-			return
-			break;
-		default:
-			sendMsg('invalid', user, text[1])
-			return
-			break;
-	}
-	switch (text[2]) {
 		case 'happening':
 		case 'hap':
 			counter = 'Happening'
@@ -891,6 +853,46 @@ function editMessage (text, user) {
 		case 'dice':
 			counter = 'SpecialDice'
 			break;
+		case 'coin':
+		case 'coins':
+		case 'coinstar':
+			turnCoinMessage('coin', text)
+			return
+			break;
+		case 'command':
+		case 'commands':
+		case 'help':
+			sendMsg('help', user)
+			return
+			break;
+		case 'turn':
+		case 'turns':
+			turnCoinMessage('turn', text)
+			return
+			break;
+		default:
+			sendMsg('invalid', user, text[1])
+			return
+			break;
+	}
+
+	switch (text[2]) {
+		case '1':
+		case 'p1':
+			player = 1
+			break;
+		case '2':
+		case 'p2':
+			player = 2
+			break;
+		case '3':
+		case 'p3':
+			player = 3
+			break;
+		case '4':
+		case 'p4':
+			player = 4
+			break;
 		default:
 			sendMsg('invalid', user, text[2])
 			return
@@ -903,6 +905,9 @@ function editMessage (text, user) {
 	
 
 	var number = text[3].slice(1)
+	if (number) {} else {
+		number = 1
+	}
 	var addNum = number++
 	var text3 = text[3]
 
@@ -935,7 +940,9 @@ function editMessage (text, user) {
 //Checks the normal MPO commands if it's turn/coin star related
 function turnCoinMessage (type, text) {
 	var number = text[2].slice(1)
-
+	if (number) {} else {
+		number = 1
+	}
 	var addNum = number++
 	if (type == 'turn') {
 		if (text[2].startsWith('p') || text[2].startsWith('+')) {
@@ -972,6 +979,7 @@ function turnCoinMessage (type, text) {
 		}
 		coinStar()
 	}
+	sendMsg('completed', user)
 }
 
 //Add temporary to whitelist
