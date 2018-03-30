@@ -339,6 +339,7 @@ function displayChange (playerNum, counter) {
 		document.getElementById('p' + playerNum + counter + 'Text').innerHTML=num;
 	} else if (num && num <= 0) {
 		document.getElementById('p' + playerNum + counter + 'Input').value = 0
+		document.getElementById('p' + playerNum + counter + 'Text').innerHTML=0
 	}
 }
 
