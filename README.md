@@ -6,11 +6,11 @@ Mario Party Overlay is a (offline-)website to display which character gets the b
 **[Website (without anything MP 9&10 related)](https://blueyoshi9000.github.io/MarioPartyOverlay/?no9=1)**
 
 ## Download
-You can download this through Github, however, then you still require internet since some files aren't included here and instead load them from a different website.
+You can download this for offline use, the Twitch features (obviously) still require internet, everything else works perfectly fine without it.
 [Download](https://github.com/blueYOSHI9000/MarioPartyOverlay/releases) (just click on the .zip file)
 
 # Credits
-Created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000) | Version 1.3.1 (Changelog at the bottom)  
+Created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000) 
 Character Sprites ripped by [Random Talking Bush](https://www.vg-resource.com/user-7.html) and edited by [RicoDexter](https://twitter.com/Der_RicoDexter) & [blueYOSHI9000](https://www.twitter.com/blueyoshi9000yt)
 
 [Font](https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx)
