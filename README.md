@@ -32,7 +32,7 @@ v2.0
 
 v1.3.1
 - Added: Option to replace the Explanation Text with the Bonus Star names
-- Changed: Everything, counters update immediately and should have less lag overall on slower PCs
+- Changed: Counters now update immediately and should have less lag overall on slower PCs
 
 v1.3 
 - Added: MP10 Characters
