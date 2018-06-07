@@ -4,7 +4,6 @@ about: Create a report to help us improve
 
 ---
 
-(If using it offline, be sure that your using the newest version, bugs might already be fixed)
 **Describe the bug**
 A clear and concise description of what the bug is.
 
