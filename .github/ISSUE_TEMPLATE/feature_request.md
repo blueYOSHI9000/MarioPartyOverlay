@@ -4,7 +4,6 @@ about: Suggest an idea for this project
 
 ---
 
-(If using it offline, be sure that your using the newest version, your feature might already be added)
 **Is your feature request related to a problem? Please describe.**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
 
