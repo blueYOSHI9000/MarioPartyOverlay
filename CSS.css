@@ -23,23 +23,27 @@ src: url("font.ttf");
 }
 
 
-a:visited {
-	color: #000077;
-}
-.specialText {
-	font-family: 'Mario';
-	color: white;
-}
+
 .hidden {
 	display: none;
 }
 .visible {
 	display: block;
 }
-.characterImg {
-	margin-right: 50px;
-	height: 120px;
+
+.inputVariable {
+	display: none;
 }
+
+/* == Global == */
+.whiteText {
+	color: white;
+}
+.marginLeft {
+	padding-left: 50px;
+}
+
+/* == Counters == */
 .player {
 	float: left;
 	margin-top: 30px;
@@ -48,30 +52,78 @@ a:visited {
 	height: 35px;
 	margin-left: 15px;
 }
-.whiteText {
-	color: white;
+.characterImg {
+	margin-right: 50px;
+	height: 120px;
 }
-.grayText {
-	font-family: arial;
-	line-height: 1.3;
-	color: #E4E4E4;
-	background-color: rgba(0, 0, 0, 0.3);
+
+#coinStar {
+	height: 35px;
+	margin-left: 30px;
+}
+#coinStarCharacter {
+	height: 40px;
+	position: relative;
+	top: 3px;
+}
+#coinStarText {
+	margin-left: 9px;
+}
+#coinStarDiv {
+	position: relative;
+	left: -150px;
+}
+
+/* == Coin star tie == */
+.coinStarTieDiv {
+	height: 40px;
+	position: relative;
+	display: inline;
+	left: 160px;
+	top: 10px;
+}
+#coinStarTie1 {
+	height: 28px;
+	position: relative;
+	top: -28px;
+	left: 33px;
+}
+#coinStarTie2 {
+	height: 28px;
+	position: relative;
+	left: 32px;
+	top: -28px;
+}
+#coinStarTie3 {
+	height: 28px;
+	position: relative;
+	left: -33px;
+}
+#coinStarTie4 {
+	height: 28px;
+	position: relative;
+	left: -35px;
+	top: 2px;
+}
+#coinStarTie5 {
+	height: 28px;
+	position: relative;
+	left: 84px;
+	top: 2px;
+}
+
+/* == Counter Inputs == */
+.firstInputText {
+	color: white;
 }
 .numInput {
 	width: 40px;
 }
+.turnInputText {
+	color: white;
+}
 .turnInput {
 	margin-bottom: 30px;
-}
-.inputText {
-	color: white;
-	margin-left: 50px;
-}
-.inputButton {
-	margin-left: 50px;
-}
-.firstInputText {
-	color: white;
 }
 .comText {
 	margin-left: 70px;
@@ -80,24 +132,13 @@ a:visited {
 .changesButton {
 	margin-right: 40px;
 }
-.turnInputText {
-	color: white;
+.changesBorder {
+	border-top: 2px;
+	border-color: white;
+	border-top-style: solid;
+	width: 973px;
+	margin-top: 3px;
 }
-.inputVariable {
-	display: none;
-}
-.explanationText {
-	color: white;
-	margin-left: 50px;
-}
-.right { 
-	color: green;   
-}
-.wrong {
-	color: red;   
-}
-
-
 
 #redSpaceButton {
 	margin-left: 40px;
@@ -108,33 +149,75 @@ a:visited {
 #minigameButton {
 	margin-right: 0px;
 }
-#changesBorderTop {
-	border-top: 2px;
-	border-color: white;
-	border-top-style: solid;
-	width: 973px;
-	margin-top: 3px;
+
+
+/* == Settings == */
+.settingsTitle {
+	color: #111111;
+	border-bottom: 2px black solid;
 }
-#changesBorderBottom {
-	border-top: 2px;
-	border-color: white;
-	border-top-style: solid;
-	width: 973px;
-	margin-top: 3px;
+.settingsText {
+	color: #111111;
 }
-#commandsBorder {
-	border-top: 7px;
-	border-color: white;
-	border-top-style: solid;
+.settingsNote {
+	color: #888888;
+}
+.resizableInput {
+	resize: both;
+	max-width: 500px;
+	min-width: 200px;
+	min-height: 70px;
+}
+.commandInput {
+	margin-top: 12px;
+	resize: both;
+	min-width: 400px;
+	min-height: 15px;
+	height: 15px;
+}
+
+#settings {
+	position: fixed;
+	left: 0;
+	top: 0;
 	width: 100%;
-	margin-top: 3px;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
 }
-#coinStar {
-	height: 35px;
-	margin-left: 30px;
+#settingsContent {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: #F3F3F3;
+	border: 3px solid #111111;
+	padding: 1rem 1.5rem;
+	border-radius: 0.5rem;
+	position: auto;
 }
-#coinStarCharacter {
-	height: 40px;
-	position: relative;
-	top: 3px;
+#settingsClose {
+	float: right;
+}
+
+/* == Tutorial == */
+#tutorial {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+#tutorialContent {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	border: 3px solid #111111;
+	border-radius: 0.5rem;
+	padding: 1rem 1.5rem;
+	background-color: #F3F3F3;
+}
+#tutorialClose {
+	float: right;
 }

@@ -1,46 +1,43 @@
-//Global Variables
-var highlightColor = '#ff0000'
+/*
+* Updates Input elements of the counters.
+* Is activated at each button press and updates the value from the Input elements.
+*
+* @param {number} player Which player should be updated.
+* @param {string} action What should be done.
+* @param {string} amount The amount that should be changed
+* @param {string} counter Which counter should be updated.
+*/
+function counterButtons (player, action, amount, counter) {
+	//console.log('Player: ' + player + ', action: ' + action + ', amount: ' + amount + ', counter: ' + counter)
+	if (amount == '') {
+			amount = 1
+		}
 
-//Input Buttons
-function counterButtons (player, button, counter) {
-	if (button == 'P10') {
-		for (let num = 0; num < 10; num++) {
-			document.getElementById(player + counter + 'Input').value++
+	if (counter != 'curTurn' && counter != 'maxTurn' && counter != 'coinStar') {
+
+		if (action == 'P') {
+			for (let num = 0; num < amount; num++) {
+				document.getElementById('p' + player + counter + 'Input').value++
+			}
+		} else if (action == 'M') {
+			for (let num = 0; num < amount; num++) {
+				document.getElementById('p' + player + counter + 'Input').value--
+			}
 		}
-	} else if (button == 'P6') {
-		for (let num = 0; num < 6; num++) {
-			document.getElementById(player + counter + 'Input').value++
-		}
-	} else if (button == 'P5') {
-		for (let num = 0; num < 5; num++) {
-			document.getElementById(player + counter + 'Input').value++
-		}
-	} else if (button == 'P') {
-		document.getElementById(player + counter + 'Input').value++
-	} else if (button == 'M') {
-		document.getElementById(player + counter + 'Input').value--
-	} else if (button == 'M5') {
-		for (let num = 0; num < 5; num++) {
-			document.getElementById(player + counter + 'Input').value--
-		}
-	} else if (button == 'M6') {
-		for (let num = 0; num < 6; num++) {
-			document.getElementById(player + counter + 'Input').value--
-		}
-	} else if (button == 'M10') {
-		for (let num = 0; num < 10; num++) {
-			document.getElementById(player + counter + 'Input').value--
+
+		displayChange(player, counter)
+	} else {
+		if (action == 'P') {
+			for (let num = 0; num < amount; num++) {
+				document.getElementById(counter + 'Input').value++
+			}
+		} else if (action == 'M') {
+			for (let num = 0; num < amount; num++) {
+				document.getElementById(counter + 'Input').value--
+			}
 		}
 	}
-	if (player == 'p1') {
-	displayChange(1, counter)
-	} else if (player == 'p2') {
-	displayChange(2, counter)
-	} else if (player == 'p3') {
-	displayChange(3, counter)
-	} else if (player == 'p4') {
-	displayChange(4, counter)
-	}
+
 
 	if (counter == 'coinStar') {
 		coinStar()
@@ -55,9 +52,16 @@ function counterButtons (player, button, counter) {
 	}
 }
 
-//On/Off Buttons
-function displayOnOff (counter, scounter, no10) {
-	//var displayNone = document.getElementById('p1' + counter + 'Display').name
+/*
+* Hides and shows settings to update the counters after pressing the "on/off" buttons.
+*
+* @param {string} counter Which counter settings should be hidden/shown.
+* @param {boolean} no10 If the counter has additional buttons like "+10" or "-5". True = no additional buttons.
+*/
+function displayOnOff (counter, no10, scounter) {
+	if (scounter) {} else {
+		var scounter = counter.toLowerCase()
+	}
 	var displayNone = parseInt(document.getElementById(scounter + 'Var').value);
 
 	var playerNum = 1
@@ -98,8 +102,7 @@ function displayOnOff (counter, scounter, no10) {
 		document.getElementById('p' + playerNum + counter + 'InputM').style = visible
 		document.getElementById('p' + playerNum + counter + 'InputP').style = visible
 
-		if (no10) {
-		} else {
+		if (no10 == true) {} else {
 			document.getElementById('p' + playerNum + counter + 'InputM10').style = visible
 			document.getElementById('p' + playerNum + counter + 'InputP10').style = visible
 		}
@@ -114,16 +117,25 @@ function displayOnOff (counter, scounter, no10) {
 	}
 }
 
-//Bonus star highlight
+/*
+* Resets or starts the highlighting feature by calling callHighlight().
+*/
+var highlightColor = '#ff0000'
 function resetHighlights () {
 	if (document.getElementById('enableHighlight').checked == false) {
-		startHighlight(true)
+		callHighlight(true)
 	} else {
-		startHighlight()
+		callHighlight()
 	}
 }
 
-function startHighlight (resetHighlights, changeColor) {
+/*
+* Calls highlight() for all counters to either reset/start the highlighting or to change the color of it.
+*
+* @param {boolean} resetHighlights If highlighting should be turned off.
+* @param {boolean} changeColor If the highlight color should be changed.
+*/
+function callHighlight (resetHighlights, changeColor) {
 	var originalHighlightColor = highlightColor
 
 	if (resetHighlights == true) {
@@ -135,8 +147,6 @@ function startHighlight (resetHighlights, changeColor) {
 	}
 
 	if (document.getElementById('enableHighlight').checked == true || resetHighlights) {
-		highlightOn = true
-		resetHighlights = false
 		if (document.getElementById('happeningVar').value == 1 ) {
 			highlight('Happening', highlightColor)
 		}
@@ -176,6 +186,12 @@ function startHighlight (resetHighlights, changeColor) {
 	highlightColor = originalHighlightColor
 }
 
+/*
+* Updates the highlighting for a certain counter in case the bonus star(s) has changed.
+*
+* @param {string} counter Which counter should be updated.
+* @param {string} color Which color the highlight should have.
+*/
 function highlight (counter, color) {
 	var counterP1 = document.getElementById('p1' + counter + 'Text').innerHTML
 	var counterP2 = document.getElementById('p2' + counter + 'Text').innerHTML
@@ -216,7 +232,9 @@ function highlight (counter, color) {
 	}
 }
 
-//Slow Star Display On/Off
+/*
+* Turns the slow star feature on or off.
+*/
 function slowStar () {
 	if (document.getElementById('runningVar').value == 0) {
 		displayOnOff('Running', 'running')
@@ -249,7 +267,11 @@ function slowStar () {
 	}
 }
 
-//Highlighting Slow & Running Star
+/*
+* Highlights the slow star.
+*
+* @param {string} color Which color the highlight should have.
+*/
 function slowHighlight (color) {
 		var counter = 'Running'
 
@@ -295,7 +317,9 @@ function slowHighlight (color) {
 		}
 }
 
-//Replaces Minigame Coins with Minigame Wins
+/*
+* Replaces minigame coins with minigame wins.
+*/
 function minigameWins () {
 	var activated = document.getElementById('minigameWinsActivated').checked
 	var playerNum = 1
@@ -303,8 +327,14 @@ function minigameWins () {
 
 	if (activated == true) {
 		source = 'img/minigamewins.png'
+		if (document.getElementById('changeNames').checked == false) {
+			document.getElementById('minigameExplanation').innerHTML = 'Minigame Wins:'
+		}
 	} else {
 		source = 'img/minigame.png'
+		if (document.getElementById('changeNames').checked == false) {
+			document.getElementById('minigameExplanation').innerHTML = 'Minigame Coins:'
+		}
 	}
 	
 	for (let num = 1; num < 5; num++) {
@@ -321,7 +351,11 @@ function minigameWins () {
 	}
 }
 
-//Changes Character Images
+/*
+* Changes Character Images.
+*
+* @param {number} playerNum Which player should be updated.
+*/
 function imgSelect(playerNum) {
 	var character = document.getElementById('p' + playerNum + 'Select').value
 	if (document.getElementById('p' + playerNum + 'Com').checked) {
@@ -330,9 +364,17 @@ function imgSelect(playerNum) {
 		var finalImage = "img/" + character + ".png"
 	}
 	document.getElementById('p' + playerNum + 'Img').src = finalImage
+
+	coinStarTie()
 }
 
-//Changes Displays & Input
+/*
+* Changes counter displays and input.
+* Gets fired from displayChange() which gets fired after updating a counter. Checks if the number is 0 or more, else sets it to 0, after that it updates the display.
+*
+* @param {number} playerNum Which player should get updated.
+* @param {string} counter Which counter should get updated.
+*/
 function displayChange (playerNum, counter) {
 	var num = document.getElementById('p' + playerNum + counter + 'Input').value
 	if (num && num >= 0) {
@@ -343,7 +385,9 @@ function displayChange (playerNum, counter) {
 	}
 }
 
-//Calls displayChange()
+/*
+* Calls displayChange() for every single counter and player.
+*/
 function callDisplayChange () {
 	var counter = 'Happening'
 	var playerNum = 1
@@ -386,18 +430,21 @@ function callDisplayChange () {
 	}
 }
 
-//Changes the Turns Display & Input
+/*
+* Changes turns displays and input.
+* Gets fired from displayChange() which gets fired after updating the turns. Checks if the number is 1 or more and that the current turn does not exceed the max turn, after that it updates the display.
+*/
 function turns () {
 	var curTurnVar = document.getElementById('curTurnInput').value
 	var maxTurnVar = document.getElementById('maxTurnInput').value
 
-	if (curTurnVar <= 0) {
-		document.getElementById('curTurnInput').value = 0
+	if (curTurnVar <= 1) {
+		document.getElementById('curTurnInput').value = 1
 	} else if (+curTurnVar > +maxTurnVar) {
 		document.getElementById('curTurnInput').value = maxTurnVar
 	}
-	if (+maxTurnVar < 1) {
-		document.getElementById('maxTurnInput').value = 0
+	if (maxTurnVar <= 5) {
+		document.getElementById('maxTurnInput').value = 5
 	}
 	var curTurnVar = document.getElementById('curTurnInput').value
 	var maxTurnVar = document.getElementById('maxTurnInput').value
@@ -406,7 +453,10 @@ function turns () {
 	document.getElementById('curTurnText').innerHTML= curTurnVar + '/' + maxTurnVar
 }
 
-//Changes the Coin Star Display
+/*
+* Updates the coin star display.
+* Gets fired from displayChange() which gets fired after updating the coin star. Checks if the number is 0 or more, after that it updates the display.
+*/
 function coinStar () {
 	var coinStarVar = document.getElementById('coinStarInput').value
 	if (coinStarVar && coinStarVar >= 0) {
@@ -416,15 +466,102 @@ function coinStar () {
 	}
 }
 
-//Changes Coin Star Image
-function coinStarCharImg() {
-	var character = document.getElementById('coinStarCharSelect').value
-	var finalImage = "img/" + character + ".png"
+/*
+* Updates the coin star display.
+*/
+function coinStarTie () {
+	document.getElementById('coinStarTie1').style.height = ''
+	document.getElementById('coinStarTie1').style.top = ''
+	document.getElementById('coinStarTie1').style.left = ''
 
-	document.getElementById('coinStarCharacter').src = finalImage
+	document.getElementById('coinStarTie4').style.height = ''
+	document.getElementById('coinStarTie4').style.top = ''
+	document.getElementById('coinStarTie4').style.left = ''
+
+	var player1 = document.getElementById('p1CoinStarTie').checked
+	var player2 = document.getElementById('p2CoinStarTie').checked
+	var player3 = document.getElementById('p3CoinStarTie').checked
+	var player4 = document.getElementById('p4CoinStarTie').checked
+
+	var character1 = document.getElementById('p1Select').value
+	var character2 = document.getElementById('p2Select').value
+	var character3 = document.getElementById('p3Select').value
+	var character4 = document.getElementById('p4Select').value
+
+	var tied = []
+
+	if (player1 == true) {
+		tied.push(character1)
+	}
+	if (player2 == true) {
+		tied.push(character2)
+	}
+	if (player3 == true) {
+		tied.push(character3)
+	}
+	if (player4 == true) {
+		tied.push(character4)
+	}
+
+	if (document.getElementById('questionForTie').checked == true && tied.length != 1 || tied.length == 0) {
+		document.getElementById('coinStarCharacter').src = 'img/question.png'
+
+		document.getElementById('coinStarTie1').src = 'img/tie.png'
+		document.getElementById('coinStarTie2').src = 'img/tie.png'
+		document.getElementById('coinStarTie3').src = 'img/tie.png'
+		document.getElementById('coinStarTie4').src = 'img/tie.png'
+		document.getElementById('coinStarTie5').src = 'img/tie.png'
+
+		} else if (tied.length == 1) {
+		document.getElementById('coinStarCharacter').src = 'img/' + tied[0] + '.png'
+
+		document.getElementById('coinStarTie1').src = 'img/tie.png'
+		document.getElementById('coinStarTie2').src = 'img/tie.png'
+		document.getElementById('coinStarTie3').src = 'img/tie.png'
+		document.getElementById('coinStarTie4').src = 'img/tie.png'
+		document.getElementById('coinStarTie5').src = 'img/tie.png'
+
+	} else if (tied.length == 2) {
+		document.getElementById('coinStarTie1').src = 'img/' + tied[0] + '.png'
+		document.getElementById('coinStarTie4').src = 'img/' + tied[1] + '.png'
+		document.getElementById('coinStarCharacter').src = 'img/tie.png'
+
+		document.getElementById('coinStarTie2').src = 'img/tie.png'
+		document.getElementById('coinStarTie3').src = 'img/tie.png'
+		document.getElementById('coinStarTie5').src = 'img/tie.png'
+
+		document.getElementById('coinStarTie1').style.height = '32px'
+		document.getElementById('coinStarTie1').style.top = '-24px'
+		document.getElementById('coinStarTie1').style.left = '42px'
+
+		document.getElementById('coinStarTie4').style.height = '32px'
+		document.getElementById('coinStarTie4').style.top = '-2px'
+		document.getElementById('coinStarTie4').style.left = '-31px'
+
+	} else if (tied.length == 3) {
+		document.getElementById('coinStarTie1').src = 'img/' + tied[0] + '.png'
+		document.getElementById('coinStarTie2').src = 'img/' + tied[1] + '.png'
+		document.getElementById('coinStarTie5').src = 'img/' + tied[2] + '.png'
+		document.getElementById('coinStarCharacter').src = 'img/tie.png'
+
+		document.getElementById('coinStarTie3').src = 'img/tie.png'
+		document.getElementById('coinStarTie4').src = 'img/tie.png'
+
+	} else if (tied.length == 4) {
+		document.getElementById('coinStarTie1').src = 'img/' + tied[0] + '.png'
+		document.getElementById('coinStarTie2').src = 'img/' + tied[1] + '.png'
+		document.getElementById('coinStarTie3').src = 'img/' + tied[2] + '.png'
+		document.getElementById('coinStarTie4').src = 'img/' + tied[3] + '.png'
+		document.getElementById('coinStarCharacter').src = 'img/tie.png'
+
+		document.getElementById('coinStarTie5').src = 'img/tie.png'
+
+	}
 }
 
-//Mario Party Changes Margin when nothing is there
+/*
+* Creates a extra margin in case not a single second row counter is activated.
+*/
 function changesMargin () {
 	var running = document.getElementById('runningVar').value
 	var shopping = document.getElementById('shoppingVar').value
@@ -446,18 +583,13 @@ function changesMargin () {
 	}
 }
 
-//Show/Hide Tutorial
-function showhide () {
-	var div = document.getElementById("tutorial");
-	if (div.style.display !== "none") {
-		div.style.display = "none";
-	}
-	else {
-		div.style.display = "block";
-	}
-}
-
-function showHideTutorial (id) {
+/*
+* Show/Hide a certain element.
+* Adds or removes the classes "hidden" and "visible" which respectively hides and shows a element based on a id given.
+*
+* @param {string} id Which element should be hidden or shown.
+*/
+function showHideDiv (id) {
 	var div = document.getElementById(id).classList
 	console.log(div)
 	if (div == 'hidden') {
@@ -469,7 +601,9 @@ function showHideTutorial (id) {
 	}
 }
 
-//Change names
+/*
+* Changes names from a explanation to the bonus star names.
+*/
 function changeNames () {
 	if (document.getElementById('changeNames').checked == true) {
 		document.getElementById('happeningExplanation').innerHTML = 'Happening:'
@@ -484,7 +618,11 @@ function changeNames () {
 		document.getElementById('specialDiceExplanation').innerHTML = 'Special Dice:'
 	} else {
 		document.getElementById('happeningExplanation').innerHTML = 'Happening:'
+		if (document.getElementById('minigameWinsActivated').checked == true) {
+		document.getElementById('minigameExplanation').innerHTML = 'Minigame Wins:'
+	} else {
 		document.getElementById('minigameExplanation').innerHTML = 'Minigame Coins:'
+	}
 		document.getElementById('redSpaceExplanation').innerHTML = 'Red Spaces:'
 		document.getElementById('runningExplanation').innerHTML = 'Total Dice Num.:'
 		document.getElementById('shoppingExplanation').innerHTML = 'Total Coins spent:'
@@ -496,549 +634,228 @@ function changeNames () {
 	}
 }
 
-// === Twitch Settings ===
-
-//Shows and hides the Twitch settings
-function twitchShowHide () {
-	var div = document.getElementById('twitchDiv').classList
-	console.log(div)
-	if (div == 'hidden') {
-		document.getElementById('twitchDiv').classList.add('visible');
-		document.getElementById('twitchDiv').classList.remove('hidden');
-	} else {
-		document.getElementById('twitchDiv').classList.remove('visible');
-		document.getElementById('twitchDiv').classList.add('hidden');
+/*
+* Closes the settings if the user doesn't click on the settings while they are opened.
+*
+* @param {string} event What event got fired.
+*/
+function windowOnClick (event) {
+	var settings = document.querySelector("#settings")
+	var tutorial = document.querySelector("#tutorial")
+	if (event.target === settings) {
+		showHideDiv('settings')
+	} else if (event.target === tutorial){
+		showHideDiv('tutorial')
 	}
 }
 
-//Connects to Twitch (only executed once)
-function connectTwitch (botName, oauth, channelName) {
-	if (botName, oauth, channelName) {} else {
-		var botName = document.getElementById('twitchNameInput').value
-		var oauth = document.getElementById('twitchPasswordInput').value
-		var channelName = document.getElementById('twitchChannelInput').value
-	}
+/*
+* Saves all settings as cookies.
+*
+* @param {boolean} close If the settings should be closed after saving. True = should be closed.
+*/
+function saveSettings (close) {
+	localStorage.setItem('saving', 'true')
 
-	TAPIC.setup(oauth, function (botName) {
+	localStorage.setItem('greenscreen', document.getElementById('greenscreen').checked)
+	localStorage.setItem('bgColor', document.getElementById('bgColor').value)
+	localStorage.setItem('bonusName', document.getElementById('changeNames').checked)
+	localStorage.setItem('counterHighlight', document.getElementById('enableHighlight').checked)
+	localStorage.setItem('highlightColor', document.getElementById('highlightColor').value)
+	localStorage.setItem('questionForTie', document.getElementById('questionForTie').checked)
 
-		
-		TAPIC.setRefreshRate(10); 
+	localStorage.setItem('botName', document.getElementById('twitchNameInput').value)
+	localStorage.setItem('botOauth', document.getElementById('twitchPasswordInput').value)
+	localStorage.setItem('twitchChannel', document.getElementById('twitchChannelInput').value)
+	localStorage.setItem('autoconnect', document.getElementById('twitchAutoConnect').checked)
+	localStorage.setItem('userWhitelist', document.getElementById('userWhitelist').value)
+	localStorage.setItem('adminList', document.getElementById('adminList').value)
 
-		TAPIC.joinChannel(channelName, function () {
-		sendMsg('connected')
-		TAPIC.listen('message', function (e) { newMessage(e.from, e.text, e.streamer, e.mod)})
-			
-		});
-	});
-}
+	localStorage.setItem('commandsEnabled', document.getElementById('commandsEnabled').checked)
+	localStorage.setItem('enablecmdConnected', document.getElementById('enablecmdConnected').checked)
+	localStorage.setItem('enablecmdHelp', document.getElementById('enablecmdHelp').checked)
+	localStorage.setItem('enablecmdCompleted', document.getElementById('enablecmdCompleted').checked)
+	localStorage.setItem('enablecmdError', document.getElementById('enablecmdError').checked)
+	localStorage.setItem('enablecmdMissing', document.getElementById('enablecmdMissing').checked)
+	localStorage.setItem('enablecmdNoPerm', document.getElementById('enablecmdNoPerm').checked)
 
-//Receives new Twitch Messages and checks if it's a MPO command
-function newMessage (user, text, streamer, mod) {
-	text = text.toLowerCase()
-	var lowerUser = user.toLowerCase()
-	//console.log('Username: ' + lowerUser + ', text: ' + text)
+	localStorage.setItem('cmdConnected', document.getElementById('cmdConnected').value)
+	localStorage.setItem('cmdHelp', document.getElementById('cmdHelp').value)
+	localStorage.setItem('cmdCompleted', document.getElementById('cmdCompleted').value)
+	localStorage.setItem('cmdError', document.getElementById('cmdError').value)
+	localStorage.setItem('cmdMissing', document.getElementById('cmdMissing').value)
+	localStorage.setItem('cmdNoPerm', document.getElementById('cmdNoPerm').value)
 
-	if (text.startsWith('!mpoa') && (arrCon(lowerUser, adminlist) || streamer == true || mod == true)) {
-		var arrText = text.split(' ')
-		editAdminMessage(arrText, lowerUser)
-	} else if (text.startsWith('!mpoa')) {
-		sendMsg('noPermission', user)
-	} else if (text.startsWith('!mpo') && (arrCon(lowerUser, userWhitelist) || streamer == true || mod == true)) {
-		var arrText = text.split(' ')
-		editMessage(arrText, lowerUser)
-
-	} else if (text.startsWith('!mpo')) {
-		sendMsg('noPermission', user)
-	}
-}
-
-//Checks the admin MPO commands
-function editAdminMessage (text, user) {
-	var action = 'nothing'
-	var player = 1
-
-	switch (text[1]) {
-		case 'character':
-		case 'char':
-			action = 'character'
-			break;
-		case 'computer':
-		case 'com':
-			action = 'computer'
-			break;
-		case 'maxturn':
-		case 'max':
-			action = 'maxturn'
-			break;
-		case 'activate':
-		case 'deactivate':
-		case 'enable':
-		case 'disable':
-			action = 'activate'
-			break;
-		case 'highlightcolor':
-		case 'highlight':
-			action = 'highlight'
-			break;
-		case 'adduser':
-			addWhitelist(text[2])
-			sendMsg('completed', user)
-			break;
-		case 'addadmin':
-			addAdmin(text[2])
-			sendMsg('completed', user)
-			break;
-		case 'addboth':
-		case 'adduseradmin':
-		case 'addadminuser':
-			addWhitelist(text[2])
-			addAdmin(text[2])
-			sendMsg('completed', user)
-			break;
-		default:
-			sendMsg('invalid', user, text[2])
-			return
-			break;
-	}
-
-	if (action == 'character') {
-		switch (text[2]) {
-		case '1':
-		case 'p1':
-			player = 1
-			break;
-		case '2':
-		case 'p2':
-			player = 2
-			break;
-		case '3':
-		case 'p3':
-			player = 3
-			break;
-		case '4':
-		case 'p4':
-			player = 4
-			break;
-		default:
-			sendMsg('invalid', user, text[2])
-			return
-			break;
-		}
-		var text4 = text[4]
-
-		if (text4 == 'com' || text4 == 'c') {
-			document.getElementById('p' + player + 'Com').checked = true
-		} else if (text4 == 'nocom' || text4 == 'nc' || text4 == 'n') {
-			document.getElementById('p' + player + 'Com').checked = false
-		}
-
-		document.getElementById('p' + player + 'Select').value = text[3]
-		imgSelect(player)
-		sendMsg('completed', user)
-	}
-
-	if (action == 'computer') {
-		switch (text[2]) {
-		case '1':
-		case 'p1':
-			player = 1
-			break;
-		case '2':
-		case 'p2':
-			player = 2
-			break;
-		case '3':
-		case 'p3':
-			player = 3
-			break;
-		case '4':
-		case 'p4':
-			player = 4
-			break;
-		default:
-			sendMsg('invalid', user, text[2])
-			return
-			break;
-		}
-
-		if (document.getElementById('p' + player + 'Com').checked == false) {
-			document.getElementById('p' + player + 'Com').checked = true
-		} else if (document.getElementById('p' + player + 'Com').checked == true) {
-			document.getElementById('p' + player + 'Com').checked = false
-		}
-		imgSelect(player)
-		sendMsg('completed', user)
-	}
-	if (action == 'maxturn') {
-		var number = text[2].slice(1)
-		var addNum = number++
-		
-		if (text[2].startsWith('p') || text[2].startsWith('+')) {
-			for (let num = 0; num < addNum; num++) {
-				document.getElementById('maxTurnInput').value++
-				turns()
-				sendMsg('completed', user)
-			}
-		} else if (text[2].startsWith('m') || text[2].startsWith('-')) {
-			for (let num = 0; num < addNum; num++) {
-				document.getElementById('maxTurnInput').value--
-				turns()
-				sendMsg('completed', user)
-			}
-		} else if (isNaN(text[2]) == false) {
-			document.getElementById('maxTurnInput').value = text[2]
-			turns()
-			sendMsg('completed', user)
-		} else {
-			sendMsg('invalid', user, text[2])
-		}
-	}
-
-	if (action == 'activate') {
-		switch (text[2]) {
-		case 'happening':
-		case 'hap':
-			displayOnOff('Happening', 'happening', 'true')
-			break;
-		case 'minigame':
-		case 'minigames':
-		case 'mini':
-			displayOnOff('Minigame', 'minigame')
-			break;
-		case 'minigamewin':
-		case 'minigamewins':
-		case 'miniwin':
-		case 'miniwins':
-			if (document.getElementById('minigameWinsActivated').checked == false) {
-				document.getElementById('minigameWinsActivated').checked = true
-			} else if (document.getElementById('minigameWinsActivated').checked == true) {
-				document.getElementById('minigameWinsActivated').checked = false
-			}
-			minigameWins()
-			break;
-		case 'redspace':
-		case 'redspaces':
-		case 'red':
-			displayOnOff('RedSpace', 'redSpace', 'true')
-			break;
-		case 'running':
-		case 'run':
-			displayOnOff('Running', 'running')
-			break;
-		case 'shopping':
-		case 'shop':
-			displayOnOff('Shopping', 'shopping')
-			break;
-		case 'orb':
-		case 'orbs':
-			displayOnOff('Orb', 'orb', 'true')
-			break;
-		case 'candy':
-		case 'candies':
-			displayOnOff('Candy', 'candy', 'true')
-			break;
-		case 'spinspace':
-		case 'spinspaces':
-		case 'spin':
-			displayOnOff('SpinSpace', 'spinSpace', 'true')
-			break;
-		case 'minus':
-		case 'miniztar':
-		case 'miniztars':
-		case 'ztars':
-		case 'ztar':
-			displayOnOff('MiniZtar', 'miniZtar')
-			break;
-		case 'specialdiceblock':
-		case 'specialdice':
-		case 'dice':
-			displayOnOff('SpecialDice', 'specialDice', 'true')
-			break;
-		case 'slowstar':
-		case 'slow':
-			if (document.getElementById('slowStarActivated').checked == false) {
-				document.getElementById('slowStarActivated').checked = true
-			} else if (document.getElementById('slowStarActivated').checked == true) {
-				document.getElementById('slowStarActivated').checked = false
-			}
-			slowStar()
-			slowHighlight(highlightColor)
-			break;
-		default:
-			sendMsg('invalid', user, text[2])
-			return
-			break;
-		}
-		sendMsg('completed', user)
-	}
-
-	if (action == 'highlight') {
-		if (text[2] == 'on') {
-			document.getElementById('enableHighlight').checked = true
-			resetHighlights()
-		} else if (text[2] == 'off') {
-			document.getElementById('enableHighlight').checked = false
-			resetHighlights()
-		} else if (text[2] != null) {
-				var color = text[2]
-			//}
-			document.getElementById('highlightColor').value = color
-			highlightColor = color
-
-			if (document.getElementById('enableHighlight').checked == true) {
-				resetHighlights()
-			}
-
-			if (document.getElementById('slowStarActivated').checked == true) {
-				slowHighlight(highlightColor)
-			}
-		} else {
-			sendMsg('invalid', user, text[2])
-		}
-		sendMsg('completed', user)
+	if (close == true) {
+		showHideDiv('settings')
 	}
 }
 
-//Checks the normal MPO commands and updates the counters
-function editMessage (text, user) {
-	console.log('Array: ' + text)
-	var player = 1
-	var counter = 'Happening'
+/*
+* Prepares all settings that were saved as cookies when the site gets loaded.
+*/
+function prepareMPO () {
+	if (localStorage.getItem('saving') == 'true') {
 
-
-	switch (text[1]) {
-		case 'happening':
-		case 'hap':
-			counter = 'Happening'
-			break;
-		case 'minigame':
-		case 'minigames':
-		case 'mini':
-			counter = 'Minigame'
-			break;
-		case 'redspace':
-		case 'redspaces':
-		case 'red':
-			counter = 'RedSpace'
-			break;
-		case 'running':
-		case 'run':
-			counter = 'Running'
-			break;
-		case 'shopping':
-		case 'shop':
-			counter = 'Shopping'
-			break;
-		case 'orb':
-		case 'orbs':
-			counter = 'Orb'
-			break;
-		case 'candy':
-		case 'candies':
-			counter = 'Candy'
-			break;
-		case 'spinspace':
-		case 'spinspaces':
-		case 'spin':
-			counter = 'SpinSpace'
-			break;
-		case 'minus':
-		case 'miniztar':
-		case 'miniztars':
-		case 'ztars':
-		case 'ztar':
-			counter = 'MiniZtar'
-			break;
-		case 'specialdiceblock':
-		case 'specialdice':
-		case 'dice':
-			counter = 'SpecialDice'
-			break;
-		case 'coin':
-		case 'coins':
-		case 'coinstar':
-			turnCoinMessage('coin', text)
-			return
-			break;
-		case 'command':
-		case 'commands':
-		case 'help':
-			sendMsg('help', user)
-			return
-			break;
-		case 'turn':
-		case 'turns':
-			turnCoinMessage('turn', text)
-			return
-			break;
-		default:
-			sendMsg('invalid', user, text[1])
-			return
-			break;
-	}
-
-	switch (text[2]) {
-		case '1':
-		case 'p1':
-			player = 1
-			break;
-		case '2':
-		case 'p2':
-			player = 2
-			break;
-		case '3':
-		case 'p3':
-			player = 3
-			break;
-		case '4':
-		case 'p4':
-			player = 4
-			break;
-		default:
-			sendMsg('invalid', user, text[2])
-			return
-			break;
-	}
-	
-	if (text[3]) {} else {
-		sendMsg('lastMissing', user)
-	}
-	
-
-	var number = text[3].slice(1)
-	if (number) {} else {
-		number = 1
-	}
-	var addNum = number++
-	var text3 = text[3]
-
-	if (text[3].startsWith('p') || text[3].startsWith('+')) {
-		for (let num = 0; num < addNum; num++) {
-			document.getElementById('p' + player + counter + 'Input').value++
-		}
-	} else if (text[3].startsWith('m') || text[3].startsWith('-')) {
-		for (let num = 0; num < addNum; num++) {
-			document.getElementById('p' + player + counter + 'Input').value--
-		}
-	} else if (isNaN(text[3]) == false) {
-		document.getElementById('p' + player + counter + 'Input').value = text[3]
-	} else {
-		sendMsg('invalid', user, text[2])
-	}
-
-	displayChange(player, counter)
-
-	if (document.getElementById('enableHighlight').checked == true) {
-		highlight(counter, highlightColor)
-	}
-
-	if (document.getElementById('slowStarActivated').checked == true) {
-		slowHighlight(highlightColor)
-	}
-	sendMsg('completed', user)
-}
-
-//Checks the normal MPO commands if it's turn/coin star related
-function turnCoinMessage (type, text) {
-	var number = text[2].slice(1)
-	if (number) {} else {
-		number = 1
-	}
-	var addNum = number++
-	if (type == 'turn') {
-		if (text[2].startsWith('p') || text[2].startsWith('+')) {
-			for (let num = 0; num < addNum; num++) {
-				document.getElementById('curTurnInput').value++
-			}
-		} else if (text[2].startsWith('m') || text[2].startsWith('-')) {
-			for (let num = 0; num < addNum; num++) {
-				document.getElementById('curTurnInput').value--
-			}
-		} else if (isNaN(text[2]) == false) {
-			document.getElementById('curTurnInput').value = text[2]
-		}
-		turns()
-	}
-
-	if (type == 'coin') {
-		if (text[2].startsWith('p') || text[2].startsWith('+')) {
-			for (let num = 0; num < addNum; num++) {
-				document.getElementById('coinStarInput').value++
-			}
-		} else if (text[2].startsWith('m') || text[2].startsWith('-')) {
-			for (let num = 0; num < addNum; num++) {
-				document.getElementById('coinStarInput').value--
-			}
-		} else if (isNaN(text[2]) == false) {
-			document.getElementById('coinStarInput').value = text[2]
+		document.getElementById('greenscreen').checked = stringToBoolean(localStorage.getItem('greenscreen'))
+		document.getElementById('bgColor').value = localStorage.getItem('bgColor')
+		if (document.getElementById('greenscreen').checked == true) {
+		 	bgOnOff()
 		}
 
-		var test = text[3]
-		if (test) {
-			document.getElementById('coinStarCharSelect').value = text[3]
-			coinStarCharImg()
+		document.getElementById('changeNames').checked = stringToBoolean(localStorage.getItem('bonusName'))
+		if (document.getElementById('changeNames').checked == true) {
+		 	changeNames()
 		}
-		coinStar()
-	}
-	sendMsg('completed', user)
-}
 
-//Add temporary to whitelist
-function addWhitelist (user) {
-	if (user) {
-		userWhitelist.push(user)
-	} else {
-		var newUser = document.getElementById('tempWhitelist').value
-		userWhitelist.push(newUser)
+		document.getElementById('enableHighlight').checked = stringToBoolean(localStorage.getItem('counterHighlight'))
+		document.getElementById('highlightColor').value = localStorage.getItem('highlightColor')
+		if (document.getElementById('enableHighlight').checked == true) {
+		 	callHighlight(false, true)
+		}
+
+		document.getElementById('questionForTie').checked = stringToBoolean(localStorage.getItem('questionForTie'))
+
+
+		document.getElementById('twitchNameInput').value = localStorage.getItem('botName')
+		document.getElementById('twitchPasswordInput').value = localStorage.getItem('botOauth')
+		document.getElementById('twitchChannelInput').value = localStorage.getItem('twitchChannel')
+		document.getElementById('twitchAutoConnect').checked = stringToBoolean(localStorage.getItem('autoconnect'))
+
+		document.getElementById('userWhitelist').value = localStorage.getItem('userWhitelist')
+		document.getElementById('adminList').value = localStorage.getItem('adminList')
+		saveTwitchLists()
+
+		document.getElementById('commandsEnabled').checked = stringToBoolean(localStorage.getItem('commandsEnabled'))
+		document.getElementById('enablecmdConnected').checked = stringToBoolean(localStorage.getItem('enablecmdConnected'))
+		document.getElementById('enablecmdHelp').checked = stringToBoolean(localStorage.getItem('enablecmdHelp'))
+		document.getElementById('enablecmdCompleted').checked = stringToBoolean(localStorage.getItem('enablecmdCompleted'))
+		document.getElementById('enablecmdError').checked = stringToBoolean(localStorage.getItem('enablecmdError'))
+		document.getElementById('enablecmdMissing').checked = stringToBoolean(localStorage.getItem('enablecmdMissing'))
+		document.getElementById('enablecmdNoPerm').checked = stringToBoolean(localStorage.getItem('enablecmdNoPerm'))
+
+		document.getElementById('cmdConnected').value = localStorage.getItem('cmdConnected')
+		document.getElementById('cmdHelp').value = localStorage.getItem('cmdHelp')
+		document.getElementById('cmdCompleted').value = localStorage.getItem('cmdCompleted')
+		document.getElementById('cmdError').value = localStorage.getItem('cmdError')
+		document.getElementById('cmdMissing').value = localStorage.getItem('cmdMissing')
+		document.getElementById('cmdNoPerm').value = localStorage.getItem('cmdNoPerm')
+
+		if (document.getElementById('twitchAutoConnect').checked == true) {
+		 	connectTwitch()
+		}
 	}
 }
 
-function addAdmin (admin) {
-	if (admin) {
-		adminlist.push(admin)
-	} else {
-		var newUser = document.getElementById('tempAdmin').value
-		adminlist.push(newUser)
+/*
+* Converts a string into a boolean.
+*
+* @param {string} boolean The string that should get coverted.
+*/
+function stringToBoolean(boolean) {
+	if (boolean == 'true') {
+		return true;
+	} else if (boolean == 'false') {
+		return false;
 	}
 }
 
-//Array contains
+/*
+* Resets settings and clears cookies.
+*/
+function resetSettings() {
+	localStorage.clear()
+
+	document.getElementById('greenscreen').checked = false
+	document.getElementById('bgColor').value = '#0000FF'
+	document.getElementById('changeNames').checked = false
+	document.getElementById('enableHighlight').checked = true
+	document.getElementById('highlightColor').value = '#ff0000'
+	document.getElementById('questionForTie').checked = false
+
+	document.getElementById('twitchNameInput').value = ''
+	document.getElementById('twitchPasswordInput').value = ''
+	document.getElementById('twitchChannelInput').value = ''
+	document.getElementById('twitchAutoConnect').checked = false
+
+	document.getElementById('commandsEnabled').checked = true
+	document.getElementById('enablecmdConnected').checked = true
+	document.getElementById('enablecmdHelp').checked = true
+	document.getElementById('enablecmdCompleted').checked = ''
+	document.getElementById('enablecmdError').checked = true
+	document.getElementById('enablecmdMissing').checked = true
+	document.getElementById('enablecmdNoPerm').checked = true
+	document.getElementById('cmdConnected').value = 'MPO has succesfully connected to Twitch.'
+	document.getElementById('cmdHelp').value = 'Correct usage: "!mpo *counter* *player* *action*"; "!mpo happening 3 +1", more info avaible at: https://blueyoshi9000.github.io/MarioPartyOverlay/commands.html'
+	document.getElementById('cmdCompleted').value = '@user, action completed.'
+	document.getElementById('cmdError').value = '@user, "*wrong argument entered by user*" is a invalid argument, check "!mpo commands" for help.'
+	document.getElementById('cmdMissing').value = '@user, your last argument is missing, check "!mpo commands" for help.'
+	document.getElementById('cmdNoPerm').value = '@user, you don\'t have the permission to use this command.'
+
+	showHideDiv('resetSettingsDiv')
+
+	if (bgImgOn == 0) {
+		bgOnOff()
+	}
+
+	if (document.getElementById('changeNames').checked == false) {
+		changeNames()
+	}
+
+	callHighlight(false, true)
+	resetHighlights()
+}
+
+/*
+* Checks if something is included in a array.
+*
+* @param {-} needle Checks if this is included in the array.
+* @param {array} arrhaystack The array that should include something.
+*/
 function arrCon(needle, arrhaystack)
 {
     return (arrhaystack.indexOf(needle) > -1);
 }
 
-//Background
-var bgImgOn = 1
-function bgOnOff ()
-{
+/*
+* Changes background from greenscreen to image and vice versa.
+*/
+var bgImgOn = true
+var bgColor = '#0000ff'
+function bgOnOff () {
+	bgColor = document.getElementById('bgColor').value
 
-	if (bgImgOn == 1) {
-		document.getElementById('htmlTag').style = "background: #0000ff;"
-		bgImgOn = 0
+	if (bgImgOn == true) {
+		document.getElementById('htmlTag').style.background = bgColor
+		bgImgOn = false
 	} else {
 		document.getElementById('htmlTag').style = "background: url(img/background.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"
-		bgImgOn = 1
+		bgImgOn = true
 	}
 }
 
-//Get Variable in URL
-function getUrl(variable) {
-	var query = window.location.search.substring(1);
-	var vars = query.split("&");
-	for (var i=0;i<vars.length;i++) {
-		var pair = vars[i].split("=");
-		if(pair[0] == variable){return pair[1];}
+/*
+* Changes background color if greenscreen is used.
+*/
+function changeBGColor() {
+	bgColor = document.getElementById('bgColor').value
+	if (bgImgOn == false) {
+		document.getElementById('htmlTag').style.background = bgColor
 	}
- 	return(false);
 }
 
-//Calls functions that check the URL
+window.addEventListener("click", windowOnClick)
+
+/*
+* Calls noMP9()
+*/
 window.onload = function() {
 	noMP9()
 };
 
-//Deactivates MP9
+/*
+* Disables all counters, players, features etc that are related to MP9 or 10 because why not.
+*/
 function noMP9 () {
 	var playerNum = 1
 
@@ -1090,7 +907,9 @@ function noMP9 () {
 	}
 }
 
-//Enable Interact.js
+/*
+* Enables and disables the ability to drag 'n' drop counters.
+*/
 var enableInteractVar = false
 
 function enableInteract () {
@@ -1103,7 +922,7 @@ function enableInteract () {
 	}
 }
 
-// === INTERACT.JS - DONT CHANGE ANYTHING ===
+// === INTERACT.JS ===
 // target elements with the "draggable" class
 interact('.draggable')
 	.draggable({
@@ -1151,6 +970,4 @@ interact('.draggable')
 }
 // === INTERACT.JS END ===
 
-// === INSERT BELOW THIS LINE ===
-
-
+window.onload = prepareMPO()

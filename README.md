@@ -16,6 +16,14 @@ Character Sprites ripped by [Random Talking Bush](https://www.vg-resource.com/us
 
 # Changelog
 
+v1.3
+- Added: Backup system: Allow to backup all counters and restore them
+- Added: Coin star tie system: Show multiple characters at the same time when theres a coin star tie
+- Added: Reset: Reset all counters with a button press, no more reloading!
+- Changed: Settings: All settings are moved to a seperate settings "window" on the site itself
+- Changed: Wiki Tutorial: The tutorial was moved to the Github wiki and isn't on the site anymore
+- Fixed: Minor glitches I already forgot about because they were so minor
+
 v1.2
 - Added: Twitch chat interaction, change everything through chat commands
 - Added: Twitch permission system so only accepted users can change stuff
