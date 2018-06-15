@@ -786,7 +786,7 @@ function resetSettings() {
 	document.getElementById('enablecmdMissing').checked = true
 	document.getElementById('enablecmdNoPerm').checked = true
 	document.getElementById('cmdConnected').value = 'MPO has succesfully connected to Twitch.'
-	document.getElementById('cmdHelp').value = 'Correct usage: "!mpo *counter* *player* *action*"; "!mpo happening 3 +1", more info avaible at: https://blueyoshi9000.github.io/MarioPartyOverlay/commands.html'
+	document.getElementById('cmdHelp').value = 'Correct usage: "!mpo *counter* *player* *action*"; "!mpo happening 3 +1", more info avaible at: https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Twitch-Commands-Summary'
 	document.getElementById('cmdCompleted').value = '@user, action completed.'
 	document.getElementById('cmdError').value = '@user, "*wrong argument entered by user*" is a invalid argument, check "!mpo commands" for help.'
 	document.getElementById('cmdMissing').value = '@user, your last argument is missing, check "!mpo commands" for help.'
