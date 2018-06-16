@@ -3,7 +3,6 @@ Mario Party Overlay is a website to display which character gets the bonus stars
 **Tutorial is on the site itself**
 
 **[Website](https://blueyoshi9000.github.io/MarioPartyOverlay/)**  
-**[Website (without anything MP 9&10 related)](https://blueyoshi9000.github.io/MarioPartyOverlay/?no9=1)**
 
 # Credits
 Created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000) 
