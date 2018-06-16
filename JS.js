@@ -58,75 +58,93 @@ function counterButtons (player, action, amount, counter) {
 * @param {string} counter Which counter settings should be hidden/shown.
 * @param {boolean} no10 If the counter has additional buttons like "+10" or "-5". True = no additional buttons.
 */
-function displayOnOff (counter) {
-
-
-	var classList = document.getElementsByClassName(counter)
-
+function displayOnOff (counter, counter2, start) {
 	if (document.getElementById(counter + 'Var').value == 1) {
-		var visibility = 'none'
-		document.getElementById(counter + 'Var').value = 0
-	} else {
-		var visibility = ''
-		document.getElementById(counter + 'Var').value = 1
-	}
+			var visibility = 'none'
+			var visibilityOpposite = ''
+			document.getElementById(counter + 'Var').value = 0
+		} else {
+			var visibility = ''
+			var visibilityOpposite = 'none'
+			document.getElementById(counter + 'Var').value = 1
+		}
 
-	for (let num = 0; num < classList.length; num++) {
-		document.getElementsByClassName(counter)[num].style.display = visibility
+	if (counter == 'running') {
+		for (let num = 1; num < 5; num++) {
+			document.getElementById(counter + 'Explanation').style.display = visibility
+			document.getElementById('p' + num + counter2 + 'Display').style.display = visibility
+			document.getElementById('p' + num + counter2 + 'Text').style.display = visibility
+			document.getElementById('p' + num + counter2 + 'Break').style.display = visibility
+
+			document.getElementById('p' + num + counter2 + 'InputTextBefore').style.display = visibility
+			document.getElementById('p' + num + counter2 + 'Input').style.display = visibility
+			document.getElementById('p' + num + counter2 + 'InputM').style.display = visibility
+			document.getElementById('p' + num + counter2 + 'InputP').style.display = visibility
+			if (document.getElementById('slowStarActivated').checked == true) {
+				document.getElementById('p' + num + counter2 + 'InputM6').style.display = visibility
+				document.getElementById('p' + num + counter2 + 'InputP6').style.display = visibility
+			} else {
+				document.getElementById('p' + num + counter2 + 'InputM10').style.display = visibility
+				document.getElementById('p' + num + counter2 + 'InputP10').style.display = visibility
+			}
+			if (start == true) {
+				document.getElementById('p' + num + counter2 + 'InputM6').style.display = visibility
+				document.getElementById('p' + num + counter2 + 'InputP6').style.display = visibility
+				document.getElementById('p' + num + counter2 + 'InputM10').style.display = visibility
+				document.getElementById('p' + num + counter2 + 'InputP10').style.display = visibility
+			}
+		}
+	} else {
+		var classList = document.getElementsByClassName(counter)
+
+		for (let num = 0; num < classList.length; num++) {
+			document.getElementsByClassName(counter)[num].style.display = visibility
+		}
 	}
 }
 
 function startDisplayOnOff () {
-	var classList = document.getElementsByClassName('happening')
+	var counter = 'happening'
+	var counter2 = 'Happening'
 
-	if (document.getElementById('happeningVar').value == 0) {
-		document.getElementById('happeningVar').value = 1
-		displayOnOff('happening')
-	}
-
-	if (document.getElementById('minigameVar').value == 0) {
-		document.getElementById('minigameVar').value = 1
-		displayOnOff('minigame')
-	}
-
-	if (document.getElementById('redSpaceVar').value == 0) {
-		document.getElementById('redSpaceVar').value = 1
-		displayOnOff('redSpace')
-	}
-
-	if (document.getElementById('runningVar').value == 0) {
-		document.getElementById('runningVar').value = 1
-		displayOnOff('running')
-	}
-
-	if (document.getElementById('shoppingVar').value == 0) {
-		document.getElementById('shoppingVar').value = 1
-		displayOnOff('shopping')
-	}
-
-	if (document.getElementById('orbVar').value == 0) {
-		document.getElementById('orbVar').value = 1
-		displayOnOff('orb')
-	}
-
-	if (document.getElementById('candyVar').value == 0) {
-		document.getElementById('candyVar').value = 1
-		displayOnOff('candy')
-	}
-
-	if (document.getElementById('spinSpaceVar').value == 0) {
-		document.getElementById('spinSpaceVar').value = 1
-		displayOnOff('spinSpace')
-	}
-
-	if (document.getElementById('miniZtarVar').value == 0) {
-		document.getElementById('miniZtarVar').value = 1
-		displayOnOff('miniZtar')
-	}
-
-	if (document.getElementById('specialDiceVar').value == 0) {
-		document.getElementById('specialDiceVar').value = 1
-		displayOnOff('specialDice')
+	for (let num = 0; num < 10; num++) {
+		switch (num) {
+			case 0:
+				counter = 'happening'
+				break;
+			case 1:
+				counter = 'minigame'
+				break;
+			case 2:
+				counter = 'redSpace'
+				break;
+			case 3:
+				counter = 'running'
+				counter2 = 'Running'
+				break;
+			case 4:
+				counter = 'shopping'
+				break;
+			case 5:
+				counter = 'orb'
+				break;
+			case 6:
+				counter = 'candy'
+				break;
+			case 7:
+				counter = 'spinSpace'
+				break;
+			case 8:
+				counter = 'miniZtar'
+				break;
+			case 9:
+				counter = 'specialDice'
+				break;
+		}
+		if (document.getElementById(counter + 'Var').value == 0) {
+			document.getElementById(counter + 'Var').value = 1
+			displayOnOff(counter, counter2, true)
+		}
 	}
 }
 
@@ -250,32 +268,20 @@ function highlight (counter, color) {
 */
 function slowStar () {
 	if (document.getElementById('runningVar').value == 0) {
-		displayOnOff('Running', 'running')
+		displayOnOff('running', 'Running')
 	}
 
-	var playerNum = 1
-
 	for (let num = 1; num < 5; num++) {
-		if (num == 1) {
-			playerNum = 1
-		} else if (num == 2) {
-			playerNum = 2
-		} else if (num == 3) {
-			playerNum = 3
-		} else if (num == 4) {
-			playerNum = 4
-		}
-
 		if (document.getElementById('slowStarActivated').checked == true) {
-			document.getElementById('p' + playerNum + 'RunningInputM10').style = 'display: none;'
-			document.getElementById('p' + playerNum + 'RunningInputP10').style = 'display: none;'
-			document.getElementById('p' + playerNum + 'RunningInputM6').style = ''
-			document.getElementById('p' + playerNum + 'RunningInputP6').style = ''
+			document.getElementById('p' + num + 'RunningInputM10').style.display = 'none'
+			document.getElementById('p' + num + 'RunningInputP10').style.display = 'none'
+			document.getElementById('p' + num + 'RunningInputM6').style.display = ''
+			document.getElementById('p' + num + 'RunningInputP6').style.display = ''
 		} else {
-			document.getElementById('p' + playerNum + 'RunningInputM10').style = ''
-			document.getElementById('p' + playerNum + 'RunningInputP10').style = ''
-			document.getElementById('p' + playerNum + 'RunningInputM6').style = 'display: none;'
-			document.getElementById('p' + playerNum + 'RunningInputP6').style = 'display: none;'
+			document.getElementById('p' + num + 'RunningInputM10').style.display = ''
+			document.getElementById('p' + num + 'RunningInputP10').style.display = ''
+			document.getElementById('p' + num + 'RunningInputM6').style.display = 'none'
+			document.getElementById('p' + num + 'RunningInputP6').style.display = 'none'
 		}
 	}
 }
@@ -351,16 +357,7 @@ function minigameWins () {
 	}
 	
 	for (let num = 1; num < 5; num++) {
-		if (num == 1) {
-			playerNum = 1
-		} else if (num == 2) {
-			playerNum = 2
-		} else if (num == 3) {
-			playerNum = 3
-		} else if (num == 4) {
-			playerNum = 4
-		}
-		document.getElementById('p' + playerNum + 'MinigameDisplay').src = source
+		document.getElementById('p' + num + 'MinigameDisplay').src = source
 	}
 }
 
@@ -403,7 +400,6 @@ function displayChange (playerNum, counter) {
 */
 function callDisplayChange () {
 	var counter = 'Happening'
-	var playerNum = 1
 
 	for (let num = 0; num < 10; num++) {
 		if (num == 0) {
@@ -429,16 +425,7 @@ function callDisplayChange () {
 		}
 
 		for (let num = 1; num < 5; num++) {
-			if (num == 1) {
-				playerNum = 1
-			} else if (num == 2) {
-				playerNum = 2
-			} else if (num == 3) {
-				playerNum = 3
-			} else if (num == 4) {
-				playerNum = 4
-			}
-			displayChange(playerNum, counter)
+			displayChange(num, counter)
 		}
 	}
 }
@@ -858,67 +845,6 @@ function changeBGColor() {
 }
 
 window.addEventListener("click", windowOnClick)
-
-/*
-* Calls noMP9()
-*/
-window.onload = function() {
-	noMP9()
-};
-
-/*
-* Disables all counters, players, features etc that are related to MP9 or 10 because why not.
-*/
-function noMP9 () {
-	var playerNum = 1
-
-	if (getUrl('no9') == 1) {
-		for (let num = 1; num < 6; num++) {
-			if (num == 1) {
-				playerNum = 1
-			} else if (num == 2) {
-				playerNum = 2
-			} else if (num == 3) {
-				playerNum = 3
-			} else if (num == 4) {
-				playerNum = 4
-			} else if (num == 5) {
-				playerNum = 5
-			}
-
-			var charSelect = document.getElementById('p' + playerNum + 'Select')
-			if (playerNum == 5) {
-				charSelect = document.getElementById('coinStarCharSelect')
-			}
-			for (var i=0; i<charSelect.length; i++){
-				var opt = charSelect.options[i].value
-				if (opt == 'shyguy' || opt == 'kamek' || opt == 'koopa' || opt == 'rosalina' || opt == 'spike' )
-				charSelect.remove(i);
-			}
-		}
-		for (let num = 1; num < 8; num++) {
-			if (num == 1) {
-				delethis = document.getElementById('spinSpaceButton')
-			} else if (num == 2) {
-				delethis = document.getElementById('miniZtarButton')
-			} else if (num == 3) {
-				delethis = document.getElementById('specialDiceButton')
-			} else if (num == 4) {
-				delethis = document.getElementById('slowStarActivated')
-			} else if (num == 5) {
-				delethis = document.getElementById('minigameWinsActivated')
-			} else if (num == 6) {
-				delethis = document.getElementById('slowStarActivatedText')
-			} else if (num == 7) {
-				delethis = document.getElementById('minigameWinsActivatedText')
-			}
-
-			delethis.style = 'display: none;'
-
-			document.getElementById('runningButton').innerHTML = ' Running (MP 7 & 8 & DS) on/off '
-		}
-	}
-}
 
 /*
 * Enables and disables the ability to drag 'n' drop counters.
