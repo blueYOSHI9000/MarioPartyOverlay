@@ -58,62 +58,75 @@ function counterButtons (player, action, amount, counter) {
 * @param {string} counter Which counter settings should be hidden/shown.
 * @param {boolean} no10 If the counter has additional buttons like "+10" or "-5". True = no additional buttons.
 */
-function displayOnOff (counter, no10, scounter) {
-	if (scounter) {} else {
-		var scounter = counter.toLowerCase()
-	}
-	var displayNone = parseInt(document.getElementById(scounter + 'Var').value);
+function displayOnOff (counter) {
 
-	var playerNum = 1
-	var visible = "display: none;"
-	
-	if (displayNone  == 1) {
-		document.getElementById(scounter + 'Explanation').style = "display: none;"
-		document.getElementById(scounter + 'Var').value=0
-	} else if (displayNone == 0) {
-		document.getElementById(scounter + 'Explanation').style = " "
-		document.getElementById(scounter + 'Var').value=1
+
+	var classList = document.getElementsByClassName(counter)
+
+	if (document.getElementById(counter + 'Var').value == 1) {
+		var visibility = 'none'
+		document.getElementById(counter + 'Var').value = 0
+	} else {
+		var visibility = ''
+		document.getElementById(counter + 'Var').value = 1
 	}
 
-	for (let num = 1; num < 5; num++) {
-		if (num == 1) {
-			playerNum = 1
-		} else if (num == 2) {
-			playerNum = 2
-		} else if (num == 3) {
-			playerNum = 3
-		} else if (num == 4) {
-			playerNum = 4
-		}
-		if (displayNone  == 1) {
-			visible = "display: none;"
-			document.getElementById('p1' + counter + 'Display').name=0
-		} else if (displayNone == 0) {
-			visible = " "
-			document.getElementById('p1' + counter + 'Display').name=1
-		}
+	for (let num = 0; num < classList.length; num++) {
+		document.getElementsByClassName(counter)[num].style.display = visibility
+	}
+}
 
-		document.getElementById('p' + playerNum + counter + 'Display').style = visible
-		document.getElementById('p' + playerNum + counter + 'Text').style = visible
-		document.getElementById('p' + playerNum + counter + 'Break').style = visible
+function startDisplayOnOff () {
+	var classList = document.getElementsByClassName('happening')
 
-		document.getElementById('p' + playerNum + counter + 'InputTextBefore').style = visible
-		document.getElementById('p' + playerNum + counter + 'Input').style = visible
-		document.getElementById('p' + playerNum + counter + 'InputM').style = visible
-		document.getElementById('p' + playerNum + counter + 'InputP').style = visible
+	if (document.getElementById('happeningVar').value == 0) {
+		document.getElementById('happeningVar').value = 1
+		displayOnOff('happening')
+	}
 
-		if (no10 == true) {} else {
-			document.getElementById('p' + playerNum + counter + 'InputM10').style = visible
-			document.getElementById('p' + playerNum + counter + 'InputP10').style = visible
-		}
-		if (counter == 'Running' && visible == 'display: none;') {
-			document.getElementById('p' + playerNum + counter + 'InputM6').style = 'display: none;'
-			document.getElementById('p' + playerNum + counter + 'InputP6').style = 'display: none;'
-			document.getElementById('slowStarActivated').checked = false
-		} else if (counter == 'Running' && visible == '') {
-			document.getElementById('p' + playerNum + counter + 'InputM6').style = ''
-			document.getElementById('p' + playerNum + counter + 'InputP6').style = ''
-		}
+	if (document.getElementById('minigameVar').value == 0) {
+		document.getElementById('minigameVar').value = 1
+		displayOnOff('minigame')
+	}
+
+	if (document.getElementById('redSpaceVar').value == 0) {
+		document.getElementById('redSpaceVar').value = 1
+		displayOnOff('redSpace')
+	}
+
+	if (document.getElementById('runningVar').value == 0) {
+		document.getElementById('runningVar').value = 1
+		displayOnOff('running')
+	}
+
+	if (document.getElementById('shoppingVar').value == 0) {
+		document.getElementById('shoppingVar').value = 1
+		displayOnOff('shopping')
+	}
+
+	if (document.getElementById('orbVar').value == 0) {
+		document.getElementById('orbVar').value = 1
+		displayOnOff('orb')
+	}
+
+	if (document.getElementById('candyVar').value == 0) {
+		document.getElementById('candyVar').value = 1
+		displayOnOff('candy')
+	}
+
+	if (document.getElementById('spinSpaceVar').value == 0) {
+		document.getElementById('spinSpaceVar').value = 1
+		displayOnOff('spinSpace')
+	}
+
+	if (document.getElementById('miniZtarVar').value == 0) {
+		document.getElementById('miniZtarVar').value = 1
+		displayOnOff('miniZtar')
+	}
+
+	if (document.getElementById('specialDiceVar').value == 0) {
+		document.getElementById('specialDiceVar').value = 1
+		displayOnOff('specialDice')
 	}
 }
 
@@ -971,3 +984,4 @@ interact('.draggable')
 // === INTERACT.JS END ===
 
 window.onload = prepareMPO()
+window.onload = startDisplayOnOff()

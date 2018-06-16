@@ -16,6 +16,9 @@ Character Sprites ripped by [Random Talking Bush](https://www.vg-resource.com/us
 
 # Changelog
 
+v1.3.1
+- Changed: Hide Counters System, saved some space in the JS file
+
 v1.3
 - Added: Backup system: Allow to backup all counters and restore them
 - Added: Coin star tie system: Show multiple characters at the same time when theres a coin star tie
