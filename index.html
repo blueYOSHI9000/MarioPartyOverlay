@@ -32,6 +32,7 @@
 			<td class="marginLeft happening"> <b class="whiteText" id="happeningExplanation"> Happening: </b> </td>
 			<td class="marginLeft minigame"> <b class="whiteText" id="minigameExplanation"> Minigame Coins: </b> </td>
 			<td class="marginLeft redSpace"> <b class="whiteText"  id="redSpaceExplanation"> Red Spaces: </b> </td>
+			<td style="visibility: hidden;"><button>-</button></td>
 		</tr>
 		<tr>
 			<td>
@@ -79,6 +80,8 @@
 				<input type="button" value="-" onclick="counterButtons(1, 'M', '', 'RedSpace')" id="p1RedSpaceInputM" class="redSpaceInput">
 				<input type="number" value="0" class="numInput" id="p1RedSpaceInput" autocomplete="off">
 				<input type="button" value="+" onclick="counterButtons(1, 'P', '', 'RedSpace')" id="p1RedSpaceInputP" class="redSpaceInput">
+			</td>
+			<td style="visibility: hidden;"><button>-</button></td>
 		</tr>
 		<tr>
 			<td>
@@ -127,6 +130,7 @@
 				<input type="number" value="0" class="numInput" id="p2RedSpaceInput" autocomplete="off">
 				<input type="button" value="+" onclick="counterButtons(2, 'P', '', 'RedSpace')" id="p2RedSpaceInputP" class="redSpaceInput">
 			</td>
+			<td style="visibility: hidden;"><button>-</button></td>
 		</tr>
 		<tr>
 			<td>
@@ -175,6 +179,7 @@
 				<input type="number" value="0" class="numInput" id="p3RedSpaceInput" autocomplete="off">
 				<input type="button" value="+" onclick="counterButtons(3, 'P', '', 'RedSpace')" id="p3RedSpaceInputP" class="redSpaceInput">
 			</td>
+			<td style="visibility: hidden;"><button>-</button></td>
 		</tr>
 		<tr>
 			<td>
@@ -223,6 +228,7 @@
 				<input type="number" value="0" class="numInput" id="p4RedSpaceInput" autocomplete="off">
 				<input type="button" value="+" onclick="counterButtons(4, 'P', '', 'RedSpace')" id="p4RedSpaceInputP" class="redSpaceInput">
 			</td>
+			<td style="visibility: hidden;"><button>-</button></td>
 		</tr>
 	</table>
 	<div class="changesBorder"></div>
@@ -237,6 +243,7 @@
 			<td class="marginLeft spinSpace"> <b class="whiteText"  id="spinSpaceExplanation"> Spin Spaces: </b> </td>
 			<td class="marginLeft miniZtar"> <b class="whiteText"  id="miniZtarExplanation"> Mini Ztars collected: </b> </td>
 			<td class="marginLeft specialDice"> <b class="whiteText"  id="specialDiceExplanation"> Total Special Dices used: </b> </td>
+			<td style="visibility: hidden;"><button>-</button></td>
 		</tr>
 		<tr>
 			<td class="running">
@@ -295,7 +302,7 @@
 				<input type="number" value="0" class="numInput" id="p1SpecialDiceInput" autocomplete="off">
 				<input type="button" value="+" onclick="counterButtons(1, 'P', '', 'SpecialDice')" class="specialDiceInput" id="p1SpecialDiceInputP">
 			</td>
-			<td> <input type="button" style="visibility: hidden;"> </td>
+			<td style="visibility: hidden;"><button>-</button></td>
 		</tr>
 		<tr>
 			<td class="running">
@@ -354,7 +361,7 @@
 				<input type="number" value="0" class="numInput" id="p2SpecialDiceInput" autocomplete="off">
 				<input type="button" value="+" onclick="counterButtons(2, 'P', '', 'SpecialDice')" class="specialDiceInput" id="p2SpecialDiceInputP">
 			</td>
-			<td> <input type="button" style="visibility: hidden;"> </td>
+			<td style="visibility: hidden;"><button>-</button></td>
 		</tr>
 		<tr>
 			<td class="running running">
@@ -407,7 +414,7 @@
 				<input type="number" value="0" class="numInput" id="p3SpecialDiceInput" autocomplete="off">
 				<input type="button" value="+" onclick="counterButtons(3, 'P', '', 'SpecialDice')" class="specialDiceInput" id="p3SpecialDiceInputP">
 			</td>
-			<td> <input type="button" style="visibility: hidden;"> </td>
+			<td style="visibility: hidden;"><button>-</button></td>
 		</tr>
 		<tr>
 			<td class="running">
@@ -460,7 +467,7 @@
 				<input type="number" value="0" class="numInput" id="p4SpecialDiceInput" autocomplete="off">
 				<input type="button" value="+" onclick="counterButtons(4, 'P', '', 'SpecialDice')" class="specialDiceInput" id="p4SpecialDiceInputP">
 			</td>
-			<td> <input type="button" style="visibility: hidden;"> </td>
+			<td style="visibility: hidden;"><button>-</button></td>
 		</tr>
 	</table>
 

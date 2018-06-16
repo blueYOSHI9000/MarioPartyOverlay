@@ -53,10 +53,11 @@ function counterButtons (player, action, amount, counter) {
 }
 
 /*
-* Hides and shows settings to update the counters after pressing the "on/off" buttons.
+* Hides and shows counters after pressing the "on/off" buttons.
 *
-* @param {string} counter Which counter settings should be hidden/shown.
-* @param {boolean} no10 If the counter has additional buttons like "+10" or "-5". True = no additional buttons.
+* @param {string} counter Which counter should be hidden/shown.
+* @param {string} counter2 Same as counter but with the beggining being uppercase, only useful for counters that hide and show certain buttons like Running with Slow Star.
+* @param {boolean} start True if the function is only called to hide all counters.
 */
 function displayOnOff (counter, counter2, start) {
 	if (document.getElementById(counter + 'Var').value == 1) {
@@ -103,6 +104,10 @@ function displayOnOff (counter, counter2, start) {
 	}
 }
 
+/*
+* Calls displayOnOff() when the page is being loaded.
+* This is required due to some problems with setting up elements that already include the "display: none;" style attribute.
+*/
 function startDisplayOnOff () {
 	var counter = 'happening'
 	var counter2 = 'Happening'
@@ -556,30 +561,6 @@ function coinStarTie () {
 
 		document.getElementById('coinStarTie5').src = 'img/tie.png'
 
-	}
-}
-
-/*
-* Creates a extra margin in case not a single second row counter is activated.
-*/
-function changesMargin () {
-	var running = document.getElementById('runningVar').value
-	var shopping = document.getElementById('shoppingVar').value
-	var orb = document.getElementById('orbVar').value
-	var candy = document.getElementById('candyVar').value
-
-	if (running == 0 && shopping == 0 && orb == 0 && candy == 0) {
-		var p = document.getElementById('player4');
-		var newElement = document.createElement('div');
-		newElement.setAttribute('sizeChangeDiv', 'sizeChangeDiv');
-		//newElement.innerHTML = html;
-		p.appendChild(newElement);
-
-	} else if (running == 1 || shopping == 1 || orb == 1 || candy == 1) {
-		var node = document.getElementById("sizeChangeDiv");
-		if (node.parentNode) {
-			node.parentNode.removeChild(node);
-		}
 	}
 }
 
