@@ -86,21 +86,23 @@ function mobileButtons (counter, player) {
 * Checks if Ctrl is pressed.
 */
 function ctrlPressed (e) {
-	if (e.ctrlKey && ctrlKeyVar == false) {
-		ctrlKeyVar = true
-		if (document.getElementById('mobileTypeMinus').checked == false) {
-			document.getElementById('mobileTypeMinus').checked = true
-		} else if (document.getElementById('mobileTypeMinus').checked == true) {
-			document.getElementById('mobileTypeMinus').checked = false
+	if (mobile) {
+		if (e.ctrlKey && ctrlKeyVar == false) {
+			ctrlKeyVar = true
+			if (document.getElementById('mobileTypeMinus').checked == false) {
+				document.getElementById('mobileTypeMinus').checked = true
+			} else if (document.getElementById('mobileTypeMinus').checked == true) {
+				document.getElementById('mobileTypeMinus').checked = false
+			}
+		} else if (e.key == '1') {
+			document.getElementById('type1').checked = true
+		} else if (e.key == '5') {
+			document.getElementById('type5').checked = true
+		} else if (e.key == '6') {
+			document.getElementById('type6').checked = true
+		} else if (e.key == '0') {
+			document.getElementById('type10').checked = true
 		}
-	} else if (e.key == '1') {
-		document.getElementById('type1').checked = true
-	} else if (e.key == '5') {
-		document.getElementById('type5').checked = true
-	} else if (e.key == '6') {
-		document.getElementById('type6').checked = true
-	} else if (e.key == '0') {
-		document.getElementById('type10').checked = true
 	}
 }
 
@@ -108,12 +110,14 @@ function ctrlPressed (e) {
 * Checks if Ctrl is released.
 */
 function ctrlReleased (e) {
-	if (ctrlKeyVar == true) {
-		ctrlKeyVar = false
-		if (document.getElementById('mobileTypeMinus').checked == false) {
-			document.getElementById('mobileTypeMinus').checked = true
-		} else if (document.getElementById('mobileTypeMinus').checked == true) {
-			document.getElementById('mobileTypeMinus').checked = false
+	if (mobile) {
+		if (ctrlKeyVar == true) {
+			ctrlKeyVar = false
+			if (document.getElementById('mobileTypeMinus').checked == false) {
+				document.getElementById('mobileTypeMinus').checked = true
+			} else if (document.getElementById('mobileTypeMinus').checked == true) {
+				document.getElementById('mobileTypeMinus').checked = false
+			}
 		}
 	}
 }
