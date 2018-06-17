@@ -2,25 +2,6 @@
 font-family: "Mario";
 src: url("font.ttf");
 }
-.turns {
-	font-size: 20px; /* === CHANGE THIS NUMBER WHEN USING A DIFFERENT FONT === (30px for "Super Mario 256 Bold" Font) */
-	font-family: 'Mario';
-	color: white;
-}
-.counterText {
-	font-size: 22px; /* === CHANGE THIS NUMBER WHEN USING A DIFFERENT FONT === (35px for "Super Mario 256 Bold" Font) */
-	color: white;
-	font-family: 'Mario';
-	position: relative;
-	top: -4px; /* === CHANGE THIS NUMBER WHEN USING A DIFFERENT FONT === This changes the position, the lower it is (-1 is lower than 1) the higher the number is */
-}
-#turnText {
-	margin-top: 60px;
-	font-size: 30px; /* === CHANGE THIS AND THE NUMBER BELOW (#curTurnText) TO CHANGE THE TURN TEXT SIZE === */
-}
-#curTurnText {
-	font-size: 30px;
-}
 
 
 .hidden {
@@ -47,6 +28,13 @@ src: url("font.ttf");
 	float: left;
 	margin-top: 30px;
 }
+.counterText {
+	font-size: 22px;
+	color: white;
+	font-family: 'Mario';
+	position: relative;
+	top: -4px;
+}
 .counterDisplay {
 	height: 35px;
 	margin-left: 15px;
@@ -54,6 +42,18 @@ src: url("font.ttf");
 .characterImg {
 	margin-right: 50px;
 	height: 120px;
+}
+.turns {
+	font-size: 20px;
+	font-family: 'Mario';
+	color: white;
+}
+#turnText {
+	margin-top: 60px;
+	font-size: 30px;
+}
+#curTurnText {
+	font-size: 30px;
 }
 
 #coinStar {
