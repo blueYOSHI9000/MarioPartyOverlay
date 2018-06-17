@@ -1,15 +1,14 @@
 # What's Mario Party Overlay?
-Mario Party Overlay is a website to display which character gets the bonus stars in the Mario Party games 1-10 and DS. It's also possible to include this in a Stream through OBS or other streaming software.  
+Mario Party Overlay is a website to display which player gets the bonus stars in the Mario Party games 1-10 and DS. It's also possible to include this in a Stream through OBS or other streaming software.  
 **Tutorial is on the site itself**
 
 **[Website](https://blueyoshi9000.github.io/MarioPartyOverlay/)**  
 
 # Credits
 Created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000) 
-Character Sprites ripped by [Random Talking Bush](https://www.vg-resource.com/user-7.html) and edited by [RicoDexter](https://twitter.com/Der_RicoDexter) & [blueYOSHI9000](https://www.twitter.com/blueyoshi9000)
+Character Sprites ripped by [Random Talking Bush](https://twitter.com/RandomTBush) and edited by [RicoDexter](https://twitter.com/Der_RicoDexter) & [blueYOSHI9000](https://www.twitter.com/blueyoshi9000)
 
-[Font](https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx)
-
+[Font](https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx)  
 [Interact.js](http://interactjs.io/) (enables drag 'n' drop)  
 [tapic.js](https://github.com/Skhmt/tapic) (enables everything Twitch related)
 
