@@ -1,3 +1,5 @@
+var mobile = document.getElementById('mobileSettings') //Used to check if the mobile version of MPO is used
+
 /*
 * Updates Input elements of the counters.
 * Is activated at each button press and updates the value from the Input elements.
@@ -53,6 +55,74 @@ function counterButtons (player, action, amount, counter) {
 }
 
 /*
+* Calls counterButtons() for the mobile.html site.
+* 
+* @param {string} counter Which counter should be updated.
+* @param {player} player Which player should be updated.
+*/
+function mobileButtons (counter, player) {
+	var action = ''
+	var amount = 0
+
+	if (document.getElementById('mobileTypeMinus').checked == true) {
+		action = 'M'
+	} else {
+		action = 'P'
+	}
+
+	if (document.getElementById('type5').checked == true) {
+		amount = 5
+	} else if (document.getElementById('type6').checked == true) {
+		amount = 6
+	} else if (document.getElementById('type10').checked == true) {
+		amount = 10
+	} else {
+		amount = ''
+	}
+	counterButtons(player, action, amount, counter)
+}
+
+/*
+* Checks if Ctrl is pressed.
+*/
+function ctrlPressed (e) {
+	if (e.ctrlKey && ctrlKeyVar == false) {
+		ctrlKeyVar = true
+		if (document.getElementById('mobileTypeMinus').checked == false) {
+			document.getElementById('mobileTypeMinus').checked = true
+		} else if (document.getElementById('mobileTypeMinus').checked == true) {
+			document.getElementById('mobileTypeMinus').checked = false
+		}
+	} else if (e.key == '1') {
+		document.getElementById('type1').checked = true
+	} else if (e.key == '5') {
+		document.getElementById('type5').checked = true
+	} else if (e.key == '6') {
+		document.getElementById('type6').checked = true
+	} else if (e.key == '0') {
+		document.getElementById('type10').checked = true
+	}
+}
+
+/*
+* Checks if Ctrl is released.
+*/
+function ctrlReleased (e) {
+	if (ctrlKeyVar == true) {
+		ctrlKeyVar = false
+		if (document.getElementById('mobileTypeMinus').checked == false) {
+			document.getElementById('mobileTypeMinus').checked = true
+		} else if (document.getElementById('mobileTypeMinus').checked == true) {
+			document.getElementById('mobileTypeMinus').checked = false
+		}
+	}
+}
+
+window.onkeydown = ctrlPressed
+window.onkeyup = ctrlReleased
+var ctrlKeyVar = false
+
+/*
 * Hides and shows counters after pressing the "on/off" buttons.
 *
 * @param {string} counter Which counter should be hidden/shown.
@@ -72,27 +142,29 @@ function displayOnOff (counter, counter2, start) {
 
 	if (counter == 'running') {
 		for (let num = 1; num < 5; num++) {
-			document.getElementById(counter + 'Explanation').style.display = visibility
-			document.getElementById('p' + num + counter2 + 'Display').style.display = visibility
-			document.getElementById('p' + num + counter2 + 'Text').style.display = visibility
-			document.getElementById('p' + num + counter2 + 'Break').style.display = visibility
+				document.getElementById('p' + num + counter2 + 'Display').style.display = visibility
+				document.getElementById('p' + num + counter2 + 'Text').style.display = visibility
+				document.getElementById('p' + num + counter2 + 'Break').style.display = visibility
+			if (mobile) {} else {
+				document.getElementById(counter + 'Explanation').style.display = visibility
 
-			document.getElementById('p' + num + counter2 + 'InputTextBefore').style.display = visibility
-			document.getElementById('p' + num + counter2 + 'Input').style.display = visibility
-			document.getElementById('p' + num + counter2 + 'InputM').style.display = visibility
-			document.getElementById('p' + num + counter2 + 'InputP').style.display = visibility
-			if (document.getElementById('slowStarActivated').checked == true) {
-				document.getElementById('p' + num + counter2 + 'InputM6').style.display = visibility
-				document.getElementById('p' + num + counter2 + 'InputP6').style.display = visibility
-			} else {
-				document.getElementById('p' + num + counter2 + 'InputM10').style.display = visibility
-				document.getElementById('p' + num + counter2 + 'InputP10').style.display = visibility
-			}
-			if (start == true) {
-				document.getElementById('p' + num + counter2 + 'InputM6').style.display = visibility
-				document.getElementById('p' + num + counter2 + 'InputP6').style.display = visibility
-				document.getElementById('p' + num + counter2 + 'InputM10').style.display = visibility
-				document.getElementById('p' + num + counter2 + 'InputP10').style.display = visibility
+				document.getElementById('p' + num + counter2 + 'InputTextBefore').style.display = visibility
+				document.getElementById('p' + num + counter2 + 'Input').style.display = visibility
+				document.getElementById('p' + num + counter2 + 'InputM').style.display = visibility
+				document.getElementById('p' + num + counter2 + 'InputP').style.display = visibility
+				if (document.getElementById('slowStarActivated').checked == true) {
+					document.getElementById('p' + num + counter2 + 'InputM6').style.display = visibility
+					document.getElementById('p' + num + counter2 + 'InputP6').style.display = visibility
+				} else {
+					document.getElementById('p' + num + counter2 + 'InputM10').style.display = visibility
+					document.getElementById('p' + num + counter2 + 'InputP10').style.display = visibility
+				}
+				if (start == true) {
+					document.getElementById('p' + num + counter2 + 'InputM6').style.display = visibility
+					document.getElementById('p' + num + counter2 + 'InputP6').style.display = visibility
+					document.getElementById('p' + num + counter2 + 'InputM10').style.display = visibility
+					document.getElementById('p' + num + counter2 + 'InputP10').style.display = visibility
+				}
 			}
 		}
 	} else {
@@ -276,18 +348,25 @@ function slowStar () {
 		displayOnOff('running', 'Running')
 	}
 
-	for (let num = 1; num < 5; num++) {
-		if (document.getElementById('slowStarActivated').checked == true) {
-			document.getElementById('p' + num + 'RunningInputM10').style.display = 'none'
-			document.getElementById('p' + num + 'RunningInputP10').style.display = 'none'
-			document.getElementById('p' + num + 'RunningInputM6').style.display = ''
-			document.getElementById('p' + num + 'RunningInputP6').style.display = ''
-		} else {
-			document.getElementById('p' + num + 'RunningInputM10').style.display = ''
-			document.getElementById('p' + num + 'RunningInputP10').style.display = ''
-			document.getElementById('p' + num + 'RunningInputM6').style.display = 'none'
-			document.getElementById('p' + num + 'RunningInputP6').style.display = 'none'
+	if (mobile) {} else {
+		for (let num = 1; num < 5; num++) {
+			if (document.getElementById('slowStarActivated').checked == true) {
+				document.getElementById('p' + num + 'RunningInputM10').style.display = 'none'
+				document.getElementById('p' + num + 'RunningInputP10').style.display = 'none'
+				document.getElementById('p' + num + 'RunningInputM6').style.display = ''
+				document.getElementById('p' + num + 'RunningInputP6').style.display = ''
+			} else {
+				document.getElementById('p' + num + 'RunningInputM10').style.display = ''
+				document.getElementById('p' + num + 'RunningInputP10').style.display = ''
+				document.getElementById('p' + num + 'RunningInputM6').style.display = 'none'
+				document.getElementById('p' + num + 'RunningInputP6').style.display = 'none'
+			}
 		}
+	}
+	if (document.getElementById('slowStarActivated').checked == true) {
+		slowHighlight(highlightColor)
+	} else {
+		highlight('Running', highlightColor)
 	}
 }
 
@@ -351,12 +430,12 @@ function minigameWins () {
 
 	if (activated == true) {
 		source = 'img/minigamewins.png'
-		if (document.getElementById('changeNames').checked == false) {
+		if (mobile) {} else if (document.getElementById('changeNames').checked == false) {
 			document.getElementById('minigameExplanation').innerHTML = 'Minigame Wins:'
 		}
 	} else {
 		source = 'img/minigame.png'
-		if (document.getElementById('changeNames').checked == false) {
+		if (mobile) {} else if (document.getElementById('changeNames').checked == false) {
 			document.getElementById('minigameExplanation').innerHTML = 'Minigame Coins:'
 		}
 	}
@@ -396,7 +475,7 @@ function displayChange (playerNum, counter) {
 		document.getElementById('p' + playerNum + counter + 'Text').innerHTML=num;
 	} else if (num && num <= 0) {
 		document.getElementById('p' + playerNum + counter + 'Input').value = 0
-		document.getElementById('p' + playerNum + counter + 'Text').innerHTML=0
+		document.getElementById('p' + playerNum + counter + 'Text').innerHTML= 0
 	}
 }
 
@@ -448,9 +527,11 @@ function turns () {
 	} else if (+curTurnVar > +maxTurnVar) {
 		document.getElementById('curTurnInput').value = maxTurnVar
 	}
+
 	if (maxTurnVar <= 5) {
 		document.getElementById('maxTurnInput').value = 5
 	}
+
 	var curTurnVar = document.getElementById('curTurnInput').value
 	var maxTurnVar = document.getElementById('maxTurnInput').value
 	console.log('Current:' + curTurnVar + ' Max:' + maxTurnVar)
@@ -464,17 +545,20 @@ function turns () {
 */
 function coinStar () {
 	var coinStarVar = document.getElementById('coinStarInput').value
-	if (coinStarVar && coinStarVar >= 0) {
-		document.getElementById("coinStarText").innerHTML=coinStarVar
-	} else if (coinStarVar < 0) {
+	if (coinStarVar && coinStarVar > 0) {
+		document.getElementById("coinStarText").innerHTML = coinStarVar
+	} else if (coinStarVar <= 0) {
 		document.getElementById('coinStarInput').value = 0
+		document.getElementById("coinStarText").innerHTML = document.getElementById('coinStarInput').value
 	}
 }
 
 /*
 * Updates the coin star display.
+* 
+* @param {number} player Updates the coin star for that specific player
 */
-function coinStarTie () {
+function coinStarTie (player) {
 	document.getElementById('coinStarTie1').style.height = ''
 	document.getElementById('coinStarTie1').style.top = ''
 	document.getElementById('coinStarTie1').style.left = ''
@@ -482,6 +566,14 @@ function coinStarTie () {
 	document.getElementById('coinStarTie4').style.height = ''
 	document.getElementById('coinStarTie4').style.top = ''
 	document.getElementById('coinStarTie4').style.left = ''
+
+	if (player) {
+		if (document.getElementById('p' + player + 'CoinStarTie').checked == true) {
+			document.getElementById('p' + player + 'CoinStarTie').checked = false
+		} else {
+			document.getElementById('p' + player + 'CoinStarTie').checked = true
+		}
+	}
 
 	var player1 = document.getElementById('p1CoinStarTie').checked
 	var player2 = document.getElementById('p2CoinStarTie').checked
@@ -586,32 +678,34 @@ function showHideDiv (id) {
 * Changes names from a explanation to the bonus star names.
 */
 function changeNames () {
-	if (document.getElementById('changeNames').checked == true) {
-		document.getElementById('happeningExplanation').innerHTML = 'Happening:'
-		document.getElementById('minigameExplanation').innerHTML = 'Minigame:'
-		document.getElementById('redSpaceExplanation').innerHTML = 'Red Space:'
-		document.getElementById('runningExplanation').innerHTML = 'Running:'
-		document.getElementById('shoppingExplanation').innerHTML = 'Shopping:'
-		document.getElementById('orbExplanation').innerHTML = 'Orb:'
-		document.getElementById('candyExplanation').innerHTML = 'Candy:'
-		document.getElementById('spinSpaceExplanation').innerHTML = 'Spin Space:'
-		document.getElementById('miniZtarExplanation').innerHTML = 'Minus:'
-		document.getElementById('specialDiceExplanation').innerHTML = 'Special Dice:'
-	} else {
-		document.getElementById('happeningExplanation').innerHTML = 'Happening:'
-		if (document.getElementById('minigameWinsActivated').checked == true) {
-		document.getElementById('minigameExplanation').innerHTML = 'Minigame Wins:'
-	} else {
-		document.getElementById('minigameExplanation').innerHTML = 'Minigame Coins:'
-	}
-		document.getElementById('redSpaceExplanation').innerHTML = 'Red Spaces:'
-		document.getElementById('runningExplanation').innerHTML = 'Total Dice Num.:'
-		document.getElementById('shoppingExplanation').innerHTML = 'Total Coins spent:'
-		document.getElementById('orbExplanation').innerHTML = 'Total Orbs used:'
-		document.getElementById('candyExplanation').innerHTML = 'Total Candies used:'
-		document.getElementById('spinSpaceExplanation').innerHTML = 'Spin Spaces:'
-		document.getElementById('miniZtarExplanation').innerHTML = 'Mini Ztars collected:'
-		document.getElementById('specialDiceExplanation').innerHTML = 'Total Special Dices used:'
+	if (mobile) {} else {
+		if (document.getElementById('changeNames').checked == true) {
+			document.getElementById('happeningExplanation').innerHTML = 'Happening:'
+			document.getElementById('minigameExplanation').innerHTML = 'Minigame:'
+			document.getElementById('redSpaceExplanation').innerHTML = 'Red Space:'
+			document.getElementById('runningExplanation').innerHTML = 'Running:'
+			document.getElementById('shoppingExplanation').innerHTML = 'Shopping:'
+			document.getElementById('orbExplanation').innerHTML = 'Orb:'
+			document.getElementById('candyExplanation').innerHTML = 'Candy:'
+			document.getElementById('spinSpaceExplanation').innerHTML = 'Spin Space:'
+			document.getElementById('miniZtarExplanation').innerHTML = 'Minus:'
+			document.getElementById('specialDiceExplanation').innerHTML = 'Special Dice:'
+		} else {
+			document.getElementById('happeningExplanation').innerHTML = 'Happening:'
+			if (document.getElementById('minigameWinsActivated').checked == true) {
+			document.getElementById('minigameExplanation').innerHTML = 'Minigame Wins:'
+		} else {
+			document.getElementById('minigameExplanation').innerHTML = 'Minigame Coins:'
+		}
+			document.getElementById('redSpaceExplanation').innerHTML = 'Red Spaces:'
+			document.getElementById('runningExplanation').innerHTML = 'Total Dice Num.:'
+			document.getElementById('shoppingExplanation').innerHTML = 'Total Coins spent:'
+			document.getElementById('orbExplanation').innerHTML = 'Total Orbs used:'
+			document.getElementById('candyExplanation').innerHTML = 'Total Candies used:'
+			document.getElementById('spinSpaceExplanation').innerHTML = 'Spin Spaces:'
+			document.getElementById('miniZtarExplanation').innerHTML = 'Mini Ztars collected:'
+			document.getElementById('specialDiceExplanation').innerHTML = 'Total Special Dices used:'
+		}
 	}
 }
 
@@ -623,10 +717,13 @@ function changeNames () {
 function windowOnClick (event) {
 	var settings = document.querySelector("#settings")
 	var tutorial = document.querySelector("#tutorial")
+	var mobileSettings = document.querySelector("#mobileSettings")
 	if (event.target === settings) {
 		showHideDiv('settings')
 	} else if (event.target === tutorial){
 		showHideDiv('tutorial')
+	} else if (event.target === mobileSettings){
+		showHideDiv('mobileSettings')
 	}
 }
 

@@ -14,14 +14,13 @@
 
 <body id="htmlTag" style="background: url(img/background.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;">
 	<!-- Tutorial -->
-<div id="hideInOBS">
 <div id="inputDiv">
 	<button class="button" onclick="showHideDiv('tutorial')"> Show/Hide Useful links & Credits </button>
 	<button id="enableInteractButton" onclick="enableInteract()"> Enable Drag 'n' Drop (reload to reset positions)</button>
 	<button onclick="showHideDiv('settings')"> Show Settings </button>
-	<!--<form action="mobile.html">
+	<form action="mobile.html" style="display: inline;">
 		<input type="submit" value="Mobile Version" />
-	</form>-->
+	</form>
 
 	<!-- Selection #1 -->
 	<table class="selectionTable">
@@ -502,34 +501,29 @@
 	<!-- Mario Party Changes -->
 	<div class="changesBorder"></div>
 	<div class="marioPartyChanges">
+		<table class="selectionTable">
+			<tr>
+				<td> <button class="changesButton" onclick="displayOnOff('happening')"> Happening (all MPs) on/off </button> </td>
+				<td> <button class="changesButton" id="minigameButton" onclick="displayOnOff('minigame')"> Minigames (all MPs) on/off </button> </td>
+				<td> <input type="checkbox" id="minigameWinsActivated" onchange="minigameWins()"> <b class="whiteText" id="minigameWinsActivatedText"> Minigame Wins (MP9) on/off </b> </td>
+				<td> <button class="changesButton" id="redSpaceButton" onclick="displayOnOff('redSpace')"> Red Spaces (MP 7 & 8) on/off </button> </td>
+			</tr>
 
-		<button class="changesButton" onclick="displayOnOff('happening')"> Happening (all MPs) on/off </button>
+			<tr>
+				<td> <button class="changesButton" id="runningButton" onclick="displayOnOff('running', 'Running')"> Running (MP 7 & 8 & 9 & DS) on/off </button> </td>
+				<td> <button class="changesButton" onclick="displayOnOff('shopping')"> Shopping (MP 7 & 8) on/off </button> </td>
+				<td> <button class="changesButton" onclick="displayOnOff('orb')"> Orbs (MP 6 & 7) on/off </button> </td>
+				<td> <button class="changesButton" onclick="displayOnOff('candy')"> Candies (MP 8) on/off </button> </td>
+			</tr>
 
-		<button class="changesButton" id="minigameButton" onclick="displayOnOff('minigame')"> Minigames (all MPs) on/off </button>
-
-		<input type="checkbox" id="minigameWinsActivated" onchange="minigameWins()"> <b class="whiteText" id="minigameWinsActivatedText"> Minigame Wins (MP9) on/off </b>
-
-		<button class="changesButton" id="redSpaceButton" onclick="displayOnOff('redSpace')"> Red Spaces (MP 7 & 8) on/off </button>
-		<br />
-
-		<button class="changesButton" id="runningButton" onclick="displayOnOff('running', 'Running')"> Running (MP 7 & 8 & 9 & DS) on/off </button>
-
-		<button class="changesButton" onclick="displayOnOff('shopping')"> Shopping (MP 7 & 8) on/off </button>
-
-		<button class="changesButton" onclick="displayOnOff('orb')"> Orbs (MP 6 & 7) on/off </button>
-
-		<button class="changesButton" onclick="displayOnOff('candy')"> Candies (MP 8) on/off </button>
-		<br />
-
-		<button class="changesButton" id="spinSpaceButton" onclick="displayOnOff('spinSpace')"> Spin Spaces (MP 9) on/off </button>
-
-		<button class="changesButton" id="miniZtarButton" onclick="displayOnOff('miniZtar')"> Minus Star (MP 9) on/off </button>
-
-		<button class="changesButton" id="specialDiceButton" onclick="displayOnOff('specialDice')"> Special Dice Blocks (MP 9) on/off </button>
-
-		<input type="checkbox" id="slowStarActivated" onchange="slowStar()"> <b class="whiteText" id="slowStarActivatedText"> Slow (MP 9) on/off </b>
+			<tr>
+				<td> <button class="changesButton" id="spinSpaceButton" onclick="displayOnOff('spinSpace')"> Spin Spaces (MP 9) on/off </button> </td>
+				<td> <button class="changesButton" id="miniZtarButton" onclick="displayOnOff('miniZtar')"> Minus Star (MP 9) on/off </button> </td>
+				<td> <button class="changesButton" id="specialDiceButton" onclick="displayOnOff('specialDice')"> Special Dice Blocks (MP 9) on/off </button> </td>
+				<td> <input type="checkbox" id="slowStarActivated" onchange="slowStar()"> <b class="whiteText" id="slowStarActivatedText"> Slow (MP 9) on/off </b> </td>
+			</tr>
+		</table>
 	</div>
-</div>
 </div>
 
 	<!-- Player Images & Happening & Minigame & Running Display -->
@@ -700,7 +694,7 @@
 
     	<h2 class="settingsTitle"> Credits </h2>
 
-		<b class="settingsText"> Created by <a href="https://www.twitter.com/blueyoshi9000" class="tutorialLink">blueYOSHI9000</a> | Version 1.3.1 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md#changelog" class="tutorialLink"> (Changelog)</a> <br />
+		<b class="settingsText"> Created by <a href="https://www.twitter.com/blueyoshi9000" class="tutorialLink">blueYOSHI9000</a> | Version 1.4.0 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md#changelog" class="tutorialLink"> (Changelog)</a> <br />
 		Character Sprites ripped by <a href="https://twitter.com/RandomTBush" class="tutorialLink">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="tutorialLink"> RicoDexter</a> & <a href="https://www.twitter.com/blueyoshi9000" class="tutorialLink">blueYOSHI9000</a> </b> <br /> <br />
 		<b> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="tutorialLink"> Standard font</a> </b> <br />
 		<b> <a href="http://interactjs.io/" class="tutorialLink"> Interact.js</a> </b> <b class="settingsText"> (the thing that enables drag 'n' drop) </b> <br />

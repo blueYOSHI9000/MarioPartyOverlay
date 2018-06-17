@@ -15,6 +15,10 @@ Character Sprites ripped by [Random Talking Bush](https://www.vg-resource.com/us
 
 # Changelog
 
+v1.4
+- Added: Mobile version, smaller and easier to add stuff while playing
+- Fixed: That the coin star display didn't update if it wouldve been below 0
+
 v1.3.1
 - Changed: Hide Counters System, saved some space in the JS file
 
