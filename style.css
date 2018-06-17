@@ -1,0 +1,256 @@
+@font-face {
+font-family: "Mario";
+src: url("font.ttf");
+}
+.turns {
+	font-size: 20px; /* === CHANGE THIS NUMBER WHEN USING A DIFFERENT FONT === (30px for "Super Mario 256 Bold" Font) */
+	font-family: 'Mario';
+	color: white;
+}
+.counterText {
+	font-size: 22px; /* === CHANGE THIS NUMBER WHEN USING A DIFFERENT FONT === (35px for "Super Mario 256 Bold" Font) */
+	color: white;
+	font-family: 'Mario';
+	position: relative;
+	top: -4px; /* === CHANGE THIS NUMBER WHEN USING A DIFFERENT FONT === This changes the position, the lower it is (-1 is lower than 1) the higher the number is */
+}
+#turnText {
+	margin-top: 60px;
+	font-size: 30px; /* === CHANGE THIS AND THE NUMBER BELOW (#curTurnText) TO CHANGE THE TURN TEXT SIZE === */
+}
+#curTurnText {
+	font-size: 30px;
+}
+
+
+.hidden {
+	display: none;
+}
+.visible {
+	display: block;
+}
+
+.inputVariable {
+	display: none;
+}
+
+/* == Global == */
+.whiteText {
+	color: white;
+}
+.marginLeft {
+	padding-left: 50px;
+}
+
+/* == Counters == */
+.player {
+	float: left;
+	margin-top: 30px;
+}
+.counterDisplay {
+	height: 35px;
+	margin-left: 15px;
+}
+.characterImg {
+	margin-right: 50px;
+	height: 120px;
+}
+
+#coinStar {
+	height: 35px;
+	margin-left: 30px;
+}
+#coinStarCharacter {
+	height: 40px;
+	position: relative;
+	top: 3px;
+}
+#coinStarText {
+	margin-left: 9px;
+}
+#coinStarDiv {
+	position: relative;
+	left: -150px;
+}
+
+/* == Coin star tie == */
+.coinStarTieDiv {
+	height: 40px;
+	position: relative;
+	display: inline;
+	left: 160px;
+	top: 10px;
+}
+#coinStarTie1 {
+	height: 28px;
+	position: relative;
+	top: -28px;
+	left: 33px;
+}
+#coinStarTie2 {
+	height: 28px;
+	position: relative;
+	left: 32px;
+	top: -28px;
+}
+#coinStarTie3 {
+	height: 28px;
+	position: relative;
+	left: -33px;
+}
+#coinStarTie4 {
+	height: 28px;
+	position: relative;
+	left: -35px;
+	top: 2px;
+}
+#coinStarTie5 {
+	height: 28px;
+	position: relative;
+	left: 84px;
+	top: 2px;
+}
+
+/* == Counter Inputs == */
+.firstInputText {
+	color: white;
+}
+.numInput {
+	width: 40px;
+}
+.turnInputText {
+	color: white;
+}
+.turnInput {
+	margin-bottom: 30px;
+}
+.comText {
+	margin-left: 70px;
+	color: white;
+}
+.changesButton {
+	margin-right: 40px;
+}
+.changesBorder {
+	border-top: 2px;
+	border-color: white;
+	border-top-style: solid;
+	width: 973px;
+	margin-top: 3px;
+}
+
+
+/* == Settings == */
+.settingsTitle {
+	color: #111111;
+	border-bottom: 2px black solid;
+}
+.settingsText {
+	color: #111111;
+}
+.settingsNote {
+	color: #888888;
+}
+.resizableInput {
+	resize: both;
+	max-width: 500px;
+	min-width: 200px;
+	min-height: 70px;
+}
+.commandInput {
+	margin-top: 12px;
+	resize: both;
+	min-width: 400px;
+	min-height: 15px;
+	height: 15px;
+}
+
+#settings {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+#settingsContent {
+	position: absolute;
+	max-height: 100%;
+	overflow-y: auto;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: #F3F3F3;
+	border: 3px solid #111111;
+	padding: 1rem 1.5rem;
+	border-radius: 0.5rem;
+}
+#settingsClose {
+	float: right;
+}
+
+/* == Counter options for mobile version == */
+#mobileSettings {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+#mobileSettingsContent {
+	position: absolute;
+	max-height: 100%;
+	overflow-y: auto;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: #F3F3F3;
+	border: 3px solid #111111;
+	padding: 1rem 1.5rem;
+	border-radius: 0.5rem;
+}
+
+/* == mobile version == */
+#mobileTypeDiv {
+	margin-top: 20px;
+	margin-left: 124px;
+}
+.mobileType {
+	height: 20px;
+	width: 20px;
+	margin-left: 20px;
+}
+#mobileTypeMinus {
+	height: 20px;
+	width: 20px;
+}
+.mobileTypeLabel {
+	font-size: 28px;
+	color: #F4F4F4;
+}
+
+/* == Tutorial == */
+#tutorial {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+#tutorialContent {
+	position: absolute;
+	max-height: 100%;
+	overflow-y: auto;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	border: 3px solid #111111;
+	border-radius: 0.5rem;
+	padding: 1rem 1.5rem;
+	background-color: #F3F3F3;
+}
+#tutorialClose {
+	float: right;
+}
