@@ -5,7 +5,7 @@ Mario Party Overlay is a website to display which player gets the bonus stars in
 [Tutorial](https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki)
 
 # Credits
-Created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000) 
+Created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000)  
 Character Sprites ripped by [Random Talking Bush](https://twitter.com/RandomTBush) and edited by [RicoDexter](https://twitter.com/Der_RicoDexter) & [blueYOSHI9000](https://www.twitter.com/blueyoshi9000)
 
 [Font](https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx)  
