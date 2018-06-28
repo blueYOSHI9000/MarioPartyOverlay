@@ -229,6 +229,9 @@ src: url("font.ttf");
 	font-size: 28px;
 	color: #F4F4F4;
 }
+#backupText {
+	margin-left: 100px;
+}
 
 /* == Tutorial == */
 #tutorial {

@@ -37,6 +37,8 @@
 
 	<input type="radio" name="type" value="10" id="type10" class="mobileType" autocomplete="off">
 	<label for="type10" class="mobileTypeLabel">10</label>
+
+	<span class="mobileTypeLabel" id="backupText"> Backup: </span> <button onclick="backup()"> Save </button> <button onclick="restore()" disabled="true" id="reloadButton"> Reload </button>
 </div>
 <div id="inputDiv">
 
@@ -297,7 +299,9 @@
 				</tr>
 			</table> <br />
 
-			<b class="settingsText"> Max. Turn: </b> <input type="button" value="-5" onclick="counterButtons('', 'M', 5, 'maxTurn')"> <input type="number" value="20" class="numInput" id="maxTurnInput" autocomplete="off"> <input type="button" value="+5" onclick="counterButtons('', 'P', 5, 'maxTurn')">
+			<b class="settingsText"> Max. Turn: </b> <input type="button" value="-5" onclick="counterButtons('', 'M', 5, 'maxTurn')"> <input type="number" value="20" class="numInput" id="maxTurnInput" autocomplete="off"> <input type="button" value="+5" onclick="counterButtons('', 'P', 5, 'maxTurn')"> <br /> <br />
+
+			<button onclick="showHideDiv('resetBackupDiv')"> Reset all counters </button> <span id="resetBackupDiv" class="hidden"> <b class="settingsText"> This will reset all counters! </b> <button onclick="resetBackup();showHideDiv('resetBackupDiv')"> Yes, reset! </button> </span>
 
 
 			<h2 class="settingsTitle"> Enable & disable counters </h2>
