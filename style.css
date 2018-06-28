@@ -176,7 +176,7 @@ src: url("font.ttf");
 #settingsContent {
 	position: absolute;
 	max-height: 100%;
-	overflow-y: auto;
+	overflow: auto;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
@@ -201,7 +201,7 @@ src: url("font.ttf");
 #mobileSettingsContent {
 	position: absolute;
 	max-height: 100%;
-	overflow-y: auto;
+	overflow: auto;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
@@ -242,7 +242,7 @@ src: url("font.ttf");
 #tutorialContent {
 	position: absolute;
 	max-height: 100%;
-	overflow-y: auto;
+	overflow: auto;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
