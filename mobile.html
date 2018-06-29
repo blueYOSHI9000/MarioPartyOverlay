@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="style.css">
 </head>
 
-<body id="htmlTag" style="background: url(img/background.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;">
+<body id="bodyElement" style="background: url(img/background.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;">
 
 	<button onclick="showHideDiv('mobileSettings')" style="margin-right: 50px;"> Show counter options </button>
 	<button class="button" onclick="showHideDiv('tutorial')"> Show/Hide Useful links & Credits </button>
@@ -39,6 +39,8 @@
 	<label for="type10" class="mobileTypeLabel">10</label>
 
 	<span class="mobileTypeLabel" id="backupText"> Backup: </span> <button onclick="backup()"> Save </button> <button onclick="restore()" disabled="true" id="reloadButton"> Reload </button>
+
+	<button onclick="textOutput(true)" id="textOutputMobile">Generate & Copy Counter text</button>
 </div>
 <div id="inputDiv">
 
@@ -301,7 +303,9 @@
 
 			<b class="settingsText"> Max. Turn: </b> <input type="button" value="-5" onclick="counterButtons('', 'M', 5, 'maxTurn')"> <input type="number" value="20" class="numInput" id="maxTurnInput" autocomplete="off"> <input type="button" value="+5" onclick="counterButtons('', 'P', 5, 'maxTurn')"> <br /> <br />
 
-			<button onclick="showHideDiv('resetBackupDiv')"> Reset all counters </button> <span id="resetBackupDiv" class="hidden"> <b class="settingsText"> This will reset all counters! </b> <button onclick="resetBackup();showHideDiv('resetBackupDiv')"> Yes, reset! </button> </span>
+			<button onclick="showHideDiv('resetBackupDiv')"> Reset all counters </button> <span id="resetBackupDiv" class="hidden"> <b class="settingsText"> This will reset all counters! </b> <button onclick="resetBackup();showHideDiv('resetBackupDiv')"> Yes, reset! </button> </span> <br /> <br />
+
+			<b class="settingsText"> Text Output: </b> <button onclick="textOutput(true)">Generate & Copy</button> <input id="textOutput" readonly="true" value="No stats generated yet.">
 
 
 			<h2 class="settingsTitle"> Enable & disable counters </h2>
@@ -333,26 +337,53 @@
 	<!-- Settings -->
 	<div class="hidden" id="settings">
 		<div id="settingsContent">
-			<h2 class="settingsTitle"> General MPO settings </h2>
 
-			<table class="selectionTable">
-				<tr>
-					<td> <b> Enable Greenscreen: </b> <input type="checkbox" onchange="bgOnOff()" autocomplete="off" id="greenscreen"> <input type="color" onchange="changeBGColor()" value="#0000ff" autocomplete="on" id="bgColor"> </td>
-				</tr>
-				<tr>
-					<td> <b class="settingsText"> Bonus Star names instead of Explanation: </b> <input type="checkbox" autocomplete="on" id="changeNames" onchange="changeNames()"> </td>
-				</tr>
-				<tr>
-					<td> <b class="settingsText"> Enable Counter Highlight: </b> <input type="checkbox" checked="true" autocomplete="on" id="enableHighlight" onchange="resetHighlights()">
-					<input type="color" onchange="callHighlight(false, true)" value="#ff0000" autocomplete="on" id="highlightColor"> </td>
-				</tr>
-				<tr>
-					<td> <b class="settingsText"> Use <img src="img/question.png" style="height: 15px;"> instead of a tie for the coin star: </b> <input type="checkbox" id="questionForTie" onchange="coinStarTie()"></td>
-				</tr>
-			</table>
+			<h2 class="settingsTitle" onclick="showHideDiv('generalMPOSettings')"> General MPO settings </h2>
+			<div id="generalMPOSettings" class="visible">
+
+				<table class="selectionTable">
+					<tr>
+						<td> <b> Enable Greenscreen: </b> <input type="checkbox" onchange="bgOnOff()" autocomplete="off" id="greenscreen"> <input type="color" onchange="changeBGColor()" value="#0000ff" autocomplete="on" id="bgColor"> </td>
+					</tr>
+					<tr>
+						<td> <b class="settingsText"> Bonus Star names instead of Explanation: </b> <input type="checkbox" autocomplete="on" id="changeNames" onchange="changeNames()"> </td>
+					</tr>
+					<tr>
+						<td> <b class="settingsText"> Enable Counter Highlight: </b> <input type="checkbox" checked="true" autocomplete="on" id="enableHighlight" onchange="resetHighlights()">
+						<input type="color" onchange="callHighlight(false, true)" value="#ff0000" autocomplete="on" id="highlightColor"> </td>
+					</tr>
+					<tr>
+						<td> <b class="settingsText"> Use <img src="img/question.png" style="height: 15px;"> instead of a tie for the coin star: </b> <input type="checkbox" id="questionForTie" onchange="coinStarTie()"></td>
+					</tr>
+				</table>
+			</div>
+
+			<h2 class="settingsTitle" onclick="showHideDiv('textOutputSettings')"> Text output settings </h2>
+			<div id="textOutputSettings"  class="hidden">
+
+				<table class="selectionTable">
+					<tr>
+						<td> <b class="settingsText">  Player 1 name: </b> <input id="textOutputP1Name"> </td>
+						<td class="marginLeft"> <b class="settingsText">  Player 2 name: </b> <input id="textOutputP2Name"> </td>
+					</tr> <tr>
+						<td> <b class="settingsText">  Player 3 name: </b> <input id="textOutputP3Name"> </td>
+						<td class="marginLeft"> <b class="settingsText">  Player 4 name: </b> <input id="textOutputP4Name"> </td>
+					</tr>
+					<tr> <td> 
+						<b class="settingsText"> Counter seperation: </b> <input id="textOutputSeperation" value=" - " style="width: 30px;">
+					</td> </tr>
+					<tr> <td colspan="2"> <br /> <span class="settingsNote"> Seperate counters with ", ", counters that aren't in the list won't be used for this. </span> </td> </tr>
+					<tr>
+						<td><b class="settingsText"> Counter order: </b> <br />
+						<textarea class="resizableInput" id="textOutputCounters" onchange="textOutputTest()">Happening, Minigame, Red Space</textarea> </td>
+						<td><b class="settingsText"> Counter name: </b> <span class="settingsNote"> (Used to describe the counter) </span> <br />
+						<textarea class="resizableInput" id="textOutputNames">?, MG, Red</textarea> </td>
+					</tr>
+				</table>
+			</div>
 			
-			<div id="twitchSettings" class="visible">
-				<h2 class="settingsTitle"> General Twitch Settings <button onclick="twitchSettingsSwap()"> Show Command Settings </button></h2> 
+			<h2 class="settingsTitle" onclick="showHideDiv('twitchSettings')"> General Twitch Settings </h2> 
+			<div id="twitchSettings" class="hidden">
 
 				<table class="selectionTable">
 					<tr>
@@ -365,7 +396,7 @@
 					<tr>
 						<td> <button class="button" onclick="connectTwitch()"> Connect </button> <b class="settingsText"> Auto-connect to twitch:</b> <input type="checkbox" id="twitchAutoConnect"> </td>
 					</tr>
-					<tr> <td colspan="2"> <br /> <span class="settingsNote"> Seperate users with ", ". Mods are automatically included. </span> </td> </tr>
+					<tr> <td colspan="2"> <br /> <span class="settingsNote"> Seperate users with ", ". Mods are automatically included. <br /> Counters that don't exist will automatically be removed. </span> </td> </tr>
 					<tr>
 						<td> <b class="settingsText"> User Whitelist: </b> <br />
 						<textarea class="resizableInput" id="userWhitelist">user 1, user 2</textarea> </td>
@@ -377,8 +408,8 @@
 				</table>
 			</div>
 
+			<h2 class="settingsTitle" onclick="showHideDiv('commandSettings')"> Twitch Command Settings </h2> 
 			<div id="commandSettings" class="hidden">
-				<h2 class="settingsTitle"> Twitch Command Settings <button onclick="twitchSettingsSwap()"> Show Twitch Settings </button></h2> 
 
 				<b class="settingsText"> Enable Commands: </b> <input type="checkbox" checked="true" id="commandsEnabled"> <br />
 				<b class="settingsText"> Enable "Connected" text: </b> <input type="checkbox" id="enablecmdConnected" checked="true">
@@ -398,16 +429,17 @@
 
 			</div>
 
-			<br /> <br / > <div id="resetSettingsDiv" class="hidden"> <b class="settingsText"> Reset all settings and clear cookies (this doesn't affect any counters): </b> <button onclick="resetSettings()"> Reset </button> </div> <br />
+				<div style="margin-bottom: 5px;"> <br /> <br / > <div id="resetSettingsDiv" class="hidden"> <b class="settingsText"> Reset all settings and clear cookies (this doesn't affect any counters): </b> <button onclick="resetSettings()"> Reset </button> </div> <br />
 
-			<button onclick="showHideDiv('resetSettingsDiv')"> Reset Settings </button><div id="settingsClose"> <span class="settingsNote">(Saving uses cookies)</span> <button onclick="saveSettings(true)"> Save & Close </button> <button onclick="saveSettings()"> Save </button> <button onclick="showHideDiv('settings')"> Cancel </button> </div>
+				<button onclick="showHideDiv('resetSettingsDiv')"> Reset Settings </button><div id="settingsClose"> <span class="settingsNote">(Saving uses cookies)</span> <button onclick="saveSettings(true)"> Save & Close </button> <button onclick="saveSettings()"> Save </button> <button onclick="showHideDiv('settings')"> Cancel </button> </div>
+			</div>
 		</div>
-    </div>
+	</div>
 
-    <!-- Tutorial -->
-    <div id="tutorial" class="hidden"> <div id="tutorialContent">
+	<!-- Tutorial -->
+	<div id="tutorial" class="hidden"> <div id="tutorialContent">
 
-    	<h2 class="settingsTitle"> Links </h2>
+		<h2 class="settingsTitle"> Links </h2>
 
 		<b> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki" class="tutorialLink">Tutorial</a> </b> <br />
 
@@ -419,9 +451,9 @@
 
 		<b class="tutorialLink"> <a href="https://twitchapps.com/tmi/" class="tutorialLink">Get Twitch Token</a> </b> <br />
 
-    	<h2 class="settingsTitle"> Credits </h2>
+		<h2 class="settingsTitle"> Credits </h2>
 
-		<b class="settingsText"> Created by <a href="https://www.twitter.com/blueyoshi9000" class="tutorialLink">blueYOSHI9000</a> | Version 1.4.1 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md#changelog" class="tutorialLink"> (Changelog)</a> <br />
+		<b class="settingsText"> Created by <a href="https://www.twitter.com/blueyoshi9000" class="tutorialLink">blueYOSHI9000</a> | Version 1.5.0 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md#changelog" class="tutorialLink"> (Changelog)</a> <br />
 		Character Sprites ripped by <a href="https://twitter.com/RandomTBush" class="tutorialLink">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="tutorialLink"> RicoDexter</a> & <a href="https://www.twitter.com/blueyoshi9000" class="tutorialLink">blueYOSHI9000</a> </b> <br /> <br />
 		<b> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="tutorialLink"> Font</a> </b> <br />
 		<b> <a href="http://interactjs.io/" class="tutorialLink"> Interact.js</a> </b> <b class="settingsText"> (the thing that enables drag 'n' drop) </b> <br />

@@ -15,6 +15,9 @@ Character Sprites ripped by [Random Talking Bush](https://twitter.com/RandomTBus
 
 # Changelog
 
+v1.5.0
+- Added: Text output, outputing all counters as text
+
 v1.4.1
 - Fixed: Not being able to scroll in settings
 

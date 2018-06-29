@@ -149,7 +149,7 @@ src: url("font.ttf");
 	color: #111111;
 }
 .settingsNote {
-	color: #888888;
+	color: #666666;
 }
 .resizableInput {
 	resize: both;
@@ -184,6 +184,7 @@ src: url("font.ttf");
 	border: 3px solid #111111;
 	padding: 1rem 1.5rem;
 	border-radius: 0.5rem;
+	width: 825px;
 }
 #settingsClose {
 	float: right;
@@ -214,7 +215,7 @@ src: url("font.ttf");
 /* == mobile version == */
 #mobileTypeDiv {
 	margin-top: 20px;
-	margin-left: 124px;
+	margin-left: 90px;
 }
 .mobileType {
 	height: 20px;
@@ -230,7 +231,10 @@ src: url("font.ttf");
 	color: #F4F4F4;
 }
 #backupText {
-	margin-left: 100px;
+	margin-left: 45px;
+}
+#textOutputMobile {
+	margin-left: 45px;
 }
 
 /* == Tutorial == */

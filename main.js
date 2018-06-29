@@ -666,7 +666,7 @@ function coinStarTie (player) {
 *
 * @param {string} id Which element should be hidden or shown.
 */
-function showHideDiv (id) {
+function showHideDiv (id, id2) {
 	var div = document.getElementById(id).classList
 	console.log(div)
 	if (div == 'hidden') {
@@ -676,6 +676,81 @@ function showHideDiv (id) {
 		document.getElementById(id).classList.remove('visible');
 		document.getElementById(id).classList.add('hidden');
 	}
+	if (id2) {
+		var div = document.getElementById(id2).classList
+		console.log(div)
+		if (div == 'hidden') {
+			document.getElementById(id2).classList.add('visible');
+			document.getElementById(id2).classList.remove('hidden');
+		} else {
+			document.getElementById(id2).classList.remove('visible');
+			document.getElementById(id2).classList.add('hidden');
+		}
+	}
+}
+
+/*
+* Outputs all counters as text.
+*/
+function textOutput () {
+	var p1 = document.getElementById('p1Select').value
+	var p2 = document.getElementById('p2Select').value
+	var p3 = document.getElementById('p3Select').value
+	var p4 = document.getElementById('p4Select').value
+
+	if (document.getElementById('textOutputP1Name').value != '') {
+		p1 = document.getElementById('textOutputP1Name').value
+	}
+	if (document.getElementById('textOutputP2Name').value != '') {
+		p2 = document.getElementById('textOutputP2Name').value
+	}
+	if (document.getElementById('textOutputP3Name').value != '') {
+		p3 = document.getElementById('textOutputP3Name').value
+	}
+	if (document.getElementById('textOutputP4Name').value != '') {
+		p4 = document.getElementById('textOutputP4Name').value
+	}
+
+	var joinString = document.getElementById('textOutputSeperation').value
+
+	var counters = document.getElementById('textOutputCounters').value.split(', ')
+	var names = document.getElementById('textOutputNames').value.split(', ')
+
+	var output = ['']
+
+	for (let num = 0; num < counters.length; num++) {
+		counters[num] = counters[num].replace(/\s/g, '')
+
+		output[num] = names[num] + ': ' + p1 + ' ' + document.getElementById('p1' + counters[num] + 'Input').value + ', ' + p2 + ' ' + document.getElementById('p2' + counters[num] + 'Input').value + ', ' + p3 + ' ' + document.getElementById('p3' + counters[num] + 'Input').value + ', ' + p4 + ' ' + document.getElementById('p4' + counters[num] + 'Input').value
+	}
+
+	var outputString = output.join(joinString)
+
+	var outputElement = document.getElementById('textOutput')
+	outputElement.value = outputString
+	outputElement.select()
+	outputElement.focus()
+	document.execCommand("copy");
+
+	console.log(outputString)
+
+}
+
+/*
+* Checks if the counters inserted in the settings for the text output feature are correct, if not it removes them.
+*/
+function textOutputTest () {
+	var counters = document.getElementById('textOutputCounters').value.split(', ')
+
+	for (let num = 0; num < counters.length; num++) {
+		counters[num] = counters[num].replace(/\s/g, '')
+
+		if (document.getElementById('p1' + counters[num] + 'Input')) {} else {
+			counters.splice(num, 1)
+		}
+	}
+	document.getElementById('textOutputCounters').value = counters.join(', ')
+	document.getElementById('textOutputNames').value = names.join(', ')
 }
 
 /*
@@ -722,6 +797,7 @@ function windowOnClick (event) {
 	var settings = document.querySelector("#settings")
 	var tutorial = document.querySelector("#tutorial")
 	var mobileSettings = document.querySelector("#mobileSettings")
+	var bodyElement = document.querySelector("#bodyElement")
 	if (event.target === settings) {
 		showHideDiv('settings')
 	} else if (event.target === tutorial){
@@ -767,6 +843,14 @@ function saveSettings (close) {
 	localStorage.setItem('cmdError', document.getElementById('cmdError').value)
 	localStorage.setItem('cmdMissing', document.getElementById('cmdMissing').value)
 	localStorage.setItem('cmdNoPerm', document.getElementById('cmdNoPerm').value)
+
+	localStorage.setItem('toP1Name', document.getElementById('textOutputP1Name').value)
+	localStorage.setItem('toP2Name', document.getElementById('textOutputP2Name').value)
+	localStorage.setItem('toP3Name', document.getElementById('textOutputP3Name').value)
+	localStorage.setItem('toP4Name', document.getElementById('textOutputP4Name').value)
+	localStorage.setItem('toSeperation', document.getElementById('textOutputSeperation').value)
+	localStorage.setItem('toCounters', document.getElementById('textOutputCounters').value)
+	localStorage.setItem('toOutput', document.getElementById('textOutputNames').value)
 
 	if (close == true) {
 		showHideDiv('settings')
@@ -823,6 +907,14 @@ function prepareMPO () {
 		document.getElementById('cmdMissing').value = localStorage.getItem('cmdMissing')
 		document.getElementById('cmdNoPerm').value = localStorage.getItem('cmdNoPerm')
 
+		document.getElementById('textOutputP1Name').value = localStorage.getItem('toP1Name')
+		document.getElementById('textOutputP2Name').value = localStorage.getItem('toP2Name')
+		document.getElementById('textOutputP3Name').value = localStorage.getItem('toP3Name')
+		document.getElementById('textOutputP4Name').value = localStorage.getItem('toP4Name')
+		document.getElementById('textOutputSeperation').value = localStorage.getItem('toSeperation')
+		document.getElementById('textOutputCounters').value = localStorage.getItem('toCounters')
+		document.getElementById('textOutputNames').value = localStorage.getItem('toOutput')
+
 		if (document.getElementById('twitchAutoConnect').checked == true) {
 		 	connectTwitch()
 		}
@@ -874,6 +966,14 @@ function resetSettings() {
 	document.getElementById('cmdMissing').value = '@user, your last argument is missing, check "!mpo commands" for help.'
 	document.getElementById('cmdNoPerm').value = '@user, you don\'t have the permission to use this command.'
 
+	document.getElementById('textOutputP1Name').value = ''
+	document.getElementById('textOutputP2Name').value = ''
+	document.getElementById('textOutputP3Name').value = ''
+	document.getElementById('textOutputP4Name').value = ''
+	document.getElementById('textOutputSeperation').value = ' - '
+	document.getElementById('textOutputCounters').value = 'Happening, Minigame, Red Space'
+	document.getElementById('textOutputNames').value = '?, MG, Red'
+
 	showHideDiv('resetSettingsDiv')
 
 	if (bgImgOn == 0) {
@@ -908,10 +1008,10 @@ function bgOnOff () {
 	bgColor = document.getElementById('bgColor').value
 
 	if (bgImgOn == true) {
-		document.getElementById('htmlTag').style.background = bgColor
+		document.getElementById('bodyElement').style.background = bgColor
 		bgImgOn = false
 	} else {
-		document.getElementById('htmlTag').style = "background: url(img/background.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"
+		document.getElementById('bodyElement').style = "background: url(img/background.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"
 		bgImgOn = true
 	}
 }
@@ -922,7 +1022,7 @@ function bgOnOff () {
 function changeBGColor() {
 	bgColor = document.getElementById('bgColor').value
 	if (bgImgOn == false) {
-		document.getElementById('htmlTag').style.background = bgColor
+		document.getElementById('bodyElement').style.background = bgColor
 	}
 }
 
@@ -993,3 +1093,7 @@ interact('.draggable')
 
 window.onload = prepareMPO()
 window.onload = startDisplayOnOff()
+
+if (mobile) {
+	document.getElementById('type1').focus()
+}

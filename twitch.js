@@ -18,14 +18,6 @@ function saveTwitchLists() {
 }
 
 /*
-* Swaps the general and command twitch settings.
-*/
-function twitchSettingsSwap() {
-	showHideDiv('twitchSettings')
-	showHideDiv('commandSettings')
-}
-
-/*
 * Connects to twitch. 
 *
 * @param {string} obsBotName Twitch bots name, only used for OBS.
@@ -88,11 +80,11 @@ function prepareTwitch() {
 
 		connectTwitch(botName, oauth, channelName)
 		document.getElementById('hideInOBS').style = 'display: none;'
-		document.getElementById('htmlTag').style.background = '#0000FF'
+		document.getElementById('bodyElement').style.background = '#0000FF'
 	} else if (botName != false && oauth != false && channelName != false) {
 		connectTwitch(botName, oauth, channelName)
 		document.getElementById('hideInOBS').style = 'display: none;'
-		document.getElementById('htmlTag').style.background = '#0000FF'
+		document.getElementById('bodyElement').style.background = '#0000FF'
 
 		if (noCookies != 'true') {
 			localStorage.setItem('botName', botName)
@@ -419,7 +411,7 @@ function editAdminMessage (text, user) {
 
 	if (action == 'bgcolor') {
 		if (text[2].startsWith('#') && text[2].length == 7) {
-			document.getElementById('htmlTag').style.background = text[2]
+			document.getElementById('bodyElement').style.background = text[2]
 			sendMsg('completed', user)
 		} else {
 			sendMsg('invalid', user, text[2])
