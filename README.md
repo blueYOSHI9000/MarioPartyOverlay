@@ -15,6 +15,10 @@ Character Sprites ripped by [Random Talking Bush](https://twitter.com/RandomTBus
 
 # Changelog
 
+v1.6.0
+- Added: Greenscreen Test
+- Changed: Mobile Layout
+
 v1.5.0
 - Added: Text output, outputing all counters as text
 

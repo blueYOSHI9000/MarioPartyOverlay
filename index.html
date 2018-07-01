@@ -26,8 +26,8 @@
 	<table class="selectionTable">
 		<tr>
 			<td> <b class="whiteText""> Character: </b> </td>
-			<td> <b class="comText"> Computer: </b> </td>
-			<td> <b class="comText"> Coin star: </b> </td>
+			<td class="marginLeft"> <b class="whiteText"> Computer: </b> </td>
+			<td class="marginLeft"> <b class="whiteText"> Coin star: </b> </td>
 			<td class="marginLeft happening"> <b class="whiteText" id="happeningExplanation"> Happening: </b> </td>
 			<td class="marginLeft minigame"> <b class="whiteText" id="minigameExplanation"> Minigame Coins: </b> </td>
 			<td class="marginLeft redSpace"> <b class="whiteText"  id="redSpaceExplanation"> Red Spaces: </b> </td>
@@ -60,8 +60,8 @@
 					<option value="koopakid">Koopa Kid</option>
 				</select>
 			</td>
-			<td> <b class="comText"> P1: </b> <input type="checkbox" id="p1Com" autocomplete="off" class="checkbox" onchange="imgSelect(1)"> </td>
-			<td> <b class="comText"> P1: </b> <input type="checkbox" id="p1CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie()"> </td>
+			<td class="marginLeft"> <b class="whiteText"> P1: </b> <input type="checkbox" id="p1Com" autocomplete="off" class="checkbox" onchange="imgSelect(1)"> </td>
+			<td class="marginLeft"> <b class="whiteText"> P1: </b> <input type="checkbox" id="p1CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie()"> </td>
 			<td class="marginLeft happening">
 				<b class="whiteText" id="p1HappeningInputTextBefore"> P1:</b>
 				<input type="button" value="-" onclick="counterButtons(1, 'M', '', 'Happening')" id="p1HappeningInputM">
@@ -109,8 +109,8 @@
 					<option value="koopakid">Koopa Kid</option>
 				</select>
 			</td>
-			<td> <b class="comText"> P2: </b> <input type="checkbox" id="p2Com" class="checkbox" onchange="imgSelect(2)"> </td>
-			<td> <b class="comText"> P2: </b> <input type="checkbox" id="p2CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie()"> </td>
+			<td class="marginLeft"> <b class="whiteText"> P2: </b> <input type="checkbox" id="p2Com" class="checkbox" onchange="imgSelect(2)"> </td>
+			<td class="marginLeft"> <b class="whiteText"> P2: </b> <input type="checkbox" id="p2CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie()"> </td>
 			<td class="marginLeft happening">
 				<b class="whiteText" id="p2HappeningInputTextBefore"> P2:</b>
 				<input type="button" value="-" onclick="counterButtons(2, 'M', '', 'Happening')" autocomplete="off" id="p2HappeningInputM">
@@ -158,8 +158,8 @@
 					<option value="koopakid">Koopa Kid</option>
 				</select>
 			</td>
-			<td> <b class="comText"> P3: </b> <input type="checkbox" id="p3Com" class="checkbox" onchange="imgSelect(3)"> </td>
-			<td> <b class="comText"> P3: </b> <input type="checkbox" id="p3CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie()"> </td>
+			<td class="marginLeft"> <b class="whiteText"> P3: </b> <input type="checkbox" id="p3Com" class="checkbox" onchange="imgSelect(3)"> </td>
+			<td class="marginLeft"> <b class="whiteText"> P3: </b> <input type="checkbox" id="p3CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie()"> </td>
 			<td class="marginLeft happening">
 				<b class="whiteText" id="p3HappeningInputTextBefore"> P3:</b>
 				<input type="button" value="-" onclick="counterButtons(3, 'M', '', 'Happening')" autocomplete="off" id="p3HappeningInputM">
@@ -207,8 +207,8 @@
 					<option value="koopakid">Koopa Kid</option>
 				</select>
 			</td>
-			<td> <b class="comText"> P4: </b> <input type="checkbox" id="p4Com" class="checkbox" onchange="imgSelect(4)"> </td>
-			<td> <b class="comText"> P4: </b> <input type="checkbox" id="p4CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie()"> </td>
+			<td class="marginLeft"> <b class="whiteText"> P4: </b> <input type="checkbox" id="p4Com" class="checkbox" onchange="imgSelect(4)"> </td>
+			<td class="marginLeft"> <b class="whiteText"> P4: </b> <input type="checkbox" id="p4CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie()"> </td>
 			<td class="marginLeft happening">
 				<b class="whiteText" id="p4HappeningInputTextBefore"> P4:</b>
 				<input type="button" value="-" onclick="counterButtons(4, 'M', '', 'Happening')" autocomplete="off" id="p4HappeningInputM">
@@ -235,7 +235,7 @@
 	<!-- Selection #2 -->
 	<table class="selectionTable">
 		<tr>
-			<td class="running"> <b class="firstInputText"  id="runningExplanation"> Total Dice Num.: </b> </td>
+			<td class="running"> <b class="whiteText"  id="runningExplanation"> Total Dice Num.: </b> </td>
 			<td class="marginLeft shopping"> <b class="whiteText"  id="shoppingExplanation"> Total Coins spent: </b> </td>
 			<td class="marginLeft orb"> <b class="whiteText"  id="orbExplanation"> Total Orbs used: </b> </td>
 			<td class="marginLeft candy"> <b class="whiteText"  id="candyExplanation"> Total Candies used: </b> </td>
@@ -246,7 +246,7 @@
 		</tr>
 		<tr>
 			<td class="running">
-				<b class="firstInputText" id="p1RunningInputTextBefore"> P1:</b>
+				<b class="whiteText" id="p1RunningInputTextBefore"> P1:</b>
 				<input type="button" value="-10" onclick="counterButtons(1, 'M', 10, 'Running')" class="runningInput" id="p1RunningInputM10">
 				<input type="button" value="-6" onclick="counterButtons(1, 'M', 6, 'Running')" class="runningInput" id="p1RunningInputM6">
 				<input type="button" value="-" onclick="counterButtons(1, 'M', '', 'Running')" class="runningInput" id="p1RunningInputM">
@@ -305,7 +305,7 @@
 		</tr>
 		<tr>
 			<td class="running">
-				<b class="firstInputText" id="p2RunningInputTextBefore"> P2:</b>
+				<b class="whiteText" id="p2RunningInputTextBefore"> P2:</b>
 				<input type="button" value="-10" onclick="counterButtons(2, 'M', 10, 'Running')" class="runningInput" id="p2RunningInputM10">
 				<input type="button" value="-6" onclick="counterButtons(2, 'M', 6, 'Running')" class="runningInput" id="p2RunningInputM6">
 				<input type="button" value="-" onclick="counterButtons(2, 'M', '', 'Running')" class="runningInput" id="p2RunningInputM">
@@ -364,7 +364,7 @@
 		</tr>
 		<tr>
 			<td class="running running">
-				<b class="firstInputText" id="p3RunningInputTextBefore"> P3:</b>
+				<b class="whiteText" id="p3RunningInputTextBefore"> P3:</b>
 				<input type="button" value="-10" onclick="counterButtons(3, 'M', 10, 'Running')" class="runningInput" id="p3RunningInputM10">
 				<input type="button" value="-6" onclick="counterButtons(3, 'M', 6, 'Running')" class="runningInput" id="p3RunningInputM6">
 				<input type="button" value="-" onclick="counterButtons(3, 'M', '', 'Running')" class="runningInput" id="p3RunningInputM">
@@ -417,7 +417,7 @@
 		</tr>
 		<tr>
 			<td class="running">
-				<b class="firstInputText" id="p4RunningInputTextBefore"> P4:</b>
+				<b class="whiteText" id="p4RunningInputTextBefore"> P4:</b>
 				<input type="button" value="-10" onclick="counterButtons(4, 'M', 10, 'Running')" class="runningInput" id="p4RunningInputM10">
 				<input type="button" value="-6" onclick="counterButtons(4, 'M', 6, 'Running')" class="runningInput" id="p4RunningInputM6">
 				<input type="button" value="-" onclick="counterButtons(4, 'M', '', 'Running')" class="runningInput" id="p4RunningInputM">
@@ -475,7 +475,7 @@
 	<table class="selectionTable">
 		<tr>
 			<td>
-				<b class="turnInputText" style="margin-right: 6px;"> Current Turn:</b>
+				<b class="whiteText" style="margin-right: 6px;"> Current Turn:</b>
 				<input type="button" value="-" onclick="counterButtons('', 'M', '', 'curTurn')"> <input type="number" value="1" class="numInput" id="curTurnInput" autocomplete="off"> <input type="button" value="+" onclick="counterButtons('', 'P', '', 'curTurn')">
 			</td>
 			<td class="marginLeft">
@@ -492,7 +492,7 @@
 		</tr>
 		<tr>
 			<td>
-				<b class="turnInputText" style="margin-right: 24px;"> Max. Turn:</b>
+				<b class="whiteText" style="margin-right: 24px;"> Max. Turn:</b>
 				<input type="button" value="-5" onclick="counterButtons('', 'M', 5, 'maxTurn')"> <input type="number" value="20" class="numInput" id="maxTurnInput" autocomplete="off"> <input type="button" value="+5" onclick="counterButtons('', 'P', 5, 'maxTurn')">
 			</td>
 			<td class="marginLeft">
@@ -611,7 +611,7 @@
 
 	<!-- Settings -->
 	<div class="hidden" id="settings">
-		<div id="settingsContent">
+		<div class="popupContent">
 			<span class="settingsNote"> Click on the titles to show and hide certain settings. </span>
 
 			<h2 class="settingsTitle" onclick="showHideDiv('generalMPOSettings')"> General MPO settings </h2>
@@ -619,8 +619,12 @@
 
 				<table class="selectionTable">
 					<tr>
-						<td> <b> Enable Greenscreen: </b> <input type="checkbox" onchange="bgOnOff()" autocomplete="off" id="greenscreen"> <input type="color" onchange="changeBGColor()" value="#0000ff" autocomplete="on" id="bgColor"> </td>
+						<td> <b> Enable Greenscreen: </b> <input type="checkbox" onchange="bgOnOff()" autocomplete="off" id="greenscreen"> <input type="color" onchange="changeBGColor('bgColor')" value="#0000ff" autocomplete="on" id="bgColor"> </td>
 					</tr>
+					<tr>
+						<td> <b class="settingsText"> Change Text Color: </b> <input type="color" id="textColor" value="#ffffff" onchange="changeTextColor('textColor')"> </td>
+					</tr>
+					<tr> <td> <button onclick="showHideDiv('settings');showHideDiv('colorPickTest')"> Test Greenscreen </button> </td> </tr>
 					<tr>
 						<td> <b class="settingsText"> Bonus Star names instead of Explanation: </b> <input type="checkbox" autocomplete="on" id="changeNames" onchange="changeNames()"> </td>
 					</tr>
@@ -712,8 +716,64 @@
 		</div>
 	</div>
 
+	<!-- Background Color Test -->
+	<div class="hidden" id="colorPickTest">
+		<div id="colorPickerBG">
+			<table class="selectionTable">
+				<tr>
+					<td> <button onclick="showHideDiv('colorPickTest');showHideDiv('settings')"> Settings </button> <b class="whiteText"> (Changes here will affect the normal MPO) </b> </td>
+				</tr>
+				<tr>
+					<td> <b class="whiteText"> Change BG color: </b> <input type="color" onchange="changeBGColor('bgColorPick')" value="#0000ff" autocomplete="on" id="bgColorPick"> <button onclick="resetBGColor()"> Reset Color (blue) </button> <br />
+					<b class="whiteText"> Change Text Color: </b> <input type="color" id="textColorTest" value="#ffffff" onchange="changeTextColor('textColorTest')"> <button onclick="resetTextColor()"> Reset Color (white) </button> </td>
+				</tr>
+				<tr> <td>
+					<img src="img/mario.png" class="characterImg">
+					<img src="img/luigi.png" class="characterImg">
+					<img src="img/peach.png" class="characterImg">
+					<img src="img/yoshi.png" class="characterImg">
+					<img src="img/wario.png" class="characterImg">
+					<img src="img/waluigi.png" class="characterImg">
+					<img src="img/rosalina.png" class="characterImg">
+					<img src="img/daisy.png" class="characterImg">
+					<img src="img/toad.png" class="characterImg">
+					<img src="img/toadette.png" class="characterImg">
+					<img src="img/dk.png" class="characterImg">
+					<img src="img/koopa.png" class="characterImg">
+					<img src="img/boo.png" class="characterImg">
+					<img src="img/spike.png" class="characterImg">
+					<img src="img/drybones.png" class="characterImg">
+					<img src="img/blooper.png" class="characterImg">
+					<img src="img/shyguy.png" class="characterImg">
+					<img src="img/hammerbro.png" class="characterImg">
+					<img src="img/kamek.png" class="characterImg">
+					<img src="img/birdo.png" class="characterImg">
+					<img src="img/koopakid.png" class="characterImg">
+					<img src="img/com/mario.png" class="characterImg">
+					<b class="turns" style="font-size: 30px;"> Turn 5/20 </b>
+				</td> </tr>
+
+				<tr> <td>
+					<img class="counterDisplay" src="img/happening.png">
+					<img class="counterDisplay" src="img/minigame.png">
+					<img class="counterDisplay" src="img/minigamewins.png">
+					<img class="counterDisplay" src="img/redspace.png">
+					<img class="counterDisplay" src="img/running.png">
+					<img class="counterDisplay" src="img/shopping.png">
+					<img class="counterDisplay" src="img/orb.png">
+					<img class="counterDisplay" src="img/candy.png">
+					<img class="counterDisplay" src="img/spinspace.png">
+					<img class="counterDisplay" src="img/miniztar.png">
+					<img class="counterDisplay" src="img/specialdice.png">
+					<img class="counterDisplay" src="img/coin.png">
+					<img class="counterDisplay" src="img/question.png">
+				</td> </tr>
+			</table>
+		</div>
+	</div>
+
 	<!-- Tutorial -->
-	<div id="tutorial" class="hidden"> <div id="tutorialContent">
+	<div class="hidden" id="tutorial"> <div class="popupContent">
 
 		<h2 class="settingsTitle"> Links </h2>
 
@@ -729,7 +789,7 @@
 
 		<h2 class="settingsTitle"> Credits </h2>
 
-		<b class="settingsText"> Created by <a href="https://www.twitter.com/blueyoshi9000" class="tutorialLink">blueYOSHI9000</a> | Version 1.5.0 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md#changelog" class="tutorialLink"> (Changelog)</a> <br />
+		<b class="settingsText"> Created by <a href="https://www.twitter.com/blueyoshi9000" class="tutorialLink">blueYOSHI9000</a> | Version 1.6.0 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md#changelog" class="tutorialLink"> (Changelog)</a> <br />
 		Character Sprites ripped by <a href="https://twitter.com/RandomTBush" class="tutorialLink">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="tutorialLink"> RicoDexter</a> & <a href="https://www.twitter.com/blueyoshi9000" class="tutorialLink">blueYOSHI9000</a> </b> <br /> <br />
 		<b> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="tutorialLink"> Font</a> </b> <br />
 		<b> <a href="http://interactjs.io/" class="tutorialLink"> Interact.js</a> </b> <b class="settingsText"> (the thing that enables drag 'n' drop) </b> <br />

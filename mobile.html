@@ -23,24 +23,24 @@
 	</form> <br />
 
 <div id="mobileTypeDiv">
-	<input type="checkbox" id="mobileTypeMinus">
-	<label for="mobileTypeMinus" class="mobileTypeLabel">Minus</label>
+	<span class="mobileTypeLabel" id="backupText"> Backup: </span> <button onclick="backup()"> Save </button> <button onclick="restore()" disabled="true" id="reloadButton"> Reload </button> <span class="mobileTypeLabel" id="textOutputText"> Text Output: </span> <button onclick="textOutput(true)">Generate & Copy</button> <input id="textOutput" readonly="true" value="No stats generated yet."> <br />
 
-	<input type="radio" name="type" value="1" id="type1" class="mobileType" autocomplete="off" checked>
-	<label for="type1" class="mobileTypeLabel">1</label>
+	<div id="mobileTypeSpan">
+		<input type="checkbox" id="mobileTypeMinus">
+		<label for="mobileTypeMinus" class="mobileTypeLabel">Minus</label>
 
-	<input type="radio" name="type" value="5" id="type5" class="mobileType" autocomplete="off">
-	<label for="type5" class="mobileTypeLabel">5</label>
+		<input type="radio" name="type" value="1" id="type1" class="mobileType" autocomplete="off" checked>
+		<label for="type1" class="mobileTypeLabel">1</label>
 
-	<input type="radio" name="type" value="6" id="type6" class="mobileType" autocomplete="off">
-	<label for="type6" class="mobileTypeLabel">6</label>
+		<input type="radio" name="type" value="5" id="type5" class="mobileType" autocomplete="off">
+		<label for="type5" class="mobileTypeLabel">5</label>
 
-	<input type="radio" name="type" value="10" id="type10" class="mobileType" autocomplete="off">
-	<label for="type10" class="mobileTypeLabel">10</label>
+		<input type="radio" name="type" value="6" id="type6" class="mobileType" autocomplete="off">
+		<label for="type6" class="mobileTypeLabel">6</label>
 
-	<span class="mobileTypeLabel" id="backupText"> Backup: </span> <button onclick="backup()"> Save </button> <button onclick="restore()" disabled="true" id="reloadButton"> Reload </button>
-
-	<button onclick="textOutput(true)" id="textOutputMobile">Generate & Copy Counter text</button>
+		<input type="radio" name="type" value="10" id="type10" class="mobileType" autocomplete="off">
+		<label for="type10" class="mobileTypeLabel">10</label>
+	</div>
 </div>
 <div id="inputDiv">
 
@@ -176,7 +176,7 @@
 
 	<!-- Mario Party Changes -->
 	<div class="hidden" id="mobileSettings">
-		<div id="mobileSettingsContent">
+		<div class="popupContent">
 			<h2 class="settingsTitle"> Change players & Max. turn </h2>
 			<table class="selectionTable">
 				<tr>
@@ -303,10 +303,7 @@
 
 			<b class="settingsText"> Max. Turn: </b> <input type="button" value="-5" onclick="counterButtons('', 'M', 5, 'maxTurn')"> <input type="number" value="20" class="numInput" id="maxTurnInput" autocomplete="off"> <input type="button" value="+5" onclick="counterButtons('', 'P', 5, 'maxTurn')"> <br /> <br />
 
-			<button onclick="showHideDiv('resetBackupDiv')"> Reset all counters </button> <span id="resetBackupDiv" class="hidden"> <b class="settingsText"> This will reset all counters! </b> <button onclick="resetBackup();showHideDiv('resetBackupDiv')"> Yes, reset! </button> </span> <br /> <br />
-
-			<b class="settingsText"> Text Output: </b> <button onclick="textOutput(true)">Generate & Copy</button> <input id="textOutput" readonly="true" value="No stats generated yet.">
-
+			<button onclick="showHideDiv('resetBackupDiv')"> Reset all counters </button> <span id="resetBackupDiv" class="hidden"> <b class="settingsText"> This will reset all counters! </b> <button onclick="resetBackup();showHideDiv('resetBackupDiv')"> Yes, reset! </button> </span>
 
 			<h2 class="settingsTitle"> Enable & disable counters </h2>
 			<table class="selectionTable" style="width: 1020px;">
@@ -336,7 +333,7 @@
 
 	<!-- Settings -->
 	<div class="hidden" id="settings">
-		<div id="settingsContent">
+		<div class="popupContent">
 			<span class="settingsNote"> Click on the titles to show and hide certain settings. </span>
 
 			<h2 class="settingsTitle" onclick="showHideDiv('generalMPOSettings')"> General MPO settings </h2>
@@ -344,8 +341,12 @@
 
 				<table class="selectionTable">
 					<tr>
-						<td> <b> Enable Greenscreen: </b> <input type="checkbox" onchange="bgOnOff()" autocomplete="off" id="greenscreen"> <input type="color" onchange="changeBGColor()" value="#0000ff" autocomplete="on" id="bgColor"> </td>
+						<td> <b> Enable Greenscreen: </b> <input type="checkbox" onchange="bgOnOff()" autocomplete="off" id="greenscreen"> <input type="color" onchange="changeBGColor('bgColor')" value="#0000ff" autocomplete="on" id="bgColor"> </td>
 					</tr>
+					<tr>
+						<td> <b class="settingsText"> Change Text Color: </b> <input type="color" id="textColor" value="#ffffff" onchange="changeTextColor('textColor')"> </td>
+					</tr>
+					<tr> <td> <button onclick="showHideDiv('settings');showHideDiv('colorPickTest')"> Test Greenscreen </button> </td> </tr>
 					<tr>
 						<td> <b class="settingsText"> Bonus Star names instead of Explanation: </b> <input type="checkbox" autocomplete="on" id="changeNames" onchange="changeNames()"> </td>
 					</tr>
@@ -437,8 +438,64 @@
 		</div>
 	</div>
 
+	<!-- Background Color Test -->
+	<div class="hidden" id="colorPickTest">
+		<div id="colorPickerBG">
+			<table class="selectionTable">
+				<tr>
+					<td> <button onclick="showHideDiv('colorPickTest');showHideDiv('settings')"> Settings </button> <b class="whiteText"> (Changes here will affect the normal MPO) </b> </td>
+				</tr>
+				<tr>
+					<td> <b class="whiteText"> Change BG color: </b> <input type="color" onchange="changeBGColor('bgColorPick')" value="#0000ff" autocomplete="on" id="bgColorPick"> <button onclick="resetBGColor()"> Reset Color (blue) </button> <br />
+					<b class="whiteText"> Change Text Color: </b> <input type="color" id="textColorTest" value="#ffffff" onchange="changeTextColor('textColorTest')"> <button onclick="resetTextColor()"> Reset Color (white) </button> </td>
+				</tr>
+				<tr> <td>
+					<img src="img/mario.png" class="characterImg">
+					<img src="img/luigi.png" class="characterImg">
+					<img src="img/peach.png" class="characterImg">
+					<img src="img/yoshi.png" class="characterImg">
+					<img src="img/wario.png" class="characterImg">
+					<img src="img/waluigi.png" class="characterImg">
+					<img src="img/rosalina.png" class="characterImg">
+					<img src="img/daisy.png" class="characterImg">
+					<img src="img/toad.png" class="characterImg">
+					<img src="img/toadette.png" class="characterImg">
+					<img src="img/dk.png" class="characterImg">
+					<img src="img/koopa.png" class="characterImg">
+					<img src="img/boo.png" class="characterImg">
+					<img src="img/spike.png" class="characterImg">
+					<img src="img/drybones.png" class="characterImg">
+					<img src="img/blooper.png" class="characterImg">
+					<img src="img/shyguy.png" class="characterImg">
+					<img src="img/hammerbro.png" class="characterImg">
+					<img src="img/kamek.png" class="characterImg">
+					<img src="img/birdo.png" class="characterImg">
+					<img src="img/koopakid.png" class="characterImg">
+					<img src="img/com/mario.png" class="characterImg">
+					<b class="turns" style="font-size: 30px;"> Turn 5/20 </b>
+				</td> </tr>
+
+				<tr> <td>
+					<img class="counterDisplay" src="img/happening.png">
+					<img class="counterDisplay" src="img/minigame.png">
+					<img class="counterDisplay" src="img/minigamewins.png">
+					<img class="counterDisplay" src="img/redspace.png">
+					<img class="counterDisplay" src="img/running.png">
+					<img class="counterDisplay" src="img/shopping.png">
+					<img class="counterDisplay" src="img/orb.png">
+					<img class="counterDisplay" src="img/candy.png">
+					<img class="counterDisplay" src="img/spinspace.png">
+					<img class="counterDisplay" src="img/miniztar.png">
+					<img class="counterDisplay" src="img/specialdice.png">
+					<img class="counterDisplay" src="img/coin.png">
+					<img class="counterDisplay" src="img/question.png">
+				</td> </tr>
+			</table>
+		</div>
+	</div>
+
 	<!-- Tutorial -->
-	<div id="tutorial" class="hidden"> <div id="tutorialContent">
+	<div id="tutorial" class="hidden"> <div class="popupContent">
 
 		<h2 class="settingsTitle"> Links </h2>
 
@@ -454,7 +511,7 @@
 
 		<h2 class="settingsTitle"> Credits </h2>
 
-		<b class="settingsText"> Created by <a href="https://www.twitter.com/blueyoshi9000" class="tutorialLink">blueYOSHI9000</a> | Version 1.5.0 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md#changelog" class="tutorialLink"> (Changelog)</a> <br />
+		<b class="settingsText"> Created by <a href="https://www.twitter.com/blueyoshi9000" class="tutorialLink">blueYOSHI9000</a> | Version 1.6.0 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md#changelog" class="tutorialLink"> (Changelog)</a> <br />
 		Character Sprites ripped by <a href="https://twitter.com/RandomTBush" class="tutorialLink">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="tutorialLink"> RicoDexter</a> & <a href="https://www.twitter.com/blueyoshi9000" class="tutorialLink">blueYOSHI9000</a> </b> <br /> <br />
 		<b> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="tutorialLink"> Font</a> </b> <br />
 		<b> <a href="http://interactjs.io/" class="tutorialLink"> Interact.js</a> </b> <b class="settingsText"> (the thing that enables drag 'n' drop) </b> <br />

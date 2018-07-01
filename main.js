@@ -797,13 +797,15 @@ function windowOnClick (event) {
 	var settings = document.querySelector("#settings")
 	var tutorial = document.querySelector("#tutorial")
 	var mobileSettings = document.querySelector("#mobileSettings")
-	var bodyElement = document.querySelector("#bodyElement")
+	var colorPickTest = document.querySelector('#colorPickTest')
 	if (event.target === settings) {
 		showHideDiv('settings')
 	} else if (event.target === tutorial){
 		showHideDiv('tutorial')
 	} else if (event.target === mobileSettings){
 		showHideDiv('mobileSettings')
+	} else if (event.target === colorPickTest){
+		showHideDiv('colorPickTest')
 	}
 }
 
@@ -991,10 +993,10 @@ function resetSettings() {
 /*
 * Checks if something is included in a array.
 *
-* @param {-} needle Checks if this is included in the array.
+* @param {string} needle Checks if this is included in the array.
 * @param {array} arrhaystack The array that should include something.
 */
-function arrCon(needle, arrhaystack)
+function arrCon (needle, arrhaystack)
 {
     return (arrhaystack.indexOf(needle) > -1);
 }
@@ -1018,12 +1020,64 @@ function bgOnOff () {
 
 /*
 * Changes background color if greenscreen is used.
+* 
+* @param {string} id Id of the input element that changed its value.
 */
-function changeBGColor() {
-	bgColor = document.getElementById('bgColor').value
+function changeBGColor (id) {
+	bgColor = document.getElementById(id).value
 	if (bgImgOn == false) {
 		document.getElementById('bodyElement').style.background = bgColor
 	}
+	document.getElementById('bgColor').value = bgColor
+	document.getElementById('bgColorPick').value = bgColor
+
+	document.getElementById('colorPickerBG').style = 'background-color: ' + bgColor + ';'
+}
+
+/*
+* Resets the Greenscreen color.
+*/
+function resetBGColor () {
+	document.getElementById('bgColor').value = '#0000FF'
+	changeBGColor('bgColor')
+}
+
+/*
+* Changes text color for everything outside of settings.
+* 
+* @param {string} id Id of the input element that changed its value.
+*/
+function changeTextColor (id) {
+	var whiteText = document.querySelectorAll(".whiteText")
+	var counterText = document.querySelectorAll(".counterText")
+	var turns = document.querySelectorAll(".turns")
+	var mobile = document.querySelectorAll(".mobileTypeLabel")
+
+	var color = document.getElementById(id).value
+
+	for (var num = 0; num < whiteText.length; num++) {
+		whiteText[num].style.color = color
+	}
+	for (var num = 0; num < counterText.length; num++) {
+		counterText[num].style.color = color
+	}
+	for (var num = 0; num < turns.length; num++) {
+		turns[num].style.color = color
+	}
+	for (var num = 0; num < mobile.length; num++) {
+		mobile[num].style.color = color
+	}
+
+	document.getElementById('textColor').value = color
+	document.getElementById('textColorTest').value = color
+}
+
+/*
+* Resets the Text color.
+*/
+function resetTextColor () {
+	document.getElementById('textColor').value = '#FFFFFF'
+	changeTextColor('textColor')
 }
 
 window.addEventListener("click", windowOnClick)
@@ -1093,6 +1147,7 @@ interact('.draggable')
 
 window.onload = prepareMPO()
 window.onload = startDisplayOnOff()
+window.onload = changeBGColor('bgColor')
 
 if (mobile) {
 	document.getElementById('type1').focus()
