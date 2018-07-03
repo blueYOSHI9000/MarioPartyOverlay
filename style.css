@@ -175,7 +175,6 @@ src: url("font.ttf");
 	border: 3px solid #111111;
 	padding: 1rem 1.5rem;
 	border-radius: 0.5rem;
-	width: 825px;
 }
 .warningText {
 	color: red;
@@ -188,6 +187,9 @@ src: url("font.ttf");
 	width: 100%;
 	height: 100%;
 	background-color: rgba(0, 0, 0, 0.5);
+}
+#settingsContent {
+	width: 825px;
 }
 #settingsClose {
 	float: right;
