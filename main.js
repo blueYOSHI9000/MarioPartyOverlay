@@ -787,6 +787,16 @@ function textOutput () {
 				output[num] = names[num] + ': ' + document.getElementById('coinStarInput').value + ' ' + coinStarString
 				break;
 			default:
+				switch (counters[num]) { //Add everything to textOutputTest() too
+					case 'MinusStar':
+						counters[num] = 'MiniZtar'
+						console.log('ztar')
+						break;
+					default:
+						console.log('default')
+						break;
+				}
+
 				output[num] = names[num] + ': ' + p1 + ' ' + document.getElementById('p1' + counters[num] + 'Input').value + ', ' + p2 + ' ' + document.getElementById('p2' + counters[num] + 'Input').value + ', ' + p3 + ' ' + document.getElementById('p3' + counters[num] + 'Input').value + ', ' + p4 + ' ' + document.getElementById('p4' + counters[num] + 'Input').value
 		
 		}
@@ -826,6 +836,15 @@ function textOutputTest (nameonly) {
 				case 'coinstar':
 					break;
 				default:
+					switch (counters[num]) { //Add everything to textOutput() too
+						case 'MinusStar':
+							counters[num] = 'MiniZtar'
+							console.log('ztar')
+							break;
+						default:
+							console.log('default')
+							break;
+					}
 					if (document.getElementById('p1' + counters[num] + 'Input')) {} else {
 						error.push(counters[num])
 					}
