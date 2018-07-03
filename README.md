@@ -15,6 +15,11 @@ Character Sprites ripped by [Random Talking Bush](https://twitter.com/RandomTBus
 
 # Changelog
 
+v1.6.2
+- Added: Small on-site controls tutorial for the mobile version
+- Fixed: Some counters not working for text output
+- Fixed: Mobile counter options not being displayed properly
+
 v1.6.1
 - Added: Text & Coinstar support for Text output
 - Changed: ? instead of coinstar tie now functions so only one player can hold a coin star
