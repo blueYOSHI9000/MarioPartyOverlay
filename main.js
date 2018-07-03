@@ -475,8 +475,10 @@ function imgSelect(playerNum) {
 */
 function displayChange (playerNum, counter) {
 	var num = document.getElementById('p' + playerNum + counter + 'Input').value
+
 	if (num && num >= 0) {
 		document.getElementById('p' + playerNum + counter + 'Text').innerHTML=num;
+		
 	} else if (num && num <= 0) {
 		document.getElementById('p' + playerNum + counter + 'Input').value = 0
 		document.getElementById('p' + playerNum + counter + 'Text').innerHTML= 0
@@ -563,6 +565,39 @@ function coinStar () {
 * @param {number} player Updates the coin star for that specific player
 */
 function coinStarTie (player) {
+	if (player && mobile) {
+		if (document.getElementById('p' + player + 'CoinStarTie').checked == true) {
+			document.getElementById('p' + player + 'CoinStarTie').checked = false
+		} else {
+			document.getElementById('p' + player + 'CoinStarTie').checked = true
+		}
+	}
+
+	if (document.getElementById('noTie').checked == true && player && document.getElementById('p' + player + 'CoinStarTie').checked == true) {
+		switch (player) {
+			case 1:
+			document.getElementById('p2CoinStarTie').checked = false
+			document.getElementById('p3CoinStarTie').checked = false
+			document.getElementById('p4CoinStarTie').checked = false
+				break;
+			case 2:
+			document.getElementById('p1CoinStarTie').checked = false
+			document.getElementById('p3CoinStarTie').checked = false
+			document.getElementById('p4CoinStarTie').checked = false
+				break;
+			case 3:
+			document.getElementById('p1CoinStarTie').checked = false
+			document.getElementById('p2CoinStarTie').checked = false
+			document.getElementById('p4CoinStarTie').checked = false
+				break;
+			case 4:
+			document.getElementById('p1CoinStarTie').checked = false
+			document.getElementById('p2CoinStarTie').checked = false
+			document.getElementById('p3CoinStarTie').checked = false
+				break;
+		}
+	}
+
 	document.getElementById('coinStarTie1').style.height = ''
 	document.getElementById('coinStarTie1').style.top = ''
 	document.getElementById('coinStarTie1').style.left = ''
@@ -570,14 +605,6 @@ function coinStarTie (player) {
 	document.getElementById('coinStarTie4').style.height = ''
 	document.getElementById('coinStarTie4').style.top = ''
 	document.getElementById('coinStarTie4').style.left = ''
-
-	if (player) {
-		if (document.getElementById('p' + player + 'CoinStarTie').checked == true) {
-			document.getElementById('p' + player + 'CoinStarTie').checked = false
-		} else {
-			document.getElementById('p' + player + 'CoinStarTie').checked = true
-		}
-	}
 
 	var player1 = document.getElementById('p1CoinStarTie').checked
 	var player2 = document.getElementById('p2CoinStarTie').checked
@@ -604,7 +631,7 @@ function coinStarTie (player) {
 		tied.push(character4)
 	}
 
-	if (document.getElementById('questionForTie').checked == true && tied.length != 1 || tied.length == 0) {
+	if (document.getElementById('noTie').checked == true && tied.length != 1 || tied.length == 0) {
 		document.getElementById('coinStarCharacter').src = 'img/question.png'
 
 		document.getElementById('coinStarTie1').src = 'img/tie.png'
@@ -693,10 +720,11 @@ function showHideDiv (id, id2) {
 * Outputs all counters as text.
 */
 function textOutput () {
-	var p1 = document.getElementById('p1Select').value
-	var p2 = document.getElementById('p2Select').value
-	var p3 = document.getElementById('p3Select').value
-	var p4 = document.getElementById('p4Select').value
+	var p1 = document.getElementById('p1Select').options[document.getElementById('p1Select').selectedIndex].text
+	var p2 = document.getElementById('p2Select').options[document.getElementById('p2Select').selectedIndex].text
+	var p3 = document.getElementById('p3Select').options[document.getElementById('p3Select').selectedIndex].text
+	var p4 = document.getElementById('p4Select').options[document.getElementById('p4Select').selectedIndex].text
+
 
 	if (document.getElementById('textOutputP1Name').value != '') {
 		p1 = document.getElementById('textOutputP1Name').value
@@ -716,12 +744,52 @@ function textOutput () {
 	var counters = document.getElementById('textOutputCounters').value.split(', ')
 	var names = document.getElementById('textOutputNames').value.split(', ')
 
-	var output = ['']
+	var output = []
 
 	for (let num = 0; num < counters.length; num++) {
 		counters[num] = counters[num].replace(/\s/g, '')
 
-		output[num] = names[num] + ': ' + p1 + ' ' + document.getElementById('p1' + counters[num] + 'Input').value + ', ' + p2 + ' ' + document.getElementById('p2' + counters[num] + 'Input').value + ', ' + p3 + ' ' + document.getElementById('p3' + counters[num] + 'Input').value + ', ' + p4 + ' ' + document.getElementById('p4' + counters[num] + 'Input').value
+		switch (counters[num].toLowerCase()) {
+			case 'turn':
+			case 'turns':
+				output[num] = names[num] + ': ' + document.getElementById('curTurnInput').value + '/' + document.getElementById('maxTurnInput').value
+				break;
+			case 'coin':
+			case 'coinstar':
+				var coinStarP1 = document.getElementById('p1CoinStarTie').checked
+				var coinStarP2 = document.getElementById('p2CoinStarTie').checked
+				var coinStarP3 = document.getElementById('p3CoinStarTie').checked
+				var coinStarP4 = document.getElementById('p4CoinStarTie').checked
+
+				var coinStar = []
+
+				if (coinStarP1 == true) {
+					coinStar.push(p1)
+				}
+				if (coinStarP2 == true) {
+					coinStar.push(p2)
+				}
+				if (coinStarP3 == true) {
+					coinStar.push(p3)
+				}
+				if (coinStarP4 == true) {
+					coinStar.push(p4)
+				}
+
+				var coinStarString = coinStar.join(' & ')
+
+				if (document.getElementById('noTie').checked == true && (coinStar.length > 1 || coinStar.length == 0)) {
+					coinStarString = 'multiple'
+				} else if (coinStar.length == 4 || coinStar.length == 0) {
+					coinStarString = 'everyone'
+				}
+
+				output[num] = names[num] + ': ' + document.getElementById('coinStarInput').value + ' ' + coinStarString
+				break;
+			default:
+				output[num] = names[num] + ': ' + p1 + ' ' + document.getElementById('p1' + counters[num] + 'Input').value + ', ' + p2 + ' ' + document.getElementById('p2' + counters[num] + 'Input').value + ', ' + p3 + ' ' + document.getElementById('p3' + counters[num] + 'Input').value + ', ' + p4 + ' ' + document.getElementById('p4' + counters[num] + 'Input').value
+		
+		}
 	}
 
 	var outputString = output.join(joinString)
@@ -738,19 +806,49 @@ function textOutput () {
 
 /*
 * Checks if the counters inserted in the settings for the text output feature are correct, if not it removes them.
+* 
+* @param {boolean} nameonly If true it won't check if everything inside the counters textarea is correct.
 */
-function textOutputTest () {
+function textOutputTest (nameonly) {
 	var counters = document.getElementById('textOutputCounters').value.split(', ')
+	var names = document.getElementById('textOutputNames').value.split(', ')
+	var error = []
 
-	for (let num = 0; num < counters.length; num++) {
-		counters[num] = counters[num].replace(/\s/g, '')
+	if (nameonly != true) {
+		for (let num = 0; num < counters.length; num++) {
+			counters[num] = counters[num].replace(/\s/g, '')
 
-		if (document.getElementById('p1' + counters[num] + 'Input')) {} else {
-			counters.splice(num, 1)
+			switch (counters[num].toLowerCase()) {
+				case 'turn':
+				case 'turns':
+					break;
+				case 'coin':
+				case 'coinstar':
+					break;
+				default:
+					if (document.getElementById('p1' + counters[num] + 'Input')) {} else {
+						error.push(counters[num])
+					}
+					break;
+			} 
 		}
 	}
-	document.getElementById('textOutputCounters').value = counters.join(', ')
-	document.getElementById('textOutputNames').value = names.join(', ')
+
+	if (error.length == 1) {
+		document.getElementById('textOutputWarning').innerHTML = '"' + error.join(', ') + '" isn\'t a valid counter.'
+		document.getElementById('textOutputWarning').style = 'visibility: visible;'
+	} else if (error.length > 1) {
+		document.getElementById('textOutputWarning').innerHTML = '"' + error.join(', ') + '" aren\'t valid counters.'
+		document.getElementById('textOutputWarning').style = 'visibility: visible;'
+	} else if (counters.length > names.length) {
+		document.getElementById('textOutputWarning').innerHTML = 'Counter name(s) missing.'
+		document.getElementById('textOutputWarning').style = 'visibility: visible;'
+	} else if (counters.length < names.length) {
+		document.getElementById('textOutputWarning').innerHTML = 'Too many counter names.'
+		document.getElementById('textOutputWarning').style = 'visibility: visible;'
+	} else {
+		document.getElementById('textOutputWarning').style = 'visibility: hidden;'
+	}
 }
 
 /*
@@ -822,7 +920,7 @@ function saveSettings (close) {
 	localStorage.setItem('bonusName', document.getElementById('changeNames').checked)
 	localStorage.setItem('counterHighlight', document.getElementById('enableHighlight').checked)
 	localStorage.setItem('highlightColor', document.getElementById('highlightColor').value)
-	localStorage.setItem('questionForTie', document.getElementById('questionForTie').checked)
+	localStorage.setItem('noTie', document.getElementById('noTie').checked)
 
 	localStorage.setItem('botName', document.getElementById('twitchNameInput').value)
 	localStorage.setItem('botOauth', document.getElementById('twitchPasswordInput').value)
@@ -882,7 +980,7 @@ function prepareMPO () {
 		 	callHighlight(false, true)
 		}
 
-		document.getElementById('questionForTie').checked = stringToBoolean(localStorage.getItem('questionForTie'))
+		document.getElementById('noTie').checked = stringToBoolean(localStorage.getItem('noTie'))
 
 
 		document.getElementById('twitchNameInput').value = localStorage.getItem('botName')
@@ -947,7 +1045,7 @@ function resetSettings() {
 	document.getElementById('changeNames').checked = false
 	document.getElementById('enableHighlight').checked = true
 	document.getElementById('highlightColor').value = '#ff0000'
-	document.getElementById('questionForTie').checked = false
+	document.getElementById('noTie').checked = false
 
 	document.getElementById('twitchNameInput').value = ''
 	document.getElementById('twitchPasswordInput').value = ''
@@ -972,9 +1070,9 @@ function resetSettings() {
 	document.getElementById('textOutputP2Name').value = ''
 	document.getElementById('textOutputP3Name').value = ''
 	document.getElementById('textOutputP4Name').value = ''
-	document.getElementById('textOutputSeperation').value = ' - '
-	document.getElementById('textOutputCounters').value = 'Happening, Minigame, Red Space'
-	document.getElementById('textOutputNames').value = '?, MG, Red'
+	document.getElementById('textOutputSeperation').value = ' | '
+	document.getElementById('textOutputCounters').value = 'Turns, Happening, Minigame, Red Space, Coin Star'
+	document.getElementById('textOutputNames').value = 'Turns, ?, MG, Red, Coin Star'
 
 	showHideDiv('resetSettingsDiv')
 

@@ -61,7 +61,7 @@
 				</select>
 			</td>
 			<td class="marginLeft"> <b class="whiteText"> P1: </b> <input type="checkbox" id="p1Com" autocomplete="off" class="checkbox" onchange="imgSelect(1)"> </td>
-			<td class="marginLeft"> <b class="whiteText"> P1: </b> <input type="checkbox" id="p1CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie()"> </td>
+			<td class="marginLeft"> <b class="whiteText"> P1: </b> <input type="checkbox" id="p1CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie(1)"> </td>
 			<td class="marginLeft happening">
 				<b class="whiteText" id="p1HappeningInputTextBefore"> P1:</b>
 				<input type="button" value="-" onclick="counterButtons(1, 'M', '', 'Happening')" id="p1HappeningInputM">
@@ -110,7 +110,7 @@
 				</select>
 			</td>
 			<td class="marginLeft"> <b class="whiteText"> P2: </b> <input type="checkbox" id="p2Com" class="checkbox" onchange="imgSelect(2)"> </td>
-			<td class="marginLeft"> <b class="whiteText"> P2: </b> <input type="checkbox" id="p2CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie()"> </td>
+			<td class="marginLeft"> <b class="whiteText"> P2: </b> <input type="checkbox" id="p2CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie(2)"> </td>
 			<td class="marginLeft happening">
 				<b class="whiteText" id="p2HappeningInputTextBefore"> P2:</b>
 				<input type="button" value="-" onclick="counterButtons(2, 'M', '', 'Happening')" autocomplete="off" id="p2HappeningInputM">
@@ -159,7 +159,7 @@
 				</select>
 			</td>
 			<td class="marginLeft"> <b class="whiteText"> P3: </b> <input type="checkbox" id="p3Com" class="checkbox" onchange="imgSelect(3)"> </td>
-			<td class="marginLeft"> <b class="whiteText"> P3: </b> <input type="checkbox" id="p3CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie()"> </td>
+			<td class="marginLeft"> <b class="whiteText"> P3: </b> <input type="checkbox" id="p3CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie(3)"> </td>
 			<td class="marginLeft happening">
 				<b class="whiteText" id="p3HappeningInputTextBefore"> P3:</b>
 				<input type="button" value="-" onclick="counterButtons(3, 'M', '', 'Happening')" autocomplete="off" id="p3HappeningInputM">
@@ -208,7 +208,7 @@
 				</select>
 			</td>
 			<td class="marginLeft"> <b class="whiteText"> P4: </b> <input type="checkbox" id="p4Com" class="checkbox" onchange="imgSelect(4)"> </td>
-			<td class="marginLeft"> <b class="whiteText"> P4: </b> <input type="checkbox" id="p4CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie()"> </td>
+			<td class="marginLeft"> <b class="whiteText"> P4: </b> <input type="checkbox" id="p4CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie(4)"> </td>
 			<td class="marginLeft happening">
 				<b class="whiteText" id="p4HappeningInputTextBefore"> P4:</b>
 				<input type="button" value="-" onclick="counterButtons(4, 'M', '', 'Happening')" autocomplete="off" id="p4HappeningInputM">
@@ -633,7 +633,7 @@
 						<input type="color" onchange="callHighlight(false, true)" value="#ff0000" autocomplete="on" id="highlightColor"> </td>
 					</tr>
 					<tr>
-						<td> <b class="settingsText"> Use <img src="img/question.png" style="height: 15px;"> instead of a tie for the coin star: </b> <input type="checkbox" id="questionForTie" onchange="coinStarTie()"></td>
+						<td> <b class="settingsText"> Only choose one coin star holder instead of multiple: </b> <input type="checkbox" id="noTie" onchange="coinStarTie()"></td>
 					</tr>
 				</table>
 			</div>
@@ -650,14 +650,17 @@
 						<td class="marginLeft"> <b class="settingsText">  Player 4 name: </b> <input id="textOutputP4Name"> </td>
 					</tr>
 					<tr> <td> 
-						<b class="settingsText"> Counter seperation: </b> <input id="textOutputSeperation" value=" - " style="width: 30px;">
+						<b class="settingsText"> Counter seperation: </b> <input id="textOutputSeperation" value=" | " style="width: 30px;">
 					</td> </tr>
 					<tr> <td colspan="2"> <br /> <span class="settingsNote"> Seperate counters with ", ", counters that aren't in the list won't be used for this. </span> </td> </tr>
 					<tr>
 						<td><b class="settingsText"> Counter order: </b> <br />
-						<textarea class="resizableInput" id="textOutputCounters" onchange="textOutputTest()">Happening, Minigame, Red Space</textarea> </td>
+						<textarea class="resizableInput" id="textOutputCounters" onchange="textOutputTest()">Turns, Happening, Minigame, Red Space, Coin Star</textarea> </td>
 						<td><b class="settingsText"> Counter name: </b> <span class="settingsNote"> (Used to describe the counter) </span> <br />
-						<textarea class="resizableInput" id="textOutputNames">?, MG, Red</textarea> </td>
+						<textarea class="resizableInput" id="textOutputNames" onchange="textOutputTest(true)">Turns, ?, MG, Red, Coin Star</textarea> </td>
+					</tr>
+					<tr>
+						<td> <b class="warningText" id="textOutputWarning" style="visibility: hidden;"> Hi if you see this </b> </td>
 					</tr>
 				</table>
 			</div>
@@ -789,7 +792,7 @@
 
 		<h2 class="settingsTitle"> Credits </h2>
 
-		<b class="settingsText"> Created by <a href="https://www.twitter.com/blueyoshi9000" class="tutorialLink">blueYOSHI9000</a> | Version 1.6.0 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md#changelog" class="tutorialLink"> (Changelog)</a> <br />
+		<b class="settingsText"> Created by <a href="https://www.twitter.com/blueyoshi9000" class="tutorialLink">blueYOSHI9000</a> | Version 1.6.1 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md#changelog" class="tutorialLink"> (Changelog)</a> <br />
 		Character Sprites ripped by <a href="https://twitter.com/RandomTBush" class="tutorialLink">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="tutorialLink"> RicoDexter</a> & <a href="https://www.twitter.com/blueyoshi9000" class="tutorialLink">blueYOSHI9000</a> </b> <br /> <br />
 		<b> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="tutorialLink"> Font</a> </b> <br />
 		<b> <a href="http://interactjs.io/" class="tutorialLink"> Interact.js</a> </b> <b class="settingsText"> (the thing that enables drag 'n' drop) </b> <br />

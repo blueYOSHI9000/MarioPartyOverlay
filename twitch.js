@@ -472,10 +472,10 @@ function editAdminMessage (text, user) {
 	}
 
 	if (action == 'changetie') {
-		if (document.getElementById('questionForTie').checked == false) {
-			document.getElementById('questionForTie').checked = true
+		if (document.getElementById('noTie').checked == false) {
+			document.getElementById('noTie').checked = true
 		} else {
-			document.getElementById('questionForTie').checked = false
+			document.getElementById('noTie').checked = false
 		}
 
 		coinStarTie()

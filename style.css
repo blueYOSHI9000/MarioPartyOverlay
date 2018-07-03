@@ -177,6 +177,9 @@ src: url("font.ttf");
 	border-radius: 0.5rem;
 	width: 825px;
 }
+.warningText {
+	color: red;
+}
 
 #settings {
 	position: fixed;

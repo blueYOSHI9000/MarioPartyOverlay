@@ -15,6 +15,11 @@ Character Sprites ripped by [Random Talking Bush](https://twitter.com/RandomTBus
 
 # Changelog
 
+v1.6.1
+- Added: Text & Coinstar support for Text output
+- Changed: ? instead of coinstar tie now functions so only one player can hold a coin star
+- Changed: The text output test to see if all entered counters are correct now displays a error message
+
 v1.6.0
 - Added: Greenscreen Test
 - Changed: Mobile Layout
