@@ -111,13 +111,16 @@ function newMessage (user, text, streamer, mod) {
 
 	if (text.startsWith('!mpoa') && (arrCon(lowerUser, adminList) || streamer == true || mod == true)) {
 		var arrText = text.split(' ')
-		editAdminMessage(arrText, lowerUser)
+		if (arrText.length != 0) {
+			editAdminMessage(arrText, lowerUser)
+		}
 	} else if (text.startsWith('!mpoa')) {
 		sendMsg('noPermission', user)
 	} else if (text.startsWith('!mpo') && arrCon(lowerUser, userWhitelist) || text.startsWith('!mpo') && arrCon(lowerUser, adminList) || streamer == true || mod == true) {
 		var arrText = text.split(' ')
-		editMessage(arrText, lowerUser)
-
+		if (arrText.length != 0) {
+			editMessage(arrText, lowerUser)
+		}
 	} else if (text.startsWith('!mpo')) {
 		sendMsg('noPermission', user)
 	}
