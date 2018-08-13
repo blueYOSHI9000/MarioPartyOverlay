@@ -363,7 +363,7 @@ function stringToBoolean(boolean) {
 /*
 * Resets settings and clears cookies.
 */
-function resetSettings() {
+function resetSettings () {
 	localStorage.clear()
 
 	document.getElementById('greenscreen').checked = false
@@ -404,7 +404,7 @@ function resetSettings() {
 	document.getElementById('toListAll').checked = false
 	document.getElementById('toListAllCoin').checked = false
 
-	showHideDiv('resetSettingsDiv')
+	showHideReset()
 
 	document.getElementById('greenscreen').checked = false
 	changeTheme(1)

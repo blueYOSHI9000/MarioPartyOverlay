@@ -750,6 +750,9 @@ function changeVisibility (id) {
 	}
 }
 
+/*
+* Shows and hides the reset settings text.
+*/
 function showHideReset () {
 	if (document.getElementById('resetSettingsDiv').style.visibility == 'hidden') {
 		document.getElementById('resetSettingsDiv').style.visibility = 'visible'
