@@ -15,6 +15,13 @@ Character Sprites ripped by [Random Talking Bush](https://twitter.com/RandomTBus
 
 # Changelog
 
+v1.7.0
+- Added: Themes
+- Added: Only output the bonus star owner in Text-Output
+- Added: Error Message when the site fails to load
+- Changed: Settings, fixed some stuff here and there
+- Fixed: Text color not being saved
+
 v1.6.2
 - Added: Small on-site controls tutorial for the mobile version
 - Fixed: Some counters not working for text output

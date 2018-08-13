@@ -218,3 +218,201 @@ function restore(forceRestore) {
 		callHighlight()
 	}
 }
+
+/*
+* Saves all settings as cookies.
+*
+* @param {boolean} close If the settings should be closed after saving. True = should be closed.
+*/
+function saveSettings (close) {
+	localStorage.setItem('saving', 'true')
+
+	localStorage.setItem('curTheme', curTheme)
+	localStorage.setItem('greenscreen', document.getElementById('greenscreen').checked)
+	localStorage.setItem('bgColor', document.getElementById('bgColor').value)
+	localStorage.setItem('textColor', document.getElementById('textColor').value)
+	localStorage.setItem('bonusName', document.getElementById('changeNames').checked)
+	localStorage.setItem('counterHighlight', document.getElementById('enableHighlight').checked)
+	localStorage.setItem('highlightColor', document.getElementById('highlightColor').value)
+	localStorage.setItem('noTie', document.getElementById('noTie').checked)
+
+	localStorage.setItem('botName', document.getElementById('twitchNameInput').value)
+	localStorage.setItem('botOauth', document.getElementById('twitchPasswordInput').value)
+	localStorage.setItem('twitchChannel', document.getElementById('twitchChannelInput').value)
+	localStorage.setItem('autoconnect', document.getElementById('twitchAutoConnect').checked)
+	localStorage.setItem('userWhitelist', document.getElementById('userWhitelist').value)
+	localStorage.setItem('adminList', document.getElementById('adminList').value)
+
+	localStorage.setItem('commandsEnabled', document.getElementById('commandsEnabled').checked)
+	localStorage.setItem('enablecmdConnected', document.getElementById('enablecmdConnected').checked)
+	localStorage.setItem('enablecmdHelp', document.getElementById('enablecmdHelp').checked)
+	localStorage.setItem('enablecmdCompleted', document.getElementById('enablecmdCompleted').checked)
+	localStorage.setItem('enablecmdError', document.getElementById('enablecmdError').checked)
+	localStorage.setItem('enablecmdMissing', document.getElementById('enablecmdMissing').checked)
+	localStorage.setItem('enablecmdNoPerm', document.getElementById('enablecmdNoPerm').checked)
+
+	localStorage.setItem('cmdConnected', document.getElementById('cmdConnected').value)
+	localStorage.setItem('cmdHelp', document.getElementById('cmdHelp').value)
+	localStorage.setItem('cmdCompleted', document.getElementById('cmdCompleted').value)
+	localStorage.setItem('cmdError', document.getElementById('cmdError').value)
+	localStorage.setItem('cmdMissing', document.getElementById('cmdMissing').value)
+	localStorage.setItem('cmdNoPerm', document.getElementById('cmdNoPerm').value)
+
+	localStorage.setItem('toP1Name', document.getElementById('toP1Name').value)
+	localStorage.setItem('toP2Name', document.getElementById('toP2Name').value)
+	localStorage.setItem('toP3Name', document.getElementById('toP3Name').value)
+	localStorage.setItem('toP4Name', document.getElementById('toP4Name').value)
+	localStorage.setItem('toSeperation', document.getElementById('toSeperation').value)
+	localStorage.setItem('toCounters', document.getElementById('toCounters').value)
+	localStorage.setItem('toOutput', document.getElementById('toOutput').value)
+	localStorage.setItem('toBonusOnly', document.getElementById('toBonusOnly').checked)
+	localStorage.setItem('toShowNum', document.getElementById('toShowNum').checked)
+	localStorage.setItem('toListAll', document.getElementById('toListAll').checked)
+	localStorage.setItem('toListAllCoin', document.getElementById('toListAllCoin').checked)
+
+	if (close == true) {
+		showHideDiv('settings')
+	}
+}
+
+/*
+* Prepares all settings that were saved as cookies when the site gets loaded.
+*/
+function prepareMPO () {
+	if (localStorage.getItem('saving') == 'true') {
+
+		curTheme = parseInt(localStorage.getItem('curTheme'))
+
+		document.getElementById('greenscreen').checked = stringToBoolean(localStorage.getItem('greenscreen'))
+		document.getElementById('bgColor').value = localStorage.getItem('bgColor')
+		changeTheme(curTheme)
+
+		document.getElementById('textColor').value = localStorage.getItem('textColor')
+		changeTextColor('textColor')
+
+		document.getElementById('changeNames').checked = stringToBoolean(localStorage.getItem('bonusName'))
+		if (document.getElementById('changeNames').checked == true) {
+		 	changeNames()
+		}
+
+		document.getElementById('enableHighlight').checked = stringToBoolean(localStorage.getItem('counterHighlight'))
+		document.getElementById('highlightColor').value = localStorage.getItem('highlightColor')
+		if (document.getElementById('enableHighlight').checked == true) {
+		 	callHighlight(false, true)
+		}
+
+		document.getElementById('noTie').checked = stringToBoolean(localStorage.getItem('noTie'))
+
+
+		document.getElementById('twitchNameInput').value = localStorage.getItem('botName')
+		document.getElementById('twitchPasswordInput').value = localStorage.getItem('botOauth')
+		document.getElementById('twitchChannelInput').value = localStorage.getItem('twitchChannel')
+		document.getElementById('twitchAutoConnect').checked = stringToBoolean(localStorage.getItem('autoconnect'))
+
+		document.getElementById('userWhitelist').value = localStorage.getItem('userWhitelist')
+		document.getElementById('adminList').value = localStorage.getItem('adminList')
+		saveTwitchLists()
+
+		document.getElementById('commandsEnabled').checked = stringToBoolean(localStorage.getItem('commandsEnabled'))
+		document.getElementById('enablecmdConnected').checked = stringToBoolean(localStorage.getItem('enablecmdConnected'))
+		document.getElementById('enablecmdHelp').checked = stringToBoolean(localStorage.getItem('enablecmdHelp'))
+		document.getElementById('enablecmdCompleted').checked = stringToBoolean(localStorage.getItem('enablecmdCompleted'))
+		document.getElementById('enablecmdError').checked = stringToBoolean(localStorage.getItem('enablecmdError'))
+		document.getElementById('enablecmdMissing').checked = stringToBoolean(localStorage.getItem('enablecmdMissing'))
+		document.getElementById('enablecmdNoPerm').checked = stringToBoolean(localStorage.getItem('enablecmdNoPerm'))
+
+		document.getElementById('cmdConnected').value = localStorage.getItem('cmdConnected')
+		document.getElementById('cmdHelp').value = localStorage.getItem('cmdHelp')
+		document.getElementById('cmdCompleted').value = localStorage.getItem('cmdCompleted')
+		document.getElementById('cmdError').value = localStorage.getItem('cmdError')
+		document.getElementById('cmdMissing').value = localStorage.getItem('cmdMissing')
+		document.getElementById('cmdNoPerm').value = localStorage.getItem('cmdNoPerm')
+
+		document.getElementById('toP1Name').value = localStorage.getItem('toP1Name')
+		document.getElementById('toP2Name').value = localStorage.getItem('toP2Name')
+		document.getElementById('toP3Name').value = localStorage.getItem('toP3Name')
+		document.getElementById('toP4Name').value = localStorage.getItem('toP4Name')
+		document.getElementById('toSeperation').value = localStorage.getItem('toSeperation')
+		document.getElementById('toCounters').value = localStorage.getItem('toCounters')
+		document.getElementById('toOutput').value = localStorage.getItem('toOutput')
+		document.getElementById('toBonusOnly').checked = stringToBoolean(localStorage.getItem('toBonusOnly'))
+		document.getElementById('toShowNum').checked = stringToBoolean(localStorage.getItem('toShowNum'))
+		document.getElementById('toListAll').checked = stringToBoolean(localStorage.getItem('toListAll'))
+		document.getElementById('toListAllCoin').checked = stringToBoolean(localStorage.getItem('toListAllCoin'))
+
+		if (document.getElementById('twitchAutoConnect').checked == true) {
+		 	connectTwitch()
+		}
+	}
+	document.getElementById('error').style = 'display: none;'
+}
+
+/*
+* Converts a string into a boolean.
+*
+* @param {string} boolean The string that should get coverted.
+*/
+function stringToBoolean(boolean) {
+	if (boolean == 'true') {
+		return true;
+	} else if (boolean == 'false') {
+		return false;
+	}
+}
+
+/*
+* Resets settings and clears cookies.
+*/
+function resetSettings() {
+	localStorage.clear()
+
+	document.getElementById('greenscreen').checked = false
+	document.getElementById('bgColor').value = '#0000FF'
+	document.getElementById('changeNames').checked = false
+	document.getElementById('enableHighlight').checked = true
+	document.getElementById('highlightColor').value = '#ff0000'
+	document.getElementById('noTie').checked = false
+
+	document.getElementById('twitchNameInput').value = ''
+	document.getElementById('twitchPasswordInput').value = ''
+	document.getElementById('twitchChannelInput').value = ''
+	document.getElementById('twitchAutoConnect').checked = false
+
+	document.getElementById('commandsEnabled').checked = true
+	document.getElementById('enablecmdConnected').checked = true
+	document.getElementById('enablecmdHelp').checked = true
+	document.getElementById('enablecmdCompleted').checked = ''
+	document.getElementById('enablecmdError').checked = true
+	document.getElementById('enablecmdMissing').checked = true
+	document.getElementById('enablecmdNoPerm').checked = true
+	document.getElementById('cmdConnected').value = 'MPO has succesfully connected to Twitch.'
+	document.getElementById('cmdHelp').value = 'Correct usage: "!mpo *counter* *player* *action*"; "!mpo happening 3 +1", more info avaible at: https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Twitch-Commands-Summary'
+	document.getElementById('cmdCompleted').value = '@user, action completed.'
+	document.getElementById('cmdError').value = '@user, "*wrong argument entered by user*" is a invalid argument, check "!mpo commands" for help.'
+	document.getElementById('cmdMissing').value = '@user, your last argument is missing, check "!mpo commands" for help.'
+	document.getElementById('cmdNoPerm').value = '@user, you don\'t have the permission to use this command.'
+
+	document.getElementById('toP1Name').value = ''
+	document.getElementById('toP2Name').value = ''
+	document.getElementById('toP3Name').value = ''
+	document.getElementById('toP4Name').value = ''
+	document.getElementById('toSeperation').value = ' | '
+	document.getElementById('toCounters').value = 'Turns, Happening, Minigame, Red Space, Coin Star'
+	document.getElementById('toOutput').value = 'Turns, ?, MG, Red, Coin Star'
+	document.getElementById('toBonusOnly').checked = false
+	document.getElementById('toShowNum').checked = true
+	document.getElementById('toListAll').checked = false
+	document.getElementById('toListAllCoin').checked = false
+
+	showHideDiv('resetSettingsDiv')
+
+	document.getElementById('greenscreen').checked = false
+	changeTheme(1)
+
+	if (document.getElementById('changeNames').checked == false) {
+		changeNames()
+	}
+
+	callHighlight(false, true)
+	resetHighlights()
+}

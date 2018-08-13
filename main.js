@@ -692,6 +692,7 @@ function coinStarTie (player) {
 * Adds or removes the classes "hidden" and "visible" which respectively hides and shows a element based on a id given.
 *
 * @param {string} id Which element should be hidden or shown.
+* @param {string} id2 A optional secondary id which should be hidden or shown.
 */
 function showHideDiv (id, id2) {
 	var div = document.getElementById(id).classList
@@ -717,43 +718,91 @@ function showHideDiv (id, id2) {
 }
 
 /*
+* Show certain settings and hide all others, also updates the cursor.
+*
+* @param {string} id Which settings should be shown.
+*/
+function showHideSettings (id) {
+	document.getElementById('generalMPOSettings').style.display = 'none'
+	document.getElementById('textOutputSettings').style.display = 'none'
+	document.getElementById('twitchSettings').style.display = 'none'
+	document.getElementById('commandSettings').style.display = 'none'
+
+	document.getElementById('generalMPOSettingsTitle').style.cursor = 'pointer'
+	document.getElementById('textOutputSettingsTitle').style.cursor = 'pointer'
+	document.getElementById('twitchSettingsTitle').style.cursor = 'pointer'
+	document.getElementById('commandSettingsTitle').style.cursor = 'pointer'
+
+	document.getElementById(id).style.display = 'inline'
+	document.getElementById(id + 'Title').style.cursor = 'auto'
+}
+
+/*
+* Changes visibility from visible to hidden and vice versa.
+* 
+* @param {string} id Which element should be changed
+*/
+function changeVisibility (id) {
+	if (document.getElementById(id).style.visibility == 'hidden') {
+		document.getElementById(id).style.visibility = 'visible'
+	} else if (document.getElementById(id).style.visibility == 'visible') {
+		document.getElementById(id).style.visibility = 'hidden'
+	}
+}
+
+function showHideReset () {
+	if (document.getElementById('resetSettingsDiv').style.visibility == 'hidden') {
+		document.getElementById('resetSettingsDiv').style.visibility = 'visible'
+		document.getElementById('resetSettingsButton').innerHTML = 'Don\'t reset'
+	} else {
+		document.getElementById('resetSettingsDiv').style.visibility = 'hidden'
+		document.getElementById('resetSettingsButton').innerHTML = 'Reset Settings'
+	}
+}
+
+/*
 * Outputs all counters as text.
 */
 function textOutput () {
+	//Get character from select element
 	var p1 = document.getElementById('p1Select').options[document.getElementById('p1Select').selectedIndex].text
 	var p2 = document.getElementById('p2Select').options[document.getElementById('p2Select').selectedIndex].text
 	var p3 = document.getElementById('p3Select').options[document.getElementById('p3Select').selectedIndex].text
 	var p4 = document.getElementById('p4Select').options[document.getElementById('p4Select').selectedIndex].text
 
 
-	if (document.getElementById('textOutputP1Name').value != '') {
-		p1 = document.getElementById('textOutputP1Name').value
+	//Use player name if specified instead of character
+	if (document.getElementById('toP1Name').value != '') {
+		p1 = document.getElementById('toP1Name').value
 	}
-	if (document.getElementById('textOutputP2Name').value != '') {
-		p2 = document.getElementById('textOutputP2Name').value
+	if (document.getElementById('toP2Name').value != '') {
+		p2 = document.getElementById('toP2Name').value
 	}
-	if (document.getElementById('textOutputP3Name').value != '') {
-		p3 = document.getElementById('textOutputP3Name').value
+	if (document.getElementById('toP3Name').value != '') {
+		p3 = document.getElementById('toP3Name').value
 	}
-	if (document.getElementById('textOutputP4Name').value != '') {
-		p4 = document.getElementById('textOutputP4Name').value
+	if (document.getElementById('toP4Name').value != '') {
+		p4 = document.getElementById('toP4Name').value
 	}
 
-	var joinString = document.getElementById('textOutputSeperation').value
+	var joinString = document.getElementById('toSeperation').value
 
-	var counters = document.getElementById('textOutputCounters').value.split(', ')
-	var names = document.getElementById('textOutputNames').value.split(', ')
+	var counters = document.getElementById('toCounters').value.split(', ')
+	var names = document.getElementById('toOutput').value.split(', ')
 
 	var output = []
+	var forResult = []
 
 	for (let num = 0; num < counters.length; num++) {
 		counters[num] = counters[num].replace(/\s/g, '')
 
+		//Add all specified counters to output array
 		switch (counters[num].toLowerCase()) {
 			case 'turn':
 			case 'turns':
 				output[num] = names[num] + ': ' + document.getElementById('curTurnInput').value + '/' + document.getElementById('maxTurnInput').value
 				break;
+
 			case 'coin':
 			case 'coinstar':
 				var coinStarP1 = document.getElementById('p1CoinStarTie').checked
@@ -781,24 +830,94 @@ function textOutput () {
 				if (document.getElementById('noTie').checked == true && (coinStar.length > 1 || coinStar.length == 0)) {
 					coinStarString = 'multiple'
 				} else if (coinStar.length == 4 || coinStar.length == 0) {
-					coinStarString = 'everyone'
+					if (document.getElementById('toListAllCoin').checked == false) {
+						coinStarString = 'everyone'
+					} else {
+						coinStar.push(p1)
+						coinStar.push(p2)
+						coinStar.push(p3)
+						coinStar.push(p4)
+						coinStarString = coinStar.join(' & ')
+					}
 				}
 
 				output[num] = names[num] + ': ' + document.getElementById('coinStarInput').value + ' ' + coinStarString
 				break;
-			default:
-				switch (counters[num]) { //Add everything to textOutputTest() too
-					case 'MinusStar':
-						counters[num] = 'MiniZtar'
-						console.log('ztar')
-						break;
-					default:
-						console.log('default')
-						break;
+
+			default: //Add everything new to textOutputTest() too
+				if (counters[num] == 'MinusStar') {
+					counters[num] = 'MiniZtar'
 				}
 
-				output[num] = names[num] + ': ' + p1 + ' ' + document.getElementById('p1' + counters[num] + 'Input').value + ', ' + p2 + ' ' + document.getElementById('p2' + counters[num] + 'Input').value + ', ' + p3 + ' ' + document.getElementById('p3' + counters[num] + 'Input').value + ', ' + p4 + ' ' + document.getElementById('p4' + counters[num] + 'Input').value
-		
+				if (document.getElementById('toBonusOnly').checked == true) {
+					var result = []
+					var resultNum = []
+
+					var counterP1 = document.getElementById('p1' + counters[num] + 'Text').innerHTML
+					var counterP2 = document.getElementById('p2' + counters[num] + 'Text').innerHTML
+					var counterP3 = document.getElementById('p3' + counters[num] + 'Text').innerHTML
+					var counterP4 = document.getElementById('p4' + counters[num] + 'Text').innerHTML
+
+					var counterNum = Math.max(counterP1, counterP2, counterP3, counterP4)
+
+					if (counterP1 == counterP2 && counterP1 == counterP3 && counterP1 == counterP4 && document.getElementById('toListAll').checked == false) {
+						result.push('everyone')
+						resultNum.push(document.getElementById('p1' + counters[num] + 'Input').value)
+					} else {
+						if (counterNum == counterP1) {
+							result.push(p1)
+							resultNum.push(document.getElementById('p1' + counters[num] + 'Input').value)
+						}
+
+						if (counterNum == counterP2) {
+							result.push(p2)
+							resultNum.push(document.getElementById('p2' + counters[num] + 'Input').value)
+						}
+
+						if (counterNum == counterP3) {
+							result.push(p3)
+							resultNum.push(document.getElementById('p3' + counters[num] + 'Input').value)
+						}
+
+						if (counterNum == counterP4) {
+							result.push(p4)
+							resultNum.push(document.getElementById('p4' + counters[num] + 'Input').value)
+						}
+					}
+
+
+					if (document.getElementById('toShowNum').checked == false) { //if a number should be displayed next to the player that got the bonus star
+						var resultString = result.join(' & ')
+						output[num] = names[num] + ': ' + resultString
+
+					} else {
+						//var forNum = counters.length++
+						
+						console.log('forResult: ' + forResult)
+
+						switch (result.length) {
+							case 1:
+								forResult.push(names[num] + ': ' + result[0] + ' ' + resultNum[0])
+								break;
+							case 2:
+								forResult.push(names[num] + ': ' + result[0] + ' & ' + result[1] + ' ' + resultNum[0])
+								break;
+							case 3:
+								forResult.push(names[num] + ': ' + result[0] + ' & ' + result[1] + ' & ' + result[2] + ' ' + resultNum[0])
+								break;
+							case 4:
+								forResult.push(names[num] + ': ' + result[0] + ' & ' + result[1] + ' & ' + result[2] + ' & ' + result[3] + ' ' + resultNum[0])
+								break;
+						}
+						
+
+						output[num] = forResult.join('')
+						forResult = []
+					}
+
+				} else {
+					output[num] = names[num] + ': ' + p1 + ' ' + document.getElementById('p1' + counters[num] + 'Input').value + ', ' + p2 + ' ' + document.getElementById('p2' + counters[num] + 'Input').value + ', ' + p3 + ' ' + document.getElementById('p3' + counters[num] + 'Input').value + ', ' + p4 + ' ' + document.getElementById('p4' + counters[num] + 'Input').value
+				}
 		}
 	}
 
@@ -820,8 +939,8 @@ function textOutput () {
 * @param {boolean} nameonly If true it won't check if everything inside the counters textarea is correct.
 */
 function textOutputTest (nameonly) {
-	var counters = document.getElementById('textOutputCounters').value.split(', ')
-	var names = document.getElementById('textOutputNames').value.split(', ')
+	var counters = document.getElementById('toCounters').value.split(', ')
+	var names = document.getElementById('toOutput').value.split(', ')
 	var error = []
 
 	if (nameonly != true) {
@@ -835,15 +954,9 @@ function textOutputTest (nameonly) {
 				case 'coin':
 				case 'coinstar':
 					break;
-				default:
-					switch (counters[num]) { //Add everything to textOutput() too
-						case 'MinusStar':
-							counters[num] = 'MiniZtar'
-							console.log('ztar')
-							break;
-						default:
-							console.log('default')
-							break;
+				default: //Add everything new to textOutput() too
+					if (counters[num] == 'MinusStar') {
+						counters[num] = 'MiniZtar'
 					}
 					if (document.getElementById('p1' + counters[num] + 'Input')) {} else {
 						error.push(counters[num])
@@ -927,187 +1040,6 @@ function windowOnClick (event) {
 }
 
 /*
-* Saves all settings as cookies.
-*
-* @param {boolean} close If the settings should be closed after saving. True = should be closed.
-*/
-function saveSettings (close) {
-	localStorage.setItem('saving', 'true')
-
-	localStorage.setItem('greenscreen', document.getElementById('greenscreen').checked)
-	localStorage.setItem('bgColor', document.getElementById('bgColor').value)
-	localStorage.setItem('bonusName', document.getElementById('changeNames').checked)
-	localStorage.setItem('counterHighlight', document.getElementById('enableHighlight').checked)
-	localStorage.setItem('highlightColor', document.getElementById('highlightColor').value)
-	localStorage.setItem('noTie', document.getElementById('noTie').checked)
-
-	localStorage.setItem('botName', document.getElementById('twitchNameInput').value)
-	localStorage.setItem('botOauth', document.getElementById('twitchPasswordInput').value)
-	localStorage.setItem('twitchChannel', document.getElementById('twitchChannelInput').value)
-	localStorage.setItem('autoconnect', document.getElementById('twitchAutoConnect').checked)
-	localStorage.setItem('userWhitelist', document.getElementById('userWhitelist').value)
-	localStorage.setItem('adminList', document.getElementById('adminList').value)
-
-	localStorage.setItem('commandsEnabled', document.getElementById('commandsEnabled').checked)
-	localStorage.setItem('enablecmdConnected', document.getElementById('enablecmdConnected').checked)
-	localStorage.setItem('enablecmdHelp', document.getElementById('enablecmdHelp').checked)
-	localStorage.setItem('enablecmdCompleted', document.getElementById('enablecmdCompleted').checked)
-	localStorage.setItem('enablecmdError', document.getElementById('enablecmdError').checked)
-	localStorage.setItem('enablecmdMissing', document.getElementById('enablecmdMissing').checked)
-	localStorage.setItem('enablecmdNoPerm', document.getElementById('enablecmdNoPerm').checked)
-
-	localStorage.setItem('cmdConnected', document.getElementById('cmdConnected').value)
-	localStorage.setItem('cmdHelp', document.getElementById('cmdHelp').value)
-	localStorage.setItem('cmdCompleted', document.getElementById('cmdCompleted').value)
-	localStorage.setItem('cmdError', document.getElementById('cmdError').value)
-	localStorage.setItem('cmdMissing', document.getElementById('cmdMissing').value)
-	localStorage.setItem('cmdNoPerm', document.getElementById('cmdNoPerm').value)
-
-	localStorage.setItem('toP1Name', document.getElementById('textOutputP1Name').value)
-	localStorage.setItem('toP2Name', document.getElementById('textOutputP2Name').value)
-	localStorage.setItem('toP3Name', document.getElementById('textOutputP3Name').value)
-	localStorage.setItem('toP4Name', document.getElementById('textOutputP4Name').value)
-	localStorage.setItem('toSeperation', document.getElementById('textOutputSeperation').value)
-	localStorage.setItem('toCounters', document.getElementById('textOutputCounters').value)
-	localStorage.setItem('toOutput', document.getElementById('textOutputNames').value)
-
-	if (close == true) {
-		showHideDiv('settings')
-	}
-}
-
-/*
-* Prepares all settings that were saved as cookies when the site gets loaded.
-*/
-function prepareMPO () {
-	if (localStorage.getItem('saving') == 'true') {
-
-		document.getElementById('greenscreen').checked = stringToBoolean(localStorage.getItem('greenscreen'))
-		document.getElementById('bgColor').value = localStorage.getItem('bgColor')
-		if (document.getElementById('greenscreen').checked == true) {
-		 	bgOnOff()
-		}
-
-		document.getElementById('changeNames').checked = stringToBoolean(localStorage.getItem('bonusName'))
-		if (document.getElementById('changeNames').checked == true) {
-		 	changeNames()
-		}
-
-		document.getElementById('enableHighlight').checked = stringToBoolean(localStorage.getItem('counterHighlight'))
-		document.getElementById('highlightColor').value = localStorage.getItem('highlightColor')
-		if (document.getElementById('enableHighlight').checked == true) {
-		 	callHighlight(false, true)
-		}
-
-		document.getElementById('noTie').checked = stringToBoolean(localStorage.getItem('noTie'))
-
-
-		document.getElementById('twitchNameInput').value = localStorage.getItem('botName')
-		document.getElementById('twitchPasswordInput').value = localStorage.getItem('botOauth')
-		document.getElementById('twitchChannelInput').value = localStorage.getItem('twitchChannel')
-		document.getElementById('twitchAutoConnect').checked = stringToBoolean(localStorage.getItem('autoconnect'))
-
-		document.getElementById('userWhitelist').value = localStorage.getItem('userWhitelist')
-		document.getElementById('adminList').value = localStorage.getItem('adminList')
-		saveTwitchLists()
-
-		document.getElementById('commandsEnabled').checked = stringToBoolean(localStorage.getItem('commandsEnabled'))
-		document.getElementById('enablecmdConnected').checked = stringToBoolean(localStorage.getItem('enablecmdConnected'))
-		document.getElementById('enablecmdHelp').checked = stringToBoolean(localStorage.getItem('enablecmdHelp'))
-		document.getElementById('enablecmdCompleted').checked = stringToBoolean(localStorage.getItem('enablecmdCompleted'))
-		document.getElementById('enablecmdError').checked = stringToBoolean(localStorage.getItem('enablecmdError'))
-		document.getElementById('enablecmdMissing').checked = stringToBoolean(localStorage.getItem('enablecmdMissing'))
-		document.getElementById('enablecmdNoPerm').checked = stringToBoolean(localStorage.getItem('enablecmdNoPerm'))
-
-		document.getElementById('cmdConnected').value = localStorage.getItem('cmdConnected')
-		document.getElementById('cmdHelp').value = localStorage.getItem('cmdHelp')
-		document.getElementById('cmdCompleted').value = localStorage.getItem('cmdCompleted')
-		document.getElementById('cmdError').value = localStorage.getItem('cmdError')
-		document.getElementById('cmdMissing').value = localStorage.getItem('cmdMissing')
-		document.getElementById('cmdNoPerm').value = localStorage.getItem('cmdNoPerm')
-
-		document.getElementById('textOutputP1Name').value = localStorage.getItem('toP1Name')
-		document.getElementById('textOutputP2Name').value = localStorage.getItem('toP2Name')
-		document.getElementById('textOutputP3Name').value = localStorage.getItem('toP3Name')
-		document.getElementById('textOutputP4Name').value = localStorage.getItem('toP4Name')
-		document.getElementById('textOutputSeperation').value = localStorage.getItem('toSeperation')
-		document.getElementById('textOutputCounters').value = localStorage.getItem('toCounters')
-		document.getElementById('textOutputNames').value = localStorage.getItem('toOutput')
-
-		if (document.getElementById('twitchAutoConnect').checked == true) {
-		 	connectTwitch()
-		}
-	}
-}
-
-/*
-* Converts a string into a boolean.
-*
-* @param {string} boolean The string that should get coverted.
-*/
-function stringToBoolean(boolean) {
-	if (boolean == 'true') {
-		return true;
-	} else if (boolean == 'false') {
-		return false;
-	}
-}
-
-/*
-* Resets settings and clears cookies.
-*/
-function resetSettings() {
-	localStorage.clear()
-
-	document.getElementById('greenscreen').checked = false
-	document.getElementById('bgColor').value = '#0000FF'
-	document.getElementById('changeNames').checked = false
-	document.getElementById('enableHighlight').checked = true
-	document.getElementById('highlightColor').value = '#ff0000'
-	document.getElementById('noTie').checked = false
-
-	document.getElementById('twitchNameInput').value = ''
-	document.getElementById('twitchPasswordInput').value = ''
-	document.getElementById('twitchChannelInput').value = ''
-	document.getElementById('twitchAutoConnect').checked = false
-
-	document.getElementById('commandsEnabled').checked = true
-	document.getElementById('enablecmdConnected').checked = true
-	document.getElementById('enablecmdHelp').checked = true
-	document.getElementById('enablecmdCompleted').checked = ''
-	document.getElementById('enablecmdError').checked = true
-	document.getElementById('enablecmdMissing').checked = true
-	document.getElementById('enablecmdNoPerm').checked = true
-	document.getElementById('cmdConnected').value = 'MPO has succesfully connected to Twitch.'
-	document.getElementById('cmdHelp').value = 'Correct usage: "!mpo *counter* *player* *action*"; "!mpo happening 3 +1", more info avaible at: https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Twitch-Commands-Summary'
-	document.getElementById('cmdCompleted').value = '@user, action completed.'
-	document.getElementById('cmdError').value = '@user, "*wrong argument entered by user*" is a invalid argument, check "!mpo commands" for help.'
-	document.getElementById('cmdMissing').value = '@user, your last argument is missing, check "!mpo commands" for help.'
-	document.getElementById('cmdNoPerm').value = '@user, you don\'t have the permission to use this command.'
-
-	document.getElementById('textOutputP1Name').value = ''
-	document.getElementById('textOutputP2Name').value = ''
-	document.getElementById('textOutputP3Name').value = ''
-	document.getElementById('textOutputP4Name').value = ''
-	document.getElementById('textOutputSeperation').value = ' | '
-	document.getElementById('textOutputCounters').value = 'Turns, Happening, Minigame, Red Space, Coin Star'
-	document.getElementById('textOutputNames').value = 'Turns, ?, MG, Red, Coin Star'
-
-	showHideDiv('resetSettingsDiv')
-
-	if (bgImgOn == 0) {
-		bgOnOff()
-	}
-
-	if (document.getElementById('changeNames').checked == false) {
-		changeNames()
-	}
-
-	callHighlight(false, true)
-	resetHighlights()
-}
-
-/*
 * Checks if something is included in a array.
 *
 * @param {string} needle Checks if this is included in the array.
@@ -1119,20 +1051,70 @@ function arrCon (needle, arrhaystack)
 }
 
 /*
-* Changes background from greenscreen to image and vice versa.
+* Changes Themes incl. greenscreen.
+* 
+* @param {number} theme Which theme should be used.
 */
-var bgImgOn = true
 var bgColor = '#0000ff'
-function bgOnOff () {
+var curTheme = 1
+function changeTheme (theme) {
 	bgColor = document.getElementById('bgColor').value
+	styleExtra = 'no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"'
 
-	if (bgImgOn == true) {
-		document.getElementById('bodyElement').style.background = bgColor
-		bgImgOn = false
-	} else {
-		document.getElementById('bodyElement').style = "background: url(img/background.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"
-		bgImgOn = true
+	if (theme) {} else {
+		theme = curTheme
 	}
+
+	if (document.getElementById('greenscreen').checked == true) {
+		document.getElementById('bodyElement').style.background = bgColor
+	} else {
+		switch (theme) {
+			case 2:
+				document.getElementById('bodyElement').style = 'background: url(img/MP9-bg.jpg)' + styleExtra
+				curTheme = 2
+				break;
+			case 3:
+				document.getElementById('bodyElement').style = 'background: url(img/NSMBW-bg.jpg)' + styleExtra
+				curTheme = 3
+				break;
+			default:
+				document.getElementById('bodyElement').style = 'background: url(img/background.jpg)' + styleExtra
+				curTheme = 1
+				break;
+		}
+	}
+	switch (theme) {
+			case 2:
+				document.getElementById('themeB1').style = ''
+				document.getElementById('themeB3').style = ''
+				document.getElementById('themeB1').disabled = ''
+				document.getElementById('themeB3').disabled = ''
+
+				document.getElementById('themeB2').style = 'border-color: green;'
+				document.getElementById('themeB2').disabled = 'true'
+				curTheme = 2
+				break;
+			case 3:
+				document.getElementById('themeB1').style = ''
+				document.getElementById('themeB2').style = ''
+				document.getElementById('themeB1').disabled = ''
+				document.getElementById('themeB2').disabled = ''
+
+				document.getElementById('themeB3').style = 'border-color: green;'
+				document.getElementById('themeB3').disabled = 'true'
+				curTheme = 3
+				break;
+			default:
+				document.getElementById('themeB2').style = ''
+				document.getElementById('themeB3').style = ''
+				document.getElementById('themeB2').disabled = ''
+				document.getElementById('themeB3').disabled = ''
+
+				document.getElementById('themeB1').style = 'border-color: green;'
+				document.getElementById('themeB1').disabled = 'true'
+				curTheme = 1
+				break;
+		}
 }
 
 /*
@@ -1142,7 +1124,7 @@ function bgOnOff () {
 */
 function changeBGColor (id) {
 	bgColor = document.getElementById(id).value
-	if (bgImgOn == false) {
+	if (document.getElementById('greenscreen').checked == true) {
 		document.getElementById('bodyElement').style.background = bgColor
 	}
 	document.getElementById('bgColor').value = bgColor
@@ -1150,6 +1132,7 @@ function changeBGColor (id) {
 
 	document.getElementById('colorPickerBG').style = 'background-color: ' + bgColor + ';'
 }
+
 
 /*
 * Resets the Greenscreen color.
@@ -1169,6 +1152,7 @@ function changeTextColor (id) {
 	var counterText = document.querySelectorAll(".counterText")
 	var turns = document.querySelectorAll(".turns")
 	var mobile = document.querySelectorAll(".mobileTypeLabel")
+	var border = document.querySelectorAll(".changesBorder")
 
 	var color = document.getElementById(id).value
 
@@ -1183,6 +1167,9 @@ function changeTextColor (id) {
 	}
 	for (var num = 0; num < mobile.length; num++) {
 		mobile[num].style.color = color
+	}
+	for (var num = 0; num < border.length; num++) {
+		border[num].style.borderColor = color
 	}
 
 	document.getElementById('textColor').value = color
