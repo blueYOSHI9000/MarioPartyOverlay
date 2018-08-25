@@ -279,6 +279,7 @@ function saveSettings (close) {
 * Prepares all settings that were saved as cookies when the site gets loaded.
 */
 function prepareMPO () {
+	document.getElementById('error').style = 'display: inline;'
 	if (localStorage.getItem('saving') == 'true') {
 
 		curTheme = parseInt(localStorage.getItem('curTheme'))
@@ -297,9 +298,9 @@ function prepareMPO () {
 
 		document.getElementById('enableHighlight').checked = stringToBoolean(localStorage.getItem('counterHighlight'))
 		document.getElementById('highlightColor').value = localStorage.getItem('highlightColor')
-		if (document.getElementById('enableHighlight').checked == true) {
+		/*if (document.getElementById('enableHighlight').checked == true) {
 		 	callHighlight(false, true)
-		}
+		}*/
 
 		document.getElementById('noTie').checked = stringToBoolean(localStorage.getItem('noTie'))
 
@@ -344,7 +345,10 @@ function prepareMPO () {
 		 	connectTwitch()
 		}
 	}
-	document.getElementById('error').style = 'display: none;'
+
+	callDisplayOnOff()
+
+	document.getElementById('error').style.display = 'none'
 }
 
 /*

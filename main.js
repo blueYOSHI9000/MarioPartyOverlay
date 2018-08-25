@@ -40,22 +40,21 @@ function counterButtons (player, action, amount, counter) {
 		}
 	}
 
-
 	if (counter == 'coinStar') {
 		coinStar()
 	} else if (counter == 'maxTurn' || counter == 'curTurn') {
 		turns()
 	} else if (document.getElementById('enableHighlight').checked == true) {
-		highlight(counter, highlightColor)
+		highlight(counter)
 	}
 
 	if (document.getElementById('slowStarActivated').checked == true) {
-		slowHighlight(highlightColor)
+		slowHighlight()
 	}
 }
 
 /*
-* Calls counterButtons() for the mobile.html site.
+* Calls counterButtons() for the mobile site.
 * 
 * @param {string} counter Which counter should be updated.
 * @param {player} player Which player should be updated.
@@ -122,117 +121,65 @@ function ctrlReleased (e) {
 	}
 }
 
+var ctrlKeyVar = false
 window.onkeydown = ctrlPressed
 window.onkeyup = ctrlReleased
-var ctrlKeyVar = false
 
 /*
 * Hides and shows counters after pressing the "on/off" buttons.
 *
 * @param {string} counter Which counter should be hidden/shown.
-* @param {string} counter2 Same as counter but with the beggining being uppercase, only useful for counters that hide and show certain buttons like Running with Slow Star.
-* @param {boolean} start True if the function is only called to hide all counters.
+* @param {boolean} start Hide/show certain counters depending on what they should be (used when loading the site).
 */
-function displayOnOff (counter, counter2, start) {
-	if (document.getElementById(counter + 'Var').value == 1) {
-			var visibility = 'none'
-			var visibilityOpposite = ''
-			document.getElementById(counter + 'Var').value = 0
+var callSlowStar = true
+
+function displayOnOff (counter, start) {
+	var counterClass = document.querySelectorAll('.' + counter)
+	if (start) {
+		if (document.getElementById(counter + 'Visible').value == 'true') {
+			var displayVar = ''
 		} else {
-			var visibility = ''
-			var visibilityOpposite = 'none'
-			document.getElementById(counter + 'Var').value = 1
-		}
-
-	if (counter == 'running') {
-		for (let num = 1; num < 5; num++) {
-				document.getElementById('p' + num + counter2 + 'Display').style.display = visibility
-				document.getElementById('p' + num + counter2 + 'Text').style.display = visibility
-				document.getElementById('p' + num + counter2 + 'Break').style.display = visibility
-			if (mobile) {} else {
-				document.getElementById(counter + 'Explanation').style.display = visibility
-
-				document.getElementById('p' + num + counter2 + 'InputTextBefore').style.display = visibility
-				document.getElementById('p' + num + counter2 + 'Input').style.display = visibility
-				document.getElementById('p' + num + counter2 + 'InputM').style.display = visibility
-				document.getElementById('p' + num + counter2 + 'InputP').style.display = visibility
-				if (document.getElementById('slowStarActivated').checked == true) {
-					document.getElementById('p' + num + counter2 + 'InputM6').style.display = visibility
-					document.getElementById('p' + num + counter2 + 'InputP6').style.display = visibility
-				} else {
-					document.getElementById('p' + num + counter2 + 'InputM10').style.display = visibility
-					document.getElementById('p' + num + counter2 + 'InputP10').style.display = visibility
-				}
-				if (start == true) {
-					document.getElementById('p' + num + counter2 + 'InputM6').style.display = visibility
-					document.getElementById('p' + num + counter2 + 'InputP6').style.display = visibility
-					document.getElementById('p' + num + counter2 + 'InputM10').style.display = visibility
-					document.getElementById('p' + num + counter2 + 'InputP10').style.display = visibility
-				}
-			}
+			var displayVar = 'none'
 		}
 	} else {
-		var classList = document.getElementsByClassName(counter)
-
-		for (let num = 0; num < classList.length; num++) {
-			document.getElementsByClassName(counter)[num].style.display = visibility
+		if (document.getElementById(counter + 'Visible').value == 'true') {
+			var displayVar = 'none'
+			document.getElementById(counter + 'Visible').value = 'false'
+		} else {
+			var displayVar = ''
+			document.getElementById(counter + 'Visible').value = 'true'
 		}
+	}
+
+	for (var num = 0; num < counterClass.length; num++) {
+		counterClass[num].style.display = displayVar
+	}
+
+	if (start) {} else if (callSlowStar == true && counter == 'running') {
+		slowStar()
+		callSlowStar = false
 	}
 }
 
 /*
-* Calls displayOnOff() when the page is being loaded.
-* This is required due to some problems with setting up elements that already include the "display: none;" style attribute.
+* Calls displayOnOff() when loading the page.
 */
-function startDisplayOnOff () {
-	var counter = 'happening'
-	var counter2 = 'Happening'
-
-	for (let num = 0; num < 10; num++) {
-		switch (num) {
-			case 0:
-				counter = 'happening'
-				break;
-			case 1:
-				counter = 'minigame'
-				break;
-			case 2:
-				counter = 'redSpace'
-				break;
-			case 3:
-				counter = 'running'
-				counter2 = 'Running'
-				break;
-			case 4:
-				counter = 'shopping'
-				break;
-			case 5:
-				counter = 'orb'
-				break;
-			case 6:
-				counter = 'candy'
-				break;
-			case 7:
-				counter = 'spinSpace'
-				break;
-			case 8:
-				counter = 'miniZtar'
-				break;
-			case 9:
-				counter = 'specialDice'
-				break;
-		}
-		if (document.getElementById(counter + 'Var').value == 0) {
-			document.getElementById(counter + 'Var').value = 1
-			displayOnOff(counter, counter2, true)
-		}
-	}
+function callDisplayOnOff () {
+	displayOnOff('happening', true)
+	displayOnOff('minigame', true)
+	displayOnOff('redSpace', true)
+	displayOnOff('running', true)
+	displayOnOff('shopping', true)
+	displayOnOff('orb', true)
+	displayOnOff('candy', true)
+	displayOnOff('spinSpace', true)
+	displayOnOff('miniZtar', true)
+	displayOnOff('specialDice', true)
 }
 
 /*
 * Resets or starts the highlighting feature by calling callHighlight().
 */
-var highlightColor = '#ff0000'
 function resetHighlights () {
 	if (document.getElementById('enableHighlight').checked == false) {
 		callHighlight(true)
@@ -248,54 +195,59 @@ function resetHighlights () {
 * @param {boolean} changeColor If the highlight color should be changed.
 */
 function callHighlight (resetHighlights, changeColor) {
-	var originalHighlightColor = highlightColor
+	
 
 	if (resetHighlights == true) {
-		originalHighlightColor = highlightColor
-		highlightColor = 'white'
-	} else if (changeColor) {
+		var originalHighlightColor = document.getElementById('highlightColor').value
+		//var originalHighlightColor = highlightColor
+		var textColor = document.getElementById('textColor').value
+		document.getElementById('highlightColor').value = textColor
+
+	} /*else if (changeColor) {
 		highlightColor = document.getElementById('highlightColor').value
 		originalHighlightColor = highlightColor
-	}
+	}*/
 
 	if (document.getElementById('enableHighlight').checked == true || resetHighlights) {
-		if (document.getElementById('happeningVar').value == 1 ) {
-			highlight('Happening', highlightColor)
+		if (document.getElementById('happeningVisible').value == 'true' ) {
+			highlight('Happening')
 		}
-		if (document.getElementById('minigameVar').value == 1 ) {
-			highlight('Minigame', highlightColor)
+		if (document.getElementById('minigameVisible').value == 'true' ) {
+			highlight('Minigame')
 		}
-		if (document.getElementById('redSpaceVar').value == 1 ) {
-			highlight('RedSpace', highlightColor)
+		if (document.getElementById('redSpaceVisible').value == 'true' ) {
+			highlight('RedSpace')
 		}
-		if (document.getElementById('runningVar').value == 1 && document.getElementById('slowStarActivated').checked == false ) {
-			highlight('Running', highlightColor)
-		} else if (document.getElementById('runningVar').value == 1 && document.getElementById('slowStarActivated').checked == true ) {
-			slowHighlight(highlightColor)
+		if (document.getElementById('runningVisible').value == 'true' && document.getElementById('slowStarActivated').checked == false ) {
+			highlight('Running')
+		} else if (document.getElementById('runningVisible').value == 'true' && document.getElementById('slowStarActivated').checked == true ) {
+			slowHighlight()
 		}
-		if (document.getElementById('shoppingVar').value == 1 ) {
-			highlight('Shopping', highlightColor)
+		if (document.getElementById('shoppingVisible').value == 'true' ) {
+			highlight('Shopping')
 		}
-		if (document.getElementById('orbVar').value == 1 ) {
-			highlight('Orb', highlightColor)
+		if (document.getElementById('orbVisible').value == 'true' ) {
+			highlight('Orb')
 		}
-		if (document.getElementById('candyVar').value == 1 ) {
-			highlight('Candy', highlightColor)
+		if (document.getElementById('candyVisible').value == 'true' ) {
+			highlight('Candy')
 		}
-		if (document.getElementById('spinSpaceVar').value == 1 ) {
-			highlight('SpinSpace', highlightColor)
+		if (document.getElementById('spinSpaceVisible').value == 'true' ) {
+			highlight('SpinSpace')
 		}
 		if (slowStarActivated == true) {
-			slowHighlight(highlightColor)
+			slowHighlight()
 		}
-		if (document.getElementById('miniZtarVar').value == 1 ) {
-			highlight('MiniZtar', highlightColor)
+		if (document.getElementById('miniZtarVisible').value == 'true' ) {
+			highlight('MiniZtar')
 		}
-		if (document.getElementById('specialDiceVar').value == 1 ) {
-			highlight('SpecialDice', highlightColor)
+		if (document.getElementById('specialDiceVisible').value == 'true' ) {
+			highlight('SpecialDice')
 		}
 	}
-	highlightColor = originalHighlightColor
+	if (resetHighlights == true) {
+		document.getElementById('highlightColor').value = originalHighlightColor
+	}
 }
 
 /*
@@ -304,7 +256,7 @@ function callHighlight (resetHighlights, changeColor) {
 * @param {string} counter Which counter should be updated.
 * @param {string} color Which color the highlight should have.
 */
-function highlight (counter, color) {
+function highlight (counter) {
 	var counterP1 = document.getElementById('p1' + counter + 'Text').innerHTML
 	var counterP2 = document.getElementById('p2' + counter + 'Text').innerHTML
 	var counterP3 = document.getElementById('p3' + counter + 'Text').innerHTML
@@ -312,34 +264,37 @@ function highlight (counter, color) {
 
 	var counterNum = Math.max(counterP1, counterP2, counterP3, counterP4)
 
+	var textColor = document.getElementById('textColor').value
+	var highlightColor = document.getElementById('highlightColor').value
+
 	if (counterP1 == 0 && counterP2 == 0 && counterP3 == 0 && counterP4 == 0) {
-		document.getElementById('p1' + counter + 'Text').style.color = 'white'
-		document.getElementById('p2' + counter + 'Text').style.color = 'white'
-		document.getElementById('p3' + counter + 'Text').style.color = 'white'
-		document.getElementById('p4' + counter + 'Text').style.color = 'white'
+		document.getElementById('p1' + counter + 'Text').style.color = textColor
+		document.getElementById('p2' + counter + 'Text').style.color = textColor
+		document.getElementById('p3' + counter + 'Text').style.color = textColor
+		document.getElementById('p4' + counter + 'Text').style.color = textColor
 	} else {
 		if (counterNum == counterP1) {
-			document.getElementById('p1' + counter + 'Text').style.color = color
+			document.getElementById('p1' + counter + 'Text').style.color = highlightColor
 		} else {
-			document.getElementById('p1' + counter + 'Text').style.color = 'white'
+			document.getElementById('p1' + counter + 'Text').style.color = textColor
 		}
 
 		if (counterNum == counterP2) {
-			document.getElementById('p2' + counter + 'Text').style.color = color
+			document.getElementById('p2' + counter + 'Text').style.color = highlightColor
 		} else {
-			document.getElementById('p2' + counter + 'Text').style.color = 'white'
+			document.getElementById('p2' + counter + 'Text').style.color = textColor
 		}
 
 		if (counterNum == counterP3) {
-			document.getElementById('p3' + counter + 'Text').style.color = color
+			document.getElementById('p3' + counter + 'Text').style.color = highlightColor
 		} else {
-			document.getElementById('p3' + counter + 'Text').style.color = 'white'
+			document.getElementById('p3' + counter + 'Text').style.color = textColor
 		}
 
 		if (counterNum == counterP4) {
-			document.getElementById('p4' + counter + 'Text').style.color = color
+			document.getElementById('p4' + counter + 'Text').style.color = highlightColor
 		} else {
-			document.getElementById('p4' + counter + 'Text').style.color = 'white'
+			document.getElementById('p4' + counter + 'Text').style.color = textColor
 		}
 	}
 }
@@ -348,8 +303,8 @@ function highlight (counter, color) {
 * Turns the slow star feature on or off.
 */
 function slowStar () {
-	if (document.getElementById('runningVar').value == 0) {
-		displayOnOff('running', 'Running')
+	if (document.getElementById('runningVisible').value == 'false') {
+		displayOnOff('running')
 	}
 
 	if (mobile) {} else {
@@ -367,10 +322,10 @@ function slowStar () {
 			}
 		}
 	}
-	if (document.getElementById('slowStarActivated').checked == true) {
-		slowHighlight(highlightColor)
-	} else {
-		highlight('Running', highlightColor)
+	if (document.getElementById('slowStarActivated').checked == true && document.getElementById('enableHighlight').checked == true) {
+		slowHighlight()
+	} else if (document.getElementById('enableHighlight').checked == true) {
+		highlight('Running')
 	}
 }
 
@@ -379,7 +334,7 @@ function slowStar () {
 *
 * @param {string} color Which color the highlight should have.
 */
-function slowHighlight (color) {
+function slowHighlight () {
 		var counter = 'Running'
 
 		var counterP1 = document.getElementById('p1' + counter + 'Text').innerHTML
@@ -390,37 +345,39 @@ function slowHighlight (color) {
 		var counterNumMax = Math.max(counterP1, counterP2, counterP3, counterP4)
 		var counterNumMin = Math.min(counterP1, counterP2, counterP3, counterP4)
 
+		var highlightColor = document.getElementById('highlightColor').value
+		var textColor = document.getElementById('textColor').value
 
 		if (counterP1 == 0) {
-			document.getElementById('p1' + counter + 'Text').style.color = 'white'
+			document.getElementById('p1' + counter + 'Text').style.color = textColor
 		} else if (counterNumMax == counterP1 || counterNumMin == counterP1) {
-			document.getElementById('p1' + counter + 'Text').style.color = color
+			document.getElementById('p1' + counter + 'Text').style.color = highlightColor
 		} else {
-			document.getElementById('p1' + counter + 'Text').style.color = 'white'
+			document.getElementById('p1' + counter + 'Text').style.color = textColor
 		}
 
 		if (counterP2 == 0) {
-			document.getElementById('p2' + counter + 'Text').style.color = 'white'
+			document.getElementById('p2' + counter + 'Text').style.color = textColor
 		} else if (counterNumMax == counterP2 || counterNumMin == counterP2) {
-			document.getElementById('p2' + counter + 'Text').style.color = color
+			document.getElementById('p2' + counter + 'Text').style.color = highlightColor
 		} else {
-			document.getElementById('p2' + counter + 'Text').style.color = 'white'
+			document.getElementById('p2' + counter + 'Text').style.color = textColor
 		}
 
 		if (counterP3 == 0) {
-			document.getElementById('p3' + counter + 'Text').style.color = 'white'
+			document.getElementById('p3' + counter + 'Text').style.color = textColor
 		} else if (counterNumMax == counterP3 || counterNumMin == counterP3) {
-			document.getElementById('p3' + counter + 'Text').style.color = color
+			document.getElementById('p3' + counter + 'Text').style.color = highlightColor
 		} else {
-			document.getElementById('p3' + counter + 'Text').style.color = 'white'
+			document.getElementById('p3' + counter + 'Text').style.color = textColor
 		}
 
 		if (counterP4 == 0) {
-			document.getElementById('p4' + counter + 'Text').style.color = 'white'
+			document.getElementById('p4' + counter + 'Text').style.color = textColor
 		} else if (counterNumMax == counterP4 || counterNumMin == counterP4) {
-			document.getElementById('p4' + counter + 'Text').style.color = color
+			document.getElementById('p4' + counter + 'Text').style.color = highlightColor
 		} else {
-			document.getElementById('p4' + counter + 'Text').style.color = 'white'
+			document.getElementById('p4' + counter + 'Text').style.color = textColor
 		}
 }
 
@@ -454,14 +411,16 @@ function minigameWins () {
 *
 * @param {number} playerNum Which player should be updated.
 */
-function imgSelect(playerNum) {
+function imgSelect (playerNum) {
 	var character = document.getElementById('p' + playerNum + 'Select').value
-	if (document.getElementById('p' + playerNum + 'Com').checked) {
-		var finalImage = "img/" + "com/" + character + ".png"
+	
+	document.getElementById('p' + playerNum + 'Img').src = "img/" + character + ".png"
+	
+	if (document.getElementById('p' + playerNum + 'Com').checked == true) {
+		document.getElementById('p' + playerNum + 'ComDisplay').style.visibility = 'visible'
 	} else {
-		var finalImage = "img/" + character + ".png"
+		document.getElementById('p' + playerNum + 'ComDisplay').style.visibility = 'hidden'
 	}
-	document.getElementById('p' + playerNum + 'Img').src = finalImage
 
 	coinStarTie()
 }
@@ -552,10 +511,10 @@ function turns () {
 function coinStar () {
 	var coinStarVar = document.getElementById('coinStarInput').value
 	if (coinStarVar && coinStarVar > 0) {
-		document.getElementById("coinStarText").innerHTML = coinStarVar
+		document.getElementById('coinStarText').innerHTML = coinStarVar
 	} else if (coinStarVar <= 0) {
 		document.getElementById('coinStarInput').value = 0
-		document.getElementById("coinStarText").innerHTML = document.getElementById('coinStarInput').value
+		document.getElementById('coinStarText').innerHTML = document.getElementById('coinStarInput').value
 	}
 }
 
@@ -631,32 +590,24 @@ function coinStarTie (player) {
 		tied.push(character4)
 	}
 
+	document.getElementById('coinStarTie1').src = 'img/tie.png'
+	document.getElementById('coinStarTie2').src = 'img/tie.png'
+	document.getElementById('coinStarTie3').src = 'img/tie.png'
+	document.getElementById('coinStarTie4').src = 'img/tie.png'
+	document.getElementById('coinStarTie5').src = 'img/tie.png'
+	document.getElementById('coinStarCharacter').src = 'img/tie.png'
+
 	if (document.getElementById('noTie').checked == true && tied.length != 1 || tied.length == 0) {
 		document.getElementById('coinStarCharacter').src = 'img/question.png'
-
-		document.getElementById('coinStarTie1').src = 'img/tie.png'
-		document.getElementById('coinStarTie2').src = 'img/tie.png'
-		document.getElementById('coinStarTie3').src = 'img/tie.png'
-		document.getElementById('coinStarTie4').src = 'img/tie.png'
-		document.getElementById('coinStarTie5').src = 'img/tie.png'
 
 		} else if (tied.length == 1) {
 		document.getElementById('coinStarCharacter').src = 'img/' + tied[0] + '.png'
 
-		document.getElementById('coinStarTie1').src = 'img/tie.png'
-		document.getElementById('coinStarTie2').src = 'img/tie.png'
-		document.getElementById('coinStarTie3').src = 'img/tie.png'
-		document.getElementById('coinStarTie4').src = 'img/tie.png'
-		document.getElementById('coinStarTie5').src = 'img/tie.png'
+		
 
 	} else if (tied.length == 2) {
 		document.getElementById('coinStarTie1').src = 'img/' + tied[0] + '.png'
 		document.getElementById('coinStarTie4').src = 'img/' + tied[1] + '.png'
-		document.getElementById('coinStarCharacter').src = 'img/tie.png'
-
-		document.getElementById('coinStarTie2').src = 'img/tie.png'
-		document.getElementById('coinStarTie3').src = 'img/tie.png'
-		document.getElementById('coinStarTie5').src = 'img/tie.png'
 
 		document.getElementById('coinStarTie1').style.height = '32px'
 		document.getElementById('coinStarTie1').style.top = '-24px'
@@ -670,19 +621,12 @@ function coinStarTie (player) {
 		document.getElementById('coinStarTie1').src = 'img/' + tied[0] + '.png'
 		document.getElementById('coinStarTie2').src = 'img/' + tied[1] + '.png'
 		document.getElementById('coinStarTie5').src = 'img/' + tied[2] + '.png'
-		document.getElementById('coinStarCharacter').src = 'img/tie.png'
-
-		document.getElementById('coinStarTie3').src = 'img/tie.png'
-		document.getElementById('coinStarTie4').src = 'img/tie.png'
 
 	} else if (tied.length == 4) {
 		document.getElementById('coinStarTie1').src = 'img/' + tied[0] + '.png'
 		document.getElementById('coinStarTie2').src = 'img/' + tied[1] + '.png'
 		document.getElementById('coinStarTie3').src = 'img/' + tied[2] + '.png'
 		document.getElementById('coinStarTie4').src = 'img/' + tied[3] + '.png'
-		document.getElementById('coinStarCharacter').src = 'img/tie.png'
-
-		document.getElementById('coinStarTie5').src = 'img/tie.png'
 
 	}
 }
@@ -1048,8 +992,7 @@ function windowOnClick (event) {
 * @param {string} needle Checks if this is included in the array.
 * @param {array} arrhaystack The array that should include something.
 */
-function arrCon (needle, arrhaystack)
-{
+function arrCon (needle, arrhaystack) {
     return (arrhaystack.indexOf(needle) > -1);
 }
 
@@ -1086,33 +1029,24 @@ function changeTheme (theme) {
 				break;
 		}
 	}
+	document.getElementById('themeB1').style = ''
+	document.getElementById('themeB2').style = ''
+	document.getElementById('themeB3').style = ''
+	document.getElementById('themeB1').disabled = ''
+	document.getElementById('themeB2').disabled = ''
+	document.getElementById('themeB3').disabled = ''
 	switch (theme) {
 			case 2:
-				document.getElementById('themeB1').style = ''
-				document.getElementById('themeB3').style = ''
-				document.getElementById('themeB1').disabled = ''
-				document.getElementById('themeB3').disabled = ''
-
 				document.getElementById('themeB2').style = 'border-color: green;'
 				document.getElementById('themeB2').disabled = 'true'
 				curTheme = 2
 				break;
 			case 3:
-				document.getElementById('themeB1').style = ''
-				document.getElementById('themeB2').style = ''
-				document.getElementById('themeB1').disabled = ''
-				document.getElementById('themeB2').disabled = ''
-
 				document.getElementById('themeB3').style = 'border-color: green;'
 				document.getElementById('themeB3').disabled = 'true'
 				curTheme = 3
 				break;
 			default:
-				document.getElementById('themeB2').style = ''
-				document.getElementById('themeB3').style = ''
-				document.getElementById('themeB2').disabled = ''
-				document.getElementById('themeB3').disabled = ''
-
 				document.getElementById('themeB1').style = 'border-color: green;'
 				document.getElementById('themeB1').disabled = 'true'
 				curTheme = 1
@@ -1177,6 +1111,7 @@ function changeTextColor (id) {
 
 	document.getElementById('textColor').value = color
 	document.getElementById('textColorTest').value = color
+	callHighlight()
 }
 
 /*
@@ -1253,7 +1188,6 @@ interact('.draggable')
 // === INTERACT.JS END ===
 
 window.onload = prepareMPO()
-window.onload = startDisplayOnOff()
 window.onload = changeBGColor('bgColor')
 
 if (mobile) {

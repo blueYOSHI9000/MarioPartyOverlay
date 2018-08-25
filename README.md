@@ -15,6 +15,11 @@ Character Sprites ripped by [Random Talking Bush](https://twitter.com/RandomTBus
 
 # Changelog
 
+v1.7.1
+- Changed: Computer column merged with the character column
+- Changed: Code changes to save space
+- Fixed: Wrong size of theme previews
+
 v1.7.0
 - Added: Themes
 - Added: Only output the bonus star owner in Text-Output

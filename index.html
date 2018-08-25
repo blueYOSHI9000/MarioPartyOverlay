@@ -24,8 +24,7 @@
 	<!-- Selection #1 -->
 	<table class="selectionTable">
 		<tr>
-			<td> <b class="whiteText""> Character: </b> </td>
-			<td class="marginLeft"> <b class="whiteText"> Computer: </b> </td>
+			<td> <b class="whiteText""> Character & COM: </b> </td>
 			<td class="marginLeft"> <b class="whiteText"> Coin star: </b> </td>
 			<td class="marginLeft happening"> <b class="whiteText" id="happeningExplanation"> Happening: </b> </td>
 			<td class="marginLeft minigame"> <b class="whiteText" id="minigameExplanation"> Minigame Coins: </b> </td>
@@ -58,8 +57,8 @@
 					<option value="birdo">Birdo</option>
 					<option value="koopakid">Koopa Kid</option>
 				</select>
+				<input type="checkbox" id="p1Com" autocomplete="off" class="checkbox" onchange="imgSelect(1)">
 			</td>
-			<td class="marginLeft"> <b class="whiteText"> P1: </b> <input type="checkbox" id="p1Com" autocomplete="off" class="checkbox" onchange="imgSelect(1)"> </td>
 			<td class="marginLeft"> <b class="whiteText"> P1: </b> <input type="checkbox" id="p1CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie(1)"> </td>
 			<td class="marginLeft happening">
 				<b class="whiteText" id="p1HappeningInputTextBefore"> P1:</b>
@@ -107,8 +106,8 @@
 					<option value="birdo">Birdo</option>
 					<option value="koopakid">Koopa Kid</option>
 				</select>
+				<input type="checkbox" id="p2Com" class="checkbox" onchange="imgSelect(2)">
 			</td>
-			<td class="marginLeft"> <b class="whiteText"> P2: </b> <input type="checkbox" id="p2Com" class="checkbox" onchange="imgSelect(2)"> </td>
 			<td class="marginLeft"> <b class="whiteText"> P2: </b> <input type="checkbox" id="p2CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie(2)"> </td>
 			<td class="marginLeft happening">
 				<b class="whiteText" id="p2HappeningInputTextBefore"> P2:</b>
@@ -156,8 +155,8 @@
 					<option value="birdo">Birdo</option>
 					<option value="koopakid">Koopa Kid</option>
 				</select>
+				<input type="checkbox" id="p3Com" class="checkbox" onchange="imgSelect(3)">
 			</td>
-			<td class="marginLeft"> <b class="whiteText"> P3: </b> <input type="checkbox" id="p3Com" class="checkbox" onchange="imgSelect(3)"> </td>
 			<td class="marginLeft"> <b class="whiteText"> P3: </b> <input type="checkbox" id="p3CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie(3)"> </td>
 			<td class="marginLeft happening">
 				<b class="whiteText" id="p3HappeningInputTextBefore"> P3:</b>
@@ -205,8 +204,8 @@
 					<option value="birdo">Birdo</option>
 					<option value="koopakid">Koopa Kid</option>
 				</select>
+				<input type="checkbox" id="p4Com" class="checkbox" onchange="imgSelect(4)">
 			</td>
-			<td class="marginLeft"> <b class="whiteText"> P4: </b> <input type="checkbox" id="p4Com" class="checkbox" onchange="imgSelect(4)"> </td>
 			<td class="marginLeft"> <b class="whiteText"> P4: </b> <input type="checkbox" id="p4CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie(4)"> </td>
 			<td class="marginLeft happening">
 				<b class="whiteText" id="p4HappeningInputTextBefore"> P4:</b>
@@ -513,14 +512,12 @@
 				<td> <input type="checkbox" id="minigameWinsActivated" onchange="minigameWins()"> <b class="whiteText" id="minigameWinsActivatedText"> Minigame Wins (MP9) on/off </b> </td>
 				<td> <button class="changesButton" id="redSpaceButton" onclick="displayOnOff('redSpace')"> Red Spaces (MP 7 & 8) on/off </button> </td>
 			</tr>
-
 			<tr>
-				<td> <button class="changesButton" id="runningButton" onclick="displayOnOff('running', 'Running')"> Running (MP 7 & 8 & 9 & DS) on/off </button> </td>
+				<td> <button class="changesButton" id="runningButton" onclick="displayOnOff('running')"> Running (MP 7 & 8 & 9 & DS) on/off </button> </td>
 				<td> <button class="changesButton" onclick="displayOnOff('shopping')"> Shopping (MP 7 & 8) on/off </button> </td>
 				<td> <button class="changesButton" onclick="displayOnOff('orb')"> Orbs (MP 6 & 7) on/off </button> </td>
 				<td> <button class="changesButton" onclick="displayOnOff('candy')"> Candies (MP 8) on/off </button> </td>
 			</tr>
-
 			<tr>
 				<td> <button class="changesButton" id="spinSpaceButton" onclick="displayOnOff('spinSpace')"> Spin Spaces (MP 9) on/off </button> </td>
 				<td> <button class="changesButton" id="miniZtarButton" onclick="displayOnOff('miniZtar')"> Minus Star (MP 9) on/off </button> </td>
@@ -532,7 +529,7 @@
 </div>
 
 	<!-- Player Images & Happening & Minigame & Running Display -->
-	<div class="player"> <img src="img/mario.png" class="characterImg draggable" id="p1Img"> <br />
+	<div class="player"> <div style="position: relative;" class="draggable"> <img src="img/com.png" class="comImg" id="p1ComDisplay"> <img src="img/mario.png" class="characterImg" id="p1Img"> </div> <br />
 		<div class="draggable happening"> <img class="counterDisplay" src="img/happening.png" id="p1HappeningDisplay"> <span class="counterText" id="p1HappeningText"> 0 </span> <br id="p1HappeningBreak" /> </div>
 		<div class="draggable minigame"> <img class="counterDisplay" src="img/minigame.png" id="p1MinigameDisplay"> <span class="counterText" id="p1MinigameText"> 0 </span> <br id="p1MinigameBreak" /> </div>
 		<div class="draggable redSpace"> <img class="counterDisplay" src="img/redspace.png" id="p1RedSpaceDisplay"> <span class="counterText" id="p1RedSpaceText"> 0 </span> <br id="p1RedSpaceBreak"  /> </div>
@@ -545,7 +542,7 @@
 		<div class="draggable specialDice"> <img class="counterDisplay" src="img/specialdice.png" id="p1SpecialDiceDisplay"> <span class="counterText" id="p1SpecialDiceText"> 0 </span> <br id="p1SpecialDiceBreak"  /> </div>
 	</div>
 
-	<div class="player"> <img src="img/luigi.png" class="characterImg draggable" id="p2Img"> <br />
+	<div class="player"> <div style="position: relative;" class="draggable"> <img src="img/com.png" class="comImg" id="p2ComDisplay"> <img src="img/luigi.png" class="characterImg" id="p2Img"> </div> <br />
 		<div class="draggable happening"> <img class="counterDisplay" src="img/happening.png" id="p2HappeningDisplay"> <span class="counterText" id="p2HappeningText"> 0 </span> <br id="p2HappeningBreak" /> </div>
 		<div class="draggable minigame"> <img class="counterDisplay" src="img/minigame.png" id="p2MinigameDisplay"> <span class="counterText" id="p2MinigameText"> 0 </span> <br id="p2MinigameBreak" /> </div>
 		<div class="draggable redSpace"> <img class="counterDisplay" src="img/redspace.png" id="p2RedSpaceDisplay"> <span class="counterText" id="p2RedSpaceText"> 0 </span> <br id="p2RedSpaceBreak"  /> </div>
@@ -558,7 +555,7 @@
 		<div class="draggable specialDice"> <img class="counterDisplay" src="img/specialdice.png" id="p2SpecialDiceDisplay"> <span class="counterText" id="p2SpecialDiceText"> 0 </span> <br id="p2SpecialDiceBreak"  /> </div>
 	</div>
 
-	<div class="player"> <img src="img/peach.png" class="characterImg draggable" id="p3Img"> <br />
+	<div class="player"> <div style="position: relative;" class="draggable"> <img src="img/com.png" class="comImg" id="p3ComDisplay"> <img src="img/peach.png" class="characterImg" id="p3Img"> </div> <br />
 		<div class="draggable happening"> <img class="counterDisplay" src="img/happening.png" id="p3HappeningDisplay"> <span class="counterText" id="p3HappeningText"> 0 </span> <br id="p3HappeningBreak" /> </div>
 		<div class="draggable minigame"> <img class="counterDisplay" src="img/minigame.png" id="p3MinigameDisplay"> <span class="counterText" id="p3MinigameText"> 0 </span> <br id="p3MinigameBreak" /> </div>
 		<div class="draggable redSpace"> <img class="counterDisplay" src="img/redspace.png" id="p3RedSpaceDisplay"> <span class="counterText" id="p3RedSpaceText"> 0 </span> <br id="p3RedSpaceBreak"  /> </div>
@@ -571,7 +568,7 @@
 		<div class="draggable specialDice"> <img class="counterDisplay" src="img/specialdice.png" id="p3SpecialDiceDisplay"> <span class="counterText" id="p3SpecialDiceText"> 0 </span> <br id="p3SpecialDiceBreak"  /> </div>
 	</div>
 
-	<div class="player"> <img src="img/yoshi.png" class="characterImg draggable" id="p4Img"> <br />
+	<div class="player"> <div style="position: relative;" class="draggable"> <img src="img/com.png" class="comImg" id="p4ComDisplay"> <img src="img/yoshi.png" class="characterImg" id="p4Img"> </div> <br />
 		<div class="draggable happening"> <img class="counterDisplay" src="img/happening.png" id="p4HappeningDisplay"> <span class="counterText" id="p4HappeningText"> 0 </span> <br id="p4HappeningBreak" /> </div>
 		<div class="draggable minigame"> <img class="counterDisplay" src="img/minigame.png" id="p4MinigameDisplay"> <span class="counterText" id="p4MinigameText"> 0 </span> <br id="p4MinigameBreak" /> </div>
 		<div class="draggable redSpace"> <img class="counterDisplay" src="img/redspace.png" id="p4RedSpaceDisplay"> <span class="counterText" id="p4RedSpaceText"> 0 </span> <br id="p4RedSpaceBreak"  /> </div>
@@ -589,24 +586,24 @@
 	<div class="turns draggable"> <b id="turnText"> Turn </b> <b id="curTurnText"> 1/20 </b> <br /> </div>
 
 	<!-- Most Coins -->
-	<div style="margin-top: 30px;" class="draggable" id="coinStarDiv">
+	<span style="margin-top: 30px;" class="draggable" id="coinStarDiv">
 		<div class="coinStarTieDiv"> <img src="img/tie.png" id="coinStarTie5"> <img src="img/tie.png" id="coinStarTie1"> <img src="img/tie.png" id="coinStarTie2"> 
 		<img src="img/tie.png" id="coinStarTie3"> <img src="img/tie.png" id="coinStarTie4"> </div>
 		<img src="img/coin.png" id="coinStar"> <img src="img/question.png" id="coinStarCharacter">
-		<span class="counterText" id="coinStarText"> 10 </span> </div> <br />
-
+		<span class="counterText" id="coinStarText"> 10 </span>
+	</span> <br />
 
 	<!-- On/Off Variables -->
-	<input class="inputVariable" value="1" id="happeningVar">
-	<input class="inputVariable" value="1" id="minigameVar">
-	<input class="inputVariable" value="0" id="redSpaceVar">
-	<input class="inputVariable" value="0" id="runningVar">
-	<input class="inputVariable" value="0" id="shoppingVar">
-	<input class="inputVariable" value="0" id="orbVar">
-	<input class="inputVariable" value="0" id="candyVar">
-	<input class="inputVariable" value="0" id="spinSpaceVar">
-	<input class="inputVariable" value="0" id="miniZtarVar">
-	<input class="inputVariable" value="0" id="specialDiceVar">
+	<input class="hidden" value="true" id="happeningVisible">
+	<input class="hidden" value="true" id="minigameVisible">
+	<input class="hidden" value="false" id="redSpaceVisible">
+	<input class="hidden" value="false" id="runningVisible">
+	<input class="hidden" value="false" id="shoppingVisible">
+	<input class="hidden" value="false" id="orbVisible">
+	<input class="hidden" value="false" id="candyVisible">
+	<input class="hidden" value="false" id="spinSpaceVisible">
+	<input class="hidden" value="false" id="miniZtarVisible">
+	<input class="hidden" value="false" id="specialDiceVisible">
 
 	<!-- Settings -->
 	<div class="hidden" id="settings">
@@ -771,7 +768,7 @@
 					<img src="img/kamek.png" class="characterImg">
 					<img src="img/birdo.png" class="characterImg">
 					<img src="img/koopakid.png" class="characterImg">
-					<img src="img/com/mario.png" class="characterImg">
+					<img src="img/comtest.png" class="characterImg">
 					<b class="turns" style="font-size: 30px;"> Turn 5/20 </b>
 				</td> </tr>
 
@@ -811,7 +808,7 @@
 
 		<h2 class="settingsTitle"> Credits </h2>
 
-		<span class="settingsText"> Created by <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> | Version 1.7.0 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md#changelog" class="tutorialLink"> (Changelog)</a> <br />
+		<span class="settingsText"> Created by <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> | Version 1.7.1 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md#changelog" class="tutorialLink"> (Changelog)</a> <br />
 		Character Sprites ripped by <a href="https://twitter.com/RandomTBush" class="tutorialLink">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="tutorialLink"> RicoDexter</a> & <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> </span> <br /> <br />
 		<span> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="tutorialLink">Counter Font</a> </span> <br />
 		<span> <a href="http://interactjs.io/" class="tutorialLink"> Interact.js</a> </span> <span class="settingsText">(the thing that enables drag 'n' drop) </span> <br />
@@ -824,7 +821,8 @@
 	<div id="error">
 		<div class="popupContent" id="errorContent">
 			<h2 id="errorTitle"> Something went wrong! </h2>
-			<b id="errorText"> There were problems loading this page. Please clear your cookies for this site and try again. If that didn't work, contact blueYOSHI <a href="https://twitter.com/yoshisrc">on Twitter</a> or <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new?template=bug_report.md">open an Issue on Github</a>. Thank you! </b> <br /> <br />
+			<b id="errorText"> There were problems loading this page. Please clear your cookies for this site and try again. <br />
+			If that didn't work, contact blueYOSHI <a href="https://twitter.com/yoshisrc">on Twitter</a> or <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new?template=bug_report.md">open an Issue on Github</a>. Thank you! </b> <br /> <br />
 			<button id="errorButton" onclick="localStorage.clear()">Clear Cookies</button>
 			<a id="errorLink" href="https://www.thewindowsclub.com/clear-cache-cookies-specific-website">How to clear cookies in Chrome & Firefox</a>
 		</div>
