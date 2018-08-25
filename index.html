@@ -13,7 +13,6 @@
 </head>
 
 <body id="bodyElement" style="background: url(img/background.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;">
-	<!-- Tutorial -->
 <div id="inputDiv">
 	<button class="button" onclick="showHideDiv('tutorial')"> Show Useful links & Credits </button>
 	<button id="enableInteractButton" onclick="enableInteract()"> Enable Drag 'n' Drop (reload to reset positions)</button>
@@ -25,8 +24,7 @@
 	<!-- Selection #1 -->
 	<table class="selectionTable">
 		<tr>
-			<td> <b class="whiteText""> Character: </b> </td>
-			<td class="marginLeft"> <b class="whiteText"> Computer: </b> </td>
+			<td> <b class="whiteText""> Character & COM: </b> </td>
 			<td class="marginLeft"> <b class="whiteText"> Coin star: </b> </td>
 			<td class="marginLeft happening"> <b class="whiteText" id="happeningExplanation"> Happening: </b> </td>
 			<td class="marginLeft minigame"> <b class="whiteText" id="minigameExplanation"> Minigame Coins: </b> </td>
@@ -59,8 +57,8 @@
 					<option value="birdo">Birdo</option>
 					<option value="koopakid">Koopa Kid</option>
 				</select>
+				<input type="checkbox" id="p1Com" autocomplete="off" class="checkbox" onchange="imgSelect(1)">
 			</td>
-			<td class="marginLeft"> <b class="whiteText"> P1: </b> <input type="checkbox" id="p1Com" autocomplete="off" class="checkbox" onchange="imgSelect(1)"> </td>
 			<td class="marginLeft"> <b class="whiteText"> P1: </b> <input type="checkbox" id="p1CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie(1)"> </td>
 			<td class="marginLeft happening">
 				<b class="whiteText" id="p1HappeningInputTextBefore"> P1:</b>
@@ -108,8 +106,8 @@
 					<option value="birdo">Birdo</option>
 					<option value="koopakid">Koopa Kid</option>
 				</select>
+				<input type="checkbox" id="p2Com" class="checkbox" onchange="imgSelect(2)">
 			</td>
-			<td class="marginLeft"> <b class="whiteText"> P2: </b> <input type="checkbox" id="p2Com" class="checkbox" onchange="imgSelect(2)"> </td>
 			<td class="marginLeft"> <b class="whiteText"> P2: </b> <input type="checkbox" id="p2CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie(2)"> </td>
 			<td class="marginLeft happening">
 				<b class="whiteText" id="p2HappeningInputTextBefore"> P2:</b>
@@ -157,8 +155,8 @@
 					<option value="birdo">Birdo</option>
 					<option value="koopakid">Koopa Kid</option>
 				</select>
+				<input type="checkbox" id="p3Com" class="checkbox" onchange="imgSelect(3)">
 			</td>
-			<td class="marginLeft"> <b class="whiteText"> P3: </b> <input type="checkbox" id="p3Com" class="checkbox" onchange="imgSelect(3)"> </td>
 			<td class="marginLeft"> <b class="whiteText"> P3: </b> <input type="checkbox" id="p3CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie(3)"> </td>
 			<td class="marginLeft happening">
 				<b class="whiteText" id="p3HappeningInputTextBefore"> P3:</b>
@@ -206,8 +204,8 @@
 					<option value="birdo">Birdo</option>
 					<option value="koopakid">Koopa Kid</option>
 				</select>
+				<input type="checkbox" id="p4Com" class="checkbox" onchange="imgSelect(4)">
 			</td>
-			<td class="marginLeft"> <b class="whiteText"> P4: </b> <input type="checkbox" id="p4Com" class="checkbox" onchange="imgSelect(4)"> </td>
 			<td class="marginLeft"> <b class="whiteText"> P4: </b> <input type="checkbox" id="p4CoinStarTie" autocomplete="off" class="checkbox" onchange="coinStarTie(4)"> </td>
 			<td class="marginLeft happening">
 				<b class="whiteText" id="p4HappeningInputTextBefore"> P4:</b>
@@ -514,14 +512,12 @@
 				<td> <input type="checkbox" id="minigameWinsActivated" onchange="minigameWins()"> <b class="whiteText" id="minigameWinsActivatedText"> Minigame Wins (MP9) on/off </b> </td>
 				<td> <button class="changesButton" id="redSpaceButton" onclick="displayOnOff('redSpace')"> Red Spaces (MP 7 & 8) on/off </button> </td>
 			</tr>
-
 			<tr>
-				<td> <button class="changesButton" id="runningButton" onclick="displayOnOff('running', 'Running')"> Running (MP 7 & 8 & 9 & DS) on/off </button> </td>
+				<td> <button class="changesButton" id="runningButton" onclick="displayOnOff('running')"> Running (MP 7 & 8 & 9 & DS) on/off </button> </td>
 				<td> <button class="changesButton" onclick="displayOnOff('shopping')"> Shopping (MP 7 & 8) on/off </button> </td>
 				<td> <button class="changesButton" onclick="displayOnOff('orb')"> Orbs (MP 6 & 7) on/off </button> </td>
 				<td> <button class="changesButton" onclick="displayOnOff('candy')"> Candies (MP 8) on/off </button> </td>
 			</tr>
-
 			<tr>
 				<td> <button class="changesButton" id="spinSpaceButton" onclick="displayOnOff('spinSpace')"> Spin Spaces (MP 9) on/off </button> </td>
 				<td> <button class="changesButton" id="miniZtarButton" onclick="displayOnOff('miniZtar')"> Minus Star (MP 9) on/off </button> </td>
@@ -533,7 +529,7 @@
 </div>
 
 	<!-- Player Images & Happening & Minigame & Running Display -->
-	<div class="player"> <img src="img/mario.png" class="characterImg draggable" id="p1Img"> <br />
+	<div class="player"> <div style="position: relative;" class="draggable"> <img src="img/com.png" class="comImg" id="p1ComDisplay"> <img src="img/mario.png" class="characterImg" id="p1Img"> </div> <br />
 		<div class="draggable happening"> <img class="counterDisplay" src="img/happening.png" id="p1HappeningDisplay"> <span class="counterText" id="p1HappeningText"> 0 </span> <br id="p1HappeningBreak" /> </div>
 		<div class="draggable minigame"> <img class="counterDisplay" src="img/minigame.png" id="p1MinigameDisplay"> <span class="counterText" id="p1MinigameText"> 0 </span> <br id="p1MinigameBreak" /> </div>
 		<div class="draggable redSpace"> <img class="counterDisplay" src="img/redspace.png" id="p1RedSpaceDisplay"> <span class="counterText" id="p1RedSpaceText"> 0 </span> <br id="p1RedSpaceBreak"  /> </div>
@@ -546,7 +542,7 @@
 		<div class="draggable specialDice"> <img class="counterDisplay" src="img/specialdice.png" id="p1SpecialDiceDisplay"> <span class="counterText" id="p1SpecialDiceText"> 0 </span> <br id="p1SpecialDiceBreak"  /> </div>
 	</div>
 
-	<div class="player"> <img src="img/luigi.png" class="characterImg draggable" id="p2Img"> <br />
+	<div class="player"> <div style="position: relative;" class="draggable"> <img src="img/com.png" class="comImg" id="p2ComDisplay"> <img src="img/luigi.png" class="characterImg" id="p2Img"> </div> <br />
 		<div class="draggable happening"> <img class="counterDisplay" src="img/happening.png" id="p2HappeningDisplay"> <span class="counterText" id="p2HappeningText"> 0 </span> <br id="p2HappeningBreak" /> </div>
 		<div class="draggable minigame"> <img class="counterDisplay" src="img/minigame.png" id="p2MinigameDisplay"> <span class="counterText" id="p2MinigameText"> 0 </span> <br id="p2MinigameBreak" /> </div>
 		<div class="draggable redSpace"> <img class="counterDisplay" src="img/redspace.png" id="p2RedSpaceDisplay"> <span class="counterText" id="p2RedSpaceText"> 0 </span> <br id="p2RedSpaceBreak"  /> </div>
@@ -559,7 +555,7 @@
 		<div class="draggable specialDice"> <img class="counterDisplay" src="img/specialdice.png" id="p2SpecialDiceDisplay"> <span class="counterText" id="p2SpecialDiceText"> 0 </span> <br id="p2SpecialDiceBreak"  /> </div>
 	</div>
 
-	<div class="player"> <img src="img/peach.png" class="characterImg draggable" id="p3Img"> <br />
+	<div class="player"> <div style="position: relative;" class="draggable"> <img src="img/com.png" class="comImg" id="p3ComDisplay"> <img src="img/peach.png" class="characterImg" id="p3Img"> </div> <br />
 		<div class="draggable happening"> <img class="counterDisplay" src="img/happening.png" id="p3HappeningDisplay"> <span class="counterText" id="p3HappeningText"> 0 </span> <br id="p3HappeningBreak" /> </div>
 		<div class="draggable minigame"> <img class="counterDisplay" src="img/minigame.png" id="p3MinigameDisplay"> <span class="counterText" id="p3MinigameText"> 0 </span> <br id="p3MinigameBreak" /> </div>
 		<div class="draggable redSpace"> <img class="counterDisplay" src="img/redspace.png" id="p3RedSpaceDisplay"> <span class="counterText" id="p3RedSpaceText"> 0 </span> <br id="p3RedSpaceBreak"  /> </div>
@@ -572,7 +568,7 @@
 		<div class="draggable specialDice"> <img class="counterDisplay" src="img/specialdice.png" id="p3SpecialDiceDisplay"> <span class="counterText" id="p3SpecialDiceText"> 0 </span> <br id="p3SpecialDiceBreak"  /> </div>
 	</div>
 
-	<div class="player"> <img src="img/yoshi.png" class="characterImg draggable" id="p4Img"> <br />
+	<div class="player"> <div style="position: relative;" class="draggable"> <img src="img/com.png" class="comImg" id="p4ComDisplay"> <img src="img/yoshi.png" class="characterImg" id="p4Img"> </div> <br />
 		<div class="draggable happening"> <img class="counterDisplay" src="img/happening.png" id="p4HappeningDisplay"> <span class="counterText" id="p4HappeningText"> 0 </span> <br id="p4HappeningBreak" /> </div>
 		<div class="draggable minigame"> <img class="counterDisplay" src="img/minigame.png" id="p4MinigameDisplay"> <span class="counterText" id="p4MinigameText"> 0 </span> <br id="p4MinigameBreak" /> </div>
 		<div class="draggable redSpace"> <img class="counterDisplay" src="img/redspace.png" id="p4RedSpaceDisplay"> <span class="counterText" id="p4RedSpaceText"> 0 </span> <br id="p4RedSpaceBreak"  /> </div>
@@ -590,74 +586,93 @@
 	<div class="turns draggable"> <b id="turnText"> Turn </b> <b id="curTurnText"> 1/20 </b> <br /> </div>
 
 	<!-- Most Coins -->
-	<div style="margin-top: 30px;" class="draggable" id="coinStarDiv">
+	<span style="margin-top: 30px;" class="draggable" id="coinStarDiv">
 		<div class="coinStarTieDiv"> <img src="img/tie.png" id="coinStarTie5"> <img src="img/tie.png" id="coinStarTie1"> <img src="img/tie.png" id="coinStarTie2"> 
 		<img src="img/tie.png" id="coinStarTie3"> <img src="img/tie.png" id="coinStarTie4"> </div>
 		<img src="img/coin.png" id="coinStar"> <img src="img/question.png" id="coinStarCharacter">
-		<span class="counterText" id="coinStarText"> 10 </span> </div> <br />
-
+		<span class="counterText" id="coinStarText"> 10 </span>
+	</span> <br />
 
 	<!-- On/Off Variables -->
-	<input class="inputVariable" value="1" id="happeningVar">
-	<input class="inputVariable" value="1" id="minigameVar">
-	<input class="inputVariable" value="0" id="redSpaceVar">
-	<input class="inputVariable" value="0" id="runningVar">
-	<input class="inputVariable" value="0" id="shoppingVar">
-	<input class="inputVariable" value="0" id="orbVar">
-	<input class="inputVariable" value="0" id="candyVar">
-	<input class="inputVariable" value="0" id="spinSpaceVar">
-	<input class="inputVariable" value="0" id="miniZtarVar">
-	<input class="inputVariable" value="0" id="specialDiceVar">
+	<input class="hidden" value="true" id="happeningVisible">
+	<input class="hidden" value="true" id="minigameVisible">
+	<input class="hidden" value="false" id="redSpaceVisible">
+	<input class="hidden" value="false" id="runningVisible">
+	<input class="hidden" value="false" id="shoppingVisible">
+	<input class="hidden" value="false" id="orbVisible">
+	<input class="hidden" value="false" id="candyVisible">
+	<input class="hidden" value="false" id="spinSpaceVisible">
+	<input class="hidden" value="false" id="miniZtarVisible">
+	<input class="hidden" value="false" id="specialDiceVisible">
 
 	<!-- Settings -->
 	<div class="hidden" id="settings">
 		<div class="popupContent" id="settingsContent">
 			<span class="settingsNote"> Click on the titles to show and hide certain settings. </span>
 
-			<h2 class="settingsTitle" onclick="showHideDiv('generalMPOSettings')"> General MPO settings </h2>
+			<!-- General Settings -->
+			<h2 id="generalMPOSettingsTitle" class="settingsTitle" onclick="showHideSettings('generalMPOSettings')"> General MPO settings </h2>
 			<div id="generalMPOSettings" class="visible">
 
 				<table class="selectionTable">
 					<tr>
-						<td> <b> Enable Greenscreen: </b> <input type="checkbox" onchange="bgOnOff()" autocomplete="off" id="greenscreen"> <input type="color" onchange="changeBGColor('bgColor')" value="#0000ff" autocomplete="on" id="bgColor"> </td>
+						<b class="settingsText"> Background: </b> <button id="themeB1" class="themeButtons" onclick="changeTheme(1)" style="border-color: green;" disabled="true"></button> <button id="themeB2" class="themeButtons" onclick="changeTheme(2)"></button> <button id="themeB3" class="themeButtons" onclick="changeTheme(3)">
+					</tr>
+					<tr>
+						<td> <b class="settingsText"> Enable Greenscreen: </b> <input type="checkbox" onchange="changeTheme()" autocomplete="off" id="greenscreen"> <input type="color" onchange="changeBGColor('bgColor')" value="#0000ff" autocomplete="on" id="bgColor"> </td>
 					</tr>
 					<tr>
 						<td> <b class="settingsText"> Change Text Color: </b> <input type="color" id="textColor" value="#ffffff" onchange="changeTextColor('textColor')"> </td>
 					</tr>
 					<tr> <td> <button onclick="showHideDiv('settings');showHideDiv('colorPickTest')"> Test Greenscreen </button> </td> </tr>
-					<tr>
-						<td> <b class="settingsText"> Bonus Star names instead of Explanation: </b> <input type="checkbox" autocomplete="on" id="changeNames" onchange="changeNames()"> </td>
-					</tr>
+					<tr><td><div style="visibility: hidden;"> *Empty row* </div></td></tr>
+
 					<tr>
 						<td> <b class="settingsText"> Enable Counter Highlight: </b> <input type="checkbox" checked="true" autocomplete="on" id="enableHighlight" onchange="resetHighlights()">
 						<input type="color" onchange="callHighlight(false, true)" value="#ff0000" autocomplete="on" id="highlightColor"> </td>
 					</tr>
 					<tr>
-						<td> <b class="settingsText"> Only choose one coin star holder instead of multiple: </b> <input type="checkbox" id="noTie" onchange="coinStarTie()"></td>
+						<td> <b class="settingsText"> Use Bonus Star names instead of Explanation: </b> <input type="checkbox" autocomplete="on" id="changeNames" onchange="changeNames()"> </td>
+					</tr>
+					<tr>
+						<td> <b class="settingsText"> Use <img src="img/question.png" style="height: 15px;"> instead of a tie for the coin star: </b> <input type="checkbox" id="noTie" onchange="coinStarTie()">
+							<br /> <span class="settingsNote"> (This also affects other coin star related features) </span> </td>
 					</tr>
 				</table>
 			</div>
 
-			<h2 class="settingsTitle" onclick="showHideDiv('textOutputSettings')"> Text output settings </h2>
-			<div id="textOutputSettings"  class="hidden">
+			<!-- Text Output Settings -->
+			<h2 id="textOutputSettingsTitle" class="settingsTitle" onclick="showHideSettings('textOutputSettings')"> Text output settings </h2>
+			<div id="textOutputSettings" class="hidden">
 
 				<table class="selectionTable">
 					<tr>
-						<td> <b class="settingsText">  Player 1 name: </b> <input id="textOutputP1Name"> </td>
-						<td class="marginLeft"> <b class="settingsText">  Player 2 name: </b> <input id="textOutputP2Name"> </td>
-					</tr> <tr>
-						<td> <b class="settingsText">  Player 3 name: </b> <input id="textOutputP3Name"> </td>
-						<td class="marginLeft"> <b class="settingsText">  Player 4 name: </b> <input id="textOutputP4Name"> </td>
+						<td style="border: 1px gray solid;">
+							<b class="settingsText"> Only show who got the bonus star: </b> <input type="checkbox" id="toBonusOnly">
+							<br /> <b class="settingsText marginLeft"> Show counter next to player: </b> <input type="checkbox" id="toShowNum" checked="">
+							<br /> <b class="settingsText marginLeft"> List all players instead of "everyone": </b> <input type="checkbox" id="toListAll">
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2"> <b class="settingsText"> List all players instead of "everyone" for the Coin Star: </b> <input type="checkbox" id="toListAllCoin"> </td>
+					</tr>
+					<tr>
+						<td> <br /> <b class="settingsText">  Player 1 name: </b> <input id="toP1Name"> </td>
+						<td class="marginLeft"> <br /> <b class="settingsText">  Player 2 name: </b> <input id="toP2Name"> </td>
+					</tr>
+					<tr>
+						<td> <b class="settingsText">  Player 3 name: </b> <input id="toP3Name"> </td>
+						<td class="marginLeft"> <b class="settingsText">  Player 4 name: </b> <input id="toP4Name"> </td>
 					</tr>
 					<tr> <td> 
-						<b class="settingsText"> Counter seperation: </b> <input id="textOutputSeperation" value=" | " style="width: 30px;">
+						<b class="settingsText"> Counter seperation: </b> <input id="toSeperation" value=" | " style="width: 30px;">
 					</td> </tr>
 					<tr> <td colspan="2"> <br /> <span class="settingsNote"> Seperate counters with ", ", counters that aren't in the list won't be used for this. </span> </td> </tr>
 					<tr>
 						<td><b class="settingsText"> Counter order: </b> <br />
-						<textarea class="resizableInput" id="textOutputCounters" onchange="textOutputTest()">Turns, Happening, Minigame, Red Space, Coin Star</textarea> </td>
+						<textarea class="resizableInput" id="toCounters" onchange="textOutputTest()">Turns, Happening, Minigame, Red Space, Coin Star</textarea> </td>
 						<td><b class="settingsText"> Counter name: </b> <span class="settingsNote"> (Used to describe the counter) </span> <br />
-						<textarea class="resizableInput" id="textOutputNames" onchange="textOutputTest(true)">Turns, ?, MG, Red, Coin Star</textarea> </td>
+						<textarea class="resizableInput" id="toOutput" onchange="textOutputTest(true)">Turns, ?, MG, Red, Coin Star</textarea> </td>
 					</tr>
 					<tr>
 						<td> <b class="warningText" id="textOutputWarning" style="visibility: hidden;"> Hi if you see this </b> </td>
@@ -665,7 +680,8 @@
 				</table>
 			</div>
 			
-			<h2 class="settingsTitle" onclick="showHideDiv('twitchSettings')"> General Twitch Settings </h2> 
+			<!-- Twitch Settings -->
+			<h2 id="twitchSettingsTitle" class="settingsTitle" onclick="showHideSettings('twitchSettings')"> General Twitch Settings </h2> 
 			<div id="twitchSettings" class="hidden">
 
 				<table class="selectionTable">
@@ -687,16 +703,17 @@
 						<td class="marginLeft"> <b class="settingsText"> Admin List: </b> <br />
 						<textarea class="resizableInput" id="adminList"></textarea> </td>
 					</tr>
-					<tr><td> <button onclick="saveTwitchLists()">Temp. save user & Admin lists</button> </td></tr>
+					<tr><td> <button onclick="saveTwitchLists()">Temp. save user &amp; Admin lists</button> </td></tr>
 				</table>
 			</div>
 
-			<h2 class="settingsTitle" onclick="showHideDiv('commandSettings')"> Twitch Command Settings </h2> 
+			<!-- Twitch Command Settings -->
+			<h2 id="commandSettingsTitle" class="settingsTitle" onclick="showHideSettings('commandSettings')"> Twitch Command Settings </h2> 
 			<div id="commandSettings" class="hidden">
 
 				<b class="settingsText"> Enable Commands: </b> <input type="checkbox" checked="true" id="commandsEnabled"> <br />
 				<b class="settingsText"> Enable "Connected" text: </b> <input type="checkbox" id="enablecmdConnected" checked="true">
-				<textarea id="cmdConnected" class="commandInput">MPO has succesfully connected to Twitch.</textarea><br /> <br />
+				<textarea id="cmdConnected" class="commandInput">MPO has succesfully connected to Twitch.</textarea> <br /> <br />
 
 				<span class="settingsNote">Unchecking the checkboxes disables the command.</span> <br />
 				<b class="settingsText"> Help: </b> <input type="checkbox" checked="true" id="enablecmdHelp"> <textarea class="commandInput" id="cmdHelp">Correct usage: "!mpo *counter* *player* *action*"; "!mpo happening 3 +1", more info avaible at: https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Twitch-Commands-Summary</textarea> <br />
@@ -708,13 +725,12 @@
 				<b class="settingsText"> Last argument missing: </b> <input type="checkbox" checked="true" id="enablecmdMissing"> <textarea class="commandInput" disabled="true" id="cmdMissing">@user, your last argument is missing, check "!mpo commands" for help.</textarea> <br />
 
 				<b class="settingsText"> No permission: </b> <input type="checkbox" checked="true" id="enablecmdNoPerm"> <textarea class="commandInput" disabled="true" id="cmdNoPerm">@user, you don't have the permission to use this command.</textarea> <br />
-
-
 			</div>
 
-				<div style="margin-bottom: 5px;"> <br /> <br / > <div id="resetSettingsDiv" class="hidden"> <b class="settingsText"> Reset all settings and clear cookies (this doesn't affect any counters): </b> <button onclick="resetSettings()"> Reset </button> </div> <br />
+				<!-- Reset/save Settings -->
+				<div style="margin-bottom: 5px;"> <br /> <br /> <div id="resetSettingsDiv" style="visibility: hidden;"> <b class="settingsText"> Reset all settings and clear cookies (this doesn't affect any counters): </b> <button onclick="resetSettings()"> Reset </button> <button onclick="showHideReset()"> Don't reset </button> </div> <br />
 
-				<button onclick="showHideDiv('resetSettingsDiv')"> Reset Settings </button><div id="settingsClose"> <span class="settingsNote">(Saving uses cookies)</span> <button onclick="saveSettings(true)"> Save & Close </button> <button onclick="saveSettings()"> Save </button> <button onclick="showHideDiv('settings')"> Cancel </button> </div>
+				<button onclick="showHideReset()" id="resetSettingsButton"> Reset Settings </button> <div id="settingsClose"> <span class="settingsNote">(Saving uses cookies)</span> <button onclick="saveSettings(true)"> Save &amp; Close </button> <button onclick="saveSettings()"> Save </button> <button onclick="showHideDiv('settings')"> Cancel </button> </div>
 			</div>
 		</div>
 	</div>
@@ -752,7 +768,7 @@
 					<img src="img/kamek.png" class="characterImg">
 					<img src="img/birdo.png" class="characterImg">
 					<img src="img/koopakid.png" class="characterImg">
-					<img src="img/com/mario.png" class="characterImg">
+					<img src="img/comtest.png" class="characterImg">
 					<b class="turns" style="font-size: 30px;"> Turn 5/20 </b>
 				</td> </tr>
 
@@ -780,26 +796,37 @@
 
 		<h2 class="settingsTitle"> Links </h2>
 
-		<b> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki" class="tutorialLink">Tutorial</a> </b> <br />
+		<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki" class="tutorialLink">Tutorial</a> </span> <br />
 
-		<b> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/projects/5" class="tutorialLink">Planned Features</a> </b> <br />
+		<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/projects/5" class="tutorialLink">Planned Features</a> </span> <br />
 
-		<b> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues" class="tutorialLink">Got a issue or want a feature thats not planned yet?</a> </b> <br /> <b class="settingsNote"> (You can also @ me on Twitter if you don't have a Github account)</b> <br /> <br />
+		<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues" class="tutorialLink">Got an issue, want a feature thats not planned yet or request a new theme?</a> </span> <br /> <span class="settingsNote"> (You can also @ me on Twitter if you don't have a Github account)</span> <br /> <br />
 
-		<b> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Twitch-Commands-Summary" class="tutorialLink">Twitch commands site</a> </b> <br />
+		<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Twitch-Commands-Summary" class="tutorialLink">Twitch commands site</a> </span> <br />
 
-		<b class="tutorialLink"> <a href="https://twitchapps.com/tmi/" class="tutorialLink">Get Twitch Token</a> </b> <br />
+		<span class="tutorialLink"> <a href="https://twitchapps.com/tmi/" class="tutorialLink">Get Twitch Token</a> </span> <br />
 
 		<h2 class="settingsTitle"> Credits </h2>
 
-		<b class="settingsText"> Created by <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> | Version 1.6.2 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md#changelog" class="tutorialLink"> (Changelog)</a> <br />
-		Character Sprites ripped by <a href="https://twitter.com/RandomTBush" class="tutorialLink">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="tutorialLink"> RicoDexter</a> & <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> </b> <br /> <br />
-		<b> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="tutorialLink"> Font</a> </b> <br />
-		<b> <a href="http://interactjs.io/" class="tutorialLink"> Interact.js</a> </b> <b class="settingsText"> (the thing that enables drag 'n' drop) </b> <br />
-		<b> <a href="https://github.com/Skhmt/tapic" class="tutorialLink"> tapic.js</a> </b> <b class="settingsText"> (the thing that does everything twitch related) </b> <br /> <br />
+		<span class="settingsText"> Created by <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> | Version 1.7.1 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md#changelog" class="tutorialLink"> (Changelog)</a> <br />
+		Character Sprites ripped by <a href="https://twitter.com/RandomTBush" class="tutorialLink">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="tutorialLink"> RicoDexter</a> & <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> </span> <br /> <br />
+		<span> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="tutorialLink">Counter Font</a> </span> <br />
+		<span> <a href="http://interactjs.io/" class="tutorialLink"> Interact.js</a> </span> <span class="settingsText">(the thing that enables drag 'n' drop) </span> <br />
+		<span> <a href="https://github.com/Skhmt/tapic" class="tutorialLink"> tapic.js</a> </span> <span class="settingsText">(the thing that does everything twitch related) </span> <br /> <br />
 
 		<button onclick="showHideDiv('tutorial')" id="tutorialClose">Close</button>
 	</div> </div>
+
+	<!-- Error -->
+	<div id="error">
+		<div class="popupContent" id="errorContent">
+			<h2 id="errorTitle"> Something went wrong! </h2>
+			<b id="errorText"> There were problems loading this page. Please clear your cookies for this site and try again. <br />
+			If that didn't work, contact blueYOSHI <a href="https://twitter.com/yoshisrc">on Twitter</a> or <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new?template=bug_report.md">open an Issue on Github</a>. Thank you! </b> <br /> <br />
+			<button id="errorButton" onclick="localStorage.clear()">Clear Cookies</button>
+			<a id="errorLink" href="https://www.thewindowsclub.com/clear-cache-cookies-specific-website">How to clear cookies in Chrome & Firefox</a>
+		</div>
+	</div>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/interact.js/1.2.6/interact.min.js"></script>
 	<!--script src="discordio.js"></script>
