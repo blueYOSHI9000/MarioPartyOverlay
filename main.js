@@ -788,26 +788,26 @@ function textOutput () {
 
 					if (counterP1 == counterP2 && counterP1 == counterP3 && counterP1 == counterP4 && document.getElementById('toListAll').checked == false) {
 						result.push('everyone')
-						resultNum.push(document.getElementById('p1' + counters[num] + 'Input').value)
+						resultNum.push(document.getElementById('p1' + counters[num] + 'Text').innerHTML)
 					} else {
 						if (counterNum == counterP1) {
 							result.push(p1)
-							resultNum.push(document.getElementById('p1' + counters[num] + 'Input').value)
+							resultNum.push(document.getElementById('p1' + counters[num] + 'Input').innerHTML)
 						}
 
 						if (counterNum == counterP2) {
 							result.push(p2)
-							resultNum.push(document.getElementById('p2' + counters[num] + 'Input').value)
+							resultNum.push(document.getElementById('p2' + counters[num] + 'Text').innerHTML)
 						}
 
 						if (counterNum == counterP3) {
 							result.push(p3)
-							resultNum.push(document.getElementById('p3' + counters[num] + 'Input').value)
+							resultNum.push(document.getElementById('p3' + counters[num] + 'Text').innerHTML)
 						}
 
 						if (counterNum == counterP4) {
 							result.push(p4)
-							resultNum.push(document.getElementById('p4' + counters[num] + 'Input').value)
+							resultNum.push(document.getElementById('p4' + counters[num] + 'Text').innerHTML)
 						}
 					}
 
