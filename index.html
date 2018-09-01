@@ -535,14 +535,11 @@
 					</tr>
 				</table> <br> <br>
 
-				<button onclick="changeVisibility('resetBackupDiv')" class="mobileButtons" style="width: 157px;"> Reset all counters </button> <span id="resetBackupDiv" style="visibility: hidden"> <b class="settingsText"> This will reset all counters! </b> <button onclick="resetBackup();changeVisibility('resetBackupDiv')" class="mobileButtons" style="width: 100px;"> Yes, reset! </button> </span> <br> <br>
+				<button onclick="savePlayers()" class="mobileButtons" style="width: 230px; margin-bottom: 10px;">Save Character & Counters</button> <span class="settingsNote">(Will be saved in local storage, automatically loaded when loading the site)</span> <br>
 
-				<button onclick="savePlayers()" class="mobileButtons" style="width: 230px;">Save Character & Counters</button> <span class="settingsNote">(Will be saved in local storage, automatically loaded when loading the site)</span> <br> <br>
+				<button onclick="resetPlayers()" class="mobileButtons" style="width: 240px;">Reset Character & Counters</button> <br> <br>
 
-
-				<button onclick="resetPlayers()" class="mobileButtons" style="width: 240px;">Reset Character & Counters</button> <br> <br> <br>
-
-				<b style="font-size: 23px;"><a href="https://www.mariowiki.com/Bonus_Star">Super Mario Wiki - Bonus Star</a> <br>
+				<b style="font-size: 23px;"><a href="https://www.mariowiki.com/Bonus_Star">Super Mario Wiki - Bonus Stars</a> <br>
 				<a href="https://www.giantbomb.com/bonus-stars/3015-3011/">Giant Bomb - Bonus Star List (without MP 9 & 10)</a></b>
 			</div> <br>
 			<button onclick="showHideDiv('mobileSettings')" id="tutorialClose" class="mobileButtons">Close</button>
@@ -560,7 +557,7 @@
 
 				<table class="selectionTable">
 					<tr>
-						<td> <b class="settingsText"> Enable Drag 'n' Drop (reload to reset positions): </b> <input type="checkbox" id="enableInteract" onchange="enableInteract()"> </td>
+						<td> <b class="settingsText"> Enable Drag 'n' Drop (reload to reset positions): </b> <input type="checkbox" id="enableInteract"> </td>
 					</tr>
 					<tr><td><div style="visibility: hidden;"> *Empty row* </div></td></tr>
 					<tr> <td>
@@ -731,12 +728,11 @@
 		<h2 class="settingsTitle" id="creditSettingsTitle" onclick="showHideSettings('creditSettings')"> Credits </h2>
 
 		<div id="creditSettings" class="hidden">
-			<span class="settingsText"> Created by <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> | Version 2.0.0 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md#changelog" class="tutorialLink"> (Changelog)</a> <br>
+			<span class="settingsText"> Created by <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> | Version 2.0.1 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md#changelog" class="tutorialLink"> (Changelog)</a> <br>
 			Character Sprites ripped by <a href="https://twitter.com/RandomTBush" class="tutorialLink">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="tutorialLink"> RicoDexter</a> & <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> </span> <br> <br>
 			<span> <a href="https://gist.github.com/rcotrina94/7828886">Use images as radio buttons Tutorial</a> </span> <br>
 			<span> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="tutorialLink">Counter Font</a> </span> <br>
-			<span> <a href="http://interactjs.io/" class="tutorialLink"> Interact.js</a> </span> <span class="settingsText">(the thing that enables drag 'n' drop) </span> <br>
-			<span> <a href="https://github.com/Skhmt/tapic" class="tutorialLink"> tapic.js</a> </span> <span class="settingsText">(the thing that does everything twitch related) </span> <br> <br>
+			<span> <a href="http://interactjs.io/" class="tutorialLink"> Interact.js</a> </span> <span class="settingsText">(the thing that enables drag 'n' drop) </span> <br> <br>
 		</div>
 
 		<button onclick="showHideDiv('tutorial')" id="tutorialClose" class="mobileButtons">Close</button>

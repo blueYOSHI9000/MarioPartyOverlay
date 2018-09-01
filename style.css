@@ -275,12 +275,15 @@ src: url("font.ttf");
 }
 
 .characterSelector {
-	width: 120px;
+	width: 100px;
 	margin-right: 90px;
 	height: 500px;
 	overflow-y: scroll;
 	display: inline-block;
 	position: relative;
+	border: 2px solid rgba(17, 17, 17, 0.5);
+	background-color: #e5e5e5;
+	padding-left: 12px;
 }
 .charSelector input{
 	margin: 0;
@@ -426,7 +429,7 @@ src: url("font.ttf");
 	background-image:url(img/minigamewins.png);
 }
 .redSpaceOnOff {
-	background-image:url(img/redSpace.png);
+	background-image:url(img/redspace.png);
 }
 .runningOnOff {
 	background-image:url(img/running.png);
@@ -450,13 +453,13 @@ src: url("font.ttf");
 	background-image:url(img/hex.png);
 }
 .spinSpaceOnOff {
-	background-image:url(img/spinSpace.png);
+	background-image:url(img/spinspace.png);
 }
 .miniZtarOnOff {
-	background-image:url(img/miniZtar.png);
+	background-image:url(img/miniztar.png);
 }
 .specialDiceOnOff {
-	background-image:url(img/specialDice.png);
+	background-image:url(img/specialdice.png);
 }
 
 /*
