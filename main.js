@@ -1,5 +1,3 @@
-var mobile = document.getElementById('mobileSettings') //Used to check if the mobile version of MPO is used
-
 /*
 * Updates Input elements of the counters.
 * Is activated at each button press and updates the value from the Input elements.
@@ -11,44 +9,55 @@ var mobile = document.getElementById('mobileSettings') //Used to check if the mo
 */
 function counterButtons (player, action, amount, counter) {
 	//console.log('Player: ' + player + ', action: ' + action + ', amount: ' + amount + ', counter: ' + counter)
+	var result = 0
+
 	if (amount == '') {
 			amount = 1
 		}
 
 	if (counter != 'curTurn' && counter != 'maxTurn' && counter != 'coinStar') {
+		result = parseInt(document.getElementById('p' + player + counter + 'Text').innerHTML)
 
 		if (action == 'P') {
 			for (let num = 0; num < amount; num++) {
-				document.getElementById('p' + player + counter + 'Input').value++
+				result++
 			}
 		} else if (action == 'M') {
 			for (let num = 0; num < amount; num++) {
-				document.getElementById('p' + player + counter + 'Input').value--
+				result--
 			}
 		}
-
-		displayChange(player, counter)
-	} else {
-		if (action == 'P') {
-			for (let num = 0; num < amount; num++) {
-				document.getElementById(counter + 'Input').value++
-			}
-		} else if (action == 'M') {
-			for (let num = 0; num < amount; num++) {
-				document.getElementById(counter + 'Input').value--
-			}
+		
+		if (result >= 0) {
+			document.getElementById('p' + player + counter + 'Text').innerHTML = result
+			
+		} else if (result <= 0) {
+			document.getElementById('p' + player + counter + 'Text').innerHTML = 0
 		}
 	}
 
 	if (counter == 'coinStar') {
-		coinStar()
-	} else if (counter == 'maxTurn' || counter == 'curTurn') {
-		turns()
+		result = parseInt(document.getElementById('coinStarText').innerHTML)
+
+		if (action == 'P') {
+			for (let num = 0; num < amount; num++) {
+				result++
+			}
+		} else if (action == 'M') {
+			for (let num = 0; num < amount; num++) {
+				result--
+			}
+		}
+		coinStar(result)
+
+	} else if (counter == 'curTurn' || counter == 'maxTurn') {
+		turns(counter, amount, action)
+
 	} else if (document.getElementById('enableHighlight').checked == true) {
 		highlight(counter)
 	}
 
-	if (document.getElementById('slowStarActivated').checked == true) {
+	if (document.getElementById('slowOnOff').checked == true) {
 		slowHighlight()
 	}
 }
@@ -85,23 +94,21 @@ function mobileButtons (counter, player) {
 * Checks if Ctrl is pressed.
 */
 function ctrlPressed (e) {
-	if (mobile) {
-		if (e.ctrlKey && ctrlKeyVar == false) {
-			ctrlKeyVar = true
-			if (document.getElementById('mobileTypeMinus').checked == false) {
-				document.getElementById('mobileTypeMinus').checked = true
-			} else if (document.getElementById('mobileTypeMinus').checked == true) {
-				document.getElementById('mobileTypeMinus').checked = false
-			}
-		} else if (e.key == '1') {
-			document.getElementById('type1').checked = true
-		} else if (e.key == '5') {
-			document.getElementById('type5').checked = true
-		} else if (e.key == '6') {
-			document.getElementById('type6').checked = true
-		} else if (e.key == '0') {
-			document.getElementById('type10').checked = true
+	if (e.ctrlKey && ctrlKeyVar == false) {
+		ctrlKeyVar = true
+		if (document.getElementById('mobileTypeMinus').checked == false) {
+			document.getElementById('mobileTypeMinus').checked = true
+		} else if (document.getElementById('mobileTypeMinus').checked == true) {
+			document.getElementById('mobileTypeMinus').checked = false
 		}
+	} else if (e.key == '1') {
+		document.getElementById('type1').checked = true
+	} else if (e.key == '5') {
+		document.getElementById('type5').checked = true
+	} else if (e.key == '6') {
+		document.getElementById('type6').checked = true
+	} else if (e.key == '0') {
+		document.getElementById('type10').checked = true
 	}
 }
 
@@ -109,14 +116,12 @@ function ctrlPressed (e) {
 * Checks if Ctrl is released.
 */
 function ctrlReleased (e) {
-	if (mobile) {
-		if (ctrlKeyVar == true) {
-			ctrlKeyVar = false
-			if (document.getElementById('mobileTypeMinus').checked == false) {
-				document.getElementById('mobileTypeMinus').checked = true
-			} else if (document.getElementById('mobileTypeMinus').checked == true) {
-				document.getElementById('mobileTypeMinus').checked = false
-			}
+	if (ctrlKeyVar == true) {
+		ctrlKeyVar = false
+		if (document.getElementById('mobileTypeMinus').checked == false) {
+			document.getElementById('mobileTypeMinus').checked = true
+		} else if (document.getElementById('mobileTypeMinus').checked == true) {
+			document.getElementById('mobileTypeMinus').checked = false
 		}
 	}
 }
@@ -135,20 +140,18 @@ var callSlowStar = true
 
 function displayOnOff (counter, start) {
 	var counterClass = document.querySelectorAll('.' + counter)
-	if (start) {
-		if (document.getElementById(counter + 'Visible').value == 'true') {
-			var displayVar = ''
-		} else {
-			var displayVar = 'none'
+
+	if (document.getElementById(counter + 'OnOff').checked == false) {
+		var displayVar = 'none'
+		if (counter == 'minigame' && document.getElementById('minigameWinsOnOff').checked == true) {
+			document.getElementById('minigameWinsOnOff').checked = false
+
+		} else if (counter == 'running' && document.getElementById('slowOnOff').checked == true) {
+			document.getElementById('slowOnOff').checked = false
 		}
+
 	} else {
-		if (document.getElementById(counter + 'Visible').value == 'true') {
-			var displayVar = 'none'
-			document.getElementById(counter + 'Visible').value = 'false'
-		} else {
-			var displayVar = ''
-			document.getElementById(counter + 'Visible').value = 'true'
-		}
+		var displayVar = ''
 	}
 
 	for (var num = 0; num < counterClass.length; num++) {
@@ -172,6 +175,9 @@ function callDisplayOnOff () {
 	displayOnOff('shopping', true)
 	displayOnOff('orb', true)
 	displayOnOff('candy', true)
+	displayOnOff('item', true)
+	displayOnOff('friendSpace', true)
+	displayOnOff('hex', true)
 	displayOnOff('spinSpace', true)
 	displayOnOff('miniZtar', true)
 	displayOnOff('specialDice', true)
@@ -192,56 +198,59 @@ function resetHighlights () {
 * Calls highlight() for all counters to either reset/start the highlighting or to change the color of it.
 *
 * @param {boolean} resetHighlights If highlighting should be turned off.
-* @param {boolean} changeColor If the highlight color should be changed.
+* @param {boolean} all If all counters should be called.
 */
-function callHighlight (resetHighlights, changeColor) {
+function callHighlight (resetHighlights, all) {
 	
 
 	if (resetHighlights == true) {
 		var originalHighlightColor = document.getElementById('highlightColor').value
-		//var originalHighlightColor = highlightColor
 		var textColor = document.getElementById('textColor').value
 		document.getElementById('highlightColor').value = textColor
 
-	} /*else if (changeColor) {
-		highlightColor = document.getElementById('highlightColor').value
-		originalHighlightColor = highlightColor
-	}*/
+	}
 
 	if (document.getElementById('enableHighlight').checked == true || resetHighlights) {
-		if (document.getElementById('happeningVisible').value == 'true' ) {
+		if (document.getElementById('happeningOnOff').checked == true || all == true) {
 			highlight('Happening')
 		}
-		if (document.getElementById('minigameVisible').value == 'true' ) {
+		if (document.getElementById('minigameOnOff').checked == true || all == true) {
 			highlight('Minigame')
 		}
-		if (document.getElementById('redSpaceVisible').value == 'true' ) {
+		if (document.getElementById('redSpaceOnOff').checked == true || all == true) {
 			highlight('RedSpace')
 		}
-		if (document.getElementById('runningVisible').value == 'true' && document.getElementById('slowStarActivated').checked == false ) {
+		if (document.getElementById('runningOnOff').checked == true || all == true) {
 			highlight('Running')
-		} else if (document.getElementById('runningVisible').value == 'true' && document.getElementById('slowStarActivated').checked == true ) {
-			slowHighlight()
 		}
-		if (document.getElementById('shoppingVisible').value == 'true' ) {
+		if (document.getElementById('shoppingOnOff').checked == true || all == true) {
 			highlight('Shopping')
 		}
-		if (document.getElementById('orbVisible').value == 'true' ) {
+		if (document.getElementById('orbOnOff').checked == true || all == true) {
 			highlight('Orb')
 		}
-		if (document.getElementById('candyVisible').value == 'true' ) {
+		if (document.getElementById('candyOnOff').checked == true || all == true) {
 			highlight('Candy')
 		}
-		if (document.getElementById('spinSpaceVisible').value == 'true' ) {
+		if (document.getElementById('itemOnOff').checked == true || all == true) {
+			highlight('Item')
+		}
+		if (document.getElementById('friendSpaceOnOff').checked == true || all == true) {
+			highlight('FriendSpace')
+		}
+		if (document.getElementById('hexOnOff').checked == true || all == true) {
+			highlight('Hex')
+		}
+		if (document.getElementById('spinSpaceOnOff').checked == true || all == true) {
 			highlight('SpinSpace')
 		}
-		if (slowStarActivated == true) {
+		if (document.getElementById('slowOnOff').checked == true) {
 			slowHighlight()
 		}
-		if (document.getElementById('miniZtarVisible').value == 'true' ) {
+		if (document.getElementById('miniZtarOnOff').checked == true || all == true) {
 			highlight('MiniZtar')
 		}
-		if (document.getElementById('specialDiceVisible').value == 'true' ) {
+		if (document.getElementById('specialDiceOnOff').checked == true || all == true) {
 			highlight('SpecialDice')
 		}
 	}
@@ -254,7 +263,6 @@ function callHighlight (resetHighlights, changeColor) {
 * Updates the highlighting for a certain counter in case the bonus star(s) has changed.
 *
 * @param {string} counter Which counter should be updated.
-* @param {string} color Which color the highlight should have.
 */
 function highlight (counter) {
 	var counterP1 = document.getElementById('p1' + counter + 'Text').innerHTML
@@ -303,26 +311,12 @@ function highlight (counter) {
 * Turns the slow star feature on or off.
 */
 function slowStar () {
-	if (document.getElementById('runningVisible').value == 'false') {
+	if (document.getElementById('runningOnOff').checked == false && document.getElementById('slowOnOff').checked == true) {
+		document.getElementById('runningOnOff').checked = true
 		displayOnOff('running')
 	}
 
-	if (mobile) {} else {
-		for (let num = 1; num < 5; num++) {
-			if (document.getElementById('slowStarActivated').checked == true) {
-				document.getElementById('p' + num + 'RunningInputM10').style.display = 'none'
-				document.getElementById('p' + num + 'RunningInputP10').style.display = 'none'
-				document.getElementById('p' + num + 'RunningInputM6').style.display = ''
-				document.getElementById('p' + num + 'RunningInputP6').style.display = ''
-			} else {
-				document.getElementById('p' + num + 'RunningInputM10').style.display = ''
-				document.getElementById('p' + num + 'RunningInputP10').style.display = ''
-				document.getElementById('p' + num + 'RunningInputM6').style.display = 'none'
-				document.getElementById('p' + num + 'RunningInputP6').style.display = 'none'
-			}
-		}
-	}
-	if (document.getElementById('slowStarActivated').checked == true && document.getElementById('enableHighlight').checked == true) {
+	if (document.getElementById('slowOnOff').checked == true && document.getElementById('enableHighlight').checked == true) {
 		slowHighlight()
 	} else if (document.getElementById('enableHighlight').checked == true) {
 		highlight('Running')
@@ -331,8 +325,6 @@ function slowStar () {
 
 /*
 * Highlights the slow star.
-*
-* @param {string} color Which color the highlight should have.
 */
 function slowHighlight () {
 		var counter = 'Running'
@@ -385,20 +377,19 @@ function slowHighlight () {
 * Replaces minigame coins with minigame wins.
 */
 function minigameWins () {
-	var activated = document.getElementById('minigameWinsActivated').checked
+	var activated = document.getElementById('minigameWinsOnOff').checked
 	var playerNum = 1
 	var source = 'img/minigamewins.png'
 
+	if (activated == true && document.getElementById('minigameOnOff').checked == false) {
+		document.getElementById('minigameOnOff').checked = true
+		displayOnOff('minigame')
+	}
+
 	if (activated == true) {
 		source = 'img/minigamewins.png'
-		if (mobile) {} else if (document.getElementById('changeNames').checked == false) {
-			document.getElementById('minigameExplanation').innerHTML = 'Minigame Wins:'
-		}
 	} else {
 		source = 'img/minigame.png'
-		if (mobile) {} else if (document.getElementById('changeNames').checked == false) {
-			document.getElementById('minigameExplanation').innerHTML = 'Minigame Coins:'
-		}
 	}
 	
 	for (let num = 1; num < 5; num++) {
@@ -407,129 +398,111 @@ function minigameWins () {
 }
 
 /*
-* Changes Character Images.
-*
-* @param {number} playerNum Which player should be updated.
+* Updates the characters.
+* 
+* @param {number} player Which player should be updated.
+* @param {boolean} character What character should be used.
 */
-function imgSelect (playerNum) {
-	var character = document.getElementById('p' + playerNum + 'Select').value
-	
-	document.getElementById('p' + playerNum + 'Img').src = "img/" + character + ".png"
-	
-	if (document.getElementById('p' + playerNum + 'Com').checked == true) {
-		document.getElementById('p' + playerNum + 'ComDisplay').style.visibility = 'visible'
-	} else {
-		document.getElementById('p' + playerNum + 'ComDisplay').style.visibility = 'hidden'
-	}
-
+function changeCharacters (player, character) {
+	characters[player] = character
+	document.getElementById(character + player).checked = true
+	document.getElementById('p' + player + 'Img').src = "img/" + character + ".png"
 	coinStarTie()
 }
 
-/*
-* Changes counter displays and input.
-* Gets fired from displayChange() which gets fired after updating a counter. Checks if the number is 0 or more, else sets it to 0, after that it updates the display.
-*
-* @param {number} playerNum Which player should get updated.
-* @param {string} counter Which counter should get updated.
-*/
-function displayChange (playerNum, counter) {
-	var num = document.getElementById('p' + playerNum + counter + 'Input').value
-
-	if (num && num >= 0) {
-		document.getElementById('p' + playerNum + counter + 'Text').innerHTML=num;
-		
-	} else if (num && num <= 0) {
-		document.getElementById('p' + playerNum + counter + 'Input').value = 0
-		document.getElementById('p' + playerNum + counter + 'Text').innerHTML= 0
-	}
-}
+var characters = ['', 'mario', 'luigi', 'yoshi', 'peach']
 
 /*
-* Calls displayChange() for every single counter and player.
+* Changes com status of a character.
+* 
+* @param {number} player Which player should be updated.
 */
-function callDisplayChange () {
-	var counter = 'Happening'
-
-	for (let num = 0; num < 10; num++) {
-		if (num == 0) {
-			counter  = 'Happening'
-		} else if (num == 1) {
-			counter = 'Minigame'
-		} else if (num == 2) {
-			counter = 'RedSpace'
-		} else if (num == 3) {
-			counter = 'Running'
-		} else if (num == 4) {
-			counter = 'Shopping'
-		} else if (num == 5) {
-			counter = 'Orb'
-		} else if (num == 6) {
-			counter = 'Candy'
-		} else if (num == 7) {
-			counter = 'SpinSpace'
-		} else if (num == 8) {
-			counter = 'MiniZtar'
-		} else if (num == 9) {
-			counter = 'SpecialDice'
-		}
-
-		for (let num = 1; num < 5; num++) {
-			displayChange(num, counter)
-		}
+function changeCom (player) {
+	if (document.getElementById('com' + player).checked == true) {
+		document.getElementById('p' + player + 'ComDisplay').style.visibility = 'visible'
+	} else {
+		document.getElementById('p' + player + 'ComDisplay').style.visibility = 'hidden'
 	}
 }
 
 /*
 * Changes turns displays and input.
-* Gets fired from displayChange() which gets fired after updating the turns. Checks if the number is 1 or more and that the current turn does not exceed the max turn, after that it updates the display.
+* Gets fired after updating turns. Checks if the number is 1 or more and that the current turn does not exceed the max turn, after that it updates the display.
+* 
+* @param {string} counter If current or max Turn should be changed.
+* @param {number} amount The amount that should be changed.
+* @param {string} action If it should be added, subtracted or set to the amount.
 */
-function turns () {
-	var curTurnVar = document.getElementById('curTurnInput').value
-	var maxTurnVar = document.getElementById('maxTurnInput').value
+function turns (counter, amount, action) {
+	var curTurnVar = parseInt(document.getElementById('curTurnText').innerHTML)
+	var maxTurnVar = parseInt(document.getElementById('maxTurnText').innerHTML)
+
+	if (counter == 'curTurn') {
+		var result = curTurnVar
+	} else if (counter == 'maxTurn') {
+		var result = maxTurnVar
+	} else {
+		return;
+	}
+
+	if (action == 'P') {
+		for (let num = 0; num < amount; num++) {
+			result++
+		}
+	} else if (action == 'M') {
+		for (let num = 0; num < amount; num++) {
+			result--
+		}
+	} else if (action == 'Set') {
+		result = amount
+	}
+
+	if (counter == 'curTurn') {
+		curTurnVar = result
+	} else if (counter == 'maxTurn') {
+		maxTurnVar = result
+	}
 
 	if (curTurnVar <= 1) {
-		document.getElementById('curTurnInput').value = 1
+		curTurnVar = 1
 	} else if (+curTurnVar > +maxTurnVar) {
-		document.getElementById('curTurnInput').value = maxTurnVar
+		curTurnVar = maxTurnVar
 	}
 
-	if (maxTurnVar <= 5) {
-		document.getElementById('maxTurnInput').value = 5
+	if (maxTurnVar <= 1) {
+		maxTurnVar = 1
 	}
 
-	var curTurnVar = document.getElementById('curTurnInput').value
-	var maxTurnVar = document.getElementById('maxTurnInput').value
-	console.log('Current:' + curTurnVar + ' Max:' + maxTurnVar)
+	//console.log('Current:' + curTurnVar + ' Max:' + maxTurnVar)
 
-	document.getElementById('curTurnText').innerHTML= curTurnVar + '/' + maxTurnVar
+	document.getElementById('curTurnText').innerHTML = curTurnVar
+	document.getElementById('maxTurnText').innerHTML = maxTurnVar
 }
 
 /*
 * Updates the coin star display.
 * Gets fired from displayChange() which gets fired after updating the coin star. Checks if the number is 0 or more, after that it updates the display.
+* 
+* @param {number} coinStarVar The new Coin Star value.
 */
-function coinStar () {
-	var coinStarVar = document.getElementById('coinStarInput').value
+function coinStar (coinStarVar) {
 	if (coinStarVar && coinStarVar > 0) {
 		document.getElementById('coinStarText').innerHTML = coinStarVar
 	} else if (coinStarVar <= 0) {
-		document.getElementById('coinStarInput').value = 0
-		document.getElementById('coinStarText').innerHTML = document.getElementById('coinStarInput').value
+		document.getElementById('coinStarText').innerHTML = 0
 	}
 }
 
 /*
-* Updates the coin star display.
+* Updates the coin star characters.
 * 
 * @param {number} player Updates the coin star for that specific player
 */
 function coinStarTie (player) {
-	if (player && mobile) {
-		if (document.getElementById('p' + player + 'CoinStarTie').checked == true) {
-			document.getElementById('p' + player + 'CoinStarTie').checked = false
-		} else {
-			document.getElementById('p' + player + 'CoinStarTie').checked = true
-		}
+	if (player && document.getElementById('p' + player + 'CoinStarTie').checked == true) {
+		document.getElementById('p' + player + 'CoinStarTie').checked = false
+	} else if (player) {
+		document.getElementById('p' + player + 'CoinStarTie').checked = true
 	}
 
 	if (document.getElementById('noTie').checked == true && player && document.getElementById('p' + player + 'CoinStarTie').checked == true) {
@@ -565,29 +538,27 @@ function coinStarTie (player) {
 	document.getElementById('coinStarTie4').style.top = ''
 	document.getElementById('coinStarTie4').style.left = ''
 
+	document.getElementById('coinStarDiv').style.marginLeft = '8px'
+
 	var player1 = document.getElementById('p1CoinStarTie').checked
 	var player2 = document.getElementById('p2CoinStarTie').checked
 	var player3 = document.getElementById('p3CoinStarTie').checked
 	var player4 = document.getElementById('p4CoinStarTie').checked
 
-	var character1 = document.getElementById('p1Select').value
-	var character2 = document.getElementById('p2Select').value
-	var character3 = document.getElementById('p3Select').value
-	var character4 = document.getElementById('p4Select').value
-
 	var tied = []
 
 	if (player1 == true) {
-		tied.push(character1)
+		tied.push(characters[1])
 	}
 	if (player2 == true) {
-		tied.push(character2)
+		tied.push(characters[2])
 	}
 	if (player3 == true) {
-		tied.push(character3)
+		tied.push(characters[3])
 	}
 	if (player4 == true) {
-		tied.push(character4)
+		tied.push(characters[4])
+
 	}
 
 	document.getElementById('coinStarTie1').src = 'img/tie.png'
@@ -600,10 +571,8 @@ function coinStarTie (player) {
 	if (document.getElementById('noTie').checked == true && tied.length != 1 || tied.length == 0) {
 		document.getElementById('coinStarCharacter').src = 'img/question.png'
 
-		} else if (tied.length == 1) {
+	} else if (tied.length == 1) {
 		document.getElementById('coinStarCharacter').src = 'img/' + tied[0] + '.png'
-
-		
 
 	} else if (tied.length == 2) {
 		document.getElementById('coinStarTie1').src = 'img/' + tied[0] + '.png'
@@ -616,6 +585,8 @@ function coinStarTie (player) {
 		document.getElementById('coinStarTie4').style.height = '32px'
 		document.getElementById('coinStarTie4').style.top = '-2px'
 		document.getElementById('coinStarTie4').style.left = '-31px'
+
+		document.getElementById('coinStarDiv').style.marginLeft = '0px'
 
 	} else if (tied.length == 3) {
 		document.getElementById('coinStarTie1').src = 'img/' + tied[0] + '.png'
@@ -648,6 +619,7 @@ function showHideDiv (id, id2) {
 		document.getElementById(id).classList.remove('visible');
 		document.getElementById(id).classList.add('hidden');
 	}
+
 	if (id2) {
 		var div = document.getElementById(id2).classList
 		console.log(div)
@@ -667,15 +639,35 @@ function showHideDiv (id, id2) {
 * @param {string} id Which settings should be shown.
 */
 function showHideSettings (id) {
-	document.getElementById('generalMPOSettings').style.display = 'none'
-	document.getElementById('textOutputSettings').style.display = 'none'
-	document.getElementById('twitchSettings').style.display = 'none'
-	document.getElementById('commandSettings').style.display = 'none'
+	switch (id) {
+		case 'generalMPOSettings':
+		case 'textOutputSettings':
+			var id1 = 'generalMPOSettings'
+			var id2 = 'textOutputSettings'
+			break;
+		case 'playerSettings':
+		case 'counterSettings':
+			var id1 = 'playerSettings'
+			var id2 = 'counterSettings'
+			break;
+		case 'tutorialSettings':
+		case 'linkSettings':
+		case 'creditSettings':
+			var id1 = 'tutorialSettings'
+			var id2 = 'linkSettings'
+			var id3 = 'creditSettings'
+			break;
+	}
 
-	document.getElementById('generalMPOSettingsTitle').style.cursor = 'pointer'
-	document.getElementById('textOutputSettingsTitle').style.cursor = 'pointer'
-	document.getElementById('twitchSettingsTitle').style.cursor = 'pointer'
-	document.getElementById('commandSettingsTitle').style.cursor = 'pointer'
+	document.getElementById(id1).style.display = 'none'
+	document.getElementById(id1 + 'Title').style.cursor = 'pointer'
+
+	document.getElementById(id2).style.display = 'none'
+	document.getElementById(id2 + 'Title').style.cursor = 'pointer'
+	if (id3) {
+		document.getElementById(id3).style.display = 'none'
+		document.getElementById(id3 + 'Title').style.cursor = 'pointer'
+	}
 
 	document.getElementById(id).style.display = 'inline'
 	document.getElementById(id + 'Title').style.cursor = 'auto'
@@ -695,28 +687,13 @@ function changeVisibility (id) {
 }
 
 /*
-* Shows and hides the reset settings text.
-*/
-function showHideReset () {
-	if (document.getElementById('resetSettingsDiv').style.visibility == 'hidden') {
-		document.getElementById('resetSettingsDiv').style.visibility = 'visible'
-		document.getElementById('resetSettingsButton').innerHTML = 'Don\'t reset'
-	} else {
-		document.getElementById('resetSettingsDiv').style.visibility = 'hidden'
-		document.getElementById('resetSettingsButton').innerHTML = 'Reset Settings'
-	}
-}
-
-/*
 * Outputs all counters as text.
 */
 function textOutput () {
-	//Get character from select element
-	var p1 = document.getElementById('p1Select').options[document.getElementById('p1Select').selectedIndex].text
-	var p2 = document.getElementById('p2Select').options[document.getElementById('p2Select').selectedIndex].text
-	var p3 = document.getElementById('p3Select').options[document.getElementById('p3Select').selectedIndex].text
-	var p4 = document.getElementById('p4Select').options[document.getElementById('p4Select').selectedIndex].text
-
+	var p1 = characters[1].charAt(0).toUpperCase() + characters[1].slice(1)
+	var p2 = characters[2].charAt(0).toUpperCase() + characters[2].slice(1)
+	var p3 = characters[3].charAt(0).toUpperCase() + characters[3].slice(1)
+	var p4 = characters[4].charAt(0).toUpperCase() + characters[4].slice(1)
 
 	//Use player name if specified instead of character
 	if (document.getElementById('toP1Name').value != '') {
@@ -747,7 +724,7 @@ function textOutput () {
 		switch (counters[num].toLowerCase()) {
 			case 'turn':
 			case 'turns':
-				output[num] = names[num] + ': ' + document.getElementById('curTurnInput').value + '/' + document.getElementById('maxTurnInput').value
+				output[num] = names[num] + ': ' + document.getElementById('curTurnText').innerHTML + '/' + document.getElementById('maxTurnText').innerHTML
 				break;
 
 			case 'coin':
@@ -788,12 +765,14 @@ function textOutput () {
 					}
 				}
 
-				output[num] = names[num] + ': ' + document.getElementById('coinStarInput').value + ' ' + coinStarString
+				output[num] = names[num] + ': ' + document.getElementById('coinStarText').innerHTML + ' ' + coinStarString
 				break;
 
 			default: //Add everything new to textOutputTest() too
 				if (counters[num] == 'MinusStar') {
 					counters[num] = 'MiniZtar'
+				} else if (counters[num] == 'Friendship') {
+					counters[num] = 'FriendSpace'
 				}
 
 				if (document.getElementById('toBonusOnly').checked == true) {
@@ -863,7 +842,7 @@ function textOutput () {
 					}
 
 				} else {
-					output[num] = names[num] + ': ' + p1 + ' ' + document.getElementById('p1' + counters[num] + 'Input').value + ', ' + p2 + ' ' + document.getElementById('p2' + counters[num] + 'Input').value + ', ' + p3 + ' ' + document.getElementById('p3' + counters[num] + 'Input').value + ', ' + p4 + ' ' + document.getElementById('p4' + counters[num] + 'Input').value
+					output[num] = names[num] + ': ' + p1 + ' ' + document.getElementById('p1' + counters[num] + 'Text').innerHTML + ', ' + p2 + ' ' + document.getElementById('p2' + counters[num] + 'Text').innerHTML + ', ' + p3 + ' ' + document.getElementById('p3' + counters[num] + 'Text').innerHTML + ', ' + p4 + ' ' + document.getElementById('p4' + counters[num] + 'Text').innerHTML
 				}
 		}
 	}
@@ -904,8 +883,10 @@ function textOutputTest (nameonly) {
 				default: //Add everything new to textOutput() too
 					if (counters[num] == 'MinusStar') {
 						counters[num] = 'MiniZtar'
+					} else if (counters[num] == 'Friendship') {
+						counters[num] = 'FriendSpace'
 					}
-					if (document.getElementById('p1' + counters[num] + 'Input')) {} else {
+					if (document.getElementById('p1' + counters[num] + 'Text')) {} else {
 						error.push(counters[num])
 					}
 					break;
@@ -927,41 +908,6 @@ function textOutputTest (nameonly) {
 		document.getElementById('textOutputWarning').style = 'visibility: visible;'
 	} else {
 		document.getElementById('textOutputWarning').style = 'visibility: hidden;'
-	}
-}
-
-/*
-* Changes names from a explanation to the bonus star names.
-*/
-function changeNames () {
-	if (mobile) {} else {
-		if (document.getElementById('changeNames').checked == true) {
-			document.getElementById('happeningExplanation').innerHTML = 'Happening:'
-			document.getElementById('minigameExplanation').innerHTML = 'Minigame:'
-			document.getElementById('redSpaceExplanation').innerHTML = 'Red Space:'
-			document.getElementById('runningExplanation').innerHTML = 'Running:'
-			document.getElementById('shoppingExplanation').innerHTML = 'Shopping:'
-			document.getElementById('orbExplanation').innerHTML = 'Orb:'
-			document.getElementById('candyExplanation').innerHTML = 'Candy:'
-			document.getElementById('spinSpaceExplanation').innerHTML = 'Spin Space:'
-			document.getElementById('miniZtarExplanation').innerHTML = 'Minus:'
-			document.getElementById('specialDiceExplanation').innerHTML = 'Special Dice:'
-		} else {
-			document.getElementById('happeningExplanation').innerHTML = 'Happening:'
-			if (document.getElementById('minigameWinsActivated').checked == true) {
-			document.getElementById('minigameExplanation').innerHTML = 'Minigame Wins:'
-		} else {
-			document.getElementById('minigameExplanation').innerHTML = 'Minigame Coins:'
-		}
-			document.getElementById('redSpaceExplanation').innerHTML = 'Red Spaces:'
-			document.getElementById('runningExplanation').innerHTML = 'Total Dice Num.:'
-			document.getElementById('shoppingExplanation').innerHTML = 'Total Coins spent:'
-			document.getElementById('orbExplanation').innerHTML = 'Total Orbs used:'
-			document.getElementById('candyExplanation').innerHTML = 'Total Candies used:'
-			document.getElementById('spinSpaceExplanation').innerHTML = 'Spin Spaces:'
-			document.getElementById('miniZtarExplanation').innerHTML = 'Mini Ztars collected:'
-			document.getElementById('specialDiceExplanation').innerHTML = 'Total Special Dices used:'
-		}
 	}
 }
 
@@ -989,11 +935,11 @@ function windowOnClick (event) {
 /*
 * Checks if something is included in a array.
 *
-* @param {string} needle Checks if this is included in the array.
-* @param {array} arrhaystack The array that should include something.
+* @param {string} string Checks if this is included in the array.
+* @param {array} array The array that should include something.
 */
-function arrCon (needle, arrhaystack) {
-    return (arrhaystack.indexOf(needle) > -1);
+function arrCon (string, array) {
+    return (array.indexOf(string) > -1);
 }
 
 /*
@@ -1124,21 +1070,6 @@ function resetTextColor () {
 
 window.addEventListener("click", windowOnClick)
 
-/*
-* Enables and disables the ability to drag 'n' drop counters.
-*/
-var enableInteractVar = false
-
-function enableInteract () {
-	if (enableInteractVar == false) {
-		enableInteractVar = true
-		document.getElementById('enableInteractButton').innerHTML = "Disable Drag 'n' Drop (reload to reset positions)"
-	} else if (enableInteractVar == true) {
-		enableInteractVar = false
-		document.getElementById('enableInteractButton').innerHTML = "Enable Drag 'n' Drop (reload to reset positions)"
-	}
-}
-
 // === INTERACT.JS ===
 // target elements with the "draggable" class
 interact('.draggable')
@@ -1168,8 +1099,8 @@ interact('.draggable')
 	}
 });
 
-	function dragMoveListener (event) {
-	if (enableInteractVar == true) {
+function dragMoveListener (event) {
+	if (document.getElementById('enableInteract').checked == true) {
 		var target = event.target,
 			// keep the dragged position in the data-x/data-y attributes
 			x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
@@ -1190,6 +1121,4 @@ interact('.draggable')
 window.onload = prepareMPO()
 window.onload = changeBGColor('bgColor')
 
-if (mobile) {
-	document.getElementById('type1').focus()
-}
+document.getElementById('type1').focus()

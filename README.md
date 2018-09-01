@@ -15,6 +15,16 @@ Character Sprites ripped by [Random Talking Bush](https://twitter.com/RandomTBus
 
 # Changelog
 
+v2.0.0
+- Added: Super Mario Party characters
+- Added: Mario Party DS bonus stars
+- Added: Ability to save all characters & counters
+- Changed: Counter options
+- Changed: Mobile Layout; Increased button sizes, moved "Drag 'n' Drop" to settings etc
+- Fixed: That parts of the Turns button don't change the counter
+- Removed: Desktop Version
+- Removed: Anything twitch related
+
 v1.7.1
 - Changed: Computer column merged with the character column
 - Changed: Code changes to save space

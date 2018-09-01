@@ -18,6 +18,9 @@ src: url("font.ttf");
 .marginLeft {
 	padding-left: 50px;
 }
+.lineHeight {
+	line-height: 150%;
+}
 
 /* == Error == */
 #error {
@@ -35,7 +38,7 @@ src: url("font.ttf");
 
 /* == Counters == */
 .player {
-	float: left;
+	display: inline-block;
 	margin-top: 30px;
 }
 .counterText {
@@ -71,10 +74,16 @@ src: url("font.ttf");
 }
 #curTurnText {
 	font-size: 30px;
+	width: 60px;
+	text-align: right;
+	position: absolute;
+}
+#maxTurnText {
+	font-size: 30px;
 }
 
 #coinStar {
-	height: 35px;
+	width: 35px;
 	margin-left: 30px;
 }
 #coinStarCharacter {
@@ -86,8 +95,18 @@ src: url("font.ttf");
 	margin-left: 9px;
 }
 #coinStarDiv {
+	margin-top: 30px;
+	margin-left: 8px;
+	pointer-events: none;
 	position: relative;
-	left: -150px;
+	left: -250px;
+}
+#coinStarHitbox {
+	width: 165px;
+	height: 50px;
+	position: relative;
+	left: 123px;
+	top: 6px;
 }
 
 /* == Coin star tie == */
@@ -209,6 +228,12 @@ src: url("font.ttf");
 #generalMPOSettingsTitle {
 	cursor: auto;
 }
+#playerSettingsTitle {
+	cursor: auto;
+}
+#tutorialSettingsTitle {
+	cursor: auto;
+}
 #settingsContent {
 	width: 825px;
 }
@@ -236,6 +261,249 @@ src: url("font.ttf");
 	border-radius: 0.5rem;
 	width: 825px;
 }
+
+#tutorialContent {
+	width: 950px;
+}
+
+/* == Choose Character == */
+.playerText {
+	font-family: 'Mario';
+	font-size: 16px;
+	color: #111111;
+	margin-right: 84px;
+}
+
+.characterSelector {
+	width: 120px;
+	margin-right: 90px;
+	height: 500px;
+	overflow-y: scroll;
+	display: inline-block;
+	position: relative;
+}
+.charSelector input{
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	z-index: 999;
+}
+.charSelector input:active +.charSelectorLabel, .charSelector input:active +.drinkcard-cc{opacity: .9;}
+.charSelector input:checked +.charSelectorLabel, .charSelector input:checked +.drinkcard-cc{
+	-webkit-filter: none;
+	   -moz-filter: none;
+	        filter: none;
+}
+
+.charSelectorLabel{
+	cursor: pointer;
+	background-size: contain;
+	background-repeat: no-repeat;
+	display: inline-block;
+	width: 70px;
+	height: 70px;
+	/*-webkit-transition: all 100ms ease-in;
+	   -moz-transition: all 100ms ease-in;
+	        transition: all 100ms ease-in;*/
+	-webkit-filter: grayscale(.6) opacity(.5);
+	   -moz-filter: grayscale(.6) opacity(.5);
+	        filter: grayscale(.6) opacity(.5);
+}
+.charSelectorLabel:hover{
+	-webkit-filter: grayscale(.3) opacity(.9);
+	   -moz-filter: grayscale(.3) opacity(.9);
+	        filter: grayscale(.3) opacity(.9);
+}
+
+
+.mario {
+	background-image:url(img/mario.png);
+}
+.luigi {
+	background-image:url(img/luigi.png);
+}
+.peach {
+	background-image:url(img/peach.png);
+}
+.yoshi {
+	background-image:url(img/yoshi.png);
+}
+.wario {
+	background-image:url(img/wario.png);
+}
+.waluigi {
+	background-image:url(img/waluigi.png);
+}
+.rosalina {
+	background-image:url(img/rosalina.png);
+}
+.daisy {
+	background-image:url(img/daisy.png);
+}
+.toad {
+	background-image:url(img/toad.png);
+}
+.toadette {
+	background-image:url(img/toadette.png);
+}
+.dk {
+	background-image:url(img/dk.png);
+}
+.diddy {
+	background-image:url(img/diddy.png);
+}
+.birdo {
+	background-image:url(img/birdo.png);
+}
+.bowser {
+	background-image:url(img/bowser.png);
+}
+.bowserjr {
+	background-image:url(img/bowserjr.png);
+}
+.koopakid {
+	background-image:url(img/koopakid.png);
+}
+.pompom {
+	background-image:url(img/pompom.png);
+}
+.goomba {
+	background-image:url(img/goomba.png);
+}
+.koopa {
+	background-image:url(img/koopa.png);
+}
+.drybones {
+	background-image:url(img/drybones.png);
+}
+.monty {
+	background-image:url(img/monty.png);
+}
+.boo {
+	background-image:url(img/boo.png);
+}
+.spike {
+	background-image:url(img/spike.png);
+}
+.blooper {
+	background-image:url(img/blooper.png);
+}
+.shyguy {
+	background-image:url(img/shyguy.png);
+}
+.hammerbro {
+	background-image:url(img/hammerbro.png);
+}
+.kamek {
+	background-image:url(img/kamek.png);
+}
+
+.com {
+	background-image:url(img/com.png);
+	margin-right: 108px;
+	width: 100px;
+	height: 45px;
+}
+
+
+.counterOnOff {
+	height: 25px;
+	position: relative;
+	top: 3px;
+}
+.counterOnOffText {
+	position: relative;
+	top: -3px;
+}
+
+.happeningOnOff {
+	background-image:url(img/happening.png);
+}
+.minigameOnOff {
+	background-image:url(img/minigame.png);
+}
+.minigameWinsOnOff {
+	background-image:url(img/minigamewins.png);
+}
+.redSpaceOnOff {
+	background-image:url(img/redSpace.png);
+}
+.runningOnOff {
+	background-image:url(img/running.png);
+}
+.shoppingOnOff {
+	background-image:url(img/shopping.png);
+}
+.orbOnOff {
+	background-image:url(img/orb.png);
+}
+.candyOnOff {
+	background-image:url(img/candy.png);
+}
+.itemOnOff {
+	background-image:url(img/item.png);
+}
+.friendSpaceOnOff {
+	background-image:url(img/friendSpace.png);
+}
+.hexOnOff {
+	background-image:url(img/hex.png);
+}
+.spinSpaceOnOff {
+	background-image:url(img/spinSpace.png);
+}
+.miniZtarOnOff {
+	background-image:url(img/miniZtar.png);
+}
+.specialDiceOnOff {
+	background-image:url(img/specialDice.png);
+}
+
+/*
+mario
+luigi
+yoshi
+peach
+daisy
+rosalina
+toad
+toadette
+wario
+waluigi
+dk
+diddy
+birdo
+bowser
+bowserjr
+koopakid
+pompom
+goomba
+koopa
+drybones
+monty
+boo
+spike
+blooper
+shyguy
+hammerbro
+kamek
+
+=========
+
+happening
+minigame
+redSpace
+running
+shopping
+orb
+candy
+item
+friendSpace
+hex
+spinSpace
+miniZtar
+specialDice
+*/
 
 /* == Themes == (Previews are 40x19px) */
 .themeButtons {
@@ -265,8 +533,20 @@ src: url("font.ttf");
 	height: 100%;
 	background-color: rgba(0, 0, 0, 0.5);
 }
+#mobileSettingsContent {
+	width: 1000px;
+}
 
 /* == mobile version == */
+.mobileButtons {
+	height: 27px;
+	width: 72px;
+	font-size: 17px;
+}
+#textOutput {
+	height: 20px;
+	font-size: 17px;
+}
 #mobileTypeDiv {
 	margin-top: 20px;
 }
