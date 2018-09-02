@@ -423,8 +423,14 @@ function changeCom (player) {
 	}
 }
 
+/*
+* Show/Hide characters based on the selected game.
+* 
+* @param {string} game What game is currently used.
+*/
 function changeGame (game) {
 	document.getElementById(game).checked = true
+	curGame = game
 	var showChars = []
 	var hideChars = []
 
@@ -493,6 +499,7 @@ function changeGame (game) {
 		showChars.push(document.querySelectorAll('.koopaSpan'))
 		showChars.push(document.querySelectorAll('.shyguySpan'))
 		showChars.push(document.querySelectorAll('.kamekSpan'))
+		showChars.push(document.querySelectorAll('.birdoSpan'))
 	}
 
 	if (game == 'smp' || game ==  'all') {
@@ -531,6 +538,525 @@ function changeGame (game) {
 			//showChars[num][num2] = showChars[num][num2] + 'Span'
 			showChars[num][num2].style.display = ''
 		}
+	}
+}
+var curGame = 'all'
+var pastResults = []
+
+function randomCharFor (max) {
+	var result = ''
+	result = Math.floor(Math.random() * max) + 1
+
+	for (var num = 0; num < pastResults.length; num++) {
+		if (result == pastResults[num]) {
+			result = Math.floor(Math.random() * max) + 1
+			num = -1
+		}
+	}
+	pastResults.push(result)
+	return result;
+}
+
+/*
+* Randomly selects characters based on games.
+*/
+function randomChar () {
+	var result = ''
+	pastResults = []
+	var chars = ['']
+
+	if (curGame == 'mp1' || curGame == 'mp2') {
+		for (var num = 1; num < 5; num++) {
+			result = randomCharFor(6)
+
+			switch (result) {
+				case 1:
+					chars.push('mario')
+					break;
+				case 2:
+					chars.push('luigi')
+					break;
+				case 3:
+					chars.push('yoshi')
+					break;
+				case 4:
+					chars.push('peach')
+					break;
+				case 5:
+					chars.push('wario')
+					break;
+				case 6:
+					chars.push('dk')
+					break;
+			}
+		}
+	} else if (curGame == 'mp3' || curGame == 'mp4') {
+		for (var num = 1; num < 5; num++) {
+			result = randomCharFor(8)
+
+			switch (result) {
+				case 1:
+					chars.push('mario')
+					break;
+				case 2:
+					chars.push('luigi')
+					break;
+				case 3:
+					chars.push('yoshi')
+					break;
+				case 4:
+					chars.push('peach')
+					break;
+				case 5:
+					chars.push('daisy')
+					break;
+				case 6:
+					chars.push('wario')
+					break;
+				case 7:
+					chars.push('waluigi')
+					break;
+				case 8:
+					chars.push('dk')
+					break;
+			}
+		}
+	} else if (curGame == 'mp5') {
+		for (var num = 1; num < 5; num++) {
+			result = randomCharFor(7)
+
+			switch (result) {
+				case 1:
+					chars.push('mario')
+					break;
+				case 2:
+					chars.push('luigi')
+					break;
+				case 3:
+					chars.push('yoshi')
+					break;
+				case 4:
+					chars.push('peach')
+					break;
+				case 5:
+					chars.push('daisy')
+					break;
+				case 6:
+					chars.push('wario')
+					break;
+				case 7:
+					chars.push('waluigi')
+					break;
+			}
+		}
+	} else if (curGame == 'mp6') {
+		for (var num = 1; num < 5; num++) {
+			result = randomCharFor(11)
+
+			switch (result) {
+				case 1:
+					chars.push('mario')
+					break;
+				case 2:
+					chars.push('luigi')
+					break;
+				case 3:
+					chars.push('yoshi')
+					break;
+				case 4:
+					chars.push('peach')
+					break;
+				case 5:
+					chars.push('daisy')
+					break;
+				case 6:
+					chars.push('toad')
+					break;
+				case 7:
+					chars.push('toadette')
+					break;
+				case 8:
+					chars.push('wario')
+					break;
+				case 9:
+					chars.push('waluigi')
+					break;
+				case 10:
+					chars.push('koopakid')
+					break;
+				case 11:
+					chars.push('boo')
+					break;
+			}
+		}
+	} else if (curGame == 'mp7') {
+		for (var num = 1; num < 5; num++) {
+			result = randomCharFor(12)
+
+			switch (result) {
+				case 1:
+					chars.push('mario')
+					break;
+				case 2:
+					chars.push('luigi')
+					break;
+				case 3:
+					chars.push('yoshi')
+					break;
+				case 4:
+					chars.push('peach')
+					break;
+				case 5:
+					chars.push('daisy')
+					break;
+				case 6:
+					chars.push('toad')
+					break;
+				case 7:
+					chars.push('toadette')
+					break;
+				case 8:
+					chars.push('wario')
+					break;
+				case 9:
+					chars.push('waluigi')
+					break;
+				case 10:
+					chars.push('birdo')
+					break;
+				case 11:
+					chars.push('drybones')
+					break;
+				case 12:
+					chars.push('boo')
+					break;
+			}
+		}
+	} else if (curGame == 'mp8') {
+		for (var num = 1; num < 5; num++) {
+			result = randomCharFor(14)
+
+			switch (result) {
+				case 1:
+					chars.push('mario')
+					break;
+				case 2:
+					chars.push('luigi')
+					break;
+				case 3:
+					chars.push('yoshi')
+					break;
+				case 4:
+					chars.push('peach')
+					break;
+				case 5:
+					chars.push('daisy')
+					break;
+				case 6:
+					chars.push('toad')
+					break;
+				case 7:
+					chars.push('toadette')
+					break;
+				case 8:
+					chars.push('wario')
+					break;
+				case 9:
+					chars.push('waluigi')
+					break;
+				case 10:
+					chars.push('birdo')
+					break;
+				case 11:
+					chars.push('drybones')
+					break;
+				case 12:
+					chars.push('boo')
+					break;
+				case 13:
+					chars.push('blooper')
+					break;
+				case 14:
+					chars.push('hammerbro')
+					break;
+			}
+		}
+	} else if (curGame == 'mp9') {
+		for (var num = 1; num < 5; num++) {
+			result = randomCharFor(12)
+
+			switch (result) {
+				case 1:
+					chars.push('mario')
+					break;
+				case 2:
+					chars.push('luigi')
+					break;
+				case 3:
+					chars.push('yoshi')
+					break;
+				case 4:
+					chars.push('peach')
+					break;
+				case 5:
+					chars.push('daisy')
+					break;
+				case 6:
+					chars.push('toad')
+					break;
+				case 7:
+					chars.push('wario')
+					break;
+				case 8:
+					chars.push('waluigi')
+					break;
+				case 9:
+					chars.push('birdo')
+					break;
+				case 10:
+					chars.push('koopa')
+					break;
+				case 11:
+					chars.push('shyguy')
+					break;
+				case 12:
+					chars.push('kamek')
+					break;
+			}
+		}
+	} else if (curGame == 'mp10') {
+		for (var num = 1; num < 5; num++) {
+			result = randomCharFor(12)
+
+			switch (result) {
+				case 1:
+					chars.push('mario')
+					break;
+				case 2:
+					chars.push('luigi')
+					break;
+				case 3:
+					chars.push('yoshi')
+					break;
+				case 4:
+					chars.push('peach')
+					break;
+				case 5:
+					chars.push('daisy')
+					break;
+				case 6:
+					chars.push('rosalina')
+					break;
+				case 7:
+					chars.push('toad')
+					break;
+				case 8:
+					chars.push('toadette')
+					break;
+				case 9:
+					chars.push('wario')
+					break;
+				case 10:
+					chars.push('waluigi')
+					break;
+				case 11:
+					chars.push('dk')
+					break;
+				case 12:
+					chars.push('spike')
+					break;
+			}
+		}
+	} else if (curGame == 'mpds') {
+		for (var num = 1; num < 5; num++) {
+			result = randomCharFor(8)
+
+			switch (result) {
+				case 1:
+					chars.push('mario')
+					break;
+				case 2:
+					chars.push('luigi')
+					break;
+				case 3:
+					chars.push('yoshi')
+					break;
+				case 4:
+					chars.push('peach')
+					break;
+				case 5:
+					chars.push('daisy')
+					break;
+				case 6:
+					chars.push('toad')
+					break;
+				case 7:
+					chars.push('wario')
+					break;
+				case 8:
+					chars.push('waluigi')
+					break;
+			}
+		}
+	} else if (curGame == 'smp') {
+		for (var num = 1; num < 5; num++) {
+			result = randomCharFor(20)
+
+			switch (result) {
+				case 1:
+					chars.push('mario')
+					break;
+				case 2:
+					chars.push('luigi')
+					break;
+				case 3:
+					chars.push('yoshi')
+					break;
+				case 4:
+					chars.push('peach')
+					break;
+				case 5:
+					chars.push('daisy')
+					break;
+				case 6:
+					chars.push('rosalina')
+					break;
+				case 7:
+					chars.push('wario')
+					break;
+				case 8:
+					chars.push('waluigi')
+					break;
+				case 9:
+					chars.push('dk')
+					break;
+				case 10:
+					chars.push('diddy')
+					break;
+				case 11:
+					chars.push('bowser')
+					break;
+				case 12:
+					chars.push('bowserjr')
+					break;
+				case 13:
+					chars.push('pompom')
+					break;
+				case 14:
+					chars.push('goomba')
+					break;
+				case 15:
+					chars.push('koopa')
+					break;
+				case 16:
+					chars.push('drybones')
+					break;
+				case 17:
+					chars.push('monty')
+					break;
+				case 18:
+					chars.push('boo')
+					break;
+				case 19:
+					chars.push('shyguy')
+					break;
+				case 20:
+					chars.push('hammerbro')
+					break;
+			}
+		}
+	} else if (curGame == 'all') {
+		for (var num = 1; num < 5; num++) {
+			result = randomCharFor(27)
+
+			switch (result) {
+				case 1:
+					chars.push('mario')
+					break;
+				case 2:
+					chars.push('luigi')
+					break;
+				case 3:
+					chars.push('yoshi')
+					break;
+				case 4:
+					chars.push('peach')
+					break;
+				case 5:
+					chars.push('daisy')
+					break;
+				case 6:
+					chars.push('rosalina')
+					break;
+				case 7:
+					chars.push('toad')
+					break;
+				case 8:
+					chars.push('toadette')
+					break;
+				case 9:
+					chars.push('wario')
+					break;
+				case 10:
+					chars.push('waluigi')
+					break;
+				case 11:
+					chars.push('dk')
+					break;
+				case 12:
+					chars.push('diddy')
+					break;
+				case 13:
+					chars.push('birdo')
+					break;
+				case 14:
+					chars.push('bowser')
+					break;
+				case 15:
+					chars.push('bowserjr')
+					break;
+				case 16:
+					chars.push('koopakid')
+					break;
+				case 17:
+					chars.push('pompom')
+					break;
+				case 18:
+					chars.push('goomba')
+					break;
+				case 19:
+					chars.push('koopa')
+					break;
+				case 20:
+					chars.push('drybones')
+					break;
+				case 21:
+					chars.push('monty')
+					break;
+				case 22:
+					chars.push('boo')
+					break;
+				case 23:
+					chars.push('spike')
+					break;
+				case 24:
+					chars.push('blooper')
+					break;
+				case 25:
+					chars.push('shyguy')
+					break;
+				case 26:
+					chars.push('hammerbro')
+					break;
+				case 27:
+					chars.push('kamek')
+					break;
+			}
+		}
+	}
+	for (var num = 1; num < 5; num++) {
+		document.getElementById(chars[num] + num).checked = true
+		document.getElementById(chars[num] + num).scrollIntoView(true)
 	}
 }
 

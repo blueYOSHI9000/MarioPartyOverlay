@@ -15,6 +15,7 @@ Character Sprites ripped by [Random Talking Bush](https://twitter.com/RandomTBus
 
 v2.1.0
 - Added: Only show ceratin characters based on games
+- Added: Randomizing characters
 
 v2.0.1
 - Changed: Character selection

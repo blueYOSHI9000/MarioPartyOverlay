@@ -577,7 +577,7 @@
 						<label class="charSelectorLabel goomba" for="goomba4"> </label> <br>
 					</span>
 					<span class="koopaSpan">
-						<input type="radio" name="charStorInput4" id="koopa4" value="koopa" onchange="changeCharacters(4, 'koopa')"></input> 
+						<input type="radio" name="charSelectorInput4" id="koopa4" value="koopa" onchange="changeCharacters(4, 'koopa')"></input> 
 						<label class="charSelectorLabel koopa" for="koopa4"> </label> <br>
 					</span>
 					<span class="drybonesSpan">
@@ -655,8 +655,8 @@
 
 					<input type="radio" name="gameSelector" id="smp" value="smp" onchange="changeGame('smp')"></input> 
 					<label class="charSelectorLabel smp gameLabel" for="smp"> </label>
-				</div> <!--br>
-				<button class="mobileButtons" style="width: 190px;">Randomize characters</button-->
+				</div> <br>
+				<button class="mobileButtons" style="width: 190px;" onclick="randomChar()">Randomize characters</button>
 			</div>
 
 			<h2 class="settingsTitle" id="counterSettingsTitle" onclick="showHideSettings('counterSettings')"> Counter Options & Backups </h2>
