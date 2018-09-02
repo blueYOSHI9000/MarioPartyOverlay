@@ -543,6 +543,11 @@ function changeGame (game) {
 var curGame = 'all'
 var pastResults = []
 
+/*
+* Gets a random number in a specified range and checks if it's a duplicate.
+* 
+* @param {number} max The max number.
+*/
 function randomCharFor (max) {
 	var result = ''
 	result = Math.floor(Math.random() * max) + 1
