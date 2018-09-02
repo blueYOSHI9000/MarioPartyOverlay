@@ -303,8 +303,8 @@ src: url("font.ttf");
 	background-size: contain;
 	background-repeat: no-repeat;
 	display: inline-block;
-	width: 70px;
 	height: 70px;
+	width: 70px;
 	/*-webkit-transition: all 100ms ease-in;
 	   -moz-transition: all 100ms ease-in;
 	        transition: all 100ms ease-in;*/
@@ -507,6 +507,55 @@ spinSpace
 miniZtar
 specialDice
 */
+
+.gameLabel {
+	height: 30px;
+	width: 30px;
+}
+
+.all {
+	width: 55px;
+}
+.mp1 {
+	background-image:url(img/mp1.png);
+	width: 25px;
+}
+.mp2 {
+	background-image:url(img/mp2.png);
+}
+.mp3 {
+	background-image:url(img/mp3.png);
+}
+.mp4 {
+	background-image:url(img/mp4.png);
+}
+.mp5 {
+	background-image:url(img/mp5.png);
+}
+.mp6 {
+	background-image:url(img/mp6.png);
+}
+.mp7 {
+	background-image:url(img/mp7.png);
+}
+.mp8 {
+	background-image:url(img/mp8.png);
+}
+.mp9 {
+	background-image:url(img/mp9.png);
+}
+.mp10 {
+	background-image:url(img/mp10.png);
+	width: 43px;
+}
+.mpds {
+	background-image:url(img/mpds.png);
+	width: 57px;
+}
+.smp {
+	background-image:url(img/smp.png);
+	width: 60px;
+}
 
 /* == Themes == (Previews are 40x19px) */
 .themeButtons {

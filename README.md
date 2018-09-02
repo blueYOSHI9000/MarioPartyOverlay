@@ -10,9 +10,15 @@ Character Sprites ripped by [Random Talking Bush](https://twitter.com/RandomTBus
 
 [Font](https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx)  
 [Interact.js](http://interactjs.io/) (enables drag 'n' drop)  
-[tapic.js](https://github.com/Skhmt/tapic) (enables everything Twitch related)
 
 # Changelog
+
+v2.1.0
+- Added: Only show ceratin characters based on games
+
+v2.0.1
+- Changed: Character selection
+- Fixed: Twitch stuff still being linked
 
 v2.0.0
 - Added: Super Mario Party characters

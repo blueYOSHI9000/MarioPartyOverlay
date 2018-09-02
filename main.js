@@ -201,8 +201,6 @@ function resetHighlights () {
 * @param {boolean} all If all counters should be called.
 */
 function callHighlight (resetHighlights, all) {
-	
-
 	if (resetHighlights == true) {
 		var originalHighlightColor = document.getElementById('highlightColor').value
 		var textColor = document.getElementById('textColor').value
@@ -422,6 +420,117 @@ function changeCom (player) {
 		document.getElementById('p' + player + 'ComDisplay').style.visibility = 'visible'
 	} else {
 		document.getElementById('p' + player + 'ComDisplay').style.visibility = 'hidden'
+	}
+}
+
+function changeGame (game) {
+	document.getElementById(game).checked = true
+	var showChars = []
+	var hideChars = []
+
+	hideChars.push(document.querySelectorAll('.daisySpan'))
+	hideChars.push(document.querySelectorAll('.rosalinaSpan'))
+	hideChars.push(document.querySelectorAll('.toadSpan'))
+	hideChars.push(document.querySelectorAll('.toadetteSpan'))
+	hideChars.push(document.querySelectorAll('.waluigiSpan'))
+	hideChars.push(document.querySelectorAll('.dkSpan'))
+	hideChars.push(document.querySelectorAll('.diddySpan'))
+	hideChars.push(document.querySelectorAll('.birdoSpan'))
+	hideChars.push(document.querySelectorAll('.bowserSpan'))
+	hideChars.push(document.querySelectorAll('.bowserjrSpan'))
+	hideChars.push(document.querySelectorAll('.koopakidSpan'))
+	hideChars.push(document.querySelectorAll('.pompomSpan'))
+	hideChars.push(document.querySelectorAll('.goombaSpan'))
+	hideChars.push(document.querySelectorAll('.koopaSpan'))
+	hideChars.push(document.querySelectorAll('.drybonesSpan'))
+	hideChars.push(document.querySelectorAll('.montySpan'))
+	hideChars.push(document.querySelectorAll('.booSpan'))
+	hideChars.push(document.querySelectorAll('.spikeSpan'))
+	hideChars.push(document.querySelectorAll('.blooperSpan'))
+	hideChars.push(document.querySelectorAll('.shyguySpan'))
+	hideChars.push(document.querySelectorAll('.hammerbroSpan'))
+	hideChars.push(document.querySelectorAll('.kamekSpan'))
+
+	showChars.push(document.querySelectorAll('.marioSpan'))
+	showChars.push(document.querySelectorAll('.luigiSpan'))
+	showChars.push(document.querySelectorAll('.peachSpan'))
+	showChars.push(document.querySelectorAll('.yoshiSpan'))
+	showChars.push(document.querySelectorAll('.warioSpan'))
+
+	if (game == 'mp1' || game == 'mp2' || game == 'mp3' || game == 'mp4' || game == 'mp4' || game == 'mp10' || game == 'smp' || game == 'all') {
+		showChars.push(document.querySelectorAll('.dkSpan'))
+	}
+
+	if (game == 'mp3' || game == 'mp4' || game == 'mp5' || game == 'mp6' || game == 'mp7' || game == 'mp8' || game == 'mp9' || game == 'mp10' || game == 'mpds' || game == 'smp' || game == 'all') {
+		showChars.push(document.querySelectorAll('.waluigiSpan'))
+		showChars.push(document.querySelectorAll('.daisySpan'))
+	}
+
+	if (game == 'mp6' || game == 'all') {
+		showChars.push(document.querySelectorAll('.koopakidSpan'))
+	}
+
+	if (game == 'mp6' || game == 'mp7' || game == 'mp8') {
+		showChars.push(document.querySelectorAll('.booSpan'))
+		showChars.push(document.querySelectorAll('.toadetteSpan'))
+	}
+
+	if (game == 'mp6' || game == 'mp7' || game == 'mp8' || game == 'mp9' || game == 'mp10' || game == 'mpds' || game == 'all')  {
+		showChars.push(document.querySelectorAll('.toadSpan'))
+	}
+
+	if (game == 'mp7' || game == 'mp8' || game == 'all') {
+		showChars.push(document.querySelectorAll('.birdoSpan'))
+		showChars.push(document.querySelectorAll('.drybonesSpan'))
+	}
+
+	if (game == 'mp8') {
+		showChars.push(document.querySelectorAll('.blooperSpan'))
+		showChars.push(document.querySelectorAll('.hammerbroSpan'))
+	}
+
+	if (game == 'mp9') {
+		showChars.push(document.querySelectorAll('.koopaSpan'))
+		showChars.push(document.querySelectorAll('.shyguySpan'))
+		showChars.push(document.querySelectorAll('.kamekSpan'))
+	}
+
+	if (game == 'smp' || game ==  'all') {
+		showChars.push(document.querySelectorAll('.koopaSpan'))
+		showChars.push(document.querySelectorAll('.shyguySpan'))
+	}
+
+	if (game == 'mp10' || game == 'all') {
+		showChars.push(document.querySelectorAll('.rosalinaSpan'))
+		showChars.push(document.querySelectorAll('.spikeSpan'))
+		showChars.push(document.querySelectorAll('.toadetteSpan'))
+	}
+
+	if (game == 'smp' || game == 'all') {
+		showChars.push(document.querySelectorAll('.rosalinaSpan'))
+		showChars.push(document.querySelectorAll('.bowserSpan'))
+		showChars.push(document.querySelectorAll('.goombaSpan'))
+		showChars.push(document.querySelectorAll('.montySpan'))
+		showChars.push(document.querySelectorAll('.bowserjrSpan'))
+		showChars.push(document.querySelectorAll('.booSpan'))
+		showChars.push(document.querySelectorAll('.hammerbroSpan'))
+		showChars.push(document.querySelectorAll('.diddySpan'))
+		showChars.push(document.querySelectorAll('.drybonesSpan'))
+		showChars.push(document.querySelectorAll('.pompomSpan'))
+	}
+
+	for (var num = 0; num < hideChars.length; num++) {
+		for (var num2 = 0; num2 < hideChars[num].length; num2++) {
+			//hideChars[num][num2] = hideChars[num][num2] + 'Span'
+			hideChars[num][num2].style.display = 'none'
+		}
+	}
+
+	for (var num = 0; num < showChars.length; num++) {
+		for (var num2 = 0; num2 < showChars[num].length; num2++) {
+			//showChars[num][num2] = showChars[num][num2] + 'Span'
+			showChars[num][num2].style.display = ''
+		}
 	}
 }
 
