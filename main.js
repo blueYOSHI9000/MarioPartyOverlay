@@ -80,8 +80,6 @@ function mobileButtons (counter, player) {
 
 	if (document.getElementById('type5').checked == true) {
 		amount = 5
-	} else if (document.getElementById('type6').checked == true) {
-		amount = 6
 	} else if (document.getElementById('type10').checked == true) {
 		amount = 10
 	} else {
@@ -105,8 +103,6 @@ function ctrlPressed (e) {
 		document.getElementById('type1').checked = true
 	} else if (e.key == '5') {
 		document.getElementById('type5').checked = true
-	} else if (e.key == '6') {
-		document.getElementById('type6').checked = true
 	} else if (e.key == '0') {
 		document.getElementById('type10').checked = true
 	}
@@ -434,6 +430,7 @@ function changeGame (game) {
 	var showChars = []
 	var hideChars = []
 
+	hideChars.push(document.querySelectorAll('.warioSpan'))
 	hideChars.push(document.querySelectorAll('.daisySpan'))
 	hideChars.push(document.querySelectorAll('.rosalinaSpan'))
 	hideChars.push(document.querySelectorAll('.toadSpan'))
@@ -461,67 +458,74 @@ function changeGame (game) {
 	showChars.push(document.querySelectorAll('.luigiSpan'))
 	showChars.push(document.querySelectorAll('.peachSpan'))
 	showChars.push(document.querySelectorAll('.yoshiSpan'))
-	showChars.push(document.querySelectorAll('.warioSpan'))
-
-	if (game == 'mp1' || game == 'mp2' || game == 'mp3' || game == 'mp4' || game == 'mp4' || game == 'mp10' || game == 'smp' || game == 'all') {
-		showChars.push(document.querySelectorAll('.dkSpan'))
+	if (game != 'mpa') {
+		showChars.push(document.querySelectorAll('.warioSpan'))
 	}
 
-	if (game == 'mp3' || game == 'mp4' || game == 'mp5' || game == 'mp6' || game == 'mp7' || game == 'mp8' || game == 'mp9' || game == 'mp10' || game == 'mpds' || game == 'smp' || game == 'all') {
+	if (game == 'mp1' || game == 'mp2' || game == 'mp3' || game == 'mp4' || game == 'mp4' || game == 'mp10' || game == 'mpsr' || game == 'smp' || game == 'all') {
+		showChars.push(document.querySelectorAll('.dkSpan'))
+	}
+	if (game == 'mp3' || game == 'mp4' || game == 'mp5' || game == 'mp6' || game == 'mp7' || game == 'mp8' || game == 'mp9' || game == 'mp10' || game == 'mpds' || game == 'mpit' || game == 'mpsr' || game == 'mptt100' || game == 'smp' || game == 'all') {
 		showChars.push(document.querySelectorAll('.waluigiSpan'))
 		showChars.push(document.querySelectorAll('.daisySpan'))
 	}
-
 	if (game == 'mp6' || game == 'all') {
 		showChars.push(document.querySelectorAll('.koopakidSpan'))
 	}
-
 	if (game == 'mp6' || game == 'mp7' || game == 'mp8') {
 		showChars.push(document.querySelectorAll('.booSpan'))
 		showChars.push(document.querySelectorAll('.toadetteSpan'))
 	}
-
-	if (game == 'mp6' || game == 'mp7' || game == 'mp8' || game == 'mp9' || game == 'mp10' || game == 'mpds' || game == 'all')  {
+	if (game == 'mp6' || game == 'mp7' || game == 'mp8' || game == 'mp9' || game == 'mp10' || game == 'mpds' || game == 'mpit' || game == 'mpsr' || game == 'all')  {
 		showChars.push(document.querySelectorAll('.toadSpan'))
 	}
-
 	if (game == 'mp7' || game == 'mp8' || game == 'all') {
 		showChars.push(document.querySelectorAll('.birdoSpan'))
 		showChars.push(document.querySelectorAll('.drybonesSpan'))
 	}
-
 	if (game == 'mp8') {
 		showChars.push(document.querySelectorAll('.blooperSpan'))
 		showChars.push(document.querySelectorAll('.hammerbroSpan'))
 	}
-
 	if (game == 'mp9') {
 		showChars.push(document.querySelectorAll('.koopaSpan'))
 		showChars.push(document.querySelectorAll('.shyguySpan'))
 		showChars.push(document.querySelectorAll('.kamekSpan'))
 		showChars.push(document.querySelectorAll('.birdoSpan'))
 	}
-
 	if (game == 'smp' || game ==  'all') {
 		showChars.push(document.querySelectorAll('.koopaSpan'))
 		showChars.push(document.querySelectorAll('.shyguySpan'))
 	}
-
 	if (game == 'mp10' || game == 'all') {
 		showChars.push(document.querySelectorAll('.rosalinaSpan'))
 		showChars.push(document.querySelectorAll('.spikeSpan'))
 		showChars.push(document.querySelectorAll('.toadetteSpan'))
 	}
-
-	if (game == 'smp' || game == 'all') {
+	if (game == 'mp10' || game == 'all') {
 		showChars.push(document.querySelectorAll('.rosalinaSpan'))
+		showChars.push(document.querySelectorAll('.spikeSpan'))
+		showChars.push(document.querySelectorAll('.toadetteSpan'))
+	}
+	if (game == 'mpit' || game == 'mpsr' || game == 'mptt100' || game == 'smp') {
+		showChars.push(document.querySelectorAll('.rosalinaSpan'))
+	}
+	if (game == 'mpit') {
+		showChars.push(document.querySelectorAll('.booSpan'))
+		showChars.push(document.querySelectorAll('.bowserjrSpan'))
+	}
+	if (game == 'mpsr') {
+		showChars.push(document.querySelectorAll('.toadetteSpan'))
+		showChars.push(document.querySelectorAll('.diddySpan'))
+	}
+	if (game == 'smp' || game == 'all') {
 		showChars.push(document.querySelectorAll('.bowserSpan'))
 		showChars.push(document.querySelectorAll('.goombaSpan'))
 		showChars.push(document.querySelectorAll('.montySpan'))
+		showChars.push(document.querySelectorAll('.diddySpan'))
 		showChars.push(document.querySelectorAll('.bowserjrSpan'))
 		showChars.push(document.querySelectorAll('.booSpan'))
 		showChars.push(document.querySelectorAll('.hammerbroSpan'))
-		showChars.push(document.querySelectorAll('.diddySpan'))
 		showChars.push(document.querySelectorAll('.drybonesSpan'))
 		showChars.push(document.querySelectorAll('.pompomSpan'))
 	}
@@ -872,6 +876,25 @@ function randomChar () {
 					break;
 			}
 		}
+	} else if (curGame == 'mpa') {
+		for (var num = 1; num < 5; num++) {
+			result = randomCharFor(4)
+
+			switch (result) {
+				case 1:
+					chars.push('mario')
+					break;
+				case 2:
+					chars.push('luigi')
+					break;
+				case 3:
+					chars.push('yoshi')
+					break;
+				case 4:
+					chars.push('peach')
+					break;
+			}
+		}
 	} else if (curGame == 'mpds') {
 		for (var num = 1; num < 5; num++) {
 			result = randomCharFor(8)
@@ -894,6 +917,117 @@ function randomChar () {
 					break;
 				case 6:
 					chars.push('toad')
+					break;
+				case 7:
+					chars.push('wario')
+					break;
+				case 8:
+					chars.push('waluigi')
+					break;
+			}
+		}
+	} else if (curGame == 'mpit') {
+		for (var num = 1; num < 5; num++) {
+			result = randomCharFor(10)
+
+			switch (result) {
+				case 1:
+					chars.push('mario')
+					break;
+				case 2:
+					chars.push('luigi')
+					break;
+				case 3:
+					chars.push('yoshi')
+					break;
+				case 4:
+					chars.push('peach')
+					break;
+				case 5:
+					chars.push('daisy')
+					break;
+				case 6:
+					chars.push('toad')
+					break;
+				case 7:
+					chars.push('wario')
+					break;
+				case 8:
+					chars.push('waluigi')
+					break;
+				case 9:
+					chars.push('boo')
+					break;
+				case 10:
+					chars.push('bowserjr')
+					break;
+			}
+		}
+	} else if (curGame == 'mpsr') {
+		for (var num = 1; num < 5; num++) {
+			result = randomCharFor(12)
+
+			switch (result) {
+				case 1:
+					chars.push('mario')
+					break;
+				case 2:
+					chars.push('luigi')
+					break;
+				case 3:
+					chars.push('yoshi')
+					break;
+				case 4:
+					chars.push('peach')
+					break;
+				case 5:
+					chars.push('daisy')
+					break;
+				case 6:
+					chars.push('rosalina')
+					break;
+				case 7:
+					chars.push('toad')
+					break;
+				case 8:
+					chars.push('toadette')
+					break;
+				case 9:
+					chars.push('wario')
+					break;
+				case 10:
+					chars.push('waluigi')
+					break;
+				case 11:
+					chars.push('dk')
+					break;
+				case 12:
+					chars.push('diddy')
+					break;
+			}
+		}
+	} else if (curGame == 'mptt100') {
+		for (var num = 1; num < 5; num++) {
+			result = randomCharFor(8)
+
+			switch (result) {
+				case 1:
+					chars.push('mario')
+					break;
+				case 2:
+					chars.push('luigi')
+					break;
+				case 3:
+					chars.push('yoshi')
+					break;
+				case 4:
+					chars.push('peach')
+					break;
+				case 5:
+					chars.push('daisy')
+					break;
+				case 6:
+					chars.push('rosalina')
 					break;
 				case 7:
 					chars.push('wario')

@@ -547,12 +547,28 @@ specialDice
 .mp9 {
 	background-image:url(img/mp9.png);
 }
+.mpa {
+	background-image:url(img/mpa.png);
+	width: 75px;
+}
 .mp10 {
 	background-image:url(img/mp10.png);
 	width: 43px;
 }
 .mpds {
 	background-image:url(img/mpds.png);
+	width: 57px;
+}
+.mpit {
+	background-image:url(img/mpit.png);
+	width: 43px;
+}
+.mpsr {
+	background-image:url(img/mpsr.png);
+	width: 58px;
+}
+.mptt100 {
+	background-image:url(img/mptt100.png);
 	width: 57px;
 }
 .smp {
@@ -589,7 +605,7 @@ specialDice
 	background-color: rgba(0, 0, 0, 0.5);
 }
 #mobileSettingsContent {
-	width: 1000px;
+	width: 1035px;
 }
 
 /* == mobile version == */
@@ -644,5 +660,8 @@ specialDice
 	background-color: rgba(0, 0, 0, 0.5);
 }
 #tutorialClose {
+	float: right;
+}
+#counterOptionsClose {
 	float: right;
 }

@@ -13,6 +13,9 @@ Character Sprites ripped by [Random Talking Bush](https://twitter.com/RandomTBus
 
 # Changelog
 
+v2.1.2
+- Added: MP Advance, IT, SR and TT100 support for randomizing characters
+
 v2.1.1
 - Fixed: Moveable cursor showing instead of pointer
 
