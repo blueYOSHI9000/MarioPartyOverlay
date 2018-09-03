@@ -13,6 +13,9 @@ Character Sprites ripped by [Random Talking Bush](https://twitter.com/RandomTBus
 
 # Changelog
 
+v2.1.1
+- Fixed: Moveable cursor showing instead of pointer
+
 v2.1.0
 - Added: Only show ceratin characters based on games
 - Added: Randomizing characters

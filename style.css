@@ -21,6 +21,9 @@ src: url("font.ttf");
 .lineHeight {
 	line-height: 150%;
 }
+.draggable {
+	cursor: pointer;
+}
 
 /* == Error == */
 #error {
