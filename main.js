@@ -1196,6 +1196,7 @@ function randomChar () {
 	for (var num = 1; num < 5; num++) {
 		document.getElementById(chars[num] + num).checked = true
 		document.getElementById(chars[num] + num).scrollIntoView(true)
+		changeCharacters(num, chars[num])
 	}
 }
 
