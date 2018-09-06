@@ -158,6 +158,9 @@ function displayOnOff (counter, start) {
 		slowStar()
 		callSlowStar = false
 	}
+	if (counter == 'minigame') {
+		minigameWins()
+	}
 }
 
 /*

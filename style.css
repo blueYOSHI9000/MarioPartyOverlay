@@ -214,7 +214,7 @@ src: url("font.ttf");
 	background-color: #F3F3F3;
 	border: 3px solid #111111;
 	padding: 1rem 1.5rem;
-	border-radius: 0.5rem;
+	border-radius: 1.2rem;
 }
 .warningText {
 	color: red;
@@ -266,7 +266,7 @@ src: url("font.ttf");
 }
 
 #tutorialContent {
-	width: 950px;
+	width: 970px;
 }
 
 /* == Choose Character == */
