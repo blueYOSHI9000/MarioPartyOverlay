@@ -143,8 +143,8 @@ function updateStars (player, action, amount) {
 
 	if (activated == false) {
 		for (let num = 1; num < 5; num++) {
-			if (result[num] >= 99) {
-				result[num] = 99
+			if (result[num] >= 999) {
+				result[num] = 999
 			} else if (result[num] <= 0) {
 				result[num] = 0
 			}
@@ -165,8 +165,8 @@ function updateStars (player, action, amount) {
 		}
 
 		for (let num = 1; num < 5; num++) {
-			if (result[num] >= 99) {
-				result[num] = 99
+			if (result[num] >= 999) {
+				result[num] = 999
 			} else if (result[num] <= 0) {
 				result[num] = 0
 			}
