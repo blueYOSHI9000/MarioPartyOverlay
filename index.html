@@ -8,7 +8,7 @@
 	<meta name="description" content="A Overlay for casual players and streamers! Plan your turn by seeing who got the Bonus Stars from MP1-10 & DS! With Super Mario Party support on it's way!">
 	<meta name="author" content="blueYOSHI9000">
 
-	<link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
+	<link rel="shortcut icon" type="image/png" href="img/star.png"/>
 	<link rel="stylesheet" href="style.css">
 </head>
 
@@ -59,7 +59,11 @@
 	</span> <br>
 
 	<!-- Player Images & Counter Display -->
-	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(1)"> <img src="img/com.png" class="comImg" id="p1ComDisplay"> <img src="img/mario.png" class="characterImg" id="p1Img"> </div> <br>
+	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(1)"> <img src="img/com.png" class="comImg" id="p1ComDisplay"> <img src="img/mario.png" class="characterImg" id="p1Img"> <br> </div>
+		<div class="draggable stars" onclick="mobileButtons('Stars', 1)"> <img class="counterDisplay" src="img/star.png" id="p1StarsDisplay"> <span class="counterText" id="p1StarsText">0</span> <br> </div>
+		<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/star.png"> <span class="counterText">0</span> <br> </div>
+		<div class="draggable coins" onclick="mobileButtons('Coins', 1)"> <img class="counterDisplay" src="img/coin.png" id="p1CoinsDisplay"> <span class="counterText" id="p1CoinsText"> 10 </span> <br> </div>
+
 		<div class="draggable happening" onclick="mobileButtons('Happening', 1)"> <img class="counterDisplay" src="img/happening.png" id="p1HappeningDisplay"> <span class="counterText" id="p1HappeningText"> 0 </span> <br> </div>
 		<div class="draggable minigame" onclick="mobileButtons('Minigame', 1)"> <img class="counterDisplay" src="img/minigame.png" id="p1MinigameDisplay"> <span class="counterText" id="p1MinigameText"> 0 </span> <br> </div>
 
@@ -79,7 +83,11 @@
 		<div class="draggable specialDice" onclick="mobileButtons('SpecialDice', 1)"> <img class="counterDisplay" src="img/specialdice.png" id="p1SpecialDiceDisplay"> <span class="counterText" id="p1SpecialDiceText"> 0 </span> <br> </div>
 	</div>
 
-	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(2)"> <img src="img/com.png" class="comImg" id="p2ComDisplay"> <img src="img/luigi.png" class="characterImg " id="p2Img"> </div> <br>
+	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(2)"> <img src="img/com.png" class="comImg" id="p2ComDisplay"> <img src="img/luigi.png" class="characterImg " id="p2Img"> <br> </div>
+		<div class="draggable stars" onclick="mobileButtons('Stars', 2)"> <img class="counterDisplay" src="img/star.png" id="p2StarsDisplay"> <span class="counterText" id="p2StarsText">0</span> <br> </div>
+		<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/star.png"> <span class="counterText">0</span> <br> </div>
+		<div class="draggable coins" onclick="mobileButtons('Coins', 2)"> <img class="counterDisplay" src="img/coin.png" id="p2CoinsDisplay"> <span class="counterText" id="p2CoinsText"> 10 </span> <br> </div>
+
 		<div class="draggable happening" onclick="mobileButtons('Happening', 2)"> <img class="counterDisplay" src="img/happening.png" id="p2HappeningDisplay"> <span class="counterText" id="p2HappeningText"> 0 </span> <br> </div>
 		<div class="draggable minigame" onclick="mobileButtons('Minigame', 2)"> <img class="counterDisplay" src="img/minigame.png" id="p2MinigameDisplay"> <span class="counterText" id="p2MinigameText"> 0 </span> <br> </div>
 
@@ -99,7 +107,11 @@
 		<div class="draggable specialDice" onclick="mobileButtons('SpecialDice', 2)"> <img class="counterDisplay" src="img/specialdice.png" id="p2SpecialDiceDisplay"> <span class="counterText" id="p2SpecialDiceText"> 0 </span> <br> </div>
 	</div>
 
-	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(3)"> <img src="img/com.png" class="comImg" id="p3ComDisplay"> <img src="img/yoshi.png" class="characterImg " id="p3Img"> </div> <br>
+	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(3)"> <img src="img/com.png" class="comImg" id="p3ComDisplay"> <img src="img/yoshi.png" class="characterImg " id="p3Img"> <br> </div>
+		<div class="draggable stars" onclick="mobileButtons('Stars', 3)"> <img class="counterDisplay" src="img/star.png" id="p3StarsDisplay"> <span class="counterText" id="p3StarsText">0</span> <br> </div>
+		<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/star.png"> <span class="counterText">0</span> <br> </div>
+		<div class="draggable coins" onclick="mobileButtons('Coins', 3)"> <img class="counterDisplay" src="img/coin.png" id="p3CoinsDisplay"> <span class="counterText" id="p3CoinsText"> 10 </span> <br> </div>
+
 		<div class="draggable happening" onclick="mobileButtons('Happening', 3)"> <img class="counterDisplay" src="img/happening.png" id="p3HappeningDisplay"> <span class="counterText" id="p3HappeningText"> 0 </span> <br> </div>
 		<div class="draggable minigame" onclick="mobileButtons('Minigame', 3)"> <img class="counterDisplay" src="img/minigame.png" id="p3MinigameDisplay"> <span class="counterText" id="p3MinigameText"> 0 </span> <br> </div>
 
@@ -119,7 +131,11 @@
 		<div class="draggable specialDice" onclick="mobileButtons('SpecialDice', 3)"> <img class="counterDisplay" src="img/specialdice.png" id="p3SpecialDiceDisplay"> <span class="counterText" id="p3SpecialDiceText"> 0 </span> <br> </div>
 	</div>
 
-	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(4)"> <img src="img/com.png" class="comImg" id="p4ComDisplay"> <img src="img/peach.png" class="characterImg " id="p4Img"> </div> <br>
+	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(4)"> <img src="img/com.png" class="comImg" id="p4ComDisplay"> <img src="img/peach.png" class="characterImg " id="p4Img"> <br> </div>
+		<div class="draggable stars" onclick="mobileButtons('Stars', 4)"> <img class="counterDisplay" src="img/star.png" id="p4StarsDisplay"> <span class="counterText" id="p4StarsText">0</span> <br> </div>
+		<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/star.png"> <span class="counterText">0</span> <br> </div>
+		<div class="draggable coins" onclick="mobileButtons('Coins', 4)"> <img class="counterDisplay" src="img/coin.png" id="p4CoinsDisplay"> <span class="counterText" id="p4CoinsText"> 10 </span> <br> </div>
+
 		<div class="draggable happening" onclick="mobileButtons('Happening', 4)"> <img class="counterDisplay" src="img/happening.png" id="p4HappeningDisplay"> <span class="counterText" id="p4HappeningText"> 0 </span> <br> </div>
 		<div class="draggable minigame" onclick="mobileButtons('Minigame', 4)"> <img class="counterDisplay" src="img/minigame.png" id="p4MinigameDisplay"> <span class="counterText" id="p4MinigameText"> 0 </span> <br> </div>
 
@@ -610,7 +626,7 @@
 						<label class="charSelectorLabel kamek" for="kamek4"> </label>
 					</span>
 				</div> <br>
-				<div style="font-family: 'Mario';" class="charSelector">Games:
+				<div style="font-family: 'Mario'; font-size: 18px;" class="charSelector">Games:
 
 
 					<input type="radio" name="gameSelector" id="all" value="all" onchange="changeGame('all')" checked>
@@ -667,11 +683,11 @@
 				<button class="mobileButtons" style="width: 190px;" onclick="randomChar()">Randomize characters</button>
 			</div>
 
-			<h2 class="settingsTitle" id="counterSettingsTitle" onclick="showHideSettings('counterSettings')"> Counter Options & Backups </h2>
+			<h2 class="settingsTitle" id="counterSettingsTitle" onclick="showHideSettings('counterSettings')"> Counter Options </h2>
 			<div id="counterSettings" class="charSelector hidden">
 
 				
-				<table class="selectionTable" style="border-spacing: 0px 20px;">
+				<table class="selectionTable" style="border-spacing: 20px 10px;">
 					<tr>
 						<td> <label for="happeningOnOff" class="counterOnOffText">Happening (all MPs):</label> <input type="checkbox" id="happeningOnOff" class="counterOnOffInput" onchange="displayOnOff('happening')" checked> <label for="happeningOnOff" class="charSelectorLabel counterOnOff happeningOnOff"></label> </td>
 						<td> <label for="minigameOnOff" class="counterOnOffText">Minigame Coins (MP 1-8, DS):</label> <input type="checkbox" name="minigame" id="minigameOnOff" class="counterOnOffInput" onchange="displayOnOff('minigame')" checked> <label for="minigameOnOff" class="charSelectorLabel counterOnOff minigameOnOff"></label> </td>
@@ -697,16 +713,33 @@
 						<td> <label for="miniZtarOnOff" class="counterOnOffText">Minus (MP 9):</label> <input type="checkbox" id="miniZtarOnOff" class="counterOnOffInput" onchange="displayOnOff('miniZtar')"> <label for="miniZtarOnOff" class="charSelectorLabel counterOnOff miniZtarOnOff"></label> </td>
 						<td> <label for="specialDiceOnOff" class="counterOnOffText">Dice Block (MP 9):</label> <input type="checkbox" id="specialDiceOnOff" class="counterOnOffInput" onchange="displayOnOff('specialDice')"> <label for="specialDiceOnOff" class="charSelectorLabel counterOnOff specialDiceOnOff"></label> </td>
 					</tr>
-				</table> <br> <br>
+					<tr>
+						<td colspan="3"><span style="font-size: 27px; border-bottom: 2px black solid;">In-game counters</span></td>
+					</tr>
+					<tr>
+						<td colspan="3"><span class="settingsNote"> (Useful to completely replace the in-game display - Highlighting does not affect these counters) </span></td>
+					</tr>
+					<tr>
+						<td> <label for="starsOnOff" class="counterOnOffText">Stars:</label> <input type="checkbox" id="starsOnOff" class="counterOnOffInput" onchange="displayOnOff('stars')"> <label for="starsOnOff" class="charSelectorLabel counterOnOff starsOnOff"></label> </td>
+						<td> <label for="inclBonusOnOff" class="counterOnOffText">Automatically add bonus stars:</label> <input type="checkbox" id="inclBonusOnOff" class="counterOnOffInput" onclick="updateStars()"> <label for="inclBonusOnOff" class="charSelectorLabel counterOnOff starsOnOff"></td>
+					</tr>
+					<tr>
+						<td> <label for="miniStarsOnOff" class="counterOnOffText">Mini-stars (MP 9 & 10):</label> <input type="checkbox" id="miniStarsOnOff" class="counterOnOffInput" onchange="changeStars('miniStars');updateStars()"> <label for="miniStarsOnOff" class="charSelectorLabel counterOnOff miniStarsOnOff"></label> </td>
+						<td> <label for="bananasOnOff" class="counterOnOffText">Bananas (MP 9):</label> <input type="checkbox" id="bananasOnOff" class="counterOnOffInput" onclick="changeStars('bananas');updateStars()"> <label for="bananasOnOff" class="charSelectorLabel counterOnOff bananasOnOff"></td>
+					</tr>
+					<tr>
+						<td> <label for="coinsOnOff" class="counterOnOffText">Coins:</label> <input type="checkbox" id="coinsOnOff" class="counterOnOffInput" onchange="displayOnOff('coins')"> <label for="coinsOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </td>
+					</tr>
+				</table>
 
-				<button onclick="savePlayers()" class="mobileButtons" style="width: 230px; margin-bottom: 10px;">Save Character & Counters</button> <span class="settingsNote">(Will be saved in local storage, automatically loaded when loading the site)</span> <br>
-
-				<button onclick="resetPlayers()" class="mobileButtons" style="width: 240px;">Reset Character & Counters</button> <br> <br>
+				<button onclick="saveCounters()" class="mobileButtons" style="width: 180px">Perm Save Counters</button> <button onclick="resetCounters()" class="mobileButtons" style="width: 140px;">Reset Counters</button> <br> <br>
 
 				<b style="font-size: 23px;"><a href="https://www.mariowiki.com/Bonus_Star">Super Mario Wiki - Bonus Stars</a> <br>
-				<a href="https://www.giantbomb.com/bonus-stars/3015-3011/">Giant Bomb - Bonus Star List (without MP 9 & 10)</a></b>
-			</div> <br>
-			<button onclick="showHideDiv('mobileSettings')" id="counterOptionsClose" class="mobileButtons">Close</button>
+				<a href="https://www.giantbomb.com/bonus-stars/3015-3011/">Giant Bomb - Bonus Star List (without MP 9 & 10)</a></b> <br> <br>
+			</div>
+
+			<!-- Reset/save Settings -->
+			<button onclick="resetPlayers()" id="resetPlayersButton" class="mobileButtons" style="width: 130px;"> Reset Options </button> <div class="settingsClose"> <span class="settingsNote">(Will be saved in local storage)</span> <button onclick="savePlayers(true)" class="mobileButtons" style="width: 120px;"> Save &amp; Close </button> <button onclick="savePlayers()" class="mobileButtons" style="width: 55px;"> Save </button> <button onclick="showHideDiv('mobileSettings')" class="mobileButtons"> Close </button> </div>
 		</div>
 	</div>
 
@@ -792,7 +825,7 @@
 			</div>
 
 				<!-- Reset/save Settings -->
-				<button onclick="resetSettings()" id="resetSettingsButton" class="mobileButtons" style="width: 130px;"> Reset Settings </button> <div id="settingsClose"> <span class="settingsNote">(Will be saved on local storage)</span> <button onclick="saveSettings(true)" class="mobileButtons" style="width: 120px;"> Save &amp; Close </button> <button onclick="saveSettings()" class="mobileButtons" style="width: 55px;"> Save </button> <button onclick="showHideDiv('settings')" class="mobileButtons"> Cancel </button> </div>
+				<button onclick="resetSettings()" id="resetSettingsButton" class="mobileButtons" style="width: 130px;"> Reset Settings </button> <div class="settingsClose"> <span class="settingsNote">(Will be saved in local storage)</span> <button onclick="saveSettings(true)" class="mobileButtons" style="width: 120px;"> Save &amp; Close </button> <button onclick="saveSettings()" class="mobileButtons" style="width: 55px;"> Save </button> <button onclick="showHideDiv('settings')" class="mobileButtons"> Close </button> </div>
 			</div>
 		</div>
 	</div>
@@ -887,7 +920,7 @@
 		<h2 class="settingsTitle" id="creditSettingsTitle" onclick="showHideSettings('creditSettings')"> Credits </h2>
 
 		<div id="creditSettings" class="hidden">
-			<span class="settingsText"> Created by <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> | Version 2.1.1 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md#changelog" class="tutorialLink"> (Changelog)</a> <br>
+			<span class="settingsText"> Created by <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> | Version 2.2.0 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md#changelog" class="tutorialLink"> (Changelog)</a> <br>
 			Mario Kart 8 (Deluxe) character sprites ripped by <a href="https://twitter.com/RandomTBush" class="tutorialLink">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="tutorialLink"> RicoDexter</a> & <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> </span> <br> <br>
 			<span> <a href="https://gist.github.com/rcotrina94/7828886">Use images as radio buttons Tutorial</a> </span> <br>
 			<span> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="tutorialLink">Counter Font</a> </span> <br>

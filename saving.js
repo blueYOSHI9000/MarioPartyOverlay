@@ -60,7 +60,18 @@ var dice1 = 0
 var dice2 = 0
 var dice3 = 0
 var dice4 = 0
+var stars1 = 0
+var stars2 = 0
+var stars3 = 0
+var stars4 = 0
+var coins1 = 0
+var coins2 = 0
+var coins3 = 0
+var coins4 = 0
 
+/*
+* Resets the backup.
+*/
 function resetBackup() {
 	document.getElementById('coinStarText').innerHTML = 10
 	document.getElementById('p1CoinStarTie').checked = false
@@ -120,12 +131,23 @@ function resetBackup() {
 	document.getElementById('p2SpecialDiceText').innerHTML = 0
 	document.getElementById('p3SpecialDiceText').innerHTML = 0
 	document.getElementById('p4SpecialDiceText').innerHTML = 0
+	document.getElementById('p1StarsText').innerHTML = 0
+	document.getElementById('p2StarsText').innerHTML = 0
+	document.getElementById('p3StarsText').innerHTML = 0
+	document.getElementById('p4StarsText').innerHTML = 0
+	document.getElementById('p1CoinsText').innerHTML = 0
+	document.getElementById('p2CoinsText').innerHTML = 0
+	document.getElementById('p3CoinsText').innerHTML = 0
+	document.getElementById('p4CoinsText').innerHTML = 0
 
 	turns('curTurn', 1, 'Set')
 	coinStarTie()
 	callHighlight(false, true)
 }
 
+/*
+* Backups all counters.
+*/
 function backup() {
 	document.getElementById('reloadButton').disabled = false
 	backuped = true
@@ -190,8 +212,21 @@ function backup() {
 	dice2 = document.getElementById('p2SpecialDiceText').innerHTML
 	dice3 = document.getElementById('p3SpecialDiceText').innerHTML
 	dice4 = document.getElementById('p4SpecialDiceText').innerHTML
+	stars1 = document.getElementById('p1StarsText').innerHTML
+	stars2 = document.getElementById('p2StarsText').innerHTML
+	stars3 = document.getElementById('p3StarsText').innerHTML
+	stars4 = document.getElementById('p4StarsText').innerHTML
+	coins1 = document.getElementById('p1CoinsText').innerHTML
+	coins2 = document.getElementById('p2CoinsText').innerHTML
+	coins3 = document.getElementById('p3CoinsText').innerHTML
+	coins4 = document.getElementById('p4CoinsText').innerHTML
 }
 
+/*
+* Restores all saved counters.
+* 
+* @param {boolean} forceRestore If the restore should be forced.
+*/
 function restore(forceRestore) {
 	if (backuped == true || forceRestore == true) {
 		document.getElementById('coinStarText').innerHTML = coinStarVar
@@ -260,9 +295,11 @@ function restore(forceRestore) {
 }
 
 /*
-* Saves all Characters and Counters
+* Saves all Characters.
+*
+* @param {boolean} close If the settings should be closed after saving. True = should be closed.
 */
-function savePlayers () {
+function savePlayers (close) {
 	localStorage.setItem('savePlayers', true)
 
 	localStorage.setItem('char1', characters[1])
@@ -289,6 +326,97 @@ function savePlayers () {
 	localStorage.setItem('spinSpace', document.getElementById('spinSpaceOnOff').checked)
 	localStorage.setItem('miniZtar', document.getElementById('miniZtarOnOff').checked)
 	localStorage.setItem('specialDice', document.getElementById('specialDiceOnOff').checked)
+	localStorage.setItem('stars', document.getElementById('starsOnOff').checked)
+	localStorage.setItem('inclBonus', document.getElementById('inclBonusOnOff').checked)
+	localStorage.setItem('miniStars', document.getElementById('miniStarsOnOff').checked)
+	localStorage.setItem('bananas', document.getElementById('bananasOnOff').checked)
+	localStorage.setItem('coins', document.getElementById('coinsOnOff').checked)
+
+	if (close == true) {
+		showHideDiv('mobileSettings')
+	}
+}
+
+/*
+* Resets all characters.
+*/
+function resetPlayers () {
+	localStorage.setItem('savePlayers', false)
+
+	localStorage.setItem('char1', 'mario')
+	localStorage.setItem('char2', 'luigi')
+	localStorage.setItem('char3', 'yoshi')
+	localStorage.setItem('char4', 'peach')
+	localStorage.setItem('com1', false)
+	localStorage.setItem('com2', false)
+	localStorage.setItem('com3', false)
+	localStorage.setItem('com4', false)
+
+	localStorage.setItem('happening', true)
+	localStorage.setItem('minigame', true)
+	localStorage.setItem('minigameWins', false)
+	localStorage.setItem('redSpace', false)
+	localStorage.setItem('running', false)
+	localStorage.setItem('slow', false)
+	localStorage.setItem('shopping', false)
+	localStorage.setItem('orb', false)
+	localStorage.setItem('candy', false)
+	localStorage.setItem('item', false)
+	localStorage.setItem('friendSpace', false)
+	localStorage.setItem('hex', false)
+	localStorage.setItem('spinSpace', false)
+	localStorage.setItem('miniZtar', false)
+	localStorage.setItem('specialDice', false)
+	localStorage.setItem('stars', false)
+	localStorage.setItem('inclBonus', false)
+	localStorage.setItem('miniStars', false)
+	localStorage.setItem('bananas', false)
+	localStorage.setItem('coins', false)
+
+	document.getElementById('happeningOnOff').checked = true
+	document.getElementById('minigameOnOff').checked = true
+	document.getElementById('minigameWinsOnOff').checked = false
+	document.getElementById('redSpaceOnOff').checked = false
+	document.getElementById('runningOnOff').checked = false
+	document.getElementById('slowOnOff').checked = false
+	document.getElementById('shoppingOnOff').checked = false
+	document.getElementById('orbOnOff').checked = false
+	document.getElementById('candyOnOff').checked = false
+	document.getElementById('itemOnOff').checked = false
+	document.getElementById('friendSpaceOnOff').checked = false
+	document.getElementById('hexOnOff').checked = false
+	document.getElementById('spinSpaceOnOff').checked = false
+	document.getElementById('miniZtarOnOff').checked = false
+	document.getElementById('specialDiceOnOff').checked = false
+	document.getElementById('starsOnOff').checked = false
+	document.getElementById('inclBonusOnOff').checked = false
+	document.getElementById('miniStarsOnOff').checked = false
+	document.getElementById('bananasOnOff').checked = false
+	document.getElementById('coinsOnOff').checked = false
+
+	changeCharacters(1, 'mario')
+	changeCharacters(2, 'luigi')
+	changeCharacters(3, 'yoshi')
+	changeCharacters(4, 'peach')
+
+	document.getElementById('com1').checked = false
+	document.getElementById('com2').checked = false
+	document.getElementById('com3').checked = false
+	document.getElementById('com4').checked = false
+	changeCom(1)
+	changeCom(2)
+	changeCom(3)
+	changeCom(4)
+
+	callDisplayOnOff()
+	changeStars()
+}
+
+/*
+* Saves all counters.
+*/
+function saveCounters () {
+	localStorage.setItem('saveCounters', true)
 
 	localStorage.setItem('coinStarVar', document.getElementById('coinStarText').innerHTML)
 	localStorage.setItem('coinStarTie1', document.getElementById('p1CoinStarTie').checked)
@@ -351,76 +479,99 @@ function savePlayers () {
 	localStorage.setItem('dice2', document.getElementById('p2SpecialDiceText').innerHTML)
 	localStorage.setItem('dice3', document.getElementById('p3SpecialDiceText').innerHTML)
 	localStorage.setItem('dice4', document.getElementById('p4SpecialDiceText').innerHTML)
+	localStorage.setItem('stars1', document.getElementById('p1StarsText').innerHTML)
+	localStorage.setItem('stars2', document.getElementById('p2StarsText').innerHTML)
+	localStorage.setItem('stars3', document.getElementById('p3StarsText').innerHTML)
+	localStorage.setItem('stars4', document.getElementById('p4StarsText').innerHTML)
+	localStorage.setItem('coins1', document.getElementById('p1CoinsText').innerHTML)
+	localStorage.setItem('coins2', document.getElementById('p2CoinsText').innerHTML)
+	localStorage.setItem('coins3', document.getElementById('p3CoinsText').innerHTML)
+	localStorage.setItem('coins4', document.getElementById('p4CoinsText').innerHTML)
 }
 
 /*
-* resets all characters and counters
+* Resets all counters.
 */
-function resetPlayers () {
-	localStorage.setItem('savePlayers', false)
+function resetCounters () {
+	localStorage.setItem('saveCounters', false)
 
-	localStorage.setItem('char1', 'mario')
-	localStorage.setItem('char2', 'luigi')
-	localStorage.setItem('char3', 'yoshi')
-	localStorage.setItem('char4', 'peach')
-	localStorage.setItem('com1', false)
-	localStorage.setItem('com2', false)
-	localStorage.setItem('com3', false)
-	localStorage.setItem('com4', false)
+	localStorage.setItem('coinStarVar', 10)
+	localStorage.setItem('coinStarTie1', false)
+	localStorage.setItem('coinStarTie2', false)
+	localStorage.setItem('coinStarTie3', false)
+	localStorage.setItem('coinStarTie4', false)
 
-	localStorage.setItem('happening', true)
-	localStorage.setItem('minigame', true)
-	localStorage.setItem('minigameWins', false)
-	localStorage.setItem('redSpace', false)
-	localStorage.setItem('running', false)
-	localStorage.setItem('slow', false)
-	localStorage.setItem('shopping', false)
-	localStorage.setItem('orb', false)
-	localStorage.setItem('candy', false)
-	localStorage.setItem('item', false)
-	localStorage.setItem('friendSpace', false)
-	localStorage.setItem('hex', false)
-	localStorage.setItem('spinSpace', false)
-	localStorage.setItem('miniZtar', false)
-	localStorage.setItem('specialDice', false)
+	localStorage.setItem('curTurn', 1)
+	localStorage.setItem('maxTurn', 20)
+	document.getElementById('maxTurnText').innerHTML = 30
 
-	document.getElementById('happeningOnOff').checked = true
-	document.getElementById('minigameOnOff').checked = true
-	document.getElementById('minigameWinsOnOff').checked = false
-	document.getElementById('redSpaceOnOff').checked = false
-	document.getElementById('runningOnOff').checked = false
-	document.getElementById('slowOnOff').checked = false
-	document.getElementById('shoppingOnOff').checked = false
-	document.getElementById('orbOnOff').checked = false
-	document.getElementById('candyOnOff').checked = false
-	document.getElementById('itemOnOff').checked = false
-	document.getElementById('friendSpaceOnOff').checked = false
-	document.getElementById('hexOnOff').checked = false
-	document.getElementById('spinSpaceOnOff').checked = false
-	document.getElementById('miniZtarOnOff').checked = false
-	document.getElementById('specialDiceOnOff').checked = false
-
-	changeCharacters(1, 'mario')
-	changeCharacters(2, 'luigi')
-	changeCharacters(3, 'yoshi')
-	changeCharacters(4, 'peach')
-
-	document.getElementById('com1').checked = false
-	document.getElementById('com2').checked = false
-	document.getElementById('com3').checked = false
-	document.getElementById('com4').checked = false
-	changeCom(1)
-	changeCom(2)
-	changeCom(3)
-	changeCom(4)
+	localStorage.setItem('hap1', 0)
+	localStorage.setItem('hap2', 0)
+	localStorage.setItem('hap3', 0)
+	localStorage.setItem('hap4', 0)
+	localStorage.setItem('mini1', 0)
+	localStorage.setItem('mini2', 0)
+	localStorage.setItem('mini3', 0)
+	localStorage.setItem('mini4', 0)
+	localStorage.setItem('red1', 0)
+	localStorage.setItem('red2', 0)
+	localStorage.setItem('red3', 0)
+	localStorage.setItem('red4', 0)
+	localStorage.setItem('run1', 0)
+	localStorage.setItem('run2', 0)
+	localStorage.setItem('run3', 0)
+	localStorage.setItem('run4', 0)
+	localStorage.setItem('shop1', 0)
+	localStorage.setItem('shop2', 0)
+	localStorage.setItem('shop3', 0)
+	localStorage.setItem('shop4', 0)
+	localStorage.setItem('orb1', 0)
+	localStorage.setItem('orb2', 0)
+	localStorage.setItem('orb3', 0)
+	localStorage.setItem('orb4', 0)
+	localStorage.setItem('candy1', 0)
+	localStorage.setItem('candy2', 0)
+	localStorage.setItem('candy3', 0)
+	localStorage.setItem('candy4', 0)
+	localStorage.setItem('item1', 0)
+	localStorage.setItem('item2', 0)
+	localStorage.setItem('item3', 0)
+	localStorage.setItem('item4', 0)
+	localStorage.setItem('friend1', 0)
+	localStorage.setItem('friend2', 0)
+	localStorage.setItem('friend3', 0)
+	localStorage.setItem('friend4', 0)
+	localStorage.setItem('hex1', 0)
+	localStorage.setItem('hex2', 0)
+	localStorage.setItem('hex3', 0)
+	localStorage.setItem('hex4', 0)
+	localStorage.setItem('spin1', 0)
+	localStorage.setItem('spin2', 0)
+	localStorage.setItem('spin3', 0)
+	localStorage.setItem('spin4', 0)
+	localStorage.setItem('ztar1', 0)
+	localStorage.setItem('ztar2', 0)
+	localStorage.setItem('ztar3', 0)
+	localStorage.setItem('ztar4', 0)
+	localStorage.setItem('dice1', 0)
+	localStorage.setItem('dice2', 0)
+	localStorage.setItem('dice3', 0)
+	localStorage.setItem('dice4', 0)
+	localStorage.setItem('stars1', 0)
+	localStorage.setItem('stars2', 0)
+	localStorage.setItem('stars3', 0)
+	localStorage.setItem('stars4', 0)
+	localStorage.setItem('coins1', 10)
+	localStorage.setItem('coins2', 10)
+	localStorage.setItem('coins3', 10)
+	localStorage.setItem('coins4', 10)
 
 	resetBackup()
-	callDisplayOnOff()
-	resetBackup()
+	updateStars()
 }
 
 /*
-* Saves all settings as cookies.
+* Saves all settings in local storage.
 *
 * @param {boolean} close If the settings should be closed after saving. True = should be closed.
 */
@@ -454,7 +605,7 @@ function saveSettings (close) {
 }
 
 /*
-* Prepares all settings that were saved as cookies when the site gets loaded.
+* Prepares all settings that were saved in local storage when the site gets loaded.
 */
 function prepareMPO () {
 	document.getElementById('error').style = 'display: inline;'
@@ -518,7 +669,23 @@ function prepareMPO () {
 		document.getElementById('spinSpaceOnOff').checked = stringToBoolean(localStorage.getItem('spinSpace'))
 		document.getElementById('miniZtarOnOff').checked = stringToBoolean(localStorage.getItem('miniZtar'))
 		document.getElementById('specialDiceOnOff').checked = stringToBoolean(localStorage.getItem('specialDice'))
+		document.getElementById('starsOnOff').checked = stringToBoolean(localStorage.getItem('stars'))
+		document.getElementById('inclBonusOnOff').checked = stringToBoolean(localStorage.getItem('inclBonus'))
+		document.getElementById('miniStarsOnOff').checked = stringToBoolean(localStorage.getItem('miniStars'))
+		document.getElementById('bananasOnOff').checked = stringToBoolean(localStorage.getItem('bananas'))
+		document.getElementById('coinsOnOff').checked = stringToBoolean(localStorage.getItem('coins'))
 
+		if (localStorage.getItem('miniStars') == 'true') {
+			changeStars('miniStars')
+		} else if (localStorage.getItem('bananas') == 'true') {
+			changeStars('bananas')
+		}
+
+		if (document.getElementById('minigameWinsOnOff').checked == true) {
+			minigameWins()
+		}
+	}
+	if (localStorage.getItem('saveCounters') == 'true') {
 		document.getElementById('coinStarText').innerHTML = localStorage.getItem('coinStarVar')
 		document.getElementById('p1CoinStarTie').checked = stringToBoolean(localStorage.getItem('coinStarTie1'))
 		document.getElementById('p2CoinStarTie').checked = stringToBoolean(localStorage.getItem('coinStarTie2'))
@@ -582,9 +749,6 @@ function prepareMPO () {
 		document.getElementById('p4SpecialDiceText').innerHTML = localStorage.getItem('dice4')
 
 		callHighlight(false, true)
-		if (document.getElementById('minigameWinsOnOff').checked == true) {
-			minigameWins()
-		}
 	}
 
 	coinStarTie()
@@ -607,7 +771,7 @@ function stringToBoolean(boolean) {
 }
 
 /*
-* Resets settings and clears cookies.
+* Resets settings.
 */
 function resetSettings () {
 	document.getElementById('enableInteract').checked = false

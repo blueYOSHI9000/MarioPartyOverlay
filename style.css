@@ -56,7 +56,7 @@ src: url("font.ttf");
 	margin-left: 15px;
 }
 .characterImg {
-	margin-right: 50px;
+	margin-right: 65px;
 	width: 120px;
 }
 .comImg {
@@ -65,6 +65,9 @@ src: url("font.ttf");
 	display: inline;
 	top: 77px;
 	visibility: hidden;
+}
+.stars {
+	position: absolute;
 }
 .turns {
 	font-size: 20px;
@@ -240,7 +243,7 @@ src: url("font.ttf");
 #settingsContent {
 	width: 825px;
 }
-#settingsClose {
+.settingsClose {
 	float: right;
 }
 
@@ -274,7 +277,7 @@ src: url("font.ttf");
 	font-family: 'Mario';
 	font-size: 16px;
 	color: #111111;
-	margin-right: 84px;
+	margin-right: 82px;
 }
 
 .characterSelector {
@@ -406,7 +409,7 @@ src: url("font.ttf");
 
 .com {
 	background-image:url(img/com.png);
-	margin-right: 108px;
+	margin-right: 106px;
 	width: 100px;
 	height: 45px;
 }
@@ -414,6 +417,7 @@ src: url("font.ttf");
 
 .counterOnOff {
 	height: 25px;
+	width: 25px;
 	position: relative;
 	top: 3px;
 }
@@ -464,6 +468,18 @@ src: url("font.ttf");
 .specialDiceOnOff {
 	background-image:url(img/specialdice.png);
 }
+.starsOnOff {
+	background-image:url(img/star.png);
+}
+.miniStarsOnOff {
+	background-image:url(img/ministar.png);
+}
+.bananasOnOff {
+	background-image:url(img/banana.png);
+}
+.coinsOnOff {
+	background-image:url(img/coin.png);
+}
 
 /*
 mario
@@ -509,19 +525,21 @@ hex
 spinSpace
 miniZtar
 specialDice
+stars
+coins
 */
 
 .gameLabel {
-	height: 30px;
-	width: 30px;
+	height: 25px;
+	width: 25px;
 }
 
 .all {
-	width: 55px;
+	width: 50px;
 }
 .mp1 {
 	background-image:url(img/mp1.png);
-	width: 25px;
+	width: 20px;
 }
 .mp2 {
 	background-image:url(img/mp2.png);
@@ -547,33 +565,33 @@ specialDice
 .mp9 {
 	background-image:url(img/mp9.png);
 }
-.mpa {
-	background-image:url(img/mpa.png);
-	width: 75px;
-}
 .mp10 {
 	background-image:url(img/mp10.png);
-	width: 43px;
+	width: 40px;
+}
+.mpa {
+	background-image:url(img/mpa.png);
+	width: 63px;
 }
 .mpds {
 	background-image:url(img/mpds.png);
-	width: 57px;
+	width: 50px;
 }
 .mpit {
 	background-image:url(img/mpit.png);
-	width: 43px;
+	width: 35px;
 }
 .mpsr {
 	background-image:url(img/mpsr.png);
-	width: 58px;
+	width: 46px;
 }
 .mptt100 {
 	background-image:url(img/mptt100.png);
-	width: 57px;
+	width: 47px;
 }
 .smp {
 	background-image:url(img/smp.png);
-	width: 60px;
+	width: 51px;
 }
 
 /* == Themes == (Previews are 40x19px) */
@@ -605,13 +623,13 @@ specialDice
 	background-color: rgba(0, 0, 0, 0.5);
 }
 #mobileSettingsContent {
-	width: 1035px;
+	width: 900px;
 }
 
 /* == mobile version == */
 .mobileButtons {
 	height: 27px;
-	width: 72px;
+	width: 62px;
 	font-size: 17px;
 }
 #textOutput {

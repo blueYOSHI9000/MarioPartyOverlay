@@ -13,6 +13,10 @@ Character Sprites ripped by [Random Talking Bush](https://twitter.com/RandomTBus
 
 # Changelog
 
+v2.2.0
+- Added: Star & Coins counters to completely replace the in-game display
+- Added: Counter restrictions at 999 to avoid breaking the site
+
 v2.1.2
 - Added: MP Advance, IT, SR and TT100 support for randomizing characters
 
