@@ -777,6 +777,9 @@
 					<tr>
 						<td> <b class="settingsText"> Don't use ties for the Coin Star: </b> <input type="checkbox" id="noTie" onchange="coinStarTie()"> </td>
 					</tr>
+					<tr>
+						<td> <b class="settingsText"> Automatically save/reload when changing turns: </b> <input type="checkbox" id="autoSave" onclick="if (this.checked == true) {backup()}"> </td>
+					</tr>
 					<tr><td><div style="visibility: hidden;"> *Empty row* </div></td></tr>
 					<tr>
 						<td><button onclick="localStorage.clear()" class="mobileButtons" style="width: 163px;">Clear local storage</button> <span class="settingsNote">(This will clear all saved settings, characters and counters)</span></td>
@@ -906,22 +909,17 @@
 		The "Generate & Copy" button outputs all counters as text and copies it (this can be configured in the settings). <br class="lineHeight">
 		The "Save" and "Reload" buttons save and reload all counters. Not the characters and not settings, only counters. </span>
 
-		<h2 class="settingsTitle" id="linkSettingsTitle" onclick="showHideSettings('linkSettings')"> Links </h2>
+		<h2 class="settingsTitle" id="linkSettingsTitle" onclick="showHideSettings('linkSettings')"> Links & Credits </h2>
 
 		<div id="linkSettings" class="hidden">
-			<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki" class="tutorialLink">Bigger Tutorial</a> </span> <br class="lineHeight">
+			<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki" class="tutorialLink">Better Tutorial</a> </span> <br class="lineHeight">
 
 			<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/projects/5" class="tutorialLink">Planned Features</a> </span> <br class="lineHeight">
 
-			<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues" class="tutorialLink">Got an issue?</a> </span> <span class="settingsNote"> (You can also @ me on Twitter if you don't have a Github account)</span>
-		</div>
+			<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues" class="tutorialLink">Got an issue?</a> </span> <span class="settingsNote"> (You can also @ me on Twitter if you don't have a Github account)</span> <br> <br>
 
-		<h2 class="settingsTitle" id="creditSettingsTitle" onclick="showHideSettings('creditSettings')"> Credits </h2>
-
-		<div id="creditSettings" class="hidden">
-			<span class="settingsText"> Created by <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> | Version 2.2.0 <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/master/README.md#changelog" class="tutorialLink"> (Changelog)</a> <br>
-			Mario Kart 8 (Deluxe) character sprites ripped by <a href="https://twitter.com/RandomTBush" class="tutorialLink">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="tutorialLink"> RicoDexter</a> & <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> </span> <br> <br>
-			<span> <a href="https://gist.github.com/rcotrina94/7828886">Use images as radio buttons Tutorial</a> </span> <br>
+			<span class="settingsText"> Created by <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> <br>
+			Mario Kart 8 (Deluxe) character sprites ripped by <a href="https://twitter.com/RandomTBush" class="tutorialLink">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="tutorialLink"> RicoDexter</a> & <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> </span> <br>
 			<span> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="tutorialLink">Counter Font</a> </span> <br>
 			<span> <a href="http://interactjs.io/" class="tutorialLink"> Interact.js</a> </span> <span class="settingsText">(the thing that enables drag 'n' drop) </span> <br> <br>
 		</div>

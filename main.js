@@ -1393,6 +1393,12 @@ function turns (counter, amount, action) {
 	var curTurnVar = parseInt(document.getElementById('curTurnText').innerHTML)
 	var maxTurnVar = parseInt(document.getElementById('maxTurnText').innerHTML)
 
+	if (action == 'P' && document.getElementById('autoSave').checked == true) {
+		backup()
+	} else if (action == 'M' && document.getElementById('autoSave').checked == true) {
+		restore()
+	}
+
 	if (counter == 'curTurn') {
 		var result = curTurnVar
 	} else if (counter == 'maxTurn') {
@@ -1612,10 +1618,8 @@ function showHideSettings (id) {
 			break;
 		case 'tutorialSettings':
 		case 'linkSettings':
-		case 'creditSettings':
 			var id1 = 'tutorialSettings'
 			var id2 = 'linkSettings'
-			var id3 = 'creditSettings'
 			break;
 	}
 
@@ -1624,10 +1628,6 @@ function showHideSettings (id) {
 
 	document.getElementById(id2).style.display = 'none'
 	document.getElementById(id2 + 'Title').style.cursor = 'pointer'
-	if (id3) {
-		document.getElementById(id3).style.display = 'none'
-		document.getElementById(id3 + 'Title').style.cursor = 'pointer'
-	}
 
 	document.getElementById(id).style.display = 'inline'
 	document.getElementById(id + 'Title').style.cursor = 'auto'
