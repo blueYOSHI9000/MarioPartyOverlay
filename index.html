@@ -59,7 +59,7 @@
 	</span> <br>
 
 	<!-- Player Images & Counter Display -->
-	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(1)"> <img src="img/com.png" class="comImg" id="p1ComDisplay"> <img src="img/mario.png" class="characterImg" id="p1Img"> <br> </div>
+	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(1)"> <img src="img/com.png" class="comImg" id="p1ComDisplay"> <img src="img/mpsrIcons/mario.png" class="characterImg" id="p1Img"> <br> </div>
 		<div class="draggable stars" onclick="mobileButtons('Stars', 1)"> <img class="counterDisplay" src="img/star.png" id="p1StarsDisplay"> <span class="counterText" id="p1StarsText">0</span> <br> </div>
 		<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/star.png"> <span class="counterText">0</span> <br> </div>
 		<div class="draggable coins" onclick="mobileButtons('Coins', 1)"> <img class="counterDisplay" src="img/coin.png" id="p1CoinsDisplay"> <span class="counterText" id="p1CoinsText"> 10 </span> <br> </div>
@@ -83,7 +83,7 @@
 		<div class="draggable specialDice" onclick="mobileButtons('SpecialDice', 1)"> <img class="counterDisplay" src="img/specialdice.png" id="p1SpecialDiceDisplay"> <span class="counterText" id="p1SpecialDiceText"> 0 </span> <br> </div>
 	</div>
 
-	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(2)"> <img src="img/com.png" class="comImg" id="p2ComDisplay"> <img src="img/luigi.png" class="characterImg " id="p2Img"> <br> </div>
+	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(2)"> <img src="img/com.png" class="comImg" id="p2ComDisplay"> <img src="img/mpsrIcons/luigi.png" class="characterImg " id="p2Img"> <br> </div>
 		<div class="draggable stars" onclick="mobileButtons('Stars', 2)"> <img class="counterDisplay" src="img/star.png" id="p2StarsDisplay"> <span class="counterText" id="p2StarsText">0</span> <br> </div>
 		<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/star.png"> <span class="counterText">0</span> <br> </div>
 		<div class="draggable coins" onclick="mobileButtons('Coins', 2)"> <img class="counterDisplay" src="img/coin.png" id="p2CoinsDisplay"> <span class="counterText" id="p2CoinsText"> 10 </span> <br> </div>
@@ -107,7 +107,7 @@
 		<div class="draggable specialDice" onclick="mobileButtons('SpecialDice', 2)"> <img class="counterDisplay" src="img/specialdice.png" id="p2SpecialDiceDisplay"> <span class="counterText" id="p2SpecialDiceText"> 0 </span> <br> </div>
 	</div>
 
-	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(3)"> <img src="img/com.png" class="comImg" id="p3ComDisplay"> <img src="img/yoshi.png" class="characterImg " id="p3Img"> <br> </div>
+	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(3)"> <img src="img/com.png" class="comImg" id="p3ComDisplay"> <img src="img/mpsrIcons/yoshi.png" class="characterImg " id="p3Img"> <br> </div>
 		<div class="draggable stars" onclick="mobileButtons('Stars', 3)"> <img class="counterDisplay" src="img/star.png" id="p3StarsDisplay"> <span class="counterText" id="p3StarsText">0</span> <br> </div>
 		<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/star.png"> <span class="counterText">0</span> <br> </div>
 		<div class="draggable coins" onclick="mobileButtons('Coins', 3)"> <img class="counterDisplay" src="img/coin.png" id="p3CoinsDisplay"> <span class="counterText" id="p3CoinsText"> 10 </span> <br> </div>
@@ -131,7 +131,7 @@
 		<div class="draggable specialDice" onclick="mobileButtons('SpecialDice', 3)"> <img class="counterDisplay" src="img/specialdice.png" id="p3SpecialDiceDisplay"> <span class="counterText" id="p3SpecialDiceText"> 0 </span> <br> </div>
 	</div>
 
-	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(4)"> <img src="img/com.png" class="comImg" id="p4ComDisplay"> <img src="img/peach.png" class="characterImg " id="p4Img"> <br> </div>
+	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(4)"> <img src="img/com.png" class="comImg" id="p4ComDisplay"> <img src="img/mpsrIcons/peach.png" class="characterImg " id="p4Img"> <br> </div>
 		<div class="draggable stars" onclick="mobileButtons('Stars', 4)"> <img class="counterDisplay" src="img/star.png" id="p4StarsDisplay"> <span class="counterText" id="p4StarsText">0</span> <br> </div>
 		<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/star.png"> <span class="counterText">0</span> <br> </div>
 		<div class="draggable coins" onclick="mobileButtons('Coins', 4)"> <img class="counterDisplay" src="img/coin.png" id="p4CoinsDisplay"> <span class="counterText" id="p4CoinsText"> 10 </span> <br> </div>
@@ -758,6 +758,20 @@
 					<tr><td><div style="visibility: hidden;"> *Empty row* </div></td></tr>
 					<tr> <td>
 						<b class="settingsText"> Background: </b> <button id="themeB1" class="themeButtons" onclick="changeTheme(1)" style="border-color: green;" disabled></button> <button id="themeB2" class="themeButtons" onclick="changeTheme(2)"></button> <button id="themeB3" class="themeButtons" onclick="changeTheme(3)"> </button>
+					</td> </tr>
+					<tr>
+						<td> <b class="settingsText" style="position: relative; top: -13px;"> Icons style: </b> 
+							<span class="charSelector">
+								<span>
+									<input type="radio" name="icons" id="mpsrIcons" value="mpsrIcons" onchange="changeIcons('icons')" checked>
+									<label class="charSelectorLabel mario iconLabel" for="mpsrIcons"> </label>
+								</span>
+								<span>
+									<input type="radio" name="icons" id="mk8Icons" value="mk8Icons" onchange="changeIcons('icons')">
+									<label class="charSelectorLabel iconLabel" for="mk8Icons" style="background-image: url('img/mk8Icons/mario.png');"> </label>
+								</span>
+							</span>
+						</td>
 					</tr>
 					<tr>
 						<td> <b class="settingsText"> Enable Greenscreen: </b> <input type="checkbox" onchange="changeTheme()" id="greenscreen"> <input type="color" onchange="changeBGColor('bgColor')" value="#0000ff" id="bgColor"> </td>
@@ -843,35 +857,49 @@
 					<td> <b class="whiteText"> Change BG color: </b> <input type="color" onchange="changeBGColor('bgColorPick')" value="#0000ff" id="bgColorPick"> <button onclick="resetBGColor()" class="mobileButtons" style="width: 165px;"> Reset Color (blue) </button> <br>
 					<b class="whiteText"> Change Text Color: </b> <input type="color" id="textColorTest" value="#ffffff" onchange="changeTextColor('textColorTest')"> <button onclick="resetTextColor()" class="mobileButtons" style="width: 170px;"> Reset Color (white) </button> </td>
 				</tr>
+				<tr>
+					<td>
+						<span class="charSelector">
+							<span>
+								<input type="radio" name="icons2" id="mpsrIcons2" value="mpsrIcons" onchange="changeIcons('icons2')" checked>
+								<label class="charSelectorLabel mario iconLabel" for="mpsrIcons"> </label>
+							</span>
+							<span>
+								<input type="radio" name="icons2" id="mk8Icons2" value="mk8Icons" onchange="changeIcons('icons2')">
+								<label class="charSelectorLabel iconLabel" for="mk8Icons" style="background-image: url('img/mk8Icons/mario.png');"> </label>
+							</span>
+						</span>
+					</td>
+				</tr>
 				<tr> <td>
-					<img src="img/mario.png" class="characterImg">
-					<img src="img/luigi.png" class="characterImg">
-					<img src="img/yoshi.png" class="characterImg">
-					<img src="img/peach.png" class="characterImg">
-					<img src="img/daisy.png" class="characterImg">
-					<img src="img/rosalina.png" class="characterImg">
-					<img src="img/toad.png" class="characterImg">
-					<img src="img/toadette.png" class="characterImg">
-					<img src="img/wario.png" class="characterImg">
-					<img src="img/waluigi.png" class="characterImg">
-					<img src="img/dk.png" class="characterImg">
-					<img src="img/diddy.png" class="characterImg">
-					<img src="img/birdo.png" class="characterImg">
-					<img src="img/bowser.png" class="characterImg">
-					<img src="img/bowserjr.png" class="characterImg">
-					<img src="img/koopakid.png" class="characterImg">
-					<img src="img/pompom.png" class="characterImg">
-					<img src="img/goomba.png" class="characterImg">
-					<img src="img/koopa.png" class="characterImg">
-					<img src="img/drybones.png" class="characterImg">
-					<img src="img/monty.png" class="characterImg">
-					<img src="img/boo.png" class="characterImg">
-					<img src="img/spike.png" class="characterImg">
-					<img src="img/blooper.png" class="characterImg">
-					<img src="img/shyguy.png" class="characterImg">
-					<img src="img/hammerbro.png" class="characterImg">
-					<img src="img/kamek.png" class="characterImg">
-					<img src="img/comtest.png" class="characterImg">
+					<img src="img/mpsrIcons/mario.png" class="characterImg">
+					<img src="img/mpsrIcons/luigi.png" class="characterImg">
+					<img src="img/mpsrIcons/yoshi.png" class="characterImg">
+					<img src="img/mpsrIcons/peach.png" class="characterImg">
+					<img src="img/mpsrIcons/daisy.png" class="characterImg">
+					<img src="img/mpsrIcons/rosalina.png" class="characterImg">
+					<img src="img/mpsrIcons/toad.png" class="characterImg">
+					<img src="img/mpsrIcons/toadette.png" class="characterImg">
+					<img src="img/mpsrIcons/wario.png" class="characterImg">
+					<img src="img/mpsrIcons/waluigi.png" class="characterImg">
+					<img src="img/mpsrIcons/dk.png" class="characterImg">
+					<img src="img/mpsrIcons/diddy.png" class="characterImg">
+					<img src="img/mpsrIcons/birdo.png" class="characterImg">
+					<img src="img/mpsrIcons/bowser.png" class="characterImg">
+					<img src="img/mpsrIcons/bowserjr.png" class="characterImg">
+					<img src="img/mpsrIcons/koopakid.png" class="characterImg">
+					<img src="img/mpsrIcons/pompom.png" class="characterImg">
+					<img src="img/mpsrIcons/goomba.png" class="characterImg">
+					<img src="img/mpsrIcons/koopa.png" class="characterImg">
+					<img src="img/mpsrIcons/drybones.png" class="characterImg">
+					<img src="img/mpsrIcons/monty.png" class="characterImg">
+					<img src="img/mpsrIcons/boo.png" class="characterImg">
+					<img src="img/mpsrIcons/spike.png" class="characterImg">
+					<img src="img/mpsrIcons/blooper.png" class="characterImg">
+					<img src="img/mpsrIcons/shyguy.png" class="characterImg">
+					<img src="img/mpsrIcons/hammerbro.png" class="characterImg">
+					<img src="img/mpsrIcons/kamek.png" class="characterImg">
+					<img src="img/mpsrIcons/comtest.png" class="characterImg">
 					<b class="turns" style="font-size: 30px;"> Turn 5/20 </b>
 				</td> </tr>
 
@@ -919,7 +947,8 @@
 			<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues" class="tutorialLink">Got an issue?</a> </span> <span class="settingsNote"> (You can also @ me on Twitter if you don't have a Github account)</span> <br> <br>
 
 			<span class="settingsText"> Created by <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> <br>
-			Mario Kart 8 (Deluxe) character sprites ripped by <a href="https://twitter.com/RandomTBush" class="tutorialLink">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="tutorialLink"> RicoDexter</a> & <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> </span> <br>
+			Default icons created by <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> using official artwork and inspired by <a href="https://mariopartylegacy.com/" class="tutorialLink">Mario Party Legacy</a> <br>
+			Mario Kart 8 Deluxe character sprites ripped by <a href="https://twitter.com/RandomTBush" class="tutorialLink">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="tutorialLink"> RicoDexter</a> & <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> </span> <br>
 			<span> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="tutorialLink">Counter Font</a> </span> <br>
 			<span> <a href="http://interactjs.io/" class="tutorialLink"> Interact.js</a> </span> <span class="settingsText">(the thing that enables drag 'n' drop) </span> <br> <br>
 		</div>
@@ -934,7 +963,7 @@
 			<b id="errorText"> There were problems loading this page. Please clear your local storage for this site and try again. <br>
 			If that didn't work, contact blueYOSHI <a href="https://twitter.com/yoshisrc">on Twitter</a> or <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new?template=bug_report.md">open an Issue on Github</a>. Thank you! </b> <br> <br>
 			<button id="errorButton" onclick="localStorage.clear()">Clear local storage</button>
-			<a id="errorLink" href="https://www.thewindowsclub.com/clear-cache-cookies-specific-website">How to clear local storage in Chrome & Firefox</a>
+			<a id="errorLink" href="https://www.thewindowsclub.com/clear-cache-cookies-specific-website">If the button didn't work (tutorial on how to clear cookies)</a>
 		</div>
 	</div>
 

@@ -580,6 +580,7 @@ function saveSettings (close) {
 
 	localStorage.setItem('enableInteract', document.getElementById('enableInteract').checked)
 	localStorage.setItem('curTheme', curTheme)
+	localStorage.setItem('iconStyle', document.querySelector('input[name="icons"]:checked').value)
 	localStorage.setItem('greenscreen', document.getElementById('greenscreen').checked)
 	localStorage.setItem('bgColor', document.getElementById('bgColor').value)
 	localStorage.setItem('textColor', document.getElementById('textColor').value)
@@ -616,6 +617,14 @@ function prepareMPO () {
 		document.getElementById('greenscreen').checked = stringToBoolean(localStorage.getItem('greenscreen'))
 		document.getElementById('bgColor').value = localStorage.getItem('bgColor')
 		changeTheme(curTheme)
+
+		if (localStorage.getItem('iconStyle') == 'mk8Icons') {
+			document.getElementById('mk8Icons').checked = true
+			changeIcons('icons')
+		} else {
+			document.getElementById('mpsrIcons').checked = true
+			document.getElementById('mpsrIcons2').checked = true
+		}
 
 		document.getElementById('textColor').value = localStorage.getItem('textColor')
 		changeTextColor('textColor')

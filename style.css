@@ -327,85 +327,85 @@ src: url("font.ttf");
 
 
 .mario {
-	background-image:url(img/mario.png);
+	background-image:url(img/mpsrIcons/mario.png);
 }
 .luigi {
-	background-image:url(img/luigi.png);
+	background-image:url(img/mpsrIcons/luigi.png);
 }
 .peach {
-	background-image:url(img/peach.png);
+	background-image:url(img/mpsrIcons/peach.png);
 }
 .yoshi {
-	background-image:url(img/yoshi.png);
+	background-image:url(img/mpsrIcons/yoshi.png);
 }
 .wario {
-	background-image:url(img/wario.png);
+	background-image:url(img/mpsrIcons/wario.png);
 }
 .waluigi {
-	background-image:url(img/waluigi.png);
+	background-image:url(img/mpsrIcons/waluigi.png);
 }
 .rosalina {
-	background-image:url(img/rosalina.png);
+	background-image:url(img/mpsrIcons/rosalina.png);
 }
 .daisy {
-	background-image:url(img/daisy.png);
+	background-image:url(img/mpsrIcons/daisy.png);
 }
 .toad {
-	background-image:url(img/toad.png);
+	background-image:url(img/mpsrIcons/toad.png);
 }
 .toadette {
-	background-image:url(img/toadette.png);
+	background-image:url(img/mpsrIcons/toadette.png);
 }
 .dk {
-	background-image:url(img/dk.png);
+	background-image:url(img/mpsrIcons/dk.png);
 }
 .diddy {
-	background-image:url(img/diddy.png);
+	background-image:url(img/mpsrIcons/diddy.png);
 }
 .birdo {
-	background-image:url(img/birdo.png);
+	background-image:url(img/mpsrIcons/birdo.png);
 }
 .bowser {
-	background-image:url(img/bowser.png);
+	background-image:url(img/mpsrIcons/bowser.png);
 }
 .bowserjr {
-	background-image:url(img/bowserjr.png);
+	background-image:url(img/mpsrIcons/bowserjr.png);
 }
 .koopakid {
-	background-image:url(img/koopakid.png);
+	background-image:url(img/mpsrIcons/koopakid.png);
 }
 .pompom {
-	background-image:url(img/pompom.png);
+	background-image:url(img/mpsrIcons/pompom.png);
 }
 .goomba {
-	background-image:url(img/goomba.png);
+	background-image:url(img/mpsrIcons/goomba.png);
 }
 .koopa {
-	background-image:url(img/koopa.png);
+	background-image:url(img/mpsrIcons/koopa.png);
 }
 .drybones {
-	background-image:url(img/drybones.png);
+	background-image:url(img/mpsrIcons/drybones.png);
 }
 .monty {
-	background-image:url(img/monty.png);
+	background-image:url(img/mpsrIcons/monty.png);
 }
 .boo {
-	background-image:url(img/boo.png);
+	background-image:url(img/mpsrIcons/boo.png);
 }
 .spike {
-	background-image:url(img/spike.png);
+	background-image:url(img/mpsrIcons/spike.png);
 }
 .blooper {
-	background-image:url(img/blooper.png);
+	background-image:url(img/mpsrIcons/blooper.png);
 }
 .shyguy {
-	background-image:url(img/shyguy.png);
+	background-image:url(img/mpsrIcons/shyguy.png);
 }
 .hammerbro {
-	background-image:url(img/hammerbro.png);
+	background-image:url(img/mpsrIcons/hammerbro.png);
 }
 .kamek {
-	background-image:url(img/kamek.png);
+	background-image:url(img/mpsrIcons/kamek.png);
 }
 
 .com {
@@ -529,6 +529,11 @@ specialDice
 stars
 coins
 */
+
+.iconLabel {
+	height: 40px;
+	width: 40px;
+}
 
 .gameLabel {
 	height: 25px;
