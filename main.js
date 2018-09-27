@@ -1977,31 +1977,18 @@ function changeIcons (id) {
 
 	for (var num = 0; num < charImg.length; num++) {
 		var charImgSrc = charImg[num].src
-		console.log(charImgSrc)
-
-		if (charImgSrc.startsWith('file') == true) {
-			//Pictures offline give the full path (file:C:\Users\ etc.) instead of just the image path (img/mk8Icons/mario.png) so the substring method doesn't work there and as such it would result in an infinite for loop.
-			//To use this offline the substring below needs to be modified. After substring only "mpsr/mario.png"/"mk8/luigi.png" should be left so everything up until that point needs to be removed.
-			//charImgSrc = charImgSrc.substring(66) //Reminder that it's only 66 in my case as usernames are included in the path (my username has 9 letters)
-			console.error('[MPO] Changing icons is *not* possible offline. Please use the online version or change the name of the folders (MPO uses the "mpsrIcons" folder by default, clear local storage if it doesn\'t). Editing the "changeIcons()" function in "main.js" is required to change icons while using MPO.')
-			document.getElementById('mpsrIcons').checked = true
-			return;
-		} else {
-			charImgSrc = charImgSrc.substring(4)
-		}
 
 		charImgSrc = charImgSrc.split('')
 		var result = []
-		for (var num2 = 0; num2 < charImgSrc.length; num2++) {
+		for (var num2 = charImgSrc.length; num2 > 0; num2--) {
 			if (charImgSrc[num2] == '/') {
-				result.push('/')
 				break;
 			} else {
 				result.push(charImgSrc[num2])
 			}
 		}
 		charImgSrc = charImgSrc.join('')
-		result = charImgSrc.substring(result.length)
+		result = charImgSrc.substring(charImgSrc.length - result.length)
 		charImg[num].src = ['img/', selected, '/', result].join('')
 	}
 }
