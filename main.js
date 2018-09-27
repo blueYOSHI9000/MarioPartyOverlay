@@ -1977,6 +1977,7 @@ function changeIcons (id) {
 
 	for (var num = 0; num < charImg.length; num++) {
 		var charImgSrc = charImg[num].src
+		console.log(charImgSrc)
 
 		if (charImgSrc.startsWith('file') == true) {
 			//Pictures offline give the full path (file:C:\Users\ etc.) instead of just the image path (img/mk8Icons/mario.png) so the substring method doesn't work there and as such it would result in an infinite for loop.
