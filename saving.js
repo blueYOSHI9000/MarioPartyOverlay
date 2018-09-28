@@ -792,12 +792,15 @@ function stringToBoolean(boolean) {
 */
 function resetSettings () {
 	document.getElementById('enableInteract').checked = false
+	document.getElementById('mpsrIcons').checked = true
 	document.getElementById('greenscreen').checked = false
 	document.getElementById('bgColor').value = '#0000FF'
 	document.getElementById('textColor').value = '#ffffff'
 	document.getElementById('enableHighlight').checked = true
 	document.getElementById('highlightColor').value = '#ff0000'
 	document.getElementById('noTie').checked = false
+	document.getElementById('autoSave').checked = false
+	document.getElementById('permSave').checked = false
 
 	document.getElementById('toP1Name').value = ''
 	document.getElementById('toP2Name').value = ''
@@ -815,12 +818,15 @@ function resetSettings () {
 
 	localStorage.setItem('enableInteract', document.getElementById('enableInteract').checked)
 	localStorage.setItem('curTheme', curTheme)
+	localStorage.setItem('iconStyle', document.querySelector('input[name="icons"]:checked').value)
 	localStorage.setItem('greenscreen', document.getElementById('greenscreen').checked)
 	localStorage.setItem('bgColor', document.getElementById('bgColor').value)
 	localStorage.setItem('textColor', document.getElementById('textColor').value)
 	localStorage.setItem('counterHighlight', document.getElementById('enableHighlight').checked)
 	localStorage.setItem('highlightColor', document.getElementById('highlightColor').value)
 	localStorage.setItem('noTie', document.getElementById('noTie').checked)
+	localStorage.setItem('autoSave', document.getElementById('autoSave').checked)
+	localStorage.setItem('permSave', document.getElementById('permSave').checked)
 
 	localStorage.setItem('toP1Name', document.getElementById('toP1Name').value)
 	localStorage.setItem('toP2Name', document.getElementById('toP2Name').value)
@@ -836,6 +842,7 @@ function resetSettings () {
 
 	document.getElementById('greenscreen').checked = false
 	changeTheme(1)
+	changeIcons('icons')
 	changeTextColor('textColor')
 
 	callHighlight(false, true)
