@@ -220,6 +220,10 @@ function backup() {
 	coins2 = document.getElementById('p2CoinsText').innerHTML
 	coins3 = document.getElementById('p3CoinsText').innerHTML
 	coins4 = document.getElementById('p4CoinsText').innerHTML
+
+	if (document.getElementById('permSave').checked == true) {
+		saveCounters()
+	}
 }
 
 /*
@@ -587,6 +591,8 @@ function saveSettings (close) {
 	localStorage.setItem('counterHighlight', document.getElementById('enableHighlight').checked)
 	localStorage.setItem('highlightColor', document.getElementById('highlightColor').value)
 	localStorage.setItem('noTie', document.getElementById('noTie').checked)
+	localStorage.setItem('autoSave', document.getElementById('autoSave').checked)
+	localStorage.setItem('permSave', document.getElementById('permSave').checked)
 
 	localStorage.setItem('toP1Name', document.getElementById('toP1Name').value)
 	localStorage.setItem('toP2Name', document.getElementById('toP2Name').value)
@@ -633,6 +639,8 @@ function prepareMPO () {
 		document.getElementById('highlightColor').value = localStorage.getItem('highlightColor')
 
 		document.getElementById('noTie').checked = stringToBoolean(localStorage.getItem('noTie'))
+		document.getElementById('autoSave').checked = stringToBoolean(localStorage.getItem('autoSave'))
+		document.getElementById('permSave').checked = stringToBoolean(localStorage.getItem('permSave'))
 
 		document.getElementById('toP1Name').value = localStorage.getItem('toP1Name')
 		document.getElementById('toP2Name').value = localStorage.getItem('toP2Name')

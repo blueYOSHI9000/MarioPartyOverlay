@@ -732,7 +732,7 @@
 					</tr>
 				</table>
 
-				<button onclick="saveCounters()" class="mobileButtons" style="width: 180px">Perm. Save Counters</button> <button onclick="resetCounters()" class="mobileButtons" style="width: 140px;">Reset Counters</button> <br> <br>
+				<button onclick="resetCounters()" class="mobileButtons" style="width: 140px;">Reset Counters</button> <br> <br>
 
 				<b style="font-size: 21px;"><a href="https://www.mariowiki.com/Bonus_Star">Super Mario Wiki - Bonus Stars</a> | <a href="https://www.giantbomb.com/bonus-stars/3015-3011/">Giant Bomb - Bonus Star List (without MP 9 & 10)</a></b> <br> <br>
 			</div>
@@ -792,7 +792,10 @@
 						<td> <b class="settingsText"> Don't use ties for the Coin Star: </b> <input type="checkbox" id="noTie" onchange="coinStarTie()"> </td>
 					</tr>
 					<tr>
-						<td> <b class="settingsText"> Automatically save/reload when changing turns: </b> <input type="checkbox" id="autoSave" onclick="if (this.checked == true) {backup()}"> </td>
+						<td> <b class="settingsText"> Automatically save/reload when updating turns: </b> <input type="checkbox" id="autoSave" onclick="if (this.checked == true) {backup()}"> </td>
+					</tr>
+					<tr>
+						<td> <b class="settingsText"> Save counters permanently (not getting deleted on site reload): </b> <input type="checkbox" id="permSave"> </td>
 					</tr>
 					<tr><td><div style="visibility: hidden;"> *Empty row* </div></td></tr>
 					<tr>
