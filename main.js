@@ -1541,11 +1541,11 @@ function coinStarTie (player) {
 		document.getElementById('coinStarCharacter').src = 'img/question.png'
 
 	} else if (tied.length == 1) {
-		document.getElementById('coinStarCharacter').src = 'img/' + tied[0] + '.png'
+		document.getElementById('coinStarCharacter').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[0] + '.png'
 
 	} else if (tied.length == 2) {
-		document.getElementById('coinStarTie1').src = 'img/' + tied[0] + '.png'
-		document.getElementById('coinStarTie4').src = 'img/' + tied[1] + '.png'
+		document.getElementById('coinStarTie1').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[0] + '.png'
+		document.getElementById('coinStarTie4').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[1] + '.png'
 
 		document.getElementById('coinStarTie1').style.height = '32px'
 		document.getElementById('coinStarTie1').style.top = '-24px'
@@ -1558,15 +1558,15 @@ function coinStarTie (player) {
 		document.getElementById('coinStarDiv').style.marginLeft = '0px'
 
 	} else if (tied.length == 3) {
-		document.getElementById('coinStarTie1').src = 'img/' + tied[0] + '.png'
-		document.getElementById('coinStarTie2').src = 'img/' + tied[1] + '.png'
-		document.getElementById('coinStarTie5').src = 'img/' + tied[2] + '.png'
+		document.getElementById('coinStarTie1').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[0] + '.png'
+		document.getElementById('coinStarTie2').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[1] + '.png'
+		document.getElementById('coinStarTie5').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[2] + '.png'
 
 	} else if (tied.length == 4) {
-		document.getElementById('coinStarTie1').src = 'img/' + tied[0] + '.png'
-		document.getElementById('coinStarTie2').src = 'img/' + tied[1] + '.png'
-		document.getElementById('coinStarTie3').src = 'img/' + tied[2] + '.png'
-		document.getElementById('coinStarTie4').src = 'img/' + tied[3] + '.png'
+		document.getElementById('coinStarTie1').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[0] + '.png'
+		document.getElementById('coinStarTie2').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[1] + '.png'
+		document.getElementById('coinStarTie3').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[2] + '.png'
+		document.getElementById('coinStarTie4').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[3] + '.png'
 
 	}
 }
