@@ -139,6 +139,7 @@ src: url("font.ttf");
 	height: 28px;
 	position: relative;
 	left: -33px;
+	top: 2px;
 }
 #coinStarTie4 {
 	height: 28px;
