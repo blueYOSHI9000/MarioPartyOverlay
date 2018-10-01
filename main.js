@@ -1468,6 +1468,8 @@ function coinStar (coinStarVar) {
 * @param {number} player Updates the coin star for that specific player
 */
 function coinStarTie (player) {
+	var icons = document.querySelector('input[name="icons"]:checked').value
+
 	if (player && document.getElementById('p' + player + 'CoinStarTie').checked == true) {
 		document.getElementById('p' + player + 'CoinStarTie').checked = false
 	} else if (player) {
@@ -1507,7 +1509,7 @@ function coinStarTie (player) {
 	document.getElementById('coinStarTie4').style.top = ''
 	document.getElementById('coinStarTie4').style.left = ''
 
-	document.getElementById('coinStarDiv').style.marginLeft = '8px'
+	document.getElementById('coinStarDiv').style.marginLeft = '12px'
 
 	var player1 = document.getElementById('p1CoinStarTie').checked
 	var player2 = document.getElementById('p2CoinStarTie').checked
@@ -1555,19 +1557,28 @@ function coinStarTie (player) {
 		document.getElementById('coinStarTie4').style.top = '-2px'
 		document.getElementById('coinStarTie4').style.left = '-31px'
 
-		document.getElementById('coinStarDiv').style.marginLeft = '0px'
-
+		if (icons == 'mpsrIcons') {
+			document.getElementById('coinStarDiv').style.marginLeft = '3px'
+		} else {
+			document.getElementById('coinStarDiv').style.marginLeft = '4px'
+		}
 	} else if (tied.length == 3) {
-		document.getElementById('coinStarTie1').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[0] + '.png'
-		document.getElementById('coinStarTie2').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[1] + '.png'
-		document.getElementById('coinStarTie5').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[2] + '.png'
+		document.getElementById('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png'
+		document.getElementById('coinStarTie2').src = 'img/' + icons + '/' + tied[1] + '.png'
+		document.getElementById('coinStarTie5').src = 'img/' + icons + '/' + tied[2] + '.png'
 
+		if (icons == 'mpsrIcons') {
+			document.getElementById('coinStarDiv').style.marginLeft = '10px'
+		}
 	} else if (tied.length == 4) {
-		document.getElementById('coinStarTie1').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[0] + '.png'
-		document.getElementById('coinStarTie2').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[1] + '.png'
-		document.getElementById('coinStarTie3').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[2] + '.png'
-		document.getElementById('coinStarTie4').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[3] + '.png'
+		document.getElementById('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png'
+		document.getElementById('coinStarTie2').src = 'img/' + icons + '/' + tied[1] + '.png'
+		document.getElementById('coinStarTie3').src = 'img/' + icons + '/' + tied[2] + '.png'
+		document.getElementById('coinStarTie4').src = 'img/' + icons + '/' + tied[3] + '.png'
 
+		if (icons == 'mpsrIcons') {
+			document.getElementById('coinStarDiv').style.marginLeft = '10px'
+		}
 	}
 }
 
@@ -1991,6 +2002,7 @@ function changeIcons (id) {
 		result = charImgSrc.substring(charImgSrc.length - result.length)
 		charImg[num].src = ['img/', selected, '/', result].join('')
 	}
+	coinStarTie()
 }
 
 /*
