@@ -336,6 +336,8 @@ function savePlayers (close) {
 	localStorage.setItem('bananas', document.getElementById('bananasOnOff').checked)
 	localStorage.setItem('coins', document.getElementById('coinsOnOff').checked)
 
+	localStorage.setItem('curGame', curGame)
+
 	if (close == true) {
 		showHideDiv('mobileSettings')
 	}
@@ -411,6 +413,9 @@ function resetPlayers () {
 	changeCom(2)
 	changeCom(3)
 	changeCom(4)
+
+	changeGame('all')
+	localStorage.setItem('curGame', 'all')
 
 	callDisplayOnOff()
 	changeStars()
@@ -701,6 +706,8 @@ function prepareMPO () {
 		if (document.getElementById('minigameWinsOnOff').checked == true) {
 			minigameWins()
 		}
+
+		changeGame(localStorage.getItem('curGame'))
 	}
 	if (localStorage.getItem('saveCounters') == 'true') {
 		document.getElementById('coinStarText').innerHTML = localStorage.getItem('coinStarVar')
