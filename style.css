@@ -98,11 +98,11 @@ src: url("font.ttf");
 	top: 3px;
 }
 #coinStarText {
-	margin-left: 9px;
+	left: 9px;
 }
 #coinStarDiv {
 	margin-top: 30px;
-	margin-left: 12px;
+	margin-left: 5px;
 	pointer-events: none;
 	position: relative;
 	left: -250px;
@@ -123,35 +123,29 @@ src: url("font.ttf");
 	left: 160px;
 	top: 10px;
 }
-#coinStarTie1 {
-	height: 28px;
+.coinStarTie {
+	height: 30px;
 	position: relative;
+}
+#coinStarTie1 {
 	top: -28px;
-	left: 33px;
+	left: 45px;
 }
 #coinStarTie2 {
-	height: 28px;
-	position: relative;
-	left: 32px;
 	top: -28px;
+	left: 40px;
 }
 #coinStarTie3 {
-	height: 28px;
-	position: relative;
-	left: -33px;
 	top: 2px;
+	left: -27px;
 }
 #coinStarTie4 {
-	height: 28px;
-	position: relative;
-	left: -35px;
 	top: 2px;
+	left: -32px;
 }
 #coinStarTie5 {
-	height: 28px;
-	position: relative;
-	left: 84px;
 	top: 2px;
+	left: 97px;
 }
 
 /* == Counter Inputs == */
@@ -437,6 +431,9 @@ src: url("font.ttf");
 .minigameWinsOnOff {
 	background-image:url(img/minigamewins.png);
 }
+.minigameMiniStarsOnOff {
+	background-image:url(img/minigameministars.png);
+}
 .redSpaceOnOff {
 	background-image:url(img/redspace.png);
 }
@@ -630,7 +627,7 @@ coins
 	background-color: rgba(0, 0, 0, 0.5);
 }
 #mobileSettingsContent {
-	width: 900px;
+	width: 950px;
 }
 
 /* == mobile version == */

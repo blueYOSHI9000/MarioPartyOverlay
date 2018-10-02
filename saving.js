@@ -318,6 +318,7 @@ function savePlayers (close) {
 	localStorage.setItem('happening', document.getElementById('happeningOnOff').checked)
 	localStorage.setItem('minigame', document.getElementById('minigameOnOff').checked)
 	localStorage.setItem('minigameWins', document.getElementById('minigameWinsOnOff').checked)
+	localStorage.setItem('minigameMiniStars', document.getElementById('minigameMiniStarsOnOff').checked)
 	localStorage.setItem('redSpace', document.getElementById('redSpaceOnOff').checked)
 	localStorage.setItem('running', document.getElementById('runningOnOff').checked)
 	localStorage.setItem('slow', document.getElementById('slowOnOff').checked)
@@ -361,6 +362,7 @@ function resetPlayers () {
 	localStorage.setItem('happening', true)
 	localStorage.setItem('minigame', true)
 	localStorage.setItem('minigameWins', false)
+	localStorage.setItem('minigameMiniStars', false)
 	localStorage.setItem('redSpace', false)
 	localStorage.setItem('running', false)
 	localStorage.setItem('slow', false)
@@ -382,6 +384,7 @@ function resetPlayers () {
 	document.getElementById('happeningOnOff').checked = true
 	document.getElementById('minigameOnOff').checked = true
 	document.getElementById('minigameWinsOnOff').checked = false
+	document.getElementById('minigameMiniStarsOnOff').checked = false
 	document.getElementById('redSpaceOnOff').checked = false
 	document.getElementById('runningOnOff').checked = false
 	document.getElementById('slowOnOff').checked = false
@@ -679,6 +682,7 @@ function prepareMPO () {
 		document.getElementById('happeningOnOff').checked = stringToBoolean(localStorage.getItem('happening'))
 		document.getElementById('minigameOnOff').checked = stringToBoolean(localStorage.getItem('minigame'))
 		document.getElementById('minigameWinsOnOff').checked = stringToBoolean(localStorage.getItem('minigameWins'))
+		document.getElementById('minigameMiniStarsOnOff').checked = stringToBoolean(localStorage.getItem('minigameMiniStars'))
 		document.getElementById('redSpaceOnOff').checked = stringToBoolean(localStorage.getItem('redSpace'))
 		document.getElementById('runningOnOff').checked = stringToBoolean(localStorage.getItem('running'))
 		document.getElementById('slowOnOff').checked = stringToBoolean(localStorage.getItem('slow'))
@@ -704,7 +708,9 @@ function prepareMPO () {
 		}
 
 		if (document.getElementById('minigameWinsOnOff').checked == true) {
-			minigameWins()
+			minigameWins('Wins')
+		} else if (document.getElementById('minigameMiniStarsOnOff').checked == true) {
+			minigameWins('MiniStars')
 		}
 
 		changeGame(localStorage.getItem('curGame'))

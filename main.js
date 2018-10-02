@@ -246,8 +246,9 @@ function displayOnOff (counter, start) {
 
 	if (document.getElementById(counter + 'OnOff').checked == false) {
 		var displayVar = 'none'
-		if (counter == 'minigame' && document.getElementById('minigameWinsOnOff').checked == true) {
+		if (counter == 'minigame' && (document.getElementById('minigameWinsOnOff').checked == true || document.getElementById('minigameMiniStarsOnOff').checked == true)) {
 			document.getElementById('minigameWinsOnOff').checked = false
+			document.getElementById('minigameMiniStarsOnOff').checked = false
 		} else if (counter == 'running' && document.getElementById('slowOnOff').checked == true) {
 			document.getElementById('slowOnOff').checked = false
 		} else if (counter == 'stars' && document.getElementById('inclBonusOnOff').checked == true) {
@@ -525,21 +526,38 @@ function slowHighlight (stars) {
 }
 
 /*
-* Replaces minigame coins with minigame wins.
+* Replaces minigame coins with minigame wins or mini-stars.
+* 
+* @param {string} type Which one should be used.
 */
-function minigameWins () {
-	var activated = document.getElementById('minigameWinsOnOff').checked
-	var source = 'img/minigamewins.png'
-
-	if (activated == true && document.getElementById('minigameOnOff').checked == false) {
-		document.getElementById('minigameOnOff').checked = true
-		displayOnOff('minigame')
+function minigameWins (type) {
+	if (type) {} else if (document.getElementById('minigameWinsOnOff').checked == true) {
+		var type = 'Wins'
+	} else if (document.getElementById('minigameMiniStarsOnOff').checked == true) {
+		var type = 'MiniStars'
+	} else {
+		var type = ''
 	}
 
-	if (activated == true) {
-		source = 'img/minigamewins.png'
+	if (document.getElementById('minigame' + type + 'OnOff').checked == true) {
+		if (document.getElementById('minigameOnOff').checked == false) {
+			document.getElementById('minigameOnOff').checked = true
+			displayOnOff('minigame')
+		}
+		document.getElementById('minigameWinsOnOff').checked = false
+		document.getElementById('minigameMiniStarsOnOff').checked = false
+		document.getElementById('minigame' + type + 'OnOff').checked = true
 	} else {
-		source = 'img/minigame.png'
+		document.getElementById('minigameWinsOnOff').checked = false
+		document.getElementById('minigameMiniStarsOnOff').checked = false
+		type = ''
+	}
+
+	var source = 'img/minigame.png'
+	if (type == 'MiniStars') {
+		source = 'img/minigameministars.png'
+	} else if (type == 'Wins') {
+		source = 'img/minigamewins.png'
 	}
 	
 	for (let num = 1; num < 5; num++) {
@@ -638,6 +656,12 @@ function changeGame (game) {
 	hideChars.push(document.querySelectorAll('.hammerbroSpan'))
 	hideChars.push(document.querySelectorAll('.kamekSpan'))
 
+	hideChars.push(document.querySelectorAll('.mp6C'))
+	hideChars.push(document.querySelectorAll('.mp7C'))
+	hideChars.push(document.querySelectorAll('.mp8C'))
+	hideChars.push(document.querySelectorAll('.mp9C'))
+	hideChars.push(document.querySelectorAll('.mpDSC'))
+
 	showChars.push(document.querySelectorAll('.marioSpan'))
 	showChars.push(document.querySelectorAll('.luigiSpan'))
 	showChars.push(document.querySelectorAll('.peachSpan'))
@@ -655,6 +679,7 @@ function changeGame (game) {
 	}
 	if (game == 'mp6' || game == 'all') {
 		showChars.push(document.querySelectorAll('.koopakidSpan'))
+		showChars.push(document.querySelectorAll('.mp6C'))
 	}
 	if (game == 'mp6' || game == 'mp7' || game == 'mp8') {
 		showChars.push(document.querySelectorAll('.booSpan'))
@@ -667,15 +692,25 @@ function changeGame (game) {
 		showChars.push(document.querySelectorAll('.birdoSpan'))
 		showChars.push(document.querySelectorAll('.drybonesSpan'))
 	}
+	if (game == 'mp7' || game == 'all') {
+		showChars.push(document.querySelectorAll('.mp7C'))
+	}
 	if (game == 'mp8') {
 		showChars.push(document.querySelectorAll('.blooperSpan'))
 		showChars.push(document.querySelectorAll('.hammerbroSpan'))
+		showChars.push(document.querySelectorAll('.mp8C'))
 	}
 	if (game == 'mp9') {
 		showChars.push(document.querySelectorAll('.koopaSpan'))
 		showChars.push(document.querySelectorAll('.shyguySpan'))
 		showChars.push(document.querySelectorAll('.kamekSpan'))
 		showChars.push(document.querySelectorAll('.birdoSpan'))
+		showChars.push(document.querySelectorAll('.mp9C'))
+	}
+	if (game == 'mp9' || game == 'mp10') {
+		hideChars.push(document.querySelectorAll('.happeningC'))
+	} else {
+		showChars.push(document.querySelectorAll('.happeningC'))
 	}
 	if (game == 'smp' || game ==  'all') {
 		showChars.push(document.querySelectorAll('.koopaSpan'))
@@ -690,6 +725,10 @@ function changeGame (game) {
 		showChars.push(document.querySelectorAll('.rosalinaSpan'))
 		showChars.push(document.querySelectorAll('.spikeSpan'))
 		showChars.push(document.querySelectorAll('.toadetteSpan'))
+		showChars.push(document.querySelectorAll('.mp10C'))
+	}
+	if (game == 'mpds' || game == 'all') {
+		showChars.push(document.querySelectorAll('.mpDSC'))
 	}
 	if (game == 'mpit' || game == 'mpsr' || game == 'mptt100' || game == 'smp') {
 		showChars.push(document.querySelectorAll('.rosalinaSpan'))
@@ -712,6 +751,23 @@ function changeGame (game) {
 		showChars.push(document.querySelectorAll('.hammerbroSpan'))
 		showChars.push(document.querySelectorAll('.drybonesSpan'))
 		showChars.push(document.querySelectorAll('.pompomSpan'))
+	}
+	if (game == 'all') {
+		showChars.push(document.querySelectorAll('.mp8C'))
+		showChars.push(document.querySelectorAll('.mp9C'))
+	}
+
+	if (game == 'mpa' || game == 'mpit' || game == 'mpsr' || game == 'mptt100' || game == 'smp') {
+		showChars.push(document.querySelectorAll('.mp6C'))
+		showChars.push(document.querySelectorAll('.mp7C'))
+		showChars.push(document.querySelectorAll('.mp8C'))
+		showChars.push(document.querySelectorAll('.mp9C'))
+		showChars.push(document.querySelectorAll('.mp10C'))
+		showChars.push(document.querySelectorAll('.mpDSC'))
+
+		document.getElementById('counterError').style = ''
+	} else {
+		document.getElementById('counterError').style = 'display: none;'
 	}
 
 	for (var num = 0; num < hideChars.length; num++) {
@@ -1509,7 +1565,8 @@ function coinStarTie (player) {
 	document.getElementById('coinStarTie4').style.top = ''
 	document.getElementById('coinStarTie4').style.left = ''
 
-	document.getElementById('coinStarDiv').style.marginLeft = '12px'
+	document.getElementById('coinStarDiv').style.marginLeft = '5px'
+	document.getElementById('coinStarText').style.left = '9px'
 
 	var player1 = document.getElementById('p1CoinStarTie').checked
 	var player2 = document.getElementById('p2CoinStarTie').checked
@@ -1543,24 +1600,28 @@ function coinStarTie (player) {
 		document.getElementById('coinStarCharacter').src = 'img/question.png'
 
 	} else if (tied.length == 1) {
-		document.getElementById('coinStarCharacter').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[0] + '.png'
+		document.getElementById('coinStarCharacter').src = 'img/' + icons + '/' + tied[0] + '.png'
 
+		if (icons == 'mpsrIcons') {
+			document.getElementById('coinStarText').style.left = '8px'
+		}
 	} else if (tied.length == 2) {
-		document.getElementById('coinStarTie1').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[0] + '.png'
-		document.getElementById('coinStarTie4').src = 'img/' + document.querySelector('input[name="icons"]:checked').value + '/' + tied[1] + '.png'
+		document.getElementById('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png'
+		document.getElementById('coinStarTie4').src = 'img/' + icons + '/' + tied[1] + '.png'
 
 		document.getElementById('coinStarTie1').style.height = '32px'
 		document.getElementById('coinStarTie1').style.top = '-24px'
-		document.getElementById('coinStarTie1').style.left = '42px'
+		document.getElementById('coinStarTie1').style.left = '48px'
 
 		document.getElementById('coinStarTie4').style.height = '32px'
 		document.getElementById('coinStarTie4').style.top = '-2px'
 		document.getElementById('coinStarTie4').style.left = '-31px'
 
 		if (icons == 'mpsrIcons') {
-			document.getElementById('coinStarDiv').style.marginLeft = '3px'
+			document.getElementById('coinStarDiv').style.marginLeft = '0px'
+			document.getElementById('coinStarText').style.left = '9px'
 		} else {
-			document.getElementById('coinStarDiv').style.marginLeft = '4px'
+			document.getElementById('coinStarDiv').style.marginLeft = '1px'
 		}
 	} else if (tied.length == 3) {
 		document.getElementById('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png'
@@ -1568,7 +1629,7 @@ function coinStarTie (player) {
 		document.getElementById('coinStarTie5').src = 'img/' + icons + '/' + tied[2] + '.png'
 
 		if (icons == 'mpsrIcons') {
-			document.getElementById('coinStarDiv').style.marginLeft = '10px'
+			document.getElementById('coinStarDiv').style.marginLeft = '3px'
 		}
 	} else if (tied.length == 4) {
 		document.getElementById('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png'
@@ -1577,7 +1638,7 @@ function coinStarTie (player) {
 		document.getElementById('coinStarTie4').src = 'img/' + icons + '/' + tied[3] + '.png'
 
 		if (icons == 'mpsrIcons') {
-			document.getElementById('coinStarDiv').style.marginLeft = '10px'
+			document.getElementById('coinStarDiv').style.marginLeft = '3px'
 		}
 	}
 }
