@@ -51,8 +51,8 @@
 	<span style="white-space: nowrap;" class="draggable">
 		<img src="img/tie.png" onclick="mobileButtons('coinStar')" id="coinStarHitbox">
 		<span id="coinStarDiv">
-			<span class="coinStarTieDiv"> <img src="img/tie.png" id="coinStarTie5"> <img src="img/tie.png" id="coinStarTie1" style="position: relative;"> <img src="img/tie.png" id="coinStarTie2" style="position: relative;"> 
-			<img src="img/tie.png" id="coinStarTie3" style="position: relative;"> <img src="img/tie.png" id="coinStarTie4" style="position: relative;"> </span>
+			<span class="coinStarTieDiv"> <img src="img/tie.png" id="coinStarTie5" class="coinStarTie"> <img src="img/tie.png" id="coinStarTie1" class="coinStarTie"> <img src="img/tie.png" id="coinStarTie2" class="coinStarTie"> 
+			<img src="img/tie.png" id="coinStarTie3" class="coinStarTie"> <img src="img/tie.png" id="coinStarTie4" class="coinStarTie"> </span>
 			<img src="img/coin.png" id="coinStar"> <img src="img/question.png" id="coinStarCharacter">
 			<span class="counterText" id="coinStarText"> 10 </span>
 		</span>
@@ -691,7 +691,7 @@
 					<tr>
 						<td> <label for="happeningOnOff" class="counterOnOffText">Happening (all MPs):</label> <input type="checkbox" id="happeningOnOff" class="counterOnOffInput" onchange="displayOnOff('happening')" checked> <label for="happeningOnOff" class="charSelectorLabel counterOnOff happeningOnOff"></label> </td>
 						<td> <label for="minigameOnOff" class="counterOnOffText">Minigame Coins (MP 1-8, DS):</label> <input type="checkbox" name="minigame" id="minigameOnOff" class="counterOnOffInput" onchange="displayOnOff('minigame')" checked> <label for="minigameOnOff" class="charSelectorLabel counterOnOff minigameOnOff"></label> </td>
-						<td> <label for="minigameWinsOnOff" class="counterOnOffText">Wins instead of Coins (MP 9):</label> <input type="checkbox" name="minigame" id="minigameWinsOnOff" class="counterOnOffInput" onchange="minigameWins()"> <label for="minigameWinsOnOff" class="charSelectorLabel counterOnOff minigameWinsOnOff"></label> </td>
+						<td> <label for="minigameWinsOnOff" class="counterOnOffText">Wins instead of Coins (MP DS):</label> <input type="checkbox" name="minigame" id="minigameWinsOnOff" class="counterOnOffInput" onchange="minigameWins()"> <label for="minigameWinsOnOff" class="charSelectorLabel counterOnOff minigameWinsOnOff"></label> </td>
 					</tr>
 					<tr>
 						<td> <label for="redSpaceOnOff" class="counterOnOffText">Red (7, 8):</label> <input type="checkbox" id="redSpaceOnOff" class="counterOnOffInput" onchange="displayOnOff('redSpace')"> <label for="redSpaceOnOff" class="charSelectorLabel counterOnOff redSpaceOnOff"></label> </td>
