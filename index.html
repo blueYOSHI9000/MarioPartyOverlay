@@ -14,9 +14,9 @@
 
 <body id="bodyElement" style="background: url(img/background.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;">
 
-	<button onclick="showHideDiv('mobileSettings')" class="mobileButtons" style="margin-right: 30px; width: 240px;"> Character & counter options </button>
-	<button onclick="showHideDiv('settings')" class="mobileButtons" style="margin-right: 30px; width: 80px;"> Settings </button>
-	<button class="mobileButtons" onclick="showHideDiv('tutorial')" style="width: 187px;"> Tutorial & Useful links </button> <br> <br>
+	<button onclick="showHideDiv(['mobileSettings'])" class="mobileButtons" style="margin-right: 30px; width: 240px;"> Character & counter options </button>
+	<button onclick="showHideDiv(['settings'])" class="mobileButtons" style="margin-right: 30px; width: 80px;"> Settings </button>
+	<button class="mobileButtons" onclick="showHideDiv(['tutorial'])" style="width: 187px;"> Tutorial & Useful links </button> <br> <br>
 
 	<div id="mobileTypeDiv">
 		<button class="mobileButtons" onclick="textOutput(true)" style="width: 150px; margin-left: 57px;">Generate & Copy</button> <input id="textOutput" onClick="this.select()" value="No stats generated yet." readonly> <button onclick="backup()" class="mobileButtons" style="width: 55px; margin-left: 30px;"> Save </button> <button onclick="restore()" id="reloadButton" class="mobileButtons" style="width: 75px;" disabled> Reload </button> <br>
@@ -60,99 +60,99 @@
 
 	<!-- Player Images & Counter Display -->
 	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(1)"> <img src="img/com.png" class="comImg" id="p1ComDisplay"> <img src="img/mpsrIcons/mario.png" class="characterImg" id="p1Img"> <br> </div>
-		<div class="draggable stars" onclick="mobileButtons('Stars', 1)"> <img class="counterDisplay" src="img/star.png" id="p1StarsDisplay"> <span class="counterText" id="p1StarsText">0</span> <br> </div>
+		<div class="draggable stars" onclick="mobileButtons('stars', 1)"> <img class="counterDisplay" src="img/star.png" id="p1StarsDisplay"> <span class="counterText" id="p1StarsText">0</span> <br> </div>
 		<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/star.png"> <span class="counterText">0</span> <br> </div>
-		<div class="draggable coins" onclick="mobileButtons('Coins', 1)"> <img class="counterDisplay" src="img/coin.png" id="p1CoinsDisplay"> <span class="counterText" id="p1CoinsText"> 10 </span> <br> </div>
+		<div class="draggable coins" onclick="mobileButtons('coins', 1)"> <img class="counterDisplay" src="img/coin.png" id="p1CoinsDisplay"> <span class="counterText" id="p1CoinsText"> 10 </span> <br> </div>
 
-		<div class="draggable happening" onclick="mobileButtons('Happening', 1)"> <img class="counterDisplay" src="img/happening.png" id="p1HappeningDisplay"> <span class="counterText" id="p1HappeningText"> 0 </span> <br> </div>
-		<div class="draggable minigame" onclick="mobileButtons('Minigame', 1)"> <img class="counterDisplay" src="img/minigame.png" id="p1MinigameDisplay"> <span class="counterText" id="p1MinigameText"> 0 </span> <br> </div>
+		<div class="draggable happening" onclick="mobileButtons('happening', 1)"> <img class="counterDisplay" src="img/happening.png" id="p1HappeningDisplay"> <span class="counterText" id="p1HappeningText"> 0 </span> <br> </div>
+		<div class="draggable minigame" onclick="mobileButtons('minigame', 1)"> <img class="counterDisplay" src="img/minigame.png" id="p1MinigameDisplay"> <span class="counterText" id="p1MinigameText"> 0 </span> <br> </div>
 
-		<div class="draggable redSpace" onclick="mobileButtons('RedSpace', 1)"> <img class="counterDisplay" src="img/redspace.png" id="p1RedSpaceDisplay"> <span class="counterText" id="p1RedSpaceText"> 0 </span> <br> </div>
-		<div class="draggable running" onclick="mobileButtons('Running', 1)"> <img class="counterDisplay" src="img/running.png" id="p1RunningDisplay"> <span class="counterText" id="p1RunningText"> 0 </span> <br> </div>
+		<div class="draggable redSpace" onclick="mobileButtons('redSpace', 1)"> <img class="counterDisplay" src="img/redspace.png" id="p1RedSpaceDisplay"> <span class="counterText" id="p1RedSpaceText"> 0 </span> <br> </div>
+		<div class="draggable running" onclick="mobileButtons('running', 1)"> <img class="counterDisplay" src="img/running.png" id="p1RunningDisplay"> <span class="counterText" id="p1RunningText"> 0 </span> <br> </div>
 
-		<div class="draggable shopping" onclick="mobileButtons('Shopping', 1)"> <img class="counterDisplay" src="img/shopping.png" id="p1ShoppingDisplay"> <span class="counterText" id="p1ShoppingText"> 0 </span> <br> </div>
-		<div class="draggable orb" onclick="mobileButtons('Orb', 1)"> <img class="counterDisplay" src="img/orb.png" id="p1OrbDisplay"> <span class="counterText" id="p1OrbText"> 0 </span> <br> </div>
-		<div class="draggable candy" onclick="mobileButtons('Candy', 1)"> <img class="counterDisplay" src="img/candy.png" id="p1CandyDisplay"> <span class="counterText" id="p1CandyText"> 0 </span> <br> </div>
+		<div class="draggable shopping" onclick="mobileButtons('shopping', 1)"> <img class="counterDisplay" src="img/shopping.png" id="p1ShoppingDisplay"> <span class="counterText" id="p1ShoppingText"> 0 </span> <br> </div>
+		<div class="draggable orb" onclick="mobileButtons('orb', 1)"> <img class="counterDisplay" src="img/orb.png" id="p1OrbDisplay"> <span class="counterText" id="p1OrbText"> 0 </span> <br> </div>
+		<div class="draggable candy" onclick="mobileButtons('candy', 1)"> <img class="counterDisplay" src="img/candy.png" id="p1CandyDisplay"> <span class="counterText" id="p1CandyText"> 0 </span> <br> </div>
 
-		<div class="draggable item" onclick="mobileButtons('Item', 1)"> <img class="counterDisplay" src="img/item.png" id="p1ItemDisplay"> <span class="counterText" id="p1ItemText"> 0 </span> <br> </div>
-		<div class="draggable friendSpace" onclick="mobileButtons('FriendSpace', 1)"> <img class="counterDisplay" src="img/friendspace.png" id="p1FriendSpaceDisplay"> <span class="counterText" id="p1FriendSpaceText"> 0 </span> <br> </div>
-		<div class="draggable hex" onclick="mobileButtons('Hex', 1)"> <img class="counterDisplay" src="img/hex.png" id="p1HexDisplay"> <span class="counterText" id="p1HexText"> 0 </span> <br> </div>
+		<div class="draggable item" onclick="mobileButtons('item', 1)"> <img class="counterDisplay" src="img/item.png" id="p1ItemDisplay"> <span class="counterText" id="p1ItemText"> 0 </span> <br> </div>
+		<div class="draggable friendSpace" onclick="mobileButtons('friendSpace', 1)"> <img class="counterDisplay" src="img/friendspace.png" id="p1FriendSpaceDisplay"> <span class="counterText" id="p1FriendSpaceText"> 0 </span> <br> </div>
+		<div class="draggable hex" onclick="mobileButtons('hex', 1)"> <img class="counterDisplay" src="img/hex.png" id="p1HexDisplay"> <span class="counterText" id="p1HexText"> 0 </span> <br> </div>
 
-		<div class="draggable spinSpace" onclick="mobileButtons('SpinSpace', 1)"> <img class="counterDisplay" src="img/spinspace.png" id="p1SpinSpaceDisplay"> <span class="counterText" id="p1SpinSpaceText"> 0 </span> <br> </div>
-		<div class="draggable miniZtar" onclick="mobileButtons('MiniZtar', 1)"> <img class="counterDisplay" src="img/miniztar.png" id="p1MiniZtarDisplay"> <span class="counterText" id="p1MiniZtarText"> 0 </span> <br> </div>
-		<div class="draggable specialDice" onclick="mobileButtons('SpecialDice', 1)"> <img class="counterDisplay" src="img/specialdice.png" id="p1SpecialDiceDisplay"> <span class="counterText" id="p1SpecialDiceText"> 0 </span> <br> </div>
+		<div class="draggable spinSpace" onclick="mobileButtons('spinSpace', 1)"> <img class="counterDisplay" src="img/spinspace.png" id="p1SpinSpaceDisplay"> <span class="counterText" id="p1SpinSpaceText"> 0 </span> <br> </div>
+		<div class="draggable minus" onclick="mobileButtons('minus', 1)"> <img class="counterDisplay" src="img/minus.png" id="p1MinusDisplay"> <span class="counterText" id="p1MinusText"> 0 </span> <br> </div>
+		<div class="draggable specialDice" onclick="mobileButtons('specialDice', 1)"> <img class="counterDisplay" src="img/specialdice.png" id="p1SpecialDiceDisplay"> <span class="counterText" id="p1SpecialDiceText"> 0 </span> <br> </div>
 	</div>
 
 	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(2)"> <img src="img/com.png" class="comImg" id="p2ComDisplay"> <img src="img/mpsrIcons/luigi.png" class="characterImg " id="p2Img"> <br> </div>
-		<div class="draggable stars" onclick="mobileButtons('Stars', 2)"> <img class="counterDisplay" src="img/star.png" id="p2StarsDisplay"> <span class="counterText" id="p2StarsText">0</span> <br> </div>
+		<div class="draggable stars" onclick="mobileButtons('stars', 2)"> <img class="counterDisplay" src="img/star.png" id="p2StarsDisplay"> <span class="counterText" id="p2StarsText">0</span> <br> </div>
 		<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/star.png"> <span class="counterText">0</span> <br> </div>
-		<div class="draggable coins" onclick="mobileButtons('Coins', 2)"> <img class="counterDisplay" src="img/coin.png" id="p2CoinsDisplay"> <span class="counterText" id="p2CoinsText"> 10 </span> <br> </div>
+		<div class="draggable coins" onclick="mobileButtons('coins', 2)"> <img class="counterDisplay" src="img/coin.png" id="p2CoinsDisplay"> <span class="counterText" id="p2CoinsText"> 10 </span> <br> </div>
 
-		<div class="draggable happening" onclick="mobileButtons('Happening', 2)"> <img class="counterDisplay" src="img/happening.png" id="p2HappeningDisplay"> <span class="counterText" id="p2HappeningText"> 0 </span> <br> </div>
-		<div class="draggable minigame" onclick="mobileButtons('Minigame', 2)"> <img class="counterDisplay" src="img/minigame.png" id="p2MinigameDisplay"> <span class="counterText" id="p2MinigameText"> 0 </span> <br> </div>
+		<div class="draggable happening" onclick="mobileButtons('happening', 2)"> <img class="counterDisplay" src="img/happening.png" id="p2HappeningDisplay"> <span class="counterText" id="p2HappeningText"> 0 </span> <br> </div>
+		<div class="draggable minigame" onclick="mobileButtons('minigame', 2)"> <img class="counterDisplay" src="img/minigame.png" id="p2MinigameDisplay"> <span class="counterText" id="p2MinigameText"> 0 </span> <br> </div>
 
-		<div class="draggable redSpace" onclick="mobileButtons('RedSpace', 2)"> <img class="counterDisplay" src="img/redspace.png" id="p2RedSpaceDisplay"> <span class="counterText" id="p2RedSpaceText"> 0 </span> <br> </div>
-		<div class="draggable running" onclick="mobileButtons('Running', 2)"> <img class="counterDisplay" src="img/running.png" id="p2RunningDisplay"> <span class="counterText" id="p2RunningText"> 0 </span> <br> </div>
+		<div class="draggable redSpace" onclick="mobileButtons('redSpace', 2)"> <img class="counterDisplay" src="img/redspace.png" id="p2RedSpaceDisplay"> <span class="counterText" id="p2RedSpaceText"> 0 </span> <br> </div>
+		<div class="draggable running" onclick="mobileButtons('running', 2)"> <img class="counterDisplay" src="img/running.png" id="p2RunningDisplay"> <span class="counterText" id="p2RunningText"> 0 </span> <br> </div>
 
-		<div class="draggable shopping" onclick="mobileButtons('Shopping', 2)"> <img class="counterDisplay" src="img/shopping.png" id="p2ShoppingDisplay"> <span class="counterText" id="p2ShoppingText"> 0 </span> <br> </div>
-		<div class="draggable orb" onclick="mobileButtons('Orb', 2)"> <img class="counterDisplay" src="img/orb.png" id="p2OrbDisplay"> <span class="counterText" id="p2OrbText"> 0 </span> <br> </div>
-		<div class="draggable candy" onclick="mobileButtons('Candy', 2)"> <img class="counterDisplay" src="img/candy.png" id="p2CandyDisplay"> <span class="counterText" id="p2CandyText"> 0 </span> <br> </div>
+		<div class="draggable shopping" onclick="mobileButtons('shopping', 2)"> <img class="counterDisplay" src="img/shopping.png" id="p2ShoppingDisplay"> <span class="counterText" id="p2ShoppingText"> 0 </span> <br> </div>
+		<div class="draggable orb" onclick="mobileButtons('orb', 2)"> <img class="counterDisplay" src="img/orb.png" id="p2OrbDisplay"> <span class="counterText" id="p2OrbText"> 0 </span> <br> </div>
+		<div class="draggable candy" onclick="mobileButtons('candy', 2)"> <img class="counterDisplay" src="img/candy.png" id="p2CandyDisplay"> <span class="counterText" id="p2CandyText"> 0 </span> <br> </div>
 
-		<div class="draggable item" onclick="mobileButtons('Item', 2)"> <img class="counterDisplay" src="img/item.png" id="p2ItemDisplay"> <span class="counterText" id="p2ItemText"> 0 </span> <br> </div>
-		<div class="draggable friendSpace" onclick="mobileButtons('FriendSpace', 2)"> <img class="counterDisplay" src="img/friendspace.png" id="p2FriendSpaceDisplay"> <span class="counterText" id="p2FriendSpaceText"> 0 </span> <br> </div>
-		<div class="draggable hex" onclick="mobileButtons('Hex', 2)"> <img class="counterDisplay" src="img/hex.png" id="p2HexDisplay"> <span class="counterText" id="p2HexText"> 0 </span> <br> </div>
+		<div class="draggable item" onclick="mobileButtons('item', 2)"> <img class="counterDisplay" src="img/item.png" id="p2ItemDisplay"> <span class="counterText" id="p2ItemText"> 0 </span> <br> </div>
+		<div class="draggable friendSpace" onclick="mobileButtons('friendSpace', 2)"> <img class="counterDisplay" src="img/friendspace.png" id="p2FriendSpaceDisplay"> <span class="counterText" id="p2FriendSpaceText"> 0 </span> <br> </div>
+		<div class="draggable hex" onclick="mobileButtons('hex', 2)"> <img class="counterDisplay" src="img/hex.png" id="p2HexDisplay"> <span class="counterText" id="p2HexText"> 0 </span> <br> </div>
 
-		<div class="draggable spinSpace" onclick="mobileButtons('SpinSpace', 2)"> <img class="counterDisplay" src="img/spinspace.png" id="p2SpinSpaceDisplay"> <span class="counterText" id="p2SpinSpaceText"> 0 </span> <br> </div>
-		<div class="draggable miniZtar" onclick="mobileButtons('MiniZtar', 2)"> <img class="counterDisplay" src="img/miniztar.png" id="p2MiniZtarDisplay"> <span class="counterText" id="p2MiniZtarText"> 0 </span> <br> </div>
-		<div class="draggable specialDice" onclick="mobileButtons('SpecialDice', 2)"> <img class="counterDisplay" src="img/specialdice.png" id="p2SpecialDiceDisplay"> <span class="counterText" id="p2SpecialDiceText"> 0 </span> <br> </div>
+		<div class="draggable spinSpace" onclick="mobileButtons('spinSpace', 2)"> <img class="counterDisplay" src="img/spinspace.png" id="p2SpinSpaceDisplay"> <span class="counterText" id="p2SpinSpaceText"> 0 </span> <br> </div>
+		<div class="draggable minus" onclick="mobileButtons('minus', 2)"> <img class="counterDisplay" src="img/minus.png" id="p2MinusDisplay"> <span class="counterText" id="p2MinusText"> 0 </span> <br> </div>
+		<div class="draggable specialDice" onclick="mobileButtons('specialDice', 2)"> <img class="counterDisplay" src="img/specialdice.png" id="p2SpecialDiceDisplay"> <span class="counterText" id="p2SpecialDiceText"> 0 </span> <br> </div>
 	</div>
 
 	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(3)"> <img src="img/com.png" class="comImg" id="p3ComDisplay"> <img src="img/mpsrIcons/yoshi.png" class="characterImg " id="p3Img"> <br> </div>
-		<div class="draggable stars" onclick="mobileButtons('Stars', 3)"> <img class="counterDisplay" src="img/star.png" id="p3StarsDisplay"> <span class="counterText" id="p3StarsText">0</span> <br> </div>
+		<div class="draggable stars" onclick="mobileButtons('stars', 3)"> <img class="counterDisplay" src="img/star.png" id="p3StarsDisplay"> <span class="counterText" id="p3StarsText">0</span> <br> </div>
 		<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/star.png"> <span class="counterText">0</span> <br> </div>
-		<div class="draggable coins" onclick="mobileButtons('Coins', 3)"> <img class="counterDisplay" src="img/coin.png" id="p3CoinsDisplay"> <span class="counterText" id="p3CoinsText"> 10 </span> <br> </div>
+		<div class="draggable coins" onclick="mobileButtons('coins', 3)"> <img class="counterDisplay" src="img/coin.png" id="p3CoinsDisplay"> <span class="counterText" id="p3CoinsText"> 10 </span> <br> </div>
 
-		<div class="draggable happening" onclick="mobileButtons('Happening', 3)"> <img class="counterDisplay" src="img/happening.png" id="p3HappeningDisplay"> <span class="counterText" id="p3HappeningText"> 0 </span> <br> </div>
-		<div class="draggable minigame" onclick="mobileButtons('Minigame', 3)"> <img class="counterDisplay" src="img/minigame.png" id="p3MinigameDisplay"> <span class="counterText" id="p3MinigameText"> 0 </span> <br> </div>
+		<div class="draggable happening" onclick="mobileButtons('happening', 3)"> <img class="counterDisplay" src="img/happening.png" id="p3HappeningDisplay"> <span class="counterText" id="p3HappeningText"> 0 </span> <br> </div>
+		<div class="draggable minigame" onclick="mobileButtons('minigame', 3)"> <img class="counterDisplay" src="img/minigame.png" id="p3MinigameDisplay"> <span class="counterText" id="p3MinigameText"> 0 </span> <br> </div>
 
-		<div class="draggable redSpace" onclick="mobileButtons('RedSpace', 3)"> <img class="counterDisplay" src="img/redspace.png" id="p3RedSpaceDisplay"> <span class="counterText" id="p3RedSpaceText"> 0 </span> <br> </div>
-		<div class="draggable running" onclick="mobileButtons('Running', 3)"> <img class="counterDisplay" src="img/running.png" id="p3RunningDisplay"> <span class="counterText" id="p3RunningText"> 0 </span> <br> </div>
+		<div class="draggable redSpace" onclick="mobileButtons('redSpace', 3)"> <img class="counterDisplay" src="img/redspace.png" id="p3RedSpaceDisplay"> <span class="counterText" id="p3RedSpaceText"> 0 </span> <br> </div>
+		<div class="draggable running" onclick="mobileButtons('running', 3)"> <img class="counterDisplay" src="img/running.png" id="p3RunningDisplay"> <span class="counterText" id="p3RunningText"> 0 </span> <br> </div>
 
-		<div class="draggable shopping" onclick="mobileButtons('Shopping', 3)"> <img class="counterDisplay" src="img/shopping.png" id="p3ShoppingDisplay"> <span class="counterText" id="p3ShoppingText"> 0 </span> <br> </div>
-		<div class="draggable orb" onclick="mobileButtons('Orb', 3)"> <img class="counterDisplay" src="img/orb.png" id="p3OrbDisplay"> <span class="counterText" id="p3OrbText"> 0 </span> <br> </div>
-		<div class="draggable candy" onclick="mobileButtons('Candy', 3)"> <img class="counterDisplay" src="img/candy.png" id="p3CandyDisplay"> <span class="counterText" id="p3CandyText"> 0 </span> <br> </div>
+		<div class="draggable shopping" onclick="mobileButtons('shopping', 3)"> <img class="counterDisplay" src="img/shopping.png" id="p3ShoppingDisplay"> <span class="counterText" id="p3ShoppingText"> 0 </span> <br> </div>
+		<div class="draggable orb" onclick="mobileButtons('orb', 3)"> <img class="counterDisplay" src="img/orb.png" id="p3OrbDisplay"> <span class="counterText" id="p3OrbText"> 0 </span> <br> </div>
+		<div class="draggable candy" onclick="mobileButtons('candy', 3)"> <img class="counterDisplay" src="img/candy.png" id="p3CandyDisplay"> <span class="counterText" id="p3CandyText"> 0 </span> <br> </div>
 
-		<div class="draggable item" onclick="mobileButtons('Item', 3)"> <img class="counterDisplay" src="img/item.png" id="p3ItemDisplay"> <span class="counterText" id="p3ItemText"> 0 </span> <br> </div>
-		<div class="draggable friendSpace" onclick="mobileButtons('FriendSpace', 3)"> <img class="counterDisplay" src="img/friendspace.png" id="p3FriendSpaceDisplay"> <span class="counterText" id="p3FriendSpaceText"> 0 </span> <br> </div>
-		<div class="draggable hex" onclick="mobileButtons('Hex', 3)"> <img class="counterDisplay" src="img/hex.png" id="p3HexDisplay"> <span class="counterText" id="p3HexText"> 0 </span> <br> </div>
+		<div class="draggable item" onclick="mobileButtons('item', 3)"> <img class="counterDisplay" src="img/item.png" id="p3ItemDisplay"> <span class="counterText" id="p3ItemText"> 0 </span> <br> </div>
+		<div class="draggable friendSpace" onclick="mobileButtons('friendSpace', 3)"> <img class="counterDisplay" src="img/friendspace.png" id="p3FriendSpaceDisplay"> <span class="counterText" id="p3FriendSpaceText"> 0 </span> <br> </div>
+		<div class="draggable hex" onclick="mobileButtons('hex', 3)"> <img class="counterDisplay" src="img/hex.png" id="p3HexDisplay"> <span class="counterText" id="p3HexText"> 0 </span> <br> </div>
 
-		<div class="draggable spinSpace" onclick="mobileButtons('SpinSpace', 3)"> <img class="counterDisplay" src="img/spinspace.png" id="p3SpinSpaceDisplay"> <span class="counterText" id="p3SpinSpaceText"> 0 </span> <br> </div>
-		<div class="draggable miniZtar" onclick="mobileButtons('MiniZtar', 3)"> <img class="counterDisplay" src="img/miniztar.png" id="p3MiniZtarDisplay"> <span class="counterText" id="p3MiniZtarText"> 0 </span> <br> </div>
-		<div class="draggable specialDice" onclick="mobileButtons('SpecialDice', 3)"> <img class="counterDisplay" src="img/specialdice.png" id="p3SpecialDiceDisplay"> <span class="counterText" id="p3SpecialDiceText"> 0 </span> <br> </div>
+		<div class="draggable spinSpace" onclick="mobileButtons('spinSpace', 3)"> <img class="counterDisplay" src="img/spinspace.png" id="p3SpinSpaceDisplay"> <span class="counterText" id="p3SpinSpaceText"> 0 </span> <br> </div>
+		<div class="draggable minus" onclick="mobileButtons('minus', 3)"> <img class="counterDisplay" src="img/minus.png" id="p3MinusDisplay"> <span class="counterText" id="p3MinusText"> 0 </span> <br> </div>
+		<div class="draggable specialDice" onclick="mobileButtons('specialDice', 3)"> <img class="counterDisplay" src="img/specialdice.png" id="p3SpecialDiceDisplay"> <span class="counterText" id="p3SpecialDiceText"> 0 </span> <br> </div>
 	</div>
 
 	<div class="player"> <div style="position: relative;" class="draggable" onclick="coinStarTie(4)"> <img src="img/com.png" class="comImg" id="p4ComDisplay"> <img src="img/mpsrIcons/peach.png" class="characterImg " id="p4Img"> <br> </div>
-		<div class="draggable stars" onclick="mobileButtons('Stars', 4)"> <img class="counterDisplay" src="img/star.png" id="p4StarsDisplay"> <span class="counterText" id="p4StarsText">0</span> <br> </div>
+		<div class="draggable stars" onclick="mobileButtons('stars', 4)"> <img class="counterDisplay" src="img/star.png" id="p4StarsDisplay"> <span class="counterText" id="p4StarsText">0</span> <br> </div>
 		<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/star.png"> <span class="counterText">0</span> <br> </div>
-		<div class="draggable coins" onclick="mobileButtons('Coins', 4)"> <img class="counterDisplay" src="img/coin.png" id="p4CoinsDisplay"> <span class="counterText" id="p4CoinsText"> 10 </span> <br> </div>
+		<div class="draggable coins" onclick="mobileButtons('coins', 4)"> <img class="counterDisplay" src="img/coin.png" id="p4CoinsDisplay"> <span class="counterText" id="p4CoinsText"> 10 </span> <br> </div>
 
-		<div class="draggable happening" onclick="mobileButtons('Happening', 4)"> <img class="counterDisplay" src="img/happening.png" id="p4HappeningDisplay"> <span class="counterText" id="p4HappeningText"> 0 </span> <br> </div>
-		<div class="draggable minigame" onclick="mobileButtons('Minigame', 4)"> <img class="counterDisplay" src="img/minigame.png" id="p4MinigameDisplay"> <span class="counterText" id="p4MinigameText"> 0 </span> <br> </div>
+		<div class="draggable happening" onclick="mobileButtons('happening', 4)"> <img class="counterDisplay" src="img/happening.png" id="p4HappeningDisplay"> <span class="counterText" id="p4HappeningText"> 0 </span> <br> </div>
+		<div class="draggable minigame" onclick="mobileButtons('minigame', 4)"> <img class="counterDisplay" src="img/minigame.png" id="p4MinigameDisplay"> <span class="counterText" id="p4MinigameText"> 0 </span> <br> </div>
 
-		<div class="draggable redSpace" onclick="mobileButtons('RedSpace', 4)"> <img class="counterDisplay" src="img/redspace.png" id="p4RedSpaceDisplay"> <span class="counterText" id="p4RedSpaceText"> 0 </span> <br> </div>
-		<div class="draggable running" onclick="mobileButtons('Running', 4)"> <img class="counterDisplay" src="img/running.png" id="p4RunningDisplay"> <span class="counterText" id="p4RunningText"> 0 </span> <br> </div>
+		<div class="draggable redSpace" onclick="mobileButtons('redSpace', 4)"> <img class="counterDisplay" src="img/redspace.png" id="p4RedSpaceDisplay"> <span class="counterText" id="p4RedSpaceText"> 0 </span> <br> </div>
+		<div class="draggable running" onclick="mobileButtons('running', 4)"> <img class="counterDisplay" src="img/running.png" id="p4RunningDisplay"> <span class="counterText" id="p4RunningText"> 0 </span> <br> </div>
 
-		<div class="draggable shopping" onclick="mobileButtons('Shopping', 4)"> <img class="counterDisplay" src="img/shopping.png" id="p4ShoppingDisplay"> <span class="counterText" id="p4ShoppingText"> 0 </span> <br> </div>
-		<div class="draggable orb" onclick="mobileButtons('Orb', 4)"> <img class="counterDisplay" src="img/orb.png" id="p4OrbDisplay"> <span class="counterText" id="p4OrbText"> 0 </span> <br> </div>
-		<div class="draggable candy" onclick="mobileButtons('Candy', 4)"> <img class="counterDisplay" src="img/candy.png" id="p4CandyDisplay"> <span class="counterText" id="p4CandyText"> 0 </span> <br> </div>
+		<div class="draggable shopping" onclick="mobileButtons('shopping', 4)"> <img class="counterDisplay" src="img/shopping.png" id="p4ShoppingDisplay"> <span class="counterText" id="p4ShoppingText"> 0 </span> <br> </div>
+		<div class="draggable orb" onclick="mobileButtons('orb', 4)"> <img class="counterDisplay" src="img/orb.png" id="p4OrbDisplay"> <span class="counterText" id="p4OrbText"> 0 </span> <br> </div>
+		<div class="draggable candy" onclick="mobileButtons('candy', 4)"> <img class="counterDisplay" src="img/candy.png" id="p4CandyDisplay"> <span class="counterText" id="p4CandyText"> 0 </span> <br> </div>
 
-		<div class="draggable item" onclick="mobileButtons('Item', 4)"> <img class="counterDisplay" src="img/item.png" id="p4ItemDisplay"> <span class="counterText" id="p4ItemText"> 0 </span> <br> </div>
-		<div class="draggable friendSpace" onclick="mobileButtons('FriendSpace', 4)"> <img class="counterDisplay" src="img/friendspace.png" id="p4FriendSpaceDisplay"> <span class="counterText" id="p4FriendSpaceText"> 0 </span> <br> </div>
-		<div class="draggable hex" onclick="mobileButtons('Hex', 4)"> <img class="counterDisplay" src="img/hex.png" id="p4HexDisplay"> <span class="counterText" id="p4HexText"> 0 </span> <br> </div>
+		<div class="draggable item" onclick="mobileButtons('item', 4)"> <img class="counterDisplay" src="img/item.png" id="p4ItemDisplay"> <span class="counterText" id="p4ItemText"> 0 </span> <br> </div>
+		<div class="draggable friendSpace" onclick="mobileButtons('friendSpace', 4)"> <img class="counterDisplay" src="img/friendspace.png" id="p4FriendSpaceDisplay"> <span class="counterText" id="p4FriendSpaceText"> 0 </span> <br> </div>
+		<div class="draggable hex" onclick="mobileButtons('hex', 4)"> <img class="counterDisplay" src="img/hex.png" id="p4HexDisplay"> <span class="counterText" id="p4HexText"> 0 </span> <br> </div>
 
-		<div class="draggable spinSpace" onclick="mobileButtons('SpinSpace', 4)"> <img class="counterDisplay" src="img/spinspace.png" id="p4SpinSpaceDisplay"> <span class="counterText" id="p4SpinSpaceText"> 0 </span> <br> </div>
-		<div class="draggable miniZtar" onclick="mobileButtons('MiniZtar', 4)"> <img class="counterDisplay" src="img/miniztar.png" id="p4MiniZtarDisplay"> <span class="counterText" id="p4MiniZtarText"> 0 </span> <br> </div>
-		<div class="draggable specialDice" onclick="mobileButtons('SpecialDice', 4)"> <img class="counterDisplay" src="img/specialdice.png" id="p4SpecialDiceDisplay"> <span class="counterText" id="p4SpecialDiceText"> 0 </span> <br> </div>
+		<div class="draggable spinSpace" onclick="mobileButtons('spinSpace', 4)"> <img class="counterDisplay" src="img/spinspace.png" id="p4SpinSpaceDisplay"> <span class="counterText" id="p4SpinSpaceText"> 0 </span> <br> </div>
+		<div class="draggable minus" onclick="mobileButtons('minus', 4)"> <img class="counterDisplay" src="img/minus.png" id="p4MinusDisplay"> <span class="counterText" id="p4MinusText"> 0 </span> <br> </div>
+		<div class="draggable specialDice" onclick="mobileButtons('specialDice', 4)"> <img class="counterDisplay" src="img/specialdice.png" id="p4SpecialDiceDisplay"> <span class="counterText" id="p4SpecialDiceText"> 0 </span> <br> </div>
 	</div>
 
 	<!-- Mario Party Counter Settings -->
@@ -714,7 +714,7 @@
 					</tr>
 					<tr class="mp9C mp10C">
 						<td class="mp9C"> <label for="spinSpaceOnOff" class="counterOnOffText">Spin (9):</label> <input type="checkbox" id="spinSpaceOnOff" class="counterOnOffInput" onchange="displayOnOff('spinSpace')"> <label for="spinSpaceOnOff" class="charSelectorLabel counterOnOff spinSpaceOnOff"></label> </td>
-						<td> <label for="miniZtarOnOff" class="counterOnOffText">Minus (9, 10):</label> <input type="checkbox" id="miniZtarOnOff" class="counterOnOffInput" onchange="displayOnOff('miniZtar')"> <label for="miniZtarOnOff" class="charSelectorLabel counterOnOff miniZtarOnOff"></label> </td>
+						<td> <label for="minusOnOff" class="counterOnOffText">Minus (9, 10):</label> <input type="checkbox" id="minusOnOff" class="counterOnOffInput" onchange="displayOnOff('minus')"> <label for="minusOnOff" class="charSelectorLabel counterOnOff minusOnOff"></label> </td>
 						<td> <label for="specialDiceOnOff" class="counterOnOffText">Dice Block (9, 10):</label> <input type="checkbox" id="specialDiceOnOff" class="counterOnOffInput" onchange="displayOnOff('specialDice')"> <label for="specialDiceOnOff" class="charSelectorLabel counterOnOff specialDiceOnOff"></label> </td>
 					</tr>
 					<tr>
@@ -742,7 +742,7 @@
 			</div>
 
 			<!-- Reset/save Settings -->
-			<button onclick="resetPlayers()" id="resetPlayersButton" class="mobileButtons" style="width: 130px;"> Reset Options </button> <div class="settingsClose"> <span class="settingsNote">(Will be saved in local storage)</span> <button onclick="savePlayers(true)" class="mobileButtons" style="width: 120px;"> Save &amp; Close </button> <button onclick="savePlayers()" class="mobileButtons" style="width: 55px;"> Save </button> <button onclick="showHideDiv('mobileSettings')" class="mobileButtons"> Close </button> </div>
+			<button onclick="resetPlayers()" id="resetPlayersButton" class="mobileButtons" style="width: 130px;"> Reset Options </button> <div class="settingsClose"> <span class="settingsNote">(Will be saved in local storage)</span> <button onclick="savePlayers(true)" class="mobileButtons" style="width: 120px;"> Save &amp; Close </button> <button onclick="savePlayers()" class="mobileButtons" style="width: 55px;"> Save </button> <button onclick="showHideDiv(['mobileSettings'])" class="mobileButtons"> Close </button> </div>
 		</div>
 	</div>
 
@@ -784,7 +784,7 @@
 						<td> <b class="settingsText"> Change Text Color: </b> <input type="color" id="textColor" value="#ffffff" onchange="changeTextColor('textColor')"> </td>
 					</tr>
 					<tr>
-						<td> <button onclick="showHideDiv('settings');showHideDiv('colorPickTest')" class="mobileButtons" style="width: 155px;"> Test Greenscreen </button> </td>
+						<td> <button onclick="showHideDiv(['settings', 'colorPickTest'])" class="mobileButtons" style="width: 155px;"> Test Greenscreen </button> </td>
 					</tr>
 					<tr><td><div style="visibility: hidden;"> *Empty row* </div></td></tr>
 
@@ -848,7 +848,7 @@
 			</div>
 
 				<!-- Reset/save Settings -->
-				<button onclick="resetSettings()" id="resetSettingsButton" class="mobileButtons" style="width: 130px;"> Reset Settings </button> <div class="settingsClose"> <span class="settingsNote">(Will be saved in local storage)</span> <button onclick="saveSettings(true)" class="mobileButtons" style="width: 120px;"> Save &amp; Close </button> <button onclick="saveSettings()" class="mobileButtons" style="width: 55px;"> Save </button> <button onclick="showHideDiv('settings')" class="mobileButtons"> Close </button> </div>
+				<button onclick="resetSettings()" id="resetSettingsButton" class="mobileButtons" style="width: 130px;"> Reset Settings </button> <div class="settingsClose"> <span class="settingsNote">(Will be saved in local storage)</span> <button onclick="saveSettings(true)" class="mobileButtons" style="width: 120px;"> Save &amp; Close </button> <button onclick="saveSettings()" class="mobileButtons" style="width: 55px;"> Save </button> <button onclick="showHideDiv(['settings'])" class="mobileButtons"> Close </button> </div>
 			</div>
 		</div>
 	</div>
@@ -858,7 +858,7 @@
 		<div id="colorPickerBG">
 			<table class="selectionTable">
 				<tr>
-					<td> <button onclick="showHideDiv('colorPickTest');showHideDiv('settings')" class="mobileButtons" style="width: 80px;"> Settings </button> <b class="whiteText"> (Changes here will affect the normal MPO) </b> </td>
+					<td> <button onclick="showHideDiv(['colorPickTest', 'settings'])" class="mobileButtons" style="width: 80px;"> Settings </button> <b class="whiteText"> (Changes here will affect the normal MPO) </b> </td>
 				</tr>
 				<tr>
 					<td> <b class="whiteText"> Change BG color: </b> <input type="color" onchange="changeBGColor('bgColorPick')" value="#0000ff" id="bgColorPick"> <button onclick="resetBGColor()" class="mobileButtons" style="width: 165px;"> Reset Color (blue) </button> <br>
@@ -923,7 +923,7 @@
 					<img class="counterDisplay" src="img/friendspace.png">
 					<img class="counterDisplay" src="img/hex.png">
 					<img class="counterDisplay" src="img/spinspace.png">
-					<img class="counterDisplay" src="img/miniztar.png">
+					<img class="counterDisplay" src="img/minus.png">
 					<img class="counterDisplay" src="img/specialdice.png">
 					<img class="counterDisplay" src="img/coin.png">
 					<img class="counterDisplay" src="img/question.png">
@@ -960,7 +960,7 @@
 			<span> <a href="http://interactjs.io/" class="tutorialLink"> Interact.js</a> </span> <span class="settingsText">(the thing that enables drag 'n' drop) </span> <br> <br>
 		</div>
 
-		<button onclick="showHideDiv('tutorial')" id="tutorialClose" class="mobileButtons">Close</button>
+		<button onclick="showHideDiv(['tutorial'])" id="tutorialClose" class="mobileButtons">Close</button>
 	</div> </div>
 
 	<!-- Error -->

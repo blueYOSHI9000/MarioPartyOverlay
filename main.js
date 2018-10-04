@@ -15,6 +15,7 @@ function counterButtons (player, action, amount, counter) {
 	}
 
 	if (counter != 'curTurn' && counter != 'maxTurn' && counter != 'coinStar') {
+		counter = counter.charAt(0).toUpperCase() + counter.slice(1)
 		result = parseInt(document.getElementById('p' + player + counter + 'Text').innerHTML)
 
 		if (action == 'P') {
@@ -295,7 +296,7 @@ function callDisplayOnOff () {
 	displayOnOff('friendSpace', true)
 	displayOnOff('hex', true)
 	displayOnOff('spinSpace', true)
-	displayOnOff('miniZtar', true)
+	displayOnOff('minus', true)
 	displayOnOff('specialDice', true)
 	displayOnOff('stars', true)
 	displayOnOff('coins', true)
@@ -324,53 +325,21 @@ function callHighlight (resetHighlights, all, stars) {
 		var originalHighlightColor = document.getElementById('highlightColor').value
 		var textColor = document.getElementById('textColor').value
 		document.getElementById('highlightColor').value = textColor
-
 	}
 
+	var counters = ['happening', 'minigame', 'redSpace', 'running', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice']
+
 	if (document.getElementById('enableHighlight').checked == true || resetHighlights == true || all == true || stars == true) {
-		if (document.getElementById('happeningOnOff').checked == true || all == true) {
-			highlight('Happening', stars)
-		}
-		if (document.getElementById('minigameOnOff').checked == true || all == true) {
-			highlight('Minigame', stars)
-		}
-		if (document.getElementById('redSpaceOnOff').checked == true || all == true) {
-			highlight('RedSpace', stars)
-		}
-		if (document.getElementById('runningOnOff').checked == true || all == true) {
-			highlight('Running', stars)
-		}
-		if (document.getElementById('shoppingOnOff').checked == true || all == true) {
-			highlight('Shopping', stars)
-		}
-		if (document.getElementById('orbOnOff').checked == true || all == true) {
-			highlight('Orb', stars)
-		}
-		if (document.getElementById('candyOnOff').checked == true || all == true) {
-			highlight('Candy', stars)
-		}
-		if (document.getElementById('itemOnOff').checked == true || all == true) {
-			highlight('Item', stars)
-		}
-		if (document.getElementById('friendSpaceOnOff').checked == true || all == true) {
-			highlight('FriendSpace', stars)
-		}
-		if (document.getElementById('hexOnOff').checked == true || all == true) {
-			highlight('Hex', stars)
-		}
-		if (document.getElementById('spinSpaceOnOff').checked == true || all == true) {
-			highlight('SpinSpace', stars)
+		for (let num = 0; num < 12; num++) {
+			if (document.getElementById(counters[num] + 'OnOff').checked == true || all == true) {
+				highlight(counters[num], stars)
+			}
 		}
 		if (document.getElementById('slowOnOff').checked == true) {
 			slowHighlight(true)
 		}
-		if (document.getElementById('miniZtarOnOff').checked == true || all == true) {
-			highlight('MiniZtar', stars)
-		}
-		if (document.getElementById('specialDiceOnOff').checked == true || all == true) {
-			highlight('SpecialDice', stars)
-		}
 	}
+
 	if (resetHighlights == true) {
 		document.getElementById('highlightColor').value = originalHighlightColor
 	}
@@ -386,6 +355,7 @@ function highlight (counter, stars) {
 	if (counter == 'Stars' || counter == 'Coins') {
 		return;
 	}
+	counter = counter.charAt(0).toUpperCase() + counter.slice(1)
 
 	var counterP1 = document.getElementById('p1' + counter + 'Text').innerHTML
 	var counterP2 = document.getElementById('p2' + counter + 'Text').innerHTML
@@ -458,7 +428,7 @@ function slowStar () {
 	if (document.getElementById('slowOnOff').checked == true && document.getElementById('enableHighlight').checked == true) {
 		slowHighlight()
 	} else if (document.getElementById('enableHighlight').checked == true) {
-		highlight('Running')
+		highlight('running')
 	}
 }
 
@@ -753,6 +723,8 @@ function changeGame (game) {
 		showChars.push(document.querySelectorAll('.pompomSpan'))
 	}
 	if (game == 'all') {
+		showChars.push(document.querySelectorAll('.blooperSpan'))
+		showChars.push(document.querySelectorAll('.kamekSpan'))
 		showChars.push(document.querySelectorAll('.mp8C'))
 		showChars.push(document.querySelectorAll('.mp9C'))
 	}
@@ -792,13 +764,17 @@ var pastResults = []
 * 
 * @param {number} max The max number.
 */
-function randomCharFor (max) {
+function randomCharFor (max, min) {
+	if (min) {} else {
+		var min = 0
+	}
+
 	var result = ''
-	result = Math.floor(Math.random() * max) + 1
+	result = Math.floor(Math.random() * max) + min
 
 	for (var num = 0; num < pastResults.length; num++) {
 		if (result == pastResults[num]) {
-			result = Math.floor(Math.random() * max) + 1
+			result = Math.floor(Math.random() * max) + 0
 			num = -1
 		}
 	}
@@ -813,624 +789,97 @@ function randomChar () {
 	var result = ''
 	pastResults = []
 	var chars = ['']
+	var rdmChars = []
 
 	if (curGame == 'mp1' || curGame == 'mp2') {
 		for (var num = 1; num < 5; num++) {
 			result = randomCharFor(6)
-
-			switch (result) {
-				case 1:
-					chars.push('mario')
-					break;
-				case 2:
-					chars.push('luigi')
-					break;
-				case 3:
-					chars.push('yoshi')
-					break;
-				case 4:
-					chars.push('peach')
-					break;
-				case 5:
-					chars.push('wario')
-					break;
-				case 6:
-					chars.push('dk')
-					break;
-			}
+			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'wario', 'dk']
+			chars.push(rdmChars[result])
 		}
 	} else if (curGame == 'mp3' || curGame == 'mp4') {
 		for (var num = 1; num < 5; num++) {
 			result = randomCharFor(8)
-
-			switch (result) {
-				case 1:
-					chars.push('mario')
-					break;
-				case 2:
-					chars.push('luigi')
-					break;
-				case 3:
-					chars.push('yoshi')
-					break;
-				case 4:
-					chars.push('peach')
-					break;
-				case 5:
-					chars.push('daisy')
-					break;
-				case 6:
-					chars.push('wario')
-					break;
-				case 7:
-					chars.push('waluigi')
-					break;
-				case 8:
-					chars.push('dk')
-					break;
-			}
+			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'wario', 'waluigi', 'dk']
+			chars.push(rdmChars[result])
 		}
 	} else if (curGame == 'mp5') {
 		for (var num = 1; num < 5; num++) {
 			result = randomCharFor(7)
-
-			switch (result) {
-				case 1:
-					chars.push('mario')
-					break;
-				case 2:
-					chars.push('luigi')
-					break;
-				case 3:
-					chars.push('yoshi')
-					break;
-				case 4:
-					chars.push('peach')
-					break;
-				case 5:
-					chars.push('daisy')
-					break;
-				case 6:
-					chars.push('wario')
-					break;
-				case 7:
-					chars.push('waluigi')
-					break;
-			}
+			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'wario', 'waluigi']
+			chars.push(rdmChars[result])
 		}
 	} else if (curGame == 'mp6') {
 		for (var num = 1; num < 5; num++) {
 			result = randomCharFor(11)
-
-			switch (result) {
-				case 1:
-					chars.push('mario')
-					break;
-				case 2:
-					chars.push('luigi')
-					break;
-				case 3:
-					chars.push('yoshi')
-					break;
-				case 4:
-					chars.push('peach')
-					break;
-				case 5:
-					chars.push('daisy')
-					break;
-				case 6:
-					chars.push('toad')
-					break;
-				case 7:
-					chars.push('toadette')
-					break;
-				case 8:
-					chars.push('wario')
-					break;
-				case 9:
-					chars.push('waluigi')
-					break;
-				case 10:
-					chars.push('koopakid')
-					break;
-				case 11:
-					chars.push('boo')
-					break;
-			}
+			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'toad', 'toadette', 'wario', 'waluigi', 'koopakid', 'boo']
+			chars.push(rdmChars[result])
 		}
 	} else if (curGame == 'mp7') {
 		for (var num = 1; num < 5; num++) {
 			result = randomCharFor(12)
-
-			switch (result) {
-				case 1:
-					chars.push('mario')
-					break;
-				case 2:
-					chars.push('luigi')
-					break;
-				case 3:
-					chars.push('yoshi')
-					break;
-				case 4:
-					chars.push('peach')
-					break;
-				case 5:
-					chars.push('daisy')
-					break;
-				case 6:
-					chars.push('toad')
-					break;
-				case 7:
-					chars.push('toadette')
-					break;
-				case 8:
-					chars.push('wario')
-					break;
-				case 9:
-					chars.push('waluigi')
-					break;
-				case 10:
-					chars.push('birdo')
-					break;
-				case 11:
-					chars.push('drybones')
-					break;
-				case 12:
-					chars.push('boo')
-					break;
-			}
+			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'toad', 'toadette', 'wario', 'waluigi', 'birdo', 'drybones', 'boo']
+			chars.push(rdmChars[result])
 		}
 	} else if (curGame == 'mp8') {
 		for (var num = 1; num < 5; num++) {
 			result = randomCharFor(14)
-
-			switch (result) {
-				case 1:
-					chars.push('mario')
-					break;
-				case 2:
-					chars.push('luigi')
-					break;
-				case 3:
-					chars.push('yoshi')
-					break;
-				case 4:
-					chars.push('peach')
-					break;
-				case 5:
-					chars.push('daisy')
-					break;
-				case 6:
-					chars.push('toad')
-					break;
-				case 7:
-					chars.push('toadette')
-					break;
-				case 8:
-					chars.push('wario')
-					break;
-				case 9:
-					chars.push('waluigi')
-					break;
-				case 10:
-					chars.push('birdo')
-					break;
-				case 11:
-					chars.push('drybones')
-					break;
-				case 12:
-					chars.push('boo')
-					break;
-				case 13:
-					chars.push('blooper')
-					break;
-				case 14:
-					chars.push('hammerbro')
-					break;
-			}
+			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'toad', 'toadette', 'wario', 'waluigi', 'birdo', 'drybones', 'boo', 'blooper', 'hammerbro']
+			chars.push(rdmChars[result])
 		}
 	} else if (curGame == 'mp9') {
 		for (var num = 1; num < 5; num++) {
 			result = randomCharFor(12)
-
-			switch (result) {
-				case 1:
-					chars.push('mario')
-					break;
-				case 2:
-					chars.push('luigi')
-					break;
-				case 3:
-					chars.push('yoshi')
-					break;
-				case 4:
-					chars.push('peach')
-					break;
-				case 5:
-					chars.push('daisy')
-					break;
-				case 6:
-					chars.push('toad')
-					break;
-				case 7:
-					chars.push('wario')
-					break;
-				case 8:
-					chars.push('waluigi')
-					break;
-				case 9:
-					chars.push('birdo')
-					break;
-				case 10:
-					chars.push('koopa')
-					break;
-				case 11:
-					chars.push('shyguy')
-					break;
-				case 12:
-					chars.push('kamek')
-					break;
-			}
+			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'toad', 'wario', 'waluigi', 'birdo', 'koopa', 'shyguy', 'kamek']
+			chars.push(rdmChars[result])
 		}
 	} else if (curGame == 'mp10') {
 		for (var num = 1; num < 5; num++) {
 			result = randomCharFor(12)
-
-			switch (result) {
-				case 1:
-					chars.push('mario')
-					break;
-				case 2:
-					chars.push('luigi')
-					break;
-				case 3:
-					chars.push('yoshi')
-					break;
-				case 4:
-					chars.push('peach')
-					break;
-				case 5:
-					chars.push('daisy')
-					break;
-				case 6:
-					chars.push('rosalina')
-					break;
-				case 7:
-					chars.push('toad')
-					break;
-				case 8:
-					chars.push('toadette')
-					break;
-				case 9:
-					chars.push('wario')
-					break;
-				case 10:
-					chars.push('waluigi')
-					break;
-				case 11:
-					chars.push('dk')
-					break;
-				case 12:
-					chars.push('spike')
-					break;
-			}
+			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'toad', 'toadette', 'wario', 'waluigi', 'dk', 'spike']
+			chars.push(rdmChars[result])
 		}
 	} else if (curGame == 'mpa') {
 		for (var num = 1; num < 5; num++) {
 			result = randomCharFor(4)
-
-			switch (result) {
-				case 1:
-					chars.push('mario')
-					break;
-				case 2:
-					chars.push('luigi')
-					break;
-				case 3:
-					chars.push('yoshi')
-					break;
-				case 4:
-					chars.push('peach')
-					break;
-			}
+			rdmChars = ['mario', 'luigi', 'yoshi', 'peach']
+			chars.push(rdmChars[result])
 		}
 	} else if (curGame == 'mpds') {
 		for (var num = 1; num < 5; num++) {
 			result = randomCharFor(8)
-
-			switch (result) {
-				case 1:
-					chars.push('mario')
-					break;
-				case 2:
-					chars.push('luigi')
-					break;
-				case 3:
-					chars.push('yoshi')
-					break;
-				case 4:
-					chars.push('peach')
-					break;
-				case 5:
-					chars.push('daisy')
-					break;
-				case 6:
-					chars.push('toad')
-					break;
-				case 7:
-					chars.push('wario')
-					break;
-				case 8:
-					chars.push('waluigi')
-					break;
-			}
+			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'toad', 'wario', 'waluigi']
+			chars.push(rdmChars[result])
 		}
 	} else if (curGame == 'mpit') {
 		for (var num = 1; num < 5; num++) {
 			result = randomCharFor(10)
-
-			switch (result) {
-				case 1:
-					chars.push('mario')
-					break;
-				case 2:
-					chars.push('luigi')
-					break;
-				case 3:
-					chars.push('yoshi')
-					break;
-				case 4:
-					chars.push('peach')
-					break;
-				case 5:
-					chars.push('daisy')
-					break;
-				case 6:
-					chars.push('toad')
-					break;
-				case 7:
-					chars.push('wario')
-					break;
-				case 8:
-					chars.push('waluigi')
-					break;
-				case 9:
-					chars.push('boo')
-					break;
-				case 10:
-					chars.push('bowserjr')
-					break;
-			}
+			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'toad', 'wario', 'waluigi', 'boo', 'bowserjr']
+			chars.push(rdmChars[result])
 		}
 	} else if (curGame == 'mpsr') {
 		for (var num = 1; num < 5; num++) {
 			result = randomCharFor(12)
-
-			switch (result) {
-				case 1:
-					chars.push('mario')
-					break;
-				case 2:
-					chars.push('luigi')
-					break;
-				case 3:
-					chars.push('yoshi')
-					break;
-				case 4:
-					chars.push('peach')
-					break;
-				case 5:
-					chars.push('daisy')
-					break;
-				case 6:
-					chars.push('rosalina')
-					break;
-				case 7:
-					chars.push('toad')
-					break;
-				case 8:
-					chars.push('toadette')
-					break;
-				case 9:
-					chars.push('wario')
-					break;
-				case 10:
-					chars.push('waluigi')
-					break;
-				case 11:
-					chars.push('dk')
-					break;
-				case 12:
-					chars.push('diddy')
-					break;
-			}
+			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'toad', 'toadette', 'wario', 'waluigi', 'dk', 'diddy']
+			chars.push(rdmChars[result])
 		}
 	} else if (curGame == 'mptt100') {
 		for (var num = 1; num < 5; num++) {
 			result = randomCharFor(8)
-
-			switch (result) {
-				case 1:
-					chars.push('mario')
-					break;
-				case 2:
-					chars.push('luigi')
-					break;
-				case 3:
-					chars.push('yoshi')
-					break;
-				case 4:
-					chars.push('peach')
-					break;
-				case 5:
-					chars.push('daisy')
-					break;
-				case 6:
-					chars.push('rosalina')
-					break;
-				case 7:
-					chars.push('wario')
-					break;
-				case 8:
-					chars.push('waluigi')
-					break;
-			}
+			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'wario', 'waluigi']
+			chars.push(rdmChars[result])
 		}
 	} else if (curGame == 'smp') {
 		for (var num = 1; num < 5; num++) {
 			result = randomCharFor(20)
-
-			switch (result) {
-				case 1:
-					chars.push('mario')
-					break;
-				case 2:
-					chars.push('luigi')
-					break;
-				case 3:
-					chars.push('yoshi')
-					break;
-				case 4:
-					chars.push('peach')
-					break;
-				case 5:
-					chars.push('daisy')
-					break;
-				case 6:
-					chars.push('rosalina')
-					break;
-				case 7:
-					chars.push('wario')
-					break;
-				case 8:
-					chars.push('waluigi')
-					break;
-				case 9:
-					chars.push('dk')
-					break;
-				case 10:
-					chars.push('diddy')
-					break;
-				case 11:
-					chars.push('bowser')
-					break;
-				case 12:
-					chars.push('bowserjr')
-					break;
-				case 13:
-					chars.push('pompom')
-					break;
-				case 14:
-					chars.push('goomba')
-					break;
-				case 15:
-					chars.push('koopa')
-					break;
-				case 16:
-					chars.push('drybones')
-					break;
-				case 17:
-					chars.push('monty')
-					break;
-				case 18:
-					chars.push('boo')
-					break;
-				case 19:
-					chars.push('shyguy')
-					break;
-				case 20:
-					chars.push('hammerbro')
-					break;
-			}
+			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'wario', 'waluigi', 'dk', 'diddy', 'bowser', 'bowserjr', 'pompom', 'hoomba', 'koopa', 'drybones', 'monty', 'boo', 'shyguy', 'hammerbro']
+			chars.push(rdmChars[result])
 		}
 	} else if (curGame == 'all') {
 		for (var num = 1; num < 5; num++) {
 			result = randomCharFor(27)
-
-			switch (result) {
-				case 1:
-					chars.push('mario')
-					break;
-				case 2:
-					chars.push('luigi')
-					break;
-				case 3:
-					chars.push('yoshi')
-					break;
-				case 4:
-					chars.push('peach')
-					break;
-				case 5:
-					chars.push('daisy')
-					break;
-				case 6:
-					chars.push('rosalina')
-					break;
-				case 7:
-					chars.push('toad')
-					break;
-				case 8:
-					chars.push('toadette')
-					break;
-				case 9:
-					chars.push('wario')
-					break;
-				case 10:
-					chars.push('waluigi')
-					break;
-				case 11:
-					chars.push('dk')
-					break;
-				case 12:
-					chars.push('diddy')
-					break;
-				case 13:
-					chars.push('birdo')
-					break;
-				case 14:
-					chars.push('bowser')
-					break;
-				case 15:
-					chars.push('bowserjr')
-					break;
-				case 16:
-					chars.push('koopakid')
-					break;
-				case 17:
-					chars.push('pompom')
-					break;
-				case 18:
-					chars.push('goomba')
-					break;
-				case 19:
-					chars.push('koopa')
-					break;
-				case 20:
-					chars.push('drybones')
-					break;
-				case 21:
-					chars.push('monty')
-					break;
-				case 22:
-					chars.push('boo')
-					break;
-				case 23:
-					chars.push('spike')
-					break;
-				case 24:
-					chars.push('blooper')
-					break;
-				case 25:
-					chars.push('shyguy')
-					break;
-				case 26:
-					chars.push('hammerbro')
-					break;
-				case 27:
-					chars.push('kamek')
-					break;
-			}
+			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'toad', 'toadette', 'wario', 'waluigi', 'dk', 'diddy', 'birdo', 'bowser', 'bowserjr', 'koopakid', 'pompom', 'hoomba', 'koopa', 'drybones', 'monty', 'boo', 'spike', 'blooper', 'shyguy', 'hammerbro', 'kamek']
+			chars.push(rdmChars[result])
 		}
 	}
 	for (var num = 1; num < 5; num++) {
@@ -1589,11 +1038,9 @@ function coinStarTie (player) {
 
 	}
 
-	document.getElementById('coinStarTie1').src = 'img/tie.png'
-	document.getElementById('coinStarTie2').src = 'img/tie.png'
-	document.getElementById('coinStarTie3').src = 'img/tie.png'
-	document.getElementById('coinStarTie4').src = 'img/tie.png'
-	document.getElementById('coinStarTie5').src = 'img/tie.png'
+	for (let num = 1; num < 6; num++) {
+		document.getElementById('coinStarTie' + num).src = 'img/tie.png'
+	}
 	document.getElementById('coinStarCharacter').src = 'img/tie.png'
 
 	if (document.getElementById('noTie').checked == true && tied.length != 1 || tied.length == 0) {
@@ -1647,29 +1094,18 @@ function coinStarTie (player) {
 * Show/Hide a certain element.
 * Adds or removes the classes "hidden" and "visible" which respectively hides and shows a element based on a id given.
 *
-* @param {string} id Which element should be hidden or shown.
-* @param {string} id2 A optional secondary id which should be hidden or shown.
+* @param {array} ids Which elements should be hidden or shown.
 */
-function showHideDiv (id, id2) {
-	var div = document.getElementById(id).classList
-	//console.log(div)
-	if (div == 'hidden') {
-		document.getElementById(id).classList.add('visible');
-		document.getElementById(id).classList.remove('hidden');
-	} else {
-		document.getElementById(id).classList.remove('visible');
-		document.getElementById(id).classList.add('hidden');
-	}
+function showHideDiv (ids) {
+	for (let num = 0; num < ids.length; num++) {
+		var div = document.getElementById(ids[num]).classList
 
-	if (id2) {
-		var div = document.getElementById(id2).classList
-		console.log(div)
 		if (div == 'hidden') {
-			document.getElementById(id2).classList.add('visible');
-			document.getElementById(id2).classList.remove('hidden');
+			document.getElementById(ids[num]).classList.add('visible');
+			document.getElementById(ids[num]).classList.remove('hidden');
 		} else {
-			document.getElementById(id2).classList.remove('visible');
-			document.getElementById(id2).classList.add('hidden');
+			document.getElementById(ids[num]).classList.remove('visible');
+			document.getElementById(ids[num]).classList.add('hidden');
 		}
 	}
 }
@@ -1804,9 +1240,7 @@ function textOutput () {
 				break;
 
 			default: //Add everything new to textOutputTest() too
-				if (counters[num] == 'MinusStar') {
-					counters[num] = 'MiniZtar'
-				} else if (counters[num] == 'Friendship') {
+				if (counters[num] == 'Friendship') {
 					counters[num] = 'FriendSpace'
 				}
 
@@ -1916,9 +1350,7 @@ function textOutputTest (nameonly) {
 				case 'coinstar':
 					break;
 				default: //Add everything new to textOutput() too
-					if (counters[num] == 'MinusStar') {
-						counters[num] = 'MiniZtar'
-					} else if (counters[num] == 'Friendship') {
+					if (counters[num] == 'Friendship') {
 						counters[num] = 'FriendSpace'
 					}
 					if (document.getElementById('p1' + counters[num] + 'Text')) {} else {
@@ -1957,13 +1389,13 @@ function windowOnClick (event) {
 	var mobileSettings = document.querySelector("#mobileSettings")
 	var colorPickTest = document.querySelector('#colorPickTest')
 	if (event.target === settings) {
-		showHideDiv('settings')
+		showHideDiv(['settings'])
 	} else if (event.target === tutorial){
-		showHideDiv('tutorial')
+		showHideDiv(['tutorial'])
 	} else if (event.target === mobileSettings){
-		showHideDiv('mobileSettings')
+		showHideDiv(['mobileSettings'])
 	} else if (event.target === colorPickTest){
-		showHideDiv('colorPickTest')
+		showHideDiv(['colorPickTest'])
 	}
 }
 

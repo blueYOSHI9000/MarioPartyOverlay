@@ -8,66 +8,28 @@ var coinStarTie4 = false
 
 var curTurn = 1
 
-var hap1 = 0
-var hap2 = 0
-var hap3 = 0
-var hap4 = 0
-var mini1 = 0
-var mini2 = 0
-var mini3 = 0
-var mini4 = 0
-var red1 = 0
-var red2 = 0
-var red3 = 0
-var red4 = 0
-var run1 = 0
-var run2 = 0
-var run3 = 0
-var run4 = 0
-var shop1 = 0
-var shop2 = 0
-var shop3 = 0
-var shop4 = 0
-var orb1 = 0
-var orb2 = 0
-var orb3 = 0
-var orb4 = 0
-var candy1 = 0
-var candy2 = 0
-var candy3 = 0
-var candy4 = 0
-var item1 = 0
-var item2 = 0
-var item3 = 0
-var item4 = 0
-var friend1 = 0
-var friend2 = 0
-var friend3 = 0
-var friend4 = 0
-var hex1 = 0
-var hex2 = 0
-var hex3 = 0
-var hex4 = 0
-var spin1 = 0
-var spin2 = 0
-var spin3 = 0
-var spin4 = 0
-var ztar1 = 0
-var ztar2 = 0
-var ztar3 = 0
-var ztar4 = 0
-var dice1 = 0
-var dice2 = 0
-var dice3 = 0
-var dice4 = 0
-var stars1 = 0
-var stars2 = 0
-var stars3 = 0
-var stars4 = 0
-var coins1 = 0
-var coins2 = 0
-var coins3 = 0
-var coins4 = 0
+var hap = [0, 0, 0, 0]
+var mini = [0, 0, 0, 0]
+var red = [0, 0, 0, 0]
+var run = [0, 0, 0, 0]
+var shop = [0, 0, 0, 0]
+var orb = [0, 0, 0, 0]
+var candy = [0, 0, 0, 0]
+var item = [0, 0, 0, 0]
+var friend = [0, 0, 0, 0]
+var hex = [0, 0, 0, 0]
+var spin = [0, 0, 0, 0]
+var minus = [0, 0, 0, 0]
+var dice = [0, 0, 0, 0]
+var stars = [0, 0, 0, 0]
+var coins = [0, 0, 0, 0]
+
+var countersShort = ['hap', 'mini', 'red', 'run', 'shop', 'orb', 'candy', 'item', 'friend', 'hex', 'spin', 'minus', 'dice', 'stars', 'coins']
+var counters = ['happening', 'minigame', 'redSpace', 'running', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'stars', 'coins']
+var countersUp = []
+for (let num = 0; num < 14; num++) {
+	countersUp.push(counters[num].charAt(0).toUpperCase() + counters[num].slice(1))
+}
 
 /*
 * Resets the backup.
@@ -79,66 +41,11 @@ function resetBackup() {
 	document.getElementById('p3CoinStarTie').checked = false
 	document.getElementById('p4CoinStarTie').checked = false
 
-	document.getElementById('p1HappeningText').innerHTML = 0
-	document.getElementById('p2HappeningText').innerHTML = 0
-	document.getElementById('p3HappeningText').innerHTML = 0
-	document.getElementById('p4HappeningText').innerHTML = 0
-	document.getElementById('p1MinigameText').innerHTML = 0
-	document.getElementById('p2MinigameText').innerHTML = 0
-	document.getElementById('p3MinigameText').innerHTML = 0
-	document.getElementById('p4MinigameText').innerHTML = 0
-	document.getElementById('p1RedSpaceText').innerHTML = 0
-	document.getElementById('p2RedSpaceText').innerHTML = 0
-	document.getElementById('p3RedSpaceText').innerHTML = 0
-	document.getElementById('p4RedSpaceText').innerHTML = 0
-	document.getElementById('p1RunningText').innerHTML = 0
-	document.getElementById('p2RunningText').innerHTML = 0
-	document.getElementById('p3RunningText').innerHTML = 0
-	document.getElementById('p4RunningText').innerHTML = 0
-	document.getElementById('p1ShoppingText').innerHTML = 0
-	document.getElementById('p2ShoppingText').innerHTML = 0
-	document.getElementById('p3ShoppingText').innerHTML = 0
-	document.getElementById('p4ShoppingText').innerHTML = 0
-	document.getElementById('p1OrbText').innerHTML = 0
-	document.getElementById('p2OrbText').innerHTML = 0
-	document.getElementById('p3OrbText').innerHTML = 0
-	document.getElementById('p4OrbText').innerHTML = 0
-	document.getElementById('p1CandyText').innerHTML = 0
-	document.getElementById('p2CandyText').innerHTML = 0
-	document.getElementById('p3CandyText').innerHTML = 0
-	document.getElementById('p4CandyText').innerHTML = 0
-	document.getElementById('p1ItemText').innerHTML = 0
-	document.getElementById('p2ItemText').innerHTML = 0
-	document.getElementById('p3ItemText').innerHTML = 0
-	document.getElementById('p4ItemText').innerHTML = 0
-	document.getElementById('p1FriendSpaceText').innerHTML = 0
-	document.getElementById('p2FriendSpaceText').innerHTML = 0
-	document.getElementById('p3FriendSpaceText').innerHTML = 0
-	document.getElementById('p4FriendSpaceText').innerHTML = 0
-	document.getElementById('p1HexText').innerHTML = 0
-	document.getElementById('p2HexText').innerHTML = 0
-	document.getElementById('p3HexText').innerHTML = 0
-	document.getElementById('p4HexText').innerHTML = 0
-	document.getElementById('p1SpinSpaceText').innerHTML = 0
-	document.getElementById('p2SpinSpaceText').innerHTML = 0
-	document.getElementById('p3SpinSpaceText').innerHTML = 0
-	document.getElementById('p4SpinSpaceText').innerHTML = 0
-	document.getElementById('p1MiniZtarText').innerHTML = 0
-	document.getElementById('p2MiniZtarText').innerHTML = 0
-	document.getElementById('p3MiniZtarText').innerHTML = 0
-	document.getElementById('p4MiniZtarText').innerHTML = 0
-	document.getElementById('p1SpecialDiceText').innerHTML = 0
-	document.getElementById('p2SpecialDiceText').innerHTML = 0
-	document.getElementById('p3SpecialDiceText').innerHTML = 0
-	document.getElementById('p4SpecialDiceText').innerHTML = 0
-	document.getElementById('p1StarsText').innerHTML = 0
-	document.getElementById('p2StarsText').innerHTML = 0
-	document.getElementById('p3StarsText').innerHTML = 0
-	document.getElementById('p4StarsText').innerHTML = 0
-	document.getElementById('p1CoinsText').innerHTML = 0
-	document.getElementById('p2CoinsText').innerHTML = 0
-	document.getElementById('p3CoinsText').innerHTML = 0
-	document.getElementById('p4CoinsText').innerHTML = 0
+	for (let num = 1; num < 5; num++) {
+		for (let num2 = 0; num2 < 14; num2++) {
+			document.getElementById('p' + num + countersUp[num2] + 'Text').innerHTML = 0
+		}
+	}
 
 	turns('curTurn', 1, 'Set')
 	coinStarTie()
@@ -160,66 +67,25 @@ function backup() {
 
 	curTurn = parseInt(document.getElementById('curTurnText').innerHTML)
 
-	hap1 = document.getElementById('p1HappeningText').innerHTML
-	hap2 = document.getElementById('p2HappeningText').innerHTML
-	hap3 = document.getElementById('p3HappeningText').innerHTML
-	hap4 = document.getElementById('p4HappeningText').innerHTML
-	mini1 = document.getElementById('p1MinigameText').innerHTML
-	mini2 = document.getElementById('p2MinigameText').innerHTML
-	mini3 = document.getElementById('p3MinigameText').innerHTML
-	mini4 = document.getElementById('p4MinigameText').innerHTML
-	red1 = document.getElementById('p1RedSpaceText').innerHTML
-	red2 = document.getElementById('p2RedSpaceText').innerHTML
-	red3 = document.getElementById('p3RedSpaceText').innerHTML
-	red4 = document.getElementById('p4RedSpaceText').innerHTML
-	run1 = document.getElementById('p1RunningText').innerHTML
-	run2 = document.getElementById('p2RunningText').innerHTML
-	run3 = document.getElementById('p3RunningText').innerHTML
-	run4 = document.getElementById('p4RunningText').innerHTML
-	shop1 = document.getElementById('p1ShoppingText').innerHTML
-	shop2 = document.getElementById('p2ShoppingText').innerHTML
-	shop3 = document.getElementById('p3ShoppingText').innerHTML
-	shop4 = document.getElementById('p4ShoppingText').innerHTML
-	orb1 = document.getElementById('p1OrbText').innerHTML
-	orb2 = document.getElementById('p2OrbText').innerHTML
-	orb3 = document.getElementById('p3OrbText').innerHTML
-	orb4 = document.getElementById('p4OrbText').innerHTML
-	candy1 = document.getElementById('p1CandyText').innerHTML
-	candy2 = document.getElementById('p2CandyText').innerHTML
-	candy3 = document.getElementById('p3CandyText').innerHTML
-	candy4 = document.getElementById('p4CandyText').innerHTML
-	item1 = document.getElementById('p1ItemText').innerHTML
-	item2 = document.getElementById('p2ItemText').innerHTML
-	item3 = document.getElementById('p3ItemText').innerHTML
-	item4 = document.getElementById('p4ItemText').innerHTML
-	friend1 = document.getElementById('p1FriendSpaceText').innerHTML
-	friend2 = document.getElementById('p2FriendSpaceText').innerHTML
-	friend3 = document.getElementById('p3FriendSpaceText').innerHTML
-	friend4 = document.getElementById('p4FriendSpaceText').innerHTML
-	hex1 = document.getElementById('p1HexText').innerHTML
-	hex2 = document.getElementById('p2HexText').innerHTML
-	hex3 = document.getElementById('p3HexText').innerHTML
-	hex4 = document.getElementById('p4HexText').innerHTML
-	spin1 = document.getElementById('p1SpinSpaceText').innerHTML
-	spin2 = document.getElementById('p2SpinSpaceText').innerHTML
-	spin3 = document.getElementById('p3SpinSpaceText').innerHTML
-	spin4 = document.getElementById('p4SpinSpaceText').innerHTML
-	ztar1 = document.getElementById('p1MiniZtarText').innerHTML
-	ztar2 = document.getElementById('p2MiniZtarText').innerHTML
-	ztar3 = document.getElementById('p3MiniZtarText').innerHTML
-	ztar4 = document.getElementById('p4MiniZtarText').innerHTML
-	dice1 = document.getElementById('p1SpecialDiceText').innerHTML
-	dice2 = document.getElementById('p2SpecialDiceText').innerHTML
-	dice3 = document.getElementById('p3SpecialDiceText').innerHTML
-	dice4 = document.getElementById('p4SpecialDiceText').innerHTML
-	stars1 = document.getElementById('p1StarsText').innerHTML
-	stars2 = document.getElementById('p2StarsText').innerHTML
-	stars3 = document.getElementById('p3StarsText').innerHTML
-	stars4 = document.getElementById('p4StarsText').innerHTML
-	coins1 = document.getElementById('p1CoinsText').innerHTML
-	coins2 = document.getElementById('p2CoinsText').innerHTML
-	coins3 = document.getElementById('p3CoinsText').innerHTML
-	coins4 = document.getElementById('p4CoinsText').innerHTML
+	var num = 0
+	for (let num2 = 0; num2 < 4; num2++) {
+		num++
+		hap[num2] = document.getElementById('p' + num + 'HappeningText').innerHTML
+		mini[num2] = document.getElementById('p' + num + 'MinigameText').innerHTML
+		red[num2] = document.getElementById('p' + num + 'RedSpaceText').innerHTML
+		run[num2] = document.getElementById('p' + num + 'RunningText').innerHTML
+		shop[num2] = document.getElementById('p' + num + 'ShoppingText').innerHTML
+		orb[num2] = document.getElementById('p' + num + 'OrbText').innerHTML
+		candy[num2] = document.getElementById('p' + num + 'CandyText').innerHTML
+		item[num2] = document.getElementById('p' + num + 'ItemText').innerHTML
+		friend[num2] = document.getElementById('p' + num + 'FriendSpaceText').innerHTML
+		hex[num2] = document.getElementById('p' + num + 'HexText').innerHTML
+		spin[num2] = document.getElementById('p' + num + 'SpinSpaceText').innerHTML
+		minus[num2] = document.getElementById('p' + num + 'MinusText').innerHTML
+		dice[num2] = document.getElementById('p' + num + 'SpecialDiceText').innerHTML
+		stars[num2] = document.getElementById('p' + num + 'StarsText').innerHTML
+		coins[num2] = document.getElementById('p' + num + 'CoinsText').innerHTML
+	}
 
 	if (document.getElementById('permSave').checked == true) {
 		saveCounters()
@@ -239,58 +105,25 @@ function restore(forceRestore) {
 		document.getElementById('p3CoinStarTie').checked = coinStarTie3
 		document.getElementById('p4CoinStarTie').checked = coinStarTie4
 
-		document.getElementById('p1HappeningText').innerHTML = hap1
-		document.getElementById('p2HappeningText').innerHTML = hap2
-		document.getElementById('p3HappeningText').innerHTML = hap3
-		document.getElementById('p4HappeningText').innerHTML = hap4
-		document.getElementById('p1MinigameText').innerHTML = mini1
-		document.getElementById('p2MinigameText').innerHTML = mini2
-		document.getElementById('p3MinigameText').innerHTML = mini3
-		document.getElementById('p4MinigameText').innerHTML = mini4
-		document.getElementById('p1RedSpaceText').innerHTML = red1
-		document.getElementById('p2RedSpaceText').innerHTML = red2
-		document.getElementById('p3RedSpaceText').innerHTML = red3
-		document.getElementById('p4RedSpaceText').innerHTML = red4
-		document.getElementById('p1RunningText').innerHTML = run1
-		document.getElementById('p2RunningText').innerHTML = run2
-		document.getElementById('p3RunningText').innerHTML = run3
-		document.getElementById('p4RunningText').innerHTML = run4
-		document.getElementById('p1ShoppingText').innerHTML = shop1
-		document.getElementById('p2ShoppingText').innerHTML = shop2
-		document.getElementById('p3ShoppingText').innerHTML = shop3
-		document.getElementById('p4ShoppingText').innerHTML = shop4
-		document.getElementById('p1OrbText').innerHTML = orb1
-		document.getElementById('p2OrbText').innerHTML = orb2
-		document.getElementById('p3OrbText').innerHTML = orb3
-		document.getElementById('p4OrbText').innerHTML = orb4
-		document.getElementById('p1CandyText').innerHTML = candy1
-		document.getElementById('p2CandyText').innerHTML = candy2
-		document.getElementById('p3CandyText').innerHTML = candy3
-		document.getElementById('p4CandyText').innerHTML = candy4
-		document.getElementById('p1ItemText').innerHTML = item1
-		document.getElementById('p2ItemText').innerHTML = item2
-		document.getElementById('p3ItemText').innerHTML = item3
-		document.getElementById('p4ItemText').innerHTML = item4
-		document.getElementById('p1FriendSpaceText').innerHTML = friend1
-		document.getElementById('p2FriendSpaceText').innerHTML = friend2
-		document.getElementById('p3FriendSpaceText').innerHTML = friend3
-		document.getElementById('p4FriendSpaceText').innerHTML = friend4
-		document.getElementById('p1HexText').innerHTML = hex1
-		document.getElementById('p2HexText').innerHTML = hex2
-		document.getElementById('p3HexText').innerHTML = hex3
-		document.getElementById('p4HexText').innerHTML = hex4
-		document.getElementById('p1SpinSpaceText').innerHTML = spin1
-		document.getElementById('p2SpinSpaceText').innerHTML = spin2
-		document.getElementById('p3SpinSpaceText').innerHTML = spin3
-		document.getElementById('p4SpinSpaceText').innerHTML = spin4
-		document.getElementById('p1MiniZtarText').innerHTML = ztar1
-		document.getElementById('p2MiniZtarText').innerHTML = ztar2
-		document.getElementById('p3MiniZtarText').innerHTML = ztar3
-		document.getElementById('p4MiniZtarText').innerHTML = ztar4
-		document.getElementById('p1SpecialDiceText').innerHTML = dice1
-		document.getElementById('p2SpecialDiceText').innerHTML = dice2
-		document.getElementById('p3SpecialDiceText').innerHTML = dice3
-		document.getElementById('p4SpecialDiceText').innerHTML = dice4
+		var num = 0
+		for (let num2 = 0; num2 < 4; num2++) {
+			num++
+			document.getElementById('p' + num + 'HappeningText').innerHTML = hap[num2]
+			document.getElementById('p' + num + 'MinigameText').innerHTML = mini[num2]
+			document.getElementById('p' + num + 'RedSpaceText').innerHTML = red[num2]
+			document.getElementById('p' + num + 'RunningText').innerHTML = run[num2]
+			document.getElementById('p' + num + 'ShoppingText').innerHTML = shop[num2]
+			document.getElementById('p' + num + 'OrbText').innerHTML = orb[num2]
+			document.getElementById('p' + num + 'CandyText').innerHTML = candy[num2]
+			document.getElementById('p' + num + 'ItemText').innerHTML = item[num2]
+			document.getElementById('p' + num + 'FriendSpaceText').innerHTML = friend[num2]
+			document.getElementById('p' + num + 'HexText').innerHTML = hex[num2]
+			document.getElementById('p' + num + 'SpinSpaceText').innerHTML = spin[num2]
+			document.getElementById('p' + num + 'MinusText').innerHTML = minus[num2]
+			document.getElementById('p' + num + 'SpecialDiceText').innerHTML = dice[num2]
+			document.getElementById('p' + num + 'StarsText').innerHTML = stars[num2]
+			document.getElementById('p' + num + 'CoinsText').innerHTML = coins[num2]
+		}
 
 		turns('curTurn', curTurn, 'Set')
 		coinStarTie()
@@ -315,32 +148,20 @@ function savePlayers (close) {
 	localStorage.setItem('com3', document.getElementById('com3').checked)
 	localStorage.setItem('com4', document.getElementById('com4').checked)
 
-	localStorage.setItem('happening', document.getElementById('happeningOnOff').checked)
-	localStorage.setItem('minigame', document.getElementById('minigameOnOff').checked)
-	localStorage.setItem('minigameWins', document.getElementById('minigameWinsOnOff').checked)
-	localStorage.setItem('minigameMiniStars', document.getElementById('minigameMiniStarsOnOff').checked)
-	localStorage.setItem('redSpace', document.getElementById('redSpaceOnOff').checked)
-	localStorage.setItem('running', document.getElementById('runningOnOff').checked)
-	localStorage.setItem('slow', document.getElementById('slowOnOff').checked)
-	localStorage.setItem('shopping', document.getElementById('shoppingOnOff').checked)
-	localStorage.setItem('orb', document.getElementById('orbOnOff').checked)
-	localStorage.setItem('candy', document.getElementById('candyOnOff').checked)
-	localStorage.setItem('item', document.getElementById('itemOnOff').checked)
-	localStorage.setItem('friendSpace', document.getElementById('friendSpaceOnOff').checked)
-	localStorage.setItem('hex', document.getElementById('hexOnOff').checked)
-	localStorage.setItem('spinSpace', document.getElementById('spinSpaceOnOff').checked)
-	localStorage.setItem('miniZtar', document.getElementById('miniZtarOnOff').checked)
-	localStorage.setItem('specialDice', document.getElementById('specialDiceOnOff').checked)
-	localStorage.setItem('stars', document.getElementById('starsOnOff').checked)
-	localStorage.setItem('inclBonus', document.getElementById('inclBonusOnOff').checked)
-	localStorage.setItem('miniStars', document.getElementById('miniStarsOnOff').checked)
-	localStorage.setItem('bananas', document.getElementById('bananasOnOff').checked)
-	localStorage.setItem('coins', document.getElementById('coinsOnOff').checked)
+	for (let num = 0; num < 14; num++) {
+		localStorage.setItem(counters[num], document.getElementById(counters[num] + 'OnOff').checked)
+	}
+		localStorage.setItem('minigameWins', document.getElementById('minigameWinsOnOff').checked)
+		localStorage.setItem('minigameMiniStars', document.getElementById('minigameMiniStarsOnOff').checked)
+		localStorage.setItem('slow', document.getElementById('slowOnOff').checked)
+		localStorage.setItem('miniStars', document.getElementById('miniStarsOnOff').checked)
+		localStorage.setItem('bananas', document.getElementById('bananasOnOff').checked)
+		localStorage.setItem('inclBonus', document.getElementById('inclBonusOnOff').checked)
 
 	localStorage.setItem('curGame', curGame)
 
 	if (close == true) {
-		showHideDiv('mobileSettings')
+		showHideDiv(['mobileSettings'])
 	}
 }
 
@@ -373,7 +194,7 @@ function resetPlayers () {
 	localStorage.setItem('friendSpace', false)
 	localStorage.setItem('hex', false)
 	localStorage.setItem('spinSpace', false)
-	localStorage.setItem('miniZtar', false)
+	localStorage.setItem('minus', false)
 	localStorage.setItem('specialDice', false)
 	localStorage.setItem('stars', false)
 	localStorage.setItem('inclBonus', false)
@@ -395,7 +216,7 @@ function resetPlayers () {
 	document.getElementById('friendSpaceOnOff').checked = false
 	document.getElementById('hexOnOff').checked = false
 	document.getElementById('spinSpaceOnOff').checked = false
-	document.getElementById('miniZtarOnOff').checked = false
+	document.getElementById('minusOnOff').checked = false
 	document.getElementById('specialDiceOnOff').checked = false
 	document.getElementById('starsOnOff').checked = false
 	document.getElementById('inclBonusOnOff').checked = false
@@ -439,66 +260,12 @@ function saveCounters () {
 	localStorage.setItem('curTurn', document.getElementById('curTurnText').innerHTML)
 	localStorage.setItem('maxTurn', document.getElementById('maxTurnText').innerHTML)
 
-	localStorage.setItem('hap1', document.getElementById('p1HappeningText').innerHTML)
-	localStorage.setItem('hap2', document.getElementById('p2HappeningText').innerHTML)
-	localStorage.setItem('hap3', document.getElementById('p3HappeningText').innerHTML)
-	localStorage.setItem('hap4', document.getElementById('p4HappeningText').innerHTML)
-	localStorage.setItem('mini1', document.getElementById('p1MinigameText').innerHTML)
-	localStorage.setItem('mini2', document.getElementById('p2MinigameText').innerHTML)
-	localStorage.setItem('mini3', document.getElementById('p3MinigameText').innerHTML)
-	localStorage.setItem('mini4', document.getElementById('p4MinigameText').innerHTML)
-	localStorage.setItem('red1', document.getElementById('p1RedSpaceText').innerHTML)
-	localStorage.setItem('red2', document.getElementById('p2RedSpaceText').innerHTML)
-	localStorage.setItem('red3', document.getElementById('p3RedSpaceText').innerHTML)
-	localStorage.setItem('red4', document.getElementById('p4RedSpaceText').innerHTML)
-	localStorage.setItem('run1', document.getElementById('p1RunningText').innerHTML)
-	localStorage.setItem('run2', document.getElementById('p2RunningText').innerHTML)
-	localStorage.setItem('run3', document.getElementById('p3RunningText').innerHTML)
-	localStorage.setItem('run4', document.getElementById('p4RunningText').innerHTML)
-	localStorage.setItem('shop1', document.getElementById('p1ShoppingText').innerHTML)
-	localStorage.setItem('shop2', document.getElementById('p2ShoppingText').innerHTML)
-	localStorage.setItem('shop3', document.getElementById('p3ShoppingText').innerHTML)
-	localStorage.setItem('shop4', document.getElementById('p4ShoppingText').innerHTML)
-	localStorage.setItem('orb1', document.getElementById('p1OrbText').innerHTML)
-	localStorage.setItem('orb2', document.getElementById('p2OrbText').innerHTML)
-	localStorage.setItem('orb3', document.getElementById('p3OrbText').innerHTML)
-	localStorage.setItem('orb4', document.getElementById('p4OrbText').innerHTML)
-	localStorage.setItem('candy1', document.getElementById('p1CandyText').innerHTML)
-	localStorage.setItem('candy2', document.getElementById('p2CandyText').innerHTML)
-	localStorage.setItem('candy3', document.getElementById('p3CandyText').innerHTML)
-	localStorage.setItem('candy4', document.getElementById('p4CandyText').innerHTML)
-	localStorage.setItem('item1', document.getElementById('p1ItemText').innerHTML)
-	localStorage.setItem('item2', document.getElementById('p2ItemText').innerHTML)
-	localStorage.setItem('item3', document.getElementById('p3ItemText').innerHTML)
-	localStorage.setItem('item4', document.getElementById('p4ItemText').innerHTML)
-	localStorage.setItem('friend1', document.getElementById('p1FriendSpaceText').innerHTML)
-	localStorage.setItem('friend2', document.getElementById('p2FriendSpaceText').innerHTML)
-	localStorage.setItem('friend3', document.getElementById('p3FriendSpaceText').innerHTML)
-	localStorage.setItem('friend4', document.getElementById('p4FriendSpaceText').innerHTML)
-	localStorage.setItem('hex1', document.getElementById('p1HexText').innerHTML)
-	localStorage.setItem('hex2', document.getElementById('p2HexText').innerHTML)
-	localStorage.setItem('hex3', document.getElementById('p3HexText').innerHTML)
-	localStorage.setItem('hex4', document.getElementById('p4HexText').innerHTML)
-	localStorage.setItem('spin1', document.getElementById('p1SpinSpaceText').innerHTML)
-	localStorage.setItem('spin2', document.getElementById('p2SpinSpaceText').innerHTML)
-	localStorage.setItem('spin3', document.getElementById('p3SpinSpaceText').innerHTML)
-	localStorage.setItem('spin4', document.getElementById('p4SpinSpaceText').innerHTML)
-	localStorage.setItem('ztar1', document.getElementById('p1MiniZtarText').innerHTML)
-	localStorage.setItem('ztar2', document.getElementById('p2MiniZtarText').innerHTML)
-	localStorage.setItem('ztar3', document.getElementById('p3MiniZtarText').innerHTML)
-	localStorage.setItem('ztar4', document.getElementById('p4MiniZtarText').innerHTML)
-	localStorage.setItem('dice1', document.getElementById('p1SpecialDiceText').innerHTML)
-	localStorage.setItem('dice2', document.getElementById('p2SpecialDiceText').innerHTML)
-	localStorage.setItem('dice3', document.getElementById('p3SpecialDiceText').innerHTML)
-	localStorage.setItem('dice4', document.getElementById('p4SpecialDiceText').innerHTML)
-	localStorage.setItem('stars1', document.getElementById('p1StarsText').innerHTML)
-	localStorage.setItem('stars2', document.getElementById('p2StarsText').innerHTML)
-	localStorage.setItem('stars3', document.getElementById('p3StarsText').innerHTML)
-	localStorage.setItem('stars4', document.getElementById('p4StarsText').innerHTML)
-	localStorage.setItem('coins1', document.getElementById('p1CoinsText').innerHTML)
-	localStorage.setItem('coins2', document.getElementById('p2CoinsText').innerHTML)
-	localStorage.setItem('coins3', document.getElementById('p3CoinsText').innerHTML)
-	localStorage.setItem('coins4', document.getElementById('p4CoinsText').innerHTML)
+	for (let num2 = 0; num2 < 14; num2++) {
+		for (let num = 1; num < 5; num++) {
+			localStorage.setItem(countersShort[num2] + num, document.getElementById('p' + num + countersUp[num2] + 'Text').innerHTML)
+		}
+	}
+
 }
 
 /*
@@ -515,64 +282,14 @@ function resetCounters () {
 
 	localStorage.setItem('curTurn', 1)
 	localStorage.setItem('maxTurn', 20)
-	document.getElementById('maxTurnText').innerHTML = 30
+	document.getElementById('maxTurnText').innerHTML = 20
 
-	localStorage.setItem('hap1', 0)
-	localStorage.setItem('hap2', 0)
-	localStorage.setItem('hap3', 0)
-	localStorage.setItem('hap4', 0)
-	localStorage.setItem('mini1', 0)
-	localStorage.setItem('mini2', 0)
-	localStorage.setItem('mini3', 0)
-	localStorage.setItem('mini4', 0)
-	localStorage.setItem('red1', 0)
-	localStorage.setItem('red2', 0)
-	localStorage.setItem('red3', 0)
-	localStorage.setItem('red4', 0)
-	localStorage.setItem('run1', 0)
-	localStorage.setItem('run2', 0)
-	localStorage.setItem('run3', 0)
-	localStorage.setItem('run4', 0)
-	localStorage.setItem('shop1', 0)
-	localStorage.setItem('shop2', 0)
-	localStorage.setItem('shop3', 0)
-	localStorage.setItem('shop4', 0)
-	localStorage.setItem('orb1', 0)
-	localStorage.setItem('orb2', 0)
-	localStorage.setItem('orb3', 0)
-	localStorage.setItem('orb4', 0)
-	localStorage.setItem('candy1', 0)
-	localStorage.setItem('candy2', 0)
-	localStorage.setItem('candy3', 0)
-	localStorage.setItem('candy4', 0)
-	localStorage.setItem('item1', 0)
-	localStorage.setItem('item2', 0)
-	localStorage.setItem('item3', 0)
-	localStorage.setItem('item4', 0)
-	localStorage.setItem('friend1', 0)
-	localStorage.setItem('friend2', 0)
-	localStorage.setItem('friend3', 0)
-	localStorage.setItem('friend4', 0)
-	localStorage.setItem('hex1', 0)
-	localStorage.setItem('hex2', 0)
-	localStorage.setItem('hex3', 0)
-	localStorage.setItem('hex4', 0)
-	localStorage.setItem('spin1', 0)
-	localStorage.setItem('spin2', 0)
-	localStorage.setItem('spin3', 0)
-	localStorage.setItem('spin4', 0)
-	localStorage.setItem('ztar1', 0)
-	localStorage.setItem('ztar2', 0)
-	localStorage.setItem('ztar3', 0)
-	localStorage.setItem('ztar4', 0)
-	localStorage.setItem('dice1', 0)
-	localStorage.setItem('dice2', 0)
-	localStorage.setItem('dice3', 0)
-	localStorage.setItem('dice4', 0)
-	localStorage.setItem('stars1', 0)
-	localStorage.setItem('stars2', 0)
-	localStorage.setItem('stars3', 0)
-	localStorage.setItem('stars4', 0)
+	var num = 0
+	for (let num2 = 1; num2 < 13; num2++) {
+		num++
+		localStorage.setItem(countersShort[num2] + num, 0)
+	}
+
 	localStorage.setItem('coins1', 10)
 	localStorage.setItem('coins2', 10)
 	localStorage.setItem('coins3', 10)
@@ -615,7 +332,7 @@ function saveSettings (close) {
 	localStorage.setItem('toListAllCoin', document.getElementById('toListAllCoin').checked)
 
 	if (close == true) {
-		showHideDiv('settings')
+		showHideDiv(['settings'])
 	}
 }
 
@@ -678,28 +395,17 @@ function prepareMPO () {
 		changeCom(2)
 		changeCom(3)
 		changeCom(4)
-
-		document.getElementById('happeningOnOff').checked = stringToBoolean(localStorage.getItem('happening'))
-		document.getElementById('minigameOnOff').checked = stringToBoolean(localStorage.getItem('minigame'))
+		for (let num = 0; num < 4; num++) {
+			for (let num2 = 0; num2 < 14; num2++) {
+				document.getElementById(counters[num] + 'OnOff').checked = stringToBoolean(localStorage.getItem(counters[num]))
+			}
+		}
 		document.getElementById('minigameWinsOnOff').checked = stringToBoolean(localStorage.getItem('minigameWins'))
 		document.getElementById('minigameMiniStarsOnOff').checked = stringToBoolean(localStorage.getItem('minigameMiniStars'))
-		document.getElementById('redSpaceOnOff').checked = stringToBoolean(localStorage.getItem('redSpace'))
-		document.getElementById('runningOnOff').checked = stringToBoolean(localStorage.getItem('running'))
 		document.getElementById('slowOnOff').checked = stringToBoolean(localStorage.getItem('slow'))
-		document.getElementById('shoppingOnOff').checked = stringToBoolean(localStorage.getItem('shopping'))
-		document.getElementById('orbOnOff').checked = stringToBoolean(localStorage.getItem('orb'))
-		document.getElementById('candyOnOff').checked = stringToBoolean(localStorage.getItem('candy'))
-		document.getElementById('itemOnOff').checked = stringToBoolean(localStorage.getItem('item'))
-		document.getElementById('friendSpaceOnOff').checked = stringToBoolean(localStorage.getItem('friendSpace'))
-		document.getElementById('hexOnOff').checked = stringToBoolean(localStorage.getItem('hex'))
-		document.getElementById('spinSpaceOnOff').checked = stringToBoolean(localStorage.getItem('spinSpace'))
-		document.getElementById('miniZtarOnOff').checked = stringToBoolean(localStorage.getItem('miniZtar'))
-		document.getElementById('specialDiceOnOff').checked = stringToBoolean(localStorage.getItem('specialDice'))
-		document.getElementById('starsOnOff').checked = stringToBoolean(localStorage.getItem('stars'))
 		document.getElementById('inclBonusOnOff').checked = stringToBoolean(localStorage.getItem('inclBonus'))
 		document.getElementById('miniStarsOnOff').checked = stringToBoolean(localStorage.getItem('miniStars'))
 		document.getElementById('bananasOnOff').checked = stringToBoolean(localStorage.getItem('bananas'))
-		document.getElementById('coinsOnOff').checked = stringToBoolean(localStorage.getItem('coins'))
 
 		if (localStorage.getItem('miniStars') == 'true') {
 			changeStars('miniStars')
@@ -725,60 +431,14 @@ function prepareMPO () {
 		document.getElementById('curTurnText').innerHTML = localStorage.getItem('curTurn')
 		document.getElementById('maxTurnText').innerHTML = localStorage.getItem('maxTurn')
 	
-		document.getElementById('p1HappeningText').innerHTML = localStorage.getItem('hap1')
-		document.getElementById('p2HappeningText').innerHTML = localStorage.getItem('hap2')
-		document.getElementById('p3HappeningText').innerHTML = localStorage.getItem('hap3')
-		document.getElementById('p4HappeningText').innerHTML = localStorage.getItem('hap4')
-		document.getElementById('p1MinigameText').innerHTML = localStorage.getItem('mini1')
-		document.getElementById('p2MinigameText').innerHTML = localStorage.getItem('mini2')
-		document.getElementById('p3MinigameText').innerHTML = localStorage.getItem('mini3')
-		document.getElementById('p4MinigameText').innerHTML = localStorage.getItem('mini4')
-		document.getElementById('p1RedSpaceText').innerHTML = localStorage.getItem('red1')
-		document.getElementById('p2RedSpaceText').innerHTML = localStorage.getItem('red2')
-		document.getElementById('p3RedSpaceText').innerHTML = localStorage.getItem('red3')
-		document.getElementById('p4RedSpaceText').innerHTML = localStorage.getItem('red4')
-		document.getElementById('p1RunningText').innerHTML = localStorage.getItem('run1')
-		document.getElementById('p2RunningText').innerHTML = localStorage.getItem('run2')
-		document.getElementById('p3RunningText').innerHTML = localStorage.getItem('run3')
-		document.getElementById('p4RunningText').innerHTML = localStorage.getItem('run4')
-		document.getElementById('p1ShoppingText').innerHTML = localStorage.getItem('shop1')
-		document.getElementById('p2ShoppingText').innerHTML = localStorage.getItem('shop2')
-		document.getElementById('p3ShoppingText').innerHTML = localStorage.getItem('shop3')
-		document.getElementById('p4ShoppingText').innerHTML = localStorage.getItem('shop4')
-		document.getElementById('p1OrbText').innerHTML = localStorage.getItem('orb1')
-		document.getElementById('p2OrbText').innerHTML = localStorage.getItem('orb2')
-		document.getElementById('p3OrbText').innerHTML = localStorage.getItem('orb3')
-		document.getElementById('p4OrbText').innerHTML = localStorage.getItem('orb4')
-		document.getElementById('p1CandyText').innerHTML = localStorage.getItem('candy1')
-		document.getElementById('p2CandyText').innerHTML = localStorage.getItem('candy2')
-		document.getElementById('p3CandyText').innerHTML = localStorage.getItem('candy3')
-		document.getElementById('p4CandyText').innerHTML = localStorage.getItem('candy4')
-		document.getElementById('p1ItemText').innerHTML = localStorage.getItem('item1')
-		document.getElementById('p2ItemText').innerHTML = localStorage.getItem('item2')
-		document.getElementById('p3ItemText').innerHTML = localStorage.getItem('item3')
-		document.getElementById('p4ItemText').innerHTML = localStorage.getItem('item4')
-		document.getElementById('p1FriendSpaceText').innerHTML = localStorage.getItem('friend1')
-		document.getElementById('p2FriendSpaceText').innerHTML = localStorage.getItem('friend2')
-		document.getElementById('p3FriendSpaceText').innerHTML = localStorage.getItem('friend3')
-		document.getElementById('p4FriendSpaceText').innerHTML = localStorage.getItem('friend4')
-		document.getElementById('p1HexText').innerHTML = localStorage.getItem('hex1')
-		document.getElementById('p2HexText').innerHTML = localStorage.getItem('hex2')
-		document.getElementById('p3HexText').innerHTML = localStorage.getItem('hex3')
-		document.getElementById('p4HexText').innerHTML = localStorage.getItem('hex4')
-		document.getElementById('p1SpinSpaceText').innerHTML = localStorage.getItem('spin1')
-		document.getElementById('p2SpinSpaceText').innerHTML = localStorage.getItem('spin2')
-		document.getElementById('p3SpinSpaceText').innerHTML = localStorage.getItem('spin3')
-		document.getElementById('p4SpinSpaceText').innerHTML = localStorage.getItem('spin4')
-		document.getElementById('p1MiniZtarText').innerHTML = localStorage.getItem('ztar1')
-		document.getElementById('p2MiniZtarText').innerHTML = localStorage.getItem('ztar2')
-		document.getElementById('p3MiniZtarText').innerHTML = localStorage.getItem('ztar3')
-		document.getElementById('p4MiniZtarText').innerHTML = localStorage.getItem('ztar4')
-		document.getElementById('p1SpecialDiceText').innerHTML = localStorage.getItem('dice1')
-		document.getElementById('p2SpecialDiceText').innerHTML = localStorage.getItem('dice2')
-		document.getElementById('p3SpecialDiceText').innerHTML = localStorage.getItem('dice3')
-		document.getElementById('p4SpecialDiceText').innerHTML = localStorage.getItem('dice4')
+		for (let num2 = 0; num2 < 14; num2++) {
+			for (let num = 1; num < 5; num++) {
+				document.getElementById('p' + num + countersUp[num2] + 'Text').innerHTML = localStorage.getItem(countersShort[num2] + num)
+			}
+		}
 
 		callHighlight(false, true)
+		backup()
 	}
 
 	coinStarTie()

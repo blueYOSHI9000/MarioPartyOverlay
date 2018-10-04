@@ -461,8 +461,8 @@ src: url("font.ttf");
 .spinSpaceOnOff {
 	background-image:url(img/spinspace.png);
 }
-.miniZtarOnOff {
-	background-image:url(img/miniztar.png);
+.minusOnOff {
+	background-image:url(img/minus.png);
 }
 .specialDiceOnOff {
 	background-image:url(img/specialdice.png);
@@ -511,6 +511,8 @@ kamek
 
 =========
 
+stars
+coins
 happening
 minigame
 redSpace
@@ -522,10 +524,8 @@ item
 friendSpace
 hex
 spinSpace
-miniZtar
+minus
 specialDice
-stars
-coins
 */
 
 .iconLabel {
