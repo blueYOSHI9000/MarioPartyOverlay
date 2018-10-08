@@ -300,6 +300,9 @@ function callDisplayOnOff () {
 	displayOnOff('specialDice', true)
 	displayOnOff('stars', true)
 	displayOnOff('coins', true)
+	displayOnOff('ally', true)
+	displayOnOff('stompy', true)
+	displayOnOff('doormat', true)
 }
 
 /*
@@ -327,10 +330,10 @@ function callHighlight (resetHighlights, all, stars) {
 		document.getElementById('highlightColor').value = textColor
 	}
 
-	var counters = ['happening', 'minigame', 'redSpace', 'running', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice']
+	var counters = ['happening', 'minigame', 'redSpace', 'running', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat']
 
 	if (document.getElementById('enableHighlight').checked == true || resetHighlights == true || all == true || stars == true) {
-		for (let num = 0; num < 12; num++) {
+		for (let num = 0; num < counters.length; num++) {
 			if (document.getElementById(counters[num] + 'OnOff').checked == true || all == true) {
 				highlight(counters[num], stars)
 			}
@@ -631,6 +634,7 @@ function changeGame (game) {
 	hideChars.push(document.querySelectorAll('.mp8C'))
 	hideChars.push(document.querySelectorAll('.mp9C'))
 	hideChars.push(document.querySelectorAll('.mpDSC'))
+	hideChars.push(document.querySelectorAll('.smpC'))
 
 	showChars.push(document.querySelectorAll('.marioSpan'))
 	showChars.push(document.querySelectorAll('.luigiSpan'))
@@ -721,6 +725,7 @@ function changeGame (game) {
 		showChars.push(document.querySelectorAll('.hammerbroSpan'))
 		showChars.push(document.querySelectorAll('.drybonesSpan'))
 		showChars.push(document.querySelectorAll('.pompomSpan'))
+		showChars.push(document.querySelectorAll('.smpC'))
 	}
 	if (game == 'all') {
 		showChars.push(document.querySelectorAll('.blooperSpan'))
@@ -729,13 +734,14 @@ function changeGame (game) {
 		showChars.push(document.querySelectorAll('.mp9C'))
 	}
 
-	if (game == 'mpa' || game == 'mpit' || game == 'mpsr' || game == 'mptt100' || game == 'smp') {
+	if (game == 'mpa' || game == 'mpit' || game == 'mpsr' || game == 'mptt100') {
 		showChars.push(document.querySelectorAll('.mp6C'))
 		showChars.push(document.querySelectorAll('.mp7C'))
 		showChars.push(document.querySelectorAll('.mp8C'))
 		showChars.push(document.querySelectorAll('.mp9C'))
 		showChars.push(document.querySelectorAll('.mp10C'))
 		showChars.push(document.querySelectorAll('.mpDSC'))
+		showChars.push(document.querySelectorAll('.smpC'))
 
 		document.getElementById('counterError').style = ''
 	} else {

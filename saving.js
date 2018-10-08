@@ -21,13 +21,16 @@ var hex = [0, 0, 0, 0]
 var spin = [0, 0, 0, 0]
 var minus = [0, 0, 0, 0]
 var dice = [0, 0, 0, 0]
+var ally = [0, 0, 0, 0]
+var stompy = [0, 0, 0, 0]
+var doormat = [0, 0, 0, 0]
 var stars = [0, 0, 0, 0]
 var coins = [0, 0, 0, 0]
 
-var countersShort = ['hap', 'mini', 'red', 'run', 'shop', 'orb', 'candy', 'item', 'friend', 'hex', 'spin', 'minus', 'dice', 'stars', 'coins']
-var counters = ['happening', 'minigame', 'redSpace', 'running', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'stars', 'coins']
+var countersShort = ['hap', 'mini', 'red', 'run', 'shop', 'orb', 'candy', 'item', 'friend', 'hex', 'spin', 'minus', 'dice', 'ally', 'stompy', 'doormat', 'stars', 'coins']
+var counters = ['happening', 'minigame', 'redSpace', 'running', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'stars', 'coins']
 var countersUp = []
-for (let num = 0; num < 14; num++) {
+for (let num = 0; num < 17; num++) {
 	countersUp.push(counters[num].charAt(0).toUpperCase() + counters[num].slice(1))
 }
 
@@ -83,6 +86,9 @@ function backup() {
 		spin[num2] = document.getElementById('p' + num + 'SpinSpaceText').innerHTML
 		minus[num2] = document.getElementById('p' + num + 'MinusText').innerHTML
 		dice[num2] = document.getElementById('p' + num + 'SpecialDiceText').innerHTML
+		spin[num2] = document.getElementById('p' + num + 'AllyText').innerHTML
+		minus[num2] = document.getElementById('p' + num + 'StompyText').innerHTML
+		dice[num2] = document.getElementById('p' + num + 'DoormatText').innerHTML
 		stars[num2] = document.getElementById('p' + num + 'StarsText').innerHTML
 		coins[num2] = document.getElementById('p' + num + 'CoinsText').innerHTML
 	}
@@ -121,6 +127,9 @@ function restore(forceRestore) {
 			document.getElementById('p' + num + 'SpinSpaceText').innerHTML = spin[num2]
 			document.getElementById('p' + num + 'MinusText').innerHTML = minus[num2]
 			document.getElementById('p' + num + 'SpecialDiceText').innerHTML = dice[num2]
+			document.getElementById('p' + num + 'AllyText').innerHTML = ally[num2]
+			document.getElementById('p' + num + 'StompyText').innerHTML = stompy[num2]
+			document.getElementById('p' + num + 'DoormatText').innerHTML = doormat[num2]
 			document.getElementById('p' + num + 'StarsText').innerHTML = stars[num2]
 			document.getElementById('p' + num + 'CoinsText').innerHTML = coins[num2]
 		}
@@ -148,7 +157,7 @@ function savePlayers (close) {
 	localStorage.setItem('com3', document.getElementById('com3').checked)
 	localStorage.setItem('com4', document.getElementById('com4').checked)
 
-	for (let num = 0; num < 14; num++) {
+	for (let num = 0; num < 17; num++) {
 		localStorage.setItem(counters[num], document.getElementById(counters[num] + 'OnOff').checked)
 	}
 		localStorage.setItem('minigameWins', document.getElementById('minigameWinsOnOff').checked)
@@ -196,6 +205,9 @@ function resetPlayers () {
 	localStorage.setItem('spinSpace', false)
 	localStorage.setItem('minus', false)
 	localStorage.setItem('specialDice', false)
+	localStorage.setItem('ally', false)
+	localStorage.setItem('stompy', false)
+	localStorage.setItem('doormat', false)
 	localStorage.setItem('stars', false)
 	localStorage.setItem('inclBonus', false)
 	localStorage.setItem('miniStars', false)
@@ -218,6 +230,9 @@ function resetPlayers () {
 	document.getElementById('spinSpaceOnOff').checked = false
 	document.getElementById('minusOnOff').checked = false
 	document.getElementById('specialDiceOnOff').checked = false
+	document.getElementById('allyOnOff').checked = false
+	document.getElementById('stompyOnOff').checked = false
+	document.getElementById('doormatOnOff').checked = false
 	document.getElementById('starsOnOff').checked = false
 	document.getElementById('inclBonusOnOff').checked = false
 	document.getElementById('miniStarsOnOff').checked = false
@@ -260,7 +275,7 @@ function saveCounters () {
 	localStorage.setItem('curTurn', document.getElementById('curTurnText').innerHTML)
 	localStorage.setItem('maxTurn', document.getElementById('maxTurnText').innerHTML)
 
-	for (let num2 = 0; num2 < 14; num2++) {
+	for (let num2 = 0; num2 < 17; num2++) {
 		for (let num = 1; num < 5; num++) {
 			localStorage.setItem(countersShort[num2] + num, document.getElementById('p' + num + countersUp[num2] + 'Text').innerHTML)
 		}
@@ -284,10 +299,10 @@ function resetCounters () {
 	localStorage.setItem('maxTurn', 20)
 	document.getElementById('maxTurnText').innerHTML = 20
 
-	var num = 0
-	for (let num2 = 1; num2 < 13; num2++) {
-		num++
-		localStorage.setItem(countersShort[num2] + num, 0)
+	for (let num = 1; num2 < 5; num++) {
+		for (let num2 = 1; num2 < 17; num2++) {
+			localStorage.setItem(countersShort[num2] + num, 0)
+		}
 	}
 
 	localStorage.setItem('coins1', 10)
@@ -396,10 +411,11 @@ function prepareMPO () {
 		changeCom(3)
 		changeCom(4)
 		for (let num = 0; num < 4; num++) {
-			for (let num2 = 0; num2 < 14; num2++) {
+			for (let num2 = 0; num2 < 17; num2++) {
 				document.getElementById(counters[num] + 'OnOff').checked = stringToBoolean(localStorage.getItem(counters[num]))
 			}
 		}
+		console.log(stringToBoolean(localStorage.getItem('ally')))
 		document.getElementById('minigameWinsOnOff').checked = stringToBoolean(localStorage.getItem('minigameWins'))
 		document.getElementById('minigameMiniStarsOnOff').checked = stringToBoolean(localStorage.getItem('minigameMiniStars'))
 		document.getElementById('slowOnOff').checked = stringToBoolean(localStorage.getItem('slow'))
@@ -431,7 +447,7 @@ function prepareMPO () {
 		document.getElementById('curTurnText').innerHTML = localStorage.getItem('curTurn')
 		document.getElementById('maxTurnText').innerHTML = localStorage.getItem('maxTurn')
 	
-		for (let num2 = 0; num2 < 14; num2++) {
+		for (let num2 = 0; num2 < 17; num2++) {
 			for (let num = 1; num < 5; num++) {
 				document.getElementById('p' + num + countersUp[num2] + 'Text').innerHTML = localStorage.getItem(countersShort[num2] + num)
 			}

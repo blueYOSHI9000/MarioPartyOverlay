@@ -467,6 +467,15 @@ src: url("font.ttf");
 .specialDiceOnOff {
 	background-image:url(img/specialdice.png);
 }
+.allyOnOff {
+	background-image:url(img/ally.png);
+}
+.stompyOnOff {
+	background-image:url(img/stompy.png);
+}
+.doormatOnOff {
+	background-image:url(img/doormat.png);
+}
 .starsOnOff {
 	background-image:url(img/star.png);
 }
@@ -479,54 +488,6 @@ src: url("font.ttf");
 .coinsOnOff {
 	background-image:url(img/coin.png);
 }
-
-/*
-mario
-luigi
-yoshi
-peach
-daisy
-rosalina
-toad
-toadette
-wario
-waluigi
-dk
-diddy
-birdo
-bowser
-bowserjr
-koopakid
-pompom
-goomba
-koopa
-drybones
-monty
-boo
-spike
-blooper
-shyguy
-hammerbro
-kamek
-
-=========
-
-stars
-coins
-happening
-minigame
-redSpace
-running
-shopping
-orb
-candy
-item
-friendSpace
-hex
-spinSpace
-minus
-specialDice
-*/
 
 .iconLabel {
 	height: 40px;
@@ -627,7 +588,7 @@ specialDice
 	background-color: rgba(0, 0, 0, 0.5);
 }
 #mobileSettingsContent {
-	width: 880px;
+	width: 900px;
 }
 
 /* == mobile version == */
