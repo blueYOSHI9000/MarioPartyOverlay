@@ -488,7 +488,7 @@ function resetSettings () {
 	document.getElementById('highlightColor').value = '#ff0000'
 	document.getElementById('noTie').checked = false
 	document.getElementById('autoSave').checked = false
-	document.getElementById('permSave').checked = false
+	document.getElementById('permSave').checked = true
 
 	document.getElementById('toP1Name').value = ''
 	document.getElementById('toP2Name').value = ''
