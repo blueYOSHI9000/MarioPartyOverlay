@@ -160,12 +160,12 @@ function savePlayers (close) {
 	for (let num = 0; num < 17; num++) {
 		localStorage.setItem(counters[num], document.getElementById(counters[num] + 'OnOff').checked)
 	}
-		localStorage.setItem('minigameWins', document.getElementById('minigameWinsOnOff').checked)
-		localStorage.setItem('minigameMiniStars', document.getElementById('minigameMiniStarsOnOff').checked)
-		localStorage.setItem('slow', document.getElementById('slowOnOff').checked)
-		localStorage.setItem('miniStars', document.getElementById('miniStarsOnOff').checked)
-		localStorage.setItem('bananas', document.getElementById('bananasOnOff').checked)
-		localStorage.setItem('inclBonus', document.getElementById('inclBonusOnOff').checked)
+	localStorage.setItem('minigameWins', document.getElementById('minigameWinsOnOff').checked)
+	localStorage.setItem('minigameMiniStars', document.getElementById('minigameMiniStarsOnOff').checked)
+	localStorage.setItem('slow', document.getElementById('slowOnOff').checked)
+	localStorage.setItem('miniStars', document.getElementById('miniStarsOnOff').checked)
+	localStorage.setItem('bananas', document.getElementById('bananasOnOff').checked)
+	localStorage.setItem('inclBonus', document.getElementById('inclBonusOnOff').checked)
 
 	localStorage.setItem('curGame', curGame)
 
@@ -410,12 +410,11 @@ function prepareMPO () {
 		changeCom(2)
 		changeCom(3)
 		changeCom(4)
-		for (let num = 0; num < 4; num++) {
-			for (let num2 = 0; num2 < 17; num2++) {
-				document.getElementById(counters[num] + 'OnOff').checked = stringToBoolean(localStorage.getItem(counters[num]))
-			}
+
+		for (let num2 = 0; num2 < 17; num2++) {
+			document.getElementById(counters[num2] + 'OnOff').checked = stringToBoolean(localStorage.getItem(counters[num2]))
 		}
-		console.log(stringToBoolean(localStorage.getItem('ally')))
+		
 		document.getElementById('minigameWinsOnOff').checked = stringToBoolean(localStorage.getItem('minigameWins'))
 		document.getElementById('minigameMiniStarsOnOff').checked = stringToBoolean(localStorage.getItem('minigameMiniStars'))
 		document.getElementById('slowOnOff').checked = stringToBoolean(localStorage.getItem('slow'))
