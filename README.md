@@ -1,5 +1,5 @@
 # What's Mario Party Overlay?
-Mario Party Overlay is a website to display which player gets the bonus stars in the Mario Party games 1-10 and DS. It's also possible to include this in a Stream through OBS or other streaming software thanks to the greenscreen effect.  
+Mario Party Overlay is a website to display which player gets the bonus stars in the Mario Party games 1-10, DS and SMP. It's also possible to include this in a Stream through OBS or other streaming software thanks to the greenscreen effect.  
 
 **[Website](https://blueyoshi9000.github.io/MarioPartyOverlay/)**   
 [Tutorial](https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki)
