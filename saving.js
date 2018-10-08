@@ -299,7 +299,7 @@ function resetCounters () {
 	localStorage.setItem('maxTurn', 20)
 	document.getElementById('maxTurnText').innerHTML = 20
 
-	for (let num = 1; num2 < 5; num++) {
+	for (let num = 1; num < 5; num++) {
 		for (let num2 = 1; num2 < 17; num2++) {
 			localStorage.setItem(countersShort[num2] + num, 0)
 		}
