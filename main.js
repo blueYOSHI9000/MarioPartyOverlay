@@ -1,311 +1,4 @@
 /*
-* Updates the counters.
-*
-* @param {number} player Which player should be updated.
-* @param {string} action What should be done.
-* @param {string} amount The amount that should be changed
-* @param {string} counter Which counter should be updated.
-*/
-function counterButtons (player, action, amount, counter) {
-	//console.log('Player: ' + player + ', action: ' + action + ', amount: ' + amount + ', counter: ' + counter)
-	var result = 0
-
-	if (amount == '') {
-		amount = 1
-	}
-
-	if (counter != 'curTurn' && counter != 'maxTurn' && counter != 'coinStar') {
-		counter = counter.charAt(0).toUpperCase() + counter.slice(1)
-		result = parseInt(document.getElementById('p' + player + counter + 'Text').innerHTML)
-
-		if (action == 'P') {
-			for (let num = 0; num < amount; num++) {
-				result++
-			}
-		} else if (action == 'M') {
-			for (let num = 0; num < amount; num++) {
-				result--
-			}
-		}
-		
-		if (result >= 999) {
-			document.getElementById('p' + player + counter + 'Text').innerHTML = 999
-		} else if (result <= 0) {
-			document.getElementById('p' + player + counter + 'Text').innerHTML = 0
-		} else {
-			document.getElementById('p' + player + counter + 'Text').innerHTML = result
-		}
-	}
-
-	if (counter == 'coinStar') {
-		result = parseInt(document.getElementById('coinStarText').innerHTML)
-
-		if (action == 'P') {
-			for (let num = 0; num < amount; num++) {
-				result++
-			}
-		} else if (action == 'M') {
-			for (let num = 0; num < amount; num++) {
-				result--
-			}
-		}
-		coinStar(result)
-
-	} else if (counter == 'curTurn' || counter == 'maxTurn') {
-		turns(counter, amount, action)
-
-	} else if (document.getElementById('enableHighlight').checked == true && counter != 'coins') {
-		highlight(counter)
-	}
-
-	if (document.getElementById('slowOnOff').checked == true) {
-		slowHighlight()
-	}
-	if (document.getElementById('starsOnOff').checked == true && document.getElementById('inclBonusOnOff').checked == true) {
-		updateStars()
-	}
-	if (document.getElementById('coinsOnOff').checked == true) {
-		updateCoins(player)
-	}
-}
-
-/*
-* Calls counterButtons() for the mobile site.
-* 
-* @param {string} counter Which counter should be updated.
-* @param {player} player Which player should be updated.
-*/
-function mobileButtons (counter, player) {
-	var action = ''
-	var amount = 0
-
-	if (document.getElementById('mobileTypeMinus').checked == true) {
-		action = 'M'
-	} else {
-		action = 'P'
-	}
-
-	if (document.getElementById('type5').checked == true) {
-		amount = 5
-	} else if (document.getElementById('type10').checked == true) {
-		amount = 10
-	} else {
-		amount = 1
-	}
-
-	if (counter == 'Stars') {
-		updateStars(player, action, amount)
-	} else {
-		counterButtons(player, action, amount, counter)
-	}
-}
-
-/*
-* Updates the Star counter.
-*
-* @param {number} player Which player should be updated.
-* @param {string} action What should be done.
-* @param {string} amount The amount that should be changed
-*/
-var bonusStars = ['', 0, 0, 0, 0]
-
-function updateStars (player, action, amount) {
-	if (document.getElementById('starsOnOff').checked == false && document.getElementById('inclBonusOnOff').checked == true) {
-		document.getElementById('starsOnOff').checked = true
-		displayOnOff('stars')
-	}
-
-	var activated = document.getElementById('inclBonusOnOff').checked
-	var result = ['', document.getElementById('p1StarsText').innerHTML, document.getElementById('p2StarsText').innerHTML, document.getElementById('p3StarsText').innerHTML, document.getElementById('p4StarsText').innerHTML]
-
-	for (let num = 1; num < 5; num++) {
-		var resultSplit = result[num].split('')
-		var resArr = []
-		for (var num2 = 0; num2 < resultSplit.length; num2++) {
-			if (resultSplit[num2] != ' ') {
-				resArr.push(resultSplit[num2])
-			} else {
-				break;
-			}
-		}
-		result[num] = resArr.join('')
-	}
-
-	if (action == 'P') {
-		for (let num = 0; num < amount; num++) {
-			result[player]++
-		}
-	} else if (action == 'M') {
-		for (let num = 0; num < amount; num++) {
-			result[player]--
-		}
-	}
-
-
-	if (activated == false) {
-		for (let num = 1; num < 5; num++) {
-			if (result[num] >= 999) {
-				result[num] = 999
-			} else if (result[num] <= 0) {
-				result[num] = 0
-			}
-			document.getElementById('p' + num + 'StarsText').innerHTML = result[num]
-		}
-	} else if (activated == true) {
-		bonusStars = ['', 0, 0, 0, 0]
-		callHighlight(false, false, true)
-
-		if (document.getElementById('miniStarsOnOff').checked == true) {
-			for (let num = 1; num < 5; num++) {
-				bonusStars[num] = bonusStars[num] * 5
-			}
-		} else if (document.getElementById('bananasOnOff').checked == true) {
-			for (let num = 1; num < 5; num++) {
-				bonusStars[num] = bonusStars[num] * 10
-			}
-		}
-
-		for (let num = 1; num < 5; num++) {
-			if (result[num] >= 999) {
-				result[num] = 999
-			} else if (result[num] <= 0) {
-				result[num] = 0
-			}
-			document.getElementById('p' + num + 'StarsText').innerHTML = result[num] + ' + ' + bonusStars[num]
-		}
-	}
-}
-
-function updateCoins (player) {
-	var result = parseInt(document.getElementById('p' + player + 'CoinsText').innerHTML)
-	var coinStar = parseInt(document.getElementById('coinStarText').innerHTML)
-	console.log('Player:' + player + ', Result: ' + result + ', coinStar: ' + coinStar)
-
-	if (result == coinStar) {
-		if (document.getElementById('p' + player + 'CoinStarTie').checked == true) {} else {
-			document.getElementById('p' + player + 'CoinStarTie').checked = true
-		}
-	} else if (result > coinStar) {
-		document.getElementById('p1CoinStarTie').checked = false
-		document.getElementById('p2CoinStarTie').checked = false
-		document.getElementById('p3CoinStarTie').checked = false
-		document.getElementById('p4CoinStarTie').checked = false
-		document.getElementById('p' + player + 'CoinStarTie').checked = true
-		document.getElementById('coinStarText').innerHTML = result
-	}
-	coinStarTie()
-}
-
-/*
-* Checks if Ctrl is pressed.
-*/
-function ctrlPressed (e) {
-	if (e.ctrlKey && ctrlKeyVar == false) {
-		ctrlKeyVar = true
-		if (document.getElementById('mobileTypeMinus').checked == false) {
-			document.getElementById('mobileTypeMinus').checked = true
-		} else if (document.getElementById('mobileTypeMinus').checked == true) {
-			document.getElementById('mobileTypeMinus').checked = false
-		}
-	} else if (e.key == '1') {
-		document.getElementById('type1').checked = true
-	} else if (e.key == '5') {
-		document.getElementById('type5').checked = true
-	} else if (e.key == '0') {
-		document.getElementById('type10').checked = true
-	}
-}
-
-/*
-* Checks if Ctrl is released.
-*/
-function ctrlReleased (e) {
-	if (ctrlKeyVar == true) {
-		ctrlKeyVar = false
-		if (document.getElementById('mobileTypeMinus').checked == false) {
-			document.getElementById('mobileTypeMinus').checked = true
-		} else if (document.getElementById('mobileTypeMinus').checked == true) {
-			document.getElementById('mobileTypeMinus').checked = false
-		}
-	}
-}
-
-var ctrlKeyVar = false
-window.onkeydown = ctrlPressed
-window.onkeyup = ctrlReleased
-
-/*
-* Hides and shows counters after pressing the "on/off" buttons.
-*
-* @param {string} counter Which counter should be hidden/shown.
-* @param {boolean} start Hide/show certain counters depending on what they should be (used when loading the site).
-*/
-var callSlowStar = true
-
-function displayOnOff (counter, start) {
-	var counterClass = document.querySelectorAll('.' + counter)
-
-	if (document.getElementById(counter + 'OnOff').checked == false) {
-		var displayVar = 'none'
-		if (counter == 'minigame' && (document.getElementById('minigameWinsOnOff').checked == true || document.getElementById('minigameMiniStarsOnOff').checked == true)) {
-			document.getElementById('minigameWinsOnOff').checked = false
-			document.getElementById('minigameMiniStarsOnOff').checked = false
-		} else if (counter == 'running' && document.getElementById('slowOnOff').checked == true) {
-			document.getElementById('slowOnOff').checked = false
-		} else if (counter == 'stars' && document.getElementById('inclBonusOnOff').checked == true) {
-			document.getElementById('inclBonusOnOff').checked = false
-		}
-		if (counter == 'stars' && document.getElementById('miniStarsOnOff').checked == true) {
-			document.getElementById('miniStarsOnOff').checked = false
-		} else if (counter == 'stars' && document.getElementById('bananasOnOff').checked == true) {
-			document.getElementById('bananasOnOff').checked = false
-		}
-
-	} else {
-		var displayVar = ''
-	}
-
-	for (var num = 0; num < counterClass.length; num++) {
-		counterClass[num].style.display = displayVar
-	}
-
-	if (start) {} else if (callSlowStar == true && counter == 'running') {
-		slowStar()
-		callSlowStar = false
-	}
-	if (counter == 'minigame') {
-		minigameWins()
-	}
-	if ((document.getElementById('starsOnOff').checked == true && document.getElementById('inclBonusOnOff').checked == true) || counter == 'stars') {
-		updateStars()
-	}
-}
-
-/*
-* Calls displayOnOff() when loading the page.
-*/
-function callDisplayOnOff () {
-	displayOnOff('happening', true)
-	displayOnOff('minigame', true)
-	displayOnOff('redSpace', true)
-	displayOnOff('running', true)
-	displayOnOff('shopping', true)
-	displayOnOff('orb', true)
-	displayOnOff('candy', true)
-	displayOnOff('item', true)
-	displayOnOff('friendSpace', true)
-	displayOnOff('hex', true)
-	displayOnOff('spinSpace', true)
-	displayOnOff('minus', true)
-	displayOnOff('specialDice', true)
-	displayOnOff('stars', true)
-	displayOnOff('coins', true)
-	displayOnOff('ally', true)
-	displayOnOff('stompy', true)
-	displayOnOff('doormat', true)
-}
-
-/*
 * Resets or starts the highlighting feature by calling callHighlight().
 */
 function resetHighlights () {
@@ -538,6 +231,11 @@ function minigameWins (type) {
 	}
 }
 
+/*
+* Updates the star counter image.
+* 
+* @param {string} image Which image should be used.
+*/
 function changeStars (image) {
 	var source = ''
 
@@ -564,536 +262,74 @@ function changeStars (image) {
 }
 
 /*
-* Updates the characters.
-* 
-* @param {number} player Which player should be updated.
-* @param {boolean} character What character should be used.
+* Hides and shows counters after pressing the "on/off" buttons.
+*
+* @param {string} counter Which counter should be hidden/shown.
+* @param {boolean} start Hide/show certain counters depending on what they should be (used when loading the site).
 */
-function changeCharacters (player, character) {
-	var selected = document.querySelector('input[name="icons"]:checked').value
+var callSlowStar = true
 
-	characters[player] = character
-	document.getElementById(character + player).checked = true
+function displayOnOff (counter, start) {
+	var counterClass = document.querySelectorAll('.' + counter)
 
-	document.getElementById('p' + player + 'Img').src = 'img/' + selected + '/' + character + '.png'
-	coinStarTie()
-}
+	if (document.getElementById(counter + 'OnOff').checked == false) {
+		var displayVar = 'none'
+		if (counter == 'minigame' && (document.getElementById('minigameWinsOnOff').checked == true || document.getElementById('minigameMiniStarsOnOff').checked == true)) {
+			document.getElementById('minigameWinsOnOff').checked = false
+			document.getElementById('minigameMiniStarsOnOff').checked = false
+		} else if (counter == 'running' && document.getElementById('slowOnOff').checked == true) {
+			document.getElementById('slowOnOff').checked = false
+		} else if (counter == 'stars' && document.getElementById('inclBonusOnOff').checked == true) {
+			document.getElementById('inclBonusOnOff').checked = false
+		}
+		if (counter == 'stars' && document.getElementById('miniStarsOnOff').checked == true) {
+			document.getElementById('miniStarsOnOff').checked = false
+		} else if (counter == 'stars' && document.getElementById('bananasOnOff').checked == true) {
+			document.getElementById('bananasOnOff').checked = false
+		}
 
-var characters = ['', 'mario', 'luigi', 'yoshi', 'peach']
-
-/*
-* Changes com status of a character.
-* 
-* @param {number} player Which player should be updated.
-*/
-function changeCom (player) {
-	if (document.getElementById('com' + player).checked == true) {
-		document.getElementById('p' + player + 'ComDisplay').style.visibility = 'visible'
 	} else {
-		document.getElementById('p' + player + 'ComDisplay').style.visibility = 'hidden'
+		var displayVar = ''
+	}
+
+	for (var num = 0; num < counterClass.length; num++) {
+		counterClass[num].style.display = displayVar
+	}
+
+	if (start) {} else if (callSlowStar == true && counter == 'running') {
+		slowStar()
+		callSlowStar = false
+	}
+	if (counter == 'minigame') {
+		minigameWins()
+	}
+	if ((document.getElementById('starsOnOff').checked == true && document.getElementById('inclBonusOnOff').checked == true) || counter == 'stars') {
+		updateStars()
 	}
 }
 
 /*
-* Show/Hide characters based on the selected game.
-* 
-* @param {string} game What game is currently used.
+* Calls displayOnOff() when loading the page.
 */
-function changeGame (game) {
-	document.getElementById(game).checked = true
-	curGame = game
-	var showChars = []
-	var hideChars = []
-
-	hideChars.push(document.querySelectorAll('.warioSpan'))
-	hideChars.push(document.querySelectorAll('.daisySpan'))
-	hideChars.push(document.querySelectorAll('.rosalinaSpan'))
-	hideChars.push(document.querySelectorAll('.toadSpan'))
-	hideChars.push(document.querySelectorAll('.toadetteSpan'))
-	hideChars.push(document.querySelectorAll('.waluigiSpan'))
-	hideChars.push(document.querySelectorAll('.dkSpan'))
-	hideChars.push(document.querySelectorAll('.diddySpan'))
-	hideChars.push(document.querySelectorAll('.birdoSpan'))
-	hideChars.push(document.querySelectorAll('.bowserSpan'))
-	hideChars.push(document.querySelectorAll('.bowserjrSpan'))
-	hideChars.push(document.querySelectorAll('.koopakidSpan'))
-	hideChars.push(document.querySelectorAll('.pompomSpan'))
-	hideChars.push(document.querySelectorAll('.goombaSpan'))
-	hideChars.push(document.querySelectorAll('.koopaSpan'))
-	hideChars.push(document.querySelectorAll('.drybonesSpan'))
-	hideChars.push(document.querySelectorAll('.montySpan'))
-	hideChars.push(document.querySelectorAll('.booSpan'))
-	hideChars.push(document.querySelectorAll('.spikeSpan'))
-	hideChars.push(document.querySelectorAll('.blooperSpan'))
-	hideChars.push(document.querySelectorAll('.shyguySpan'))
-	hideChars.push(document.querySelectorAll('.hammerbroSpan'))
-	hideChars.push(document.querySelectorAll('.kamekSpan'))
-
-	hideChars.push(document.querySelectorAll('.mp6C'))
-	hideChars.push(document.querySelectorAll('.mp7C'))
-	hideChars.push(document.querySelectorAll('.mp8C'))
-	hideChars.push(document.querySelectorAll('.mp9C'))
-	hideChars.push(document.querySelectorAll('.mpDSC'))
-	hideChars.push(document.querySelectorAll('.smpC'))
-
-	showChars.push(document.querySelectorAll('.marioSpan'))
-	showChars.push(document.querySelectorAll('.luigiSpan'))
-	showChars.push(document.querySelectorAll('.peachSpan'))
-	showChars.push(document.querySelectorAll('.yoshiSpan'))
-	if (game != 'mpa') {
-		showChars.push(document.querySelectorAll('.warioSpan'))
-	}
-
-	if (game == 'mp1' || game == 'mp2' || game == 'mp3' || game == 'mp4' || game == 'mp4' || game == 'mp10' || game == 'mpsr' || game == 'smp' || game == 'all') {
-		showChars.push(document.querySelectorAll('.dkSpan'))
-	}
-	if (game == 'mp3' || game == 'mp4' || game == 'mp5' || game == 'mp6' || game == 'mp7' || game == 'mp8' || game == 'mp9' || game == 'mp10' || game == 'mpds' || game == 'mpit' || game == 'mpsr' || game == 'mptt100' || game == 'smp' || game == 'all') {
-		showChars.push(document.querySelectorAll('.waluigiSpan'))
-		showChars.push(document.querySelectorAll('.daisySpan'))
-	}
-	if (game == 'mp6' || game == 'all') {
-		showChars.push(document.querySelectorAll('.koopakidSpan'))
-		showChars.push(document.querySelectorAll('.mp6C'))
-	}
-	if (game == 'mp6' || game == 'mp7' || game == 'mp8') {
-		showChars.push(document.querySelectorAll('.booSpan'))
-		showChars.push(document.querySelectorAll('.toadetteSpan'))
-	}
-	if (game == 'mp6' || game == 'mp7' || game == 'mp8' || game == 'mp9' || game == 'mp10' || game == 'mpds' || game == 'mpit' || game == 'mpsr' || game == 'all')  {
-		showChars.push(document.querySelectorAll('.toadSpan'))
-	}
-	if (game == 'mp7' || game == 'mp8' || game == 'all') {
-		showChars.push(document.querySelectorAll('.birdoSpan'))
-		showChars.push(document.querySelectorAll('.drybonesSpan'))
-	}
-	if (game == 'mp7' || game == 'all') {
-		showChars.push(document.querySelectorAll('.mp7C'))
-	}
-	if (game == 'mp8') {
-		showChars.push(document.querySelectorAll('.blooperSpan'))
-		showChars.push(document.querySelectorAll('.hammerbroSpan'))
-		showChars.push(document.querySelectorAll('.mp8C'))
-	}
-	if (game == 'mp9') {
-		showChars.push(document.querySelectorAll('.koopaSpan'))
-		showChars.push(document.querySelectorAll('.shyguySpan'))
-		showChars.push(document.querySelectorAll('.kamekSpan'))
-		showChars.push(document.querySelectorAll('.birdoSpan'))
-		showChars.push(document.querySelectorAll('.mp9C'))
-	}
-	if (game == 'mp9' || game == 'mp10') {
-		hideChars.push(document.querySelectorAll('.happeningC'))
-	} else {
-		showChars.push(document.querySelectorAll('.happeningC'))
-	}
-	if (game == 'smp' || game ==  'all') {
-		showChars.push(document.querySelectorAll('.koopaSpan'))
-		showChars.push(document.querySelectorAll('.shyguySpan'))
-	}
-	if (game == 'mp10' || game == 'all') {
-		showChars.push(document.querySelectorAll('.rosalinaSpan'))
-		showChars.push(document.querySelectorAll('.spikeSpan'))
-		showChars.push(document.querySelectorAll('.toadetteSpan'))
-	}
-	if (game == 'mp10' || game == 'all') {
-		showChars.push(document.querySelectorAll('.rosalinaSpan'))
-		showChars.push(document.querySelectorAll('.spikeSpan'))
-		showChars.push(document.querySelectorAll('.toadetteSpan'))
-		showChars.push(document.querySelectorAll('.mp10C'))
-	}
-	if (game == 'mpds' || game == 'all') {
-		showChars.push(document.querySelectorAll('.mpDSC'))
-	}
-	if (game == 'mpit' || game == 'mpsr' || game == 'mptt100' || game == 'smp') {
-		showChars.push(document.querySelectorAll('.rosalinaSpan'))
-	}
-	if (game == 'mpit') {
-		showChars.push(document.querySelectorAll('.booSpan'))
-		showChars.push(document.querySelectorAll('.bowserjrSpan'))
-	}
-	if (game == 'mpsr') {
-		showChars.push(document.querySelectorAll('.toadetteSpan'))
-		showChars.push(document.querySelectorAll('.diddySpan'))
-	}
-	if (game == 'smp' || game == 'all') {
-		showChars.push(document.querySelectorAll('.bowserSpan'))
-		showChars.push(document.querySelectorAll('.goombaSpan'))
-		showChars.push(document.querySelectorAll('.montySpan'))
-		showChars.push(document.querySelectorAll('.diddySpan'))
-		showChars.push(document.querySelectorAll('.bowserjrSpan'))
-		showChars.push(document.querySelectorAll('.booSpan'))
-		showChars.push(document.querySelectorAll('.hammerbroSpan'))
-		showChars.push(document.querySelectorAll('.drybonesSpan'))
-		showChars.push(document.querySelectorAll('.pompomSpan'))
-		showChars.push(document.querySelectorAll('.smpC'))
-	}
-	if (game == 'all') {
-		showChars.push(document.querySelectorAll('.blooperSpan'))
-		showChars.push(document.querySelectorAll('.kamekSpan'))
-		showChars.push(document.querySelectorAll('.mp8C'))
-		showChars.push(document.querySelectorAll('.mp9C'))
-	}
-
-	if (game == 'mpa' || game == 'mpit' || game == 'mpsr' || game == 'mptt100') {
-		showChars.push(document.querySelectorAll('.mp6C'))
-		showChars.push(document.querySelectorAll('.mp7C'))
-		showChars.push(document.querySelectorAll('.mp8C'))
-		showChars.push(document.querySelectorAll('.mp9C'))
-		showChars.push(document.querySelectorAll('.mp10C'))
-		showChars.push(document.querySelectorAll('.mpDSC'))
-		showChars.push(document.querySelectorAll('.smpC'))
-
-		document.getElementById('counterError').style = ''
-	} else {
-		document.getElementById('counterError').style = 'display: none;'
-	}
-
-	for (var num = 0; num < hideChars.length; num++) {
-		for (var num2 = 0; num2 < hideChars[num].length; num2++) {
-			//hideChars[num][num2] = hideChars[num][num2] + 'Span'
-			hideChars[num][num2].style.display = 'none'
-		}
-	}
-
-	for (var num = 0; num < showChars.length; num++) {
-		for (var num2 = 0; num2 < showChars[num].length; num2++) {
-			//showChars[num][num2] = showChars[num][num2] + 'Span'
-			showChars[num][num2].style.display = ''
-		}
-	}
-}
-var curGame = 'all'
-var pastResults = []
-
-/*
-* Gets a random number in a specified range and checks if it's a duplicate.
-* 
-* @param {number} max The max number.
-*/
-function randomCharFor (max, min) {
-	if (min) {} else {
-		var min = 0
-	}
-
-	var result = ''
-	result = Math.floor(Math.random() * max) + min
-
-	for (var num = 0; num < pastResults.length; num++) {
-		if (result == pastResults[num]) {
-			result = Math.floor(Math.random() * max) + 0
-			num = -1
-		}
-	}
-	pastResults.push(result)
-	return result;
-}
-
-/*
-* Randomly selects characters based on games.
-*/
-function randomChar () {
-	var result = ''
-	pastResults = []
-	var chars = ['']
-	var rdmChars = []
-
-	if (curGame == 'mp1' || curGame == 'mp2') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(6)
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'wario', 'dk']
-			chars.push(rdmChars[result])
-		}
-	} else if (curGame == 'mp3' || curGame == 'mp4') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(8)
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'wario', 'waluigi', 'dk']
-			chars.push(rdmChars[result])
-		}
-	} else if (curGame == 'mp5') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(7)
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'wario', 'waluigi']
-			chars.push(rdmChars[result])
-		}
-	} else if (curGame == 'mp6') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(11)
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'toad', 'toadette', 'wario', 'waluigi', 'koopakid', 'boo']
-			chars.push(rdmChars[result])
-		}
-	} else if (curGame == 'mp7') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(12)
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'toad', 'toadette', 'wario', 'waluigi', 'birdo', 'drybones', 'boo']
-			chars.push(rdmChars[result])
-		}
-	} else if (curGame == 'mp8') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(14)
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'toad', 'toadette', 'wario', 'waluigi', 'birdo', 'drybones', 'boo', 'blooper', 'hammerbro']
-			chars.push(rdmChars[result])
-		}
-	} else if (curGame == 'mp9') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(12)
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'toad', 'wario', 'waluigi', 'birdo', 'koopa', 'shyguy', 'kamek']
-			chars.push(rdmChars[result])
-		}
-	} else if (curGame == 'mp10') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(12)
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'toad', 'toadette', 'wario', 'waluigi', 'dk', 'spike']
-			chars.push(rdmChars[result])
-		}
-	} else if (curGame == 'mpa') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(4)
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach']
-			chars.push(rdmChars[result])
-		}
-	} else if (curGame == 'mpds') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(8)
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'toad', 'wario', 'waluigi']
-			chars.push(rdmChars[result])
-		}
-	} else if (curGame == 'mpit') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(10)
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'toad', 'wario', 'waluigi', 'boo', 'bowserjr']
-			chars.push(rdmChars[result])
-		}
-	} else if (curGame == 'mpsr') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(12)
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'toad', 'toadette', 'wario', 'waluigi', 'dk', 'diddy']
-			chars.push(rdmChars[result])
-		}
-	} else if (curGame == 'mptt100') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(8)
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'wario', 'waluigi']
-			chars.push(rdmChars[result])
-		}
-	} else if (curGame == 'smp') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(20)
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'wario', 'waluigi', 'dk', 'diddy', 'bowser', 'bowserjr', 'pompom', 'hoomba', 'koopa', 'drybones', 'monty', 'boo', 'shyguy', 'hammerbro']
-			chars.push(rdmChars[result])
-		}
-	} else if (curGame == 'all') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(27)
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'toad', 'toadette', 'wario', 'waluigi', 'dk', 'diddy', 'birdo', 'bowser', 'bowserjr', 'koopakid', 'pompom', 'hoomba', 'koopa', 'drybones', 'monty', 'boo', 'spike', 'blooper', 'shyguy', 'hammerbro', 'kamek']
-			chars.push(rdmChars[result])
-		}
-	}
-	for (var num = 1; num < 5; num++) {
-		document.getElementById(chars[num] + num).checked = true
-		document.getElementById(chars[num] + num).scrollIntoView(true)
-		changeCharacters(num, chars[num])
-	}
-}
-
-/*
-* Changes turns displays and input.
-* Gets fired after updating turns. Checks if the number is 1 or more and that the current turn does not exceed the max turn, after that it updates the display.
-* 
-* @param {string} counter If current or max Turn should be changed.
-* @param {number} amount The amount that should be changed.
-* @param {string} action If it should be added, subtracted or set to the amount.
-*/
-function turns (counter, amount, action) {
-	var curTurnVar = parseInt(document.getElementById('curTurnText').innerHTML)
-	var maxTurnVar = parseInt(document.getElementById('maxTurnText').innerHTML)
-
-	if (action == 'P' && document.getElementById('autoSave').checked == true) {
-		backup()
-	} else if (action == 'M' && document.getElementById('autoSave').checked == true) {
-		restore()
-	}
-
-	if (counter == 'curTurn') {
-		var result = curTurnVar
-	} else if (counter == 'maxTurn') {
-		var result = maxTurnVar
-	} else {
-		return;
-	}
-
-	if (action == 'P') {
-		for (let num = 0; num < amount; num++) {
-			result++
-		}
-	} else if (action == 'M') {
-		for (let num = 0; num < amount; num++) {
-			result--
-		}
-	} else if (action == 'Set') {
-		result = amount
-	}
-
-	if (counter == 'curTurn') {
-		curTurnVar = result
-	} else if (counter == 'maxTurn') {
-		maxTurnVar = result
-	}
-
-	if (curTurnVar <= 1) {
-		curTurnVar = 1
-	} else if (+curTurnVar > +maxTurnVar) {
-		curTurnVar = maxTurnVar
-	}
-
-	if (maxTurnVar <= 5) {
-		maxTurnVar = 5
-	} else if (maxTurnVar >= 95) {
-		maxTurnVar = 95
-	}
-
-	//console.log('Current:' + curTurnVar + ' Max:' + maxTurnVar)
-
-	document.getElementById('curTurnText').innerHTML = curTurnVar
-	document.getElementById('maxTurnText').innerHTML = maxTurnVar
-}
-
-/*
-* Updates the coin star display.
-* Gets fired from displayChange() which gets fired after updating the coin star. Checks if the number is 0 or more, after that it updates the display.
-* 
-* @param {number} coinStarVar The new Coin Star value.
-*/
-function coinStar (coinStarVar) {
-	if (coinStarVar >= 999) {
-		document.getElementById('coinStarText').innerHTML = 999
-	} else if (coinStarVar <= 0) {
-		document.getElementById('coinStarText').innerHTML = 0
-	} else {
-		document.getElementById('coinStarText').innerHTML = coinStarVar
-	}
-}
-
-/*
-* Updates the coin star characters.
-* 
-* @param {number} player Updates the coin star for that specific player
-*/
-function coinStarTie (player) {
-	var icons = document.querySelector('input[name="icons"]:checked').value
-
-	if (player && document.getElementById('p' + player + 'CoinStarTie').checked == true) {
-		document.getElementById('p' + player + 'CoinStarTie').checked = false
-	} else if (player) {
-		document.getElementById('p' + player + 'CoinStarTie').checked = true
-	}
-
-	if (document.getElementById('noTie').checked == true && player && document.getElementById('p' + player + 'CoinStarTie').checked == true) {
-		switch (player) {
-			case 1:
-			document.getElementById('p2CoinStarTie').checked = false
-			document.getElementById('p3CoinStarTie').checked = false
-			document.getElementById('p4CoinStarTie').checked = false
-				break;
-			case 2:
-			document.getElementById('p1CoinStarTie').checked = false
-			document.getElementById('p3CoinStarTie').checked = false
-			document.getElementById('p4CoinStarTie').checked = false
-				break;
-			case 3:
-			document.getElementById('p1CoinStarTie').checked = false
-			document.getElementById('p2CoinStarTie').checked = false
-			document.getElementById('p4CoinStarTie').checked = false
-				break;
-			case 4:
-			document.getElementById('p1CoinStarTie').checked = false
-			document.getElementById('p2CoinStarTie').checked = false
-			document.getElementById('p3CoinStarTie').checked = false
-				break;
-		}
-	}
-
-	document.getElementById('coinStarTie1').style.height = ''
-	document.getElementById('coinStarTie1').style.top = ''
-	document.getElementById('coinStarTie1').style.left = ''
-
-	document.getElementById('coinStarTie4').style.height = ''
-	document.getElementById('coinStarTie4').style.top = ''
-	document.getElementById('coinStarTie4').style.left = ''
-
-	document.getElementById('coinStarDiv').style.marginLeft = '5px'
-	document.getElementById('coinStarText').style.left = '9px'
-
-	var player1 = document.getElementById('p1CoinStarTie').checked
-	var player2 = document.getElementById('p2CoinStarTie').checked
-	var player3 = document.getElementById('p3CoinStarTie').checked
-	var player4 = document.getElementById('p4CoinStarTie').checked
-
-	var tied = []
-
-	if (player1 == true) {
-		tied.push(characters[1])
-	}
-	if (player2 == true) {
-		tied.push(characters[2])
-	}
-	if (player3 == true) {
-		tied.push(characters[3])
-	}
-	if (player4 == true) {
-		tied.push(characters[4])
-
-	}
-
-	for (let num = 1; num < 6; num++) {
-		document.getElementById('coinStarTie' + num).src = 'img/tie.png'
-	}
-	document.getElementById('coinStarCharacter').src = 'img/tie.png'
-
-	if (document.getElementById('noTie').checked == true && tied.length != 1 || tied.length == 0) {
-		document.getElementById('coinStarCharacter').src = 'img/question.png'
-
-	} else if (tied.length == 1) {
-		document.getElementById('coinStarCharacter').src = 'img/' + icons + '/' + tied[0] + '.png'
-
-		if (icons == 'mpsrIcons') {
-			document.getElementById('coinStarText').style.left = '8px'
-		}
-	} else if (tied.length == 2) {
-		document.getElementById('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png'
-		document.getElementById('coinStarTie4').src = 'img/' + icons + '/' + tied[1] + '.png'
-
-		document.getElementById('coinStarTie1').style.height = '32px'
-		document.getElementById('coinStarTie1').style.top = '-24px'
-		document.getElementById('coinStarTie1').style.left = '48px'
-
-		document.getElementById('coinStarTie4').style.height = '32px'
-		document.getElementById('coinStarTie4').style.top = '-2px'
-		document.getElementById('coinStarTie4').style.left = '-31px'
-
-		if (icons == 'mpsrIcons') {
-			document.getElementById('coinStarDiv').style.marginLeft = '0px'
-			document.getElementById('coinStarText').style.left = '9px'
-		} else {
-			document.getElementById('coinStarDiv').style.marginLeft = '1px'
-		}
-	} else if (tied.length == 3) {
-		document.getElementById('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png'
-		document.getElementById('coinStarTie2').src = 'img/' + icons + '/' + tied[1] + '.png'
-		document.getElementById('coinStarTie5').src = 'img/' + icons + '/' + tied[2] + '.png'
-
-		if (icons == 'mpsrIcons') {
-			document.getElementById('coinStarDiv').style.marginLeft = '3px'
-		}
-	} else if (tied.length == 4) {
-		document.getElementById('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png'
-		document.getElementById('coinStarTie2').src = 'img/' + icons + '/' + tied[1] + '.png'
-		document.getElementById('coinStarTie3').src = 'img/' + icons + '/' + tied[2] + '.png'
-		document.getElementById('coinStarTie4').src = 'img/' + icons + '/' + tied[3] + '.png'
-
-		if (icons == 'mpsrIcons') {
-			document.getElementById('coinStarDiv').style.marginLeft = '3px'
-		}
-	}
+function callDisplayOnOff () {
+	displayOnOff('happening', true)
+	displayOnOff('minigame', true)
+	displayOnOff('redSpace', true)
+	displayOnOff('running', true)
+	displayOnOff('shopping', true)
+	displayOnOff('orb', true)
+	displayOnOff('candy', true)
+	displayOnOff('item', true)
+	displayOnOff('friendSpace', true)
+	displayOnOff('hex', true)
+	displayOnOff('spinSpace', true)
+	displayOnOff('minus', true)
+	displayOnOff('specialDice', true)
+	displayOnOff('stars', true)
+	displayOnOff('coins', true)
+	displayOnOff('ally', true)
+	displayOnOff('stompy', true)
+	displayOnOff('doormat', true)
 }
 
 /*
@@ -1164,227 +400,6 @@ function changeVisibility (id) {
 }
 
 /*
-* Outputs all counters as text.
-*/
-function textOutput () {
-	var p1 = characters[1].charAt(0).toUpperCase() + characters[1].slice(1)
-	var p2 = characters[2].charAt(0).toUpperCase() + characters[2].slice(1)
-	var p3 = characters[3].charAt(0).toUpperCase() + characters[3].slice(1)
-	var p4 = characters[4].charAt(0).toUpperCase() + characters[4].slice(1)
-
-	//Use player name if specified instead of character
-	if (document.getElementById('toP1Name').value != '') {
-		p1 = document.getElementById('toP1Name').value
-	}
-	if (document.getElementById('toP2Name').value != '') {
-		p2 = document.getElementById('toP2Name').value
-	}
-	if (document.getElementById('toP3Name').value != '') {
-		p3 = document.getElementById('toP3Name').value
-	}
-	if (document.getElementById('toP4Name').value != '') {
-		p4 = document.getElementById('toP4Name').value
-	}
-
-	var joinString = document.getElementById('toSeperation').value
-
-	var counters = document.getElementById('toCounters').value.split(', ')
-	var names = document.getElementById('toOutput').value.split(', ')
-
-	var output = []
-	var forResult = []
-
-	for (let num = 0; num < counters.length; num++) {
-		counters[num] = counters[num].replace(/\s/g, '')
-
-		//Add all specified counters to output array
-		switch (counters[num].toLowerCase()) {
-			case 'turn':
-			case 'turns':
-				output[num] = names[num] + ': ' + document.getElementById('curTurnText').innerHTML + '/' + document.getElementById('maxTurnText').innerHTML
-				break;
-
-			case 'coin':
-			case 'coinstar':
-				var coinStarP1 = document.getElementById('p1CoinStarTie').checked
-				var coinStarP2 = document.getElementById('p2CoinStarTie').checked
-				var coinStarP3 = document.getElementById('p3CoinStarTie').checked
-				var coinStarP4 = document.getElementById('p4CoinStarTie').checked
-
-				var coinStar = []
-
-				if (coinStarP1 == true) {
-					coinStar.push(p1)
-				}
-				if (coinStarP2 == true) {
-					coinStar.push(p2)
-				}
-				if (coinStarP3 == true) {
-					coinStar.push(p3)
-				}
-				if (coinStarP4 == true) {
-					coinStar.push(p4)
-				}
-
-				var coinStarString = coinStar.join(' & ')
-
-				if (document.getElementById('noTie').checked == true && (coinStar.length > 1 || coinStar.length == 0)) {
-					coinStarString = 'multiple'
-				} else if (coinStar.length == 4 || coinStar.length == 0) {
-					if (document.getElementById('toListAllCoin').checked == false) {
-						coinStarString = 'everyone'
-					} else {
-						coinStar.push(p1)
-						coinStar.push(p2)
-						coinStar.push(p3)
-						coinStar.push(p4)
-						coinStarString = coinStar.join(' & ')
-					}
-				}
-
-				output[num] = names[num] + ': ' + document.getElementById('coinStarText').innerHTML + ' ' + coinStarString
-				break;
-
-			default: //Add everything new to textOutputTest() too
-				if (counters[num] == 'Friendship') {
-					counters[num] = 'FriendSpace'
-				}
-
-				if (document.getElementById('toBonusOnly').checked == true) {
-					var result = []
-					var resultNum = []
-
-					var counterP1 = document.getElementById('p1' + counters[num] + 'Text').innerHTML
-					var counterP2 = document.getElementById('p2' + counters[num] + 'Text').innerHTML
-					var counterP3 = document.getElementById('p3' + counters[num] + 'Text').innerHTML
-					var counterP4 = document.getElementById('p4' + counters[num] + 'Text').innerHTML
-
-					var counterNum = Math.max(counterP1, counterP2, counterP3, counterP4)
-
-					if (counterP1 == counterP2 && counterP1 == counterP3 && counterP1 == counterP4 && document.getElementById('toListAll').checked == false) {
-						result.push('everyone')
-						resultNum.push(document.getElementById('p1' + counters[num] + 'Text').innerHTML)
-					} else {
-						if (counterNum == counterP1) {
-							result.push(p1)
-							resultNum.push(document.getElementById('p1' + counters[num] + 'Input').innerHTML)
-						}
-
-						if (counterNum == counterP2) {
-							result.push(p2)
-							resultNum.push(document.getElementById('p2' + counters[num] + 'Text').innerHTML)
-						}
-
-						if (counterNum == counterP3) {
-							result.push(p3)
-							resultNum.push(document.getElementById('p3' + counters[num] + 'Text').innerHTML)
-						}
-
-						if (counterNum == counterP4) {
-							result.push(p4)
-							resultNum.push(document.getElementById('p4' + counters[num] + 'Text').innerHTML)
-						}
-					}
-
-
-					if (document.getElementById('toShowNum').checked == false) { //if a number should be displayed next to the player that got the bonus star
-						var resultString = result.join(' & ')
-						output[num] = names[num] + ': ' + resultString
-
-					} else {
-						//var forNum = counters.length++
-						
-						console.log('forResult: ' + forResult)
-
-						switch (result.length) {
-							case 1:
-								forResult.push(names[num] + ': ' + result[0] + ' ' + resultNum[0])
-								break;
-							case 2:
-								forResult.push(names[num] + ': ' + result[0] + ' & ' + result[1] + ' ' + resultNum[0])
-								break;
-							case 3:
-								forResult.push(names[num] + ': ' + result[0] + ' & ' + result[1] + ' & ' + result[2] + ' ' + resultNum[0])
-								break;
-							case 4:
-								forResult.push(names[num] + ': ' + result[0] + ' & ' + result[1] + ' & ' + result[2] + ' & ' + result[3] + ' ' + resultNum[0])
-								break;
-						}
-						
-
-						output[num] = forResult.join('')
-						forResult = []
-					}
-
-				} else {
-					output[num] = names[num] + ': ' + p1 + ' ' + document.getElementById('p1' + counters[num] + 'Text').innerHTML + ', ' + p2 + ' ' + document.getElementById('p2' + counters[num] + 'Text').innerHTML + ', ' + p3 + ' ' + document.getElementById('p3' + counters[num] + 'Text').innerHTML + ', ' + p4 + ' ' + document.getElementById('p4' + counters[num] + 'Text').innerHTML
-				}
-		}
-	}
-
-	var outputString = output.join(joinString)
-
-	var outputElement = document.getElementById('textOutput')
-	outputElement.value = outputString
-	outputElement.select()
-	outputElement.focus()
-	document.execCommand("copy");
-
-	console.log(outputString)
-
-}
-
-/*
-* Checks if the counters inserted in the settings for the text output feature are correct, if not it removes them.
-* 
-* @param {boolean} nameonly If true it won't check if everything inside the counters textarea is correct.
-*/
-function textOutputTest (nameonly) {
-	var counters = document.getElementById('toCounters').value.split(', ')
-	var names = document.getElementById('toOutput').value.split(', ')
-	var error = []
-
-	if (nameonly != true) {
-		for (let num = 0; num < counters.length; num++) {
-			counters[num] = counters[num].replace(/\s/g, '')
-
-			switch (counters[num].toLowerCase()) {
-				case 'turn':
-				case 'turns':
-					break;
-				case 'coin':
-				case 'coinstar':
-					break;
-				default: //Add everything new to textOutput() too
-					if (counters[num] == 'Friendship') {
-						counters[num] = 'FriendSpace'
-					}
-					if (document.getElementById('p1' + counters[num] + 'Text')) {} else {
-						error.push(counters[num])
-					}
-					break;
-			} 
-		}
-	}
-
-	if (error.length == 1) {
-		document.getElementById('textOutputWarning').innerHTML = '"' + error.join(', ') + '" isn\'t a valid counter.'
-		document.getElementById('textOutputWarning').style = 'visibility: visible;'
-	} else if (error.length > 1) {
-		document.getElementById('textOutputWarning').innerHTML = '"' + error.join(', ') + '" aren\'t valid counters.'
-		document.getElementById('textOutputWarning').style = 'visibility: visible;'
-	} else if (counters.length > names.length) {
-		document.getElementById('textOutputWarning').innerHTML = 'Counter name(s) missing.'
-		document.getElementById('textOutputWarning').style = 'visibility: visible;'
-	} else if (counters.length < names.length) {
-		document.getElementById('textOutputWarning').innerHTML = 'Too many counter names.'
-		document.getElementById('textOutputWarning').style = 'visibility: visible;'
-	} else {
-		document.getElementById('textOutputWarning').style = 'visibility: hidden;'
-	}
-}
-
-/*
 * Closes the settings if the user doesn't click on the settings while they are opened.
 *
 * @param {string} event What event got fired.
@@ -1406,6 +421,44 @@ function windowOnClick (event) {
 }
 
 /*
+* Checks if Ctrl is pressed.
+*/
+function ctrlPressed (e) {
+	if (e.ctrlKey && ctrlKeyVar == false) {
+		ctrlKeyVar = true
+		if (document.getElementById('mobileTypeMinus').checked == false) {
+			document.getElementById('mobileTypeMinus').checked = true
+		} else if (document.getElementById('mobileTypeMinus').checked == true) {
+			document.getElementById('mobileTypeMinus').checked = false
+		}
+	} else if (e.key == '1') {
+		document.getElementById('type1').checked = true
+	} else if (e.key == '5') {
+		document.getElementById('type5').checked = true
+	} else if (e.key == '0') {
+		document.getElementById('type10').checked = true
+	}
+}
+
+/*
+* Checks if Ctrl is released.
+*/
+function ctrlReleased (e) {
+	if (ctrlKeyVar == true) {
+		ctrlKeyVar = false
+		if (document.getElementById('mobileTypeMinus').checked == false) {
+			document.getElementById('mobileTypeMinus').checked = true
+		} else if (document.getElementById('mobileTypeMinus').checked == true) {
+			document.getElementById('mobileTypeMinus').checked = false
+		}
+	}
+}
+
+var ctrlKeyVar = false
+window.onkeydown = ctrlPressed
+window.onkeyup = ctrlReleased
+
+/*
 * Checks if something is included in a array.
 *
 * @param {string} string Checks if this is included in the array.
@@ -1415,214 +468,9 @@ function arrCon (string, array) {
     return (array.indexOf(string) > -1);
 }
 
-/*
-* Changes Themes incl. greenscreen.
-* 
-* @param {number} theme Which theme should be used.
-*/
-var bgColor = '#0000ff'
-var curTheme = 1
-function changeTheme (theme) {
-	bgColor = document.getElementById('bgColor').value
-	styleExtra = 'no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"'
-
-	if (theme) {} else {
-		theme = curTheme
-	}
-
-	if (document.getElementById('greenscreen').checked == true) {
-		document.getElementById('bodyElement').style.background = bgColor
-	} else {
-		switch (theme) {
-			case 2:
-				document.getElementById('bodyElement').style = 'background: url(img/MP9-bg.jpg)' + styleExtra
-				curTheme = 2
-				break;
-			case 3:
-				document.getElementById('bodyElement').style = 'background: url(img/NSMBW-bg.jpg)' + styleExtra
-				curTheme = 3
-				break;
-			default:
-				document.getElementById('bodyElement').style = 'background: url(img/background.jpg)' + styleExtra
-				curTheme = 1
-				break;
-		}
-	}
-	document.getElementById('themeB1').style = ''
-	document.getElementById('themeB2').style = ''
-	document.getElementById('themeB3').style = ''
-	document.getElementById('themeB1').disabled = ''
-	document.getElementById('themeB2').disabled = ''
-	document.getElementById('themeB3').disabled = ''
-	switch (theme) {
-			case 2:
-				document.getElementById('themeB2').style = 'border-color: green;'
-				document.getElementById('themeB2').disabled = 'true'
-				curTheme = 2
-				break;
-			case 3:
-				document.getElementById('themeB3').style = 'border-color: green;'
-				document.getElementById('themeB3').disabled = 'true'
-				curTheme = 3
-				break;
-			default:
-				document.getElementById('themeB1').style = 'border-color: green;'
-				document.getElementById('themeB1').disabled = 'true'
-				curTheme = 1
-				break;
-		}
-}
-
-/*
-* Changes the icon style.
-* 
-* @param {string} id Where it got called from.
-*/
-function changeIcons (id) {
-	var selected = document.querySelector('input[name=' + id + ']:checked').value
-	var charImg = document.querySelectorAll('.characterImg')
-
-	document.getElementById(selected).checked = true
-	document.getElementById(selected + '2').checked = true
-
-	for (var num = 0; num < charImg.length; num++) {
-		var charImgSrc = charImg[num].src
-
-		charImgSrc = charImgSrc.split('')
-		var result = []
-		for (var num2 = charImgSrc.length; num2 > 0; num2--) {
-			if (charImgSrc[num2] == '/') {
-				break;
-			} else {
-				result.push(charImgSrc[num2])
-			}
-		}
-		charImgSrc = charImgSrc.join('')
-		result = charImgSrc.substring(charImgSrc.length - result.length)
-		charImg[num].src = ['img/', selected, '/', result].join('')
-	}
-	coinStarTie()
-}
-
-/*
-* Changes background color if greenscreen is used.
-* 
-* @param {string} id Id of the input element that changed its value.
-*/
-function changeBGColor (id) {
-	bgColor = document.getElementById(id).value
-	if (document.getElementById('greenscreen').checked == true) {
-		document.getElementById('bodyElement').style.background = bgColor
-	}
-	document.getElementById('bgColor').value = bgColor
-	document.getElementById('bgColorPick').value = bgColor
-
-	document.getElementById('colorPickerBG').style = 'background-color: ' + bgColor + ';'
-}
-
-
-/*
-* Resets the Greenscreen color.
-*/
-function resetBGColor () {
-	document.getElementById('bgColor').value = '#0000FF'
-	changeBGColor('bgColor')
-}
-
-/*
-* Changes text color for everything outside of settings.
-* 
-* @param {string} id Id of the input element that changed its value.
-*/
-function changeTextColor (id) {
-	var whiteText = document.querySelectorAll(".whiteText")
-	var counterText = document.querySelectorAll(".counterText")
-	var turns = document.querySelectorAll(".turns")
-	var mobile = document.querySelectorAll(".mobileTypeLabel")
-	var border = document.querySelectorAll(".changesBorder")
-
-	var color = document.getElementById(id).value
-
-	for (var num = 0; num < whiteText.length; num++) {
-		whiteText[num].style.color = color
-	}
-	for (var num = 0; num < counterText.length; num++) {
-		counterText[num].style.color = color
-	}
-	for (var num = 0; num < turns.length; num++) {
-		turns[num].style.color = color
-	}
-	for (var num = 0; num < mobile.length; num++) {
-		mobile[num].style.color = color
-	}
-	for (var num = 0; num < border.length; num++) {
-		border[num].style.borderColor = color
-	}
-
-	document.getElementById('textColor').value = color
-	document.getElementById('textColorTest').value = color
-	callHighlight()
-}
-
-/*
-* Resets the Text color.
-*/
-function resetTextColor () {
-	document.getElementById('textColor').value = '#FFFFFF'
-	changeTextColor('textColor')
-}
-
-window.addEventListener("click", windowOnClick)
-
-// === INTERACT.JS ===
-// target elements with the "draggable" class
-interact('.draggable')
-	.draggable({
-		// enable inertial throwing
-		inertia: true,
-		// keep the element within the area of it's parent
-		/* restrict: {
-			restriction: "parent",
-			endOnly: true,
-			elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
-		},*/ 
-		// enable autoScroll
-		autoScroll: true,
-
-		// call this function on every dragmove event
-		onmove: dragMoveListener,
-		// call this function on every dragend event
-		onend: function (event) {
-		var textEl = event.target.querySelector('p');
-
-		textEl && (textEl.textContent =
-			'moved a distance of '
-			+ (Math.sqrt(Math.pow(event.pageX - event.x0, 2) +
-				Math.pow(event.pageY - event.y0, 2) | 0))
-				.toFixed(2) + 'px');
-	}
-});
-
-function dragMoveListener (event) {
-	if (document.getElementById('enableInteract').checked == true) {
-		var target = event.target,
-			// keep the dragged position in the data-x/data-y attributes
-			x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-			y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-
-		// translate the element
-		target.style.webkitTransform =
-		target.style.transform =
-			'translate(' + x + 'px, ' + y + 'px)';
-
-		// update the posiion attributes
-		target.setAttribute('data-x', x);
-		target.setAttribute('data-y', y);
-	}
-}
-// === INTERACT.JS END ===
-
 window.onload = prepareMPO()
 window.onload = changeBGColor('bgColor')
+
+window.addEventListener("click", windowOnClick)
 
 document.getElementById('type1').focus()

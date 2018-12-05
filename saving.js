@@ -37,7 +37,7 @@ for (let num = 0; num < 17; num++) {
 /*
 * Resets the backup.
 */
-function resetBackup() {
+function resetBackup () {
 	document.getElementById('coinStarText').innerHTML = 10
 	document.getElementById('p1CoinStarTie').checked = false
 	document.getElementById('p2CoinStarTie').checked = false
@@ -58,7 +58,7 @@ function resetBackup() {
 /*
 * Backups all counters.
 */
-function backup() {
+function backup () {
 	document.getElementById('reloadButton').disabled = false
 	backuped = true
 
@@ -103,7 +103,7 @@ function backup() {
 * 
 * @param {boolean} forceRestore If the restore should be forced.
 */
-function restore(forceRestore) {
+function restore (forceRestore) {
 	if (backuped == true || forceRestore == true) {
 		document.getElementById('coinStarText').innerHTML = coinStarVar
 		document.getElementById('p1CoinStarTie').checked = coinStarTie1
@@ -467,7 +467,7 @@ function prepareMPO () {
 *
 * @param {string} boolean The string that should get coverted.
 */
-function stringToBoolean(boolean) {
+function stringToBoolean (boolean) {
 	if (boolean == 'true') {
 		return true;
 	} else if (boolean == 'false') {
