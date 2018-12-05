@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 
 	<title>Mario Party Overlay</title>
-	<meta name="description" content="A Overlay for casual players and streamers! Plan your turn by seeing who got the Bonus Stars from MP1-10 & DS! With Super Mario Party support on it's way!">
+	<meta name="description" content="An extensive and easy to use 'Bonus Star' tracker for all Mario Party games! It also includes a greenscreen to include it in a livestream!">
 	<meta name="author" content="blueYOSHI9000">
 
 	<link rel="shortcut icon" type="image/png" href="img/star.png"/>
@@ -763,7 +763,7 @@
 			</div>
 
 			<!-- Reset/save Settings -->
-			<button onclick="resetPlayers()" id="resetPlayersButton" class="mobileButtons" style="width: 130px;"> Reset Options </button> <div class="settingsClose"> <button onclick="savePlayers(true)" class="mobileButtons" style="width: 55px;"> Save </button> <button onclick="savePlayers()" class="mobileButtons" style="width: 60px;"> Apply </button> <button onclick="showHideDiv(['mobileSettings'])" class="mobileButtons"> Close </button> </div>
+			<button onclick="resetPlayers()" id="resetPlayersButton" class="mobileButtons" style="width: 130px;"> Reset Options </button> <div class="settingsClose"> <button onclick="savePlayers(true)" class="mobileButtons" style="width: 55px;"> Save </button> <button onclick="showHideDiv(['mobileSettings'])" class="mobileButtons"> Close </button> </div>
 		</div>
 	</div>
 
@@ -869,7 +869,7 @@
 			</div>
 
 				<!-- Reset/save Settings -->
-				<button onclick="resetSettings()" id="resetSettingsButton" class="mobileButtons" style="width: 130px;"> Reset Settings </button> <div class="settingsClose"> <button onclick="saveSettings(true)" class="mobileButtons" style="width: 55px;"> Save </button> <button onclick="saveSettings()" class="mobileButtons" style="width: 60px;"> Apply </button> <button onclick="showHideDiv(['settings'])" class="mobileButtons"> Close </button> </div>
+				<button onclick="resetSettings()" id="resetSettingsButton" class="mobileButtons" style="width: 130px;"> Reset Settings </button> <div class="settingsClose"> <button onclick="saveSettings(true)" class="mobileButtons" style="width: 55px;"> Save </button> <button onclick="showHideDiv(['settings'])" class="mobileButtons"> Close </button> </div>
 			</div>
 		</div>
 	</div>
@@ -962,20 +962,24 @@
 
 		<h2 class="settingsTitle" id="tutorialSettingsTitle" onclick="showHideSettings('tutorialSettings')"> Tutorial </h2>
 
-		<span class="settingsText" id="tutorialSettings"> Click on the counters (incl. Turns and Coin Star) and it increases by the amount specified at the top, which can be changed by either clicking on them or pressing the respective keyboard button (0 for 10). <br class="lineHeight">
-		By holding Ctrl or checking the Minus Checkbox at the top it subtracts everything instead. <br class="lineHeight">
-		By clicking on the characters it gives or takes them the coin star from the character that was clicked on. <br> <br>
-		The "Generate & Copy" button outputs all counters as text and copies it (this can be configured in the settings). <br class="lineHeight">
-		The "Save" and "Reload" buttons save and reload all counters. Not the characters and not settings, only counters. </span>
+		<span class="settingsText" id="tutorialSettings"> You'll probably figure it out on your own anyway, it's not like there's a self-destruct button. <br> <br>
+
+			You can click on the numbers to increase it (called counters), by holding Ctrl or checking the 'Minus' checkbox it decreases the counters instead. <br class="lineHeight">
+			To change the amount added/subtracted you can click on the numbers at the top, pressing the number on the numpad changes it too (0 for 10). To give/take the coin-star you just click on the character. <br> <br>
+
+			The "Generate & Copy" button outputs all counters as text, and copies it, so you can paste it in a stream chat to track the Bonus Stars for them as a example. <br class="lineHeight">
+			The Save/Reload buttons well... save and reload! It saves all counters (not characters, not settings, only counters) and reloads them. If activated in the settings, they will be saved in your browser too and automatically loaded the next time you open the site. <br> <br>
+
+			Note: All settings are applied immediately, the save button will only save it permanently as otherwise they get reset when you refresh the site.</span>
 
 		<h2 class="settingsTitle" id="linkSettingsTitle" onclick="showHideSettings('linkSettings')"> Links & Credits </h2>
 
 		<div id="linkSettings" class="hidden">
-			<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki" class="tutorialLink">Better Tutorial</a> </span> <br class="lineHeight">
+			<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki" class="tutorialLink">More in-depth Tutorial</a> </span> <br class="lineHeight">
 
 			<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/projects/5" class="tutorialLink">Planned Features</a> </span> <br class="lineHeight">
 
-			<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues" class="tutorialLink">Got an issue?</a> </span> <span class="settingsNote"> (You can also @ me on Twitter if you don't have a Github account)</span> <br> <br>
+			<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues" class="tutorialLink">Got an issue or want to request a feature?</a> </span> <span class="settingsNote"> (You can also @ me on Twitter if you don't have a Github account)</span> <br> <br>
 
 			<span class="settingsText"> Created by <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> <br>
 			Default icons created by <a href="https://www.twitter.com/yoshisrc" class="tutorialLink">blueYOSHI9000</a> using official artwork and inspired by <a href="https://mariopartylegacy.com/" class="tutorialLink">Mario Party Legacy</a> <br>
