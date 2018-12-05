@@ -11,6 +11,8 @@ To give/take the coin-star you just click on the character.
 The "Generate & Copy" button outputs all counters as text, and copies it, so you can paste it in a stream chat to track the Bonus Stars for them as a example.
 The Save/Reload buttons well... save and reload! It saves all counters (not characters, not settings, only counters) and reloads them. If activated in the settings, they will be saved in your browser too and automatically loaded the next time you open the site.
 
+Note: All settings are applied immediately, the save button will only save it permanently as otherwise they get reset when you refresh the site.
+
 # Credits
 Created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000)  
 Default icons created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000) using official artwork and insprired by [Mario Party Legacy](https://mariopartylegacy.com/)  
