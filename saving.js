@@ -243,6 +243,9 @@ function resetPlayers () {
 	changeCharacters(2, 'luigi')
 	changeCharacters(3, 'yoshi')
 	changeCharacters(4, 'peach')
+	for (let num = 1; num < 5; num++) {
+		document.getElementById('mario' + num).scrollIntoView(true)
+	}
 
 	document.getElementById('com1').checked = false
 	document.getElementById('com2').checked = false

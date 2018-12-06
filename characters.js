@@ -6,9 +6,11 @@
 */
 function changeCharacters (player, character) {
 	var selected = document.querySelector('input[name="icons"]:checked').value
+	var charElement = document.getElementById(character + player)
 
 	characters[player] = character
-	document.getElementById(character + player).checked = true
+
+	charElement.checked = true
 
 	document.getElementById('p' + player + 'Img').src = 'img/' + selected + '/' + character + '.png'
 	coinStarTie()

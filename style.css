@@ -599,10 +599,11 @@ src: url("font.ttf");
 }
 #textOutput {
 	height: 20px;
+	width: 216px;
 	font-size: 17px;
 }
 #mobileTypeDiv {
-	margin-top: 20px;
+	margin-top: 15px;
 }
 .mobileType {
 	height: 20px;
@@ -617,20 +618,41 @@ src: url("font.ttf");
 	font-size: 28px;
 	color: #F4F4F4;
 }
+.grayBG {
+	background-color: rgba(100, 100, 100, 0.3);
+	border-radius: 5px;
+}
 #backupText {
 	margin-left: 45px;
 }
 #textOutputMobile {
 	margin-left: 45px;
 }
-#mobileTypeMinus {
-	margin-left: 130px;
-}
 #textOutputText {
 	margin-left: 150px;
 }
 #mobileTypeSpan {
+	border-radius: 12px;
 	margin-top: 10px;
+	margin-left: 120px;
+	padding-left: 3px;
+	width: 325px;
+}
+#toGenerateSpan {
+	display: inline-block;
+	margin-left: 46px;
+	padding-top: 5px;
+	padding-left: 5px;
+	height: 32px;
+	width: 380px;
+}
+#saveReloadSpan {
+	display: inline-block;
+	margin-left: 30px;
+	padding-top: 5px;
+	padding-left: 5px;
+	height: 32px;
+	width: 139px;
 }
 
 /* == Tutorial == */
