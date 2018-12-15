@@ -355,9 +355,39 @@ function saveSettings (close) {
 }
 
 /*
+* Gets variable from URL and returns it.
+* 
+* @param {string} variable The variable it should get.
+*/
+function getUrl(variable) {
+	var query = window.location.search.substring(1);
+	var vars = query.split("&");
+	for (var i=0;i<vars.length;i++) {
+		var pair = vars[i].split("=");
+		if(pair[0] == variable){return pair[1];}
+	}
+ 	return(false);
+}
+
+/*
 * Prepares all settings that were saved in local storage when the site gets loaded.
 */
 function prepareMPO () {
+	if (getUrl('p') == 1) {
+		document.getElementById('greenscreenError').style.display = 'block'
+		document.getElementById('greenscreenTestButton').disabled = 'true'
+		document.getElementById('settingsCloseSpan').style.marginBottom = '50px'
+
+		document.getElementById('settingsContent').classList.add('settingsContentPopout')
+		document.getElementById('settingsContent').classList.remove('popupContent')
+		document.getElementById('settingsContent').style.width = 'calc(100% - 40px)'
+		document.getElementById('settingsContent').style.height = '100%'
+
+		document.getElementById('noSettings').style.display = 'none'
+		showHideDiv(['settings'])
+		return;
+	}
+
 	document.getElementById('error').style = 'display: inline;'
 	if (localStorage.getItem('saving') == 'true') {
 

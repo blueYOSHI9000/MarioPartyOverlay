@@ -39,6 +39,11 @@ src: url("font.ttf");
 	background-color: #CCCCCC;
 }
 
+#greenscreenError {
+	color: #FD3636;
+	display: none;
+}
+
 /* == Counters == */
 .player {
 	display: inline-block;
@@ -217,6 +222,24 @@ src: url("font.ttf");
 .warningText {
 	color: red;
 }
+.settingsSelection {
+	font-size: 26px;
+	color: #4242ee;
+	border-bottom: #4242ee 2px solid;
+	cursor: pointer;
+}
+.settingsSelected {
+	color: #e64940;
+	border-bottom: #e64940 2px solid;
+	cursor: default;
+}
+.flexAuto {
+	flex: auto;
+}
+#settingsSelectionSpan {
+	display: flex;
+	width: 100%;
+}
 
 #settings {
 	position: fixed;
@@ -226,20 +249,28 @@ src: url("font.ttf");
 	height: 100%;
 	background-color: rgba(0, 0, 0, 0.5);
 }
-#generalMPOSettingsTitle {
-	cursor: auto;
-}
-#playerSettingsTitle {
-	cursor: auto;
-}
-#tutorialSettingsTitle {
-	cursor: auto;
+.settingsContentPopout {
+	padding: 20px;
+	position: absolute;
+	border: none;
+	background-color: #F3F3F3;
+	overflow: auto;
 }
 #settingsContent {
-	width: 825px;
+	width: 900px;
+	height: 800px;
 }
 .settingsClose {
 	float: right;
+}
+#settingsCloseDiv {
+	flex: initial;
+}
+#settingsCloseSpan {
+	position: absolute;
+	bottom: 0;
+	width: 95%;
+	margin-bottom: 20px;
 }
 
 #colorPickTest {
@@ -263,16 +294,19 @@ src: url("font.ttf");
 	width: 825px;
 }
 
-#tutorialContent {
-	width: 970px;
-}
-
 /* == Choose Character == */
 .playerText {
 	font-family: 'Mario';
 	font-size: 16px;
 	color: #111111;
 	margin-right: 82px;
+}
+#gameSelectorDiv {
+	font-family: 'Mario';
+	font-size: 18px;
+	border-bottom: rgba(0, 0, 0, 0.4) 3px solid;
+	padding-bottom: 7px;
+	margin-bottom: 7px;
 }
 
 .characterSelector {
@@ -577,20 +611,6 @@ src: url("font.ttf");
 	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAATCAMAAADVnb8xAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4ggZDDUcNRMkYAAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAilBMVEXcrADdrQDerwDhswDluQDmuQDnuwDovADpvQDqvwDrvwDrwADswQDswgDtwgDtwwDuwwDuxADuxQDwxADwxQDwxgDxxgDxxwDyxwDyyADzyADzyQDzygD0ygD0ywD1ywD1zAD2zAD2zQD3zQD3zgD30AD40AD40QD50QD50gD50wD60gD60wD////wsOl1AAAAAWJLR0QtzdpBPQAAAXhJREFUGBmNwd1C3CAQgFH6Y1uNRqlImCAbdqSwo9/7P18Te9Xe1HPcZRyMv5jxL5dk8ZIKYCfJnUOJoRg7K3NUDuZS19TPBSzOYREFdLq+vTsB9vTFTdkAq+7xMUYfBNp8lvBz6ZBvp+CzgYYf19vUQZ+yS1K7lIItkyT/be6Q5in5ZLDJt+/rVYfxnJ1fFh8XwfKdn/1UDMrNzcN9foU6ffrsvQFanHRNvRawp9t7Lxdg+OnmQQFLX6+SstPgSs4pZwXeWm3GodfSOJjq4DDUYQf+y/FBjj9svPFucHjVd8bOLgY4Y2fPEgoHk8KuzUEkzhvQlhAVXAFMUlMZYC3nrB1azCnlWGGkPMoycKuBrrX+ig2qzyUVGTTJQUQqnKMOjRUnBjXri4YOVnIu6wlaseelbGfYUpZVNlwBWtQXEQN00yYGLVu4t1OFkeY4y8ANdjn4dbCrUXIY0OYcQ5k3oK0iDRzvLt04WDdrBlZ1V42dDQMcH/Qb7m9pTezABlQAAAAASUVORK5CYII=');
 }
 
-
-/* == Counter options for mobile version == */
-#mobileSettings {
-	position: fixed;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, 0.5);
-}
-#mobileSettingsContent {
-	width: 900px;
-}
-
 /* == mobile version == */
 .mobileButtons {
 	height: 27px;
@@ -653,20 +673,4 @@ src: url("font.ttf");
 	padding-left: 5px;
 	height: 32px;
 	width: 139px;
-}
-
-/* == Tutorial == */
-#tutorial {
-	position: fixed;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, 0.5);
-}
-#tutorialClose {
-	float: right;
-}
-#counterOptionsClose {
-	float: right;
 }

@@ -358,32 +358,16 @@ function showHideDiv (ids) {
 * @param {string} id Which settings should be shown.
 */
 function showHideSettings (id) {
-	switch (id) {
-		case 'generalMPOSettings':
-		case 'textOutputSettings':
-			var id1 = 'generalMPOSettings'
-			var id2 = 'textOutputSettings'
-			break;
-		case 'playerSettings':
-		case 'counterSettings':
-			var id1 = 'playerSettings'
-			var id2 = 'counterSettings'
-			break;
-		case 'tutorialSettings':
-		case 'linkSettings':
-			var id1 = 'tutorialSettings'
-			var id2 = 'linkSettings'
-			break;
+	var ids = ['generalMPO', 'textOutput', 'player', 'counter', 'tutorial']
+	for (let num = 0; num < 5; num++) {
+		document.getElementById(ids[num] + 'Settings').classList.add('hidden')
+		document.getElementById(ids[num] + 'Settings').classList.remove('visible')
+		document.getElementById(ids[num] + 'Selector').classList.remove('settingsSelected')
 	}
+	document.getElementById(id + 'Settings').classList.add('visible')
+	document.getElementById(id + 'Settings').classList.remove('hidden')
+	document.getElementById(id + 'Selector').classList.add('settingsSelected')
 
-	document.getElementById(id1).style.display = 'none'
-	document.getElementById(id1 + 'Title').style.cursor = 'pointer'
-
-	document.getElementById(id2).style.display = 'none'
-	document.getElementById(id2 + 'Title').style.cursor = 'pointer'
-
-	document.getElementById(id).style.display = 'inline'
-	document.getElementById(id + 'Title').style.cursor = 'auto'
 }
 
 /*
