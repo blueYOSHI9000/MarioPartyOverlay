@@ -39,11 +39,6 @@ src: url("font.ttf");
 	background-color: #CCCCCC;
 }
 
-#greenscreenError {
-	color: #FD3636;
-	display: none;
-}
-
 /* == Counters == */
 .player {
 	display: inline-block;

@@ -169,8 +169,8 @@ function savePlayers (close) {
 
 	localStorage.setItem('curGame', curGame)
 
-	if (close == true) {
-		showHideDiv(['mobileSettings'])
+	if (close == true && popout != true) {
+		showHideDiv(['settings'])
 	}
 }
 
@@ -326,6 +326,7 @@ function saveSettings (close) {
 	localStorage.setItem('saving', 'true')
 
 	localStorage.setItem('enableInteract', document.getElementById('enableInteract').checked)
+	localStorage.setItem('autoPopout', document.getElementById('autoPopout').checked)
 	localStorage.setItem('curTheme', curTheme)
 	localStorage.setItem('iconStyle', document.querySelector('input[name="icons"]:checked').value)
 	localStorage.setItem('greenscreen', document.getElementById('greenscreen').checked)
@@ -372,37 +373,37 @@ function getUrl(variable) {
 /*
 * Prepares all settings that were saved in local storage when the site gets loaded.
 */
+var popout = false
 function prepareMPO () {
 	if (getUrl('p') == 1) {
-		document.getElementById('greenscreenError').style.display = 'block'
-		document.getElementById('greenscreenTestButton').disabled = 'true'
-		document.getElementById('settingsCloseSpan').style.marginBottom = '50px'
+		mpoMain = window.opener
+		popout = true
+		showHideDiv(['settings'])
 
+		document.getElementById('popoutButton').style.display = 'none'
+		document.getElementById('greenscreenNote').style.display = 'block'
+		document.getElementById('settingsCloseSpan').style.marginBottom = '50px'
 		document.getElementById('settingsContent').classList.add('settingsContentPopout')
 		document.getElementById('settingsContent').classList.remove('popupContent')
 		document.getElementById('settingsContent').style.width = 'calc(100% - 40px)'
 		document.getElementById('settingsContent').style.height = '100%'
-
 		document.getElementById('noSettings').style.display = 'none'
-		showHideDiv(['settings'])
-		return;
 	}
 
 	document.getElementById('error').style = 'display: inline;'
 	if (localStorage.getItem('saving') == 'true') {
 
 		document.getElementById('enableInteract').checked = stringToBoolean(localStorage.getItem('enableInteract'))
+		document.getElementById('autoPopout').checked = stringToBoolean(localStorage.getItem('autoPopout'))
 		curTheme = parseInt(localStorage.getItem('curTheme'))
 		document.getElementById('greenscreen').checked = stringToBoolean(localStorage.getItem('greenscreen'))
 		document.getElementById('bgColor').value = localStorage.getItem('bgColor')
 		changeTheme(curTheme)
 
 		if (localStorage.getItem('iconStyle') == 'mk8Icons') {
-			document.getElementById('mk8Icons').checked = true
-			changeIcons('icons')
+			changeIcons('icons', 'mk8Icons')
 		} else {
-			document.getElementById('mpsrIcons').checked = true
-			document.getElementById('mpsrIcons2').checked = true
+			changeIcons('icons', 'mpsrIcons')
 		}
 
 		document.getElementById('textColor').value = localStorage.getItem('textColor')
@@ -426,6 +427,8 @@ function prepareMPO () {
 		document.getElementById('toShowNum').checked = stringToBoolean(localStorage.getItem('toShowNum'))
 		document.getElementById('toListAll').checked = stringToBoolean(localStorage.getItem('toListAll'))
 		document.getElementById('toListAllCoin').checked = stringToBoolean(localStorage.getItem('toListAllCoin'))
+	} else {
+		resetSettings()
 	}
 
 	if (localStorage.getItem('savePlayers') == 'true') {
@@ -468,7 +471,10 @@ function prepareMPO () {
 		}
 
 		changeGame(localStorage.getItem('curGame'))
+	} else {
+		var resetPlayersVar = true
 	}
+
 	if (localStorage.getItem('saveCounters') == 'true') {
 		document.getElementById('coinStarText').innerHTML = localStorage.getItem('coinStarVar')
 		document.getElementById('p1CoinStarTie').checked = stringToBoolean(localStorage.getItem('coinStarTie1'))
@@ -513,6 +519,7 @@ function stringToBoolean (boolean) {
 */
 function resetSettings () {
 	document.getElementById('enableInteract').checked = false
+	document.getElementById('autoPopout').checked = false
 	document.getElementById('mpsrIcons').checked = true
 	document.getElementById('greenscreen').checked = false
 	document.getElementById('bgColor').value = '#0000FF'
@@ -538,6 +545,7 @@ function resetSettings () {
 	localStorage.setItem('saving', 'false')
 
 	localStorage.setItem('enableInteract', document.getElementById('enableInteract').checked)
+	localStorage.setItem('autoPopout', document.getElementById('autoPopout').checked)
 	localStorage.setItem('curTheme', curTheme)
 	localStorage.setItem('iconStyle', document.querySelector('input[name="icons"]:checked').value)
 	localStorage.setItem('greenscreen', document.getElementById('greenscreen').checked)

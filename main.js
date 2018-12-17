@@ -118,7 +118,7 @@ function highlight (counter, stars) {
 function slowStar () {
 	if (document.getElementById('runningOnOff').checked == false && document.getElementById('slowOnOff').checked == true) {
 		document.getElementById('runningOnOff').checked = true
-		displayOnOff('running')
+		displayOnOff('running', false, true)
 	}
 
 	if (document.getElementById('slowOnOff').checked == true && document.getElementById('enableHighlight').checked == true) {
@@ -208,7 +208,7 @@ function minigameWins (type) {
 	if (document.getElementById('minigame' + type + 'OnOff').checked == true) {
 		if (document.getElementById('minigameOnOff').checked == false) {
 			document.getElementById('minigameOnOff').checked = true
-			displayOnOff('minigame')
+			displayOnOff('minigame', false, true)
 		}
 		document.getElementById('minigameWinsOnOff').checked = false
 		document.getElementById('minigameMiniStarsOnOff').checked = false
@@ -241,7 +241,7 @@ function changeStars (image) {
 
 	if ((document.getElementById('miniStarsOnOff').checked == true || document.getElementById('bananasOnOff').checked == true) && document.getElementById('starsOnOff').checked == false) {
 		document.getElementById('starsOnOff').checked = true
-		displayOnOff('stars')
+		displayOnOff('stars', false, true)
 	}
 
 	if (image == 'miniStars' && document.getElementById('miniStarsOnOff').checked == true) {
@@ -269,7 +269,15 @@ function changeStars (image) {
 */
 var callSlowStar = true
 
-function displayOnOff (counter, start) {
+function displayOnOff (counter, start, force) {
+	if (popout == false && popoutActivated == true && force != true) {
+		if (document.getElementById(counter + 'OnOff').checked == true) {
+			document.getElementById(counter + 'OnOff').checked = false
+		} else {
+			document.getElementById(counter + 'OnOff').checked = true
+		}
+	}
+
 	var counterClass = document.querySelectorAll('.' + counter)
 
 	if (document.getElementById(counter + 'OnOff').checked == false) {
@@ -279,6 +287,7 @@ function displayOnOff (counter, start) {
 			document.getElementById('minigameMiniStarsOnOff').checked = false
 		} else if (counter == 'running' && document.getElementById('slowOnOff').checked == true) {
 			document.getElementById('slowOnOff').checked = false
+			highlight('running')
 		} else if (counter == 'stars' && document.getElementById('inclBonusOnOff').checked == true) {
 			document.getElementById('inclBonusOnOff').checked = false
 		}
@@ -312,24 +321,24 @@ function displayOnOff (counter, start) {
 * Calls displayOnOff() when loading the page.
 */
 function callDisplayOnOff () {
-	displayOnOff('happening', true)
-	displayOnOff('minigame', true)
-	displayOnOff('redSpace', true)
-	displayOnOff('running', true)
-	displayOnOff('shopping', true)
-	displayOnOff('orb', true)
-	displayOnOff('candy', true)
-	displayOnOff('item', true)
-	displayOnOff('friendSpace', true)
-	displayOnOff('hex', true)
-	displayOnOff('spinSpace', true)
-	displayOnOff('minus', true)
-	displayOnOff('specialDice', true)
-	displayOnOff('stars', true)
-	displayOnOff('coins', true)
-	displayOnOff('ally', true)
-	displayOnOff('stompy', true)
-	displayOnOff('doormat', true)
+	displayOnOff('happening', true, true)
+	displayOnOff('minigame', true, true)
+	displayOnOff('redSpace', true, true)
+	displayOnOff('running', true, true)
+	displayOnOff('shopping', true, true)
+	displayOnOff('orb', true, true)
+	displayOnOff('candy', true, true)
+	displayOnOff('item', true, true)
+	displayOnOff('friendSpace', true, true)
+	displayOnOff('hex', true, true)
+	displayOnOff('spinSpace', true, true)
+	displayOnOff('minus', true, true)
+	displayOnOff('specialDice', true, true)
+	displayOnOff('stars', true, true)
+	displayOnOff('coins', true, true)
+	displayOnOff('ally', true, true)
+	displayOnOff('stompy', true, true)
+	displayOnOff('doormat', true, true)
 }
 
 /*
@@ -390,15 +399,9 @@ function changeVisibility (id) {
 */
 function windowOnClick (event) {
 	var settings = document.querySelector("#settings")
-	var tutorial = document.querySelector("#tutorial")
-	var mobileSettings = document.querySelector("#mobileSettings")
 	var colorPickTest = document.querySelector('#colorPickTest')
 	if (event.target === settings) {
 		showHideDiv(['settings'])
-	} else if (event.target === tutorial){
-		showHideDiv(['tutorial'])
-	} else if (event.target === mobileSettings){
-		showHideDiv(['mobileSettings'])
 	} else if (event.target === colorPickTest){
 		showHideDiv(['colorPickTest'])
 	}
@@ -449,12 +452,196 @@ window.onkeyup = ctrlReleased
 * @param {array} array The array that should include something.
 */
 function arrCon (string, array) {
-    return (array.indexOf(string) > -1);
+	return (array.indexOf(string) > -1);
 }
+
+/*
+* Opens normal settings or puts popout on top if it's activated.
+*/
+function openSettings () {
+	if (popoutActivated == true) {
+		window.open('', 'mpoSettings')
+	} else if (document.getElementById('autoPopout').checked == true) {
+		mpoSettingsPopout()
+	} else {
+		showHideDiv(['settings'])
+	}
+}
+
+/*
+* Opens the greenscreen test on the main window.
+*/
+function openGreenscreenTest () {
+	if (popout == true) {
+		sendMessage('openGreenscreenTest')
+	} else {
+		document.getElementById('settings').classList.remove('visible')
+		document.getElementById('settings').classList.add('hidden')
+		showHideDiv(['colorPickTest'])
+	}
+}
+
+/*
+* Changes the checked attribute of an element
+* 
+* @param {string} id The ID of the element that should be changed.
+* @param {boolean} checkedVar If it should be checked or unchecked. If not specified it just changes the attribute.
+*/
+function editCheckbox (id, checkedVar) {
+	if (checkedVar || (checkedVar != 'true' && checkedVar != 'false')) {} else {
+		if (document.getElementById(id).checked == true) {
+			checkedVar = false
+		} else {
+			checkedVar = true
+		}
+	}
+	document.getElementById(id).checked = stringToBoolean(checkedVar)
+}
+
+/*
+* Changes the value of an ID.
+* 
+* @param {string} id The ID of the element that should be changed.
+* @param {boolean} checkedVar The value it should be changed to.
+*/
+function editValue (id, valueVar) {
+	document.getElementById(id).value = valueVar
+}
+
+/*
+* Changes the InnerHTML value of an ID.
+* 
+* @param {string} id The ID of the element that should be changed.
+* @param {boolean} checkedVar The InnerHTML value it should be changed to.
+*/
+function editInnerHTML (id, innerHTMLVar) {
+	document.getElementById(id).value = innerHTMLVar
+}
+
+/*
+* Checks if it's executed in the popout and calls sendMessage() if it is.
+* 
+* @param {string} functionName The function that should be called in the main window.
+* @param {string} id The first attribute.
+* @param {string} attribute Other attributes.
+*/
+function sendSettingsMsg (functionName, id, attribute) {
+	if (popout == true) {
+		sendMessage(functionName + ',' + id + ',' + attribute)
+	}
+}
+
+/*
+* Sends a message to the settings-popout/main window with a funcion in it.
+* 
+* @param {string} text String with a funtion pointer in it that will be executed when received.
+*/
+function sendMessage (text) {
+	if (popoutActivated == true) {
+		mpoSettings.postMessage(text, '*')
+	} else {
+		mpoMain.postMessage(text, '*')
+	}
+	console.log('[MPO] Message sent: ' + text)
+}
+
+/*
+* Receives Message from Settings-popout/main window and executes the function in it.
+*/
+function receiveMessage (e) {
+	console.log('[MPO] Message received: ' + e.data)
+	popoutActivated = true
+	var args = e.data.split(',')
+
+	for (let num = 0; num < args.length; num++) {
+		if (isNaN(args[num]) == false) {
+			args[num] = parseInt(args[num])
+		}
+	}
+
+	var functionName = args[0]
+	args.splice(0, 1)
+
+	if (args.length == 0) {
+		executeFunctionByName(functionName)
+	} else {
+		executeFunctionByName(functionName, args)
+	}
+}
+
+/*
+* Executes a function from a string.
+* 
+* @param {string} functionName The name of the function that should be executed.
+* @param {array} args Arguments that should be used.
+*/
+function executeFunctionByName(functionName, args) {
+	var context = window
+	//var args = Array.prototype.slice.call(arguments, 2);
+	var namespaces = functionName.split(".");
+	var func = namespaces.pop();
+	for (var i = 0; i < namespaces.length; i++) {
+		context = context[namespaces[i]];
+	}
+	//console.log('executeFunctionByName: ' + func + ' - ' + args)
+	return context[func].apply(context, args);
+}
+
+/*
+* Marks the popout as closed.
+*/
+function popoutClosed () {
+	popoutActivated = false
+	console.log('[MPO] Popout deactivated.')
+}
+
+/*
+* Closes the popout
+*/
+function closePopout () {
+	if (popout == true) {
+		window.close()
+	} else {
+		sendMessage('closePopout')
+	}
+}
+
+/*
+* Creates a settings pop-out
+*/
+var mpoMain
+var mpoSettings
+var popoutActivated = false
+function mpoSettingsPopout () {
+	if (popout != true) {
+		document.getElementById('settings').classList.remove('visible')
+		document.getElementById('settings').classList.add('hidden')
+		saveSettings()
+		savePlayers()
+
+		if (popoutActivated == true) {
+			window.open('', 'mpoSettings')
+		} else {
+			mpoSettings = window.open('index.html?p=1', 'mpoSettings', 'height=800px,width=930px')
+			console.log('[MPO] Popout activated.')
+		}
+		popoutActivated = true
+	}
+}
+
 
 window.onload = prepareMPO()
 window.onload = changeBGColor('bgColor')
 
 window.addEventListener("click", windowOnClick)
+window.addEventListener("message", receiveMessage, false)
+
+window.onbeforeunload = function(){
+	if (popout == true) {
+		sendMessage('popoutClosed')
+	} else {
+		closePopout()
+	}
+}
 
 document.getElementById('type1').focus()

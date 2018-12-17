@@ -112,7 +112,7 @@ var bonusStars = ['', 0, 0, 0, 0]
 function updateStars (player, action, amount) {
 	if (document.getElementById('starsOnOff').checked == false && document.getElementById('inclBonusOnOff').checked == true) {
 		document.getElementById('starsOnOff').checked = true
-		displayOnOff('stars')
+		displayOnOff('stars', false, true)
 	}
 
 	var activated = document.getElementById('inclBonusOnOff').checked
@@ -184,7 +184,6 @@ function updateStars (player, action, amount) {
 function updateCoins (player) {
 	var result = parseInt(document.getElementById('p' + player + 'CoinsText').innerHTML)
 	var coinStar = parseInt(document.getElementById('coinStarText').innerHTML)
-	console.log('Player:' + player + ', Result: ' + result + ', coinStar: ' + coinStar)
 
 	if (result == coinStar) {
 		if (document.getElementById('p' + player + 'CoinStarTie').checked == true) {} else {

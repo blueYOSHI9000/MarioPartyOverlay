@@ -148,7 +148,7 @@ function textOutput () {
 					} else {
 						//var forNum = counters.length++
 						
-						console.log('forResult: ' + forResult)
+						//console.log('forResult: ' + forResult)
 
 						switch (result.length) {
 							case 1:
@@ -184,7 +184,7 @@ function textOutput () {
 	outputElement.focus()
 	document.execCommand("copy");
 
-	console.log(outputString)
+	console.log('[MPO Text Output] ' + outputString)
 
 }
 

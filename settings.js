@@ -1,4 +1,22 @@
 /*
+* Calls a function for the main site and the settings popout (if activated).
+* 
+* @param {string} functionName The function that shoudl be called (without the '()').
+* @param {array} attributes The attributes that the function should use.
+*/
+function changeSettings (functionName, attributes) {
+	//console.log('functionName: '  + functionName + ', attributes: ' + attributes)
+	if (popout == true) {
+		if (attributes) {
+			sendMessage(functionName + ',' + attributes.join(','))
+		} else {
+			sendMessage(functionName)
+		}
+	}
+	executeFunctionByName(functionName, attributes)
+}
+
+/*
 * Changes Themes incl. greenscreen.
 * 
 * @param {number} theme Which theme should be used.
@@ -38,31 +56,34 @@ function changeTheme (theme) {
 	document.getElementById('themeB2').disabled = ''
 	document.getElementById('themeB3').disabled = ''
 	switch (theme) {
-			case 2:
-				document.getElementById('themeB2').style = 'border-color: green;'
-				document.getElementById('themeB2').disabled = 'true'
-				curTheme = 2
-				break;
-			case 3:
-				document.getElementById('themeB3').style = 'border-color: green;'
-				document.getElementById('themeB3').disabled = 'true'
-				curTheme = 3
-				break;
-			default:
-				document.getElementById('themeB1').style = 'border-color: green;'
-				document.getElementById('themeB1').disabled = 'true'
-				curTheme = 1
-				break;
-		}
+		case 2:
+			document.getElementById('themeB2').style = 'border-color: green;'
+			document.getElementById('themeB2').disabled = 'true'
+			curTheme = 2
+			break;
+		case 3:
+			document.getElementById('themeB3').style = 'border-color: green;'
+			document.getElementById('themeB3').disabled = 'true'
+			curTheme = 3
+			break;
+		default:
+			document.getElementById('themeB1').style = 'border-color: green;'
+			document.getElementById('themeB1').disabled = 'true'
+			curTheme = 1
+			break;
+	}
 }
 
 /*
 * Changes the icon style.
 * 
 * @param {string} id Where it got called from.
+* @param {string} selected Which icons should be used.
 */
-function changeIcons (id) {
-	var selected = document.querySelector('input[name=' + id + ']:checked').value
+function changeIcons (id, selected) {
+	if (selected) {} else {
+		selected = document.querySelector('input[name=' + id + ']:checked').value
+	}
 	var charImg = document.querySelectorAll('.characterImg')
 
 	document.getElementById(selected).checked = true

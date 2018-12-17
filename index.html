@@ -14,8 +14,8 @@
 
 <body id="bodyElement" style="background: url(img/background.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;">
 
-	<button onclick="showHideDiv(['settings'])" class="mobileButtons" style="width: 80px;"> Settings </button>
-	<!--button class="mobileButtons" onclick="window.open('index.html?p=1', 'mpoTest', 'height=800px,width=920px')" style="width: 100px; margin-left: 80px;"> popout test </button--> <br> <br>
+	<button onclick="openSettings()" class="mobileButtons" style="width: 80px;"> Settings </button> <br> <br>
+	<span id="noSettings">
 
 	<div id="mobileTypeDiv">
 		<span id="toGenerateSpan" class="grayBG">
@@ -46,7 +46,7 @@
 		<input type="checkbox" id="p3CoinStarTie">
 		<input type="checkbox" id="p4CoinStarTie">
 	</div>
-	<span id="noSettings">
+
 		<!-- Turns -->
 		<span class="turns draggable"> <b id="turnText" onclick="mobileButtons('curTurn')"> Turn </b> <b id="curTurnText" onclick="mobileButtons('curTurn')">1</b><b style="margin-left: 60px; font-size: 30px;" onclick="mobileButtons('curTurn')">/</b><b id="maxTurnText" onclick="mobileButtons('maxTurn')">20</b> </span>
 
@@ -190,55 +190,55 @@
 
 			<div id="gameSelectorDiv" class="charSelector">Games:
 
-				<input type="radio" name="gameSelector" id="all" value="all" onchange="changeGame('all')" checked>
+				<input type="radio" name="gameSelector" id="all" value="all" onchange="changeSettings('changeGame', ['all'])" checked>
 				<label class="charSelectorLabel all gameLabel" for="all">All </label>
 
-				<input type="radio" name="gameSelector" id="mp1" value="mp1" onchange="changeGame('mp1')">
+				<input type="radio" name="gameSelector" id="mp1" value="mp1" onchange="changeSettings('changeGame', ['mp1'])">
 				<label class="charSelectorLabel mp1 gameLabel" for="mp1"> </label>
 
-				<input type="radio" name="gameSelector" id="mp2" value="mp2" onchange="changeGame('mp2')">
+				<input type="radio" name="gameSelector" id="mp2" value="mp2" onchange="changeSettings('changeGame', ['mp2'])">
 				<label class="charSelectorLabel mp2 gameLabel" for="mp2"> </label>
 
-				<input type="radio" name="gameSelector" id="mp3" value="mp3" onchange="changeGame('mp3')">
+				<input type="radio" name="gameSelector" id="mp3" value="mp3" onchange="changeSettings('changeGame', ['mp3'])">
 				<label class="charSelectorLabel mp3 gameLabel" for="mp3"> </label>
 
-				<input type="radio" name="gameSelector" id="mp4" value="mp4" onchange="changeGame('mp4')">
+				<input type="radio" name="gameSelector" id="mp4" value="mp4" onchange="changeSettings('changeGame', ['mp4'])">
 				<label class="charSelectorLabel mp4 gameLabel" for="mp4"> </label>
 
-				<input type="radio" name="gameSelector" id="mp5" value="mp5" onchange="changeGame('mp5')">
+				<input type="radio" name="gameSelector" id="mp5" value="mp5" onchange="changeSettings('changeGame', ['mp5'])">
 				<label class="charSelectorLabel mp5 gameLabel" for="mp5"> </label>
 
-				<input type="radio" name="gameSelector" id="mp6" value="mp6" onchange="changeGame('mp6')">
+				<input type="radio" name="gameSelector" id="mp6" value="mp6" onchange="changeSettings('changeGame', ['mp6'])">
 				<label class="charSelectorLabel mp6 gameLabel" for="mp6"> </label>
 
-				<input type="radio" name="gameSelector" id="mp7" value="mp7" onchange="changeGame('mp7')">
+				<input type="radio" name="gameSelector" id="mp7" value="mp7" onchange="changeSettings('changeGame', ['mp7'])">
 				<label class="charSelectorLabel mp7 gameLabel" for="mp7"> </label>
 
-				<input type="radio" name="gameSelector" id="mp8" value="mp8" onchange="changeGame('mp8')">
+				<input type="radio" name="gameSelector" id="mp8" value="mp8" onchange="changeSettings('changeGame', ['mp8'])">
 				<label class="charSelectorLabel mp8 gameLabel" for="mp8"> </label>
 
-				<input type="radio" name="gameSelector" id="mp9" value="mp9" onchange="changeGame('mp9')">
+				<input type="radio" name="gameSelector" id="mp9" value="mp9" onchange="changeSettings('changeGame', ['mp9'])">
 				<label class="charSelectorLabel mp9 gameLabel" for="mp9"> </label>
 
-				<input type="radio" name="gameSelector" id="mp10" value="mp10" onchange="changeGame('mp10')">
+				<input type="radio" name="gameSelector" id="mp10" value="mp10" onchange="changeSettings('changeGame', ['mp10'])">
 				<label class="charSelectorLabel mp10 gameLabel" for="mp10"> </label>
 
-				<input type="radio" name="gameSelector" id="mpa" value="mpa" onchange="changeGame('mpa')">
+				<input type="radio" name="gameSelector" id="mpa" value="mpa" onchange="changeSettings('changeGame', ['mpa'])">
 				<label class="charSelectorLabel mpa gameLabel" for="mpa"> </label>
 
-				<input type="radio" name="gameSelector" id="mpds" value="mpds" onchange="changeGame('mpds')">
+				<input type="radio" name="gameSelector" id="mpds" value="mpds" onchange="changeSettings('changeGame', ['mpds'])">
 				<label class="charSelectorLabel mpds gameLabel" for="mpds"> </label>
 
-				<input type="radio" name="gameSelector" id="mpit" value="mpit" onchange="changeGame('mpit')">
+				<input type="radio" name="gameSelector" id="mpit" value="mpit" onchange="changeSettings('changeGame', ['mpit'])">
 				<label class="charSelectorLabel mpit gameLabel" for="mpit"> </label>
 
-				<input type="radio" name="gameSelector" id="mpsr" value="mpsr" onchange="changeGame('mpsr')">
+				<input type="radio" name="gameSelector" id="mpsr" value="mpsr" onchange="changeSettings('changeGame', ['mpsr'])">
 				<label class="charSelectorLabel mpsr gameLabel" for="mpsr"> </label>
 
-				<input type="radio" name="gameSelector" id="mptt100" value="mptt100" onchange="changeGame('mptt100')">
+				<input type="radio" name="gameSelector" id="mptt100" value="mptt100" onchange="changeSettings('changeGame', ['mptt100'])">
 				<label class="charSelectorLabel mptt100 gameLabel" for="mptt100"> </label>
 
-				<input type="radio" name="gameSelector" id="smp" value="smp" onchange="changeGame('smp')">
+				<input type="radio" name="gameSelector" id="smp" value="smp" onchange="changeSettings('changeGame', ['smp'])">
 				<label class="charSelectorLabel smp gameLabel" for="smp"> </label>
 			</div>
 
@@ -247,49 +247,53 @@
 
 				<table class="selectionTable">
 					<tr>
-						<td> <label for="enableInteract"> <b class="settingsText"> Enable Drag 'n' Drop (reload to reset positions): </b> </label> <input type="checkbox" id="enableInteract"> </td>
+						<td> <label for="enableInteract"> <b class="settingsText"> Enable Drag 'n' Drop (reload to reset positions): </b> </label> <input type="checkbox" id="enableInteract" onclick="sendSettingsMsg('editCheckbox', this.id, this.checked)"> </td>
+					</tr>
+					<tr><td><div style="visibility: hidden;"> *Empty row* </div></td></tr>
+					<tr>
+						<td> <b class="settingsText"> Automatically open settings in a new window: </b> <input type="checkbox" id="autoPopout" onclick="sendSettingsMsg('editCheckbox', this.id, this.checked)"> </td>
 					</tr>
 					<tr><td><div style="visibility: hidden;"> *Empty row* </div></td></tr>
 					<tr> <td>
-						<b class="settingsText"> Background: </b> <button id="themeB1" class="themeButtons" onclick="changeTheme(1)" style="border-color: green;" disabled></button> <button id="themeB2" class="themeButtons" onclick="changeTheme(2)"></button> <button id="themeB3" class="themeButtons" onclick="changeTheme(3)"> </button>
+						<b class="settingsText"> Background: </b> <button id="themeB1" class="themeButtons" onclick="changeSettings('changeTheme', [1])" style="border-color: green;" disabled></button> <button id="themeB2" class="themeButtons" onclick="changeSettings('changeTheme', [2])"></button> <button id="themeB3" class="themeButtons" onclick="changeSettings('changeTheme', [3])"> </button>
 					</td> </tr>
 					<tr>
 						<td> <b class="settingsText" style="position: relative; top: -13px;"> Icons style: </b> 
 							<span class="charSelector">
 								<span>
-									<input type="radio" name="icons" id="mpsrIcons" value="mpsrIcons" onchange="changeIcons('icons')" checked>
+									<input type="radio" name="icons" id="mpsrIcons" value="mpsrIcons" onchange="changeSettings('changeIcons', ['icons', 'mpsrIcons'])" checked>
 									<label class="charSelectorLabel mario iconLabel" for="mpsrIcons"> </label>
 								</span>
 								<span>
-									<input type="radio" name="icons" id="mk8Icons" value="mk8Icons" onchange="changeIcons('icons')">
+									<input type="radio" name="icons" id="mk8Icons" value="mk8Icons" onchange="changeSettings('changeIcons', ['icons', 'mk8Icons'])">
 									<label class="charSelectorLabel iconLabel" for="mk8Icons" style="background-image: url('img/mk8Icons/mario.png');"> </label>
 								</span>
 							</span>
 						</td>
 					</tr>
 					<tr>
-						<td> <label for="greenscreen"> <b class="settingsText"> Enable Greenscreen: </b> </label> <input type="checkbox" onchange="changeTheme()" id="greenscreen"> <input type="color" onchange="changeBGColor('bgColor')" value="#0000ff" id="bgColor"> </td>
+						<td> <label for="greenscreen"> <b class="settingsText"> Enable Greenscreen: </b> </label> <input type="checkbox" onchange="sendSettingsMsg('editCheckbox', this.id, this.checked);changeSettings('changeTheme')" id="greenscreen"> <input type="color" onchange="sendSettingsMsg('editValue', this.id, this.value);changeSettings('changeBGColor', ['bgColor'])" value="#0000ff" id="bgColor"> </td>
 					</tr>
 					<tr>
 						<td> <b class="settingsText"> Change Text Color: </b> <input type="color" id="textColor" value="#ffffff" onchange="changeTextColor('textColor')"> </td>
 					</tr>
 					<tr>
-						<td> <button onclick="showHideDiv(['settings', 'colorPickTest'])" class="mobileButtons" id="greenscreenTestButton" style="width: 155px;"> Test Greenscreen </button> <span id="greenscreenError">Please use the normal MPO settings to test greenscreen.</span> </td>
+						<td> <button onclick="openGreenscreenTest()" class="mobileButtons" id="greenscreenTestButton" style="width: 155px;"> Test Greenscreen </button> <span class="settingsNote" id="greenscreenNote" style="display: none;">(This will be executed on the main window.)</span> </td>
 					</tr>
 					<tr><td><div style="visibility: hidden;"> *Empty row* </div></td></tr>
 
 					<tr>
-						<td> <label for="enableHighlight"> <b class="settingsText"> Enable Counter Highlight: </b> </label> <input type="checkbox" id="enableHighlight" onchange="resetHighlights()" checked>
-						<input type="color" onchange="callHighlight(false, true)" value="#ff0000" id="highlightColor"> </td>
+						<td> <label for="enableHighlight"> <b class="settingsText"> Enable Counter Highlight: </b> </label> <input type="checkbox" id="enableHighlight" onchange="if (popout == true) {sendMessage('editCheckbox,enableHighlight,' + this.checked)};changeSettings('resetHighlights')" checked>
+						<input type="color" onchange="sendSettingsMsg('editValue', this.id, this.value);changeSettings('callHighlight', [false, true])" value="#ff0000" id="highlightColor"> </td>
 					</tr>
 					<tr>
-						<td> <label for="noTie"> <b class="settingsText"> Don't use ties for the Coin Star: </b> </label> <input type="checkbox" id="noTie" onchange="coinStarTie()"> </td>
+						<td> <label for="noTie"> <b class="settingsText"> Don't use ties for the Coin Star: </b> </label> <input type="checkbox" id="noTie" onchange="if (popout == true) {sendMessage('editCheckbox,noTie,' + this.checked)};changeSettings('coinStarTie')"> </td>
 					</tr>
 					<tr>
-						<td> <label for="autoSave"> <b class="settingsText"> Automatically save/reload when updating turns: </b> </label> <input type="checkbox" id="autoSave" onclick="if (this.checked == true) {backup()}"> </td>
+						<td> <label for="autoSave"> <b class="settingsText"> Automatically save/reload when updating turns: </b> </label> <input type="checkbox" id="autoSave" onclick="sendSettingsMsg('editCheckbox', this.id, this.checked);if (this.checked == true) {changeSettings('backup')}"> </td>
 					</tr>
 					<tr>
-						<td> <label for="permSave"> <b class="settingsText"> Save counters permanently (not getting deleted on site reload): </b> </label> <input type="checkbox" id="permSave" checked> </td>
+						<td> <label for="permSave"> <b class="settingsText"> Save counters permanently (not getting deleted on site reload): </b> </label> <input type="checkbox" id="permSave" onclick="sendSettingsMsg('editCheckbox', this.id, this.checked)" checked> </td>
 					</tr>
 					<tr><td><div style="visibility: hidden;"> *Empty row* </div></td></tr>
 					<tr>
@@ -304,31 +308,31 @@
 				<table class="selectionTable">
 					<tr>
 						<td style="border: 1px gray solid;">
-							<label for="toBonusOnly"> <b class="settingsText"> Only show who got the bonus star: </b> <input type="checkbox" id="toBonusOnly">
-							<br> <label for="toShowNum"> <b class="settingsText marginLeft"> Show counter next to player: </b> </label> <input type="checkbox" id="toShowNum" checked="">
-							<br> <label for="toListAll"> <b class="settingsText marginLeft"> List all players instead of "everyone": </b> </label> <input type="checkbox" id="toListAll">
+							<label for="toBonusOnly"> <b class="settingsText"> Only show who got the bonus star: </b> <input type="checkbox" id="toBonusOnly" onclick="sendSettingsMsg('editCheckbox', this.id, this.checked)">
+							<br> <label for="toShowNum"> <b class="settingsText marginLeft"> Show counter next to player: </b> </label> <input type="checkbox" id="toShowNum" onclick="sendSettingsMsg('editCheckbox', this.id, this.checked)" checked="">
+							<br> <label for="toListAll"> <b class="settingsText marginLeft"> List all players instead of "everyone": </b> </label> <input type="checkbox" id="toListAll" onclick="sendSettingsMsg('editCheckbox', this.id, this.checked)">
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2"> <label for="toListAllCoin"> <b class="settingsText"> List all players instead of "everyone" for the Coin Star: </b> </label> <input type="checkbox" id="toListAllCoin"> </td>
+						<td colspan="2"> <label for="toListAllCoin"> <b class="settingsText"> List all players instead of "everyone" for the Coin Star: </b> </label> <input type="checkbox" id="toListAllCoin" onclick="sendSettingsMsg('editCheckbox', this.id, this.checked)"> </td>
 					</tr>
 					<tr>
-						<td> <br> <b class="settingsText">  Player 1 name: </b> <input id="toP1Name"> </td>
-						<td class="marginLeft"> <br> <b class="settingsText">  Player 2 name: </b> <input id="toP2Name"> </td>
+						<td> <br> <b class="settingsText">  Player 1 name: </b> <input id="toP1Name" onchange="sendSettingsMsg('editValue', this.id, this.value)"> </td>
+						<td class="marginLeft"> <br> <b class="settingsText">  Player 2 name: </b> <input id="toP2Name" onchange="sendSettingsMsg('editValue', this.id, this.value)"> </td>
 					</tr>
 					<tr>
-						<td> <b class="settingsText">  Player 3 name: </b> <input id="toP3Name"> </td>
-						<td class="marginLeft"> <b class="settingsText">  Player 4 name: </b> <input id="toP4Name"> </td>
+						<td> <b class="settingsText">  Player 3 name: </b> <input id="toP3Name" onchange="sendSettingsMsg('editValue', this.id, this.value)"> </td>
+						<td class="marginLeft"> <b class="settingsText">  Player 4 name: </b> <input id="toP4Name" onchange="sendSettingsMsg('editValue', this.id, this.value)"> </td>
 					</tr>
 					<tr> <td> 
-						<b class="settingsText"> Counter seperation: </b> <input id="toSeperation" value=" | " style="width: 30px;">
+						<b class="settingsText"> Counter seperation: </b> <input id="toSeperation" value=" | " onchange="sendSettingsMsg('editValue', this.id, this.value)" style="width: 30px;">
 					</td> </tr>
 					<tr> <td colspan="2"> <br> <span class="settingsNote"> Seperate counters with ", ", counters that aren't in the list won't be used for this. </span> </td> </tr>
 					<tr>
 						<td><b class="settingsText"> Counter order: </b> <br>
-						<textarea class="resizableInput" id="toCounters" onchange="textOutputTest()">Turns, Happening, Minigame, Red Space, Coin Star</textarea> </td>
+						<textarea class="resizableInput" id="toCounters" onchange="textOutputTest();sendSettingsMsg('editValue', this.id, this.value)">Turns, Happening, Minigame, Red Space, Coin Star</textarea> </td>
 						<td><b class="settingsText"> Counter name: </b> <span class="settingsNote"> (Used to describe the counter) </span> <br>
-						<textarea class="resizableInput" id="toOutput" onchange="textOutputTest(true)">Turns, ?, MG, Red, Coin Star</textarea> </td>
+						<textarea class="resizableInput" id="toOutput" onchange="textOutputTest(true);sendSettingsMsg('editValue', this.id, this.value)">Turns, ?, MG, Red, Coin Star</textarea> </td>
 					</tr>
 					<tr>
 						<td> <b class="warningText" id="textOutputWarning" style="visibility: hidden;"> Hi if you see this </b> </td>
@@ -346,463 +350,463 @@
 					<span class="playerText">Player 4</span>
 				</span> <br>
 				<span class="charSelector">
-					<input type="checkbox" name="comSelector1" id="com1" onchange="changeCom(1)">
+					<input type="checkbox" name="comSelector1" id="com1" onchange="sendSettingsMsg('editCheckbox', this.id, this.checked);changeSettings('changeCom', [1])">
 					<label class="charSelectorLabel com" for="com1"></label>
 
-					<input type="checkbox" name="comSelector2" id="com2" onchange="changeCom(2)">
+					<input type="checkbox" name="comSelector2" id="com2" onchange="sendSettingsMsg('editCheckbox', this.id, this.checked);changeSettings('changeCom', [2])">
 					<label class="charSelectorLabel com" for="com2"></label>
 
-					<input type="checkbox" name="comSelector3" id="com3" onchange="changeCom(3)">
+					<input type="checkbox" name="comSelector3" id="com3" onchange="sendSettingsMsg('editCheckbox', this.id, this.checked);changeSettings('changeCom', [3])">
 					<label class="charSelectorLabel com" for="com3"></label>
 
-					<input type="checkbox" name="comSelector4" id="com4" onchange="changeCom(4)">
+					<input type="checkbox" name="comSelector4" id="com4" onchange="sendSettingsMsg('editCheckbox', this.id, this.checked);changeSettings('changeCom', [4])">
 					<label class="charSelectorLabel com" for="com4"></label>
 				</span> <br>
 
 				<div class="charSelector characterSelector">
 					<span class="marioSpan">
-						<input type="radio" name="charSelectorInput1" id="mario1" value="mario" onchange="changeCharacters(1, 'mario')" checked>
+						<input type="radio" name="charSelectorInput1" id="mario1" value="mario" onchange="changeSettings('changeCharacters', [1, 'mario'])" checked>
 						<label class="charSelectorLabel mario" for="mario1"> </label> <br>
 					</span>
 					<span class="luigiSpan">
-						<input type="radio" name="charSelectorInput1" id="luigi1" value="luigi" onchange="changeCharacters(1, 'luigi')">
+						<input type="radio" name="charSelectorInput1" id="luigi1" value="luigi" onchange="changeSettings('changeCharacters', [1, 'luigi'])">
 						<label class="charSelectorLabel luigi" for="luigi1"> </label> <br>
 					</span>
 					<span class="yoshiSpan">
-						<input type="radio" name="charSelectorInput1" id="yoshi1" value="yoshi" onchange="changeCharacters(1, 'yoshi')">
+						<input type="radio" name="charSelectorInput1" id="yoshi1" value="yoshi" onchange="changeSettings('changeCharacters', [1, 'yoshi'])">
 						<label class="charSelectorLabel yoshi" for="yoshi1"> </label> <br>
 					</span>
 					<span class="peachSpan">
-						<input type="radio" name="charSelectorInput1" id="peach1" value="peach" onchange="changeCharacters(1, 'peach')">
+						<input type="radio" name="charSelectorInput1" id="peach1" value="peach" onchange="changeSettings('changeCharacters', [1, 'peach'])">
 						<label class="charSelectorLabel peach" for="peach1"> </label> <br>
 					</span>
 					<span class="daisySpan">
-						<input type="radio" name="charSelectorInput1" id="daisy1" value="daisy" onchange="changeCharacters(1, 'daisy')">
+						<input type="radio" name="charSelectorInput1" id="daisy1" value="daisy" onchange="changeSettings('changeCharacters', [1, 'daisy'])">
 						<label class="charSelectorLabel daisy" for="daisy1"> </label> <br>
 					</span>
 					<span class="rosalinaSpan">
-						<input type="radio" name="charSelectorInput1" id="rosalina1" value="rosalina" onchange="changeCharacters(1, 'rosalina')">
+						<input type="radio" name="charSelectorInput1" id="rosalina1" value="rosalina" onchange="changeSettings('changeCharacters', [1, 'rosalina'])">
 						<label class="charSelectorLabel rosalina" for="rosalina1"> </label> <br>
 					</span>
 					<span class="toadSpan">
-						<input type="radio" name="charSelectorInput1" id="toad1" value="toad" onchange="changeCharacters(1, 'toad')">
+						<input type="radio" name="charSelectorInput1" id="toad1" value="toad" onchange="changeSettings('changeCharacters', [1, 'toad'])">
 						<label class="charSelectorLabel toad" for="toad1"> </label> <br>
 					</span>
 					<span class="toadetteSpan">
-						<input type="radio" name="charSelectorInput1" id="toadette1" value="toadette" onchange="changeCharacters(1, 'toadette')">
+						<input type="radio" name="charSelectorInput1" id="toadette1" value="toadette" onchange="changeSettings('changeCharacters', [1, 'toadette'])">
 						<label class="charSelectorLabel toadette" for="toadette1"> </label> <br>
 					</span>
 					<span class="warioSpan">
-						<input type="radio" name="charSelectorInput1" id="wario1" value="wario" onchange="changeCharacters(1, 'wario')">
+						<input type="radio" name="charSelectorInput1" id="wario1" value="wario" onchange="changeSettings('changeCharacters', [1, 'wario'])">
 						<label class="charSelectorLabel wario" for="wario1"> </label> <br>
 					</span>
 					<span class="waluigiSpan">
-						<input type="radio" name="charSelectorInput1" id="waluigi1" value="waluigi" onchange="changeCharacters(1, 'waluigi')">
+						<input type="radio" name="charSelectorInput1" id="waluigi1" value="waluigi" onchange="changeSettings('changeCharacters', [1, 'waluigi'])">
 						<label class="charSelectorLabel waluigi" for="waluigi1"> </label> <br>
 					</span>
 					<span class="dkSpan">
-						<input type="radio" name="charSelectorInput1" id="dk1" value="dk" onchange="changeCharacters(1, 'dk')">
+						<input type="radio" name="charSelectorInput1" id="dk1" value="dk" onchange="changeSettings('changeCharacters', [1, 'dk'])">
 						<label class="charSelectorLabel dk" for="dk1"> </label> <br>
 					</span>
 					<span class="diddySpan">
-						<input type="radio" name="charSelectorInput1" id="diddy1" value="diddy" onchange="changeCharacters(1, 'diddy')">
+						<input type="radio" name="charSelectorInput1" id="diddy1" value="diddy" onchange="changeSettings('changeCharacters', [1, 'diddy'])">
 						<label class="charSelectorLabel diddy" for="diddy1"> </label> <br>
 					</span>
 					<span class="birdoSpan">
-						<input type="radio" name="charSelectorInput1" id="birdo1" value="birdo" onchange="changeCharacters(1, 'birdo')">
+						<input type="radio" name="charSelectorInput1" id="birdo1" value="birdo" onchange="changeSettings('changeCharacters', [1, 'birdo'])">
 						<label class="charSelectorLabel birdo" for="birdo1"> </label> <br>
 					</span>
 					<span class="bowserSpan">
-						<input type="radio" name="charSelectorInput1" id="bowser1" value="bowser" onchange="changeCharacters(1, 'bowser')">
+						<input type="radio" name="charSelectorInput1" id="bowser1" value="bowser" onchange="changeSettings('changeCharacters', [1, 'bowser'])">
 						<label class="charSelectorLabel bowser" for="bowser1"> </label> <br>
 					</span>
 					<span class="bowserjrSpan">
-						<input type="radio" name="charSelectorInput1" id="bowserjr1" value="bowserjr" onchange="changeCharacters(1, 'bowserjr')">
+						<input type="radio" name="charSelectorInput1" id="bowserjr1" value="bowserjr" onchange="changeSettings('changeCharacters', [1, 'bowserjr'])">
 						<label class="charSelectorLabel bowserjr" for="bowserjr1"> </label> <br>
 					</span>
 					<span class="koopakidSpan">
-						<input type="radio" name="charSelectorInput1" id="koopakid1" value="koopakid" onchange="changeCharacters(1, 'koopakid')">
+						<input type="radio" name="charSelectorInput1" id="koopakid1" value="koopakid" onchange="changeSettings('changeCharacters', [1, 'koopakid'])">
 						<label class="charSelectorLabel koopakid" for="koopakid1"> </label> <br>
 					</span>
 					<span class="pompomSpan">
-						<input type="radio" name="charSelectorInput1" id="pompom1" value="pompom" onchange="changeCharacters(1, 'pompom')">
+						<input type="radio" name="charSelectorInput1" id="pompom1" value="pompom" onchange="changeSettings('changeCharacters', [1, 'pompom'])">
 						<label class="charSelectorLabel pompom" for="pompom1"> </label> <br>
 					</span>
 					<span class="goombaSpan">
-						<input type="radio" name="charSelectorInput1" id="goomba1" value="goomba" onchange="changeCharacters(1, 'goomba')">
+						<input type="radio" name="charSelectorInput1" id="goomba1" value="goomba" onchange="changeSettings('changeCharacters', [1, 'goomba'])">
 						<label class="charSelectorLabel goomba" for="goomba1"> </label> <br>
 					</span>
 					<span class="koopaSpan">
-						<input type="radio" name="charSelectorInput1" id="koopa1" value="koopa" onchange="changeCharacters(1, 'koopa')">
+						<input type="radio" name="charSelectorInput1" id="koopa1" value="koopa" onchange="changeSettings('changeCharacters', [1, 'koopa'])">
 						<label class="charSelectorLabel koopa" for="koopa1"> </label> <br>
 					</span>
 					<span class="drybonesSpan">
-						<input type="radio" name="charSelectorInput1" id="drybones1" value="drybones" onchange="changeCharacters(1, 'drybones')">
+						<input type="radio" name="charSelectorInput1" id="drybones1" value="drybones" onchange="changeSettings('changeCharacters', [1, 'drybones'])">
 						<label class="charSelectorLabel drybones" for="drybones1"> </label> <br>
 					</span>
 					<span class="montySpan">
-						<input type="radio" name="charSelectorInput1" id="monty1" value="monty" onchange="changeCharacters(1, 'monty')">
+						<input type="radio" name="charSelectorInput1" id="monty1" value="monty" onchange="changeSettings('changeCharacters', [1, 'monty'])">
 						<label class="charSelectorLabel monty" for="monty1"> </label> <br>
 					</span>
 					<span class="spikeSpan">
-						<input type="radio" name="charSelectorInput1" id="spike1" value="spike" onchange="changeCharacters(1, 'spike')">
+						<input type="radio" name="charSelectorInput1" id="spike1" value="spike" onchange="changeSettings('changeCharacters', [1, 'spike'])">
 						<label class="charSelectorLabel spike" for="spike1"> </label> <br>
 					</span>
 					<span class="booSpan">
-						<input type="radio" name="charSelectorInput1" id="boo1" value="boo" onchange="changeCharacters(1, 'boo')">
+						<input type="radio" name="charSelectorInput1" id="boo1" value="boo" onchange="changeSettings('changeCharacters', [1, 'boo'])">
 						<label class="charSelectorLabel boo" for="boo1"> </label> <br>
 					</span>
 					<span class="blooperSpan">
-						<input type="radio" name="charSelectorInput1" id="blooper1" value="blooper" onchange="changeCharacters(1, 'blooper')">
+						<input type="radio" name="charSelectorInput1" id="blooper1" value="blooper" onchange="changeSettings('changeCharacters', [1, 'blooper'])">
 						<label class="charSelectorLabel blooper" for="blooper1"> </label> <br>
 					</span>
 					<span class="shyguySpan">
-						<input type="radio" name="charSelectorInput1" id="shyguy1" value="shyguy" onchange="changeCharacters(1, 'shyguy')">
+						<input type="radio" name="charSelectorInput1" id="shyguy1" value="shyguy" onchange="changeSettings('changeCharacters', [1, 'shyguy'])">
 						<label class="charSelectorLabel shyguy" for="shyguy1"> </label> <br>
 					</span>
 					<span class="hammerbroSpan">
-						<input type="radio" name="charSelectorInput1" id="hammerbro1" value="hammerbro" onchange="changeCharacters(1, 'hammerbro')">
+						<input type="radio" name="charSelectorInput1" id="hammerbro1" value="hammerbro" onchange="changeSettings('changeCharacters', [1, 'hammerbro'])">
 						<label class="charSelectorLabel hammerbro" for="hammerbro1"> </label> <br>
 					</span>
 					<span class="kamekSpan">
-						<input type="radio" name="charSelectorInput1" id="kamek1" value="kamek" onchange="changeCharacters(1, 'kamek')">
+						<input type="radio" name="charSelectorInput1" id="kamek1" value="kamek" onchange="changeSettings('changeCharacters', [1, 'kamek'])">
 						<label class="charSelectorLabel kamek" for="kamek1"> </label>
 				</span>
 				</div>
 
 				<div class="charSelector characterSelector">
 					<span class="marioSpan">
-						<input type="radio" name="charSelectorInput2" id="mario2" value="mario" onchange="changeCharacters(2, 'mario')">
+						<input type="radio" name="charSelectorInput2" id="mario2" value="mario" onchange="changeSettings('changeCharacters', [2, 'mario'])">
 						<label class="charSelectorLabel mario" for="mario2"> </label> <br>
 					</span>
 					<span class="luigiSpan">
-						<input type="radio" name="charSelectorInput2" id="luigi2" value="luigi" onchange="changeCharacters(2, 'luigi')" checked>
+						<input type="radio" name="charSelectorInput2" id="luigi2" value="luigi" onchange="changeSettings('changeCharacters', [2, 'luigi'])" checked>
 						<label class="charSelectorLabel luigi" for="luigi2"> </label> <br>
 					</span>
 					<span class="yoshiSpan">
-						<input type="radio" name="charSelectorInput2" id="yoshi2" value="yoshi" onchange="changeCharacters(2, 'yoshi')">
+						<input type="radio" name="charSelectorInput2" id="yoshi2" value="yoshi" onchange="changeSettings('changeCharacters', [2, 'yoshi'])">
 						<label class="charSelectorLabel yoshi" for="yoshi2"> </label> <br>
 					</span>
 					<span class="peachSpan">
-						<input type="radio" name="charSelectorInput2" id="peach2" value="peach" onchange="changeCharacters(2, 'peach')">
+						<input type="radio" name="charSelectorInput2" id="peach2" value="peach" onchange="changeSettings('changeCharacters', [2, 'peach'])">
 						<label class="charSelectorLabel peach" for="peach2"> </label> <br>
 					</span>
 					<span class="daisySpan">
-						<input type="radio" name="charSelectorInput2" id="daisy2" value="daisy" onchange="changeCharacters(2, 'daisy')">
+						<input type="radio" name="charSelectorInput2" id="daisy2" value="daisy" onchange="changeSettings('changeCharacters', [2, 'daisy'])">
 						<label class="charSelectorLabel daisy" for="daisy2"> </label> <br>
 					</span>
 					<span class="rosalinaSpan">
-						<input type="radio" name="charSelectorInput2" id="rosalina2" value="rosalina" onchange="changeCharacters(2, 'rosalina')">
+						<input type="radio" name="charSelectorInput2" id="rosalina2" value="rosalina" onchange="changeSettings('changeCharacters', [2, 'rosalina'])">
 						<label class="charSelectorLabel rosalina" for="rosalina2"> </label> <br>
 					</span>
 					<span class="toadSpan">
-						<input type="radio" name="charSelectorInput2" id="toad2" value="toad" onchange="changeCharacters(2, 'toad')">
+						<input type="radio" name="charSelectorInput2" id="toad2" value="toad" onchange="changeSettings('changeCharacters', [2, 'toad'])">
 						<label class="charSelectorLabel toad" for="toad2"> </label> <br>
 					</span>
 					<span class="toadetteSpan">
-						<input type="radio" name="charSelectorInput2" id="toadette2" value="toadette" onchange="changeCharacters(2, 'toadette')">
+						<input type="radio" name="charSelectorInput2" id="toadette2" value="toadette" onchange="changeSettings('changeCharacters', [2, 'toadette'])">
 						<label class="charSelectorLabel toadette" for="toadette2"> </label> <br>
 					</span>
 					<span class="warioSpan">
-						<input type="radio" name="charSelectorInput2" id="wario2" value="wario" onchange="changeCharacters(2, 'wario')">
+						<input type="radio" name="charSelectorInput2" id="wario2" value="wario" onchange="changeSettings('changeCharacters', [2, 'wario'])">
 						<label class="charSelectorLabel wario" for="wario2"> </label> <br>
 					</span>
 					<span class="waluigiSpan">
-						<input type="radio" name="charSelectorInput2" id="waluigi2" value="waluigi" onchange="changeCharacters(2, 'waluigi')">
+						<input type="radio" name="charSelectorInput2" id="waluigi2" value="waluigi" onchange="changeSettings('changeCharacters', [2, 'waluigi'])">
 						<label class="charSelectorLabel waluigi" for="waluigi2"> </label> <br>
 					</span>
 					<span class="dkSpan">
-						<input type="radio" name="charSelectorInput2" id="dk2" value="dk" onchange="changeCharacters(2, 'dk')">
+						<input type="radio" name="charSelectorInput2" id="dk2" value="dk" onchange="changeSettings('changeCharacters', [2, 'dk'])">
 						<label class="charSelectorLabel dk" for="dk2"> </label> <br>
 					</span>
 					<span class="diddySpan">
-						<input type="radio" name="charSelectorInput2" id="diddy2" value="diddy" onchange="changeCharacters(2, 'diddy')">
+						<input type="radio" name="charSelectorInput2" id="diddy2" value="diddy" onchange="changeSettings('changeCharacters', [2, 'diddy'])">
 						<label class="charSelectorLabel diddy" for="diddy2"> </label> <br>
 					</span>
 					<span class="birdoSpan">
-						<input type="radio" name="charSelectorInput2" id="birdo2" value="birdo" onchange="changeCharacters(2, 'birdo')">
+						<input type="radio" name="charSelectorInput2" id="birdo2" value="birdo" onchange="changeSettings('changeCharacters', [2, 'birdo'])">
 						<label class="charSelectorLabel birdo" for="birdo2"> </label> <br>
 					</span>
 					<span class="bowserSpan">
-						<input type="radio" name="charSelectorInput2" id="bowser2" value="bowser" onchange="changeCharacters(2, 'bowser')">
+						<input type="radio" name="charSelectorInput2" id="bowser2" value="bowser" onchange="changeSettings('changeCharacters', [2, 'bowser'])">
 						<label class="charSelectorLabel bowser" for="bowser2"> </label> <br>
 					</span>
 					<span class="bowserjrSpan">
-						<input type="radio" name="charSelectorInput2" id="bowserjr2" value="bowserjr" onchange="changeCharacters(2, 'bowserjr')">
+						<input type="radio" name="charSelectorInput2" id="bowserjr2" value="bowserjr" onchange="changeSettings('changeCharacters', [2, 'bowserjr'])">
 						<label class="charSelectorLabel bowserjr" for="bowserjr2"> </label> <br>
 					</span>
 					<span class="koopakidSpan">
-						<input type="radio" name="charSelectorInput2" id="koopakid2" value="koopakid" onchange="changeCharacters(2, 'koopakid')">
+						<input type="radio" name="charSelectorInput2" id="koopakid2" value="koopakid" onchange="changeSettings('changeCharacters', [2, 'koopakid'])">
 						<label class="charSelectorLabel koopakid" for="koopakid2"> </label> <br>
 					</span>
 					<span class="pompomSpan">
-						<input type="radio" name="charSelectorInput2" id="pompom2" value="pompom" onchange="changeCharacters(2, 'pompom')">
+						<input type="radio" name="charSelectorInput2" id="pompom2" value="pompom" onchange="changeSettings('changeCharacters', [2, 'pompom'])">
 						<label class="charSelectorLabel pompom" for="pompom2"> </label> <br>
 					</span>
 					<span class="goombaSpan">
-						<input type="radio" name="charSelectorInput2" id="goomba2" value="goomba" onchange="changeCharacters(2, 'goomba')">
+						<input type="radio" name="charSelectorInput2" id="goomba2" value="goomba" onchange="changeSettings('changeCharacters', [2, 'goomba'])">
 						<label class="charSelectorLabel goomba" for="goomba2"> </label> <br>
 					</span>
 					<span class="koopaSpan">
-						<input type="radio" name="charSelectorInput2" id="koopa2" value="koopa" onchange="changeCharacters(2, 'koopa')">
+						<input type="radio" name="charSelectorInput2" id="koopa2" value="koopa" onchange="changeSettings('changeCharacters', [2, 'koopa'])">
 						<label class="charSelectorLabel koopa" for="koopa2"> </label> <br>
 					</span>
 					<span class="drybonesSpan">
-						<input type="radio" name="charSelectorInput2" id="drybones2" value="drybones" onchange="changeCharacters(2, 'drybones')">
+						<input type="radio" name="charSelectorInput2" id="drybones2" value="drybones" onchange="changeSettings('changeCharacters', [2, 'drybones'])">
 						<label class="charSelectorLabel drybones" for="drybones2"> </label> <br>
 					</span>
 					<span class="montySpan">
-						<input type="radio" name="charSelectorInput2" id="monty2" value="monty" onchange="changeCharacters(2, 'monty')">
+						<input type="radio" name="charSelectorInput2" id="monty2" value="monty" onchange="changeSettings('changeCharacters', [2, 'monty'])">
 						<label class="charSelectorLabel monty" for="monty2"> </label> <br>
 					</span>
 					<span class="spikeSpan">
-						<input type="radio" name="charSelectorInput2" id="spike2" value="spike" onchange="changeCharacters(2, 'spike')">
+						<input type="radio" name="charSelectorInput2" id="spike2" value="spike" onchange="changeSettings('changeCharacters', [2, 'spike'])">
 						<label class="charSelectorLabel spike" for="spike2"> </label> <br>
 					</span>
 					<span class="booSpan">
-						<input type="radio" name="charSelectorInput2" id="boo2" value="boo" onchange="changeCharacters(2, 'boo')">
+						<input type="radio" name="charSelectorInput2" id="boo2" value="boo" onchange="changeSettings('changeCharacters', [2, 'boo'])">
 						<label class="charSelectorLabel boo" for="boo2"> </label> <br>
 					</span>
 					<span class="blooperSpan">
-						<input type="radio" name="charSelectorInput2" id="blooper2" value="blooper" onchange="changeCharacters(2, 'blooper')">
+						<input type="radio" name="charSelectorInput2" id="blooper2" value="blooper" onchange="changeSettings('changeCharacters', [2, 'blooper'])">
 						<label class="charSelectorLabel blooper" for="blooper2"> </label> <br>
 					</span>
 					<span class="shyguySpan">
-						<input type="radio" name="charSelectorInput2" id="shyguy2" value="shyguy" onchange="changeCharacters(2, 'shyguy')">
+						<input type="radio" name="charSelectorInput2" id="shyguy2" value="shyguy" onchange="changeSettings('changeCharacters', [2, 'shyguy'])">
 						<label class="charSelectorLabel shyguy" for="shyguy2"> </label> <br>
 					</span>
 					<span class="hammerbroSpan">
-						<input type="radio" name="charSelectorInput2" id="hammerbro2" value="hammerbro" onchange="changeCharacters(2, 'hammerbro')">
+						<input type="radio" name="charSelectorInput2" id="hammerbro2" value="hammerbro" onchange="changeSettings('changeCharacters', [2, 'hammerbro'])">
 						<label class="charSelectorLabel hammerbro" for="hammerbro2"> </label> <br>
 					</span>
 					<span class="kamekSpan">
-						<input type="radio" name="charSelectorInput2" id="kamek2" value="kamek" onchange="changeCharacters(2, 'kamek')">
+						<input type="radio" name="charSelectorInput2" id="kamek2" value="kamek" onchange="changeSettings('changeCharacters', [2, 'kamek'])">
 						<label class="charSelectorLabel kamek" for="kamek2"> </label>
 				</span>
 				</div>
 
 				<div class="charSelector characterSelector">
 					<span class="marioSpan">
-						<input type="radio" name="charSelectorInput3" id="mario3" value="mario" onchange="changeCharacters(3, 'mario')">
+						<input type="radio" name="charSelectorInput3" id="mario3" value="mario" onchange="changeSettings('changeCharacters', [3, 'mario'])">
 						<label class="charSelectorLabel mario" for="mario3"> </label> <br>
 					</span>
 					<span class="luigiSpan">
-						<input type="radio" name="charSelectorInput3" id="luigi3" value="luigi" onchange="changeCharacters(3, 'luigi')">
+						<input type="radio" name="charSelectorInput3" id="luigi3" value="luigi" onchange="changeSettings('changeCharacters', [3, 'luigi'])">
 						<label class="charSelectorLabel luigi" for="luigi3"> </label> <br>
 					</span>
 					<span class="yoshiSpan">
-						<input type="radio" name="charSelectorInput3" id="yoshi3" value="yoshi" onchange="changeCharacters(3, 'yoshi')" checked>
+						<input type="radio" name="charSelectorInput3" id="yoshi3" value="yoshi" onchange="changeSettings('changeCharacters', [3, 'yoshi'])" checked>
 						<label class="charSelectorLabel yoshi" for="yoshi3"> </label> <br>
 					</span>
 					<span class="peachSpan">
-						<input type="radio" name="charSelectorInput3" id="peach3" value="peach" onchange="changeCharacters(3, 'peach')">
+						<input type="radio" name="charSelectorInput3" id="peach3" value="peach" onchange="changeSettings('changeCharacters', [3, 'peach'])">
 						<label class="charSelectorLabel peach" for="peach3"> </label> <br>
 					</span>
 					<span class="daisySpan">
-						<input type="radio" name="charSelectorInput3" id="daisy3" value="daisy" onchange="changeCharacters(3, 'daisy')">
+						<input type="radio" name="charSelectorInput3" id="daisy3" value="daisy" onchange="changeSettings('changeCharacters', [3, 'daisy'])">
 						<label class="charSelectorLabel daisy" for="daisy3"> </label> <br>
 					</span>
 					<span class="rosalinaSpan">
-						<input type="radio" name="charSelectorInput3" id="rosalina3" value="rosalina" onchange="changeCharacters(3, 'rosalina')">
+						<input type="radio" name="charSelectorInput3" id="rosalina3" value="rosalina" onchange="changeSettings('changeCharacters', [3, 'rosalina'])">
 						<label class="charSelectorLabel rosalina" for="rosalina3"> </label> <br>
 					</span>
 					<span class="toadSpan">
-						<input type="radio" name="charSelectorInput3" id="toad3" value="toad" onchange="changeCharacters(3, 'toad')">
+						<input type="radio" name="charSelectorInput3" id="toad3" value="toad" onchange="changeSettings('changeCharacters', [3, 'toad'])">
 						<label class="charSelectorLabel toad" for="toad3"> </label> <br>
 					</span>
 					<span class="toadetteSpan">
-						<input type="radio" name="charSelectorInput3" id="toadette3" value="toadette" onchange="changeCharacters(3, 'toadette')">
+						<input type="radio" name="charSelectorInput3" id="toadette3" value="toadette" onchange="changeSettings('changeCharacters', [3, 'toadette'])">
 						<label class="charSelectorLabel toadette" for="toadette3"> </label> <br>
 					</span>
 					<span class="warioSpan">
-						<input type="radio" name="charSelectorInput3" id="wario3" value="wario" onchange="changeCharacters(3, 'wario')">
+						<input type="radio" name="charSelectorInput3" id="wario3" value="wario" onchange="changeSettings('changeCharacters', [3, 'wario'])">
 						<label class="charSelectorLabel wario" for="wario3"> </label> <br>
 					</span>
 					<span class="waluigiSpan">
-						<input type="radio" name="charSelectorInput3" id="waluigi3" value="waluigi" onchange="changeCharacters(3, 'waluigi')">
+						<input type="radio" name="charSelectorInput3" id="waluigi3" value="waluigi" onchange="changeSettings('changeCharacters', [3, 'waluigi'])">
 						<label class="charSelectorLabel waluigi" for="waluigi3"> </label> <br>
 					</span>
 					<span class="dkSpan">
-						<input type="radio" name="charSelectorInput3" id="dk3" value="dk" onchange="changeCharacters(3, 'dk')">
+						<input type="radio" name="charSelectorInput3" id="dk3" value="dk" onchange="changeSettings('changeCharacters', [3, 'dk'])">
 						<label class="charSelectorLabel dk" for="dk3"> </label> <br>
 					</span>
 					<span class="diddySpan">
-						<input type="radio" name="charSelectorInput3" id="diddy3" value="diddy" onchange="changeCharacters(3, 'diddy')">
+						<input type="radio" name="charSelectorInput3" id="diddy3" value="diddy" onchange="changeSettings('changeCharacters', [3, 'diddy'])">
 						<label class="charSelectorLabel diddy" for="diddy3"> </label> <br>
 					</span>
 					<span class="birdoSpan">
-						<input type="radio" name="charSelectorInput3" id="birdo3" value="birdo" onchange="changeCharacters(3, 'birdo')">
+						<input type="radio" name="charSelectorInput3" id="birdo3" value="birdo" onchange="changeSettings('changeCharacters', [3, 'birdo'])">
 						<label class="charSelectorLabel birdo" for="birdo3"> </label> <br>
 					</span>
 					<span class="bowserSpan">
-						<input type="radio" name="charSelectorInput3" id="bowser3" value="bowser" onchange="changeCharacters(3, 'bowser')">
+						<input type="radio" name="charSelectorInput3" id="bowser3" value="bowser" onchange="changeSettings('changeCharacters', [3, 'bowser'])">
 						<label class="charSelectorLabel bowser" for="bowser3"> </label> <br>
 					</span>
 					<span class="bowserjrSpan">
-						<input type="radio" name="charSelectorInput3" id="bowserjr3" value="bowserjr" onchange="changeCharacters(3, 'bowserjr')">
+						<input type="radio" name="charSelectorInput3" id="bowserjr3" value="bowserjr" onchange="changeSettings('changeCharacters', [3, 'bowserjr'])">
 						<label class="charSelectorLabel bowserjr" for="bowserjr3"> </label> <br>
 					</span>
 					<span class="koopakidSpan">
-						<input type="radio" name="charSelectorInput3" id="koopakid3" value="koopakid" onchange="changeCharacters(3, 'koopakid')">
+						<input type="radio" name="charSelectorInput3" id="koopakid3" value="koopakid" onchange="changeSettings('changeCharacters', [3, 'koopakid'])">
 						<label class="charSelectorLabel koopakid" for="koopakid3"> </label> <br>
 					</span>
 					<span class="pompomSpan">
-						<input type="radio" name="charSelectorInput3" id="pompom3" value="pompom" onchange="changeCharacters(3, 'pompom')">
+						<input type="radio" name="charSelectorInput3" id="pompom3" value="pompom" onchange="changeSettings('changeCharacters', [3, 'pompom'])">
 						<label class="charSelectorLabel pompom" for="pompom3"> </label> <br>
 					</span>
 					<span class="goombaSpan">
-						<input type="radio" name="charSelectorInput3" id="goomba3" value="goomba" onchange="changeCharacters(3, 'goomba')">
+						<input type="radio" name="charSelectorInput3" id="goomba3" value="goomba" onchange="changeSettings('changeCharacters', [3, 'goomba'])">
 						<label class="charSelectorLabel goomba" for="goomba3"> </label> <br>
 					</span>
 					<span class="koopaSpan">
-						<input type="radio" name="charSelectorInput3" id="koopa3" value="koopa" onchange="changeCharacters(3, 'koopa')">
+						<input type="radio" name="charSelectorInput3" id="koopa3" value="koopa" onchange="changeSettings('changeCharacters', [3, 'koopa'])">
 						<label class="charSelectorLabel koopa" for="koopa3"> </label> <br>
 					</span>
 					<span class="drybonesSpan">
-						<input type="radio" name="charSelectorInput3" id="drybones3" value="drybones" onchange="changeCharacters(3, 'drybones')">
+						<input type="radio" name="charSelectorInput3" id="drybones3" value="drybones" onchange="changeSettings('changeCharacters', [3, 'drybones'])">
 						<label class="charSelectorLabel drybones" for="drybones3"> </label> <br>
 					</span>
 					<span class="montySpan">
-						<input type="radio" name="charSelectorInput3" id="monty3" value="monty" onchange="changeCharacters(3, 'monty')">
+						<input type="radio" name="charSelectorInput3" id="monty3" value="monty" onchange="changeSettings('changeCharacters', [3, 'monty'])">
 						<label class="charSelectorLabel monty" for="monty3"> </label> <br>
 					</span>
 					<span class="spikeSpan">
-						<input type="radio" name="charSelectorInput3" id="spike3" value="spike" onchange="changeCharacters(3, 'spike')">
+						<input type="radio" name="charSelectorInput3" id="spike3" value="spike" onchange="changeSettings('changeCharacters', [3, 'spike'])">
 						<label class="charSelectorLabel spike" for="spike3"> </label> <br>
 					</span>
 					<span class="booSpan">
-						<input type="radio" name="charSelectorInput3" id="boo3" value="boo" onchange="changeCharacters(3, 'boo')">
+						<input type="radio" name="charSelectorInput3" id="boo3" value="boo" onchange="changeSettings('changeCharacters', [3, 'boo'])">
 						<label class="charSelectorLabel boo" for="boo3"> </label> <br>
 					</span>
 					<span class="blooperSpan">
-						<input type="radio" name="charSelectorInput3" id="blooper3" value="blooper" onchange="changeCharacters(3, 'blooper')">
+						<input type="radio" name="charSelectorInput3" id="blooper3" value="blooper" onchange="changeSettings('changeCharacters', [3, 'blooper'])">
 						<label class="charSelectorLabel blooper" for="blooper3"> </label> <br>
 					</span>
 					<span class="shyguySpan">
-						<input type="radio" name="charSelectorInput3" id="shyguy3" value="shyguy" onchange="changeCharacters(3, 'shyguy')">
+						<input type="radio" name="charSelectorInput3" id="shyguy3" value="shyguy" onchange="changeSettings('changeCharacters', [3, 'shyguy'])">
 						<label class="charSelectorLabel shyguy" for="shyguy3"> </label> <br>
 					</span>
 					<span class="hammerbroSpan">
-						<input type="radio" name="charSelectorInput3" id="hammerbro3" value="hammerbro" onchange="changeCharacters(3, 'hammerbro')">
+						<input type="radio" name="charSelectorInput3" id="hammerbro3" value="hammerbro" onchange="changeSettings('changeCharacters', [3, 'hammerbro'])">
 						<label class="charSelectorLabel hammerbro" for="hammerbro3"> </label> <br>
 					</span>
 					<span class="kamekSpan">
-						<input type="radio" name="charSelectorInput3" id="kamek3" value="kamek" onchange="changeCharacters(3, 'kamek')">
+						<input type="radio" name="charSelectorInput3" id="kamek3" value="kamek" onchange="changeSettings('changeCharacters', [3, 'kamek'])">
 						<label class="charSelectorLabel kamek" for="kamek3"> </label>
 					</span>
 				</div>
 
 				<div class="charSelector characterSelector">
 					<span class="marioSpan">
-						<input type="radio" name="charSelectorInput4" id="mario4" value="mario" onchange="changeCharacters(4, 'mario')">
+						<input type="radio" name="charSelectorInput4" id="mario4" value="mario" onchange="changeSettings('changeCharacters', [4, 'mario'])">
 						<label class="charSelectorLabel mario" for="mario4"> </label> <br>
 					</span>
 					<span class="luigiSpan">
-						<input type="radio" name="charSelectorInput4" id="luigi4" value="luigi" onchange="changeCharacters(4, 'luigi')">
+						<input type="radio" name="charSelectorInput4" id="luigi4" value="luigi" onchange="changeSettings('changeCharacters', [4, 'luigi'])">
 						<label class="charSelectorLabel luigi" for="luigi4"> </label> <br>
 					</span>
 					<span class="yoshiSpan">
-						<input type="radio" name="charSelectorInput4" id="yoshi4" value="yoshi" onchange="changeCharacters(4, 'yoshi')">
+						<input type="radio" name="charSelectorInput4" id="yoshi4" value="yoshi" onchange="changeSettings('changeCharacters', [4, 'yoshi'])">
 						<label class="charSelectorLabel yoshi" for="yoshi4"> </label> <br>
 					</span>
 					<span class="peachSpan">
-						<input type="radio" name="charSelectorInput4" id="peach4" value="peach" onchange="changeCharacters(4, 'peach')" checked>
+						<input type="radio" name="charSelectorInput4" id="peach4" value="peach" onchange="changeSettings('changeCharacters', [4, 'peach'])" checked>
 						<label class="charSelectorLabel peach" for="peach4"> </label> <br>
 					</span>
 					<span class="daisySpan">
-						<input type="radio" name="charSelectorInput4" id="daisy4" value="daisy" onchange="changeCharacters(4, 'daisy')">
+						<input type="radio" name="charSelectorInput4" id="daisy4" value="daisy" onchange="changeSettings('changeCharacters', [4, 'daisy'])">
 						<label class="charSelectorLabel daisy" for="daisy4"> </label> <br>
 					</span>
 					<span class="rosalinaSpan">
-						<input type="radio" name="charSelectorInput4" id="rosalina4" value="rosalina" onchange="changeCharacters(4, 'rosalina')">
+						<input type="radio" name="charSelectorInput4" id="rosalina4" value="rosalina" onchange="changeSettings('changeCharacters', [4, 'rosalina'])">
 						<label class="charSelectorLabel rosalina" for="rosalina4"> </label> <br>
 					</span>
 					<span class="toadSpan">
-						<input type="radio" name="charSelectorInput4" id="toad4" value="toad" onchange="changeCharacters(4, 'toad')">
+						<input type="radio" name="charSelectorInput4" id="toad4" value="toad" onchange="changeSettings('changeCharacters', [4, 'toad'])">
 						<label class="charSelectorLabel toad" for="toad4"> </label> <br>
 					</span>
 					<span class="toadetteSpan">
-						<input type="radio" name="charSelectorInput4" id="toadette4" value="toadette" onchange="changeCharacters(4, 'toadette')">
+						<input type="radio" name="charSelectorInput4" id="toadette4" value="toadette" onchange="changeSettings('changeCharacters', [4, 'toadette'])">
 						<label class="charSelectorLabel toadette" for="toadette4"> </label> <br>
 					</span>
 					<span class="warioSpan">
-						<input type="radio" name="charSelectorInput4" id="wario4" value="wario" onchange="changeCharacters(4, 'wario')">
+						<input type="radio" name="charSelectorInput4" id="wario4" value="wario" onchange="changeSettings('changeCharacters', [4, 'wario'])">
 						<label class="charSelectorLabel wario" for="wario4"> </label> <br>
 					</span>
 					<span class="waluigiSpan">
-						<input type="radio" name="charSelectorInput4" id="waluigi4" value="waluigi" onchange="changeCharacters(4, 'waluigi')">
+						<input type="radio" name="charSelectorInput4" id="waluigi4" value="waluigi" onchange="changeSettings('changeCharacters', [4, 'waluigi'])">
 						<label class="charSelectorLabel waluigi" for="waluigi4"> </label> <br>
 					</span>
 					<span class="dkSpan">
-						<input type="radio" name="charSelectorInput4" id="dk4" value="dk" onchange="changeCharacters(4, 'dk')">
+						<input type="radio" name="charSelectorInput4" id="dk4" value="dk" onchange="changeSettings('changeCharacters', [4, 'dk'])">
 						<label class="charSelectorLabel dk" for="dk4"> </label> <br>
 					</span>
 					<span class="diddySpan">
-						<input type="radio" name="charSelectorInput4" id="diddy4" value="diddy" onchange="changeCharacters(4, 'diddy')">
+						<input type="radio" name="charSelectorInput4" id="diddy4" value="diddy" onchange="changeSettings('changeCharacters', [4, 'diddy'])">
 						<label class="charSelectorLabel diddy" for="diddy4"> </label> <br>
 					</span>
 					<span class="birdoSpan">
-						<input type="radio" name="charSelectorInput4" id="birdo4" value="birdo" onchange="changeCharacters(4, 'birdo')">
+						<input type="radio" name="charSelectorInput4" id="birdo4" value="birdo" onchange="changeSettings('changeCharacters', [4, 'birdo'])">
 						<label class="charSelectorLabel birdo" for="birdo4"> </label> <br>
 					</span>
 					<span class="bowserSpan">
-						<input type="radio" name="charSelectorInput4" id="bowser4" value="bowser" onchange="changeCharacters(4, 'bowser')">
+						<input type="radio" name="charSelectorInput4" id="bowser4" value="bowser" onchange="changeSettings('changeCharacters', [4, 'bowser'])">
 						<label class="charSelectorLabel bowser" for="bowser4"> </label> <br>
 					</span>
 					<span class="bowserjrSpan">
-						<input type="radio" name="charSelectorInput4" id="bowserjr4" value="bowserjr" onchange="changeCharacters(4, 'bowserjr')">
+						<input type="radio" name="charSelectorInput4" id="bowserjr4" value="bowserjr" onchange="changeSettings('changeCharacters', [4, 'bowserjr'])">
 						<label class="charSelectorLabel bowserjr" for="bowserjr4"> </label> <br>
 					</span>
 					<span class="koopakidSpan">
-						<input type="radio" name="charSelectorInput4" id="koopakid4" value="koopakid" onchange="changeCharacters(4, 'koopakid')">
+						<input type="radio" name="charSelectorInput4" id="koopakid4" value="koopakid" onchange="changeSettings('changeCharacters', [4, 'koopakid'])">
 						<label class="charSelectorLabel koopakid" for="koopakid4"> </label> <br>
 					</span>
 					<span class="pompomSpan">
-						<input type="radio" name="charSelectorInput4" id="pompom4" value="pompom" onchange="changeCharacters(4, 'pompom')">
+						<input type="radio" name="charSelectorInput4" id="pompom4" value="pompom" onchange="changeSettings('changeCharacters', [4, 'pompom'])">
 						<label class="charSelectorLabel pompom" for="pompom4"> </label> <br>
 					</span>
 					<span class="goombaSpan">
-						<input type="radio" name="charSelectorInput4" id="goomba4" value="goomba" onchange="changeCharacters(4, 'goomba')">
+						<input type="radio" name="charSelectorInput4" id="goomba4" value="goomba" onchange="changeSettings('changeCharacters', [4, 'goomba'])">
 						<label class="charSelectorLabel goomba" for="goomba4"> </label> <br>
 					</span>
 					<span class="koopaSpan">
-						<input type="radio" name="charSelectorInput4" id="koopa4" value="koopa" onchange="changeCharacters(4, 'koopa')">
+						<input type="radio" name="charSelectorInput4" id="koopa4" value="koopa" onchange="changeSettings('changeCharacters', [4, 'koopa'])">
 						<label class="charSelectorLabel koopa" for="koopa4"> </label> <br>
 					</span>
 					<span class="drybonesSpan">
-						<input type="radio" name="charSelectorInput4" id="drybones4" value="drybones" onchange="changeCharacters(4, 'drybones')">
+						<input type="radio" name="charSelectorInput4" id="drybones4" value="drybones" onchange="changeSettings('changeCharacters', [4, 'drybones'])">
 						<label class="charSelectorLabel drybones" for="drybones4"> </label> <br>
 					</span>
 					<span class="montySpan">
-						<input type="radio" name="charSelectorInput4" id="monty4" value="monty" onchange="changeCharacters(4, 'monty')">
+						<input type="radio" name="charSelectorInput4" id="monty4" value="monty" onchange="changeSettings('changeCharacters', [4, 'monty'])">
 						<label class="charSelectorLabel monty" for="monty4"> </label> <br>
 					</span>
 					<span class="spikeSpan">
-						<input type="radio" name="charSelectorInput4" id="spike4" value="spike" onchange="changeCharacters(4, 'spike')">
+						<input type="radio" name="charSelectorInput4" id="spike4" value="spike" onchange="changeSettings('changeCharacters', [4, 'spike'])">
 						<label class="charSelectorLabel spike" for="spike4"> </label> <br>
 					</span>
 					<span class="booSpan">
-						<input type="radio" name="charSelectorInput4" id="boo4" value="boo" onchange="changeCharacters(4, 'boo')">
+						<input type="radio" name="charSelectorInput4" id="boo4" value="boo" onchange="changeSettings('changeCharacters', [4, 'boo'])">
 						<label class="charSelectorLabel boo" for="boo4"> </label> <br>
 					</span>
 					<span class="blooperSpan">
-						<input type="radio" name="charSelectorInput4" id="blooper4" value="blooper" onchange="changeCharacters(4, 'blooper')">
+						<input type="radio" name="charSelectorInput4" id="blooper4" value="blooper" onchange="changeSettings('changeCharacters', [4, 'blooper'])">
 						<label class="charSelectorLabel blooper" for="blooper4"> </label> <br>
 					</span>
 					<span class="shyguySpan">
-						<input type="radio" name="charSelectorInput4" id="shyguy4" value="shyguy" onchange="changeCharacters(4, 'shyguy')">
+						<input type="radio" name="charSelectorInput4" id="shyguy4" value="shyguy" onchange="changeSettings('changeCharacters', [4, 'shyguy'])">
 						<label class="charSelectorLabel shyguy" for="shyguy4"> </label> <br>
 					</span>
 					<span class="hammerbroSpan">
-						<input type="radio" name="charSelectorInput4" id="hammerbro4" value="hammerbro" onchange="changeCharacters(4, 'hammerbro')">
+						<input type="radio" name="charSelectorInput4" id="hammerbro4" value="hammerbro" onchange="changeSettings('changeCharacters', [4, 'hammerbro'])">
 						<label class="charSelectorLabel hammerbro" for="hammerbro4"> </label> <br>
 					</span>
 					<span class="kamekSpan">
-						<input type="radio" name="charSelectorInput4" id="kamek4" value="kamek" onchange="changeCharacters(4, 'kamek')">
+						<input type="radio" name="charSelectorInput4" id="kamek4" value="kamek" onchange="changeSettings('changeCharacters', [4, 'kamek'])">
 						<label class="charSelectorLabel kamek" for="kamek4"> </label>
 					</span>
 				</div> <br>
-			 <button class="mobileButtons" style="width: 190px;" onclick="randomChar()">Randomize characters</button>
+			 <button class="mobileButtons" style="width: 190px;" onclick="changeSettings('randomChar')">Randomize characters</button>
 			</div>
 
 			<!-- Counter Settings -->
@@ -812,35 +816,35 @@
 						<td colspan="3" id="counterError" style="display: none;"> <span style="color: red;">The selected game either doesn't have bonus stars or MPO doesn't support it (yet).</span> </td>
 					</tr>
 					<tr>
-						<td class="happeningC"> <label for="happeningOnOff" class="counterOnOffText">Happening (1-8, DS, SMP):</label> <input type="checkbox" id="happeningOnOff" class="counterOnOffInput" onchange="displayOnOff('happening')" checked> <label for="happeningOnOff" class="charSelectorLabel counterOnOff happeningOnOff"></label> </td>
-						<td> <label for="minigameOnOff" class="counterOnOffText">Minigame Coins (1-8):</label> <input type="checkbox" name="minigame" id="minigameOnOff" class="counterOnOffInput" onchange="displayOnOff('minigame')" checked> <label for="minigameOnOff" class="charSelectorLabel counterOnOff minigameOnOff"></label> </td>
-						<td class="mpDSC mp9C mp10C smpC"> <span class="mpDSC smpC"> <label for="minigameWinsOnOff" class="counterOnOffText">Minigame Wins (DS, SMP):</label> <input type="checkbox" name="minigame" id="minigameWinsOnOff" class="counterOnOffInput" onchange="minigameWins('Wins')"> <label for="minigameWinsOnOff" class="charSelectorLabel counterOnOff minigameWinsOnOff"></label> <br> </span>
-						<span class="mp9C mp10C"> <label for="minigameMiniStarsOnOff" class="counterOnOffText">Minigame Mini-Stars (9, 10):</label> <input type="checkbox" name="minigame" id="minigameMiniStarsOnOff" class="counterOnOffInput" onchange="minigameWins('MiniStars')"> <label for="minigameMiniStarsOnOff" class="charSelectorLabel counterOnOff minigameMiniStarsOnOff"></label> </span> </td>
+						<td class="happeningC"> <label for="happeningOnOff" class="counterOnOffText">Happening (1-8, DS, SMP):</label> <input type="checkbox" id="happeningOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['happening'])" checked> <label for="happeningOnOff" class="charSelectorLabel counterOnOff happeningOnOff"></label> </td>
+						<td> <label for="minigameOnOff" class="counterOnOffText">Minigame Coins (1-8):</label> <input type="checkbox" name="minigame" id="minigameOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['minigame'])" checked> <label for="minigameOnOff" class="charSelectorLabel counterOnOff minigameOnOff"></label> </td>
+						<td class="mpDSC mp9C mp10C smpC"> <span class="mpDSC smpC"> <label for="minigameWinsOnOff" class="counterOnOffText">Minigame Wins (DS, SMP):</label> <input type="checkbox" name="minigame" id="minigameWinsOnOff" class="counterOnOffInput" onchange="sendSettingsMsg('editCheckbox', this.id, this.checked);changeSettings('minigameWins', ['Wins'])"> <label for="minigameWinsOnOff" class="charSelectorLabel counterOnOff minigameWinsOnOff"></label> <br> </span>
+						<span class="mp9C mp10C"> <label for="minigameMiniStarsOnOff" class="counterOnOffText">Minigame Mini-Stars (9, 10):</label> <input type="checkbox" name="minigame" id="minigameMiniStarsOnOff" class="counterOnOffInput" onchange="sendSettingsMsg('editCheckbox', this.id, this.checked);changeSettings('minigameWins', ['MiniStars'])"> <label for="minigameMiniStarsOnOff" class="charSelectorLabel counterOnOff minigameMiniStarsOnOff"></label> </span> </td>
 					</tr>
 					<tr class="mp7C mp8C mp9C mp10C mpDSC smpC">
-						<td class="mp7C mp8C smpC"> <label for="redSpaceOnOff" class="counterOnOffText">Red (7, 8, SMP):</label> <input type="checkbox" id="redSpaceOnOff" class="counterOnOffInput" onchange="displayOnOff('redSpace')"> <label for="redSpaceOnOff" class="charSelectorLabel counterOnOff redSpaceOnOff"></label> </td>
-						<td class="mp7C mp8C mp9C mp10C mpDSC smpC"> <label for="runningOnOff" class="counterOnOffText">Running (7-10, DS, SMP):</label> <input type="checkbox" id="runningOnOff" class="counterOnOffInput" onchange="displayOnOff('running')"> <label for="runningOnOff" class="charSelectorLabel counterOnOff runningOnOff"></label> </td>
-						<td class="mp9C mp10C smpC"> <label for="slowOnOff" class="counterOnOffText">Slow (9, 10, SMP):</label> <input type="checkbox" id="slowOnOff" class="counterOnOffInput" onchange="slowStar()"> <label for="slowOnOff" class="charSelectorLabel counterOnOff runningOnOff"></label> </td>
+						<td class="mp7C mp8C smpC"> <label for="redSpaceOnOff" class="counterOnOffText">Red (7, 8, SMP):</label> <input type="checkbox" id="redSpaceOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['redSpace'])"> <label for="redSpaceOnOff" class="charSelectorLabel counterOnOff redSpaceOnOff"></label> </td>
+						<td class="mp7C mp8C mp9C mp10C mpDSC smpC"> <label for="runningOnOff" class="counterOnOffText">Running (7-10, DS, SMP):</label> <input type="checkbox" id="runningOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['running'])"> <label for="runningOnOff" class="charSelectorLabel counterOnOff runningOnOff"></label> </td>
+						<td class="mp9C mp10C smpC"> <label for="slowOnOff" class="counterOnOffText">Slow (9, 10, SMP):</label> <input type="checkbox" id="slowOnOff" class="counterOnOffInput" onchange="sendSettingsMsg('editCheckbox', this.id, this.checked);changeSettings('slowStar')"> <label for="slowOnOff" class="charSelectorLabel counterOnOff runningOnOff"></label> </td>
 					</tr>
 					<tr class="mp6C mp7C mp8C">
-						<td class="mp7C mp8C"> <label for="shoppingOnOff" class="counterOnOffText">Shopping (7, 8):</label> <input type="checkbox" id="shoppingOnOff" class="counterOnOffInput" onchange="displayOnOff('shopping')"> <label for="shoppingOnOff" class="charSelectorLabel counterOnOff shoppingOnOff"></label> </td>
-						<td class="mp6C mp7C"> <label for="orbOnOff" class="counterOnOffText">Orb (6, 7):</label> <input type="checkbox" id="orbOnOff" class="counterOnOffInput" onchange="displayOnOff('orb')"> <label for="orbOnOff" class="charSelectorLabel counterOnOff orbOnOff"></label> </td>
-						<td class="mp8C"> <label for="candyOnOff" class="counterOnOffText">Candy (8):</label> <input type="checkbox" id="candyOnOff" class="counterOnOffInput" onchange="displayOnOff('candy')"> <label for="candyOnOff" class="charSelectorLabel counterOnOff candyOnOff"></label> </td>
+						<td class="mp7C mp8C"> <label for="shoppingOnOff" class="counterOnOffText">Shopping (7, 8):</label> <input type="checkbox" id="shoppingOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['shopping'])"> <label for="shoppingOnOff" class="charSelectorLabel counterOnOff shoppingOnOff"></label> </td>
+						<td class="mp6C mp7C"> <label for="orbOnOff" class="counterOnOffText">Orb (6, 7):</label> <input type="checkbox" id="orbOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['orb'])"> <label for="orbOnOff" class="charSelectorLabel counterOnOff orbOnOff"></label> </td>
+						<td class="mp8C"> <label for="candyOnOff" class="counterOnOffText">Candy (8):</label> <input type="checkbox" id="candyOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['candy'])"> <label for="candyOnOff" class="charSelectorLabel counterOnOff candyOnOff"></label> </td>
 					</tr>
 					<tr class="mpDSC smpC">
-						<td> <label for="itemOnOff" class="counterOnOffText">Item (DS, SMP):</label> <input type="checkbox" id="itemOnOff" class="counterOnOffInput" onchange="displayOnOff('item')"> <label for="itemOnOff" class="charSelectorLabel counterOnOff itemOnOff"></label> </td>
-						<td class="mpDSC"> <label for="friendSpaceOnOff" class="counterOnOffText">Friendship (DS):</label> <input type="checkbox" id="friendSpaceOnOff" class="counterOnOffInput" onchange="displayOnOff('friendSpace')"> <label for="friendSpaceOnOff" class="charSelectorLabel counterOnOff friendSpaceOnOff"></label> </td>
-						<td class="mpDSC"> <label for="hexOnOff" class="counterOnOffText">Hex (DS):</label> <input type="checkbox" id="hexOnOff" class="counterOnOffInput" onchange="displayOnOff('hex')"> <label for="hexOnOff" class="charSelectorLabel counterOnOff hexOnOff"></label> </td>
+						<td> <label for="itemOnOff" class="counterOnOffText">Item (DS, SMP):</label> <input type="checkbox" id="itemOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['item'])"> <label for="itemOnOff" class="charSelectorLabel counterOnOff itemOnOff"></label> </td>
+						<td class="mpDSC"> <label for="friendSpaceOnOff" class="counterOnOffText">Friendship (DS):</label> <input type="checkbox" id="friendSpaceOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['friendSpace'])"> <label for="friendSpaceOnOff" class="charSelectorLabel counterOnOff friendSpaceOnOff"></label> </td>
+						<td class="mpDSC"> <label for="hexOnOff" class="counterOnOffText">Hex (DS):</label> <input type="checkbox" id="hexOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['hex'])"> <label for="hexOnOff" class="charSelectorLabel counterOnOff hexOnOff"></label> </td>
 					</tr>
 					<tr class="mp9C mp10C">
-						<td class="mp9C"> <label for="spinSpaceOnOff" class="counterOnOffText">Spin (9):</label> <input type="checkbox" id="spinSpaceOnOff" class="counterOnOffInput" onchange="displayOnOff('spinSpace')"> <label for="spinSpaceOnOff" class="charSelectorLabel counterOnOff spinSpaceOnOff"></label> </td>
-						<td> <label for="minusOnOff" class="counterOnOffText">Minus (9, 10):</label> <input type="checkbox" id="minusOnOff" class="counterOnOffInput" onchange="displayOnOff('minus')"> <label for="minusOnOff" class="charSelectorLabel counterOnOff minusOnOff"></label> </td>
-						<td> <label for="specialDiceOnOff" class="counterOnOffText">Dice Block (9, 10):</label> <input type="checkbox" id="specialDiceOnOff" class="counterOnOffInput" onchange="displayOnOff('specialDice')"> <label for="specialDiceOnOff" class="charSelectorLabel counterOnOff specialDiceOnOff"></label> </td>
+						<td class="mp9C"> <label for="spinSpaceOnOff" class="counterOnOffText">Spin (9):</label> <input type="checkbox" id="spinSpaceOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['spinSpace'])"> <label for="spinSpaceOnOff" class="charSelectorLabel counterOnOff spinSpaceOnOff"></label> </td>
+						<td> <label for="minusOnOff" class="counterOnOffText">Minus (9, 10):</label> <input type="checkbox" id="minusOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['minus'])"> <label for="minusOnOff" class="charSelectorLabel counterOnOff minusOnOff"></label> </td>
+						<td> <label for="specialDiceOnOff" class="counterOnOffText">Dice Block (9, 10):</label> <input type="checkbox" id="specialDiceOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['specialDice'])"> <label for="specialDiceOnOff" class="charSelectorLabel counterOnOff specialDiceOnOff"></label> </td>
 					</tr>
 					<tr class="smpC">
-						<td> <label for="allyOnOff" class="counterOnOffText">Ally (SMP):</label> <input type="checkbox" id="allyOnOff" class="counterOnOffInput" onchange="displayOnOff('ally')"> <label for="allyOnOff" class="charSelectorLabel counterOnOff allyOnOff"></label> </td>
-						<td> <label for="stompyOnOff" class="counterOnOffText">Stompy (SMP):</label> <input type="checkbox" id="stompyOnOff" class="counterOnOffInput" onchange="displayOnOff('stompy')"> <label for="stompyOnOff" class="charSelectorLabel counterOnOff stompyOnOff"></label> </td>
-						<td> <label for="doormatOnOff" class="counterOnOffText">Doormat (SMP):</label> <input type="checkbox" id="doormatOnOff" class="counterOnOffInput" onchange="displayOnOff('doormat')"> <label for="doormatOnOff" class="charSelectorLabel counterOnOff doormatOnOff"></label> </td>
+						<td> <label for="allyOnOff" class="counterOnOffText">Ally (SMP):</label> <input type="checkbox" id="allyOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['ally'])"> <label for="allyOnOff" class="charSelectorLabel counterOnOff allyOnOff"></label> </td>
+						<td> <label for="stompyOnOff" class="counterOnOffText">Stompy (SMP):</label> <input type="checkbox" id="stompyOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['stompy'])"> <label for="stompyOnOff" class="charSelectorLabel counterOnOff stompyOnOff"></label> </td>
+						<td> <label for="doormatOnOff" class="counterOnOffText">Doormat (SMP):</label> <input type="checkbox" id="doormatOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['doormat'])"> <label for="doormatOnOff" class="charSelectorLabel counterOnOff doormatOnOff"></label> </td>
 					</tr>
 					<tr>
 						<td colspan="3"><span style="font-size: 27px; border-bottom: 2px black solid;">In-game counters</span></td>
@@ -849,19 +853,19 @@
 						<td colspan="3"><span class="settingsNote"> (Useful to completely replace the in-game display - Highlighting does not affect these counters) </span></td>
 					</tr>
 					<tr>
-						<td> <label for="starsOnOff" class="counterOnOffText">Stars:</label> <input type="checkbox" id="starsOnOff" class="counterOnOffInput" onchange="displayOnOff('stars')"> <label for="starsOnOff" class="charSelectorLabel counterOnOff starsOnOff"></label> </td>
-						<td> <label for="inclBonusOnOff" class="counterOnOffText">Automatically add bonus stars:</label> <input type="checkbox" id="inclBonusOnOff" class="counterOnOffInput" onclick="updateStars()"> <label for="inclBonusOnOff" class="charSelectorLabel counterOnOff starsOnOff"></label></td>
+						<td> <label for="starsOnOff" class="counterOnOffText">Stars:</label> <input type="checkbox" id="starsOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['stars'])"> <label for="starsOnOff" class="charSelectorLabel counterOnOff starsOnOff"></label> </td>
+						<td> <label for="inclBonusOnOff" class="counterOnOffText">Automatically add bonus stars:</label> <input type="checkbox" id="inclBonusOnOff" class="counterOnOffInput" onclick="sendSettingsMsg('editCheckbox', this.id, this.checked);changeSettings('updateStars')"> <label for="inclBonusOnOff" class="charSelectorLabel counterOnOff starsOnOff"></label></td>
 					</tr>
 					<tr class="mp9C mp10C">
-						<td> <label for="miniStarsOnOff" class="counterOnOffText">Mini-stars (MP 9 & 10):</label> <input type="checkbox" id="miniStarsOnOff" class="counterOnOffInput" onchange="changeStars('miniStars');updateStars()"> <label for="miniStarsOnOff" class="charSelectorLabel counterOnOff miniStarsOnOff"></label> </td>
-						<td class="mp9C"> <label for="bananasOnOff" class="counterOnOffText">Bananas (MP 9):</label> <input type="checkbox" id="bananasOnOff" class="counterOnOffInput" onclick="changeStars('bananas');updateStars()"> <label for="bananasOnOff" class="charSelectorLabel counterOnOff bananasOnOff"></label></td>
+						<td> <label for="miniStarsOnOff" class="counterOnOffText">Mini-stars (MP 9 & 10):</label> <input type="checkbox" id="miniStarsOnOff" class="counterOnOffInput" onchange="sendSettingsMsg('editCheckbox', this.id, this.checked);changeSettings('changeStars', ['miniStars']);changeSettings('updateStars')"> <label for="miniStarsOnOff" class="charSelectorLabel counterOnOff miniStarsOnOff"></label> </td>
+						<td class="mp9C"> <label for="bananasOnOff" class="counterOnOffText">Bananas (MP 9):</label> <input type="checkbox" id="bananasOnOff" class="counterOnOffInput" onclick="sendSettingsMsg('editCheckbox', this.id, this.checked);changeSettings('changeStars', ['bananas']);changeSettings('updateStars')"> <label for="bananasOnOff" class="charSelectorLabel counterOnOff bananasOnOff"></label></td>
 					</tr>
 					<tr>
-						<td> <label for="coinsOnOff" class="counterOnOffText">Coins:</label> <input type="checkbox" id="coinsOnOff" class="counterOnOffInput" onchange="displayOnOff('coins')"> <label for="coinsOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </td>
+						<td> <label for="coinsOnOff" class="counterOnOffText">Coins:</label> <input type="checkbox" id="coinsOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['coins'])"> <label for="coinsOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </td>
 					</tr>
 				</table>
 
-				<button onclick="resetCounters()" class="mobileButtons" style="width: 180px; margin-right: 10px;">Perm. Save Counters</button> <button onclick="resetCounters()" class="mobileButtons" style="width: 140px;">Reset Counters</button>
+				<button onclick="changeSettings('saveCounters')" class="mobileButtons" style="width: 180px; margin-right: 10px;">Perm. Save Counters</button> <button onclick="changeSettings('resetCounters')" class="mobileButtons" style="width: 140px;">Reset Counters</button>
 
 				<b style="font-size: 21px; margin-left: 50px;"><a target="_blank" href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Mario-Party-Bonus-Star-List">Bonus Star List</a></b> <br> <br>
 			</div>
@@ -889,7 +893,8 @@
 			</div>
 
 			<!-- Reset/save Settings -->
-			<span id="settingsCloseSpan"> <button onclick="resetSettings()" id="resetSettingsButton" class="mobileButtons" style="width: 130px; flex: auto;"> Reset Settings </button> <button onclick="resetPlayers();" class="mobileButtons" style="width: 215px; flex: auto;"> Reset Players & Counters </button> <div class="settingsClose" id="settingsCloseDiv"> <button onclick="saveSettings(true); savePlayers(true)" class="mobileButtons" style="width: 55px;"> Save </button> <button onclick="showHideDiv(['settings'])" class="mobileButtons" id="settingsCloseButton"> Close </button> </div> </span>
+			<span id="settingsCloseSpan"> <button onclick="changeSettings('resetSettings')" id="resetSettingsButton" class="mobileButtons" style="width: 130px; flex: auto;"> Reset Settings </button> <button onclick="changeSettings('resetPlayers')" class="mobileButtons" style="width: 215px; flex: auto;"> Reset Players & Counters </button> <div class="settingsClose" id="settingsCloseDiv">
+				<button class="mobileButtons" id="popoutButton" onclick="mpoSettingsPopout()" style="width: 140px;"> Popout Settings </button> <button onclick="saveSettings(); savePlayers(true)" class="mobileButtons" id="saveButton" style="width: 55px;"> Save </button> <button onclick="saveSettings(); savePlayers(); if (popout == true) {window.close()} else {showHideDiv(['settings'])}" class="mobileButtons" id="settingsCloseButton"> Close </button> </div> </span>
 		</div>
 	</div>
 
@@ -898,7 +903,7 @@
 		<div id="colorPickerBG">
 			<table class="selectionTable">
 				<tr>
-					<td> <button onclick="showHideDiv(['colorPickTest', 'settings'])" class="mobileButtons" style="width: 80px;"> Settings </button> <b class="whiteText"> (Changes here will affect the normal MPO) </b> </td>
+					<td> <button onclick="showHideDiv(['colorPickTest']);openSettings()" class="mobileButtons" style="width: 80px;"> Settings </button> <b class="whiteText"> (Changes here will affect the normal MPO) </b> </td>
 				</tr>
 				<tr>
 					<td> <b class="whiteText"> Change BG color: </b> <input type="color" onchange="changeBGColor('bgColorPick')" value="#0000ff" id="bgColorPick"> <button onclick="resetBGColor()" class="mobileButtons" style="width: 165px;"> Reset Color (blue) </button> <br>
@@ -908,11 +913,11 @@
 					<td>
 						<span class="charSelector">
 							<span>
-								<input type="radio" name="icons2" id="mpsrIcons2" value="mpsrIcons" onchange="changeIcons('icons2')" checked>
+								<input type="radio" name="icons2" id="mpsrIcons2" value="mpsrIcons" onchange="changeIcons('icons2', 'mpsrIcons')" checked>
 								<label class="charSelectorLabel mario iconLabel" for="mpsrIcons"> </label>
 							</span>
 							<span>
-								<input type="radio" name="icons2" id="mk8Icons2" value="mk8Icons" onchange="changeIcons('icons2')">
+								<input type="radio" name="icons2" id="mk8Icons2" value="mk8Icons" onchange="changeIcons('icons2', 'mk8Icons')">
 								<label class="charSelectorLabel iconLabel" for="mk8Icons" style="background-image: url('img/mk8Icons/mario.png');"> </label>
 							</span>
 						</span>
