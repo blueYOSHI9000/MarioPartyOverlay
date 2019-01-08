@@ -8,12 +8,12 @@ function changeSettings (functionName, attributes) {
 	//console.log('functionName: '  + functionName + ', attributes: ' + attributes)
 	if (popout == true) {
 		if (attributes) {
-			sendMessage(functionName + ',' + attributes.join(','))
+			sendMessage(functionName + '+' + attributes.join('+'));
 		} else {
-			sendMessage(functionName)
+			sendMessage(functionName);
 		}
 	}
-	executeFunctionByName(functionName, attributes)
+	executeFunctionByName(functionName, attributes);
 }
 
 /*
@@ -21,55 +21,55 @@ function changeSettings (functionName, attributes) {
 * 
 * @param {number} theme Which theme should be used.
 */
-var bgColor = '#0000ff'
-var curTheme = 1
+var bgColor = '#0000ff';
+var curTheme = 1;
 function changeTheme (theme) {
-	bgColor = document.getElementById('bgColor').value
-	styleExtra = 'no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"'
+	bgColor = getValue('bgColor');
+	styleExtra = 'no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"';
 
 	if (theme) {} else {
-		theme = curTheme
+		theme = curTheme;
 	}
 
 	if (document.getElementById('greenscreen').checked == true) {
-		document.getElementById('bodyElement').style.background = bgColor
+		document.getElementById('bodyElement').style.background = bgColor;
 	} else {
 		switch (theme) {
 			case 2:
-				document.getElementById('bodyElement').style = 'background: url(img/MP9-bg.jpg)' + styleExtra
+				document.getElementById('bodyElement').style = 'background: url(img/MP9-bg.jpg)' + styleExtra;
 				curTheme = 2
 				break;
 			case 3:
-				document.getElementById('bodyElement').style = 'background: url(img/NSMBW-bg.jpg)' + styleExtra
+				document.getElementById('bodyElement').style = 'background: url(img/NSMBW-bg.jpg)' + styleExtra;
 				curTheme = 3
 				break;
 			default:
-				document.getElementById('bodyElement').style = 'background: url(img/background.jpg)' + styleExtra
+				document.getElementById('bodyElement').style = 'background: url(img/background.jpg)' + styleExtra;
 				curTheme = 1
 				break;
 		}
 	}
-	document.getElementById('themeB1').style = ''
-	document.getElementById('themeB2').style = ''
-	document.getElementById('themeB3').style = ''
-	document.getElementById('themeB1').disabled = ''
-	document.getElementById('themeB2').disabled = ''
-	document.getElementById('themeB3').disabled = ''
+	document.getElementById('themeB1').style = '';
+	document.getElementById('themeB2').style = '';
+	document.getElementById('themeB3').style = '';
+	document.getElementById('themeB1').disabled = '';
+	document.getElementById('themeB2').disabled = '';
+	document.getElementById('themeB3').disabled = '';
 	switch (theme) {
 		case 2:
-			document.getElementById('themeB2').style = 'border-color: green;'
-			document.getElementById('themeB2').disabled = 'true'
-			curTheme = 2
+			document.getElementById('themeB2').style = 'border-color: green;';
+			document.getElementById('themeB2').disabled = 'true';
+			curTheme = 2;
 			break;
 		case 3:
-			document.getElementById('themeB3').style = 'border-color: green;'
-			document.getElementById('themeB3').disabled = 'true'
-			curTheme = 3
+			document.getElementById('themeB3').style = 'border-color: green;';
+			document.getElementById('themeB3').disabled = 'true';
+			curTheme = 3;
 			break;
 		default:
-			document.getElementById('themeB1').style = 'border-color: green;'
-			document.getElementById('themeB1').disabled = 'true'
-			curTheme = 1
+			document.getElementById('themeB1').style = 'border-color: green;';
+			document.getElementById('themeB1').disabled = 'true';
+			curTheme = 1;
 			break;
 	}
 }
@@ -82,30 +82,40 @@ function changeTheme (theme) {
 */
 function changeIcons (id, selected) {
 	if (selected) {} else {
-		selected = document.querySelector('input[name=' + id + ']:checked').value
+		selected = getSelectedIcon(id);
 	}
-	var charImg = document.querySelectorAll('.characterImg')
+	var charImg = document.querySelectorAll('.characterImg');
 
-	document.getElementById(selected).checked = true
-	document.getElementById(selected + '2').checked = true
+	editValue(selected, true);
+	editValue(selected + '2', true);
 
 	for (var num = 0; num < charImg.length; num++) {
-		var charImgSrc = charImg[num].src
+		var charImgSrc = charImg[num].src;
 
-		charImgSrc = charImgSrc.split('')
-		var result = []
+		charImgSrc = charImgSrc.split('');
+		var result = [];
 		for (var num2 = charImgSrc.length; num2 > 0; num2--) {
 			if (charImgSrc[num2] == '/') {
 				break;
 			} else {
-				result.push(charImgSrc[num2])
+				result.push(charImgSrc[num2]);
 			}
 		}
-		charImgSrc = charImgSrc.join('')
-		result = charImgSrc.substring(charImgSrc.length - result.length)
-		charImg[num].src = ['img/', selected, '/', result].join('')
+		charImgSrc = charImgSrc.join('');
+		result = charImgSrc.substring(charImgSrc.length - result.length);
+		charImg[num].src = ['img/', selected, '/', result].join('');
 	}
-	coinStarTie()
+	coinStarTie();
+}
+
+function getSelectedIcon (id) {
+	id = id.charAt(0).toUpperCase() + id.slice(1);
+	if (getValue('mpsr' + id) == true) {
+		return 'mpsr' + id;
+	} else if (getValue('mk8' + id) == true) {
+		return 'mk8' + id;
+	}
+	return false;
 }
 
 /*
@@ -114,14 +124,14 @@ function changeIcons (id, selected) {
 * @param {string} id Id of the input element that changed its value.
 */
 function changeBGColor (id) {
-	bgColor = document.getElementById(id).value
+	bgColor = getValue(id);
 	if (document.getElementById('greenscreen').checked == true) {
-		document.getElementById('bodyElement').style.background = bgColor
+		document.getElementById('bodyElement').style.background = bgColor;
 	}
-	document.getElementById('bgColor').value = bgColor
-	document.getElementById('bgColorPick').value = bgColor
+	editValue('bgColor', bgColor);
+	editValue('bgColorPick', bgColor);
 
-	document.getElementById('colorPickerBG').style = 'background-color: ' + bgColor + ';'
+	document.getElementById('colorPickerBG').style = 'background-color: ' + bgColor + ';';
 }
 
 
@@ -129,8 +139,8 @@ function changeBGColor (id) {
 * Resets the Greenscreen color.
 */
 function resetBGColor () {
-	document.getElementById('bgColor').value = '#0000FF'
-	changeBGColor('bgColor')
+	document.getElementById('bgColor').value = '#0000FF';
+	changeBGColor('bgColor');
 }
 
 /*
@@ -139,41 +149,37 @@ function resetBGColor () {
 * @param {string} id Id of the input element that changed its value.
 */
 function changeTextColor (id) {
-	var whiteText = document.querySelectorAll(".whiteText")
-	var counterText = document.querySelectorAll(".counterText")
-	var turns = document.querySelectorAll(".turns")
-	var mobile = document.querySelectorAll(".mobileTypeLabel")
-	var border = document.querySelectorAll(".changesBorder")
+	var whiteText = document.querySelectorAll(".whiteText");
+	var counterText = document.querySelectorAll(".counterText");
+	var turns = document.querySelectorAll(".turns");
+	var mobile = document.querySelectorAll(".mobileTypeLabel");
 
-	var color = document.getElementById(id).value
+	var color = getValue(id);
 
 	for (var num = 0; num < whiteText.length; num++) {
-		whiteText[num].style.color = color
+		whiteText[num].style.color = color;
 	}
 	for (var num = 0; num < counterText.length; num++) {
-		counterText[num].style.color = color
+		counterText[num].style.color = color;
 	}
 	for (var num = 0; num < turns.length; num++) {
-		turns[num].style.color = color
+		turns[num].style.color = color;
 	}
 	for (var num = 0; num < mobile.length; num++) {
-		mobile[num].style.color = color
-	}
-	for (var num = 0; num < border.length; num++) {
-		border[num].style.borderColor = color
+		mobile[num].style.color = color;
 	}
 
-	document.getElementById('textColor').value = color
-	document.getElementById('textColorTest').value = color
-	callHighlight()
+	editValue('textColor', color);
+	editValue('textColorTest', color);
+	callHighlight();
 }
 
 /*
 * Resets the Text color.
 */
 function resetTextColor () {
-	document.getElementById('textColor').value = '#FFFFFF'
-	changeTextColor('textColor')
+	editValue('textColor', '#FFFFFF');
+	changeTextColor('textColor');
 }
 
 // === INTERACT.JS ===

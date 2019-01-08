@@ -11,6 +11,10 @@ src: url("font.ttf");
 	display: block;
 }
 
+body {
+	font-family: Helvetica, Segoe UI, Arial, sans-serif;
+}
+
 /* == Global == */
 .whiteText {
 	color: white;
@@ -23,6 +27,9 @@ src: url("font.ttf");
 }
 .draggable {
 	cursor: pointer;
+}
+.nowrap {
+	white-space: nowrap;
 }
 
 /* == Error == */
@@ -115,6 +122,19 @@ src: url("font.ttf");
 	top: 6px;
 }
 
+/* == Counter Animation == */
+
+@keyframes bounce {
+	0% { top: -4px; }
+	65% { top: -13px; }
+	80% { top: -9px; }
+	100% { top: -4px; }
+}
+
+.counterAnimation {
+	animation: bounce .19s ease-out 0s 1 both;
+}
+
 /* == Coin star tie == */
 .coinStarTieDiv {
 	height: 40px;
@@ -168,13 +188,6 @@ src: url("font.ttf");
 .changesButton {
 	margin-right: 40px;
 }
-.changesBorder {
-	border-top: 2px;
-	border-color: white;
-	border-top-style: solid;
-	width: 973px;
-	margin-top: 3px;
-}
 
 
 /* == Settings == */
@@ -188,6 +201,7 @@ src: url("font.ttf");
 }
 .settingsNote {
 	color: #666666;
+	font-size: 18px;
 }
 .resizableInput {
 	resize: both;
@@ -219,6 +233,7 @@ src: url("font.ttf");
 }
 .settingsSelection {
 	font-size: 26px;
+	margin-right: 10px;
 	color: #4242ee;
 	border-bottom: #4242ee 2px solid;
 	cursor: pointer;
@@ -252,7 +267,7 @@ src: url("font.ttf");
 	overflow: auto;
 }
 #settingsContent {
-	width: 900px;
+	width: 962px;
 	height: 800px;
 }
 .settingsClose {
@@ -294,11 +309,14 @@ src: url("font.ttf");
 	font-family: 'Mario';
 	font-size: 16px;
 	color: #111111;
-	margin-right: 82px;
 }
 #gameSelectorDiv {
 	font-family: 'Mario';
 	font-size: 18px;
+	display: flex;
+	max-width: 1044px;
+}
+#gameSelectorBorder {
 	border-bottom: rgba(0, 0, 0, 0.4) 3px solid;
 	padding-bottom: 7px;
 	margin-bottom: 7px;
@@ -306,7 +324,6 @@ src: url("font.ttf");
 
 .characterSelector {
 	width: 100px;
-	margin-right: 90px;
 	height: 500px;
 	overflow-y: scroll;
 	display: inline-block;
@@ -434,7 +451,6 @@ src: url("font.ttf");
 
 .com {
 	background-image:url(img/com.png);
-	margin-right: 106px;
 	width: 100px;
 	height: 45px;
 }
@@ -652,6 +668,7 @@ src: url("font.ttf");
 	margin-left: 120px;
 	padding-left: 3px;
 	width: 325px;
+	font-size: 10px;
 }
 #toGenerateSpan {
 	display: inline-block;

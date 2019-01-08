@@ -2,10 +2,10 @@
 * Resets or starts the highlighting feature by calling callHighlight().
 */
 function resetHighlights () {
-	if (document.getElementById('enableHighlight').checked == false) {
-		callHighlight(true)
+	if (getValue('enableHighlight') == false) {
+		callHighlight(true);
 	} else {
-		callHighlight()
+		callHighlight();
 	}
 }
 
@@ -18,26 +18,26 @@ function resetHighlights () {
 */
 function callHighlight (resetHighlights, all, stars) {
 	if (resetHighlights == true) {
-		var originalHighlightColor = document.getElementById('highlightColor').value
-		var textColor = document.getElementById('textColor').value
-		document.getElementById('highlightColor').value = textColor
+		var originalHighlightColor = getValue('highlightColor');
+		var textColor = getValue('textColor');
+		getValue('highlightColor', textColor);
 	}
 
-	var counters = ['happening', 'minigame', 'redSpace', 'running', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat']
+	var counters = ['happening', 'minigame', 'redSpace', 'running', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat'];
 
-	if (document.getElementById('enableHighlight').checked == true || resetHighlights == true || all == true || stars == true) {
+	if (getValue('enableHighlight') == true || resetHighlights == true || all == true || stars == true) {
 		for (let num = 0; num < counters.length; num++) {
-			if (document.getElementById(counters[num] + 'OnOff').checked == true || all == true) {
-				highlight(counters[num], stars)
+			if (getValue(counters[num] + 'OnOff') == true || all == true) {
+				highlight(counters[num], stars);
 			}
 		}
-		if (document.getElementById('slowOnOff').checked == true) {
-			slowHighlight(true)
+		if (getValue('slowOnOff') == true) {
+			slowHighlight(true);
 		}
 	}
 
 	if (resetHighlights == true) {
-		document.getElementById('highlightColor').value = originalHighlightColor
+		editValue('highlightColor', originalHighlightColor);
 	}
 }
 
@@ -51,62 +51,62 @@ function highlight (counter, stars) {
 	if (counter == 'Stars' || counter == 'Coins') {
 		return;
 	}
-	counter = counter.charAt(0).toUpperCase() + counter.slice(1)
+	counter = counter.charAt(0).toUpperCase() + counter.slice(1);
 
-	var counterP1 = document.getElementById('p1' + counter + 'Text').innerHTML
-	var counterP2 = document.getElementById('p2' + counter + 'Text').innerHTML
-	var counterP3 = document.getElementById('p3' + counter + 'Text').innerHTML
-	var counterP4 = document.getElementById('p4' + counter + 'Text').innerHTML
+	var counterP1 = document.getElementById('p1' + counter + 'Text').innerHTML;
+	var counterP2 = document.getElementById('p2' + counter + 'Text').innerHTML;
+	var counterP3 = document.getElementById('p3' + counter + 'Text').innerHTML;
+	var counterP4 = document.getElementById('p4' + counter + 'Text').innerHTML;
 
-	var counterNum = Math.max(counterP1, counterP2, counterP3, counterP4)
+	var counterNum = Math.max(counterP1, counterP2, counterP3, counterP4);
 
 	if (stars == true) {
 		if (counterP1 == 0 && counterP2 == 0 && counterP3 == 0 && counterP4 == 0) {} else {
 			if (counterNum == counterP1) {
-				bonusStars[1]++
+				bonusStars[1]++;
 			}
 			if (counterNum == counterP2) {
-				bonusStars[2]++
+				bonusStars[2]++;
 			}
 			if (counterNum == counterP3) {
-				bonusStars[3]++
+				bonusStars[3]++;
 			}
 			if (counterNum == counterP4) {
-				bonusStars[4]++
+				bonusStars[4]++;
 			}
 		}
 	} else {
-		var textColor = document.getElementById('textColor').value
-		var highlightColor = document.getElementById('highlightColor').value
+		var textColor = getValue('textColor');
+		var highlightColor = getValue('highlightColor');
 
 		if (counterP1 == 0 && counterP2 == 0 && counterP3 == 0 && counterP4 == 0) {
-			document.getElementById('p1' + counter + 'Text').style.color = textColor
-			document.getElementById('p2' + counter + 'Text').style.color = textColor
-			document.getElementById('p3' + counter + 'Text').style.color = textColor
-			document.getElementById('p4' + counter + 'Text').style.color = textColor
+			document.getElementById('p1' + counter + 'Text').style.color = textColor;
+			document.getElementById('p2' + counter + 'Text').style.color = textColor;
+			document.getElementById('p3' + counter + 'Text').style.color = textColor;
+			document.getElementById('p4' + counter + 'Text').style.color = textColor;
 		} else {
 			if (counterNum == counterP1) {
-				document.getElementById('p1' + counter + 'Text').style.color = highlightColor
+				document.getElementById('p1' + counter + 'Text').style.color = highlightColor;
 			} else {
-				document.getElementById('p1' + counter + 'Text').style.color = textColor
+				document.getElementById('p1' + counter + 'Text').style.color = textColor;
 			}
 
 			if (counterNum == counterP2) {
-				document.getElementById('p2' + counter + 'Text').style.color = highlightColor
+				document.getElementById('p2' + counter + 'Text').style.color = highlightColor;
 			} else {
-				document.getElementById('p2' + counter + 'Text').style.color = textColor
+				document.getElementById('p2' + counter + 'Text').style.color = textColor;
 			}
 
 			if (counterNum == counterP3) {
-				document.getElementById('p3' + counter + 'Text').style.color = highlightColor
+				document.getElementById('p3' + counter + 'Text').style.color = highlightColor;
 			} else {
-				document.getElementById('p3' + counter + 'Text').style.color = textColor
+				document.getElementById('p3' + counter + 'Text').style.color = textColor;
 			}
 
 			if (counterNum == counterP4) {
-				document.getElementById('p4' + counter + 'Text').style.color = highlightColor
+				document.getElementById('p4' + counter + 'Text').style.color = highlightColor;
 			} else {
-				document.getElementById('p4' + counter + 'Text').style.color = textColor
+				document.getElementById('p4' + counter + 'Text').style.color = textColor;
 			}
 		}
 	}
@@ -116,15 +116,15 @@ function highlight (counter, stars) {
 * Turns the slow star feature on or off.
 */
 function slowStar () {
-	if (document.getElementById('runningOnOff').checked == false && document.getElementById('slowOnOff').checked == true) {
-		document.getElementById('runningOnOff').checked = true
-		displayOnOff('running', false, true)
+	if (getValue('runningOnOff') == false && getValue('slowOnOff') == true) {
+		editValue('runningOnOff', true);
+		displayOnOff('running', false, true);
 	}
 
-	if (document.getElementById('slowOnOff').checked == true && document.getElementById('enableHighlight').checked == true) {
-		slowHighlight()
-	} else if (document.getElementById('enableHighlight').checked == true) {
-		highlight('running')
+	if (getValue('slowOnOff') == true && getValue('enableHighlight') == true) {
+		slowHighlight();
+	} else if (getValue('enableHighlight') == true) {
+		highlight('running');
 	}
 }
 
@@ -132,61 +132,61 @@ function slowStar () {
 * Highlights the slow star.
 */
 function slowHighlight (stars) {
-	var counterP1 = document.getElementById('p1RunningText').innerHTML
-	var counterP2 = document.getElementById('p2RunningText').innerHTML
-	var counterP3 = document.getElementById('p3RunningText').innerHTML
-	var counterP4 = document.getElementById('p4RunningText').innerHTML
+	var counterP1 = document.getElementById('p1RunningText').innerHTML;
+	var counterP2 = document.getElementById('p2RunningText').innerHTML;
+	var counterP3 = document.getElementById('p3RunningText').innerHTML;
+	var counterP4 = document.getElementById('p4RunningText').innerHTML;
 
-	var counterNumMax = Math.max(counterP1, counterP2, counterP3, counterP4)
-	var counterNumMin = Math.min(counterP1, counterP2, counterP3, counterP4)
+	var counterNumMax = Math.max(counterP1, counterP2, counterP3, counterP4);
+	var counterNumMin = Math.min(counterP1, counterP2, counterP3, counterP4);
 
 	if (stars == true) {
 		if (counterP1 == 0) {} else if (counterNumMin == counterP1) {
-			bonusStars[1]++
+			bonusStars[1]++;
 		}
 		if (counterP2 == 0) {} else if (counterNumMin == counterP2) {
-			bonusStars[2]++
+			bonusStars[2]++;
 		}
 		if (counterP3 == 0) {} else if (counterNumMin == counterP3) {
-			bonusStars[3]++
+			bonusStars[3]++;
 		}
 		if (counterP4 == 0) {} else if (counterNumMin == counterP4) {
-			bonusStars[4]++
+			bonusStars[4]++;
 		}
 	} else {
-		var highlightColor = document.getElementById('highlightColor').value
-		var textColor = document.getElementById('textColor').value
+		var highlightColor = getValue('highlightColor');
+		var textColor = getValue('textColor');
 
 		if (counterP1 == 0) {
-			document.getElementById('p1RunningText').style.color = textColor
+			document.getElementById('p1RunningText').style.color = textColor;
 		} else if (counterNumMax == counterP1 || counterNumMin == counterP1) {
-			document.getElementById('p1RunningText').style.color = highlightColor
+			document.getElementById('p1RunningText').style.color = highlightColor;
 		} else {
-			document.getElementById('p1RunningText').style.color = textColor
+			document.getElementById('p1RunningText').style.color = textColor;
 		}
 
 		if (counterP2 == 0) {
-			document.getElementById('p2RunningText').style.color = textColor
+			document.getElementById('p2RunningText').style.color = textColor;
 		} else if (counterNumMax == counterP2 || counterNumMin == counterP2) {
-			document.getElementById('p2RunningText').style.color = highlightColor
+			document.getElementById('p2RunningText').style.color = highlightColor;
 		} else {
-			document.getElementById('p2RunningText').style.color = textColor
+			document.getElementById('p2RunningText').style.color = textColor;
 		}
 
 		if (counterP3 == 0) {
-			document.getElementById('p3RunningText').style.color = textColor
+			document.getElementById('p3RunningText').style.color = textColor;
 		} else if (counterNumMax == counterP3 || counterNumMin == counterP3) {
-			document.getElementById('p3RunningText').style.color = highlightColor
+			document.getElementById('p3RunningText').style.color = highlightColor;
 		} else {
-			document.getElementById('p3RunningText').style.color = textColor
+			document.getElementById('p3RunningText').style.color = textColor;
 		}
 
 		if (counterP4 == 0) {
-			document.getElementById('p4RunningText').style.color = textColor
+			document.getElementById('p4RunningText').style.color = textColor;
 		} else if (counterNumMax == counterP4 || counterNumMin == counterP4) {
-			document.getElementById('p4RunningText').style.color = highlightColor
+			document.getElementById('p4RunningText').style.color = highlightColor;
 		} else {
-			document.getElementById('p4RunningText').style.color = textColor
+			document.getElementById('p4RunningText').style.color = textColor;
 		}
 	}
 }
@@ -197,37 +197,37 @@ function slowHighlight (stars) {
 * @param {string} type Which one should be used.
 */
 function minigameWins (type) {
-	if (type) {} else if (document.getElementById('minigameWinsOnOff').checked == true) {
-		var type = 'Wins'
-	} else if (document.getElementById('minigameMiniStarsOnOff').checked == true) {
-		var type = 'MiniStars'
+	if (type) {} else if (getValue('minigameWinsOnOff') == true) {
+		var type = 'Wins';
+	} else if (getValue('minigameMiniStarsOnOff') == true) {
+		var type = 'MiniStars';
 	} else {
-		var type = ''
+		var type = '';
 	}
 
-	if (document.getElementById('minigame' + type + 'OnOff').checked == true) {
-		if (document.getElementById('minigameOnOff').checked == false) {
-			document.getElementById('minigameOnOff').checked = true
-			displayOnOff('minigame', false, true)
+	if (getValue('minigame' + type + 'OnOff') == true) {
+		if (getValue('minigameOnOff') == false) {
+			editValue('minigameOnOff', true);
+			displayOnOff('minigame', false, true);
 		}
-		document.getElementById('minigameWinsOnOff').checked = false
-		document.getElementById('minigameMiniStarsOnOff').checked = false
-		document.getElementById('minigame' + type + 'OnOff').checked = true
+		editValue('minigameWinsOnOff', false);
+		editValue('minigameMiniStarsOnOff', false);
+		editValue('minigame' + type + 'OnOff', true);
 	} else {
-		document.getElementById('minigameWinsOnOff').checked = false
-		document.getElementById('minigameMiniStarsOnOff').checked = false
-		type = ''
+		editValue('minigameWinsOnOff', false);
+		editValue('minigameMiniStarsOnOff', false);
+		type = '';
 	}
 
-	var source = 'img/minigame.png'
+	var source = 'img/minigame.png';
 	if (type == 'MiniStars') {
-		source = 'img/minigameministars.png'
+		source = 'img/minigameministars.png';
 	} else if (type == 'Wins') {
-		source = 'img/minigamewins.png'
+		source = 'img/minigamewins.png';
 	}
 	
 	for (let num = 1; num < 5; num++) {
-		document.getElementById('p' + num + 'MinigameDisplay').src = source
+		document.getElementById('p' + num + 'MinigameDisplay').src = source;
 	}
 }
 
@@ -237,27 +237,27 @@ function minigameWins (type) {
 * @param {string} image Which image should be used.
 */
 function changeStars (image) {
-	var source = ''
+	var source = '';
 
-	if ((document.getElementById('miniStarsOnOff').checked == true || document.getElementById('bananasOnOff').checked == true) && document.getElementById('starsOnOff').checked == false) {
-		document.getElementById('starsOnOff').checked = true
-		displayOnOff('stars', false, true)
+	if ((getValue('miniStarsOnOff') == true || getValue('bananasOnOff') == true) && getValue('starsOnOff') == false) {
+		editValue('starsOnOff', true);
+		displayOnOff('stars', false, true);
 	}
 
-	if (image == 'miniStars' && document.getElementById('miniStarsOnOff').checked == true) {
-		document.getElementById('bananasOnOff').checked = false
-		source = 'img/ministar.png'
+	if (image == 'miniStars' && getValue('miniStarsOnOff') == true) {
+		editValue('bananasOnOff', false);
+		source = 'img/ministar.png';
 	} else if (image == 'bananas' && document.getElementById('bananasOnOff').checked == true) {
-		document.getElementById('miniStarsOnOff').checked = false
-		source = 'img/banana.png'
+		editValue('miniStarsOnOff', false);
+		source = 'img/banana.png';
 	} else {
-		document.getElementById('miniStarsOnOff').checked = false
-		document.getElementById('bananasOnOff').checked = false
-		source = 'img/star.png'
+		editValue('miniStarsOnOff', false);
+		editValue('bananasOnOff', false);
+		source = 'img/star.png';
 	}
 
 	for (let num = 1; num < 5; num++) {
-		document.getElementById('p' + num + 'StarsDisplay').src = source
+		document.getElementById('p' + num + 'StarsDisplay').src = source;
 	}
 }
 
@@ -271,49 +271,46 @@ var callSlowStar = true
 
 function displayOnOff (counter, start, force) {
 	if (popout == false && popoutActivated == true && force != true) {
-		if (document.getElementById(counter + 'OnOff').checked == true) {
-			document.getElementById(counter + 'OnOff').checked = false
+		if (getValue(counter + 'OnOff') == true) {
+			editValue(counter + 'OnOff', false);
 		} else {
-			document.getElementById(counter + 'OnOff').checked = true
+			editValue(counter + 'OnOff', true);
 		}
 	}
 
 	var counterClass = document.querySelectorAll('.' + counter)
 
-	if (document.getElementById(counter + 'OnOff').checked == false) {
-		var displayVar = 'none'
-		if (counter == 'minigame' && (document.getElementById('minigameWinsOnOff').checked == true || document.getElementById('minigameMiniStarsOnOff').checked == true)) {
-			document.getElementById('minigameWinsOnOff').checked = false
-			document.getElementById('minigameMiniStarsOnOff').checked = false
-		} else if (counter == 'running' && document.getElementById('slowOnOff').checked == true) {
-			document.getElementById('slowOnOff').checked = false
-			highlight('running')
-		} else if (counter == 'stars' && document.getElementById('inclBonusOnOff').checked == true) {
-			document.getElementById('inclBonusOnOff').checked = false
+	if (getValue(counter + 'OnOff') == false) {
+		var displayVar = 'none';
+		if (counter == 'minigame' && (getValue('minigameWinsOnOff') == true || getValue('minigameMiniStarsOnOff') == true)) {
+			editValue('minigameWinsOnOff', false);
+			editValue('minigameMiniStarsOnOff', false);
+		} else if (counter == 'running' && getValue('slowOnOff') == true) {
+			editValue('slowOnOff', false);
+			highlight('running');
+		} else if (counter == 'stars' && getValue('inclBonusOnOff') == true) {
+			editValue('inclBonusOnOff', false);
 		}
-		if (counter == 'stars' && document.getElementById('miniStarsOnOff').checked == true) {
-			document.getElementById('miniStarsOnOff').checked = false
-		} else if (counter == 'stars' && document.getElementById('bananasOnOff').checked == true) {
-			document.getElementById('bananasOnOff').checked = false
+		if (counter == 'stars' && getValue('miniStarsOnOff') == true) {
+			editValue('miniStarsOnOff', false);
+		} else if (counter == 'stars' && getValue('bananasOnOff') == true) {
+			editValue('bananasOnOff', false);
 		}
 
 	} else {
-		var displayVar = ''
+		var displayVar = '';
 	}
 
 	for (var num = 0; num < counterClass.length; num++) {
-		counterClass[num].style.display = displayVar
+		counterClass[num].style.display = displayVar;
 	}
 
 	if (start) {} else if (callSlowStar == true && counter == 'running') {
-		slowStar()
-		callSlowStar = false
+		slowStar();
+		callSlowStar = false;
 	}
-	if (counter == 'minigame') {
-		minigameWins()
-	}
-	if ((document.getElementById('starsOnOff').checked == true && document.getElementById('inclBonusOnOff').checked == true) || counter == 'stars') {
-		updateStars()
+	if ((getValue('starsOnOff').checked == true && getValue('inclBonusOnOff').checked == true) || counter == 'stars') {
+		updateStars();
 	}
 }
 
@@ -321,24 +318,24 @@ function displayOnOff (counter, start, force) {
 * Calls displayOnOff() when loading the page.
 */
 function callDisplayOnOff () {
-	displayOnOff('happening', true, true)
-	displayOnOff('minigame', true, true)
-	displayOnOff('redSpace', true, true)
-	displayOnOff('running', true, true)
-	displayOnOff('shopping', true, true)
-	displayOnOff('orb', true, true)
-	displayOnOff('candy', true, true)
-	displayOnOff('item', true, true)
-	displayOnOff('friendSpace', true, true)
-	displayOnOff('hex', true, true)
-	displayOnOff('spinSpace', true, true)
-	displayOnOff('minus', true, true)
-	displayOnOff('specialDice', true, true)
-	displayOnOff('stars', true, true)
-	displayOnOff('coins', true, true)
-	displayOnOff('ally', true, true)
-	displayOnOff('stompy', true, true)
-	displayOnOff('doormat', true, true)
+	displayOnOff('happening', true, true);
+	displayOnOff('minigame', true, true);
+	displayOnOff('redSpace', true, true);
+	displayOnOff('running', true, true);
+	displayOnOff('shopping', true, true);
+	displayOnOff('orb', true, true);
+	displayOnOff('candy', true, true);
+	displayOnOff('item', true, true);
+	displayOnOff('friendSpace', true, true);
+	displayOnOff('hex', true, true);
+	displayOnOff('spinSpace', true, true);
+	displayOnOff('minus', true, true);
+	displayOnOff('specialDice', true, true);
+	displayOnOff('stars', true, true);
+	displayOnOff('coins', true, true);
+	displayOnOff('ally', true, true);
+	displayOnOff('stompy', true, true);
+	displayOnOff('doormat', true, true);
 }
 
 /*
@@ -349,7 +346,7 @@ function callDisplayOnOff () {
 */
 function showHideDiv (ids) {
 	for (let num = 0; num < ids.length; num++) {
-		var div = document.getElementById(ids[num]).classList
+		var div = document.getElementById(ids[num]).classList;
 
 		if (div == 'hidden') {
 			document.getElementById(ids[num]).classList.add('visible');
@@ -367,15 +364,15 @@ function showHideDiv (ids) {
 * @param {string} id Which settings should be shown.
 */
 function showHideSettings (id) {
-	var ids = ['generalMPO', 'textOutput', 'player', 'counter', 'tutorial']
+	var ids = ['generalMPO', 'textOutput', 'player', 'counter', 'tutorial'];
 	for (let num = 0; num < 5; num++) {
-		document.getElementById(ids[num] + 'Settings').classList.add('hidden')
-		document.getElementById(ids[num] + 'Settings').classList.remove('visible')
-		document.getElementById(ids[num] + 'Selector').classList.remove('settingsSelected')
+		document.getElementById(ids[num] + 'Settings').classList.add('hidden');
+		document.getElementById(ids[num] + 'Settings').classList.remove('visible');
+		document.getElementById(ids[num] + 'Selector').classList.remove('settingsSelected');
 	}
-	document.getElementById(id + 'Settings').classList.add('visible')
-	document.getElementById(id + 'Settings').classList.remove('hidden')
-	document.getElementById(id + 'Selector').classList.add('settingsSelected')
+	document.getElementById(id + 'Settings').classList.add('visible');
+	document.getElementById(id + 'Settings').classList.remove('hidden');
+	document.getElementById(id + 'Selector').classList.add('settingsSelected');
 
 }
 
@@ -386,9 +383,9 @@ function showHideSettings (id) {
 */
 function changeVisibility (id) {
 	if (document.getElementById(id).style.visibility == 'hidden') {
-		document.getElementById(id).style.visibility = 'visible'
+		document.getElementById(id).style.visibility = 'visible';
 	} else if (document.getElementById(id).style.visibility == 'visible') {
-		document.getElementById(id).style.visibility = 'hidden'
+		document.getElementById(id).style.visibility = 'hidden';
 	}
 }
 
@@ -398,12 +395,12 @@ function changeVisibility (id) {
 * @param {string} event What event got fired.
 */
 function windowOnClick (event) {
-	var settings = document.querySelector("#settings")
-	var colorPickTest = document.querySelector('#colorPickTest')
+	var settings = document.querySelector("#settings");
+	var colorPickTest = document.querySelector('#colorPickTest');
 	if (event.target === settings) {
-		showHideDiv(['settings'])
+		showHideDiv(['settings']);
 	} else if (event.target === colorPickTest){
-		showHideDiv(['colorPickTest'])
+		showHideDiv(['colorPickTest']);
 	}
 }
 
@@ -412,18 +409,18 @@ function windowOnClick (event) {
 */
 function ctrlPressed (e) {
 	if (e.ctrlKey && ctrlKeyVar == false) {
-		ctrlKeyVar = true
-		if (document.getElementById('mobileTypeMinus').checked == false) {
-			document.getElementById('mobileTypeMinus').checked = true
-		} else if (document.getElementById('mobileTypeMinus').checked == true) {
-			document.getElementById('mobileTypeMinus').checked = false
+		ctrlKeyVar = true;
+		if (getValue('mobileTypeMinus') == false) {
+			editValue('mobileTypeMinus', true);
+		} else if (getValue('mobileTypeMinus') == true) {
+			editValue('mobileTypeMinus', false);
 		}
 	} else if (e.key == '1') {
-		document.getElementById('type1').checked = true
+		editValue('type1', true);
 	} else if (e.key == '5') {
-		document.getElementById('type5').checked = true
+		editValue('type5', true);
 	} else if (e.key == '0') {
-		document.getElementById('type10').checked = true
+		editValue('type10', true);
 	}
 }
 
@@ -433,17 +430,17 @@ function ctrlPressed (e) {
 function ctrlReleased (e) {
 	if (ctrlKeyVar == true) {
 		ctrlKeyVar = false
-		if (document.getElementById('mobileTypeMinus').checked == false) {
-			document.getElementById('mobileTypeMinus').checked = true
-		} else if (document.getElementById('mobileTypeMinus').checked == true) {
-			document.getElementById('mobileTypeMinus').checked = false
+		if (getValue('mobileTypeMinus') == false) {
+			editValue('mobileTypeMinus', true);
+		} else if (getValue('mobileTypeMinus') == true) {
+			editValue('mobileTypeMinus', false);
 		}
 	}
 }
 
-var ctrlKeyVar = false
-window.onkeydown = ctrlPressed
-window.onkeyup = ctrlReleased
+var ctrlKeyVar = false;
+window.onkeydown = ctrlPressed;
+window.onkeyup = ctrlReleased;
 
 /*
 * Checks if something is included in a array.
@@ -460,11 +457,11 @@ function arrCon (string, array) {
 */
 function openSettings () {
 	if (popoutActivated == true) {
-		window.open('', 'mpoSettings')
-	} else if (document.getElementById('autoPopout').checked == true) {
-		mpoSettingsPopout()
+		window.open('', 'mpoSettings');
+	} else if (getValue('autoPopout').checked == true) {
+		mpoSettingsPopout();
 	} else {
-		showHideDiv(['settings'])
+		showHideDiv(['settings']);
 	}
 }
 
@@ -473,61 +470,52 @@ function openSettings () {
 */
 function openGreenscreenTest () {
 	if (popout == true) {
-		sendMessage('openGreenscreenTest')
+		sendMessage('openGreenscreenTest');
 	} else {
-		document.getElementById('settings').classList.remove('visible')
-		document.getElementById('settings').classList.add('hidden')
-		showHideDiv(['colorPickTest'])
+		document.getElementById('settings').classList.remove('visible');
+		document.getElementById('settings').classList.add('hidden');
+		showHideDiv(['colorPickTest']);
 	}
 }
 
 /*
-* Changes the checked attribute of an element
+* Edits the value of an input element. If element is a checkbox and no value is given it changes it to the opposite instead.
 * 
 * @param {string} id The ID of the element that should be changed.
-* @param {boolean} checkedVar If it should be checked or unchecked. If not specified it just changes the attribute.
+* @param {string/boolean} value The value that it should be changed to
 */
-function editCheckbox (id, checkedVar) {
-	if (checkedVar || (checkedVar != 'true' && checkedVar != 'false')) {} else {
-		if (document.getElementById(id).checked == true) {
-			checkedVar = false
-		} else {
-			checkedVar = true
-		}
+function editValue (id, value) {
+	//console.log('id: ' + id + ', value: ' + value);
+	if (document.getElementById(id).type == 'checkbox' || document.getElementById(id).type == 'radio') {
+		if (value != true && value != false) { value = stringToBoolean(value); }
+		document.getElementById(id).checked = value;
+	} else {
+		document.getElementById(id).value = value;
 	}
-	document.getElementById(id).checked = stringToBoolean(checkedVar)
 }
 
 /*
-* Changes the value of an ID.
+* Gets the value of an input element
 * 
 * @param {string} id The ID of the element that should be changed.
-* @param {boolean} checkedVar The value it should be changed to.
 */
-function editValue (id, valueVar) {
-	document.getElementById(id).value = valueVar
-}
-
-/*
-* Changes the InnerHTML value of an ID.
-* 
-* @param {string} id The ID of the element that should be changed.
-* @param {boolean} checkedVar The InnerHTML value it should be changed to.
-*/
-function editInnerHTML (id, innerHTMLVar) {
-	document.getElementById(id).value = innerHTMLVar
+function getValue (id) {
+	if (document.getElementById(id).type == 'checkbox' || document.getElementById(id).type == 'radio') {
+		return document.getElementById(id).checked;
+	} else {
+		return document.getElementById(id).value;
+	}
 }
 
 /*
 * Checks if it's executed in the popout and calls sendMessage() if it is.
 * 
-* @param {string} functionName The function that should be called in the main window.
 * @param {string} id The first attribute.
 * @param {string} attribute Other attributes.
 */
-function sendSettingsMsg (functionName, id, attribute) {
+function sendSettingsMsg (id, attribute) {
 	if (popout == true) {
-		sendMessage(functionName + ',' + id + ',' + attribute)
+		sendMessage('editValue+' + id + '+' + attribute);
 	}
 }
 
@@ -538,34 +526,34 @@ function sendSettingsMsg (functionName, id, attribute) {
 */
 function sendMessage (text) {
 	if (popoutActivated == true) {
-		mpoSettings.postMessage(text, '*')
+		mpoSettings.postMessage(text, '*');
 	} else {
-		mpoMain.postMessage(text, '*')
+		mpoMain.postMessage(text, '*');
 	}
-	console.log('[MPO] Message sent: ' + text)
+	console.log('[MPO] Message sent: ' + text);
 }
 
 /*
 * Receives Message from Settings-popout/main window and executes the function in it.
 */
 function receiveMessage (e) {
-	console.log('[MPO] Message received: ' + e.data)
-	popoutActivated = true
-	var args = e.data.split(',')
+	console.log('[MPO] Message received: ' + e.data);
+	popoutActivated = true;
+	var args = e.data.split('+');
 
 	for (let num = 0; num < args.length; num++) {
 		if (isNaN(args[num]) == false) {
-			args[num] = parseInt(args[num])
+			args[num] = parseInt(args[num]);
 		}
 	}
 
-	var functionName = args[0]
-	args.splice(0, 1)
+	var functionName = args[0];
+	args.splice(0, 1);
 
 	if (args.length == 0) {
-		executeFunctionByName(functionName)
+		executeFunctionByName(functionName);
 	} else {
-		executeFunctionByName(functionName, args)
+		executeFunctionByName(functionName, args);
 	}
 }
 
@@ -576,7 +564,7 @@ function receiveMessage (e) {
 * @param {array} args Arguments that should be used.
 */
 function executeFunctionByName(functionName, args) {
-	var context = window
+	var context = window;
 	//var args = Array.prototype.slice.call(arguments, 2);
 	var namespaces = functionName.split(".");
 	var func = namespaces.pop();
@@ -591,8 +579,8 @@ function executeFunctionByName(functionName, args) {
 * Marks the popout as closed.
 */
 function popoutClosed () {
-	popoutActivated = false
-	console.log('[MPO] Popout deactivated.')
+	popoutActivated = false;
+	console.log('[MPO] Popout deactivated.');
 }
 
 /*
@@ -600,48 +588,48 @@ function popoutClosed () {
 */
 function closePopout () {
 	if (popout == true) {
-		window.close()
+		window.close();
 	} else {
-		sendMessage('closePopout')
+		sendMessage('closePopout');
 	}
 }
 
 /*
 * Creates a settings pop-out
 */
-var mpoMain
-var mpoSettings
-var popoutActivated = false
+var mpoMain;
+var mpoSettings;
+var popoutActivated = false;
 function mpoSettingsPopout () {
 	if (popout != true) {
-		document.getElementById('settings').classList.remove('visible')
-		document.getElementById('settings').classList.add('hidden')
-		saveSettings()
-		savePlayers()
+		document.getElementById('settings').classList.remove('visible');
+		document.getElementById('settings').classList.add('hidden');
+		saveSettings();
+		savePlayers();
 
 		if (popoutActivated == true) {
-			window.open('', 'mpoSettings')
+			window.open('', 'mpoSettings');
 		} else {
-			mpoSettings = window.open('index.html?p=1', 'mpoSettings', 'height=800px,width=930px')
-			console.log('[MPO] Popout activated.')
+			mpoSettings = window.open('index.html?p=1', 'mpoSettings', 'height=830px,width=1002px');
+			console.log('[MPO] Popout activated.');
 		}
-		popoutActivated = true
+		popoutActivated = true;
 	}
 }
 
 
-window.onload = prepareMPO()
-window.onload = changeBGColor('bgColor')
+window.onload = prepareMPO();
+window.onload = changeBGColor('bgColor');
 
-window.addEventListener("click", windowOnClick)
-window.addEventListener("message", receiveMessage, false)
+window.addEventListener("click", windowOnClick);
+window.addEventListener("message", receiveMessage, false);
 
 window.onbeforeunload = function(){
 	if (popout == true) {
-		sendMessage('popoutClosed')
+		sendMessage('popoutClosed');
 	} else {
-		closePopout()
+		closePopout();
 	}
 }
 
-document.getElementById('type1').focus()
+document.getElementById('type1').focus();
