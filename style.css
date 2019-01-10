@@ -218,6 +218,7 @@ body {
 }
 .tutorialLink {
 	font-size: 20px;
+	white-space: nowrap;
 }
 .settingsNote {
 	color: #666666;
@@ -247,6 +248,25 @@ body {
 	border: 3px solid #111111;
 	padding: 1rem 1.5rem;
 	border-radius: 1.2rem;
+}
+
+.counterSelection {
+	display: flex;
+	margin-bottom: 13px;
+	min-width: 850px;
+	max-width: 1060px;
+	white-space: nowrap;
+}
+.counterSelection span:not(.flexAuto) {
+	width: 300px;
+}
+#ingameCounters {
+	font-size: 27px;
+	border-bottom: 2px black solid;
+	margin-bottom: 5px;
+}
+#counterError {
+	color: red;
 }
 
 .warningText {
@@ -354,7 +374,6 @@ body {
 	}
 	#settingsCloseSpan { position: fixed; }
 	#settingsCloseSave { display: block !important; }
-	.settingsContent {  }
 }
 
 /* == Choose Character == */
