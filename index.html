@@ -179,7 +179,7 @@
 
 	<!-- Settings -->
 	<div class="hidden" id="settings">
-		<div class="popupContent" id="settingsContent">
+		<div class="popupContent settingsPopup" id="settingsContent">
 			<span id="settingsSelectionSpan">
 				<b id="generalMPOSelector" class="settingsSelection settingsSelected" onclick="showHideSettings('generalMPO')">General</b> <span class="flexAuto"></span>
 				<b id="textOutputSelector" class="settingsSelection nowrap" onclick="showHideSettings('textOutput')">Text Output</b> <span class="flexAuto"></span>
@@ -399,7 +399,7 @@
 
 			<!-- Mario Party Counter Settings -->
 			<div id="playerSettings" class="hidden">
-				<span style="display: flex; max-width: 1050px;">
+				<span style="display: flex; max-width: 1050px; min-width: 585px;">
 
 					<span>
 						<span class="playerText">Player 1</span> <br>
@@ -982,7 +982,7 @@
 					<button onclick="if (popout == true) {window.close()} else {showHideDiv(['settings'])}" class="mobileButtons" id="settingsCloseButton"> Close </button>
 				</div>
 			</span>
-			<span style="display: none; visibility: hidden; font-size: 10px;" id="settingsCloseSave">x <br> x</span>
+			<span style="display: none; visibility: hidden; font-size: 12px;" id="settingsCloseSave">x <br> x</span>
 		</div>
 	</div>
 

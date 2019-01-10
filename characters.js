@@ -22,14 +22,52 @@ var characters = ['', 'mario', 'luigi', 'yoshi', 'peach'];
 * Changes com status of a character.
 * 
 * @param {number} player Which player should be updated.
+* @param {boolean} noAnimation Skips animation if true.
 */
+function changeCom (player, noAnimation) {
+	if (getValue('com' + player) == true) {
+		if (getValue('enableAnimation') == true && noAnimation != true) {
+			document.getElementById('p' + player + 'ComDisplay').classList.add('visibleAnimation');
+			document.getElementById('p' + player + 'ComDisplay').classList.remove('hiddenAnimation');
+		} else {
+			document.getElementById('p' + player + 'ComDisplay').style.opacity = '1';
+		}
+	} else {
+		if (getValue('enableAnimation') == true && noAnimation != true) {
+			document.getElementById('p' + player + 'ComDisplay').classList.remove('visibleAnimation');
+			document.getElementById('p' + player + 'ComDisplay').classList.add('hiddenAnimation');
+		} else {
+			document.getElementById('p' + player + 'ComDisplay').style.opacity = '0';
+		}
+	}
+}
+
+/*
+function updateCounter (id, change, noAnimation) {
+	if (document.getElementById(id).innerHTML == change) {
+		return;
+	}
+	document.getElementById(id).innerHTML = change;
+	if (getValue('enableAnimation') == false && noAnimation != true) {
+		return;
+	}
+
+	document.getElementById(id).classList.add('counterAnimation');
+
+	var element = document.getElementById(id)
+	element.addEventListener('webkitAnimationEnd', function(){
+		this.classList.remove('counterAnimation');
+		this.removeEventListener('webkitAnimationEnd', arguments.callee, false);
+	}, false);
+}
+
 function changeCom (player) {
 	if (getValue('com' + player) == true) {
 		document.getElementById('p' + player + 'ComDisplay').style.visibility = 'visible';
 	} else {
 		document.getElementById('p' + player + 'ComDisplay').style.visibility = 'hidden';
 	}
-}
+}*/
 
 /*
 * Show/Hide characters based on the selected game.

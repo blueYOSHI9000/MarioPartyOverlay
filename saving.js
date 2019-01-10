@@ -380,13 +380,14 @@ function prepareMPO () {
 		mpoMain = window.opener;
 		popout = true;
 		showHideDiv(['settings']);
-;
+
 		document.getElementById('popoutButton').style.display = 'none';
 		document.getElementById('greenscreenNote').style.display = 'block';
 		document.getElementById('settingsCloseSpan').style.position = 'fixed';
 		document.getElementById('settingsCloseSave').style.display = 'block';
 		document.getElementById('settingsContent').classList.add('settingsContentPopout');
 		document.getElementById('settingsContent').classList.remove('popupContent');
+		document.getElementById('settingsContent').classList.remove('settingsPopup');
 		document.getElementById('settingsContent').style.width = 'calc(100% - 40px)';
 		document.getElementById('settingsContent').style.height = 'calc(100% - 40px)'; //-40px is required as otherwise there would be 40px offscreen which would destroy the whole layout
 		document.getElementById('noSettings').style.display = 'none';
@@ -445,10 +446,10 @@ function prepareMPO () {
 		editValue('com3', stringToBoolean(localStorage.getItem('com3')));
 		editValue('com4', stringToBoolean(localStorage.getItem('com4')));
 
-		changeCom(1);
-		changeCom(2);
-		changeCom(3);
-		changeCom(4);
+		changeCom(1, true);
+		changeCom(2, true);
+		changeCom(3, true);
+		changeCom(4, true);
 
 		for (let num2 = 0; num2 < 17; num2++) {
 			editValue(counters[num2] + 'OnOff', stringToBoolean(localStorage.getItem(counters[num2])));
