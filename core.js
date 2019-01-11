@@ -238,9 +238,9 @@ function turns (counter, amount, action) {
 	var curTurnVar = parseInt(document.getElementById('curTurnText').innerHTML);
 	var maxTurnVar = parseInt(document.getElementById('maxTurnText').innerHTML);
 
-	if (action == 'P' && getValue('autoSave').checked == true) {
+	if (action == 'P' && getValue('autoSave') == true) {
 		backup();
-	} else if (action == 'M' && getValue('autoSave').checked == true) {
+	} else if (action == 'M' && getValue('autoSave') == true) {
 		restore();
 	}
 
@@ -379,7 +379,7 @@ function coinStarTie (player) {
 	}
 	document.getElementById('coinStarCharacter').src = 'img/tie.png';
 
-	if (document.getElementById('noTie').checked == true && tied.length != 1 || tied.length == 0) {
+	if (getValue('noTie') == true && tied.length != 1 || tied.length == 0) {
 		document.getElementById('coinStarCharacter').src = 'img/question.png';
 
 	} else if (tied.length == 1) {

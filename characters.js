@@ -43,33 +43,6 @@ function changeCom (player, noAnimation) {
 }
 
 /*
-function updateCounter (id, change, noAnimation) {
-	if (document.getElementById(id).innerHTML == change) {
-		return;
-	}
-	document.getElementById(id).innerHTML = change;
-	if (getValue('enableAnimation') == false && noAnimation != true) {
-		return;
-	}
-
-	document.getElementById(id).classList.add('counterAnimation');
-
-	var element = document.getElementById(id)
-	element.addEventListener('webkitAnimationEnd', function(){
-		this.classList.remove('counterAnimation');
-		this.removeEventListener('webkitAnimationEnd', arguments.callee, false);
-	}, false);
-}
-
-function changeCom (player) {
-	if (getValue('com' + player) == true) {
-		document.getElementById('p' + player + 'ComDisplay').style.visibility = 'visible';
-	} else {
-		document.getElementById('p' + player + 'ComDisplay').style.visibility = 'hidden';
-	}
-}*/
-
-/*
 * Show/Hide characters based on the selected game.
 * 
 * @param {string} game What game is currently used.
@@ -79,6 +52,8 @@ function changeGame (game) {
 	curGame = game;
 	var showChars = [];
 	var hideChars = [];
+	var showCounters = [];
+	var hideCounters = [];
 
 	hideChars.push(document.querySelectorAll('.warioSpan'));
 	hideChars.push(document.querySelectorAll('.daisySpan'));
@@ -104,12 +79,13 @@ function changeGame (game) {
 	hideChars.push(document.querySelectorAll('.hammerbroSpan'));
 	hideChars.push(document.querySelectorAll('.kamekSpan'));
 
-	hideChars.push(document.querySelectorAll('.mp6C'));
-	hideChars.push(document.querySelectorAll('.mp7C'));
-	hideChars.push(document.querySelectorAll('.mp8C'));
-	hideChars.push(document.querySelectorAll('.mp9C'));
-	hideChars.push(document.querySelectorAll('.mpDSC'));
-	hideChars.push(document.querySelectorAll('.smpC'));
+	hideCounters.push(document.querySelectorAll('.mp6C'));
+	hideCounters.push(document.querySelectorAll('.mp7C'));
+	hideCounters.push(document.querySelectorAll('.mp8C'));
+	hideCounters.push(document.querySelectorAll('.mp9C'));
+	hideCounters.push(document.querySelectorAll('.mpDSC'));
+	hideCounters.push(document.querySelectorAll('.mpsrC'));
+	hideCounters.push(document.querySelectorAll('.smpC'));
 
 	showChars.push(document.querySelectorAll('.marioSpan'));
 	showChars.push(document.querySelectorAll('.luigiSpan'));
@@ -128,7 +104,7 @@ function changeGame (game) {
 	}
 	if (game == 'mp6' || game == 'all') {
 		showChars.push(document.querySelectorAll('.koopakidSpan'));
-		showChars.push(document.querySelectorAll('.mp6C'));
+		showCounters.push(document.querySelectorAll('.mp6C'));
 	}
 	if (game == 'mp6' || game == 'mp7' || game == 'mp8') {
 		showChars.push(document.querySelectorAll('.booSpan'));
@@ -142,24 +118,24 @@ function changeGame (game) {
 		showChars.push(document.querySelectorAll('.drybonesSpan'));
 	}
 	if (game == 'mp7' || game == 'all') {
-		showChars.push(document.querySelectorAll('.mp7C'))
+		showCounters.push(document.querySelectorAll('.mp7C'))
 	}
 	if (game == 'mp8') {
 		showChars.push(document.querySelectorAll('.blooperSpan'))
 		showChars.push(document.querySelectorAll('.hammerbroSpan'))
-		showChars.push(document.querySelectorAll('.mp8C'))
+		showCounters.push(document.querySelectorAll('.mp8C'))
 	}
 	if (game == 'mp9') {
 		showChars.push(document.querySelectorAll('.koopaSpan'));
 		showChars.push(document.querySelectorAll('.shyguySpan'));
 		showChars.push(document.querySelectorAll('.kamekSpan'));
 		showChars.push(document.querySelectorAll('.birdoSpan'));
-		showChars.push(document.querySelectorAll('.mp9C'));
+		showCounters.push(document.querySelectorAll('.mp9C'));
 	}
-	if (game == 'mp9' || game == 'mp10') {
-		hideChars.push(document.querySelectorAll('.happeningC'));
+	if (game == 'mp9' || game == 'mp10' || game == 'mpsr' || game == 'mptt100') {
+		hideCounters.push(document.querySelectorAll('.happeningC'));
 	} else {
-		showChars.push(document.querySelectorAll('.happeningC'));
+		showCounters.push(document.querySelectorAll('.happeningC'));
 	}
 	if (game == 'smp' || game ==  'all') {
 		showChars.push(document.querySelectorAll('.koopaSpan'));
@@ -174,10 +150,10 @@ function changeGame (game) {
 		showChars.push(document.querySelectorAll('.rosalinaSpan'));
 		showChars.push(document.querySelectorAll('.spikeSpan'));
 		showChars.push(document.querySelectorAll('.toadetteSpan'));
-		showChars.push(document.querySelectorAll('.mp10C'));
+		showCounters.push(document.querySelectorAll('.mp10C'));
 	}
 	if (game == 'mpds' || game == 'all') {
-		showChars.push(document.querySelectorAll('.mpDSC'));
+		showCounters.push(document.querySelectorAll('.mpDSC'));
 	}
 	if (game == 'mpit' || game == 'mpsr' || game == 'mptt100' || game == 'smp') {
 		showChars.push(document.querySelectorAll('.rosalinaSpan'));
@@ -189,6 +165,15 @@ function changeGame (game) {
 	if (game == 'mpsr') {
 		showChars.push(document.querySelectorAll('.toadetteSpan'));
 		showChars.push(document.querySelectorAll('.diddySpan'));
+		showCounters.push(document.querySelectorAll('.mpsrC'));
+	}
+	if (game == 'mpsr' || game == 'mptt100') {
+		hideCounters.push(document.querySelectorAll('.minigameC'));
+	} else {
+		showCounters.push(document.querySelectorAll('.minigameC'));
+	}
+	if (game == 'mptt100') {
+		showCounters.push(document.querySelectorAll('.mpsrC'));
 	}
 	if (game == 'smp' || game == 'all') {
 		showChars.push(document.querySelectorAll('.bowserSpan'));
@@ -200,23 +185,25 @@ function changeGame (game) {
 		showChars.push(document.querySelectorAll('.hammerbroSpan'));
 		showChars.push(document.querySelectorAll('.drybonesSpan'));
 		showChars.push(document.querySelectorAll('.pompomSpan'));
-		showChars.push(document.querySelectorAll('.smpC'));
+		showCounters.push(document.querySelectorAll('.smpC'));
 	}
 	if (game == 'all') {
 		showChars.push(document.querySelectorAll('.blooperSpan'));
 		showChars.push(document.querySelectorAll('.kamekSpan'));
-		showChars.push(document.querySelectorAll('.mp8C'));
-		showChars.push(document.querySelectorAll('.mp9C'));
+		showCounters.push(document.querySelectorAll('.mp8C'));
+		showCounters.push(document.querySelectorAll('.mp9C'));
+		showCounters.push(document.querySelectorAll('.mpsrC'));
 	}
 
-	if (game == 'mpa' || game == 'mpit' || game == 'mpsr' || game == 'mptt100') {
-		showChars.push(document.querySelectorAll('.mp6C'));
-		showChars.push(document.querySelectorAll('.mp7C'));
-		showChars.push(document.querySelectorAll('.mp8C'));
-		showChars.push(document.querySelectorAll('.mp9C'));
-		showChars.push(document.querySelectorAll('.mp10C'));
-		showChars.push(document.querySelectorAll('.mpDSC'));
-		showChars.push(document.querySelectorAll('.smpC'));
+	if (game == 'mpa' || game == 'mpit') {
+		showCounters.push(document.querySelectorAll('.mp6C'));
+		showCounters.push(document.querySelectorAll('.mp7C'));
+		showCounters.push(document.querySelectorAll('.mp8C'));
+		showCounters.push(document.querySelectorAll('.mp9C'));
+		showCounters.push(document.querySelectorAll('.mp10C'));
+		showCounters.push(document.querySelectorAll('.mpDSC'));
+		showCounters.push(document.querySelectorAll('.mpsrC'));
+		showCounters.push(document.querySelectorAll('.smpC'));
 
 		document.getElementById('counterError').style = '';
 	} else {
@@ -234,6 +221,18 @@ function changeGame (game) {
 		for (var num2 = 0; num2 < showChars[num].length; num2++) {
 			//showChars[num][num2] = showChars[num][num2] + 'Span';
 			showChars[num][num2].style.display = '';
+		}
+	}
+
+	for (var num = 0; num < hideCounters.length; num++) {
+		for (var num2 = 0; num2 < hideCounters[num].length; num2++) {
+			hideCounters[num][num2].style.visibility = 'hidden';
+		}
+	}
+
+	for (var num = 0; num < showCounters.length; num++) {
+		for (var num2 = 0; num2 < showCounters[num].length; num2++) {
+			showCounters[num][num2].style.visibility = 'visible';
 		}
 	}
 }

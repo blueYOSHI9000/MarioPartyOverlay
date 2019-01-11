@@ -23,7 +23,7 @@ function callHighlight (resetHighlights, all, stars) {
 		getValue('highlightColor', textColor);
 	}
 
-	var counters = ['happening', 'minigame', 'redSpace', 'running', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat'];
+	var counters = ['happening', 'minigame', 'redSpace', 'running', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'balloon'];
 
 	if (getValue('enableHighlight') == true || resetHighlights == true || all == true || stars == true) {
 		for (let num = 0; num < counters.length; num++) {
@@ -247,7 +247,7 @@ function changeStars (image) {
 	if (image == 'miniStars' && getValue('miniStarsOnOff') == true) {
 		editValue('bananasOnOff', false);
 		source = 'img/ministar.png';
-	} else if (image == 'bananas' && document.getElementById('bananasOnOff').checked == true) {
+	} else if (image == 'bananas' && getValue('bananasOnOff') == true) {
 		editValue('miniStarsOnOff', false);
 		source = 'img/banana.png';
 	} else {
@@ -298,6 +298,9 @@ function displayOnOff (counter, start, force) {
 		}
 
 	} else {
+		if (counter == 'minigame') {
+			minigameWins()
+		}
 		var displayVar = '';
 	}
 
@@ -309,7 +312,7 @@ function displayOnOff (counter, start, force) {
 		slowStar();
 		callSlowStar = false;
 	}
-	if ((getValue('starsOnOff').checked == true && getValue('inclBonusOnOff').checked == true) || counter == 'stars') {
+	if ((getValue('starsOnOff') == true && getValue('inclBonusOnOff')== true) || counter == 'stars') {
 		updateStars();
 	}
 }
@@ -331,11 +334,12 @@ function callDisplayOnOff () {
 	displayOnOff('spinSpace', true, true);
 	displayOnOff('minus', true, true);
 	displayOnOff('specialDice', true, true);
-	displayOnOff('stars', true, true);
-	displayOnOff('coins', true, true);
 	displayOnOff('ally', true, true);
 	displayOnOff('stompy', true, true);
 	displayOnOff('doormat', true, true);
+	displayOnOff('balloon', true, true);
+	displayOnOff('stars', true, true);
+	displayOnOff('coins', true, true);
 }
 
 /*
@@ -458,7 +462,7 @@ function arrCon (string, array) {
 function openSettings () {
 	if (popoutActivated == true) {
 		window.open('', 'mpoSettings');
-	} else if (getValue('autoPopout').checked == true) {
+	} else if (getValue('autoPopout') == true) {
 		mpoSettingsPopout();
 	} else {
 		showHideDiv(['settings']);

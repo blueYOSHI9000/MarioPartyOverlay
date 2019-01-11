@@ -31,6 +31,9 @@ body {
 .nowrap {
 	white-space: nowrap;
 }
+.relative {
+	position: relative;
+}
 
 /* == Error == */
 #error {
@@ -240,7 +243,6 @@ body {
 .popupContent {
 	position: absolute;
 	max-height: 100%;
-	overflow: auto;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
@@ -248,6 +250,26 @@ body {
 	border: 3px solid #111111;
 	padding: 1rem 1.5rem;
 	border-radius: 1.2rem;
+}
+
+
+#settingsMain {
+	overflow: auto;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	height: 100%
+}
+#settingsClose {
+	float: right;
+}
+
+
+#settingsHeaderBorder {
+	border-bottom: #929292 3px solid;
+}
+#settingsFooterBorder {
+	margin-bottom: 7px;
+	border-bottom: #929292 3px solid;
 }
 
 .counterSelection {
@@ -290,6 +312,7 @@ body {
 #settingsSelectionSpan {
 	display: flex;
 	width: 100%;
+	max-width: 1044px;
 }
 
 #settings {
@@ -305,24 +328,13 @@ body {
 	position: absolute;
 	border: none;
 	background-color: #F3F3F3;
-	overflow: auto;
 }
 #settingsContent {
 	width: 962px;
 	height: 800px;
 	background: no-repeat url(img/settings-bg.png), #F3F3F3;
-}
-.settingsClose {
-	float: right;
-}
-#settingsCloseDiv {
-	flex: initial;
-}
-#settingsCloseSpan {
-	position: absolute;
-	bottom: 0;
-	width: 95%;
-	margin-bottom: 20px;
+	display: flex;
+	flex-direction: column;
 }
 
 #colorPickTest {
@@ -358,13 +370,12 @@ body {
 	}
 }
 
-@media screen and (max-width: 1040px), screen and (max-height: 860px) {
+@media screen and (max-width: 1040px), screen and (max-height: 860px) { /* Will be used when screen is small enough - reminder to change it in popout too */
 	.settingsPopup {
 		padding: 20px;
 		position: absolute;
 		border: none;
 		background-color: #F3F3F3;
-		overflow: auto;
 		width: calc(100% - 40px) !important;
 		height: calc(100% - 40px) !important;
 		border-radius: 0rem;
@@ -387,11 +398,6 @@ body {
 	font-size: 18px;
 	display: flex;
 	max-width: 1044px;
-}
-#gameSelectorBorder {
-	border-bottom: rgba(0, 0, 0, 0.4) 3px solid;
-	padding-bottom: 7px;
-	margin-bottom: 7px;
 }
 
 .characterSelector {
@@ -592,6 +598,9 @@ body {
 }
 .doormatOnOff {
 	background-image:url(img/doormat.png);
+}
+.balloonOnOff {
+	background-image:url(img/balloon.png);
 }
 .starsOnOff {
 	background-image:url(img/star.png);

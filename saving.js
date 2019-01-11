@@ -24,13 +24,14 @@ var dice = [0, 0, 0, 0];
 var ally = [0, 0, 0, 0];
 var stompy = [0, 0, 0, 0];
 var doormat = [0, 0, 0, 0];
+var balloon = [0, 0, 0, 0];
 var stars = [0, 0, 0, 0];
 var coins = [0, 0, 0, 0];
 
-var countersShort = ['hap', 'mini', 'red', 'run', 'shop', 'orb', 'candy', 'item', 'friend', 'hex', 'spin', 'minus', 'dice', 'ally', 'stompy', 'doormat', 'stars', 'coins'];
-var counters = ['happening', 'minigame', 'redSpace', 'running', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'stars', 'coins'];
+var countersShort = ['hap', 'mini', 'red', 'run', 'shop', 'orb', 'candy', 'item', 'friend', 'hex', 'spin', 'minus', 'dice', 'ally', 'stompy', 'doormat', 'balloon', 'stars', 'coins'];
+var counters = ['happening', 'minigame', 'redSpace', 'running', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'balloon', 'stars', 'coins'];
 var countersUp = [];
-for (let num = 0; num < 17; num++) {
+for (let num = 0; num < 19; num++) {
 	countersUp.push(counters[num].charAt(0).toUpperCase() + counters[num].slice(1));
 }
 
@@ -89,11 +90,12 @@ function backup () {
 		spin[num2] = document.getElementById('p' + num + 'AllyText').innerHTML;
 		minus[num2] = document.getElementById('p' + num + 'StompyText').innerHTML;
 		dice[num2] = document.getElementById('p' + num + 'DoormatText').innerHTML;
+		balloon[num2] = document.getElementById('p' + num + 'BalloonText').innerHTML;
 		stars[num2] = document.getElementById('p' + num + 'StarsText').innerHTML;
 		coins[num2] = document.getElementById('p' + num + 'CoinsText').innerHTML;
 	}
 
-	if (document.getElementById('permSave').checked == true) {
+	if (getValue('permSave') == true) {
 		saveCounters();
 	}
 }
@@ -130,6 +132,7 @@ function restore (forceRestore) {
 			document.getElementById('p' + num + 'AllyText').innerHTML = ally[num2];
 			document.getElementById('p' + num + 'StompyText').innerHTML = stompy[num2];
 			document.getElementById('p' + num + 'DoormatText').innerHTML = doormat[num2];
+			document.getElementById('p' + num + 'BalloonText').innerHTML = balloon[num2];
 			document.getElementById('p' + num + 'StarsText').innerHTML = stars[num2];
 			document.getElementById('p' + num + 'CoinsText').innerHTML = coins[num2];
 		}
@@ -157,7 +160,7 @@ function savePlayers (close) {
 	localStorage.setItem('com3', getValue('com3'));
 	localStorage.setItem('com4', getValue('com4'));
 
-	for (let num = 0; num < 17; num++) {
+	for (let num = 0; num < 19; num++) {
 		localStorage.setItem(counters[num], getValue(counters[num] + 'OnOff'));
 	}
 	localStorage.setItem('minigameWins', getValue('minigameWinsOnOff'));
@@ -208,6 +211,7 @@ function resetPlayers () {
 	localStorage.setItem('ally', false);
 	localStorage.setItem('stompy', false);
 	localStorage.setItem('doormat', false);
+	localStorage.setItem('balloon', false);
 	localStorage.setItem('stars', false);
 	localStorage.setItem('inclBonus', false);
 	localStorage.setItem('miniStars', false);
@@ -233,6 +237,7 @@ function resetPlayers () {
 	editValue('allyOnOff', false);
 	editValue('stompyOnOff', false);
 	editValue('doormatOnOff', false);
+	editValue('balloonOnOff', false);
 	editValue('starsOnOff', false);
 	editValue('inclBonusOnOff', false);
 	editValue('miniStarsOnOff', false);
@@ -278,7 +283,8 @@ function saveCounters () {
 	localStorage.setItem('curTurn', document.getElementById('curTurnText').innerHTML);
 	localStorage.setItem('maxTurn', document.getElementById('maxTurnText').innerHTML);
 
-	for (let num2 = 0; num2 < 17; num2++) {
+	for (let num2 = 0; num2 < 19; num2++) {
+			console.log(countersShort[num2] + ', ' + num2)
 		for (let num = 1; num < 5; num++) {
 			localStorage.setItem(countersShort[num2] + num, document.getElementById('p' + num + countersUp[num2] + 'Text').innerHTML);
 		}
@@ -303,7 +309,7 @@ function resetCounters () {
 	document.getElementById('maxTurnText').innerHTML = 20;
 
 	for (let num = 1; num < 5; num++) {
-		for (let num2 = 1; num2 < 17; num2++) {
+		for (let num2 = 1; num2 < 19; num2++) {
 			localStorage.setItem(countersShort[num2] + num, 0);
 		}
 	}
@@ -383,8 +389,6 @@ function prepareMPO () {
 
 		document.getElementById('popoutButton').style.display = 'none';
 		document.getElementById('greenscreenNote').style.display = 'block';
-		document.getElementById('settingsCloseSpan').style.position = 'fixed';
-		document.getElementById('settingsCloseSave').style.display = 'block';
 		document.getElementById('settingsContent').classList.add('settingsContentPopout');
 		document.getElementById('settingsContent').classList.remove('popupContent');
 		document.getElementById('settingsContent').classList.remove('settingsPopup');
@@ -451,7 +455,7 @@ function prepareMPO () {
 		changeCom(3, true);
 		changeCom(4, true);
 
-		for (let num2 = 0; num2 < 17; num2++) {
+		for (let num2 = 0; num2 < 19; num2++) {
 			editValue(counters[num2] + 'OnOff', stringToBoolean(localStorage.getItem(counters[num2])));
 		}
 		
@@ -468,9 +472,9 @@ function prepareMPO () {
 			changeStars('bananas');
 		}
 
-		if (getValue('minigameWinsOnOff').checked == true) {
+		if (getValue('minigameWinsOnOff') == true) {
 			minigameWins('Wins');
-		} else if (getValue('minigameMiniStarsOnOff').checked == true) {
+		} else if (getValue('minigameMiniStarsOnOff') == true) {
 			minigameWins('MiniStars');
 		}
 
@@ -489,7 +493,7 @@ function prepareMPO () {
 		document.getElementById('curTurnText').innerHTML = localStorage.getItem('curTurn');
 		document.getElementById('maxTurnText').innerHTML = localStorage.getItem('maxTurn');
 	
-		for (let num2 = 0; num2 < 17; num2++) {
+		for (let num2 = 0; num2 < 19; num2++) {
 			for (let num = 1; num < 5; num++) {
 				document.getElementById('p' + num + countersUp[num2] + 'Text').innerHTML = localStorage.getItem(countersShort[num2] + num);
 			}

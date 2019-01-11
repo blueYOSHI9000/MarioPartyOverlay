@@ -31,7 +31,7 @@ function changeTheme (theme) {
 		theme = curTheme;
 	}
 
-	if (document.getElementById('greenscreen').checked == true) {
+	if (getValue('greenscreen') == true) {
 		document.getElementById('bodyElement').style.background = bgColor;
 	} else {
 		switch (theme) {
@@ -125,7 +125,7 @@ function getSelectedIcon (id) {
 */
 function changeBGColor (id) {
 	bgColor = getValue(id);
-	if (document.getElementById('greenscreen').checked == true) {
+	if (getValue('greenscreen') == true) {
 		document.getElementById('bodyElement').style.background = bgColor;
 	}
 	editValue('bgColor', bgColor);
