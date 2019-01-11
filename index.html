@@ -303,105 +303,65 @@
 				<!-- General Settings -->
 				<div id="generalMPOSettings" class="visible">
 
-					<table class="selectionTable">
-						<tr>
-							<td> <label for="enableInteract"> <span class="settingsText"> Enable Drag 'n' Drop (reload to reset positions): </span> </label> <input type="checkbox" id="enableInteract" onclick="sendSettingsMsg(this.id, this.checked)"> </td>
-						</tr>
-						<tr><td><div style="visibility: hidden;"> *Empty row* </div></td></tr>
-						<tr>
-							<td> <label for="autoPopout"> <span class="settingsText"> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onclick="sendSettingsMsg(this.id, this.checked)"> </label> </td>
-						</tr>
-						<tr><td><div style="visibility: hidden;"> *Empty row* </div></td></tr>
-						<tr> <td>
-							<span class="settingsText"> Background: </span> <button id="themeB1" class="themeButtons" onclick="changeSettings('changeTheme', [1])" style="border-color: green;" disabled></button> <button id="themeB2" class="themeButtons" onclick="changeSettings('changeTheme', [2])"></button> <button id="themeB3" class="themeButtons" onclick="changeSettings('changeTheme', [3])"> </button>
-						</td> </tr>
-						<tr>
-							<td> <span class="settingsText" style="position: relative; top: -13px;"> Icons style: </span> 
-								<span class="charSelector">
-									<span class="relative">
-										<input type="radio" name="icons" id="mpsrIcons" value="mpsrIcons" onchange="changeSettings('changeIcons', ['icons', 'mpsrIcons'])" checked>
-										<label class="charSelectorLabel mario iconLabel" for="mpsrIcons"> </label>
-									</span>
-									<span class="relative">
-										<input type="radio" name="icons" id="mk8Icons" value="mk8Icons" onchange="changeSettings('changeIcons', ['icons', 'mk8Icons'])">
-										<label class="charSelectorLabel iconLabel" for="mk8Icons" style="background-image: url('img/mk8Icons/mario.png');"> </label>
-									</span>
-								</span>
-							</td>
-						</tr>
-						<tr>
-							<td> <label for="greenscreen"> <span class="settingsText"> Enable greenscreen: </span> </label> <input type="checkbox" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('changeTheme')" id="greenscreen"> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('changeBGColor', ['bgColor'])" value="#0000ff" id="bgColor"> </td>
-						</tr>
-						<tr>
-							<td> <span class="settingsText"> Change text color: </span> <input type="color" id="textColor" value="#ffffff" onchange="changeTextColor('textColor')"> </td>
-						</tr>
-						<tr>
-							<td> <button onclick="openGreenscreenTest()" class="mobileButtons" id="greenscreenTestButton" style="width: 155px;"> Test Greenscreen </button> <span class="settingsNote" id="greenscreenNote" style="display: none;">(This will be executed on the main window.)</span> </td>
-						</tr>
-						<tr><td><div style="visibility: hidden;"> *Empty row* </div></td></tr>
-						<tr>
-							<td> <label for="enableHighlight"> <span class="settingsText"> Enable counter highlight: </span> </label> <input type="checkbox" id="enableHighlight" onchange="sendSettingsMsg(this.id, + this.checked);changeSettings('resetHighlights')" checked>
-							<input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('callHighlight', [false, true])" value="#da0000" id="highlightColor"> </td>
-						</tr>
-						<tr>
-							<td>
-								<label for="enableAnimation"> <span class="settingsText"> Enable counter animation: </span> </label> <input type="checkbox" id="enableAnimation" onclick="sendSettingsMsg(this.id, this.checked)" checked>
-							</td>
-						</tr>
-						<tr><td><div style="visibility: hidden;"> *Empty row* </div></td></tr>
-						<tr>
-							<td> <label for="noTie"> <span class="settingsText"> Don't use ties for the Coin Star: </span> </label> <input type="checkbox" id="noTie" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('coinStarTie')"> </td>
-						</tr>
-						<tr>
-							<td> <label for="autoSave"> <span class="settingsText"> Automatically save/reload when updating turns: </span> </label> <input type="checkbox" id="autoSave" onclick="sendSettingsMsg(this.id, this.checked);if (this.checked == true) {changeSettings('backup')}"> </td>
-						</tr>
-						<tr>
-							<td> <label for="permSave"> <span class="settingsText"> Save counters permanently (not getting deleted on site reload): </span> </label> <input type="checkbox" id="permSave" onclick="sendSettingsMsg(this.id, this.checked)" checked> </td>
-						</tr>
-						<tr><td><div style="visibility: hidden;"> *Empty row* </div></td></tr>
-						<tr><td><div style="visibility: hidden;"> *Empty row* </div></td></tr>
-						<tr>
-							<td><button onclick="localStorage.clear()" class="mobileButtons" style="width: 163px;">Clear local storage</button> <span class="settingsNote">(This will clear all saved settings, characters and counters)</span></td>
-						</tr>
-					</table>
+					<label for="enableInteract"> <span class="settingsText"> Enable Drag 'n' Drop (reload to reset positions): </span> </label> <input type="checkbox" id="enableInteract" onclick="sendSettingsMsg(this.id, this.checked)"> <br> <br>
+
+					<label for="autoPopout"> <span class="settingsText"> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onclick="sendSettingsMsg(this.id, this.checked)"> </label> <br> <br>
+					
+					<span class="settingsText"> Background: </span> <button id="themeB1" class="themeButtons" onclick="changeSettings('changeTheme', [1])" style="border-color: green;" disabled></button> <button id="themeB2" class="themeButtons" onclick="changeSettings('changeTheme', [2])"></button> <button id="themeB3" class="themeButtons" onclick="changeSettings('changeTheme', [3])"> </button> <br>
+					<span class="settingsText" style="position: relative; top: -13px;"> Icons style: </span> 
+						<span class="charSelector">
+							<span class="relative">
+								<input type="radio" name="icons" id="mpsrIcons" value="mpsrIcons" onchange="changeSettings('changeIcons', ['icons', 'mpsrIcons'])" checked>
+								<label class="charSelectorLabel mario iconLabel" for="mpsrIcons"> </label>
+							</span>
+							<span class="relative">
+								<input type="radio" name="icons" id="mk8Icons" value="mk8Icons" onchange="changeSettings('changeIcons', ['icons', 'mk8Icons'])">
+								<label class="charSelectorLabel iconLabel" for="mk8Icons" style="background-image: url('img/mk8Icons/mario.png');"> </label>
+							</span>
+						</span> <br>
+					<label for="greenscreen"> <span class="settingsText"> Enable greenscreen: </span> </label> <input type="checkbox" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('changeTheme')" id="greenscreen"> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('changeBGColor', ['bgColor'])" value="#0000ff" id="bgColor"><br>
+					<span class="settingsText"> Change text color: </span> <input type="color" id="textColor" value="#ffffff" onchange="changeSettings('textColor')"> <br>
+					<button onclick="openGreenscreenTest()" class="mobileButtons" id="greenscreenTestButton" style="width: 155px;"> Test Greenscreen </button> <span class="settingsNote" id="greenscreenNote" style="display: none;">(This will be executed on the main window.)</span> <br> <br>
+
+					<label for="enableHighlight"> <span class="settingsText"> Enable counter highlight: </span> </label> <input type="checkbox" id="enableHighlight" onchange="sendSettingsMsg(this.id, + this.checked);changeSettings('resetHighlights')" checked> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('callHighlight', [false, true])" value="#da0000" id="highlightColor"> <br>
+					<label for="enableAnimation"> <span class="settingsText"> Enable counter animation: </span> </label> <input type="checkbox" id="enableAnimation" onclick="sendSettingsMsg(this.id, this.checked)" checked> <br> <br>
+					
+					<label for="noTie"> <span class="settingsText"> Don't use ties for the Coin Star: </span> </label> <input type="checkbox" id="noTie" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('coinStarTie')"> <br>
+					<label for="autoSave"> <span class="settingsText"> Automatically save/reload when updating turns: </span> </label> <input type="checkbox" id="autoSave" onclick="sendSettingsMsg(this.id, this.checked);if (this.checked == true) {changeSettings('backup')}"> <br>
+					<label for="permSave"> <span class="settingsText"> Save counters permanently (not getting deleted on site reload): </span> </label> <input type="checkbox" id="permSave" onclick="sendSettingsMsg(this.id, this.checked)" checked> <br> <br> <br>
+					
+					<button onclick="localStorage.clear()" class="mobileButtons" style="width: 163px;">Clear local storage</button> <span class="settingsNote">(This will clear all saved settings, characters and counters)</span>
 				</div>
 
 				<!-- Text Output Settings -->
 				<div id="textOutputSettings" class="hidden">
 
-					<table class="selectionTable">
-						<tr>
-							<td style="border: 2px rgba(120, 120, 120, 0.4) solid;">
-								<label for="toBonusOnly"> <span class="settingsText"> Only show who got the bonus star: </span> <input type="checkbox" id="toBonusOnly" onclick="sendSettingsMsg(this.id, this.checked)">
-								<br> <label for="toShowNum"> <span class="settingsText marginLeft"> Show counter next to player: </span> </label> <input type="checkbox" id="toShowNum" onclick="sendSettingsMsg(this.id, this.checked)" checked="">
-								<br> <label for="toListAll"> <span class="settingsText marginLeft"> List all players instead of "everyone": </span> </label> <input type="checkbox" id="toListAll" onclick="sendSettingsMsg(this.id, this.checked)">
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2"> <label for="toListAllCoin"> <span class="settingsText"> List all players instead of "everyone" for the Coin Star: </span> </label> <input type="checkbox" id="toListAllCoin" onclick="sendSettingsMsg(this.id, this.checked)"> </td>
-						</tr>
-						<tr>
-							<td> <br> <span class="settingsText">  Player 1 name: </span> <input id="toP1Name" onchange="sendSettingsMsg(this.id, this.value)"> </td>
-							<td class="marginLeft"> <br> <span class="settingsText">  Player 2 name: </span> <input id="toP2Name" onchange="sendSettingsMsg(this.id, this.value)"> </td>
-						</tr>
-						<tr>
-							<td> <span class="settingsText">  Player 3 name: </span> <input id="toP3Name" onchange="sendSettingsMsg(this.id, this.value)"> </td>
-							<td class="marginLeft"> <span class="settingsText">  Player 4 name: </span> <input id="toP4Name" onchange="sendSettingsMsg(this.id, this.value)"> </td>
-						</tr>
-						<tr> <td> 
-							<span class="settingsText"> Counter seperation: </span> <input id="toSeperation" value=" | " onchange="sendSettingsMsg(this.id, this.value)" style="width: 30px;">
-						</td> </tr>
-						<tr> <td colspan="2"> <br> <span class="settingsNote"> Seperate counters with ", ", counters that aren't in the list won't be used for this. </span> </td> </tr>
-						<tr>
-							<td><span class="settingsText"> Counter order: </span> <br>
-							<textarea class="resizableInput" id="toCounters" onchange="textOutputTest();sendSettingsMsg(this.id, this.value)">Turns, Happening, Minigame, Red Space, Coin Star</textarea> </td>
-							<td><span class="settingsText"> Counter name: </span> <span class="settingsNote"> (Used to describe the counter) </span> <br>
-							<textarea class="resizableInput" id="toOutput" onchange="textOutputTest(true);sendSettingsMsg(this.id, this.value)">Turns, ?, MG, Red, Coin Star</textarea> </td>
-						</tr>
-						<tr>
-							<td> <b class="warningText" id="textOutputWarning" style="visibility: hidden;"> Hi if you see this </b> </td>
-						</tr>
-					</table>
+					<div style="border: 2px rgba(120, 120, 120, 0.4) solid; width: 405px; padding-left: 3px;">
+						<label for="toBonusOnly"> <span class="settingsText"> Only show who got the bonus star: </span> </label> <input type="checkbox" id="toBonusOnly" onclick="sendSettingsMsg(this.id, this.checked)"> <br> 
+						<label for="toShowNum"> <span class="settingsText marginLeft"> Show counter next to player: </span> </label> <input type="checkbox" id="toShowNum" onclick="sendSettingsMsg(this.id, this.checked)" checked=""> <br> 
+						<label for="toListAll"> <span class="settingsText marginLeft"> List all players instead of "everyone": </span> </label> <input type="checkbox" id="toListAll" onclick="sendSettingsMsg(this.id, this.checked)">
+					</div>
+					<label for="toListAllCoin"> <span class="settingsText"> List all players instead of "everyone" for the Coin Star: </span> </label> <input type="checkbox" id="toListAllCoin" onclick="sendSettingsMsg(this.id, this.checked)"> <br> <br>
+					
+					<span class="settingsText">  Player 1 name: </span> <input id="toP1Name" onchange="sendSettingsMsg(this.id, this.value)">
+					<span class="settingsText marginLeft">  Player 2 name: </span> <input id="toP2Name" onchange="sendSettingsMsg(this.id, this.value)"> <br>
+					<span class="settingsText">  Player 3 name: </span> <input id="toP3Name" onchange="sendSettingsMsg(this.id, this.value)">
+					<span class="settingsText marginLeft">  Player 4 name: </span> <input id="toP4Name" onchange="sendSettingsMsg(this.id, this.value)"> <br>
+					<span class="settingsText"> Counter seperation: </span> <input id="toSeperation" value=" | " onchange="sendSettingsMsg(this.id, this.value)" style="width: 30px;"> <br> <br>
+					
+					<span class="settingsNote" id="counterNote"> Seperate counters with ", ". </span> <br>
+					<div style="columns: 2;">
+						<span id="counterOrder">
+							<span class="settingsText"> Counter order: </span> <span class="settingsNote"> (Only counters listed will be used) </span> <br>
+							<textarea class="resizableInput" id="toCounters" onchange="textOutputTest();sendSettingsMsg(this.id, this.value)">Turns, Happening, Minigame, Red Space, Coin Star</textarea>
+						</span>
+						<span id="counterNames">
+							<span class="settingsText"> Counter names: </span> <span class="settingsNote"> (Used to describe the counter) </span> <br>
+							<textarea class="resizableInput" id="toOutput" onchange="textOutputTest(true);sendSettingsMsg(this.id, this.value)">Turns, ?, MG, Red, Coin Star</textarea>
+						</span>
+					</div> <br>
+					
+					<b class="warningText" id="textOutputWarning" style="visibility: hidden;"> Hi if you see this </b>
 				</div>
 
 				<!-- Mario Party Counter Settings -->
@@ -1006,83 +966,75 @@
 	<!-- Background Color Test -->
 	<div class="hidden" id="colorPickTest">
 		<div id="colorPickerBG">
-			<table class="selectionTable">
-				<tr>
-					<td> <button onclick="showHideDiv(['colorPickTest']);openSettings()" class="mobileButtons" style="width: 80px;"> Settings </button> <span class="whiteText"> (Changes here will affect the normal MPO) </span> </td>
-				</tr>
-				<tr>
-					<td> <b class="whiteText"> Change BG color: </span> <input type="color" onchange="changeBGColor('bgColorPick')" value="#0000ff" id="bgColorPick"> <button onclick="resetBGColor()" class="mobileButtons" style="width: 165px;"> Reset Color (blue) </button> <br>
-					<b class="whiteText"> Change Text Color: </span> <input type="color" id="textColorTest" value="#ffffff" onchange="changeTextColor('textColorTest')"> <button onclick="resetTextColor()" class="mobileButtons" style="width: 170px;"> Reset Color (white) </button> </td>
-				</tr>
-				<tr>
-					<td>
-						<span class="charSelector">
-							<span>
-								<input type="radio" name="icons2" id="mpsrIcons2" value="mpsrIcons" onchange="changeIcons('icons2', 'mpsrIcons')" checked>
-								<label class="charSelectorLabel mario iconLabel" for="mpsrIcons"> </label>
-							</span>
-							<span>
-								<input type="radio" name="icons2" id="mk8Icons2" value="mk8Icons" onchange="changeIcons('icons2', 'mk8Icons')">
-								<label class="charSelectorLabel iconLabel" for="mk8Icons" style="background-image: url('img/mk8Icons/mario.png');"> </label>
-							</span>
-						</span>
-					</td>
-				</tr>
-				<tr> <td>
-					<img src="img/mpsrIcons/mario.png" class="characterImg">
-					<img src="img/mpsrIcons/luigi.png" class="characterImg">
-					<img src="img/mpsrIcons/yoshi.png" class="characterImg">
-					<img src="img/mpsrIcons/peach.png" class="characterImg">
-					<img src="img/mpsrIcons/daisy.png" class="characterImg">
-					<img src="img/mpsrIcons/rosalina.png" class="characterImg">
-					<img src="img/mpsrIcons/toad.png" class="characterImg">
-					<img src="img/mpsrIcons/toadette.png" class="characterImg">
-					<img src="img/mpsrIcons/wario.png" class="characterImg">
-					<img src="img/mpsrIcons/waluigi.png" class="characterImg">
-					<img src="img/mpsrIcons/dk.png" class="characterImg">
-					<img src="img/mpsrIcons/diddy.png" class="characterImg">
-					<img src="img/mpsrIcons/birdo.png" class="characterImg">
-					<img src="img/mpsrIcons/bowser.png" class="characterImg">
-					<img src="img/mpsrIcons/bowserjr.png" class="characterImg">
-					<img src="img/mpsrIcons/koopakid.png" class="characterImg">
-					<img src="img/mpsrIcons/pompom.png" class="characterImg">
-					<img src="img/mpsrIcons/goomba.png" class="characterImg">
-					<img src="img/mpsrIcons/koopa.png" class="characterImg">
-					<img src="img/mpsrIcons/drybones.png" class="characterImg">
-					<img src="img/mpsrIcons/monty.png" class="characterImg">
-					<img src="img/mpsrIcons/boo.png" class="characterImg">
-					<img src="img/mpsrIcons/spike.png" class="characterImg">
-					<img src="img/mpsrIcons/blooper.png" class="characterImg">
-					<img src="img/mpsrIcons/shyguy.png" class="characterImg">
-					<img src="img/mpsrIcons/hammerbro.png" class="characterImg">
-					<img src="img/mpsrIcons/kamek.png" class="characterImg">
-					<img src="img/mpsrIcons/comtest.png" class="characterImg">
-					<b class="turns" style="font-size: 30px;"> Turn 5/20 </b>
-				</td> </tr>
+			<button onclick="showHideDiv(['colorPickTest']);openSettings()" class="mobileButtons" style="width: 80px;"> Settings </button> <span class="whiteText"> (Changes here will affect the normal MPO) </span> <br>
+			
+			<span class="whiteText"> Change BG color: </span> <input type="color" onchange="changeBGColor('bgColorPick')" value="#0000ff" id="bgColorPick"> <button onclick="resetBGColor()" class="mobileButtons" style="width: 165px;"> Reset Color (blue) </button> <br>
+			<span class="whiteText"> Change Text Color: </span> <input type="color" id="textColorTest" value="#ffffff" onchange="changeTextColor('textColorTest')"> <button onclick="resetTextColor()" class="mobileButtons" style="width: 170px;"> Reset Color (white) </button> <br>
+			
+			<span class="charSelector">
+				<span>
+					<input type="radio" name="icons2" id="mpsrIcons2" value="mpsrIcons" onchange="changeIcons('icons2', 'mpsrIcons')" checked>
+					<label class="charSelectorLabel mario iconLabel" for="mpsrIcons"> </label>
+				</span>
+				<span>
+					<input type="radio" name="icons2" id="mk8Icons2" value="mk8Icons" onchange="changeIcons('icons2', 'mk8Icons')">
+					<label class="charSelectorLabel iconLabel" for="mk8Icons" style="background-image: url('img/mk8Icons/mario.png');"> </label>
+				</span>
+			</span> <br>
+			<span>
+				<img src="img/mpsrIcons/mario.png" class="characterImg">
+				<img src="img/mpsrIcons/luigi.png" class="characterImg">
+				<img src="img/mpsrIcons/yoshi.png" class="characterImg">
+				<img src="img/mpsrIcons/peach.png" class="characterImg">
+				<img src="img/mpsrIcons/daisy.png" class="characterImg">
+				<img src="img/mpsrIcons/rosalina.png" class="characterImg">
+				<img src="img/mpsrIcons/toad.png" class="characterImg">
+				<img src="img/mpsrIcons/toadette.png" class="characterImg">
+				<img src="img/mpsrIcons/wario.png" class="characterImg">
+				<img src="img/mpsrIcons/waluigi.png" class="characterImg">
+				<img src="img/mpsrIcons/dk.png" class="characterImg">
+				<img src="img/mpsrIcons/diddy.png" class="characterImg">
+				<img src="img/mpsrIcons/birdo.png" class="characterImg">
+				<img src="img/mpsrIcons/bowser.png" class="characterImg">
+				<img src="img/mpsrIcons/bowserjr.png" class="characterImg">
+				<img src="img/mpsrIcons/koopakid.png" class="characterImg">
+				<img src="img/mpsrIcons/pompom.png" class="characterImg">
+				<img src="img/mpsrIcons/goomba.png" class="characterImg">
+				<img src="img/mpsrIcons/koopa.png" class="characterImg">
+				<img src="img/mpsrIcons/drybones.png" class="characterImg">
+				<img src="img/mpsrIcons/monty.png" class="characterImg">
+				<img src="img/mpsrIcons/boo.png" class="characterImg">
+				<img src="img/mpsrIcons/spike.png" class="characterImg">
+				<img src="img/mpsrIcons/blooper.png" class="characterImg">
+				<img src="img/mpsrIcons/shyguy.png" class="characterImg">
+				<img src="img/mpsrIcons/hammerbro.png" class="characterImg">
+				<img src="img/mpsrIcons/kamek.png" class="characterImg">
+				<img src="img/mpsrIcons/comtest.png" class="characterImg">
+				<b class="turns" style="font-size: 30px;"> Turn 5/20 </b>
+			</span> <br>
 
-				<tr> <td>
-					<img class="counterDisplay" src="img/happening.png">
-					<img class="counterDisplay" src="img/minigame.png">
-					<img class="counterDisplay" src="img/minigamewins.png">
-					<img class="counterDisplay" src="img/redspace.png">
-					<img class="counterDisplay" src="img/running.png">
-					<img class="counterDisplay" src="img/shopping.png">
-					<img class="counterDisplay" src="img/orb.png">
-					<img class="counterDisplay" src="img/candy.png">
-					<img class="counterDisplay" src="img/item.png">
-					<img class="counterDisplay" src="img/friendspace.png">
-					<img class="counterDisplay" src="img/hex.png">
-					<img class="counterDisplay" src="img/spinspace.png">
-					<img class="counterDisplay" src="img/minus.png">
-					<img class="counterDisplay" src="img/specialdice.png">
-					<img class="counterDisplay" src="img/ally.png">
-					<img class="counterDisplay" src="img/stompy.png">
-					<img class="counterDisplay" src="img/doormat.png">
-					<img class="counterDisplay" src="img/balloon.png">
-					<img class="counterDisplay" src="img/coin.png">
-					<img class="counterDisplay" src="img/question.png">
-				</td> </tr>
-			</table>
+			<span>
+				<img class="counterDisplay" src="img/happening.png">
+				<img class="counterDisplay" src="img/minigame.png">
+				<img class="counterDisplay" src="img/minigamewins.png">
+				<img class="counterDisplay" src="img/redspace.png">
+				<img class="counterDisplay" src="img/running.png">
+				<img class="counterDisplay" src="img/shopping.png">
+				<img class="counterDisplay" src="img/orb.png">
+				<img class="counterDisplay" src="img/candy.png">
+				<img class="counterDisplay" src="img/item.png">
+				<img class="counterDisplay" src="img/friendspace.png">
+				<img class="counterDisplay" src="img/hex.png">
+				<img class="counterDisplay" src="img/spinspace.png">
+				<img class="counterDisplay" src="img/minus.png">
+				<img class="counterDisplay" src="img/specialdice.png">
+				<img class="counterDisplay" src="img/ally.png">
+				<img class="counterDisplay" src="img/stompy.png">
+				<img class="counterDisplay" src="img/doormat.png">
+				<img class="counterDisplay" src="img/balloon.png">
+				<img class="counterDisplay" src="img/coin.png">
+				<img class="counterDisplay" src="img/question.png">
+			</span>
 		</div>
 	</div>
 

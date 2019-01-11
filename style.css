@@ -252,6 +252,10 @@ body {
 	border-radius: 1.2rem;
 }
 
+#generalMPOSettings .settingsText {
+	line-height: 31px;
+}
+
 
 #settingsMain {
 	overflow: auto;
@@ -289,6 +293,14 @@ body {
 }
 #counterError {
 	color: red;
+}
+
+#counterOrder {
+	margin-right: 1000px;
+	white-space: nowrap;
+}
+#counterNames {
+	white-space: nowrap;
 }
 
 .warningText {
