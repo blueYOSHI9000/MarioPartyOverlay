@@ -323,7 +323,7 @@
 					<span class="settingsText"> Change text color: </span> <input type="color" id="textColor" value="#ffffff" onchange="changeSettings('textColor')"> <br>
 					<button onclick="openGreenscreenTest()" class="mobileButtons" id="greenscreenTestButton" style="width: 155px;"> Test Greenscreen </button> <span class="settingsNote" id="greenscreenNote" style="display: none;">(This will be executed on the main window.)</span> <br> <br>
 
-					<label for="enableHighlight"> <span class="settingsText"> Enable counter highlight: </span> </label> <input type="checkbox" id="enableHighlight" onchange="sendSettingsMsg(this.id, + this.checked);changeSettings('resetHighlights')" checked> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('callHighlight', [false, true])" value="#da0000" id="highlightColor"> <br>
+					<label for="enableHighlight"> <span class="settingsText"> Enable counter highlight: </span> </label> <input type="checkbox" id="enableHighlight" onchange="sendSettingsMsg(this.id, + this.checked);changeSettings('resetHighlights')" checked> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('callHighlight', [false, true])" value="#FF0000" id="highlightColor"> <br>
 					<label for="enableAnimation"> <span class="settingsText"> Enable counter animation: </span> </label> <input type="checkbox" id="enableAnimation" onclick="sendSettingsMsg(this.id, this.checked)" checked> <br> <br>
 					
 					<label for="noTie"> <span class="settingsText"> Don't use ties for the Coin Star: </span> </label> <input type="checkbox" id="noTie" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('coinStarTie')"> <br>
@@ -1056,5 +1056,6 @@
 	<script src="settings.js"></script>
 	<script src="core.js"></script>
 	<script src="main.js"></script>
+	<script type="text/javascript"> window.onload = prepareMPOBackup(); </script>
 </body>
 </html>

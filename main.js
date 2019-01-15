@@ -268,7 +268,6 @@ function changeStars (image) {
 * @param {boolean} start Hide/show certain counters depending on what they should be (used when loading the site).
 */
 var callSlowStar = true
-
 function displayOnOff (counter, start, force) {
 	if (popout == false && popoutActivated == true && force != true) {
 		if (getValue(counter + 'OnOff') == true) {
@@ -621,10 +620,6 @@ function mpoSettingsPopout () {
 	}
 }
 
-
-window.onload = prepareMPO();
-window.onload = changeBGColor('bgColor');
-
 window.addEventListener("click", windowOnClick);
 window.addEventListener("message", receiveMessage, false);
 
@@ -637,3 +632,6 @@ window.onbeforeunload = function(){
 }
 
 document.getElementById('type1').focus();
+
+window.onload = prepareMPO();
+window.onload = changeBGColor('bgColor');

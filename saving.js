@@ -380,7 +380,8 @@ function getUrl(variable) {
 /*
 * Prepares all settings that were saved in local storage when the site gets loaded.
 */
-var popout = false
+var prepared = false;
+var popout = false;
 function prepareMPO () {
 	if (getUrl('p') == 1) {
 		mpoMain = window.opener;
@@ -397,6 +398,7 @@ function prepareMPO () {
 		document.getElementById('noSettings').style.display = 'none';
 	}
 
+	localStorage.getItem('enableHighlight');
 	document.getElementById('error').style = 'display: inline;';
 	if (localStorage.getItem('saving') == 'true') {
 
@@ -507,6 +509,17 @@ function prepareMPO () {
 	callDisplayOnOff();
 
 	document.getElementById('error').style.display = 'none';
+	prepared = true;
+}
+
+/*
+* In case prepareMPO() crashes, this will run instead and prepares MPO safely.
+*/
+function prepareMPOBackup () {
+	if (prepared != true) {
+		console.warn('[MPO] Could not properly start MPO.');
+		callDisplayOnOff();
+	}
 }
 
 /*
