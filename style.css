@@ -35,17 +35,6 @@ body {
 	position: relative;
 }
 
-/* == Error == */
-#error {
-	position: fixed;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, 0.7);
-	display: none;
-}
-
 /* == Counters == */
 .player {
 	display: inline-block;
@@ -105,7 +94,7 @@ body {
 	top: 3px;
 }
 #coinStarText {
-	left: 9px;
+	left: 5px;
 }
 #coinStarDiv {
 	margin-top: 30px;
@@ -118,7 +107,7 @@ body {
 	width: 165px;
 	height: 50px;
 	position: relative;
-	left: 123px;
+	left: -45px;
 	top: 6px;
 }
 
@@ -154,36 +143,35 @@ body {
 /* == Coin star tie == */
 .coinStarTieDiv {
 	height: 40px;
-	position: relative;
+	position: absolute;
 	display: inline;
 	left: 160px;
 	top: 10px;
 }
 .coinStarTie {
 	height: 30px;
-	position: relative;
+	position: absolute;
 }
 #coinStarTie1 {
-	top: -28px;
-	left: 45px;
+	top: -39px;
+	left: -99px;
 }
 #coinStarTie2 {
-	top: -28px;
-	left: 40px;
+	top: -39px;
+	left: -69px;
 }
 #coinStarTie3 {
-	top: 2px;
-	left: -27px;
+	top: -10px;
+	left: -99px;
 }
 #coinStarTie4 {
-	top: 2px;
-	left: -32px;
+	top: -10px;
+	left: -69px;
 }
 #coinStarTie5 {
-	top: 2px;
-	left: 97px;
+	top: -13px;
+	left: -84px;
 }
-
 
 /* == Settings == */
 .settingsText {
@@ -229,6 +217,10 @@ body {
 }
 #settingsClose {
 	float: right;
+}
+#popoutError {
+	color: #FF0000;
+	visibility: hidden;
 }
 
 

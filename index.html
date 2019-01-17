@@ -51,7 +51,7 @@
 		<span class="turns draggable"> <b id="turnText" onclick="mobileButtons('curTurn')"> Turn </b> <b id="curTurnText" onclick="mobileButtons('curTurn')">1</b><b style="margin-left: 60px; font-size: 30px;" onclick="mobileButtons('curTurn')">/</b><b id="maxTurnText" onclick="mobileButtons('maxTurn')">20</b> </span>
 
 		<!-- Most Coins -->
-		<span class="draggable nowrap">
+		<span class="draggable nowrap" style="margin-left: 100px;">
 			<img src="img/tie.png" onclick="mobileButtons('coinStar')" id="coinStarHitbox">
 			<span id="coinStarDiv">
 				<span class="coinStarTieDiv"> <img src="img/tie.png" id="coinStarTie5" class="coinStarTie"> <img src="img/tie.png" id="coinStarTie1" class="coinStarTie"> <img src="img/tie.png" id="coinStarTie2" class="coinStarTie"> 
@@ -302,6 +302,7 @@
 
 				<!-- General Settings -->
 				<div id="generalMPOSettings" class="visible">
+					<span class="settingsText" id="popoutError"> Some features that require cookies to work (incl. popout) are disabled because cookies are blocked. </span> <br>
 
 					<label for="enableInteract"> <span class="settingsText"> Enable Drag 'n' Drop (reload to reset positions): </span> </label> <input type="checkbox" id="enableInteract" onclick="sendSettingsMsg(this.id, this.checked)"> <br> <br>
 
@@ -921,9 +922,9 @@
 					<div class="counterSelection">
 						<span class="relative"> <label for="coinsOnOff" class="counterOnOffText">Coins:</label> <input type="checkbox" id="coinsOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['coins'])"> <label for="coinsOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </span>
 					</div> <br>
-					<button onclick="changeSettings('saveCounters')" class="mobileButtons" style="width: 180px; margin-right: 10px;">Perm. Save Counters</button> <button onclick="changeSettings('resetCounters')" class="mobileButtons" style="width: 140px;">Reset Counters</button>
+					<button onclick="changeSettings('saveCounters')" id="permSaveCounters" class="mobileButtons" style="width: 180px; margin-right: 10px;">Perm. Save Counters</button> <button onclick="changeSettings('resetCounters')" class="mobileButtons" style="width: 140px;">Reset Counters</button>
 
-					<span style="font-size: 21px; margin-left: 50px;"><a class="settingsLink" target="_blank" href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Mario-Party-Bonus-Star-List">Bonus Star List</a></span>
+					<span style="font-size: 21px; margin-left: 50px;"><a class="settingsLink" rel="noopener" target="_blank" href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Mario-Party-Bonus-Star-List">Bonus Star List</a></span>
 				</div>
 				<div id="tutorialSettings" class="hidden"> <span class="settingsText"> You'll probably figure it out on your own anyway, it's not like there's a self-destruct button... <br> <br>
 					You can click on the numbers to increase it (called counters), by holding Ctrl or checking the 'Minus' checkbox it decreases the counters instead. <br class="lineHeight">
@@ -935,17 +936,15 @@
 					Note: All settings are applied immediately, the save button will only save it permanently as otherwise they get reset when you refresh the site. Settings will also be saved when opening a popout.</span>
 
 					<br> <br> <div style="border-bottom: rgba(0, 0, 0, 0.4) 2px solid;"></div> <br>
-					<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Mario-Party-Overlay-Tutorial" class="settingsLink" target="_blank">More in-depth Tutorial</a> </span> <br class="lineHeight">
+					<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Mario-Party-Overlay-Tutorial" class="settingsLink" rel="noopener" target="_blank">More in-depth Tutorial</a> </span> <br class="lineHeight">
 
-					<!--span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/projects/5" class="settingsLink" target="_blank">Planned Features</a> </span> <br class="lineHeight"-->
+					<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new/choose" class="settingsLink" rel="noopener" target="_blank">Got an issue or want to request a feature?</a> </span> <span class="settingsNote"> (You can also @ me on Twitter if you don't have a Github account)</span> <br> <br>
 
-					<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new/choose" class="settingsLink" target="_blank">Got an issue or want to request a feature?</a> </span> <span class="settingsNote"> (You can also @ me on Twitter if you don't have a Github account)</span> <br> <br>
-
-					<span class="settingsText"> Created by <a href="https://www.twitter.com/yoshisrc" class="settingsLink" target="_blank">blueYOSHI9000</a> <br>
-					Default icons created by <a href="https://www.twitter.com/yoshisrc" class="settingsLink" target="_blank">blueYOSHI9000</a> using official artwork and inspired by <a href="https://mariopartylegacy.com/" class="settingsLink" target="_blank">Mario Party Legacy</a> <br>
-					Mario Kart 8 character sprites ripped by <a href="https://twitter.com/RandomTBush" class="settingsLink" target="_blank">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="settingsLink" target="_blank"> RicoDexter</a> & <a href="https://www.twitter.com/yoshisrc" class="settingsLink" target="_blank">blueYOSHI9000</a> </span> <br>
-					<span> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="settingsLink" target="_blank">Counter Font</a> </span> <br>
-					<span> <a href="https://interactjs.io/" class="settingsLink" target="_blank"> Interact.js</a> </span> <span class="settingsText">(enables drag 'n' drop) </span> <br> <br>
+					<span class="settingsText"> Created by <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI9000</a> <br>
+					Default icons created by <a href="https://www.twitter.com/yoshisrc" class="settingsLink" target="_blank">blueYOSHI9000</a> using official artwork and inspired by <a href="https://mariopartylegacy.com/" class="settingsLink" rel="noopener" target="_blank">Mario Party Legacy</a> <br>
+					Mario Kart 8 character sprites ripped by <a href="https://twitter.com/RandomTBush" class="settingsLink" rel="noopener" target="_blank">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="settingsLink" rel="noopener" target="_blank"> RicoDexter</a> & <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI9000</a> </span> <br>
+					<span> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="settingsLink" rel="noopener" target="_blank">Counter Font</a> </span> <br>
+					<span> <a href="https://interactjs.io/" class="settingsLink" rel="noopener" target="_blank"> Interact.js</a> </span> <span class="settingsText">(enables drag 'n' drop) </span> <br> <br>
 				</div>
 			</div>
 
@@ -956,7 +955,7 @@
 				<button onclick="changeSettings('resetPlayers')" class="mobileButtons" style="width: 215px; flex: auto;"> Reset Players & Counters </button>
 				<span id="settingsClose">
 					<button class="mobileButtons" id="popoutButton" onclick="mpoSettingsPopout()" style="width: 140px;"> Popout Settings </button>
-					<button onclick="saveSettings(); savePlayers(true)" class="mobileButtons" id="saveButton" style="width: 55px;"> Save </button>
+					<button onclick="saveSettings(true); savePlayers()" class="mobileButtons" id="saveButton" style="width: 55px;"> Save </button>
 					<button onclick="if (popout == true) {window.close()} else {showHideDiv(['settings'])}" class="mobileButtons" id="settingsCloseButton"> Close </button>
 				</span>
 			</div>
@@ -1035,17 +1034,6 @@
 				<img class="counterDisplay" src="img/coin.png">
 				<img class="counterDisplay" src="img/question.png">
 			</span>
-		</div>
-	</div>
-
-	<!-- Error -->
-	<div id="error">
-		<div class="popupContent" id="errorContent">
-			<h2 id="errorTitle"> Something went wrong! </h2>
-			<b id="errorText"> There were problems loading this page. Please clear your local storage for this site and try again. <br>
-			If that didn't work, contact blueYOSHI <a href="https://twitter.com/yoshisrc">on Twitter</a> or <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new?template=bug_report.md">open an Issue on Github</a>. Thank you! </b> <br> <br>
-			<button id="errorButton" onclick="localStorage.clear()">Clear local storage</button>
-			<a id="errorLink" href="https://www.thewindowsclub.com/clear-cache-cookies-specific-website">If the button didn't work (tutorial on how to clear cookies)</a>
 		</div>
 	</div>
 

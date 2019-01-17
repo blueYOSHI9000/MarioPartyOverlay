@@ -181,43 +181,6 @@ function savePlayers (close) {
 * Resets all characters.
 */
 function resetPlayers () {
-	localStorage.setItem('savePlayers', false);
-
-	localStorage.setItem('char1', 'mario');
-	localStorage.setItem('char2', 'luigi');
-	localStorage.setItem('char3', 'yoshi');
-	localStorage.setItem('char4', 'peach');
-	localStorage.setItem('com1', false);
-	localStorage.setItem('com2', false);
-	localStorage.setItem('com3', false);
-	localStorage.setItem('com4', false);
-
-	localStorage.setItem('happening', true);
-	localStorage.setItem('minigame', true);
-	localStorage.setItem('minigameWins', false);
-	localStorage.setItem('minigameMiniStars', false);
-	localStorage.setItem('redSpace', false);
-	localStorage.setItem('running', false);
-	localStorage.setItem('slow', false);
-	localStorage.setItem('shopping', false);
-	localStorage.setItem('orb', false)
-	localStorage.setItem('candy', false);
-	localStorage.setItem('item', false);
-	localStorage.setItem('friendSpace', false);
-	localStorage.setItem('hex', false)
-	localStorage.setItem('spinSpace', false);
-	localStorage.setItem('minus', false);
-	localStorage.setItem('specialDice', false);
-	localStorage.setItem('ally', false);
-	localStorage.setItem('stompy', false);
-	localStorage.setItem('doormat', false);
-	localStorage.setItem('balloon', false);
-	localStorage.setItem('stars', false);
-	localStorage.setItem('inclBonus', false);
-	localStorage.setItem('miniStars', false);
-	localStorage.setItem('bananas', false);
-	localStorage.setItem('coins', false);
-
 	editValue('happeningOnOff', true);
 	editValue('minigameOnOff', true);
 	editValue('minigameWinsOnOff', false);
@@ -262,10 +225,48 @@ function resetPlayers () {
 	changeCom(4);
 
 	changeGame('all');
-	localStorage.setItem('curGame', 'all');
 
 	callDisplayOnOff();
 	changeStars();
+
+	localStorage.setItem('curGame', 'all');
+
+	localStorage.setItem('savePlayers', false);
+
+	localStorage.setItem('char1', 'mario');
+	localStorage.setItem('char2', 'luigi');
+	localStorage.setItem('char3', 'yoshi');
+	localStorage.setItem('char4', 'peach');
+	localStorage.setItem('com1', false);
+	localStorage.setItem('com2', false);
+	localStorage.setItem('com3', false);
+	localStorage.setItem('com4', false);
+
+	localStorage.setItem('happening', true);
+	localStorage.setItem('minigame', true);
+	localStorage.setItem('minigameWins', false);
+	localStorage.setItem('minigameMiniStars', false);
+	localStorage.setItem('redSpace', false);
+	localStorage.setItem('running', false);
+	localStorage.setItem('slow', false);
+	localStorage.setItem('shopping', false);
+	localStorage.setItem('orb', false)
+	localStorage.setItem('candy', false);
+	localStorage.setItem('item', false);
+	localStorage.setItem('friendSpace', false);
+	localStorage.setItem('hex', false)
+	localStorage.setItem('spinSpace', false);
+	localStorage.setItem('minus', false);
+	localStorage.setItem('specialDice', false);
+	localStorage.setItem('ally', false);
+	localStorage.setItem('stompy', false);
+	localStorage.setItem('doormat', false);
+	localStorage.setItem('balloon', false);
+	localStorage.setItem('stars', false);
+	localStorage.setItem('inclBonus', false);
+	localStorage.setItem('miniStars', false);
+	localStorage.setItem('bananas', false);
+	localStorage.setItem('coins', false);
 }
 
 /*
@@ -296,17 +297,10 @@ function saveCounters () {
 * Resets all counters.
 */
 function resetCounters () {
-	localStorage.setItem('saveCounters', false);
-
-	localStorage.setItem('coinStarVar', 10);
-	localStorage.setItem('coinStarTie1', false);
-	localStorage.setItem('coinStarTie2', false);
-	localStorage.setItem('coinStarTie3', false);
-	localStorage.setItem('coinStarTie4', false);
-
-	localStorage.setItem('curTurn', 1);
-	localStorage.setItem('maxTurn', 20);
 	document.getElementById('maxTurnText').innerHTML = 20;
+
+	resetBackup();
+	updateStars();
 
 	for (let num = 1; num < 5; num++) {
 		for (let num2 = 1; num2 < 19; num2++) {
@@ -318,9 +312,17 @@ function resetCounters () {
 	localStorage.setItem('coins2', 10);
 	localStorage.setItem('coins3', 10);
 	localStorage.setItem('coins4', 10);
+	
+	localStorage.setItem('saveCounters', false);
 
-	resetBackup();
-	updateStars();
+	localStorage.setItem('coinStarVar', 10);
+	localStorage.setItem('coinStarTie1', false);
+	localStorage.setItem('coinStarTie2', false);
+	localStorage.setItem('coinStarTie3', false);
+	localStorage.setItem('coinStarTie4', false);
+
+	localStorage.setItem('curTurn', 1);
+	localStorage.setItem('maxTurn', 20);
 }
 
 /*
@@ -329,6 +331,10 @@ function resetCounters () {
 * @param {boolean} close If the settings should be closed after saving. True = should be closed.
 */
 function saveSettings (close) {
+	if (close == true && popout != true) {
+		showHideDiv(['settings']);
+	}
+	
 	localStorage.setItem('saving', 'true');
 
 	localStorage.setItem('enableInteract', getValue('enableInteract'));
@@ -356,10 +362,6 @@ function saveSettings (close) {
 	localStorage.setItem('toShowNum', getValue('toShowNum'));
 	localStorage.setItem('toListAll', getValue('toListAll'));
 	localStorage.setItem('toListAllCoin', getValue('toListAllCoin'));
-
-	if (close == true) {
-		showHideDiv(['settings']);
-	}
 }
 
 /*
@@ -398,8 +400,7 @@ function prepareMPO () {
 		document.getElementById('noSettings').style.display = 'none';
 	}
 
-	localStorage.getItem('enableHighlight');
-	document.getElementById('error').style = 'display: inline;';
+	localStorage.getItem('enableHighlight'); //If cookies are blocked, this will break the function immediately
 	if (localStorage.getItem('saving') == 'true') {
 
 		editValue('enableInteract', stringToBoolean(localStorage.getItem('enableInteract')));
@@ -508,7 +509,6 @@ function prepareMPO () {
 	coinStarTie();
 	callDisplayOnOff();
 
-	document.getElementById('error').style.display = 'none';
 	prepared = true;
 }
 
@@ -518,6 +518,13 @@ function prepareMPO () {
 function prepareMPOBackup () {
 	if (prepared != true) {
 		console.warn('[MPO] Could not properly start MPO.');
+		document.getElementById('popoutError').style.visibility = 'visible';
+		document.getElementById('popoutButton').style.display = 'none';
+		editValue('autoPopout', false);
+		document.getElementById('autoPopout').disabled = true;
+		editValue('permSave', false);
+		document.getElementById('permSave').disabled = true;
+		document.getElementById('permSaveCounters').disabled = true;
 		callDisplayOnOff();
 	}
 }
@@ -550,7 +557,9 @@ function resetSettings () {
 	editValue('enableAnimation', true);
 	editValue('noTie', false);
 	editValue('autoSave', false);
-	editValue('permSave', true);
+	if (prepared != true) {} else {
+		editValue('permSave', true);
+	}
 
 	editValue('toP1Name', '');
 	editValue('toP2Name', '');
@@ -563,6 +572,14 @@ function resetSettings () {
 	editValue('toShowNum', true);
 	editValue('toListAll', false);
 	editValue('toListAllCoin', false);
+
+	editValue('greenscreen', false);
+	changeTheme(1);
+	changeIcons('icons');
+	changeTextColor('textColor');
+
+	callHighlight(false, true);
+	resetHighlights();
 
 	localStorage.setItem('saving', 'false');
 
@@ -590,12 +607,4 @@ function resetSettings () {
 	localStorage.setItem('toShowNum', getValue('toShowNum'));
 	localStorage.setItem('toListAll', getValue('toListAll'));
 	localStorage.setItem('toListAllCoin', getValue('toListAllCoin'));
-
-	editValue('greenscreen', false);
-	changeTheme(1);
-	changeIcons('icons');
-	changeTextColor('textColor');
-
-	callHighlight(false, true);
-	resetHighlights();
 }

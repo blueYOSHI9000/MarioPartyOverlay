@@ -351,7 +351,7 @@ function coinStarTie (player) {
 	document.getElementById('coinStarTie4').style.left = '';
 
 	document.getElementById('coinStarDiv').style.marginLeft = '5px';
-	document.getElementById('coinStarText').style.left = '9px';
+	document.getElementById('coinStarText').style.left = '5px';
 
 	var player1 = getValue('p1CoinStarTie');
 	var player2 = getValue('p2CoinStarTie');
@@ -386,42 +386,31 @@ function coinStarTie (player) {
 		document.getElementById('coinStarCharacter').src = 'img/' + icons + '/' + tied[0] + '.png';
 
 		if (icons == 'mpsrIcons') {
-			document.getElementById('coinStarText').style.left = '8px';
+			document.getElementById('coinStarText').style.left = '4px';
 		}
 	} else if (tied.length == 2) {
 		document.getElementById('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png';
 		document.getElementById('coinStarTie4').src = 'img/' + icons + '/' + tied[1] + '.png';
 
-		document.getElementById('coinStarTie1').style.height = '32px';
-		document.getElementById('coinStarTie1').style.top = '-24px';
-		document.getElementById('coinStarTie1').style.left = '48px';
+		document.getElementById('coinStarTie1').style.height = '34px';
+		document.getElementById('coinStarTie1').style.top = '-35px';
+		document.getElementById('coinStarTie1').style.left = '-98px';
 
-		document.getElementById('coinStarTie4').style.height = '32px';
-		document.getElementById('coinStarTie4').style.top = '-2px';
-		document.getElementById('coinStarTie4').style.left = '-31px';
+		document.getElementById('coinStarTie4').style.height = '34px';
+		document.getElementById('coinStarTie4').style.top = '-14px';
+		document.getElementById('coinStarTie4').style.left = '-69px';
 
 		if (icons == 'mpsrIcons') {
-			document.getElementById('coinStarDiv').style.marginLeft = '0px';
-			document.getElementById('coinStarText').style.left = '9px';
-		} else {
-			document.getElementById('coinStarDiv').style.marginLeft = '1px';
+			document.getElementById('coinStarText').style.left = '5px';
 		}
 	} else if (tied.length == 3) {
 		document.getElementById('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png';
 		document.getElementById('coinStarTie2').src = 'img/' + icons + '/' + tied[1] + '.png';
 		document.getElementById('coinStarTie5').src = 'img/' + icons + '/' + tied[2] + '.png';
-
-		if (icons == 'mpsrIcons') {
-			document.getElementById('coinStarDiv').style.marginLeft = '3px';
-		}
 	} else if (tied.length == 4) {
 		document.getElementById('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png';
 		document.getElementById('coinStarTie2').src = 'img/' + icons + '/' + tied[1] + '.png';
 		document.getElementById('coinStarTie3').src = 'img/' + icons + '/' + tied[2] + '.png';
 		document.getElementById('coinStarTie4').src = 'img/' + icons + '/' + tied[3] + '.png';
-
-		if (icons == 'mpsrIcons') {
-			document.getElementById('coinStarDiv').style.marginLeft = '2px';
-		}
 	}
 }
