@@ -4,9 +4,9 @@ Mario Party Overlay is a highly customizable and easy to use 'Bonus Star' tracke
 **[Website](https://blueyoshi9000.github.io/MarioPartyOverlay/)**   
 
 # How to use?
-You'll probably figure it out on your own anyway, it's not like there's a self-destruct button.
+You'll probably figure it out on your own anyway, it's not like there's a self-destruct button...
 
-You can click on the numbers to increase it (called counters), by holding Ctrl or checking the 'Minus' checkbox it decreases the counters instead.
+You can click on the numbers to increase it (called counters). By holding Ctrl or checking the 'Minus' checkbox it decreases the counters instead.
 To change the amount added/subtracted you can click on the numbers at the top, pressing the number on the numpad changes it too (0 for 10).
 To give/take the coin-star you just click on the character.
 

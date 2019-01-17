@@ -398,6 +398,9 @@ function prepareMPO () {
 		document.getElementById('settingsContent').style.width = 'calc(100% - 40px)';
 		document.getElementById('settingsContent').style.height = 'calc(100% - 40px)'; //-40px is required as otherwise there would be 40px offscreen which would destroy the whole layout
 		document.getElementById('noSettings').style.display = 'none';
+
+		sendMessage('syncPopout')
+		return;
 	}
 
 	localStorage.getItem('enableHighlight'); //If cookies are blocked, this will break the function immediately
@@ -518,14 +521,85 @@ function prepareMPO () {
 function prepareMPOBackup () {
 	if (prepared != true) {
 		console.warn('[MPO] Could not properly start MPO.');
-		document.getElementById('popoutError').style.visibility = 'visible';
-		document.getElementById('popoutButton').style.display = 'none';
-		editValue('autoPopout', false);
-		document.getElementById('autoPopout').disabled = true;
 		editValue('permSave', false);
 		document.getElementById('permSave').disabled = true;
 		document.getElementById('permSaveCounters').disabled = true;
 		callDisplayOnOff();
+	}
+}
+
+/*
+* Gets called on the main site when a popout is opened. Sends all the required info to properly sync it.
+*/
+function syncPopout () {
+	if (popout == false && popoutActivated == true) {
+		sendMessage('changeTheme+' + curTheme)
+		sendMessage('changeGame+' + curGame)
+		sendMessage('changeCharacters+' + 1 + '+' + characters[1])
+		sendMessage('changeCharacters+' + 2 + '+' + characters[2])
+		sendMessage('changeCharacters+' + 3 + '+' + characters[3])
+		sendMessage('changeCharacters+' + 4 + '+' + characters[4])
+
+		sendSettingsMsg('enableInteract', getValue('enableInteract'), true)
+		sendSettingsMsg('autoPopout', getValue('autoPopout'), true)
+		sendSettingsMsg('mpsrIcons', getValue('mpsrIcons'), true)
+		sendSettingsMsg('mk8Icons', getValue('mk8Icons'), true)
+		sendSettingsMsg('greenscreen', getValue('greenscreen'), true)
+		sendSettingsMsg('bgColor', getValue('bgColor'), true)
+		sendSettingsMsg('textColor', getValue('textColor'), true)
+		sendSettingsMsg('enableHighlight', getValue('enableHighlight'), true)
+		sendSettingsMsg('highlightColor', getValue('highlightColor'), true)
+		sendSettingsMsg('enableAnimation', getValue('enableAnimation'), true)
+		sendSettingsMsg('noTie', getValue('noTie'), true)
+		sendSettingsMsg('autoSave', getValue('autoSave'), true)
+		sendSettingsMsg('autoSave', getValue('autoSave'), true)
+		sendSettingsMsg('toBonusOnly', getValue('toBonusOnly'), true)
+		sendSettingsMsg('toShowNum', getValue('toShowNum'), true)
+		sendSettingsMsg('toListAll', getValue('toListAll'), true)
+		sendSettingsMsg('toListAllCoin', getValue('toListAllCoin'), true)
+		sendSettingsMsg('toP1Name', getValue('toP1Name'), true)
+		sendSettingsMsg('toP2Name', getValue('toP2Name'), true)
+		sendSettingsMsg('toP3Name', getValue('toP3Name'), true)
+		sendSettingsMsg('toP4Name', getValue('toP4Name'), true)
+		sendSettingsMsg('toSeperation', getValue('toSeperation'), true)
+		sendSettingsMsg('toCounters', getValue('toCounters'), true)
+		sendSettingsMsg('toOutput', getValue('toOutput'), true)
+		sendSettingsMsg('com1', getValue('com1'), true)
+		sendSettingsMsg('com2', getValue('com2'), true)
+		sendSettingsMsg('com3', getValue('com3'), true)
+		sendSettingsMsg('com4', getValue('com4'), true)
+		sendSettingsMsg('happeningOnOff', getValue('happeningOnOff'), true)
+		sendSettingsMsg('minigameOnOff', getValue('minigameOnOff'), true)
+		sendSettingsMsg('minigameWinsOnOff', getValue('minigameWinsOnOff'), true)
+		sendSettingsMsg('minigameMiniStarsOnOff', getValue('minigameMiniStarsOnOff'), true)
+		sendSettingsMsg('redSpaceOnOff', getValue('redSpaceOnOff'), true)
+		sendSettingsMsg('runningOnOff', getValue('runningOnOff'), true)
+		sendSettingsMsg('slowOnOff', getValue('slowOnOff'), true)
+		sendSettingsMsg('shoppingOnOff', getValue('shoppingOnOff'), true)
+		sendSettingsMsg('orbOnOff', getValue('orbOnOff'), true)
+		sendSettingsMsg('candyOnOff', getValue('candyOnOff'), true)
+		sendSettingsMsg('itemOnOff', getValue('itemOnOff'), true)
+		sendSettingsMsg('friendSpaceOnOff', getValue('friendSpaceOnOff'), true)
+		sendSettingsMsg('hexOnOff', getValue('hexOnOff'), true)
+		sendSettingsMsg('spinSpaceOnOff', getValue('spinSpaceOnOff'), true)
+		sendSettingsMsg('minusOnOff', getValue('minusOnOff'), true)
+		sendSettingsMsg('specialDiceOnOff', getValue('specialDiceOnOff'), true)
+		sendSettingsMsg('allyOnOff', getValue('allyOnOff'), true)
+		sendSettingsMsg('stompyOnOff', getValue('stompyOnOff'), true)
+		sendSettingsMsg('doormatOnOff', getValue('doormatOnOff'), true)
+		sendSettingsMsg('balloonOnOff', getValue('balloonOnOff'), true)
+		sendSettingsMsg('starsOnOff', getValue('starsOnOff'), true)
+		sendSettingsMsg('inclBonusOnOff', getValue('inclBonusOnOff'), true)
+		sendSettingsMsg('miniStarsOnOff', getValue('miniStarsOnOff'), true)
+		sendSettingsMsg('bananasOnOff', getValue('bananasOnOff'), true)
+		sendSettingsMsg('coinsOnOff', getValue('coinsOnOff'), true)
+
+		sendMessage('changeCom+' + 1)
+		sendMessage('changeCom+' + 2)
+		sendMessage('changeCom+' + 3)
+		sendMessage('changeCom+' + 4)
+
+		console.log('[MPO] Popout synced')
 	}
 }
 

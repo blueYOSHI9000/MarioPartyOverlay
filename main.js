@@ -251,8 +251,6 @@ function changeStars (image) {
 		editValue('miniStarsOnOff', false);
 		source = 'img/banana.png';
 	} else {
-		editValue('miniStarsOnOff', false);
-		editValue('bananasOnOff', false);
 		source = 'img/star.png';
 	}
 
@@ -313,6 +311,7 @@ function displayOnOff (counter, start, force) {
 	}
 	if ((getValue('starsOnOff') == true && getValue('inclBonusOnOff')== true) || counter == 'stars') {
 		updateStars();
+		changeStars();
 	}
 }
 
@@ -492,9 +491,10 @@ function getValue (id) {
 * 
 * @param {string} id The first attribute.
 * @param {string} attribute Other attributes.
+* @para, {boolean} force Forces it to send the message if true.
 */
-function sendSettingsMsg (id, attribute) {
-	if (popout == true) {
+function sendSettingsMsg (id, attribute, force) {
+	if (popout == true || force == true) {
 		sendMessage('editValue+' + id + '+' + attribute);
 	}
 }
@@ -505,7 +505,7 @@ function sendSettingsMsg (id, attribute) {
 * @param {string} text String with a funtion pointer in it that will be executed when received.
 */
 function sendMessage (text) {
-	if (popoutActivated == true) {
+	if (popoutActivated == true && popout == false) {
 		mpoSettings.postMessage(text, '*');
 	} else {
 		mpoMain.postMessage(text, '*');
@@ -584,8 +584,8 @@ function mpoSettingsPopout () {
 	if (popout != true) {
 		document.getElementById('settings').classList.remove('visible');
 		document.getElementById('settings').classList.add('hidden');
-		saveSettings();
-		savePlayers();
+		//saveSettings();
+		//savePlayers();
 
 		if (popoutActivated == true) {
 			window.open('', 'mpoSettings');
