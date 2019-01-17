@@ -380,19 +380,6 @@ function showHideSettings (id) {
 }
 
 /*
-* Changes visibility from visible to hidden and vice versa.
-* 
-* @param {string} id Which element should be changed
-*/
-function changeVisibility (id) {
-	if (document.getElementById(id).style.visibility == 'hidden') {
-		document.getElementById(id).style.visibility = 'visible';
-	} else if (document.getElementById(id).style.visibility == 'visible') {
-		document.getElementById(id).style.visibility = 'hidden';
-	}
-}
-
-/*
 * Closes the settings if the user doesn't click on the settings while they are opened.
 *
 * @param {string} event What event got fired.
@@ -444,16 +431,6 @@ function ctrlReleased (e) {
 var ctrlKeyVar = false;
 window.onkeydown = ctrlPressed;
 window.onkeyup = ctrlReleased;
-
-/*
-* Checks if something is included in a array.
-*
-* @param {string} string Checks if this is included in the array.
-* @param {array} array The array that should include something.
-*/
-function arrCon (string, array) {
-	return (array.indexOf(string) > -1);
-}
 
 /*
 * Opens normal settings or puts popout on top if it's activated.

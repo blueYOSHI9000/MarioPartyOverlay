@@ -6,7 +6,7 @@ function textOutput () {
 
 	//Checks if a custom name has been assigned, if not it uses the characters name
 	for (let num = 1; num < 5; num++) {
-		if (getValue('toP' + num + 'Name').value == '') {
+		if (getValue('toP' + num + 'Name') == '') {
 			switch (characters[num]) {
 				case 'bowserjr':
 					playerName[num] = 'Bowser Jr.';
@@ -40,7 +40,7 @@ function textOutput () {
 		}
 	}
 
-	var joinString = getValue('toSeperation').value;
+	var joinString = getValue('toSeperation');
 
 	var counters = getValue('toCounters').split(', ');
 	var counterNames = getValue('toOutput').split(', ');

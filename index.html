@@ -320,7 +320,7 @@
 							</span>
 						</span> <br>
 					<label for="greenscreen"> <span class="settingsText"> Enable greenscreen: </span> </label> <input type="checkbox" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('changeTheme')" id="greenscreen"> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('changeBGColor', ['bgColor'])" value="#0000ff" id="bgColor"><br>
-					<span class="settingsText"> Change text color: </span> <input type="color" id="textColor" value="#ffffff" onchange="changeSettings('textColor')"> <br>
+					<span class="settingsText"> Change text color: </span> <input type="color" id="textColor" value="#ffffff" onchange="changeSettings('changeTextColor', [this.id])"> <br>
 					<button onclick="openGreenscreenTest()" class="mobileButtons" id="greenscreenTestButton" style="width: 155px;"> Test Greenscreen </button> <span class="settingsNote" id="greenscreenNote" style="display: none;">(This will be executed on the main window.)</span> <br> <br>
 
 					<label for="enableHighlight"> <span class="settingsText"> Enable counter highlight: </span> </label> <input type="checkbox" id="enableHighlight" onchange="sendSettingsMsg(this.id, + this.checked);changeSettings('resetHighlights')" checked> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('callHighlight', [false, true])" value="#FF0000" id="highlightColor"> <br>
@@ -969,7 +969,7 @@
 			<button onclick="showHideDiv(['colorPickTest']);openSettings()" class="mobileButtons" style="width: 80px;"> Settings </button> <span class="whiteText"> (Changes here will affect the normal MPO) </span> <br>
 			
 			<span class="whiteText"> Change BG color: </span> <input type="color" onchange="changeBGColor('bgColorPick')" value="#0000ff" id="bgColorPick"> <button onclick="resetBGColor()" class="mobileButtons" style="width: 165px;"> Reset Color (blue) </button> <br>
-			<span class="whiteText"> Change Text Color: </span> <input type="color" id="textColorTest" value="#ffffff" onchange="changeTextColor('textColorTest')"> <button onclick="resetTextColor()" class="mobileButtons" style="width: 170px;"> Reset Color (white) </button> <br>
+			<span class="whiteText"> Change Text Color: </span> <input type="color" id="textColorTest" value="#ffffff" onchange="changeTextColor(this.id)"> <button onclick="resetTextColor()" class="mobileButtons" style="width: 170px;"> Reset Color (white) </button> <br>
 			
 			<span class="charSelector">
 				<span>

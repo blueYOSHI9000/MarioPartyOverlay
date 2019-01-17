@@ -45,9 +45,6 @@ body {
 	background-color: rgba(0, 0, 0, 0.7);
 	display: none;
 }
-#errorContent {
-	background-color: #CCCCCC;
-}
 
 /* == Counters == */
 .player {
@@ -187,34 +184,8 @@ body {
 	left: 97px;
 }
 
-/* == Counter Inputs == */
-.firstInputText {
-	color: white;
-}
-.numInput {
-	width: 40px;
-}
-.turnInputText {
-	color: white;
-}
-.turnInput {
-	margin-bottom: 30px;
-}
-.comText {
-	margin-left: 70px;
-	color: white;
-}
-.changesButton {
-	margin-right: 40px;
-}
-
 
 /* == Settings == */
-.settingsTitle {
-	color: #111111;
-	border-bottom: 2px black solid;
-	cursor: pointer;
-}
 .settingsText {
 	color: #111111;
 	font-size: 20px;
@@ -232,13 +203,6 @@ body {
 	max-width: 500px;
 	min-width: 200px;
 	min-height: 70px;
-}
-.commandInput {
-	margin-top: 12px;
-	resize: both;
-	min-width: 400px;
-	min-height: 15px;
-	height: 15px;
 }
 .popupContent {
 	position: absolute;
@@ -745,15 +709,6 @@ body {
 .grayBG {
 	background-color: rgba(100, 100, 100, 0.3);
 	border-radius: 5px;
-}
-#backupText {
-	margin-left: 45px;
-}
-#textOutputMobile {
-	margin-left: 45px;
-}
-#textOutputText {
-	margin-left: 150px;
 }
 #mobileTypeSpan {
 	border-radius: 12px;

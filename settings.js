@@ -124,6 +124,7 @@ function getSelectedIcon (id) {
 * @param {string} id Id of the input element that changed its value.
 */
 function changeBGColor (id) {
+	console.log(id)
 	bgColor = getValue(id);
 	if (getValue('greenscreen') == true) {
 		document.getElementById('bodyElement').style.background = bgColor;
@@ -139,7 +140,7 @@ function changeBGColor (id) {
 * Resets the Greenscreen color.
 */
 function resetBGColor () {
-	document.getElementById('bgColor').value = '#0000FF';
+	editValue('bgColor', '#0000FF');
 	changeBGColor('bgColor');
 }
 
