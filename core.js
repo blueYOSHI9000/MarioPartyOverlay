@@ -340,6 +340,11 @@ function coinStarTie (player) {
 			editValue('p3CoinStarTie', false);
 				break;
 		}
+	} else if (getValue('noTie') == true) {
+		editValue('p1CoinStarTie', false);
+		editValue('p2CoinStarTie', false);
+		editValue('p3CoinStarTie', false);
+		editValue('p4CoinStarTie', false);
 	}
 
 	document.getElementById('coinStarTie1').style.height = '';
