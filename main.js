@@ -275,8 +275,6 @@ function displayOnOff (counter, start, force) {
 		}
 	}
 
-	var counterClass = document.querySelectorAll('.' + counter)
-
 	if (getValue(counter + 'OnOff') == false) {
 		var displayVar = 'none';
 		if (counter == 'minigame' && (getValue('minigameWinsOnOff') == true || getValue('minigameMiniStarsOnOff') == true)) {
@@ -300,6 +298,13 @@ function displayOnOff (counter, start, force) {
 		}
 		var displayVar = '';
 	}
+
+	if (counter == 'coinStar') {
+		document.getElementById('coinStarFullDiv').style.display = displayVar;
+		return;
+	}
+
+	var counterClass = document.querySelectorAll('.' + counter);
 
 	for (var num = 0; num < counterClass.length; num++) {
 		counterClass[num].style.display = displayVar;

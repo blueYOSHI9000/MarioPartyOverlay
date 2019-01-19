@@ -51,7 +51,7 @@
 		<span class="turns draggable"> <b id="turnText" onclick="mobileButtons('curTurn')"> Turn </b> <b id="curTurnText" onclick="mobileButtons('curTurn')">1</b><b style="margin-left: 60px; font-size: 30px;" onclick="mobileButtons('curTurn')">/</b><b id="maxTurnText" onclick="mobileButtons('maxTurn')">20</b> </span>
 
 		<!-- Most Coins -->
-		<span class="draggable nowrap" style="margin-left: 100px;">
+		<span class="draggable nowrap" style="margin-left: 100px;" id="coinStarFullDiv">
 			<img src="img/tie.png" onclick="mobileButtons('coinStar')" id="coinStarHitbox">
 			<span id="coinStarDiv">
 				<span class="coinStarTieDiv"> <img src="img/tie.png" id="coinStarTie5" class="coinStarTie"> <img src="img/tie.png" id="coinStarTie1" class="coinStarTie"> <img src="img/tie.png" id="coinStarTie2" class="coinStarTie"> 
@@ -337,7 +337,7 @@
 
 					<div style="border: 2px rgba(120, 120, 120, 0.4) solid; width: 405px; padding-left: 3px;">
 						<label for="toBonusOnly"> <span class="settingsText"> Only show who got the bonus star: </span> </label> <input type="checkbox" id="toBonusOnly" onclick="sendSettingsMsg(this.id, this.checked)"> <br> 
-						<label for="toShowNum"> <span class="settingsText marginLeft"> Show counter next to player: </span> </label> <input type="checkbox" id="toShowNum" onclick="sendSettingsMsg(this.id, this.checked)" checked=""> <br> 
+						<label for="toShowNum"> <span class="settingsText marginLeft"> Show counter next to player: </span> </label> <input type="checkbox" id="toShowNum" onclick="sendSettingsMsg(this.id, this.checked)" checked> <br> 
 						<label for="toListAll"> <span class="settingsText marginLeft"> List all players instead of "everyone": </span> </label> <input type="checkbox" id="toListAll" onclick="sendSettingsMsg(this.id, this.checked)">
 					</div>
 					<label for="toListAllCoin"> <span class="settingsText"> List all players instead of "everyone" for the Coin Star: </span> </label> <input type="checkbox" id="toListAllCoin" onclick="sendSettingsMsg(this.id, this.checked)"> <br> <br>
@@ -348,8 +348,9 @@
 					<span class="settingsText marginLeft">  Player 4 name: </span> <input id="toP4Name" onchange="sendSettingsMsg(this.id, this.value)"> <br>
 					<span class="settingsText"> Counter seperation: </span> <input id="toSeperation" value=" | " onchange="sendSettingsMsg(this.id, this.value)" style="width: 30px;"> <br> <br>
 					
-					<span class="settingsNote" id="counterNote"> Seperate counters with ", ". </span> <br>
-					<div style="columns: 2;">
+					<label for="toUseActive"> <span class="settingsText"> Only use active counters: </span> <input type="checkbox" id="toUseActive" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('updateCounterInput')" checked> </label> <br> <br>
+					<span class="settingsNote hidden" id="counterNote"> Seperate counters with ", ". </span>
+					<div style="columns: 2;" class="hidden" id="counterDiv">
 						<span id="counterOrder">
 							<span class="settingsText"> Counter order: </span> <span class="settingsNote"> (Only counters listed will be used) </span> <br>
 							<textarea class="resizableInput" id="toCounters" onchange="textOutputTest();sendSettingsMsg(this.id, this.value)">Turns, Happening, Minigame, Red Space, Coin Star</textarea>
@@ -900,8 +901,12 @@
 						<span class="flexAuto"></span>
 						<span class="relative"> <label for="doormatOnOff" class="counterOnOffText">Doormat (SMP):</label> <input type="checkbox" id="doormatOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['doormat'])"> <label for="doormatOnOff" class="charSelectorLabel counterOnOff doormatOnOff"></label> </span>
 					</div>
-					<div class="counterSelection mpsrC">
-						<span class="relative"> <label for="balloonOnOff" class="counterOnOffText">Balloon (SR, TT100):</label> <input type="checkbox" id="balloonOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['balloon'])"> <label for="balloonOnOff" class="charSelectorLabel counterOnOff balloonOnOff"></label> </span>
+					<div class="counterSelection coinStarC mpsrC">
+						<span class="mpsrC relative"> <label for="balloonOnOff" class="counterOnOffText">Balloon (SR, TT100):</label> <input type="checkbox" id="balloonOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['balloon'])"> <label for="balloonOnOff" class="charSelectorLabel counterOnOff balloonOnOff"></label> </span>
+						<span class="flexAuto"></span>
+						<span class="coinStarC relative"> <label for="coinStarOnOff" class="counterOnOffText">Coin Star (MP 1-5, SMP):</label> <input type="checkbox" id="coinStarOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['coinStar'])" checked> <label for="coinStarOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </span>
+						<span class="flexAuto"></span>
+						<span class="relative"></span>
 					</div> <br>
 					<span id="ingameCounters">In-game counters</span> <br>
 					<span class="settingsNote" style="white-space: nowrap;"> (Useful to completely replace the in-game display - Highlighting does not affect these counters) </span> <br>

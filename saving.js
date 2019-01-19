@@ -28,8 +28,8 @@ var balloon = [0, 0, 0, 0];
 var stars = [0, 0, 0, 0];
 var coins = [0, 0, 0, 0];
 
-var countersShort = ['hap', 'mini', 'red', 'run', 'shop', 'orb', 'candy', 'item', 'friend', 'hex', 'spin', 'minus', 'dice', 'ally', 'stompy', 'doormat', 'balloon', 'stars', 'coins'];
-var counters = ['happening', 'minigame', 'redSpace', 'running', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'balloon', 'stars', 'coins'];
+var countersShort = ['stars', 'coins', 'hap', 'mini', 'red', 'run', 'shop', 'orb', 'candy', 'item', 'friend', 'hex', 'spin', 'minus', 'dice', 'ally', 'stompy', 'doormat', 'balloon'];
+var counters = ['stars', 'coins', 'happening', 'minigame', 'redSpace', 'running', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'balloon'];
 var countersUp = [];
 for (let num = 0; num < 19; num++) {
 	countersUp.push(counters[num].charAt(0).toUpperCase() + counters[num].slice(1));
@@ -356,6 +356,7 @@ function saveSettings (close) {
 	localStorage.setItem('toP3Name', getValue('toP3Name'));
 	localStorage.setItem('toP4Name', getValue('toP4Name'));
 	localStorage.setItem('toSeperation', getValue('toSeperation'));
+	localStorage.setItem('toUseActive', getValue('toUseActive'));
 	localStorage.setItem('toCounters', getValue('toCounters'));
 	localStorage.setItem('toOutput', getValue('toOutput'));
 	localStorage.setItem('toBonusOnly', getValue('toBonusOnly'));
@@ -435,12 +436,15 @@ function prepareMPO () {
 		editValue('toP3Name', localStorage.getItem('toP3Name'));
 		editValue('toP4Name', localStorage.getItem('toP4Name'));
 		editValue('toSeperation', localStorage.getItem('toSeperation'));
+		editValue('toUseActive', localStorage.getItem('toUseActive'));
 		editValue('toCounters', localStorage.getItem('toCounters'));
 		editValue('toOutput', localStorage.getItem('toOutput'));
 		editValue('toBonusOnly', stringToBoolean(localStorage.getItem('toBonusOnly')));
 		editValue('toShowNum', stringToBoolean(localStorage.getItem('toShowNum')));
 		editValue('toListAll', stringToBoolean(localStorage.getItem('toListAll')));
 		editValue('toListAllCoin', stringToBoolean(localStorage.getItem('toListAllCoin')));
+
+		updateCounterInput()
 	} else {
 		resetSettings();
 	}
@@ -557,11 +561,20 @@ function syncPopout () {
 		sendSettingsMsg('toShowNum', getValue('toShowNum'), true)
 		sendSettingsMsg('toListAll', getValue('toListAll'), true)
 		sendSettingsMsg('toListAllCoin', getValue('toListAllCoin'), true)
-		sendSettingsMsg('toP1Name', getValue('toP1Name'), true)
-		sendSettingsMsg('toP2Name', getValue('toP2Name'), true)
-		sendSettingsMsg('toP3Name', getValue('toP3Name'), true)
-		sendSettingsMsg('toP4Name', getValue('toP4Name'), true)
+		if (getValue('toP1Name') != '') {
+			sendSettingsMsg('toP1Name', getValue('toP1Name'), true)
+		}
+		if (getValue('toP2Name') != '') {
+			sendSettingsMsg('toP2Name', getValue('toP2Name'), true)
+		}
+		if (getValue('toP3Name') != '') {
+			sendSettingsMsg('toP3Name', getValue('toP3Name'), true)
+		}
+		if (getValue('toP4Name') != '') {
+			sendSettingsMsg('toP4Name', getValue('toP4Name'), true)
+		}
 		sendSettingsMsg('toSeperation', getValue('toSeperation'), true)
+		sendSettingsMsg('toUseActive', getValue('toUseActive'), true)
 		sendSettingsMsg('toCounters', getValue('toCounters'), true)
 		sendSettingsMsg('toOutput', getValue('toOutput'), true)
 		sendSettingsMsg('com1', getValue('com1'), true)
@@ -598,6 +611,7 @@ function syncPopout () {
 		sendMessage('changeCom+' + 2)
 		sendMessage('changeCom+' + 3)
 		sendMessage('changeCom+' + 4)
+		sendMessage('updateCounterInput')
 
 		console.log('[MPO] Popout synced')
 	}
@@ -640,6 +654,7 @@ function resetSettings () {
 	editValue('toP3Name', '');
 	editValue('toP4Name', '');
 	editValue('toSeperation', ' | ');
+	editValue('toUseActive', true);
 	editValue('toCounters', 'Turns, Happening, Minigame, Red Space, Coin Star');
 	editValue('toOutput', 'Turns, ?, MG, Red, Coin Star');
 	editValue('toBonusOnly', false);
@@ -651,6 +666,7 @@ function resetSettings () {
 	changeTheme(1);
 	changeIcons('icons');
 	changeTextColor('textColor');
+	updateCounterInput()
 
 	callHighlight(false, true);
 	resetHighlights();

@@ -42,17 +42,49 @@ function textOutput () {
 
 	var joinString = getValue('toSeperation');
 
-	var counters = getValue('toCounters').split(', ');
-	var counterNames = getValue('toOutput').split(', ');
+	if (getValue('toUseActive') == false) {
+		var toCounters = getValue('toCounters').split(', ');
+		var counterNames = getValue('toOutput').split(', ');
+	} else {
+		var toCounters = [];
+		var counterNames = [];
+
+		toCounters.push('turns');
+		counterNames.push('Turns');
+
+		if (getValue('coinStarOnOff') == true) {
+			toCounters.push('coinstar');
+			counterNames.push('Coin Star');
+		}
+
+		for (let num = 0; num < counters.length; num++) {
+			if (getValue(counters[num] + 'OnOff') == true) {
+				toCounters.push(countersUp[num]);
+
+				switch (countersUp[num]) {
+					case 'RedSpace':
+						counterNames.push('Red Space');
+					case 'FriendSpace':
+						counterNames.push('Friendship');
+					case 'SpinSpace':
+						counterNames.push('Spin');
+					case 'SpecialDice':
+						counterNames.push('Dice Block');
+					default:
+						counterNames.push(countersUp[num]);
+				}
+			}
+		}
+	}
 
 	var output = [];
 	var forResult = [];
 
-	for (let num = 0; num < counters.length; num++) {
-		counters[num] = counters[num].replace(/\s/g, '');
+	for (let num = 0; num < toCounters.length; num++) {
+		toCounters[num] = toCounters[num].replace(/\s/g, '');
 
 		//Add all specified counters to output array
-		switch (counters[num].toLowerCase()) {
+		switch (toCounters[num].toLowerCase()) {
 			case 'turn':
 			case 'turns':
 				output[num] = counterNames[num] + ': ' + document.getElementById('curTurnText').innerHTML + '/' + document.getElementById('maxTurnText').innerHTML;
@@ -100,43 +132,43 @@ function textOutput () {
 				break;
 
 			default: //Add everything new to textOutputTest() too
-				if (counters[num] == 'Friendship') {
-					counters[num] = 'FriendSpace';
+				if (toCounters[num] == 'Friendship') {
+					toCounters[num] = 'FriendSpace';
 				}
 
 				if (getValue('toBonusOnly') == true) {
 					var result = [];
 					var resultNum = [];
 
-					var counterP1 = document.getElementById('p1' + counters[num] + 'Text').innerHTML;
-					var counterP2 = document.getElementById('p2' + counters[num] + 'Text').innerHTML;
-					var counterP3 = document.getElementById('p3' + counters[num] + 'Text').innerHTML;
-					var counterP4 = document.getElementById('p4' + counters[num] + 'Text').innerHTML;
+					var counterP1 = document.getElementById('p1' + toCounters[num] + 'Text').innerHTML;
+					var counterP2 = document.getElementById('p2' + toCounters[num] + 'Text').innerHTML;
+					var counterP3 = document.getElementById('p3' + toCounters[num] + 'Text').innerHTML;
+					var counterP4 = document.getElementById('p4' + toCounters[num] + 'Text').innerHTML;
 
 					var counterNum = Math.max(counterP1, counterP2, counterP3, counterP4);
 
 					if (counterP1 == counterP2 && counterP1 == counterP3 && counterP1 == counterP4 && getValue('toListAll') == false) {
 						result.push('everyone');
-						resultNum.push(document.getElementById('p1' + counters[num] + 'Text').innerHTML);
+						resultNum.push(document.getElementById('p1' + toCounters[num] + 'Text').innerHTML);
 					} else {
 						if (counterNum == counterP1) {
 							result.push(playerName[1]);
-							resultNum.push(document.getElementById('p1' + counters[num] + 'Input').innerHTML);
+							resultNum.push(document.getElementById('p1' + toCounters[num] + 'Input').innerHTML);
 						}
 
 						if (counterNum == counterP2) {
 							result.push(playerName[2]);
-							resultNum.push(document.getElementById('p2' + counters[num] + 'Text').innerHTML);
+							resultNum.push(document.getElementById('p2' + toCounters[num] + 'Text').innerHTML);
 						}
 
 						if (counterNum == counterP3) {
 							result.push(playerName[3]);
-							resultNum.push(document.getElementById('p3' + counters[num] + 'Text').innerHTML);
+							resultNum.push(document.getElementById('p3' + toCounters[num] + 'Text').innerHTML);
 						}
 
 						if (counterNum == counterP4) {
 							result.push(playerName[4]);
-							resultNum.push(document.getElementById('p4' + counters[num] + 'Text').innerHTML);
+							resultNum.push(document.getElementById('p4' + toCounters[num] + 'Text').innerHTML);
 						}
 					}
 
@@ -146,7 +178,7 @@ function textOutput () {
 						output[num] = counterNames[num] + ': ' + resultString;
 
 					} else {
-						//var forNum = counters.length++;
+						//var forNum = toCounters.length++;
 						
 						//console.log('forResult: ' + forResult);
 
@@ -171,7 +203,7 @@ function textOutput () {
 					}
 
 				} else {
-					output[num] = counterNames[num] + ': ' + playerName[1] + ' ' + document.getElementById('p1' + counters[num] + 'Text').innerHTML + ', ' + playerName[2] + ' ' + document.getElementById('p2' + counters[num] + 'Text').innerHTML + ', ' + playerName[3] + ' ' + document.getElementById('p3' + counters[num] + 'Text').innerHTML + ', ' + playerName[4] + ' ' + document.getElementById('p4' + counters[num] + 'Text').innerHTML;
+					output[num] = counterNames[num] + ': ' + playerName[1] + ' ' + document.getElementById('p1' + toCounters[num] + 'Text').innerHTML + ', ' + playerName[2] + ' ' + document.getElementById('p2' + toCounters[num] + 'Text').innerHTML + ', ' + playerName[3] + ' ' + document.getElementById('p3' + toCounters[num] + 'Text').innerHTML + ', ' + playerName[4] + ' ' + document.getElementById('p4' + toCounters[num] + 'Text').innerHTML;
 				}
 		}
 	}
@@ -194,15 +226,15 @@ function textOutput () {
 * @param {boolean} nameonly If true it won't check if everything inside the counters textarea is correct.
 */
 function textOutputTest (nameonly) {
-	var counters = getValue('toCounters').split(', ');
+	var toCounters = getValue('toCounters').split(', ');
 	var counterNames = getValue('toOutput').split(', ');
 	var error = [];
 
 	if (nameonly != true) {
-		for (let num = 0; num < counters.length; num++) {
-			counters[num] = counters[num].replace(/\s/g, '');
+		for (let num = 0; num < toCounters.length; num++) {
+			toCounters[num] = toCounters[num].replace(/\s/g, '');
 
-			switch (counters[num].toLowerCase()) {
+			switch (toCounters[num].toLowerCase()) {
 				case 'turn':
 				case 'turns':
 					break;
@@ -210,11 +242,11 @@ function textOutputTest (nameonly) {
 				case 'coinstar':
 					break;
 				default: //Add everything new to textOutput() too
-					if (counters[num] == 'Friendship') {
-						counters[num] = 'FriendSpace';
+					if (toCounters[num] == 'Friendship') {
+						toCounters[num] = 'FriendSpace';
 					}
-					if (document.getElementById('p1' + counters[num] + 'Text')) {} else {
-						error.push(counters[num]);
+					if (document.getElementById('p1' + toCounters[num] + 'Text')) {} else {
+						error.push(toCounters[num]);
 					}
 					break;
 			} 
@@ -227,13 +259,27 @@ function textOutputTest (nameonly) {
 	} else if (error.length > 1) {
 		document.getElementById('textOutputWarning').innerHTML = '"' + error.join(', ') + '" aren\'t valid counters.';
 		document.getElementById('textOutputWarning').style = 'visibility: visible;';
-	} else if (counters.length > counterNames.length) {
+	} else if (toCounters.length > counterNames.length) {
 		document.getElementById('textOutputWarning').innerHTML = 'Counter name(s) missing.';
 		document.getElementById('textOutputWarning').style = 'visibility: visible;';
-	} else if (counters.length < counterNames.length) {
+	} else if (toCounters.length < counterNames.length) {
 		document.getElementById('textOutputWarning').innerHTML = 'Too many counter counterNames.';
 		document.getElementById('textOutputWarning').style = 'visibility: visible;';
 	} else {
 		document.getElementById('textOutputWarning').style = 'visibility: hidden;';
+	}
+}
+
+/*
+* Hides and shows the counter input for the Text Output setti
+*/
+function updateCounterInput () {
+	if (getValue('toUseActive') == false) {
+		document.getElementById('counterNote').style.display = 'block';
+		document.getElementById('counterDiv').style.display = 'block';
+	} else {
+		document.getElementById('counterNote').style.display = 'none';
+		document.getElementById('counterDiv').style.display = 'none';
+		editValue('toUseActive', true);
 	}
 }
