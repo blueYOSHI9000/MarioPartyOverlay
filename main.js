@@ -516,14 +516,14 @@ function sendMessage (text) {
 	} else {
 		mpoMain.postMessage(text, '*');
 	}
-	console.log('[MPO] Message sent: ' + text);
+	//console.log('[MPO] Message sent: ' + text);
 }
 
 /*
 * Receives Message from Settings-popout/main window and executes the function in it.
 */
 function receiveMessage (e) {
-	console.log('[MPO] Message received: ' + e.data);
+	//console.log('[MPO] Message received: ' + e.data);
 	popoutActivated = true;
 	var args = e.data.split('+');
 

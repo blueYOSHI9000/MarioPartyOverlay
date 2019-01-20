@@ -404,6 +404,7 @@ function prepareMPO () {
 		document.getElementById('noSettings').style.display = 'none';
 
 		sendMessage('syncPopout')
+		prepared = true;
 		return;
 	}
 
