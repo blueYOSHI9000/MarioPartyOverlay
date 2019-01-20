@@ -343,6 +343,7 @@ function callDisplayOnOff () {
 	displayOnOff('balloon', true, true);
 	displayOnOff('stars', true, true);
 	displayOnOff('coins', true, true);
+	displayOnOff('coinStar', true, true);
 }
 
 /*

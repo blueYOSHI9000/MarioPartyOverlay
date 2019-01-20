@@ -169,6 +169,7 @@ function savePlayers (close) {
 	localStorage.setItem('miniStars', getValue('miniStarsOnOff'));
 	localStorage.setItem('bananas', getValue('bananasOnOff'));
 	localStorage.setItem('inclBonus', getValue('inclBonusOnOff'));
+	localStorage.setItem('coinstar', getValue('coinStarOnOff'));
 
 	localStorage.setItem('curGame', curGame);
 
@@ -206,6 +207,7 @@ function resetPlayers () {
 	editValue('miniStarsOnOff', false);
 	editValue('bananasOnOff', false);
 	editValue('coinsOnOff', false);
+	editValue('coinStarOnOff', true);
 
 	changeCharacters(1, 'mario');
 	changeCharacters(2, 'luigi');
@@ -267,6 +269,7 @@ function resetPlayers () {
 	localStorage.setItem('miniStars', false);
 	localStorage.setItem('bananas', false);
 	localStorage.setItem('coins', false);
+	localStorage.setItem('coinstar', true);
 }
 
 /*
@@ -475,6 +478,7 @@ function prepareMPO () {
 		editValue('inclBonusOnOff', stringToBoolean(localStorage.getItem('inclBonus')));
 		editValue('miniStarsOnOff', stringToBoolean(localStorage.getItem('miniStars')));
 		editValue('bananasOnOff', stringToBoolean(localStorage.getItem('bananas')));
+		editValue('coinStarOnOff', stringToBoolean(localStorage.getItem('coinstar')));
 
 		if (localStorage.getItem('miniStars') == 'true') {
 			changeStars('miniStars');
