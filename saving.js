@@ -413,10 +413,11 @@ function prepareMPO () {
 		changeTheme(curTheme)
 
 		if (localStorage.getItem('iconStyle') == 'mk8Icons') {
-			changeIcons('icons', 'mk8Icons');
+			editValue('mk8Icons', true);
 		} else {
-			changeIcons('icons', 'mpsrIcons');
+			editValue('mpsr', true);
 		}
+		changeCharacters();
 		
 		editValue('customCounterIcons', localStorage.getItem('customCounterIcons'));
 		editValue('textColor', localStorage.getItem('textColor'));
@@ -443,7 +444,7 @@ function prepareMPO () {
 		editValue('toListAll', stringToBoolean(localStorage.getItem('toListAll')));
 		editValue('toListAllCoin', stringToBoolean(localStorage.getItem('toListAllCoin')));
 
-		updateCounterInput()
+		updateCounterInput();
 	} else {
 		resetSettings();
 	}
