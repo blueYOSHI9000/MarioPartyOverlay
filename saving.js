@@ -339,6 +339,7 @@ function saveSettings (close) {
 	localStorage.setItem('curTheme', curTheme);
 	localStorage.setItem('iconStyle', document.querySelector('input[name="icons"]:checked'));
 	localStorage.setItem('customCounterIcons', getValue('customCounterIcons'));
+	localStorage.setItem('customCharacterIcons', getValue('customCharacterIcons'));
 	localStorage.setItem('greenscreen', getValue('greenscreen'));
 	localStorage.setItem('bgColor', getValue('bgColor'));
 	localStorage.setItem('textColor', getValue('textColor'));
@@ -417,9 +418,10 @@ function prepareMPO () {
 		} else {
 			editValue('mpsr', true);
 		}
-		changeCharacters();
 		
 		editValue('customCounterIcons', localStorage.getItem('customCounterIcons'));
+		editValue('customCharacterIcons', localStorage.getItem('customCharacterIcons'));
+		changeCharacters();
 		editValue('textColor', localStorage.getItem('textColor'));
 		changeTextColor('textColor');
 
@@ -541,6 +543,8 @@ function syncPopout () {
 		sendSettingsMsg('autoPopout', getValue('autoPopout'), true);
 		sendSettingsMsg('mpsrIcons', getValue('mpsrIcons'), true);
 		sendSettingsMsg('mk8Icons', getValue('mk8Icons'), true);
+		sendSettingsMsg('customCounterIcons', getValue('customCounterIcons'), true);
+		sendSettingsMsg('customCharacterIcons', getValue('customCharacterIcons'), true);
 		sendSettingsMsg('greenscreen', getValue('greenscreen'), true);
 		sendSettingsMsg('bgColor', getValue('bgColor'), true);
 		sendSettingsMsg('textColor', getValue('textColor'), true);
@@ -629,6 +633,7 @@ function resetSettings () {
 	editValue('autoPopout', false);
 	editValue('mpsrIcons', true);
 	editValue('customCounterIcons', false);
+	editValue('customCharacterIcons', false);
 	editValue('greenscreen', false);
 	editValue('bgColor', '#0000FF');
 	editValue('textColor', '#ffffff');
@@ -671,6 +676,7 @@ function resetSettings () {
 	localStorage.setItem('curTheme', curTheme);
 	localStorage.setItem('iconStyle', document.querySelector('input[name="icons"]:checked'));
 	localStorage.setItem('customCounterIcons', getValue('customCounterIcons'));
+	localStorage.setItem('customCharacterIcons', getValue('customCharacterIcons'));
 	localStorage.setItem('greenscreen', getValue('greenscreen'));
 	localStorage.setItem('bgColor', getValue('bgColor'));
 	localStorage.setItem('textColor', getValue('textColor'));
