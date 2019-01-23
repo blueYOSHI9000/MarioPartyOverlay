@@ -320,6 +320,10 @@ body {
 	padding: 1rem 1.5rem;
 	border-radius: 0.5rem;
 	width: 1161px;
+	background-color: rgb(0, 0, 255);
+}
+#colorPickerBG img {
+	margin-right: 0px;
 }
 
 @media screen and (max-width: 1230px), screen and (max-height: 870px) {
@@ -515,12 +519,6 @@ body {
 .minigameOnOff {
 	background-image:url(img/minigame.png);
 }
-.minigameWinsOnOff {
-	background-image:url(img/minigamewins.png);
-}
-.minigameMiniStarsOnOff {
-	background-image:url(img/minigameministars.png);
-}
 .redSpaceOnOff {
 	background-image:url(img/redspace.png);
 }
@@ -567,7 +565,7 @@ body {
 	background-image:url(img/balloon.png);
 }
 .starsOnOff {
-	background-image:url(img/star.png);
+	background-image:url(img/stars.png);
 }
 .miniStarsOnOff {
 	background-image:url(img/ministar.png);
@@ -576,7 +574,7 @@ body {
 	background-image:url(img/banana.png);
 }
 .coinsOnOff {
-	background-image:url(img/coin.png);
+	background-image:url(img/coins.png);
 }
 
 .iconLabel {

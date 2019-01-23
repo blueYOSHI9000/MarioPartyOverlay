@@ -192,46 +192,6 @@ function slowHighlight (stars) {
 }
 
 /*
-* Replaces minigame coins with minigame wins or mini-stars.
-* 
-* @param {string} type Which one should be used.
-*/
-function minigameWins (type) {
-	if (type) {} else if (getValue('minigameWinsOnOff') == true) {
-		var type = 'Wins';
-	} else if (getValue('minigameMiniStarsOnOff') == true) {
-		var type = 'MiniStars';
-	} else {
-		var type = '';
-	}
-
-	if (getValue('minigame' + type + 'OnOff') == true) {
-		if (getValue('minigameOnOff') == false) {
-			editValue('minigameOnOff', true);
-			displayOnOff('minigame', false, true);
-		}
-		editValue('minigameWinsOnOff', false);
-		editValue('minigameMiniStarsOnOff', false);
-		editValue('minigame' + type + 'OnOff', true);
-	} else {
-		editValue('minigameWinsOnOff', false);
-		editValue('minigameMiniStarsOnOff', false);
-		type = '';
-	}
-
-	var source = 'img/minigame.png';
-	if (type == 'MiniStars') {
-		source = 'img/minigameministars.png';
-	} else if (type == 'Wins') {
-		source = 'img/minigamewins.png';
-	}
-	
-	for (let num = 1; num < 5; num++) {
-		document.getElementById('p' + num + 'MinigameDisplay').src = source;
-	}
-}
-
-/*
 * Updates the star counter image.
 * 
 * @param {string} image Which image should be used.
@@ -251,7 +211,7 @@ function changeStars (image) {
 		editValue('miniStarsOnOff', false);
 		source = 'img/banana.png';
 	} else {
-		source = 'img/star.png';
+		source = 'img/stars.png';
 	}
 
 	for (let num = 1; num < 5; num++) {
@@ -277,10 +237,7 @@ function displayOnOff (counter, start, force) {
 
 	if (getValue(counter + 'OnOff') == false) {
 		var displayVar = 'none';
-		if (counter == 'minigame' && (getValue('minigameWinsOnOff') == true || getValue('minigameMiniStarsOnOff') == true)) {
-			editValue('minigameWinsOnOff', false);
-			editValue('minigameMiniStarsOnOff', false);
-		} else if (counter == 'running' && getValue('slowOnOff') == true) {
+		if (counter == 'running' && getValue('slowOnOff') == true) {
 			editValue('slowOnOff', false);
 			highlight('running');
 		} else if (counter == 'stars' && getValue('inclBonusOnOff') == true) {
@@ -293,9 +250,6 @@ function displayOnOff (counter, start, force) {
 		}
 
 	} else {
-		if (counter == 'minigame') {
-			minigameWins()
-		}
 		var displayVar = '';
 	}
 

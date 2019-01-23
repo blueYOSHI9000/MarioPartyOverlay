@@ -1,22 +1,109 @@
+
+
 /*
-* Updates the characters.
+* Changes characters and their icons depending on the options selected.
 * 
-* @param {number} player Which player should be updated.
-* @param {boolean} character What character should be used.
+* @param {number} player Which player should be changed (only used when changing characters).
+* @param {string} character Which character should be used (only used when changing characters).
 */
 function changeCharacters (player, character) {
-	var selected = document.querySelector('input[name="icons"]:checked').value;
-	var charElement = document.getElementById(character + player);
-
-	characters[player] = character;
-
-	charElement.checked = true;
-
-	document.getElementById('p' + player + 'Img').src = 'img/' + selected + '/' + character + '.png';
-	coinStarTie();
+	if (getValue('customCharacterIcons') == true) {
+		for (let num = 1; num < 5; num++) {
+			if (player == num) {
+				characters[num] = character
+			}
+			if (curGame != 'all') {
+				document.getElementById('p' + num + 'Img').src = 'img/' + curGame + '/' + characters[num] + '.png';
+			} else {
+				document.getElementById('p' + num + 'Img').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[num] + '.png';
+			}
+		}
+	} else {
+		for (let num = 1; num < 5; num++) {
+			if (player == num) {
+				characters[num] = character
+			}
+			document.getElementById('p' + num + 'Img').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[num] + '.png';
+		}
+	}
 }
 
+/*
+* Changes character icon back in case there's no custom icon.
+*/
+function changeCharactersBackup (elem) {
+	var id = elem.id;
+
+	var player = id.split('');
+	document.getElementById(id).src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/'  + characters[player[1]] + '.png';
+}
+
+/*
+* Replaces counter icons with custom icons depending on the selected game.
+*/
 var characters = ['', 'mario', 'luigi', 'yoshi', 'peach'];
+function changeCounterIcons () {
+	if (getValue('customCounterIcons') == true) {
+		for (let num = 0; num < counters.length; num++) {
+			var elems = document.getElementsByClassName(counters[num]);
+
+			var onOffElems = document.getElementsByClassName(counters[num] + 'OnOff');
+			for (let num1 = 0; num1 < onOffElems.length; num1++) {
+				if (curGame != 'all') {
+					onOffElems[num1].style.backgroundImage = 'url(img/' + curGame + '/' + counters[num] + '.png)';
+				} else {
+					onOffElems[num1].style.backgroundImage = 'url(img/' + counters[num] + '.png)';
+				}
+			}
+
+			for (let num1 = 0; num1 < elems.length; num1++) {
+				elems[num1] = elems[num1].childNodes;
+				var elems2 = elems[num1].getElementsByTagName('img');
+
+				for (let num2 = 0; num2 < elems2.length; num2++) {
+					if (curGame != 'all') {
+						elems2[num2].src = 'img/' + curGame + '/' + counters[num] + '.png';
+					} else {
+						elems2[num2].src = 'img/' + counters[num] + '.png';
+					}
+				}
+			}
+		}
+	} else {
+		for (let num = 0; num < counters.length; num++) {
+			var elems = document.getElementsByClassName(counters[num]);
+
+			var onOffElems = document.getElementsByClassName(counters[num] + 'OnOff');
+			for (let num1 = 0; num1 < onOffElems.length; num1++) {
+				onOffElems[num1].style.backgroundImage = 'url(img/' + counters[num] + '.png)';
+			}
+
+			for (let num1 = 0; num1 < elems.length; num1++) {
+				elems[num1] = elems[num1].childNodes;
+				var elems2 = elems[num1].getElementsByTagName('img');
+
+				for (let num2 = 0; num2 < elems2.length; num2++) {
+					elems2[num2].src = 'img/' + counters[num] + '.png';
+				}
+			}
+		}
+	}
+}
+
+/*
+* Changes counter icon back in case there's no custom icon.
+*/
+function counterImgError (elem) {
+	var id = elem.id;
+	elem = elem.parentNode;
+	elem = elem.className.split(' ');
+	document.getElementById(id).src = 'img/' + elem[1] + '.png';
+
+	var elem2 = document.getElementById(elem[1] + 'OnOff');
+	elem2 = elem2.parentNode;
+
+	elem2.children[2].style = 'background-image: url(img/' + elem[1] + '.png);';
+}
 
 /*
 * Changes com status of a character.
@@ -137,6 +224,11 @@ function changeGame (game) {
 	} else {
 		showCounters.push(document.querySelectorAll('.happeningC'));
 	}
+	if (game == 'mp6' || game == 'mp7' || game == 'mp8' || game == 'mp9' || game == 'mp10' || game == 'mpds' || game == 'mpsr' || game == 'mptt100') {
+		hideCounters.push(document.querySelectorAll('.coinStarC'));
+	} else {
+		showCounters.push(document.querySelectorAll('.coinStarC'));
+	}
 	if (game == 'smp' || game ==  'all') {
 		showChars.push(document.querySelectorAll('.koopaSpan'));
 		showChars.push(document.querySelectorAll('.shyguySpan'));
@@ -235,6 +327,8 @@ function changeGame (game) {
 			showCounters[num][num2].style.visibility = 'visible';
 		}
 	}
+	changeCounterIcons()
+	changeCharacters()
 }
 var curGame = 'all';
 var pastResults = [];

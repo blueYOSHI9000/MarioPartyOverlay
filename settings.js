@@ -75,50 +75,6 @@ function changeTheme (theme) {
 }
 
 /*
-* Changes the icon style.
-* 
-* @param {string} id Where it got called from.
-* @param {string} selected Which icons should be used.
-*/
-function changeIcons (id, selected) {
-	if (selected) {} else {
-		selected = getSelectedIcon(id);
-	}
-	var charImg = document.querySelectorAll('.characterImg');
-
-	editValue(selected, true);
-	editValue(selected + '2', true);
-
-	for (var num = 0; num < charImg.length; num++) {
-		var charImgSrc = charImg[num].src;
-
-		charImgSrc = charImgSrc.split('');
-		var result = [];
-		for (var num2 = charImgSrc.length; num2 > 0; num2--) {
-			if (charImgSrc[num2] == '/') {
-				break;
-			} else {
-				result.push(charImgSrc[num2]);
-			}
-		}
-		charImgSrc = charImgSrc.join('');
-		result = charImgSrc.substring(charImgSrc.length - result.length);
-		charImg[num].src = ['img/', selected, '/', result].join('');
-	}
-	coinStarTie();
-}
-
-function getSelectedIcon (id) {
-	id = id.charAt(0).toUpperCase() + id.slice(1);
-	if (getValue('mpsr' + id) == true) {
-		return 'mpsr' + id;
-	} else if (getValue('mk8' + id) == true) {
-		return 'mk8' + id;
-	}
-	return false;
-}
-
-/*
 * Changes background color if greenscreen is used.
 * 
 * @param {string} id Id of the input element that changed its value.
@@ -129,9 +85,6 @@ function changeBGColor (id) {
 		document.getElementById('bodyElement').style.background = bgColor;
 	}
 	editValue('bgColor', bgColor);
-	editValue('bgColorPick', bgColor);
-
-	document.getElementById('colorPickerBG').style = 'background-color: ' + bgColor + ';';
 }
 
 
@@ -170,7 +123,6 @@ function changeTextColor (id) {
 	}
 
 	editValue('textColor', color);
-	editValue('textColorTest', color);
 	callHighlight();
 }
 
