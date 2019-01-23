@@ -13,9 +13,9 @@ function changeCharacters (player, character) {
 				characters[num] = character
 			}
 			if (curGame != 'all') {
-				document.getElementById('p' + num + 'Img').src = 'img/' + curGame + '/' + characters[num] + '.png';
+				document.getElementById('p' + num + 'Img').src = 'img/' + curGame + '/' + characters[num].toLowerCase()  + '.png';
 			} else {
-				document.getElementById('p' + num + 'Img').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[num] + '.png';
+				document.getElementById('p' + num + 'Img').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[num].toLowerCase()  + '.png';
 			}
 		}
 	} else {
@@ -23,7 +23,7 @@ function changeCharacters (player, character) {
 			if (player == num) {
 				characters[num] = character
 			}
-			document.getElementById('p' + num + 'Img').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[num] + '.png';
+			document.getElementById('p' + num + 'Img').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[num].toLowerCase()  + '.png';
 		}
 	}
 }
@@ -35,7 +35,7 @@ function changeCharactersBackup (elem) {
 	var id = elem.id;
 
 	var player = id.split('');
-	document.getElementById(id).src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/'  + characters[player[1]] + '.png';
+	document.getElementById(id).src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/'  + characters[player[1]].toLowerCase()  + '.png';
 }
 
 /*
@@ -50,9 +50,9 @@ function changeCounterIcons () {
 			var onOffElems = document.getElementsByClassName(counters[num] + 'OnOff');
 			for (let num1 = 0; num1 < onOffElems.length; num1++) {
 				if (curGame != 'all') {
-					onOffElems[num1].style.backgroundImage = 'url(img/' + curGame + '/' + counters[num] + '.png)';
+					onOffElems[num1].style.backgroundImage = 'url(img/' + curGame + '/' + counters[num].toLowerCase() + '.png)';
 				} else {
-					onOffElems[num1].style.backgroundImage = 'url(img/' + counters[num] + '.png)';
+					onOffElems[num1].style.backgroundImage = 'url(img/' + counters[num].toLowerCase()  + '.png)';
 				}
 			}
 
@@ -75,7 +75,7 @@ function changeCounterIcons () {
 
 			var onOffElems = document.getElementsByClassName(counters[num] + 'OnOff');
 			for (let num1 = 0; num1 < onOffElems.length; num1++) {
-				onOffElems[num1].style.backgroundImage = 'url(img/' + counters[num] + '.png)';
+				onOffElems[num1].style.backgroundImage = 'url(img/' + counters[num].toLowerCase()  + '.png)';
 			}
 
 			for (let num1 = 0; num1 < elems.length; num1++) {
@@ -83,7 +83,7 @@ function changeCounterIcons () {
 				var elems2 = elems[num1].getElementsByTagName('img');
 
 				for (let num2 = 0; num2 < elems2.length; num2++) {
-					elems2[num2].src = 'img/' + counters[num] + '.png';
+					elems2[num2].src = 'img/' + counters[num].toLowerCase()  + '.png';
 				}
 			}
 		}
@@ -97,12 +97,12 @@ function counterImgError (elem) {
 	var id = elem.id;
 	elem = elem.parentNode;
 	elem = elem.className.split(' ');
-	document.getElementById(id).src = 'img/' + elem[1] + '.png';
+	document.getElementById(id).src = 'img/' + elem[1].toLowerCase()  + '.png';
 
 	var elem2 = document.getElementById(elem[1] + 'OnOff');
 	elem2 = elem2.parentNode;
 
-	elem2.children[2].style = 'background-image: url(img/' + elem[1] + '.png);';
+	elem2.children[2].style = 'background-image: url(img/' + elem[1].toLowerCase()  + '.png);';
 }
 
 /*
