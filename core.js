@@ -133,7 +133,6 @@ function mobileButtons (counter, player) {
 * @param {string} amount The amount that should be changed.
 */
 var bonusStars = ['', 0, 0, 0, 0];
-
 function updateStars (player, action, amount) {
 	if (getValue('starsOnOff') == false && getValue('inclBonusOnOff') == true) {
 		editValue('starsOnOff', true);
@@ -170,6 +169,12 @@ function updateStars (player, action, amount) {
 	if (activated == true) {
 		bonusStars = ['', 0, 0, 0, 0];
 		callHighlight(false, false, true);
+
+		for (let num = 1; num < 5; num++) {
+			if (getValue('p' + num + 'CoinStarTie') == true) {
+				bonusStars[num]++
+			}
+		}
 
 		if (getValue('miniStarsOnOff') == true) {
 			for (let num = 1; num < 5; num++) {
@@ -418,4 +423,5 @@ function coinStarTie (player) {
 		document.getElementById('coinStarTie3').src = 'img/' + icons + '/' + tied[2] + '.png';
 		document.getElementById('coinStarTie4').src = 'img/' + icons + '/' + tied[3] + '.png';
 	}
+	updateStars();
 }
