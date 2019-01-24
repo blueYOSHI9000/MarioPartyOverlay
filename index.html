@@ -307,7 +307,7 @@
 					<label for="autoPopout"> <span class="settingsText"> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="sendSettingsMsg(this.id, this.checked)"> </label> <br> <br>
 					
 					<span class="settingsText"> Background: </span> <button id="themeB1" class="themeButtons" onclick="changeSettings('changeTheme', [1])" style="border-color: green;" disabled></button> <button id="themeB2" class="themeButtons" onclick="changeSettings('changeTheme', [2])"></button> <button id="themeB3" class="themeButtons" onclick="changeSettings('changeTheme', [3])"> </button> <br>
-					<span class="settingsText" style="position: relative; top: -13px;"> Icons style: </span> 
+					<span class="settingsText" style="position: relative; top: -13px;"> Default icon style: </span> 
 						<span class="charSelector">
 							<span class="relative">
 								<input type="radio" name="icons" id="mpsrIcons" value="mpsrIcons" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('changeCharacters')" checked>
@@ -319,8 +319,8 @@
 							</span>
 						</span> <br>
 
-					<label for="customCounterIcons"> <span class="settingsText"> Use counter icons depending on selected game if available: </span> </label> <input type="checkbox" id="customCounterIcons" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('changeCounterIcons')"> <br>
-					<label for="customCharacterIcons"> <span class="settingsText"> Use character icons depending on selected game if available: </span> </label> <input type="checkbox" id="customCharacterIcons" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('changeCharacters')"> <br> <br>
+					<label for="customCharacterIcons"> <span class="settingsText"> Use character icons based on the selected game if available: </span> </label> <input type="checkbox" id="customCharacterIcons" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('changeCharacters')"> <br>
+					<label for="customCounterIcons"> <span class="settingsText"> Use counter icons based on the selected game if available: </span> </label> <input type="checkbox" id="customCounterIcons" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('changeCounterIcons')"> <br> <br>
 
 
 
@@ -932,7 +932,8 @@
 
 					<span style="font-size: 21px; margin-left: 50px;"><a class="settingsLink" rel="noopener" target="_blank" href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Mario-Party-Bonus-Star-List">Bonus Star List</a></span>
 				</div>
-				<div id="tutorialSettings" class="hidden"> <span class="settingsText"> Click on the numbers to increase the counters, by holding Ctrl you can decrease them instead. The amount can be changed at the top (1, 5 or 10). <br> <br>
+				<div id="tutorialSettings" class="hidden"> <span class="settingsText"> Click on the numbers to increase the counters, by holding Ctrl you can decrease them instead. The amount can be changed at the top (1, 5 or 10). <br class="lineHeight">
+					To give/take the coin-star you just click on the character. <br> <br>
 					The "Generate & Copy" button outputs all stats as text and copies it. <br class="lineHeight">
 					The Save/Reload buttons well... save and reload! It saves all stats and reloads them. If activated in the settings, they will be saved in your browser too and automatically loaded the next time you open the site. <br> <br>
 
