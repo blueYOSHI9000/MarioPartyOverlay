@@ -206,16 +206,49 @@ function changeStars (image) {
 
 	if (image == 'miniStars' && getValue('miniStarsOnOff') == true) {
 		editValue('bananasOnOff', false);
-		source = 'img/ministar.png';
+		source = 'ministar';
 	} else if (image == 'bananas' && getValue('bananasOnOff') == true) {
 		editValue('miniStarsOnOff', false);
-		source = 'img/banana.png';
+		source = 'banana';
 	} else {
-		source = 'img/stars.png';
+		source = 'stars';
 	}
 
 	for (let num = 1; num < 5; num++) {
-		document.getElementById('p' + num + 'StarsDisplay').src = source;
+		if (curGame != 'all') {
+			document.getElementById('p' + num + 'StarsDisplay').src = 'img/' + curGame + '/' + source + '.png';
+		} else {
+			document.getElementById('p' + num + 'StarsDisplay').src = 'img/' + source + '.png';
+		}
+	}
+}
+
+/*
+* Uses default icon for star counter in case a custom one doesn't exist.
+*/
+function changeStarsError (elem) {
+	var id = elem.id;
+	if (getValue('miniStarsOnOff') == true) {
+		document.getElementById(id).src = 'img/ministar.png';
+	} else if (getValue('bananasOnOff') == true) {
+		document.getElementById(id).src = 'img/banana.png';
+	} else {
+		document.getElementById(id).src = 'img/stars.png';
+	}
+	for (let num = 0; num < 3; num++) {
+		switch (num) {
+			case 0:
+				elem = 'ministar';
+			case 1:
+				elem = 'banana';
+			case 2:
+				elem = 'stars';
+		}
+
+	var elem2 = document.getElementById(elem + 'OnOff');
+	elem2 = elem2.parentNode;
+
+	elem2.children[2].style = 'background-image: url(img/' + elem + '.png);';
 	}
 }
 
