@@ -26,6 +26,7 @@ function changeCharacters (player, character) {
 			document.getElementById('p' + num + 'Img').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[num].toLowerCase()  + '.png';
 		}
 	}
+	coinStarTie();
 }
 
 /*
