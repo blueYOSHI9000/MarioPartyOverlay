@@ -650,7 +650,7 @@ body {
 
 @media screen and (max-width: 771px) {
 	#gameSelectorDiv { font-size: 2.3vw; }
-	#gameSelectorDiv input { height: 1.7vw; width: 1.7vw; }
+	#gameSelectorDiv input { visibility: hidden; /*height: 1.7vw; width: 1.7vw;*/ }
 	.settingsSelection { font-size: 3.4vw; }
 	.gameLabel { font-size: 2.3vw; height: 3.2vw; width: 3.2vw }
 	#mp1 { margin-left: 3vw; }
