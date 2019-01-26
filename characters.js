@@ -93,6 +93,11 @@ function changeCounterIcons () {
 				}
 			}
 		}
+		if (curGame != 'all') {
+			document.getElementById('coinStar').src = 'img/' + curGame + '/coins.png';
+		} else {
+			document.getElementById('coinStar').src = 'img/coins.png';
+		}
 	} else {
 		for (let num = 0; num < counters.length; num++) {
 			var elems = document.getElementsByClassName(counters[num]);
@@ -111,6 +116,11 @@ function changeCounterIcons () {
 				}
 			}
 		}
+		if (curGame != 'all') {
+			document.getElementById('coinStar').src = 'img/' + curGame + '/coins.png';
+		} else {
+			document.getElementById('coinStar').src = 'img/coins.png';
+		}
 	}
 }
 
@@ -127,6 +137,12 @@ function counterImgError (elem) {
 	elem2 = elem2.parentNode;
 
 	elem2.children[2].style = 'background-image: url(img/' + elem[1].toLowerCase()  + '.png);';
+	if (elem[1].toLowerCase() == 'coins') {
+		elem2 = document.getElementById('coinStarOnOff');
+		elem2 = elem2.parentNode;
+
+		elem2.children[2].style = 'background-image: url(img/' + elem[1].toLowerCase()  + '.png);';
+	}
 }
 
 /*

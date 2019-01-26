@@ -647,6 +647,22 @@ body {
 	width: 51px;
 }
 
+@media screen and (max-width: 771px) {
+	#gameSelectorDiv { font-size: 2.3vw; }
+	#gameSelectorDiv input { height: 1.7vw; width: 1.7vw; }
+	.settingsSelection { font-size: 3.4vw; }
+	.gameLabel { font-size: 2.3vw; height: 3.2vw; width: 3.2vw }
+	#mp1 { margin-left: 3vw; }
+	.mp1 { width: 2.3vw; margin-left: 3vw; }
+	.mp10 { width: 5.3vw; }
+	.mpa { width: 7.8vw; }
+	.mpds { width: 6.4vw; }
+	.mpit { width: 4vw; }
+	.mpsr { width: 6.2vw; }
+	.mptt100 { width: 6.2vw; }
+	.smp { width: 6.6vw; }
+}
+
 /* == Themes == (Previews are 40x19px) */
 .themeButtons {
 	width: 44px;
