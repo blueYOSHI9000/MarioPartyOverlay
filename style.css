@@ -53,14 +53,20 @@ body {
 }
 .characterImg {
 	margin-right: 65px;
-	width: 120px;
+	width: 116px;
+	padding-left: 2px;
+	padding-right: 2px;
 }
 .comImg {
 	width: 120px;
 	position: absolute;
 	display: inline;
-	top: 77px;
+	top: 87px;
 	opacity: 0;
+}
+.characterDiv {
+	position: relative;
+	margin-bottom: 10px;
 }
 .stars {
 	position: absolute;
