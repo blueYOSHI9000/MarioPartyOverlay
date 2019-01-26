@@ -632,8 +632,8 @@ function resetSettings () {
 	editValue('enableInteract', false);
 	editValue('autoPopout', false);
 	editValue('mpsrIcons', true);
-	editValue('customCounterIcons', false);
-	editValue('customCharacterIcons', false);
+	editValue('customCounterIcons', true);
+	editValue('customCharacterIcons', true);
 	editValue('greenscreen', false);
 	editValue('bgColor', '#0000FF');
 	editValue('textColor', '#ffffff');

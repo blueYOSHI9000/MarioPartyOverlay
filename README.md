@@ -4,21 +4,21 @@ Mario Party Overlay is a highly customizable and easy to use 'Bonus Star' tracke
 **[Website](https://blueyoshi9000.github.io/MarioPartyOverlay/)**   
 
 # How to use?
-You'll probably figure it out on your own anyway, it's not like there's a self-destruct button...
-
-You can click on the numbers to increase it (called counters). By holding Ctrl or checking the 'Minus' checkbox it decreases the counters instead.
-To change the amount added/subtracted you can click on the numbers at the top, pressing the number on the numpad changes it too (0 for 10).
+Click on the numbers to increase the counters, by holding Ctrl you can decrease them instead. The amount can be changed at the top (1, 5 or 10).  
 To give/take the coin-star you just click on the character.
 
-The "Generate & Copy" button outputs all counters as text, and copies it, so you can paste it in a stream chat to track the Bonus Stars for them as a example.
-The Save/Reload buttons well... save and reload! It saves all counters (not characters, not settings, only counters) and reloads them. If activated in the settings, they will be saved in your browser too and automatically loaded the next time you open the site.
+The "Generate & Copy" button outputs all stats as text and copies it.  
+The Save/Reload buttons well... save and reload! It saves all stats and reloads them. If activated in the settings, they will be saved in your browser too and automatically loaded the next time you open the site.
 
 Note: All settings are applied immediately, the save button will only save it permanently as otherwise they get reset when you refresh the site.
 
 # Credits
 Created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000)  
 Default icons created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000) using official artwork and insprired by [Mario Party Legacy](https://mariopartylegacy.com/)  
-Mario Kart 8 Deluxe icons ripped by [Random Talking Bush](https://twitter.com/RandomTBush) and edited by [RicoDexter](https://twitter.com/Der_RicoDexter) & [blueYOSHI9000](https://www.twitter.com/blueyoshi9000)
+Mario Kart 8 Deluxe icons ripped by [Random Talking Bush](https://twitter.com/RandomTBush) and edited by [RicoDexter](https://twitter.com/Der_RicoDexter) & [blueYOSHI9000](https://www.twitter.com/blueyoshi9000)  
+Super Mario Party character icons ripped by [xX-CamTro-Xx](https://www.spriters-resource.com/submitter/xX-CamTro-Xx/)  
+Mario Party 9 character icons ripped by [larsenv](https://www.spriters-resource.com/submitter/larsenv/)  
+Mario Party DS icons ripped by [FieryExplosion](https://www.spriters-resource.com/submitter/FieryExplosion/) & [Anonymous](https://www.spriters-resource.com/submitter/Anonymous/)
 
 [Font](https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx)  
 [Interact.js](http://interactjs.io/) (enables drag 'n' drop)

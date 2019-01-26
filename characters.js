@@ -10,23 +10,46 @@ function changeCharacters (player, character) {
 	if (getValue('customCharacterIcons') == true) {
 		for (let num = 1; num < 5; num++) {
 			if (player == num) {
-				characters[num] = character
+				characters[num] = character;
+				editValue(character + num, true);
 			}
 			if (curGame != 'all') {
-				document.getElementById('p' + num + 'Img').src = 'img/' + curGame + '/' + characters[num].toLowerCase()  + '.png';
+				document.getElementById('p' + num + 'Img').src = 'img/' + curGame + '/' + characters[num].toLowerCase() + '.png';
 			} else {
-				document.getElementById('p' + num + 'Img').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[num].toLowerCase()  + '.png';
+				document.getElementById('p' + num + 'Img').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[num].toLowerCase() + '.png';
 			}
 		}
 	} else {
 		for (let num = 1; num < 5; num++) {
 			if (player == num) {
-				characters[num] = character
+				characters[num] = character;
 			}
-			document.getElementById('p' + num + 'Img').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[num].toLowerCase()  + '.png';
+			document.getElementById('p' + num + 'Img').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[num].toLowerCase() + '.png';
 		}
 	}
 	coinStarTie();
+}
+
+/*
+* Changes COM Image depending on selected game.
+*/
+function changeComImg () {
+	for (let num = 1; num < 5; num++) {
+		if (curGame != 'all') {
+			document.getElementById('p' + num + 'ComDisplay').src = 'img/' + curGame + '/com.png';
+		} else {
+			document.getElementById('p' + num + 'ComDisplay').src = 'img/com.png';
+		}
+	}
+}
+
+/*
+* Changes COM image back in case there's no custom one.
+*/
+function changeComImgError () {
+	for (let num = 1; num < 5; num++) {
+		document.getElementById('p' + num + 'ComDisplay').src = 'img/com.png';
+	}
 }
 
 /*
@@ -36,7 +59,7 @@ function changeCharactersBackup (elem) {
 	var id = elem.id;
 
 	var player = id.split('');
-	document.getElementById(id).src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/'  + characters[player[1]].toLowerCase()  + '.png';
+	document.getElementById(id).src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/'  + characters[player[1]].toLowerCase() + '.png';
 }
 
 /*
@@ -328,8 +351,9 @@ function changeGame (game) {
 			showCounters[num][num2].style.visibility = 'visible';
 		}
 	}
-	changeCounterIcons()
-	changeCharacters()
+	changeCounterIcons();
+	changeCharacters();
+	changeComImg();
 }
 var curGame = 'all';
 var pastResults = [];
