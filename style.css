@@ -277,6 +277,7 @@ body {
 	display: flex;
 	width: 100%;
 	max-width: 1044px;
+	margin-bottom: 10px;
 }
 
 #settings {
