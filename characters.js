@@ -86,9 +86,9 @@ function changeCounterIcons () {
 
 				for (let num2 = 0; num2 < elems2.length; num2++) {
 					if (curGame != 'all') {
-						elems2[num2].src = 'img/' + curGame + '/' + counters[num] + '.png';
+						elems2[num2].src = 'img/' + curGame + '/' + counters[num].toLowerCase() + '.png';
 					} else {
-						elems2[num2].src = 'img/' + counters[num] + '.png';
+						elems2[num2].src = 'img/' + counters[num].toLowerCase() + '.png';
 					}
 				}
 			}
