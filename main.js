@@ -391,7 +391,7 @@ function windowOnClick (event) {
 }
 
 /*
-* Checks if Ctrl is pressed.
+* Checks if Ctrl & Shift is pressed.
 */
 function ctrlPressed (e) {
 	if (e.ctrlKey && ctrlKeyVar == false) {
@@ -400,6 +400,14 @@ function ctrlPressed (e) {
 			editValue('mobileTypeMinus', true);
 		} else if (getValue('mobileTypeMinus') == true) {
 			editValue('mobileTypeMinus', false);
+		}
+	} else if (e.shiftKey && shiftKeyVar == false) {
+		if (getValue('type1') == true) {
+			shiftKeyVar = true;
+			editValue('type5', true);
+		} else if (getValue('type5') == true) {
+			shiftKeyVar = true;
+			editValue('type1', true);
 		}
 	} else if (e.key == '1') {
 		editValue('type1', true);
@@ -411,20 +419,28 @@ function ctrlPressed (e) {
 }
 
 /*
-* Checks if Ctrl is released.
+* Checks if Ctrl & Shift is released.
 */
 function ctrlReleased (e) {
-	if (ctrlKeyVar == true) {
+	if (e.key == 'Control' && ctrlKeyVar == true) {
 		ctrlKeyVar = false
 		if (getValue('mobileTypeMinus') == false) {
 			editValue('mobileTypeMinus', true);
 		} else if (getValue('mobileTypeMinus') == true) {
 			editValue('mobileTypeMinus', false);
 		}
+	} else if (e.key == 'Shift' && shiftKeyVar == true) {
+		shiftKeyVar = false;
+		if (getValue('type5') == true) {
+			editValue('type1', true);
+		} else if (getValue('type1') == true) {
+			editValue('type5', true);
+		}
 	}
 }
 
 var ctrlKeyVar = false;
+var shiftKeyVar = false;
 window.onkeydown = ctrlPressed;
 window.onkeyup = ctrlReleased;
 

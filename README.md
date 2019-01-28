@@ -5,6 +5,7 @@ Mario Party Overlay is a highly customizable and easy to use 'Bonus Star' tracke
 
 # How to use?
 Click on the numbers to increase the counters, by holding Ctrl you can decrease them instead. The amount can be changed at the top (1, 5 or 10).  
+It's possible to switch between 1 and 5 by holding Shift, if one of the two is selected.  
 To give/take the coin-star you just click on the character.
 
 The "Generate & Copy" button outputs all stats as text and copies it.  
