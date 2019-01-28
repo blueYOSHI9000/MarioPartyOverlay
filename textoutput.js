@@ -153,7 +153,7 @@ function textOutput () {
 					} else {
 						if (counterNum == counterP1) {
 							result.push(playerName[1]);
-							resultNum.push(document.getElementById('p1' + toCounters[num] + 'Input').innerHTML);
+							resultNum.push(document.getElementById('p1' + toCounters[num] + 'Text').innerHTML);
 						}
 
 						if (counterNum == counterP2) {
@@ -178,10 +178,6 @@ function textOutput () {
 						output[num] = counterNames[num] + ': ' + resultString;
 
 					} else {
-						//var forNum = toCounters.length++;
-						
-						//console.log('forResult: ' + forResult);
-
 						switch (result.length) {
 							case 1:
 								forResult.push(counterNames[num] + ': ' + result[0] + ' ' + resultNum[0]);

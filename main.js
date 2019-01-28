@@ -283,7 +283,11 @@ function displayOnOff (counter, start, force) {
 		}
 
 	} else {
-		var displayVar = '';
+		if (counter == 'coinStar') {
+			var displayVar = '';
+		} else {
+			var displayVar = 'block';
+		}
 	}
 
 	if (counter == 'coinStar') {

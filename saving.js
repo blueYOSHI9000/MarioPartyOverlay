@@ -282,7 +282,6 @@ function saveCounters () {
 	localStorage.setItem('maxTurn', document.getElementById('maxTurnText').innerHTML);
 
 	for (let num2 = 0; num2 < 19; num2++) {
-			console.log(countersShort[num2] + ', ' + num2)
 		for (let num = 1; num < 5; num++) {
 			localStorage.setItem(countersShort[num2] + num, document.getElementById('p' + num + countersUp[num2] + 'Text').innerHTML);
 		}
