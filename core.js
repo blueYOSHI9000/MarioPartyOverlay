@@ -215,20 +215,22 @@ function updateCoins (player) {
 	var result = parseInt(document.getElementById('p' + player + 'CoinsText').innerHTML);
 	var coinStar = parseInt(document.getElementById('coinStarText').innerHTML);
 
-	if (result == coinStar) {
-		if (getValue('p' + player + 'CoinStarTie') == true) {} else {
+	if (getValue('coinStarOnOff') == true) {
+		if (result == coinStar) {
+			if (getValue('p' + player + 'CoinStarTie') == true) {} else {
+				editValue('p' + player + 'CoinStarTie', true);
+			}
+		} else if (result > coinStar) {
+			editValue('p1CoinStarTie', false);
+			editValue('p2CoinStarTie', false);
+			editValue('p3CoinStarTie', false);
+			editValue('p4CoinStarTie', false);
 			editValue('p' + player + 'CoinStarTie', true);
-		}
-	} else if (result > coinStar) {
-		editValue('p1CoinStarTie', false);
-		editValue('p2CoinStarTie', false);
-		editValue('p3CoinStarTie', false);
-		editValue('p4CoinStarTie', false);
-		editValue('p' + player + 'CoinStarTie', true);
 
-		updateCounter('coinStarText', result);
+			updateCounter('coinStarText', result);
+		}
+		coinStarTie();
 	}
-	coinStarTie();
 }
 
 /*

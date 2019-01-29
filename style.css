@@ -255,7 +255,7 @@ body {
 	white-space: nowrap;
 }
 .counterSelection span:not(.flexAuto) {
-	width: 300px;
+	width: 310px;
 }
 #ingameCounters {
 	font-size: 27px;

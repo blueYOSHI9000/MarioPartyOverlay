@@ -245,10 +245,15 @@ function changeStarsError (elem) {
 				elem = 'stars';
 		}
 
-	var elem2 = document.getElementById(elem + 'OnOff');
+	var elem2 = document.getElementById('starsOnOff');
 	elem2 = elem2.parentNode;
 
-	elem2.children[2].style = 'background-image: url(img/' + elem + '.png);';
+	elem2.children[2].style = 'background-image: url(img/stars.png);';
+
+	elem2 = document.getElementById('inclBonusOnOff');
+	elem2 = elem2.parentNode;
+
+	elem2.children[2].style = 'background-image: url(img/stars.png);';
 	}
 }
 
@@ -292,6 +297,13 @@ function displayOnOff (counter, start, force) {
 
 	if (counter == 'coinStar') {
 		document.getElementById('coinStarFullDiv').style.display = displayVar;
+		if (getValue('coinStarOnOff') == false) {
+			editValue('p1CoinStarTie', false);
+			editValue('p2CoinStarTie', false);
+			editValue('p3CoinStarTie', false);
+			editValue('p4CoinStarTie', false);
+			coinStarTie();
+		}
 		return;
 	}
 

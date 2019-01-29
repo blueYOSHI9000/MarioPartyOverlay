@@ -137,11 +137,19 @@ function counterImgError (elem) {
 	elem2 = elem2.parentNode;
 
 	elem2.children[2].style = 'background-image: url(img/' + elem[1].toLowerCase()  + '.png);';
-	if (elem[1].toLowerCase() == 'coins') {
+	console.log(elem[1])
+	if (elem[1] == 'coins') {
 		elem2 = document.getElementById('coinStarOnOff');
 		elem2 = elem2.parentNode;
 
-		elem2.children[2].style = 'background-image: url(img/' + elem[1].toLowerCase()  + '.png);';
+		elem2.children[2].style = 'background-image: url(img/coins.png);';
+	} else if (elem[1] == 'running') {
+		elem2 = document.getElementById('slowOnOff');
+		console.log(elem2)
+		elem2 = elem2.parentNode;
+		console.log(elem2)
+
+		elem2.children[2].style = 'background-image: url(img/running.png);';
 	}
 }
 
