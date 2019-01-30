@@ -348,6 +348,7 @@ function saveSettings (close) {
 	localStorage.setItem('noTie', getValue('noTie'));
 	localStorage.setItem('autoSave', getValue('autoSave'));
 	localStorage.setItem('permSave', getValue('permSave'));
+	localStorage.setItem('deactivateUnused', getValue('deactivateUnused'));
 
 	localStorage.setItem('toP1Name', getValue('toP1Name'));
 	localStorage.setItem('toP2Name', getValue('toP2Name'));
@@ -431,6 +432,7 @@ function prepareMPO () {
 		editValue('noTie', stringToBoolean(localStorage.getItem('noTie')));
 		editValue('autoSave', stringToBoolean(localStorage.getItem('autoSave')));
 		editValue('permSave', stringToBoolean(localStorage.getItem('permSave')));
+		editValue('deactivateUnused', stringToBoolean(localStorage.getItem('deactivateUnused')));
 
 		editValue('toP1Name', localStorage.getItem('toP1Name'));
 		editValue('toP2Name', localStorage.getItem('toP2Name'));
@@ -641,6 +643,7 @@ function resetSettings () {
 	editValue('enableAnimation', true);
 	editValue('noTie', false);
 	editValue('autoSave', false);
+	editValue('deactivateUnused', true);
 	if (prepared != true) {} else {
 		editValue('permSave', true);
 	}
@@ -684,6 +687,7 @@ function resetSettings () {
 	localStorage.setItem('noTie', getValue('noTie'));
 	localStorage.setItem('autoSave', getValue('autoSave'));
 	localStorage.setItem('permSave', getValue('permSave'));
+	localStorage.setItem('deactivateUnused', getValue('deactivateUnused'));
 
 	localStorage.setItem('toP1Name', getValue('toP1Name'));
 	localStorage.setItem('toP2Name', getValue('toP2Name'));

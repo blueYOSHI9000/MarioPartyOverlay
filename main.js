@@ -199,6 +199,19 @@ function slowHighlight (stars) {
 function changeStars (image) {
 	var source = '';
 
+	if (image) {} else {
+		if (curGame == 'mp10') {
+			if (getValue('miniStarsOnOff') == true) {
+				image = 'miniStars';
+				editValue('bananasOnOff', false);
+			} else {
+				image = 'stars';
+				editValue('bananasOnOff', false);
+				editValue('miniStarsOnOff', false);
+			}
+		}
+	}
+
 	if ((getValue('miniStarsOnOff') == true || getValue('bananasOnOff') == true) && getValue('starsOnOff') == false) {
 		editValue('starsOnOff', true);
 		displayOnOff('stars', false, true);

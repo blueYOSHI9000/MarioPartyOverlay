@@ -137,7 +137,6 @@ function counterImgError (elem) {
 	elem2 = elem2.parentNode;
 
 	elem2.children[2].style = 'background-image: url(img/' + elem[1].toLowerCase()  + '.png);';
-	console.log(elem[1])
 	if (elem[1] == 'coins') {
 		elem2 = document.getElementById('coinStarOnOff');
 		elem2 = elem2.parentNode;
@@ -145,9 +144,7 @@ function counterImgError (elem) {
 		elem2.children[2].style = 'background-image: url(img/coins.png);';
 	} else if (elem[1] == 'running') {
 		elem2 = document.getElementById('slowOnOff');
-		console.log(elem2)
 		elem2 = elem2.parentNode;
-		console.log(elem2)
 
 		elem2.children[2].style = 'background-image: url(img/running.png);';
 	}
@@ -378,9 +375,61 @@ function changeGame (game) {
 	changeCounterIcons();
 	changeCharacters();
 	changeComImg();
+	if (getValue('deactivateUnused') == true) {
+		deactivateUnused();
+	}
 }
 var curGame = 'all';
 var pastResults = [];
+
+/*
+* Deactivates all counters not used by the current game.
+*/
+function deactivateUnused () {
+	var unused;
+	switch (curGame) {
+		case 'mp1':
+		case 'mp2':
+		case 'mp3':
+		case 'mp4':
+		case 'mp5':
+			unused = ['redSpace', 'running', 'slow', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'balloon', 'miniStars', 'bananas'];
+			break;
+		case 'mp6':
+			unused = ['coinStar', 'redSpace', 'running', 'slow', 'shopping', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'balloon', 'miniStars', 'bananas'];
+			break;
+		case 'mp7':
+			unused = ['coinStar', 'slow', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'balloon', 'miniStars', 'bananas'];
+			break;
+		case 'mp8':
+			unused = ['coinStar', 'slow', 'orb', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'balloon', 'miniStars', 'bananas'];
+			break;
+		case 'mp9':
+			unused = ['coinStar', 'redSpace', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'ally', 'stompy', 'doormat', 'balloon'];
+			break;
+		case 'mp10':
+			unused = ['coinStar', 'redSpace', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'ally', 'stompy', 'doormat', 'balloon', 'miniStars'];
+			break;
+		case 'mpds':
+			unused = ['coinStar', 'redSpace', 'slow', 'orb', 'candy', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'balloon', 'miniStars', 'bananas'];
+			break;
+		case 'mpsr':
+		case 'mptt100':
+			unused = ['coinStar', 'happening', 'minigame', 'redSpace', 'shopping', 'orb', 'candy', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
+			break;
+		case 'smp':
+			unused = ['shopping', 'orb', 'candy', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'balloon', 'miniStars', 'bananas'];
+			break;
+		default:
+			return;
+	}
+	for (var num = 0; num < unused.length; num++) {
+		editValue(unused[num] + 'OnOff', false);
+	}
+	callDisplayOnOff();
+	changeStars();
+
+}
 
 /*
 * Gets a random number in a specified range and checks if it's a duplicate.
