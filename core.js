@@ -64,7 +64,7 @@ function counterButtons (player, action, amount, counter) {
 	if (getValue('starsOnOff') == true && getValue('inclBonusOnOff') == true) {
 		updateStars();
 	}
-	if (getValue('coinsOnOff') == true) {
+	if (getValue('coinsOnOff') == true && counter == 'Coins') {
 		updateCoins(player);
 	}
 }

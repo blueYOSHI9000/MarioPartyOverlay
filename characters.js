@@ -9,22 +9,31 @@
 function changeCharacters (player, character) {
 	if (getValue('customCharacterIcons') == true) {
 		for (let num = 1; num < 5; num++) {
-			if (player == num) {
-				characters[num] = character;
-				editValue(character + num, true);
+			if (player) {
+				characters[player] = character;
+				editValue(character + player, true);
+				num = player;
 			}
 			if (curGame != 'all') {
 				document.getElementById('p' + num + 'Img').src = 'img/' + curGame + '/' + characters[num].toLowerCase() + '.png';
 			} else {
 				document.getElementById('p' + num + 'Img').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[num].toLowerCase() + '.png';
 			}
+			if (player) {
+				break;
+			}
 		}
 	} else {
 		for (let num = 1; num < 5; num++) {
-			if (player == num) {
-				characters[num] = character;
+			if (player) {
+				characters[player] = character;
+				editValue(character + player, true);
+				num = player;
 			}
 			document.getElementById('p' + num + 'Img').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[num].toLowerCase() + '.png';
+			if (player) {
+				break;
+			}
 		}
 	}
 	coinStarTie();
