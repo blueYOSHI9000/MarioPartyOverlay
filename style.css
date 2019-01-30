@@ -319,6 +319,10 @@ body {
 	background: no-repeat url(img/settings-bg.png), #F3F3F3;
 	display: flex;
 	flex-direction: column;
+	white-space: nowrap;
+}
+#tutorialSettings {
+	white-space: normal;
 }
 
 #colorPickTest {
