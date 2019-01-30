@@ -398,7 +398,7 @@ function coinStarTie (player) {
 		document.getElementById('coinStarCharacter').src = 'img/' + icons + '/' + tied[0] + '.png';
 
 		if (icons == 'mpsrIcons') {
-			document.getElementById('coinStarText').style.left = '4px';
+			document.getElementById('coinStarText').style.left = '5px';
 		}
 	} else if (tied.length == 2) {
 		document.getElementById('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png';
