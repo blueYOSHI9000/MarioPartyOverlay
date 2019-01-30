@@ -20,7 +20,7 @@ function callHighlight (resetHighlights, all, stars) {
 	if (resetHighlights == true) {
 		var originalHighlightColor = getValue('highlightColor');
 		var textColor = getValue('textColor');
-		getValue('highlightColor', textColor);
+		editValue('highlightColor', textColor);
 	}
 
 	var counters = ['happening', 'minigame', 'redSpace', 'running', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'balloon'];

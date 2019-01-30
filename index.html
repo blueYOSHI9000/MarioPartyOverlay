@@ -324,7 +324,7 @@
 					<label for="customCounterIcons"> <span class="settingsText"> Use game-based counter icons if available: </span> </label> <input type="checkbox" id="customCounterIcons" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('changeCounterIcons')" checked> <br> <br>
 
 					<label for="greenscreen"> <span class="settingsText"> Enable greenscreen: </span> </label> <input type="checkbox" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('changeTheme')" id="greenscreen"> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('changeBGColor', ['bgColor'])" value="#0000ff" id="bgColor"><br>
-					<span class="settingsText"> Change text color: </span> <input type="color" id="textColor" value="#ffffff" onchange="changeSettings('changeTextColor', [this.id])"> <br> <br>
+					<span class="settingsText"> Change text color: </span> <input type="color" id="textColor" value="#ffffff" onchange="sendSettingsMsg(this.id, this.value);changeSettings('changeTextColor', [this.id])"> <br> <br>
 
 					<label for="enableHighlight"> <span class="settingsText"> Enable counter highlight: </span> </label> <input type="checkbox" id="enableHighlight" onchange="sendSettingsMsg(this.id, + this.checked);changeSettings('resetHighlights')" checked> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('callHighlight', [false, true])" value="#FF0000" id="highlightColor"> <br>
 					<label for="enableAnimation"> <span class="settingsText"> Enable counter animation: </span> </label> <input type="checkbox" id="enableAnimation" onchange="sendSettingsMsg(this.id, this.checked)" checked> <br> <br>
