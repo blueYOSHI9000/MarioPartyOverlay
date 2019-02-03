@@ -134,6 +134,35 @@ function resetTextColor () {
 	changeTextColor('textColor');
 }
 
+/*
+* Saves all drag 'n' drop locations.
+*/
+function interactSave () {
+	var elems = document.getElementsByClassName('draggable');
+	var arrX = [];
+	var arrY = [];
+	for (var num = 0; num < elems.length; num++) {
+		arrX.push(elems[num].getAttribute('data-x'));
+		arrY.push(elems[num].getAttribute('data-y'));
+	}
+	localStorage.setItem('datax', arrX);
+	localStorage.setItem('datay', arrY);
+}
+
+/*
+* Resets all drag 'n' drop locations.
+*/
+function interactReset () {
+	localStorage.removeItem('datax');
+	localStorage.removeItem('datay');
+	var elems = document.getElementsByClassName('draggable');
+	for (var num = 0; num < elems.length; num++) {
+		elems[num].style.transform = 'none';
+		elems[num].setAttribute('data-x', 0);
+		elems[num].setAttribute('data-y', 0);
+	}
+}
+
 // === INTERACT.JS ===
 // target elements with the "draggable" class
 interact('.draggable')

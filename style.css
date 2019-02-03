@@ -706,7 +706,7 @@ body {
 }
 
 /* == mobile version == */
-.mobileButtons {
+button {
 	height: 27px;
 	width: 62px;
 	font-size: 17px;

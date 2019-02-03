@@ -508,6 +508,16 @@ function prepareMPO () {
 		callHighlight(false, true);
 		backup();
 	}
+	if (localStorage.getItem('datax')) {
+		var arrX = localStorage.getItem('datax').split(',');
+		var arrY = localStorage.getItem('datay').split(',');
+		var elems = document.getElementsByClassName('draggable');
+		for (var num = 0; num < elems.length; num++) {
+			elems[num].style.transform = 'translate(' + arrX[num] + 'px, ' + arrY[num] + 'px)';
+			elems[num].setAttribute('data-x', arrX[num]);
+			elems[num].setAttribute('data-y', arrY[num]);
+		}
+	}
 
 	coinStarTie();
 	callDisplayOnOff();

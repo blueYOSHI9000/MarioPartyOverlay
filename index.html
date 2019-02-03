@@ -16,14 +16,14 @@
 <body id="bodyElement" style="background: url(img/background.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;">
 
 	<span id="noSettings">
-	<button onclick="openSettings()" class="mobileButtons" style="width: 80px;"> Settings </button> <br> <br>
+	<button onclick="openSettings()" style="width: 80px;"> Settings </button> <br> <br>
 
 	<div id="mobileTypeDiv">
 		<span id="toGenerateSpan" class="grayBG">
-			<button class="mobileButtons" onclick="textOutput(true)" style="width: 150px;">Generate & Copy</button> <input id="textOutput" onClick="this.select()" value="No stats generated yet." readonly>
+			<button onclick="textOutput(true)" style="width: 150px;">Generate & Copy</button> <input id="textOutput" onClick="this.select()" value="No stats generated yet." readonly>
 		</span>
 		<span id="saveReloadSpan" class="grayBG">
-			<button onclick="backup()" class="mobileButtons" style="width: 55px;"> Save </button> <button onclick="restore()" id="reloadButton" class="mobileButtons" style="width: 75px;" disabled> Reload </button> <br>
+			<button onclick="backup()" style="width: 55px;"> Save </button> <button onclick="restore()" id="reloadButton" style="width: 75px;" disabled> Reload </button> <br>
 		</span>
 
 		<div id="mobileTypeSpan" class="grayBG">
@@ -303,7 +303,7 @@
 
 				<!-- General Settings -->
 				<div id="generalMPOSettings" class="visible">
-					<label for="enableInteract"> <span class="settingsText"> Enable Drag 'n' Drop (reload to reset positions): </span> </label> <input type="checkbox" id="enableInteract" onchange="sendSettingsMsg(this.id, this.checked)"> <br> <br>
+					<label for="enableInteract"> <span class="settingsText"> Enable Drag 'n' Drop: </span> </label> <input type="checkbox" id="enableInteract" onchange="sendSettingsMsg(this.id, this.checked)"> <button style="width: 130px;" onclick="changeSettings('interactSave')">Save Positions</button> <button style="width: 135px;" onclick="changeSettings('interactReset')">Reset Positions</button> <br> <br>
 
 					<label for="autoPopout"> <span class="settingsText"> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="sendSettingsMsg(this.id, this.checked)"> </label> <br> <br>
 					
@@ -333,7 +333,7 @@
 					<label for="autoSave"> <span class="settingsText"> Automatically save/reload when updating turns: </span> </label> <input type="checkbox" id="autoSave" onchange="sendSettingsMsg(this.id, this.checked);if (this.checked == true) {changeSettings('backup')}"> <br>
 					<label for="permSave"> <span class="settingsText"> Save counters permanently (not getting deleted on site reload): </span> </label> <input type="checkbox" id="permSave" onchange="sendSettingsMsg(this.id, this.checked)" checked> <br> <br> <br>
 					
-					<button onclick="localStorage.clear()" class="mobileButtons" style="width: 163px;">Clear local storage</button> <span class="settingsNote">(This will clear all saved settings, characters and counters)</span>
+					<button onclick="localStorage.clear()" style="width: 163px;">Clear local storage</button> <span class="settingsNote">(This will clear all saved settings, characters and counters)</span>
 				</div>
 
 				<!-- Text Output Settings -->
@@ -855,7 +855,7 @@
 							</div>
 						</span>
 					</span>
-					<button class="mobileButtons" style="width: 190px;" onclick="changeSettings('randomChar')">Randomize characters</button>
+					<button style="width: 190px;" onclick="changeSettings('randomChar')">Randomize characters</button>
 				</div>
 
 				<!-- Counter Settings -->
@@ -927,7 +927,7 @@
 						<span class="relative"> <label for="coinsOnOff" class="counterOnOffText">Coins:</label> <input type="checkbox" id="coinsOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['coins'])"> <label for="coinsOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </span>
 					</div> <br>
 					<span class="relative"> <label for="deactivateUnused"> <span class="settingsText"> Deactivate unused counters when changing games: </span> </label> <input type="checkbox" id="deactivateUnused" style="top: 5px;" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('deactivateUnused')" checked> </span> <br>
-					<button onclick="changeSettings('saveCounters')" id="permSaveCounters" class="mobileButtons" style="width: 150px; margin-right: 10px;">Perm. Save Stats</button> <button onclick="changeSettings('resetCounters')" class="mobileButtons" style="width: 107px;">Reset Stats</button>
+					<button onclick="changeSettings('saveCounters')" id="permSaveCounters" style="width: 150px; margin-right: 10px;">Perm. Save Stats</button> <button onclick="changeSettings('resetCounters')" style="width: 107px;">Reset Stats</button>
 
 					<span style="font-size: 21px; margin-left: 50px;"><a class="settingsLink" rel="noopener" target="_blank" href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Mario-Party-Bonus-Star-List">Bonus Star List</a></span>
 				</div>
@@ -958,12 +958,12 @@
 			<!-- Reset/save Settings -->
 			<div id="settingsFooter">
 				<div id="settingsFooterBorder"></div>
-				<button onclick="changeSettings('resetSettings')" id="resetSettingsButton" class="mobileButtons" style="width: 130px; flex: auto;"> Reset Settings </button>
-				<button onclick="changeSettings('resetPlayers')" class="mobileButtons" style="width: 215px; flex: auto;"> Reset Players & Counters </button>
+				<button onclick="changeSettings('resetSettings')" id="resetSettingsButton" style="width: 130px; flex: auto;"> Reset Settings </button>
+				<button onclick="changeSettings('resetPlayers')" style="width: 215px; flex: auto;"> Reset Players & Counters </button>
 				<span id="settingsClose">
-					<button class="mobileButtons" id="popoutButton" onclick="mpoSettingsPopout()" style="width: 140px;"> Popout Settings </button>
-					<button onclick="saveSettings(true); savePlayers()" class="mobileButtons" id="saveButton" style="width: 55px;"> Save </button>
-					<button onclick="if (popout == true) {window.close()} else {showHideDiv(['settings'])}" class="mobileButtons" id="settingsCloseButton"> Close </button>
+					<button id="popoutButton" onclick="mpoSettingsPopout()" style="width: 140px;"> Popout Settings </button>
+					<button onclick="saveSettings(true); savePlayers()" id="saveButton" style="width: 55px;"> Save </button>
+					<button onclick="if (popout == true) {window.close()} else {showHideDiv(['settings'])}" id="settingsCloseButton"> Close </button>
 				</span>
 			</div>
 		</div>
