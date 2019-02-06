@@ -405,7 +405,7 @@ function deactivateUnused () {
 			unused = ['redSpace', 'running', 'slow', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
 			break;
 		case 'mp6':
-			unused = ['coinStar', 'redSpace', 'running', 'slow', 'shopping', 'candy', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
+			unused = ['coinStar', 'redSpace', 'running', 'slow', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
 			break;
 		case 'mp7':
 			unused = ['coinStar', 'slow', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
