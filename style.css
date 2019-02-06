@@ -552,12 +552,6 @@ body {
 .shoppingOnOff {
 	background-image:url(img/shopping.png);
 }
-.orbOnOff {
-	background-image:url(img/orb.png);
-}
-.candyOnOff {
-	background-image:url(img/candy.png);
-}
 .itemOnOff {
 	background-image:url(img/item.png);
 }
@@ -566,6 +560,9 @@ body {
 }
 .hexOnOff {
 	background-image:url(img/hex.png);
+}
+.balloonOnOff {
+	background-image:url(img/balloon.png);
 }
 .spinSpaceOnOff {
 	background-image:url(img/spinspace.png);
@@ -584,9 +581,6 @@ body {
 }
 .doormatOnOff {
 	background-image:url(img/doormat.png);
-}
-.balloonOnOff {
-	background-image:url(img/balloon.png);
 }
 .starsOnOff {
 	background-image:url(img/stars.png);

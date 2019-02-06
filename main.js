@@ -23,7 +23,7 @@ function callHighlight (resetHighlights, all, stars) {
 		editValue('highlightColor', textColor);
 	}
 
-	var counters = ['happening', 'minigame', 'redSpace', 'running', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'balloon'];
+	var counters = ['happening', 'minigame', 'redSpace', 'running', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat'];
 
 	if (getValue('enableHighlight') == true || resetHighlights == true || all == true || stars == true) {
 		for (let num = 0; num < counters.length; num++) {
@@ -345,18 +345,16 @@ function callDisplayOnOff () {
 	displayOnOff('redSpace', true, true);
 	displayOnOff('running', true, true);
 	displayOnOff('shopping', true, true);
-	displayOnOff('orb', true, true);
-	displayOnOff('candy', true, true);
 	displayOnOff('item', true, true);
 	displayOnOff('friendSpace', true, true);
 	displayOnOff('hex', true, true);
+	displayOnOff('balloon', true, true);
 	displayOnOff('spinSpace', true, true);
 	displayOnOff('minus', true, true);
 	displayOnOff('specialDice', true, true);
 	displayOnOff('ally', true, true);
 	displayOnOff('stompy', true, true);
 	displayOnOff('doormat', true, true);
-	displayOnOff('balloon', true, true);
 	displayOnOff('stars', true, true);
 	displayOnOff('coins', true, true);
 	displayOnOff('coinStar', true, true);

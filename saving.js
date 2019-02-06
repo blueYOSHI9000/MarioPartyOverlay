@@ -13,25 +13,23 @@ var mini = [0, 0, 0, 0];
 var red = [0, 0, 0, 0];
 var run = [0, 0, 0, 0];
 var shop = [0, 0, 0, 0];
-var orb = [0, 0, 0, 0];
-var candy = [0, 0, 0, 0];
 var item = [0, 0, 0, 0];
 var friend = [0, 0, 0, 0];
 var hex = [0, 0, 0, 0];
+var balloon = [0, 0, 0, 0];
 var spin = [0, 0, 0, 0];
 var minus = [0, 0, 0, 0];
 var dice = [0, 0, 0, 0];
 var ally = [0, 0, 0, 0];
 var stompy = [0, 0, 0, 0];
 var doormat = [0, 0, 0, 0];
-var balloon = [0, 0, 0, 0];
 var stars = [0, 0, 0, 0];
 var coins = [0, 0, 0, 0];
 
-var countersShort = ['stars', 'coins', 'hap', 'mini', 'red', 'run', 'shop', 'orb', 'candy', 'item', 'friend', 'hex', 'spin', 'minus', 'dice', 'ally', 'stompy', 'doormat', 'balloon'];
-var counters = ['stars', 'coins', 'happening', 'minigame', 'redSpace', 'running', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'balloon'];
+var countersShort = ['stars', 'coins', 'hap', 'mini', 'red', 'run', 'shop', 'item', 'friend', 'hex', 'balloon', 'spin', 'minus', 'dice', 'ally', 'stompy', 'doormat'];
+var counters = ['stars', 'coins', 'happening', 'minigame', 'redSpace', 'running', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat'];
 var countersUp = [];
-for (let num = 0; num < 19; num++) {
+for (let num = 0; num < counters.length; num++) {
 	countersUp.push(counters[num].charAt(0).toUpperCase() + counters[num].slice(1));
 }
 
@@ -46,9 +44,10 @@ function resetBackup () {
 	editValue('p4CoinStarTie', false);
 
 	for (let num = 1; num < 5; num++) {
-		for (let num2 = 0; num2 < 14; num2++) {
+		for (let num2 = 0; num2 < counters.length; num2++) {
 			document.getElementById('p' + num + countersUp[num2] + 'Text').innerHTML = 0;
 		}
+		document.getElementById('p' + num + 'CoinsText').innerHTML = 10;
 	}
 
 	turns('curTurn', 1, 'Set');
@@ -71,28 +70,24 @@ function backup () {
 
 	curTurn = parseInt(document.getElementById('curTurnText').innerHTML);
 
-	var num = 0;
 	for (let num2 = 0; num2 < 4; num2++) {
-		num++;
-		hap[num2] = document.getElementById('p' + num + 'HappeningText').innerHTML;
-		mini[num2] = document.getElementById('p' + num + 'MinigameText').innerHTML;
-		red[num2] = document.getElementById('p' + num + 'RedSpaceText').innerHTML;
-		run[num2] = document.getElementById('p' + num + 'RunningText').innerHTML;
-		shop[num2] = document.getElementById('p' + num + 'ShoppingText').innerHTML;
-		orb[num2] = document.getElementById('p' + num + 'OrbText').innerHTML;
-		candy[num2] = document.getElementById('p' + num + 'CandyText').innerHTML;
-		item[num2] = document.getElementById('p' + num + 'ItemText').innerHTML;
-		friend[num2] = document.getElementById('p' + num + 'FriendSpaceText').innerHTML;
-		hex[num2] = document.getElementById('p' + num + 'HexText').innerHTML;
-		spin[num2] = document.getElementById('p' + num + 'SpinSpaceText').innerHTML;
-		minus[num2] = document.getElementById('p' + num + 'MinusText').innerHTML;
-		dice[num2] = document.getElementById('p' + num + 'SpecialDiceText').innerHTML;
-		spin[num2] = document.getElementById('p' + num + 'AllyText').innerHTML;
-		minus[num2] = document.getElementById('p' + num + 'StompyText').innerHTML;
-		dice[num2] = document.getElementById('p' + num + 'DoormatText').innerHTML;
-		balloon[num2] = document.getElementById('p' + num + 'BalloonText').innerHTML;
-		stars[num2] = document.getElementById('p' + num + 'StarsText').innerHTML;
-		coins[num2] = document.getElementById('p' + num + 'CoinsText').innerHTML;
+		hap[num2] = document.getElementById('p' + num2 + 'HappeningText').innerHTML;
+		mini[num2] = document.getElementById('p' + num2 + 'MinigameText').innerHTML;
+		red[num2] = document.getElementById('p' + num2 + 'RedSpaceText').innerHTML;
+		run[num2] = document.getElementById('p' + num2 + 'RunningText').innerHTML;
+		shop[num2] = document.getElementById('p' + num2 + 'ShoppingText').innerHTML;
+		item[num2] = document.getElementById('p' + num2 + 'ItemText').innerHTML;
+		friend[num2] = document.getElementById('p' + num2 + 'FriendSpaceText').innerHTML;
+		hex[num2] = document.getElementById('p' + num2 + 'HexText').innerHTML;
+		balloon[num2] = document.getElementById('p' + num2 + 'BalloonText').innerHTML;
+		spin[num2] = document.getElementById('p' + num2 + 'SpinSpaceText').innerHTML;
+		minus[num2] = document.getElementById('p' + num2 + 'MinusText').innerHTML;
+		dice[num2] = document.getElementById('p' + num2 + 'SpecialDiceText').innerHTML;
+		spin[num2] = document.getElementById('p' + num2 + 'AllyText').innerHTML;
+		minus[num2] = document.getElementById('p' + num2 + 'StompyText').innerHTML;
+		dice[num2] = document.getElementById('p' + num2 + 'DoormatText').innerHTML;
+		stars[num2] = document.getElementById('p' + num2 + 'StarsText').innerHTML;
+		coins[num2] = document.getElementById('p' + num2 + 'CoinsText').innerHTML;
 	}
 
 	if (getValue('permSave') == true) {
@@ -121,18 +116,16 @@ function restore (forceRestore) {
 			document.getElementById('p' + num + 'RedSpaceText').innerHTML = red[num2];
 			document.getElementById('p' + num + 'RunningText').innerHTML = run[num2];
 			document.getElementById('p' + num + 'ShoppingText').innerHTML = shop[num2];
-			document.getElementById('p' + num + 'OrbText').innerHTML = orb[num2];
-			document.getElementById('p' + num + 'CandyText').innerHTML = candy[num2];
 			document.getElementById('p' + num + 'ItemText').innerHTML = item[num2];
 			document.getElementById('p' + num + 'FriendSpaceText').innerHTML = friend[num2];
 			document.getElementById('p' + num + 'HexText').innerHTML = hex[num2];
+			document.getElementById('p' + num + 'BalloonText').innerHTML = balloon[num2];
 			document.getElementById('p' + num + 'SpinSpaceText').innerHTML = spin[num2];
 			document.getElementById('p' + num + 'MinusText').innerHTML = minus[num2];
 			document.getElementById('p' + num + 'SpecialDiceText').innerHTML = dice[num2];
 			document.getElementById('p' + num + 'AllyText').innerHTML = ally[num2];
 			document.getElementById('p' + num + 'StompyText').innerHTML = stompy[num2];
 			document.getElementById('p' + num + 'DoormatText').innerHTML = doormat[num2];
-			document.getElementById('p' + num + 'BalloonText').innerHTML = balloon[num2];
 			document.getElementById('p' + num + 'StarsText').innerHTML = stars[num2];
 			document.getElementById('p' + num + 'CoinsText').innerHTML = coins[num2];
 		}
@@ -160,7 +153,7 @@ function savePlayers (close) {
 	localStorage.setItem('com3', getValue('com3'));
 	localStorage.setItem('com4', getValue('com4'));
 
-	for (let num = 0; num < 19; num++) {
+	for (let num = 0; num < counters.length; num++) {
 		localStorage.setItem(counters[num], getValue(counters[num] + 'OnOff'));
 	}
 	localStorage.setItem('slow', getValue('slowOnOff'));
@@ -186,18 +179,16 @@ function resetPlayers () {
 	editValue('runningOnOff', false);
 	editValue('slowOnOff', false);
 	editValue('shoppingOnOff', false);
-	editValue('orbOnOff', false);
-	editValue('candyOnOff', false);
 	editValue('itemOnOff', false);
 	editValue('friendSpaceOnOff', false);
 	editValue('hexOnOff', false);
 	editValue('spinSpaceOnOff', false);
+	editValue('balloonOnOff', false);
 	editValue('minusOnOff', false);
 	editValue('specialDiceOnOff', false);
 	editValue('allyOnOff', false);
 	editValue('stompyOnOff', false);
 	editValue('doormatOnOff', false);
-	editValue('balloonOnOff', false);
 	editValue('starsOnOff', false);
 	editValue('inclBonusOnOff', false);
 	editValue('miniStarsOnOff', false);
@@ -246,18 +237,16 @@ function resetPlayers () {
 	localStorage.setItem('running', false);
 	localStorage.setItem('slow', false);
 	localStorage.setItem('shopping', false);
-	localStorage.setItem('orb', false)
-	localStorage.setItem('candy', false);
 	localStorage.setItem('item', false);
 	localStorage.setItem('friendSpace', false);
-	localStorage.setItem('hex', false)
+	localStorage.setItem('hex', false);
+	localStorage.setItem('balloon', false);
 	localStorage.setItem('spinSpace', false);
 	localStorage.setItem('minus', false);
 	localStorage.setItem('specialDice', false);
 	localStorage.setItem('ally', false);
 	localStorage.setItem('stompy', false);
 	localStorage.setItem('doormat', false);
-	localStorage.setItem('balloon', false);
 	localStorage.setItem('stars', false);
 	localStorage.setItem('inclBonus', false);
 	localStorage.setItem('miniStars', false);
@@ -281,7 +270,7 @@ function saveCounters () {
 	localStorage.setItem('curTurn', document.getElementById('curTurnText').innerHTML);
 	localStorage.setItem('maxTurn', document.getElementById('maxTurnText').innerHTML);
 
-	for (let num2 = 0; num2 < 19; num2++) {
+	for (let num2 = 0; num2 < counters.length; num2++) {
 		for (let num = 1; num < 5; num++) {
 			localStorage.setItem(countersShort[num2] + num, document.getElementById('p' + num + countersUp[num2] + 'Text').innerHTML);
 		}
@@ -299,7 +288,7 @@ function resetCounters () {
 	updateStars();
 
 	for (let num = 1; num < 5; num++) {
-		for (let num2 = 1; num2 < 19; num2++) {
+		for (let num2 = 1; num2 < counters.length; num2++) {
 			localStorage.setItem(countersShort[num2] + num, 0);
 		}
 	}
@@ -468,7 +457,7 @@ function prepareMPO () {
 		changeCom(3, true);
 		changeCom(4, true);
 
-		for (let num2 = 0; num2 < 19; num2++) {
+		for (let num2 = 0; num2 < counters.length; num2++) {
 			editValue(counters[num2] + 'OnOff', stringToBoolean(localStorage.getItem(counters[num2])));
 		}
 		
@@ -499,7 +488,7 @@ function prepareMPO () {
 		document.getElementById('curTurnText').innerHTML = localStorage.getItem('curTurn');
 		document.getElementById('maxTurnText').innerHTML = localStorage.getItem('maxTurn');
 	
-		for (let num2 = 0; num2 < 19; num2++) {
+		for (let num2 = 0; num2 < counters.length; num2++) {
 			for (let num = 1; num < 5; num++) {
 				document.getElementById('p' + num + countersUp[num2] + 'Text').innerHTML = localStorage.getItem(countersShort[num2] + num);
 			}
@@ -595,18 +584,16 @@ function syncPopout () {
 		sendSettingsMsg('runningOnOff', getValue('runningOnOff'), true);
 		sendSettingsMsg('slowOnOff', getValue('slowOnOff'), true);
 		sendSettingsMsg('shoppingOnOff', getValue('shoppingOnOff'), true);
-		sendSettingsMsg('orbOnOff', getValue('orbOnOff'), true);
-		sendSettingsMsg('candyOnOff', getValue('candyOnOff'), true);
 		sendSettingsMsg('itemOnOff', getValue('itemOnOff'), true);
 		sendSettingsMsg('friendSpaceOnOff', getValue('friendSpaceOnOff'), true);
 		sendSettingsMsg('hexOnOff', getValue('hexOnOff'), true);
+		sendSettingsMsg('balloonOnOff', getValue('balloonOnOff'), true);
 		sendSettingsMsg('spinSpaceOnOff', getValue('spinSpaceOnOff'), true);
 		sendSettingsMsg('minusOnOff', getValue('minusOnOff'), true);
 		sendSettingsMsg('specialDiceOnOff', getValue('specialDiceOnOff'), true);
 		sendSettingsMsg('allyOnOff', getValue('allyOnOff'), true);
 		sendSettingsMsg('stompyOnOff', getValue('stompyOnOff'), true);
 		sendSettingsMsg('doormatOnOff', getValue('doormatOnOff'), true);
-		sendSettingsMsg('balloonOnOff', getValue('balloonOnOff'), true);
 		sendSettingsMsg('starsOnOff', getValue('starsOnOff'), true);
 		sendSettingsMsg('inclBonusOnOff', getValue('inclBonusOnOff'), true);
 		sendSettingsMsg('miniStarsOnOff', getValue('miniStarsOnOff'), true);

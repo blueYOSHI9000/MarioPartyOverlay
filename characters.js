@@ -402,32 +402,32 @@ function deactivateUnused () {
 		case 'mp3':
 		case 'mp4':
 		case 'mp5':
-			unused = ['redSpace', 'running', 'slow', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'balloon', 'miniStars', 'bananas'];
+			unused = ['redSpace', 'running', 'slow', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
 			break;
 		case 'mp6':
-			unused = ['coinStar', 'redSpace', 'running', 'slow', 'shopping', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'balloon', 'miniStars', 'bananas'];
+			unused = ['coinStar', 'redSpace', 'running', 'slow', 'shopping', 'candy', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
 			break;
 		case 'mp7':
-			unused = ['coinStar', 'slow', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'balloon', 'miniStars', 'bananas'];
+			unused = ['coinStar', 'slow', 'candy', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
 			break;
 		case 'mp8':
-			unused = ['coinStar', 'slow', 'orb', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'balloon', 'miniStars', 'bananas'];
+			unused = ['coinStar', 'slow', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
 			break;
 		case 'mp9':
-			unused = ['coinStar', 'redSpace', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'ally', 'stompy', 'doormat', 'balloon'];
+			unused = ['coinStar', 'redSpace', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'ally', 'stompy', 'doormat'];
 			break;
 		case 'mp10':
-			unused = ['coinStar', 'redSpace', 'shopping', 'orb', 'candy', 'item', 'friendSpace', 'hex', 'spinSpace', 'ally', 'stompy', 'doormat', 'balloon', 'miniStars'];
+			unused = ['coinStar', 'redSpace', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'ally', 'stompy', 'doormat', 'miniStars'];
 			break;
 		case 'mpds':
-			unused = ['coinStar', 'redSpace', 'slow', 'orb', 'candy', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'balloon', 'miniStars', 'bananas'];
+			unused = ['coinStar', 'redSpace', 'slow', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
 			break;
 		case 'mpsr':
 		case 'mptt100':
-			unused = ['coinStar', 'happening', 'minigame', 'redSpace', 'shopping', 'orb', 'candy', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
+			unused = ['coinStar', 'happening', 'minigame', 'redSpace', 'shopping', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
 			break;
 		case 'smp':
-			unused = ['shopping', 'orb', 'candy', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'balloon', 'miniStars', 'bananas'];
+			unused = ['shopping', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'miniStars', 'bananas'];
 			break;
 		default:
 			return;
