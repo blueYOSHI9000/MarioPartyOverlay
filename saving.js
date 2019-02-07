@@ -70,24 +70,26 @@ function backup () {
 
 	curTurn = parseInt(document.getElementById('curTurnText').innerHTML);
 
+	var num = 0
 	for (let num2 = 0; num2 < 4; num2++) {
-		hap[num2] = document.getElementById('p' + num2 + 'HappeningText').innerHTML;
-		mini[num2] = document.getElementById('p' + num2 + 'MinigameText').innerHTML;
-		red[num2] = document.getElementById('p' + num2 + 'RedSpaceText').innerHTML;
-		run[num2] = document.getElementById('p' + num2 + 'RunningText').innerHTML;
-		shop[num2] = document.getElementById('p' + num2 + 'ShoppingText').innerHTML;
-		item[num2] = document.getElementById('p' + num2 + 'ItemText').innerHTML;
-		friend[num2] = document.getElementById('p' + num2 + 'FriendSpaceText').innerHTML;
-		hex[num2] = document.getElementById('p' + num2 + 'HexText').innerHTML;
-		balloon[num2] = document.getElementById('p' + num2 + 'BalloonText').innerHTML;
-		spin[num2] = document.getElementById('p' + num2 + 'SpinSpaceText').innerHTML;
-		minus[num2] = document.getElementById('p' + num2 + 'MinusText').innerHTML;
-		dice[num2] = document.getElementById('p' + num2 + 'SpecialDiceText').innerHTML;
-		spin[num2] = document.getElementById('p' + num2 + 'AllyText').innerHTML;
-		minus[num2] = document.getElementById('p' + num2 + 'StompyText').innerHTML;
-		dice[num2] = document.getElementById('p' + num2 + 'DoormatText').innerHTML;
-		stars[num2] = document.getElementById('p' + num2 + 'StarsText').innerHTML;
-		coins[num2] = document.getElementById('p' + num2 + 'CoinsText').innerHTML;
+		num++
+		hap[num2] = document.getElementById('p' + num + 'HappeningText').innerHTML;
+		mini[num2] = document.getElementById('p' + num + 'MinigameText').innerHTML;
+		red[num2] = document.getElementById('p' + num + 'RedSpaceText').innerHTML;
+		run[num2] = document.getElementById('p' + num + 'RunningText').innerHTML;
+		shop[num2] = document.getElementById('p' + num + 'ShoppingText').innerHTML;
+		item[num2] = document.getElementById('p' + num + 'ItemText').innerHTML;
+		friend[num2] = document.getElementById('p' + num + 'FriendSpaceText').innerHTML;
+		hex[num2] = document.getElementById('p' + num + 'HexText').innerHTML;
+		balloon[num2] = document.getElementById('p' + num + 'BalloonText').innerHTML;
+		spin[num2] = document.getElementById('p' + num + 'SpinSpaceText').innerHTML;
+		minus[num2] = document.getElementById('p' + num + 'MinusText').innerHTML;
+		dice[num2] = document.getElementById('p' + num + 'SpecialDiceText').innerHTML;
+		spin[num2] = document.getElementById('p' + num + 'AllyText').innerHTML;
+		minus[num2] = document.getElementById('p' + num + 'StompyText').innerHTML;
+		dice[num2] = document.getElementById('p' + num + 'DoormatText').innerHTML;
+		stars[num2] = document.getElementById('p' + num + 'StarsText').innerHTML;
+		coins[num2] = document.getElementById('p' + num + 'CoinsText').innerHTML;
 	}
 
 	if (getValue('permSave') == true) {
@@ -108,9 +110,9 @@ function restore (forceRestore) {
 		editValue('p3CoinStarTie', coinStarTie3);
 		editValue('p4CoinStarTie', coinStarTie4);
 
-		var num = 0;
+		var num = 0
 		for (let num2 = 0; num2 < 4; num2++) {
-			num++;
+			num++
 			document.getElementById('p' + num + 'HappeningText').innerHTML = hap[num2];
 			document.getElementById('p' + num + 'MinigameText').innerHTML = mini[num2];
 			document.getElementById('p' + num + 'RedSpaceText').innerHTML = red[num2];
