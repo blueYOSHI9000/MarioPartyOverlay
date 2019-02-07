@@ -265,6 +265,10 @@ body {
 #counterError {
 	color: red;
 }
+#siteError {
+	display: none;
+	color: red;
+}
 
 #counterOrder {
 	margin-right: 1000px;

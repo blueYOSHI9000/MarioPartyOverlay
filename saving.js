@@ -389,7 +389,8 @@ function prepareMPO () {
 		document.getElementById('settingsContent').style.height = 'calc(100% - 40px)'; //-40px is required as otherwise there would be 40px offscreen which would destroy the whole layout
 		document.getElementById('noSettings').style.display = 'none';
 
-		sendMessage('syncPopout')
+		sendMessage('syncPopout');
+		localStorage.getItem('enableHighlight'); //If cookies are blocked, this will break the function immediately
 		prepared = true;
 		return;
 	}
@@ -522,10 +523,10 @@ function prepareMPO () {
 function prepareMPOBackup () {
 	if (prepared != true) {
 		console.warn('[MPO] Could not properly start MPO.');
-		editValue('permSave', false);
-		document.getElementById('permSave').disabled = true;
-		document.getElementById('permSaveCounters').disabled = true;
-		callDisplayOnOff();
+		document.getElementById('siteError').style.display = 'block';
+		if (popout != true) {
+			callDisplayOnOff();
+		}
 	}
 }
 

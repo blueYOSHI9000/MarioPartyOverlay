@@ -294,6 +294,9 @@
 
 				<!-- General Settings -->
 				<div id="generalMPOSettings" class="visible">
+					<span id="siteError"> MPO could not be properly loaded, try reloading or clearing local storage. <br> This might also appear if cookies are deactivated. </span>
+
+
 					<label for="enableInteract"> <span class="settingsText"> Enable Drag 'n' Drop: </span> </label> <input type="checkbox" id="enableInteract" onchange="sendSettingsMsg(this.id, this.checked)"> <button style="width: 130px;" onclick="changeSettings('interactSave')">Save Positions</button> <button style="width: 135px;" onclick="changeSettings('interactReset')">Reset Positions</button> <br> <br>
 
 					<label for="autoPopout"> <span class="settingsText"> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="sendSettingsMsg(this.id, this.checked)"> </label> <br> <br>
@@ -915,7 +918,7 @@
 						<span class="relative"> <label for="coinsOnOff" class="counterOnOffText">Coins:</label> <input type="checkbox" id="coinsOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['coins'])"> <label for="coinsOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </span>
 					</div> <br>
 					<span class="relative"> <label for="deactivateUnused"> <span class="settingsText"> Deactivate unused counters when changing games: </span> </label> <input type="checkbox" id="deactivateUnused" style="top: 5px;" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('deactivateUnused')" checked> </span> <br>
-					<button onclick="changeSettings('saveCounters')" id="permSaveCounters" style="width: 150px; margin-right: 10px;">Perm. Save Stats</button> <button onclick="changeSettings('resetCounters')" style="width: 107px;">Reset Stats</button>
+					<button onclick="changeSettings('saveCounters')" id="permSaveCounters" style="width: 100px; margin-right: 10px;">Save Stats</button> <button onclick="changeSettings('resetCounters')" style="width: 107px;">Reset Stats</button>
 
 					<span style="font-size: 21px; margin-left: 50px;"><a class="settingsLink" rel="noopener" target="_blank" href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Mario-Party-Bonus-Star-List">Bonus Star List</a></span>
 				</div>
