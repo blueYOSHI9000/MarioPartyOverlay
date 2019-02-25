@@ -201,23 +201,12 @@ body {
 	left: -84px;
 }
 
-@keyframes bounce {
-	0% { top: -4px; }
-	65% { top: -13px; }
-	80% { top: -9px; }
-	100% { top: -4px; }
-}
-
-.counterAnimation {
-	animation: bounce .19s ease-out 0s 1 both;
-}
-
 /* == Settings == */
 #settingsButton {
 	font-family: 'Mario';
 	font-size: 19px;
 	color: #000000;
-	text-shadow: -1px 0 #b0b0b0, 0 1px #b0b0b0, 1px 0 #b0b0b0, 0 -1px #b0b0b0;
+	text-shadow: -2px 0 #d7d7d7, 0 2px #d7d7d7, 2px 0 #d7d7d7, 0 -2px #d7d7d7;
 	cursor: pointer;
 	margin-left: 230px;
 }
