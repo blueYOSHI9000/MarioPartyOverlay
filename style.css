@@ -1,6 +1,6 @@
 @font-face {
-font-family: "Mario";
-src: url("font.ttf");
+	font-family: "Mario";
+	src: url("font.ttf");
 }
 
 
@@ -159,6 +159,15 @@ body {
 	animation: hide .5s ease 0s 1 both;
 }
 
+@keyframes error {
+	0% { color: #ff0000; }
+	50% { color: #ff0000; }
+	100% { color: #111111; }
+}
+.errorAni {
+	animation: error .5s linear 0s 1 both;
+}
+
 /* == Coin star tie == */
 .coinStarTieDiv {
 	height: 40px;
@@ -222,6 +231,12 @@ body {
 	padding: 1rem 1.5rem;
 	border-radius: 1.2rem;
 }
+#settingsSelectionSpanBreak {
+	display: none;
+}
+#shortcutSelectorBreak {
+	margin-right: 0px;
+}
 
 #generalMPOSettings .settingsText {
 	line-height: 31px;
@@ -242,6 +257,18 @@ body {
 #settingsHeaderBorder {
 	border-bottom: #929292 3px solid;
 }
+#shortcutHeader {
+	display: none;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-bottom: #929292 3px solid;
+}
+#shortcutNotif {
+	text-align: center;
+}
+#finishTurn {
+	float: right;
+}
 #settingsFooterBorder {
 	margin-bottom: 7px;
 	border-bottom: #929292 3px solid;
@@ -257,16 +284,16 @@ body {
 .counterSelection span:not(.flexAuto) {
 	width: 310px;
 }
-#ingameCounters {
+.settingsTitle {
 	font-size: 27px;
 	border-bottom: 2px black solid;
-	margin-bottom: 5px;
-}
-#counterError {
-	color: red;
+	margin-bottom: 10px;
+	display: inline-block;
 }
 #siteError {
 	display: none;
+}
+.error {
 	color: red;
 }
 
@@ -383,6 +410,146 @@ body {
 	#settingsCloseSave { display: block !important; }
 }
 
+/* == Shortcuts == */
+.turnBreak {
+	display: none;
+}
+.column {
+	float: left;
+	width: 50%;
+}
+@media screen and (max-width: 800px) { /* Will be used when shortcut turn columns would overlap each other */
+	.turnBreak { display: inline-block; }
+	.column {
+		float: none;
+		width: auto;
+	}
+}
+
+.shortcutText {
+	font-family: 'Mario';
+	font-size: 20px;
+	color: #1F1F1F;
+}
+.spanSelection span {
+	opacity: .5;
+	cursor: pointer;
+}
+.spanSelection span:hover {
+	opacity: .9;
+}
+.spanSelection span:active {
+	opacity: 1;
+}
+.selected {
+	opacity: 1 !important;
+}
+.selected:hover {
+	opacity: 1 !important;
+}
+.selected:active {
+	opacity: 1 !important;
+}
+
+#turnPlayerIcon {
+	width: 45px;
+}
+#turnCurDice {
+	width: 30px;
+	margin-right: 10px;
+}
+#turnCurDiceText {
+	opacity: 1 !important;
+	cursor: default;
+}
+#turnItems {
+	position: relative;
+}
+#turnItems img {
+	width: 40px;
+	margin-right: 15px;
+}
+#turnSpaces img {
+	width: 40px;
+}
+.imgSelection img {
+	opacity: .5;
+	cursor: pointer;
+}
+.imgSelection img:hover {
+	opacity: .9;
+}
+.imgSelection img:active {
+	opacity: 1;
+}
+#itemOther {
+	position: absolute;
+	top: -25px;
+}
+#itemImg {
+	width: 40px;
+	margin-right: 10px;
+}
+#spaceEventImg {
+	width: 40px;
+	margin-right: 10px;
+}
+#hexSelection img {
+	width: 40px;
+}
+#hexCharSelection img {
+	width: 60px;
+}
+
+.chooseImg {
+	width: 60px;
+	opacity: .5;
+	cursor: pointer;
+}
+.chooseImg:hover {
+	opacity: .9;
+}
+.chooseImg:active {
+	opacity: 1;
+}
+.chooseImgSelected {
+	width: 60px;
+	-webkit-filter: grayscale(70%);
+			filter: grayscale(70%);
+}
+.chooseImgOrder img {
+	width: 50px;
+}
+
+#starsSelection img {
+	width: 45px;
+}
+#shoppingSelection span {
+	display: inline-block;
+	width: 40px;
+	text-align: center;
+	background: url(img/coins.png) no-repeat;
+	background-size: 40px;
+}
+
+.battleImg {
+	width: 40px;
+	opacity: .5;
+	cursor: pointer;
+}
+.battleImg:hover {
+	opacity: .9;
+}
+.battleImg:active {
+	opacity: 1;
+}
+#battleCoins {
+	width: 35px;
+}
+#battleResult img {
+	width: 50px;
+}
+
 /* == Choose Character == */
 .playerText {
 	font-family: 'Mario';
@@ -412,6 +579,9 @@ body {
 	padding: 0;
 	position: absolute;
 	z-index: 999;
+}
+#iconSelector input {
+	top: -24px;
 }
 .charSelector input:active +.charSelectorLabel, .charSelector input:active +.drinkcard-cc{opacity: .9;}
 .charSelector input:checked +.charSelectorLabel, .charSelector input:checked +.drinkcard-cc{
@@ -669,10 +839,12 @@ body {
 	width: 51px;
 }
 
-@media screen and (max-width: 771px) {
+@media screen and (max-width: 800px) {
+	#settingsSelectionSpan { display: none; }
+	#settingsSelectionSpanBreak { display: block; }
 	#gameSelectorDiv { font-size: 2.3vw; }
 	#gameSelectorDiv input { visibility: hidden; /*height: 1.7vw; width: 1.7vw;*/ }
-	.settingsSelection { font-size: 3.4vw; }
+	/*.settingsSelection { font-size: 3.4vw; }*/
 	.gameLabel { font-size: 2.3vw; height: 3.2vw; width: 3.2vw }
 	#mp1 { margin-left: 3vw; }
 	.mp1 { width: 2.3vw; margin-left: 3vw; }
@@ -705,8 +877,6 @@ body {
 
 /* == mobile version == */
 button {
-	height: 27px;
-	width: 62px;
 	font-size: 17px;
 }
 #textOutput {

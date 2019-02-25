@@ -50,7 +50,7 @@ function resetBackup () {
 		document.getElementById('p' + num + 'CoinsText').innerHTML = 10;
 	}
 
-	turns('curTurn', 1, 'Set');
+	turns('curTurn', 1, 'set');
 	coinStarTie();
 	callHighlight(false, true);
 }
@@ -327,7 +327,7 @@ function saveSettings (close) {
 	localStorage.setItem('enableInteract', getValue('enableInteract'));
 	localStorage.setItem('autoPopout', getValue('autoPopout'));
 	localStorage.setItem('curTheme', curTheme);
-	localStorage.setItem('iconStyle', document.querySelector('input[name="icons"]:checked'));
+	localStorage.setItem('iconStyle', document.querySelector('input[name="icons"]:checked').id);
 	localStorage.setItem('customCounterIcons', getValue('customCounterIcons'));
 	localStorage.setItem('customCharacterIcons', getValue('customCharacterIcons'));
 	localStorage.setItem('greenscreen', getValue('greenscreen'));
@@ -611,6 +611,21 @@ function syncPopout () {
 
 		console.log('[MPO] Popout synced');
 	}
+}
+
+var statSynced = false;
+/*
+* Syncs all stats with popout.
+*/
+function statSync () {
+	for (var num = 0; num < countersUp.length; num++) {
+		for (var num2 = 1; num2 < 5; num2++) {
+			sendMessage('counterButtons+' + num2 + '+set+' + getInner('p' + num2 + countersUp[num] + 'Text') + '+' + countersUp[num]);
+		}
+	}
+	sendMessage('counterButtons+1+set+' + getInner('curTurnText') + '+curTurn');
+	sendMessage('counterButtons+1+set+' + getInner('maxTurnText') + '+maxTurn');
+	statSynced = true;
 }
 
 /*

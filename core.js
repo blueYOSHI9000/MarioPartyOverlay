@@ -5,12 +5,13 @@
 * @param {string} action What should be done.
 * @param {string} amount The amount that should be changed
 * @param {string} counter Which counter should be updated.
+* @param {boolean} nosend If true it won't get executed on popout.
 */
-function counterButtons (player, action, amount, counter) {
-	//console.log('Player: ' + player + ', action: ' + action + ', amount: ' + amount + ', counter: ' + counter)
+function counterButtons (player, action, amount, counter, send) {
+	//console.log('[counterButtons] Player: ' + player + ', action: ' + action + ', amount: ' + amount + ', counter: ' + counter);
 	var result = 0;
 
-	if (amount == '') {
+	if (amount === '') {
 		amount = 1;
 	}
 
@@ -19,13 +20,11 @@ function counterButtons (player, action, amount, counter) {
 		result = parseInt(document.getElementById('p' + player + counter + 'Text').innerHTML);
 
 		if (action == 'P') {
-			for (let num = 0; num < amount; num++) {
-				result++;
-			}
+			result = result + amount;
 		} else if (action == 'M') {
-			for (let num = 0; num < amount; num++) {
-				result--;
-			}
+			result = result - amount;
+		} else if (action == 'set') {
+			result = amount;
 		}
 		
 		if (result >= 999) {
@@ -41,13 +40,11 @@ function counterButtons (player, action, amount, counter) {
 		result = parseInt(document.getElementById('coinStarText').innerHTML);
 
 		if (action == 'P') {
-			for (let num = 0; num < amount; num++) {
-				result++;
-			}
+			result = result + amount;
 		} else if (action == 'M') {
-			for (let num = 0; num < amount; num++) {
-				result--;
-			}
+			result = result - amount;
+		} else if (action == 'set') {
+			result = amount;
 		}
 		coinStar(result);
 
@@ -121,6 +118,9 @@ function mobileButtons (counter, player) {
 	if (counter == 'Stars') {
 		updateStars(player, action, amount);
 	} else {
+		if (popoutActivated == true && statSynced == true) {
+			sendMessage('counterButtons+' + player + '+' + action + '+' + amount + '+' + counter);
+		}
 		counterButtons(player, action, amount, counter);
 	}
 }
@@ -267,7 +267,7 @@ function turns (counter, amount, action) {
 		for (let num = 0; num < amount; num++) {
 			result--;
 		}
-	} else if (action == 'Set') {
+	} else if (action == 'set') {
 		result = amount;
 	}
 

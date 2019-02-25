@@ -386,16 +386,23 @@ function showHideDiv (ids) {
 * @param {string} id Which settings should be shown.
 */
 function showHideSettings (id) {
-	var ids = ['generalMPO', 'textOutput', 'player', 'counter', 'tutorial'];
-	for (let num = 0; num < 5; num++) {
+	var ids = ['generalMPO', 'textOutput', 'shortcut', 'player', 'counter', 'tutorial'];
+	for (let num = 0; num < ids.length; num++) {
 		document.getElementById(ids[num] + 'Settings').classList.add('hidden');
 		document.getElementById(ids[num] + 'Settings').classList.remove('visible');
 		document.getElementById(ids[num] + 'Selector').classList.remove('settingsSelected');
+		document.getElementById(ids[num] + 'SelectorBreak').classList.remove('settingsSelected');
 	}
 	document.getElementById(id + 'Settings').classList.add('visible');
 	document.getElementById(id + 'Settings').classList.remove('hidden');
 	document.getElementById(id + 'Selector').classList.add('settingsSelected');
+	document.getElementById(id + 'SelectorBreak').classList.add('settingsSelected');
 
+	if (id == 'shortcut') {
+		document.getElementById('shortcutHeader').style.display = 'block';
+	} else {
+		document.getElementById('shortcutHeader').style.display = 'none';
+	}
 }
 
 /*
@@ -468,6 +475,16 @@ window.onkeydown = ctrlPressed;
 window.onkeyup = ctrlReleased;
 
 /*
+* Loads settings.js to start the shortcut feature.
+*/
+function prepareShortcut () {
+	var script = document.createElement("script");
+	script.src = 'settings.js';
+
+	document.head.appendChild(script);
+}
+
+/*
 * Opens normal settings or puts popout on top if it's activated.
 */
 function openSettings () {
@@ -481,17 +498,160 @@ function openSettings () {
 }
 
 /*
-* Opens the greenscreen test on the main window.
+* Calls a function for the main site and the settings popout (if activated).
+* 
+* @param {string} functionName The function that shoudl be called (without the '()').
+* @param {array} attributes The attributes that the function should use.
 */
-function openGreenscreenTest () {
+function changeSettings (functionName, attributes) {
+	//console.log('functionName: '  + functionName + ', attributes: ' + attributes)
 	if (popout == true) {
-		sendMessage('openGreenscreenTest');
+		if (attributes) {
+			sendMessage(functionName + '+' + attributes.join('+'));
+		} else {
+			sendMessage(functionName);
+		}
+	}
+	executeFunctionByName(functionName, attributes);
+}
+
+/*
+* Changes Themes incl. greenscreen.
+* 
+* @param {number} theme Which theme should be used.
+*/
+var bgColor = '#0000ff';
+var curTheme = 1;
+function changeTheme (theme) {
+	bgColor = getValue('bgColor');
+	styleExtra = 'no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"';
+
+	if (theme) {} else {
+		theme = curTheme;
+	}
+
+	if (getValue('greenscreen') == true) {
+		document.getElementById('bodyElement').style.background = bgColor;
 	} else {
-		document.getElementById('settings').classList.remove('visible');
-		document.getElementById('settings').classList.add('hidden');
-		showHideDiv(['colorPickTest']);
+		switch (theme) {
+			case 2:
+				document.getElementById('bodyElement').style = 'background: url(img/MP9-bg.jpg)' + styleExtra;
+				curTheme = 2
+				break;
+			case 3:
+				document.getElementById('bodyElement').style = 'background: url(img/NSMBW-bg.jpg)' + styleExtra;
+				curTheme = 3
+				break;
+			default:
+				document.getElementById('bodyElement').style = 'background: url(img/background.jpg)' + styleExtra;
+				curTheme = 1
+				break;
+		}
+	}
+	document.getElementById('themeB1').style = '';
+	document.getElementById('themeB2').style = '';
+	document.getElementById('themeB3').style = '';
+	document.getElementById('themeB1').disabled = '';
+	document.getElementById('themeB2').disabled = '';
+	document.getElementById('themeB3').disabled = '';
+	switch (theme) {
+		case 2:
+			document.getElementById('themeB2').style = 'border-color: green;';
+			document.getElementById('themeB2').disabled = 'true';
+			curTheme = 2;
+			break;
+		case 3:
+			document.getElementById('themeB3').style = 'border-color: green;';
+			document.getElementById('themeB3').disabled = 'true';
+			curTheme = 3;
+			break;
+		default:
+			document.getElementById('themeB1').style = 'border-color: green;';
+			document.getElementById('themeB1').disabled = 'true';
+			curTheme = 1;
+			break;
 	}
 }
+
+/*
+* Changes background color if greenscreen is used.
+* 
+* @param {string} id Id of the input element that changed its value.
+*/
+function changeBGColor (id) {
+	bgColor = getValue(id);
+	if (getValue('greenscreen') == true) {
+		document.getElementById('bodyElement').style.background = bgColor;
+	}
+	editValue('bgColor', bgColor);
+}
+
+
+/*
+* Resets the Greenscreen color.
+*/
+function resetBGColor () {
+	editValue('bgColor', '#0000FF');
+	changeBGColor('bgColor');
+}
+
+/*
+* Changes text color for everything outside of settings.
+* 
+* @param {string} id Id of the input element that changed its value.
+*/
+function changeTextColor (id) {
+	var whiteText = document.querySelectorAll(".whiteText");
+	var counterText = document.querySelectorAll(".counterText");
+	var turns = document.querySelectorAll(".turns");
+	var mobile = document.querySelectorAll(".mobileTypeLabel");
+
+	var color = getValue(id);
+
+	for (var num = 0; num < whiteText.length; num++) {
+		whiteText[num].style.color = color;
+	}
+	for (var num = 0; num < counterText.length; num++) {
+		counterText[num].style.color = color;
+	}
+	for (var num = 0; num < turns.length; num++) {
+		turns[num].style.color = color;
+	}
+	for (var num = 0; num < mobile.length; num++) {
+		mobile[num].style.color = color;
+	}
+
+	editValue('textColor', color);
+	callHighlight();
+}
+
+/*
+* Resets the Text color.
+*/
+function resetTextColor () {
+	editValue('textColor', '#FFFFFF');
+	changeTextColor('textColor');
+}
+
+/*
+* Gets the InnerHTML of an element
+* 
+* @param {string} id The ID of the element that should be changed.
+*/
+function getInner (id) {
+	return document.getElementById(id).innerHTML;
+}
+/*
+* Edits the InnerHTML of an element.
+* 
+* @param {string} id The ID of the element that should be changed.
+* @param {string/boolean} value The text that it should be changed to
+*/
+function editInner (id, value) {
+	//console.log('id: ' + id + ', value: ' + value);
+	document.getElementById(id).innerHTML = value;
+}
+
 
 /*
 * Edits the value of an input element. If element is a checkbox and no value is given it changes it to the opposite instead.
@@ -527,11 +687,26 @@ function getValue (id) {
 * 
 * @param {string} id The first attribute.
 * @param {string} attribute Other attributes.
-* @para, {boolean} force Forces it to send the message if true.
+* @param {boolean} force Forces it to send the message if true.
 */
 function sendSettingsMsg (id, attribute, force) {
 	if (popout == true || force == true) {
 		sendMessage('editValue+' + id + '+' + attribute);
+	}
+}
+
+/*
+* Checks if it's executed in the popout and calls sendMessage() if it is.
+* 
+* @param {string} id The first attribute.
+* @param {array} attribute Other attributes.
+*/
+function execOnMain (func, attribute) {
+	if (popout == true) {
+		sendMessage(func + '+' + attribute.join('+'));
+		executeFunctionByName(func, attribute);
+	} else {
+		executeFunctionByName(func, attribute);
 	}
 }
 
@@ -553,7 +728,7 @@ function sendMessage (text) {
 * Receives Message from Settings-popout/main window and executes the function in it.
 */
 function receiveMessage (e) {
-	//console.log('[MPO] Message received: ' + e.data);
+	console.log('[MPO] Message received: ' + e.data);
 	popoutActivated = true;
 	var args = e.data.split('+');
 
@@ -579,7 +754,7 @@ function receiveMessage (e) {
 * @param {string} functionName The name of the function that should be executed.
 * @param {array} args Arguments that should be used.
 */
-function executeFunctionByName(functionName, args) {
+function executeFunctionByName (functionName, args) {
 	var context = window;
 	//var args = Array.prototype.slice.call(arguments, 2);
 	var namespaces = functionName.split(".");
@@ -632,6 +807,83 @@ function mpoSettingsPopout () {
 		popoutActivated = true;
 	}
 }
+
+/*
+* Saves all drag 'n' drop locations.
+*/
+function interactSave () {
+	var elems = document.getElementsByClassName('draggable');
+	var arrX = [];
+	var arrY = [];
+	for (var num = 0; num < elems.length; num++) {
+		arrX.push(elems[num].getAttribute('data-x'));
+		arrY.push(elems[num].getAttribute('data-y'));
+	}
+	localStorage.setItem('datax', arrX);
+	localStorage.setItem('datay', arrY);
+}
+
+/*
+* Resets all drag 'n' drop locations.
+*/
+function interactReset () {
+	localStorage.removeItem('datax');
+	localStorage.removeItem('datay');
+	var elems = document.getElementsByClassName('draggable');
+	for (var num = 0; num < elems.length; num++) {
+		elems[num].style.transform = 'none';
+		elems[num].setAttribute('data-x', 0);
+		elems[num].setAttribute('data-y', 0);
+	}
+}
+
+// === INTERACT.JS ===
+// target elements with the "draggable" class
+interact('.draggable')
+	.draggable({
+		// enable inertial throwing
+		inertia: true,
+		// keep the element within the area of it's parent
+		/* restrict: {
+			restriction: "parent",
+			endOnly: true,
+			elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+		},*/ 
+		// enable autoScroll
+		autoScroll: true,
+
+		// call this function on every dragmove event
+		onmove: dragMoveListener,
+		// call this function on every dragend event
+		onend: function (event) {
+		var textEl = event.target.querySelector('p');
+
+		textEl && (textEl.textContent =
+			'moved a distance of '
+			+ (Math.sqrt(Math.pow(event.pageX - event.x0, 2) +
+				Math.pow(event.pageY - event.y0, 2) | 0))
+				.toFixed(2) + 'px');
+	}
+});
+
+function dragMoveListener (event) {
+	if (document.getElementById('enableInteract').checked == true) {
+		var target = event.target,
+			// keep the dragged position in the data-x/data-y attributes
+			x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+			y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+		// translate the element
+		target.style.webkitTransform =
+		target.style.transform =
+			'translate(' + x + 'px, ' + y + 'px)';
+
+		// update the posiion attributes
+		target.setAttribute('data-x', x);
+		target.setAttribute('data-y', y);
+	}
+}
+// === INTERACT.JS END ===
 
 window.addEventListener("click", windowOnClick);
 window.addEventListener("message", receiveMessage, false);

@@ -19,7 +19,7 @@ Default icons created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000) 
 Mario Kart 8 Deluxe icons ripped by [Random Talking Bush](https://twitter.com/RandomTBush) and edited by [RicoDexter](https://twitter.com/Der_RicoDexter) & [blueYOSHI9000](https://www.twitter.com/blueyoshi9000)  
 Super Mario Party character icons ripped by [xX-CamTro-Xx](https://www.spriters-resource.com/submitter/xX-CamTro-Xx/)  
 Mario Party 9 character icons ripped by [larsenv](https://www.spriters-resource.com/submitter/larsenv/)  
-Mario Party DS icons ripped by [FieryExplosion](https://www.spriters-resource.com/submitter/FieryExplosion/) & [Anonymous](https://www.spriters-resource.com/submitter/Anonymous/)
+Mario Party DS icons ripped by [FieryExplosion](https://www.spriters-resource.com/submitter/FieryExplosion/) & [Anonymous](https://www.spriters-resource.com/submitter/Anonymous/) & [Arend](https://www.mariowiki.com/User:Arend)
 
 [Font](https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx)  
 [Interact.js](http://interactjs.io/) (enables drag 'n' drop)

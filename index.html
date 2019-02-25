@@ -1,13 +1,13 @@
 <!doctype html>
 
-<html lang="en">
+<html lang="en" id="htmlElement">
 <head>
 	<meta charset="utf-8">
 
 	<title>Mario Party Overlay</title>
 	<meta name="description" content="An extensive and easy to use 'Bonus Star' tracker for all Mario Party games!">
 	<meta name="author" content="blueYOSHI9000">
-	<meta name="viewport" content="width=815, initial-scale=0.5">
+	<meta name="viewport" content="width=815">
 
 	<link rel="shortcut icon" type="image/png" href="img/stars.png"/>
 	<link rel="stylesheet" href="style.css">
@@ -16,14 +16,14 @@
 <body id="bodyElement" style="background: url(img/background.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;">
 
 	<span id="noSettings">
-	<button onclick="openSettings()" style="width: 80px;"> Settings </button> <br> <br>
+	<button onclick="openSettings()"> Settings </button> <br> <br>
 
 	<div id="mobileTypeDiv">
 		<span id="toGenerateSpan" class="grayBG">
-			<button onclick="textOutput(true)" style="width: 150px;">Generate & Copy</button> <input id="textOutput" onClick="this.select()" value="No stats generated yet." readonly>
+			<button onclick="textOutput(true)">Generate & Copy</button> <input id="textOutput" onClick="this.select()" value="No stats generated yet." readonly>
 		</span>
 		<span id="saveReloadSpan" class="grayBG">
-			<button onclick="backup()" style="width: 55px;"> Save </button> <button onclick="restore()" id="reloadButton" style="width: 75px;" disabled> Reload </button> <br>
+			<button onclick="backup()"> Save </button> <button onclick="restore()" id="reloadButton" disabled> Reload </button> <br>
 		</span>
 
 		<div id="mobileTypeSpan" class="grayBG">
@@ -180,9 +180,23 @@
 				<span id="settingsSelectionSpan">
 					<b id="generalMPOSelector" class="settingsSelection settingsSelected" onclick="showHideSettings('generalMPO')">General</b> <span class="flexAuto"></span>
 					<b id="textOutputSelector" class="settingsSelection nowrap" onclick="showHideSettings('textOutput')">Text Output</b> <span class="flexAuto"></span>
+					<b id="shortcutSelector" class="settingsSelection nowrap" onclick="showHideSettings('shortcut')">Shortcuts</b> <span class="flexAuto"></span>
 					<b id="playerSelector" class="settingsSelection" onclick="showHideSettings('player')">Characters</b> <span class="flexAuto"></span>
 					<b id="counterSelector" class="settingsSelection" onclick="showHideSettings('counter')">Counters</b> <span class="flexAuto"></span>
-					<b id="tutorialSelector" class="settingsSelection" style="margin: 0px;" onclick="showHideSettings('tutorial')">Tutorial/Contact</b>
+					<b id="tutorialSelector" class="settingsSelection" style="margin: 0px;" onclick="showHideSettings('tutorial')">Credits</b>
+				</span>
+
+				<span id="settingsSelectionSpanBreak">
+					<span style="display: flex;">
+						<b id="generalMPOSelectorBreak" class="settingsSelection settingsSelected" onclick="showHideSettings('generalMPO')">General</b> <span class="flexAuto"></span>
+						<b id="textOutputSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('textOutput')">Text Output</b> <span class="flexAuto"></span>
+						<b id="shortcutSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('shortcut')">Shortcuts</b>
+					</span> <br>
+					<span style="display: flex;">
+						<b id="playerSelectorBreak" class="settingsSelection" onclick="showHideSettings('player')">Characters</b> <span class="flexAuto"></span>
+						<b id="counterSelectorBreak" class="settingsSelection" onclick="showHideSettings('counter')">Counters</b> <span class="flexAuto"></span>
+						<b id="tutorialSelectorBreak" class="settingsSelection" style="margin: 0px;" onclick="showHideSettings('tutorial')">Credits</b>
+					</span>
 				</span>
 
 				<div id="gameSelectorDiv" class="charSelector">Games: 
@@ -290,20 +304,27 @@
 				</div>
 			</div>
 			<div id="settingsHeaderBorder"></div>
+
+			<span id="shortcutHeader" style="width: 100%;">
+				<!--button style="float: left;" onclick="turnEnd()">Finish turn?</button-->
+				<button id="finishTurn" onclick="turnEnd()" disabled="true">Finish turn</button>
+				<div id="shortcutNotif" class="settingsText">Start the game.</div>
+			</span>
+
 			<div id="settingsMain">
 
 				<!-- General Settings -->
 				<div id="generalMPOSettings" class="visible">
-					<span id="siteError"> MPO could not be properly loaded, try reloading or clearing local storage. <br> This might also appear if cookies are deactivated. </span>
+					<span id="siteError" class="error"> MPO could not be loaded properly, try reloading or clearing local storage. <br> This might also appear if cookies are blocked. </span>
 
 
-					<label for="enableInteract"> <span class="settingsText"> Enable Drag 'n' Drop: </span> </label> <input type="checkbox" id="enableInteract" onchange="sendSettingsMsg(this.id, this.checked)"> <button style="width: 130px;" onclick="changeSettings('interactSave')">Save Positions</button> <button style="width: 135px;" onclick="changeSettings('interactReset')">Reset Positions</button> <br> <br>
+					<label for="enableInteract"> <span class="settingsText"> Enable Drag 'n' Drop: </span> </label> <input type="checkbox" id="enableInteract" onchange="sendSettingsMsg(this.id, this.checked)"> <button onclick="changeSettings('interactSave')">Save Positions</button> <button onclick="changeSettings('interactReset')">Reset Positions</button> <br> <br>
 
 					<label for="autoPopout"> <span class="settingsText"> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="sendSettingsMsg(this.id, this.checked)"> </label> <br> <br>
 					
 					<span class="settingsText"> Background: </span> <button id="themeB1" class="themeButtons" onclick="changeSettings('changeTheme', [1])" style="border-color: green;" disabled></button> <button id="themeB2" class="themeButtons" onclick="changeSettings('changeTheme', [2])"></button> <button id="themeB3" class="themeButtons" onclick="changeSettings('changeTheme', [3])"> </button> <br>
 					<span class="settingsText" style="position: relative; top: -13px;"> Default icon style: </span> 
-						<span class="charSelector">
+						<span class="charSelector" id="iconSelector">
 							<span class="relative">
 								<input type="radio" name="icons" id="mpsrIcons" value="mpsrIcons" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('changeCharacters')" checked>
 								<label class="charSelectorLabel mario iconLabel" for="mpsrIcons"> </label>
@@ -327,7 +348,7 @@
 					<label for="autoSave"> <span class="settingsText"> Automatically save/reload when updating turns: </span> </label> <input type="checkbox" id="autoSave" onchange="sendSettingsMsg(this.id, this.checked);if (this.checked == true) {changeSettings('backup')}"> <br>
 					<label for="permSave"> <span class="settingsText"> Save counters permanently (not getting deleted on site reload): </span> </label> <input type="checkbox" id="permSave" onchange="sendSettingsMsg(this.id, this.checked)" checked> <br> <br> <br>
 					
-					<button onclick="localStorage.clear()" style="width: 163px;">Clear local storage</button> <span class="settingsNote">(This will clear all saved settings, characters and counters)</span>
+					<button onclick="localStorage.clear()">Clear local storage</button> <span class="settingsNote">(This will clear all saved settings, characters and counters)</span>
 				</div>
 
 				<!-- Text Output Settings -->
@@ -344,7 +365,7 @@
 					<span class="settingsText marginLeft">  Player 2 name: </span> <input id="toP2Name" onchange="sendSettingsMsg(this.id, this.value)"> <br>
 					<span class="settingsText">  Player 3 name: </span> <input id="toP3Name" onchange="sendSettingsMsg(this.id, this.value)">
 					<span class="settingsText marginLeft">  Player 4 name: </span> <input id="toP4Name" onchange="sendSettingsMsg(this.id, this.value)"> <br>
-					<span class="settingsText"> Counter seperation: </span> <input id="toSeperation" value=" | " onchange="sendSettingsMsg(this.id, this.value)" style="width: 30px;"> <br> <br>
+					<span class="settingsText"> Counter seperation: </span> <input id="toSeperation" value=" | " onchange="sendSettingsMsg(this.id, this.value)"> <br> <br>
 					
 					<label for="toUseActive"> <span class="settingsText"> Only use active counters: </span> <input type="checkbox" id="toUseActive" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('updateCounterInput')" checked> </label> <br> <br>
 					<span class="settingsNote hidden" id="counterNote"> Seperate counters with ", ". </span>
@@ -361,6 +382,115 @@
 					
 					<b class="warningText" id="textOutputWarning" style="visibility: hidden;"> Hi if you see this </b>
 				</div>
+
+				<!-- Shortcuts -->
+				<div id="shortcutSettings" class="hidden">
+					<span id="shortcutSpan">
+						<span class="settingsText" style="width: 100%; white-space: normal;">
+							Currently, only <b>Mario Party DS</b> is supported, other games will be added later. <br> <br>
+							This is currently in heavy development and some features might be broken. <br> <br>
+							In case something breaks or doesn't provide the expected output, please click on "Generate & Copy" and <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">contact me</a> with a screenshot of your browsers console (Ctrl + Shift + I > "Console"). It shows the last actions done and potential errors. <br> <br>
+							A lot of features depend on the coin counter, it's recommended to show it and keep it up to date.
+						</span> <br> <br>
+						<button onclick="prepareShortcut()">Start game</button>
+					</span>
+
+					<span id="shortcutTurn" style="display: none;">
+						<span class="shortcutText"> Current Player: </span> <span class="shortcutText" id="turnPlayerName" style="color: blue;"> Mario </span> <span style="position: relative;"> <img src="img/mpsrIcons/mario.png" style="position: absolute; top: -20px; margin-left: 3px;" id="turnPlayerIcon"> </span> <br> <br>
+
+
+						<span class="column">
+							<span class="settingsTitle">Stars</span> <br>
+							<span id="starsSelection" class="imgSelection">
+								<img src="img/stars.png" onclick="buyStar()">
+								<img src="img/shortcut/magicjarstars.png" style="margin-left: 50px;" onclick="buyStar('jarstar')">
+								<img src="img/shortcut/magicjarcoins.png" onclick="buyStar('jarcoins')">
+								<img src="img/shortcut/magicjarfail.png" onclick="buyStar('jarfail')"> <br>
+								<img src="img/shortcut/bluenote.png" onclick="buyStar('bluenote')">
+								<img src="img/shortcut/greennote.png" onclick="buyStar('greennote')">
+								<img src="img/shortcut/yellownote.png" onclick="buyStar('yellownote')">
+								<img src="img/shortcut/orangenote.png" onclick="buyStar('orangenote')">
+								<img src="img/shortcut/rednote.png" onclick="buyStar('rednote')">
+							</span>
+						</span>
+						<br class="turnBreak">
+						<span class="column">
+							<span class="settingsTitle"> Dice number rolled </span> <br>
+							<span class="shortcutText spanSelection" style="-webkit-user-select: none; user-select: none;">
+								<span id="dice1" onclick="turnDice(this.id)">1</span> <span id="dice2" onclick="turnDice(this.id)">2</span> <span id="dice3" onclick="turnDice(this.id)">3</span> <span id="dice4" onclick="turnDice(this.id)">4</span> <span id="dice5" onclick="turnDice(this.id)">5</span> <span id="dice6" onclick="turnDice(this.id)">6</span> <span id="dice7" onclick="turnDice(this.id)">7</span> <span id="dice8" onclick="turnDice(this.id)">8</span> <span id="dice9" onclick="turnDice(this.id)">9</span> <span id="dice10" onclick="turnDice(this.id)">10</span>
+							</span> <br>
+							<img src="img/shortcut/diceblock.png" id="turnCurDice"> <span id="turnCurDiceText" class="shortcutText">??</span> <br> <br>
+						</span> <br>
+						
+						<span class="column">
+							<span class="settingsTitle">Shopping</span> <br>
+							<span id="shoppingSelection" class="spanSelection shortcutText">
+								<span onclick="shopping(1)">1</span>
+								<span onclick="shopping(2)">2</span>
+								<span onclick="shopping(3)">3</span>
+								<span onclick="shopping(7)">7</span> <br>
+								<span onclick="shopping(8)">8</span>
+								<span onclick="shopping(15)">15</span>
+								<span onclick="shopping(20)">20</span>
+								<span onclick="shopping(25)">25</span>
+							</span>
+						</span>
+						<br class="turnBreak">
+						<span class="column">
+							<span class="settingsTitle"> Items used? </span> <br>
+							<span id="turnItems" class="imgSelection spanSelection"> <img src="img/shortcut/double.png" id="itemDouble" onclick="turnItem(this.id)"> <img src="img/shortcut/triple.png" id="itemTriple" onclick="turnItem(this.id)"> <img src="img/shortcut/half.png" id="itemHalf" onclick="turnItem(this.id)"> <img src="img/hex.png" id="itemHex" onclick="turnItem(this.id)"> <span class="shortcutText" id="itemOther" onclick="turnItem(this.id)">Other</span> </span> <br>
+							<img src="img/tie.png" id="itemImg"> <span id="itemSpan"></span> <br> <br>
+						</span> <br>
+
+						<span class="column">
+							<span class="settingsTitle"> Space landed on </span> <br>
+							<span id="turnSpaces" class="imgSelection"> <img src="img/shortcut/bluespace.png" id="spaceBlue" onclick="turnSpace(this.id)"> <img src="img/shortcut/redspace.png" id="spaceRed" onclick="turnSpace(this.id)"> <img src="img/shortcut/happening.png" id="spaceHappening" onclick="turnSpace(this.id)"> <img src="img/shortcut/friendspace.png" id="spaceFriend" onclick="turnSpace(this.id)"> <img src="img/shortcut/duelspace.png" id="spaceDuel" onclick="turnSpace(this.id)"> <img src="img/shortcut/bowserspace.png" id="spaceBowser" onclick="turnSpace(this.id)"> </span> <br>
+							<img src="" id="spaceEventImg"> <span id="spaceEventsSpan"></span>
+						</span>
+						<br class="turnBreak">
+						<span class="column">
+							<span class="settingsTitle">Hexes landed on</span> <br>
+							<span id="hexSelection" class="imgSelection">
+								<img src="img/shortcut/coinsm10.png" id="coinsm10" onclick="turnHex(this.id)">
+								<img src="img/shortcut/coinsm20.png" id="coinsm20" onclick="turnHex(this.id)">
+								<img src="img/shortcut/coinswap.png" id="coinswap" onclick="turnHex(this.id)">
+								<img src="img/shortcut/starm1.png" id="starm1" onclick="turnHex(this.id)">
+								<img src="img/shortcut/starm2.png" id="starm2" onclick="turnHex(this.id)">
+								<img src="img/shortcut/spaceswap.png" id="spaceswap" onclick="turnHex(this.id)">
+								<img src="img/shortcut/coinblock.png" id="coinblock" onclick="turnHex(this.id)">
+								<img src="img/shortcut/starblock.png" id="starblock" onclick="turnHex(this.id)">
+							</span> <br>
+							<span id="hexCharSelection" class="imgSelection">
+							</span>
+						</span>
+					</span>
+
+
+
+
+
+
+
+
+
+
+
+
+					<span id="shortcutBattle" style="display: none;">
+						<span class="settingsTitle"> Battle Minigame </span> <br> <br>
+						<span id="battleStart"> Start Battle Minigame for <input type="number" id="battleCoins" min="10" max="60" value="10"> coins <br>
+						<button id="battleStartButton" onclick="startBattle()">Start Battle</button> </span> <span id="battleTextCoins"></span> <br> <span id="battleText"></span>
+						<span id="battlePlayers" style="display: none;">
+							<img src="img/1st.png" class="battleImg" onclick="calcBattle(1)">
+							<img src="img/2nd.png" class="battleImg" onclick="calcBattle(2)">
+							<img src="img/3rd.png" class="battleImg" onclick="calcBattle(3)">
+							<img src="img/4th.png" class="battleImg" onclick="calcBattle(4)">
+						</span>
+						<button id="battleReset" style="display: none;" onclick="calcBattle('undo')">Reset</button> <br>
+						<span id="battleResult"></span>
+					</span>
+				</div>
+
 
 				<!-- Mario Party Counter Settings -->
 				<div id="playerSettings" class="hidden">
@@ -849,12 +979,12 @@
 							</div>
 						</span>
 					</span>
-					<button style="width: 190px;" onclick="changeSettings('randomChar')">Randomize characters</button>
+					<button onclick="changeSettings('randomChar')">Randomize characters</button>
 				</div>
 
 				<!-- Counter Settings -->
 				<div id="counterSettings" class="charSelector hidden">
-					<span id="counterError" style="display: none;">The selected game doesn't have bonus stars.</span> <br>
+					<span id="counterError" class="error" style="display: none;">The selected game doesn't have bonus stars.</span> <br>
 
 					<div class="counterSelection">
 						<span class="happeningC relative"> <label for="happeningOnOff" class="counterOnOffText">Happening (1-8, DS, SMP):</label> <input type="checkbox" id="happeningOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['happening'])" checked> <label for="happeningOnOff" class="charSelectorLabel counterOnOff happeningOnOff"></label> </span>
@@ -900,7 +1030,7 @@
 					</div>
 					<span class="settingsNote"> Minigame Star Reminder: MP 1-8 uses coins, MP DS & SMP uses wins and MP 9 & 10 uses Mini-stars. </span> <br> <br>
 
-					<span id="ingameCounters">In-game counters</span> <br>
+					<span class="settingsTitle">In-game counters</span> <br>
 					<span class="settingsNote" style="white-space: nowrap;"> (Useful to completely replace the in-game display - Highlighting does not affect these counters) </span> <br>
 					<div class="counterSelection">
 						<span class="relative"> <label for="starsOnOff" class="counterOnOffText">Stars:</label> <input type="checkbox" id="starsOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['stars'])"> <label for="starsOnOff" class="charSelectorLabel counterOnOff starsOnOff"></label> </span>
@@ -918,13 +1048,13 @@
 						<span class="relative"> <label for="coinsOnOff" class="counterOnOffText">Coins:</label> <input type="checkbox" id="coinsOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['coins'])"> <label for="coinsOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </span>
 					</div> <br>
 					<span class="relative"> <label for="deactivateUnused"> <span class="settingsText"> Deactivate unused counters when changing games: </span> </label> <input type="checkbox" id="deactivateUnused" style="top: 5px;" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('deactivateUnused')" checked> </span> <br>
-					<button onclick="changeSettings('saveCounters')" id="permSaveCounters" style="width: 100px; margin-right: 10px;">Save Stats</button> <button onclick="changeSettings('resetCounters')" style="width: 107px;">Reset Stats</button>
+					<button onclick="changeSettings('saveCounters')" id="permSaveCounters" style="margin-right: 10px;">Save Stats</button> <button onclick="changeSettings('resetCounters')">Reset Stats</button>
 
 					<span style="font-size: 21px; margin-left: 50px;"><a class="settingsLink" rel="noopener" target="_blank" href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Mario-Party-Bonus-Star-List">Bonus Star List</a></span>
 				</div>
 				<div id="tutorialSettings" class="hidden"> <span class="settingsText"> Click on the numbers to increase the counters, by holding Ctrl you can decrease them instead. The amount can be changed at the top (1, 5 or 10). <br class="lineHeight">
 					It's possible to switch between 1 and 5 by holding Shift, if one of the two is selected. <br class="lineHeight">
-					To give/take the coin-star you just click on the character. <br> <br>
+					To give/take the coin star, you just click on the character. <br> <br>
 					The "Generate & Copy" button outputs all stats as text and copies it. <br class="lineHeight">
 					The Save/Reload buttons well... save and reload! It saves all stats and reloads them. If activated in the settings, they will be saved in your browser too and automatically loaded the next time you open the site. <br> <br>
 
@@ -940,7 +1070,7 @@
 					Mario Kart 8 character icons ripped by <a href="https://twitter.com/RandomTBush" class="settingsLink" rel="noopener" target="_blank">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="settingsLink" rel="noopener" target="_blank"> RicoDexter</a> & <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI9000</a> </span> <br>
 					Super Mario Party character icons ripped by <a href="https://www.spriters-resource.com/submitter/xX-CamTro-Xx/" class="settingsLink" rel="noopener" target="_blank">xX-CamTro-Xx</a> <br>
 					Mario Party 9 character icons ripped by <a href="https://www.spriters-resource.com/submitter/larsenv/" class="settingsLink" rel="noopener" target="_blank">larsenv</a> <br>
-					Mario Party DS icons ripped by <a href="https://www.spriters-resource.com/submitter/FieryExplosion/" class="settingsLink" rel="noopener" target="_blank">FieryExplosion</a> & <a href="https://www.spriters-resource.com/submitter/Anonymous/" class="settingsLink" rel="noopener" target="_blank">Anonymous</a> <br>
+					Mario Party DS icons ripped by <a href="https://www.spriters-resource.com/submitter/FieryExplosion/" class="settingsLink" rel="noopener" target="_blank">FieryExplosion</a> & <a href="https://www.spriters-resource.com/submitter/Anonymous/" class="settingsLink" rel="noopener" target="_blank">Anonymous</a> & <a href="https://www.mariowiki.com/User:Arend" class="settingsLink" rel="noopener" target="_blank">Arend</a> <br>
 					<span> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="settingsLink" rel="noopener" target="_blank">Counter Font</a> </span> <br>
 					<span> <a href="https://interactjs.io/" class="settingsLink" rel="noopener" target="_blank"> Interact.js</a> </span> <span class="settingsText">(enables drag 'n' drop) </span> <br> <br>
 				</div>
@@ -949,11 +1079,11 @@
 			<!-- Reset/save Settings -->
 			<div id="settingsFooter">
 				<div id="settingsFooterBorder"></div>
-				<button onclick="changeSettings('resetSettings')" id="resetSettingsButton" style="width: 130px; flex: auto;"> Reset Settings </button>
-				<button onclick="changeSettings('resetPlayers')" style="width: 215px; flex: auto;"> Reset Players & Counters </button>
+				<button onclick="changeSettings('resetSettings')" id="resetSettingsButton" style="flex: auto;"> Reset Settings </button>
+				<button onclick="changeSettings('resetPlayers')" style="flex: auto;"> Reset Players & Counters </button>
 				<span id="settingsClose">
-					<button id="popoutButton" onclick="mpoSettingsPopout()" style="width: 140px;"> Popout Settings </button>
-					<button onclick="saveSettings(true); savePlayers()" id="saveButton" style="width: 55px;"> Save </button>
+					<button id="popoutButton" onclick="mpoSettingsPopout()"> Popout Settings </button>
+					<button onclick="saveSettings(true); savePlayers()" id="saveButton"> Save </button>
 					<button onclick="if (popout == true) {window.close()} else {showHideDiv(['settings'])}" id="settingsCloseButton"> Close </button>
 				</span>
 			</div>
@@ -964,7 +1094,7 @@
 	<script src="saving.js"></script>
 	<script src="textoutput.js"></script>
 	<script src="characters.js"></script>
-	<script src="settings.js"></script>
+	<!--script src="settings.js"></script-->
 	<script src="core.js"></script>
 	<script src="main.js"></script>
 	<script type="text/javascript"> window.onload = prepareMPOBackup(); </script>

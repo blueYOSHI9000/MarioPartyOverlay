@@ -1,4 +1,44 @@
 /*
+* Returns the correct name of a character.
+* 
+* @param {string} character The shortened name of the character.
+*/
+function getCharName (character) {
+	if (isNaN(character) == false) {
+		character = characters[character];
+	}
+
+	switch (character) {
+		case 'bowserjr':
+			return 'Bowser Jr.';
+			break;
+		case 'dk':
+			return 'Donkey Kong';
+			break;
+		case 'koopakid':
+			return 'Koopa Kid';
+			break;
+		case 'pompom':
+			return 'Pom Pom';
+			break;
+		case 'drybones':
+			return 'Dry Bones';
+			break;
+		case 'dk':
+			return 'Donkey Kong';
+			break;
+		case 'shyguy':
+			return 'Shy Guy';
+			break;
+		case 'hammerbro':
+			return 'Hammer Bro';
+			break;
+		default:
+			return character.charAt(0).toUpperCase() + character.slice(1);
+	}
+}
+
+/*
 * Outputs all counters as text.
 */
 function textOutput () {
@@ -7,34 +47,7 @@ function textOutput () {
 	//Checks if a custom name has been assigned, if not it uses the characters name
 	for (let num = 1; num < 5; num++) {
 		if (getValue('toP' + num + 'Name') == '') {
-			switch (characters[num]) {
-				case 'bowserjr':
-					playerName[num] = 'Bowser Jr.';
-					break;
-				case 'dk':
-					playerName[num] = 'Donkey Kong';
-					break;
-				case 'koopakid':
-					playerName[num] = 'Koopa Kid';
-					break;
-				case 'pompom':
-					playerName[num] = 'Pom Pom';
-					break;
-				case 'drybones':
-					playerName[num] = 'Dry Bones';
-					break;
-				case 'dk':
-					playerName[num] = 'Donkey Kong';
-					break;
-				case 'shyguy':
-					playerName[num] = 'Shy Guy';
-					break;
-				case 'hammerbro':
-					playerName[num] = 'Hammer Bro';
-					break;
-				default:
-					playerName[num] = characters[num].charAt(0).toUpperCase() + characters[num].slice(1);
-			}
+			playerName[num] = getCharName(characters[num]);
 		} else {
 			playerName[num] = getValue('toP' + num + 'Name');
 		}
@@ -180,16 +193,16 @@ function textOutput () {
 					} else {
 						switch (result.length) {
 							case 1:
-								forResult.push(counterNames[num] + ': ' + result[0] + ' ' + resultNum[0]);
+								forResult.push(counterNames[num] + ': ' + result[0] + ' ' + resultNum[0].replace(/ /g,''));
 								break;
 							case 2:
-								forResult.push(counterNames[num] + ': ' + result[0] + ' & ' + result[1] + ' ' + resultNum[0]);
+								forResult.push(counterNames[num] + ': ' + result[0] + ' & ' + result[1] + ' ' + resultNum[0].replace(/ /g,''));
 								break;
 							case 3:
-								forResult.push(counterNames[num] + ': ' + result[0] + ' & ' + result[1] + ' & ' + result[2] + ' ' + resultNum[0]);
+								forResult.push(counterNames[num] + ': ' + result[0] + ' & ' + result[1] + ' & ' + result[2] + ' ' + resultNum[0].replace(/ /g,''));
 								break;
 							case 4:
-								forResult.push(counterNames[num] + ': ' + result[0] + ' & ' + result[1] + ' & ' + result[2] + ' & ' + result[3] + ' ' + resultNum[0]);
+								forResult.push(counterNames[num] + ': ' + result[0] + ' & ' + result[1] + ' & ' + result[2] + ' & ' + result[3] + ' ' + resultNum[0].replace(/ /g,''));
 								break;
 						}
 						
@@ -199,7 +212,7 @@ function textOutput () {
 					}
 
 				} else {
-					output[num] = counterNames[num] + ': ' + playerName[1] + ' ' + document.getElementById('p1' + toCounters[num] + 'Text').innerHTML + ', ' + playerName[2] + ' ' + document.getElementById('p2' + toCounters[num] + 'Text').innerHTML + ', ' + playerName[3] + ' ' + document.getElementById('p3' + toCounters[num] + 'Text').innerHTML + ', ' + playerName[4] + ' ' + document.getElementById('p4' + toCounters[num] + 'Text').innerHTML;
+					output[num] = counterNames[num] + ': ' + playerName[1] + ' ' + document.getElementById('p1' + toCounters[num] + 'Text').innerHTML.replace(/ /g,'') + ', ' + playerName[2] + ' ' + document.getElementById('p2' + toCounters[num] + 'Text').innerHTML.replace(/ /g,'') + ', ' + playerName[3] + ' ' + document.getElementById('p3' + toCounters[num] + 'Text').innerHTML.replace(/ /g,'') + ', ' + playerName[4] + ' ' + document.getElementById('p4' + toCounters[num] + 'Text').innerHTML.replace(/ /g,'');
 				}
 		}
 	}

@@ -420,7 +420,7 @@ function deactivateUnused () {
 			unused = ['coinStar', 'redSpace', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'ally', 'stompy', 'doormat', 'miniStars'];
 			break;
 		case 'mpds':
-			unused = ['coinStar', 'redSpace', 'slow', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
+			unused = ['coinStar', 'redSpace', 'slow', 'shopping', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
 			break;
 		case 'mpsr':
 		case 'mptt100':
