@@ -204,11 +204,13 @@ body {
 /* == Settings == */
 #settingsButton {
 	font-family: 'Mario';
-	font-size: 19px;
+	font-size: 22px;
 	color: #000000;
-	text-shadow: -2px 0 #d7d7d7, 0 2px #d7d7d7, 2px 0 #d7d7d7, 0 -2px #d7d7d7;
+	-webkit-text-stroke: 1.5px #d7d7d7;
+			text-stroke: 1.5px #d7d7d7;
+	letter-spacing: -.5px;
 	cursor: pointer;
-	margin-left: 230px;
+	margin-left: 220px;
 }
 #settingsButton:hover {
 	color: #b50000;
@@ -896,7 +898,7 @@ button {
 	font-size: 17px;
 }
 #mobileTypeDiv {
-	margin-top: 15px;
+	margin-top: 5px;
 }
 .mobileType {
 	height: 20px;
