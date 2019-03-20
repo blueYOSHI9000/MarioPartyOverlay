@@ -5,25 +5,32 @@
 * @param {string} action What should be done.
 * @param {string} amount The amount that should be changed
 * @param {string} counter Which counter should be updated.
-* @param {boolean} nosend If true it won't get executed on popout.
 */
-function counterButtons (player, action, amount, counter, send) {
+function counterButtons (player, action, amount, counter) {
 	//console.log('[counterButtons] Player: ' + player + ', action: ' + action + ', amount: ' + amount + ', counter: ' + counter);
 	var result = 0;
 
+	amount = parseInt(amount);
 	if (amount === '') {
 		amount = 1;
 	}
 
 	if (counter != 'curTurn' && counter != 'maxTurn' && counter != 'coinStar') {
 		counter = counter.charAt(0).toUpperCase() + counter.slice(1);
-		result = parseInt(document.getElementById('p' + player + counter + 'Text').innerHTML);
+		if (isNaN(amount) == true) {
+			result = 0;
+			amount = 0;
+			console.warn('[MPO] Counter was NaN, player: ' + player + ', counter: ' + counter);
+			shortcutNotif('Error: ' + counter + ' for player ' + player + ' was NaN', true);
+		} else {
+			result = parseInt(document.getElementById('p' + player + counter + 'Text').innerHTML);
+		}
 
 		if (action == 'P') {
 			result = result + amount;
 		} else if (action == 'M') {
 			result = result - amount;
-		} else if (action == 'set') {
+		} else if (action == 'S') {
 			result = amount;
 		}
 		
@@ -43,7 +50,7 @@ function counterButtons (player, action, amount, counter, send) {
 			result = result + amount;
 		} else if (action == 'M') {
 			result = result - amount;
-		} else if (action == 'set') {
+		} else if (action == 'S') {
 			result = amount;
 		}
 		coinStar(result);
@@ -98,6 +105,10 @@ function updateCounter (id, change, noAnimation) {
 * @param {player} player Which player should be updated.
 */
 function mobileButtons (counter, player) {
+	if (getValue('enableInteract') == true) {
+		return;
+	}
+
 	var action = '';
 	var amount = 0;
 
@@ -245,15 +256,15 @@ function turns (counter, amount, action) {
 	var curTurnVar = parseInt(document.getElementById('curTurnText').innerHTML);
 	var maxTurnVar = parseInt(document.getElementById('maxTurnText').innerHTML);
 
-	if (action == 'P' && getValue('autoSave') == true) {
+	if (action === 'P' && getValue('autoSave') === true && counter === 'curTurn') {
 		backup();
-	} else if (action == 'M' && getValue('autoSave') == true) {
+	} else if (action === 'M' && getValue('autoSave') === true && counter === 'curTurn') {
 		restore();
 	}
 
-	if (counter == 'curTurn') {
+	if (counter === 'curTurn') {
 		var result = curTurnVar;
-	} else if (counter == 'maxTurn') {
+	} else if (counter === 'maxTurn') {
 		var result = maxTurnVar;
 	} else {
 		return;
@@ -267,7 +278,7 @@ function turns (counter, amount, action) {
 		for (let num = 0; num < amount; num++) {
 			result--;
 		}
-	} else if (action == 'set') {
+	} else if (action == 'S') {
 		result = amount;
 	}
 

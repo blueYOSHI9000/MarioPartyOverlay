@@ -15,6 +15,10 @@
 
 <body id="bodyElement" style="background: url(img/background.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;">
 
+	<noscript>
+		<span style="position: absolute; top: 0; left: 0; background-color: black; padding: 10px; margin: 5px; border: 2px solid yellow; color: white; border-radius: 1.2rem;"> Javascript is required for MPO to work. <br> MPO does not save or send any information anywhere aside from saving stats & settings in your browser. </span>
+	</noscript>
+	
 	<span id="noSettings">
 	<span onclick="openSettings()" id="settingsButton"> Settings </span>
 
@@ -172,6 +176,67 @@
 	</span>
 
 	
+	<div id="allySelection" class="popupContent imgSelection">
+		<div style="text-align: center;"> <button style="position: absolute; bottom: 8px;" onclick="getAlly('close')">Close</button> </div>
+		<div>
+			<span style="float: left; padding-right: 10px; border-right: 2px solid black; margin-right: 10px; margin-bottom: 20px;">
+				<span style="position: relative;"> <span class="shortcutText" style="position: absolute; white-space: nowrap;"> Choose an ally </span> </span> <img src="img/smp/bobomb.png" id="bobombAlly" style="margin-left: 287px;" onclick="getAlly('bobomb')"> <br>
+				<img src="img/smp/mario.png" id="marioAlly" onclick="getAlly('mario')">
+				<img src="img/smp/luigi.png" id="luigiAlly" onclick="getAlly('luigi')">
+				<img src="img/smp/peach.png" id="peachAlly" onclick="getAlly('peach')">
+				<img src="img/smp/daisy.png" id="daisyAlly" onclick="getAlly('daisy')">
+				<img src="img/smp/wario.png" id="warioAlly" onclick="getAlly('wario')"> <br>
+				<img src="img/smp/waluigi.png" id="waluigiAlly" onclick="getAlly('waluigi')">
+				<img src="img/smp/yoshi.png" id="yoshiAlly" onclick="getAlly('yoshi')">
+				<img src="img/smp/rosalina.png" id="rosalinaAlly" onclick="getAlly('rosalina')">
+				<img src="img/smp/dk.png" id="dkAlly" onclick="getAlly('dk')">
+				<img src="img/smp/diddy.png" id="diddyAlly" onclick="getAlly('diddy')"> <br>
+				<img src="img/smp/bowser.png" id="bowserAlly" onclick="getAlly('bowser')">
+				<img src="img/smp/goomba.png" id="goombaAlly" onclick="getAlly('goomba')">
+				<img src="img/smp/shyguy.png" id="shyguyAlly" onclick="getAlly('shyguy')">
+				<img src="img/smp/koopa.png" id="koopaAlly" onclick="getAlly('koopa')">
+				<img src="img/smp/monty.png" id="montyAlly" onclick="getAlly('monty')"> <br>
+				<img src="img/smp/bowserjr.png" id="bowserjrAlly" onclick="getAlly('bowserjr')">
+				<img src="img/smp/boo.png" id="booAlly" onclick="getAlly('boo')">
+				<img src="img/smp/hammerbro.png" id="hammerbroAlly" onclick="getAlly('hammerbro')">
+				<img src="img/smp/drybones.png" id="drybonesAlly" onclick="getAlly('drybones')">
+				<img src="img/smp/pompom.png" id="pompomAlly" onclick="getAlly('pompom')">
+			</span>
+			<span style="float: right;">
+				<span class="shortcutText"> Remove an Ally </span> <br>
+				<span id="removeAllySelection">
+					<img src="img/smp/mario.png" style="visibility: hidden;" onclick="removeAlly(1, 1)">
+					<img src="img/smp/luigi.png" style="visibility: hidden;" onclick="removeAlly(1, 2)">
+					<img src="img/smp/yoshi.png" style="visibility: hidden;" onclick="removeAlly(1, 3)">
+					<img src="img/smp/yoshi.png" style="visibility: hidden;" onclick="removeAlly(1, 4)"> <br> <br>
+
+					<span id="removeAllyChar1" class="removeAllyCharSpan">
+						<img src="img/mpsrIcons/rosalina.png" class="removeAllyChar">
+						<img src="img/smp/mario.png" style="visibility: hidden;" onclick="removeAlly(2, 1)">
+						<img src="img/smp/luigi.png" style="visibility: hidden;" onclick="removeAlly(2, 2)">
+						<img src="img/smp/yoshi.png" style="visibility: hidden;" onclick="removeAlly(2, 3)">
+						<img src="img/smp/yoshi.png" style="visibility: hidden;" onclick="removeAlly(2, 4)"> <br>
+					</span>
+
+					<span id="removeAllyChar2" class="removeAllyCharSpan">
+						<img src="img/mpsrIcons/wario.png" class="removeAllyChar">
+						<img src="img/smp/mario.png" style="visibility: hidden;" onclick="removeAlly(3, 1)">
+						<img src="img/smp/luigi.png" style="visibility: hidden;" onclick="removeAlly(3, 2)">
+						<img src="img/smp/yoshi.png" style="visibility: hidden;" onclick="removeAlly(3, 3)">
+						<img src="img/smp/yoshi.png" style="visibility: hidden;" onclick="removeAlly(3, 4)"> <br>
+					</span>
+
+					<span id="removeAllyChar3" class="removeAllyCharSpan">
+						<img src="img/mpsrIcons/waluigi.png" class="removeAllyChar">
+						<img src="img/smp/mario.png" style="visibility: hidden;" onclick="removeAlly(4, 1)">
+						<img src="img/smp/luigi.png" style="visibility: hidden;" onclick="removeAlly(4, 2)">
+						<img src="img/smp/yoshi.png" style="visibility: hidden;" onclick="removeAlly(4, 3)">
+						<img src="img/smp/yoshi.png" style="visibility: hidden;" onclick="removeAlly(4, 4)"> <br>
+					</span>
+				</span>
+			</span>
+		</div>
+	</div>
 
 	<!-- Settings -->
 	<div class="hidden" id="settings">
@@ -191,7 +256,7 @@
 						<b id="generalMPOSelectorBreak" class="settingsSelection settingsSelected" onclick="showHideSettings('generalMPO')">General</b> <span class="flexAuto"></span>
 						<b id="textOutputSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('textOutput')">Text Output</b> <span class="flexAuto"></span>
 						<b id="shortcutSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('shortcut')">Shortcuts</b>
-					</span> <br>
+					</span>
 					<span style="display: flex;">
 						<b id="playerSelectorBreak" class="settingsSelection" onclick="showHideSettings('player')">Characters</b> <span class="flexAuto"></span>
 						<b id="counterSelectorBreak" class="settingsSelection" onclick="showHideSettings('counter')">Counters</b> <span class="flexAuto"></span>
@@ -310,7 +375,6 @@
 				<button id="finishTurn" onclick="turnEnd()" disabled="true">Finish turn</button>
 				<div id="shortcutNotif" class="settingsText">Start the game.</div>
 			</span>
-
 			<div id="settingsMain">
 
 				<!-- General Settings -->
@@ -322,7 +386,7 @@
 
 					<label for="autoPopout"> <span class="settingsText"> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="sendSettingsMsg(this.id, this.checked)"> </label> <br> <br>
 					
-					<span class="settingsText"> Background: </span> <button id="themeB1" class="themeButtons" onclick="changeSettings('changeTheme', [1])" style="border-color: green;" disabled></button> <button id="themeB2" class="themeButtons" onclick="changeSettings('changeTheme', [2])"></button> <button id="themeB3" class="themeButtons" onclick="changeSettings('changeTheme', [3])"> </button> <br>
+					<span class="settingsText"> Background: </span> <button id="themeB1" class="themeButtons" onclick="changeSettings('changeTheme', [1])" style="border-color: green;" disabled></button> <button id="themeB2" class="themeButtons" onclick="changeSettings('changeTheme', [2])"></button> <button id="themeB3" class="themeButtons" onclick="changeSettings('changeTheme', [3])"></button> <button id="themeB4" class="themeButtons" onclick="changeSettings('changeTheme', [4])"></button> <br>
 					<span class="settingsText" style="position: relative; top: -13px;"> Default icon style: </span> 
 						<span class="charSelector" id="iconSelector">
 							<span class="relative">
@@ -386,95 +450,74 @@
 				<!-- Shortcuts -->
 				<div id="shortcutSettings" class="hidden">
 					<span id="shortcutSpan">
-						<span class="settingsText" style="width: 100%; white-space: normal;">
-							Currently, only <b>Mario Party DS</b> is supported, other games will be added later. <br> <br>
-							This is currently in heavy development and some features might be broken. <br> <br>
-							In case something breaks or doesn't provide the expected output, please click on "Generate & Copy" and <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">contact me</a> with a screenshot of your browsers console (Ctrl + Shift + I > "Console"). It shows the last actions done and potential errors. <br> <br>
-							A lot of features depend on the coin counter, it's recommended to show it and keep it up to date.
-						</span> <br> <br>
-						<button onclick="prepareShortcut()">Start game</button>
+						<span class="settingsText" style="width: 100%; white-space: normal; line-height: 30px;">
+							Games currently supported: <img src="img/mpds.png" style="width: 40px;"> <img src="img/smp.png" style="width: 40px;"> <span class="settingsNote"> (no Kamek's Tantalizing Tower) </span> <br>
+							Only 4 players without Teams (this includes Partner Party) are currently supported. <br> <i>Reminder that all games still work normally outside of this Shortcut mode!</i> <br> <br>
+
+							A lot of features depend on the coin counter, it's recommended to show it and keep it up to date. An option to ignore coin count is planned. <br>
+							This is currently in heavy development and some features might not work as intended. <br> <br>
+							<button onclick="prepareShortcut()">Start game</button> <br> <br>
+
+							<span class="settingsTitle"> Report Bugs </span> <br>
+							In case something breaks or doesn't provide the expected output, please click on "Generate & Copy" and <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">contact me</a> or <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new?template=bug_report.md" class="settingsLink" rel="noopener" target="_blank">open a Github issue</a> with a screenshot or copy-paste of your browsers console (Ctrl + Shift + I > "Console"). It shows the last actions done and potential errors. Thank you! <br> <br>
+
+							<span class="settingsTitle"> Potential broken features </span> <br>
+							Mario Party is hugely RNG based so some events are really rare and as such hard to figure out how they work. <br>
+							Be sure to check your coin count after some of these as it might not be correct anymore:
+							<ul>
+								<li>SMP Minigame tied rewards</li>
+								<li>Battle Minigames (especially ties)</li>
+								<li>Lucky/ Extra- Bad Luck Events (some might even be missing)</li>
+								<li>VS space in SMP</li>
+								<li>MPDS Duel space</li>
+							</ul>
+						</span>
 					</span>
 
 					<span id="shortcutTurn" style="display: none;">
-						<span class="shortcutText"> Current Player: </span> <span class="shortcutText" id="turnPlayerName" style="color: blue;"> Mario </span> <span style="position: relative;"> <img src="img/mpsrIcons/mario.png" style="position: absolute; top: -20px; margin-left: 3px;" id="turnPlayerIcon"> </span> <br> <br>
+						<span class="shortcutText"> Current Player: </span> <span class="shortcutText" id="turnPlayerName" style="color: blue;"> Mario </span> <span style="position: relative;"> <img src="img/mpsrIcons/mario.png" style="position: absolute; top: -20px; margin-left: 3px;" id="turnPlayerIcon"> <span id="statusEffectsContainer"> <span id="statusEffects"></span> </span> </span> <br> <br>
 
 
-						<span class="column">
-							<span class="settingsTitle">Stars</span> <br>
-							<span id="starsSelection" class="imgSelection">
-								<img src="img/stars.png" onclick="buyStar()">
-								<img src="img/shortcut/magicjarstars.png" style="margin-left: 50px;" onclick="buyStar('jarstar')">
-								<img src="img/shortcut/magicjarcoins.png" onclick="buyStar('jarcoins')">
-								<img src="img/shortcut/magicjarfail.png" onclick="buyStar('jarfail')"> <br>
-								<img src="img/shortcut/bluenote.png" onclick="buyStar('bluenote')">
-								<img src="img/shortcut/greennote.png" onclick="buyStar('greennote')">
-								<img src="img/shortcut/yellownote.png" onclick="buyStar('yellownote')">
-								<img src="img/shortcut/orangenote.png" onclick="buyStar('orangenote')">
-								<img src="img/shortcut/rednote.png" onclick="buyStar('rednote')">
+						<span id="starColumn" class="column">
+							<span id="turnStars" class="settingsTitle"> Stars </span> <br>
+							<span id="turnStarsSelection" class="imgSelection">
 							</span>
 						</span>
 						<br class="turnBreak">
 						<span class="column">
-							<span class="settingsTitle"> Dice number rolled </span> <br>
-							<span class="shortcutText spanSelection" style="-webkit-user-select: none; user-select: none;">
-								<span id="dice1" onclick="turnDice(this.id)">1</span> <span id="dice2" onclick="turnDice(this.id)">2</span> <span id="dice3" onclick="turnDice(this.id)">3</span> <span id="dice4" onclick="turnDice(this.id)">4</span> <span id="dice5" onclick="turnDice(this.id)">5</span> <span id="dice6" onclick="turnDice(this.id)">6</span> <span id="dice7" onclick="turnDice(this.id)">7</span> <span id="dice8" onclick="turnDice(this.id)">8</span> <span id="dice9" onclick="turnDice(this.id)">9</span> <span id="dice10" onclick="turnDice(this.id)">10</span>
-							</span> <br>
-							<img src="img/shortcut/diceblock.png" id="turnCurDice"> <span id="turnCurDiceText" class="shortcutText">??</span> <br> <br>
+							<span id="turnDiceTitle" class="settingsTitle"> Dice number rolled </span> <br>
+							<span id="turnDiceSelectionSpan">
+							</span>
 						</span> <br>
 						
 						<span class="column">
-							<span class="settingsTitle">Shopping</span> <br>
-							<span id="shoppingSelection" class="spanSelection shortcutText">
-								<span onclick="shopping(1)">1</span>
-								<span onclick="shopping(2)">2</span>
-								<span onclick="shopping(3)">3</span>
-								<span onclick="shopping(7)">7</span> <br>
-								<span onclick="shopping(8)">8</span>
-								<span onclick="shopping(15)">15</span>
-								<span onclick="shopping(20)">20</span>
-								<span onclick="shopping(25)">25</span>
+							<span id="turnShoppingTitle" class="settingsTitle"> Shopping </span> <br>
+							<span id="turnShoppingSelection" class="spanSelection shortcutText">
 							</span>
 						</span>
 						<br class="turnBreak">
 						<span class="column">
-							<span class="settingsTitle"> Items used? </span> <br>
-							<span id="turnItems" class="imgSelection spanSelection"> <img src="img/shortcut/double.png" id="itemDouble" onclick="turnItem(this.id)"> <img src="img/shortcut/triple.png" id="itemTriple" onclick="turnItem(this.id)"> <img src="img/shortcut/half.png" id="itemHalf" onclick="turnItem(this.id)"> <img src="img/hex.png" id="itemHex" onclick="turnItem(this.id)"> <span class="shortcutText" id="itemOther" onclick="turnItem(this.id)">Other</span> </span> <br>
-							<img src="img/tie.png" id="itemImg"> <span id="itemSpan"></span> <br> <br>
+							<span id="turnItemsTitle" class="settingsTitle"> Items used </span> <br>
+							<span id="turnItems" class="imgSelection spanSelection"> </span> <br>
+							<img src="img/tie.png" id="itemImg"> <span id="itemEventSpan"></span> <br> <br>
 						</span> <br>
 
 						<span class="column">
-							<span class="settingsTitle"> Space landed on </span> <br>
-							<span id="turnSpaces" class="imgSelection"> <img src="img/shortcut/bluespace.png" id="spaceBlue" onclick="turnSpace(this.id)"> <img src="img/shortcut/redspace.png" id="spaceRed" onclick="turnSpace(this.id)"> <img src="img/shortcut/happening.png" id="spaceHappening" onclick="turnSpace(this.id)"> <img src="img/shortcut/friendspace.png" id="spaceFriend" onclick="turnSpace(this.id)"> <img src="img/shortcut/duelspace.png" id="spaceDuel" onclick="turnSpace(this.id)"> <img src="img/shortcut/bowserspace.png" id="spaceBowser" onclick="turnSpace(this.id)"> </span> <br>
+							<span id="turnSpacesTitle" class="settingsTitle"> Space landed on </span> <br>
+							<span id="turnSpaces" class="imgSelection"> </span> <br>
 							<img src="" id="spaceEventImg"> <span id="spaceEventsSpan"></span>
 						</span>
 						<br class="turnBreak">
-						<span class="column">
-							<span class="settingsTitle">Hexes landed on</span> <br>
-							<span id="hexSelection" class="imgSelection">
-								<img src="img/shortcut/coinsm10.png" id="coinsm10" onclick="turnHex(this.id)">
-								<img src="img/shortcut/coinsm20.png" id="coinsm20" onclick="turnHex(this.id)">
-								<img src="img/shortcut/coinswap.png" id="coinswap" onclick="turnHex(this.id)">
-								<img src="img/shortcut/starm1.png" id="starm1" onclick="turnHex(this.id)">
-								<img src="img/shortcut/starm2.png" id="starm2" onclick="turnHex(this.id)">
-								<img src="img/shortcut/spaceswap.png" id="spaceswap" onclick="turnHex(this.id)">
-								<img src="img/shortcut/coinblock.png" id="coinblock" onclick="turnHex(this.id)">
-								<img src="img/shortcut/starblock.png" id="starblock" onclick="turnHex(this.id)">
+						<span id="hexColumn" class="column">
+							<span id="turnHexTitle" class="settingsTitle"> Hex landed on </span> <br>
+							<span id="turnHexSelection" class="imgSelection">
 							</span> <br>
-							<span id="hexCharSelection" class="imgSelection">
+							<span id="turnHexCharSelection" class="imgSelection">
 							</span>
 						</span>
 					</span>
 
-
-
-
-
-
-
-
-
-
-
+					<!-- Battle -->
 
 					<span id="shortcutBattle" style="display: none;">
 						<span class="settingsTitle"> Battle Minigame </span> <br> <br>
@@ -490,7 +533,6 @@
 						<span id="battleResult"></span>
 					</span>
 				</div>
-
 
 				<!-- Mario Party Counter Settings -->
 				<div id="playerSettings" class="hidden">
@@ -983,7 +1025,7 @@
 				</div>
 
 				<!-- Counter Settings -->
-				<div id="counterSettings" class="charSelector hidden">
+				<div id="counterSettings" class="charSelector settingsText hidden">
 					<span id="counterError" class="error" style="display: none;">The selected game doesn't have bonus stars.</span> <br>
 
 					<div class="counterSelection">
@@ -1065,14 +1107,14 @@
 
 					<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new/choose" class="settingsLink" rel="noopener" target="_blank">Got an issue or want to request a feature?</a> </span> <span class="settingsNote"> (You can also @ me on Twitter if you don't have a Github account)</span> <br> <br>
 
-					<span class="settingsText"> Created by <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI9000</a> <br>
+					<span class="settingsText" style="line-height: 27px;"> Created by <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI9000</a> <br>
 					Default icons created by <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI9000</a> using official artwork and inspired by <a href="https://mariopartylegacy.com/" class="settingsLink" rel="noopener" target="_blank">Mario Party Legacy</a> <br>
-					Mario Kart 8 character icons ripped by <a href="https://twitter.com/RandomTBush" class="settingsLink" rel="noopener" target="_blank">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="settingsLink" rel="noopener" target="_blank"> RicoDexter</a> & <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI9000</a> </span> <br>
-					Super Mario Party character icons ripped by <a href="https://www.spriters-resource.com/submitter/xX-CamTro-Xx/" class="settingsLink" rel="noopener" target="_blank">xX-CamTro-Xx</a> <br>
+					Mario Kart 8 character icons ripped by <a href="https://twitter.com/RandomTBush" class="settingsLink" rel="noopener" target="_blank">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="settingsLink" rel="noopener" target="_blank"> RicoDexter</a> & <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI9000</a> <br>
+					Super Mario Party character icons ripped by <a href="https://www.spriters-resource.com/submitter/xX-CamTro-Xx/" class="settingsLink" rel="noopener" target="_blank">CamTro</a> <br>
 					Mario Party 9 character icons ripped by <a href="https://www.spriters-resource.com/submitter/larsenv/" class="settingsLink" rel="noopener" target="_blank">larsenv</a> <br>
 					Mario Party DS icons ripped by <a href="https://www.spriters-resource.com/submitter/FieryExplosion/" class="settingsLink" rel="noopener" target="_blank">FieryExplosion</a> & <a href="https://www.spriters-resource.com/submitter/Anonymous/" class="settingsLink" rel="noopener" target="_blank">Anonymous</a> & <a href="https://www.mariowiki.com/User:Arend" class="settingsLink" rel="noopener" target="_blank">Arend</a> <br>
-					<span> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="settingsLink" rel="noopener" target="_blank">Counter Font</a> </span> <br>
-					<span> <a href="https://interactjs.io/" class="settingsLink" rel="noopener" target="_blank"> Interact.js</a> </span> <span class="settingsText">(enables drag 'n' drop) </span> <br> <br>
+					<a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="settingsLink" rel="noopener" target="_blank">Counter Font</a> <br>
+					<a href="https://interactjs.io/" class="settingsLink" rel="noopener" target="_blank"> Interact.js</a> (enables drag 'n' drop) </span>
 				</div>
 			</div>
 
@@ -1084,7 +1126,7 @@
 				<span id="settingsClose">
 					<button id="popoutButton" onclick="mpoSettingsPopout()"> Popout Settings </button>
 					<button onclick="saveSettings(true); savePlayers()" id="saveButton"> Save </button>
-					<button onclick="if (popout == true) {window.close()} else {showHideDiv(['settings'])}" id="settingsCloseButton"> Close </button>
+					<button onclick="if (popout == true) {window.close()} else {showHideDiv(['settings']); if (shortcutLoaded == true) {getAlly('close');}}" id="settingsCloseButton"> Close </button>
 				</span>
 			</div>
 		</div>

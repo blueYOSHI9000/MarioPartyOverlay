@@ -412,26 +412,38 @@ function showHideSettings (id) {
 */
 function windowOnClick (event) {
 	var settings = document.querySelector("#settings");
-	var colorPickTest = document.querySelector('#colorPickTest');
 	if (event.target === settings) {
 		showHideDiv(['settings']);
-	} else if (event.target === colorPickTest){
-		showHideDiv(['colorPickTest']);
+		if (shortcutLoaded == true) {
+			getAlly('close');
+		}
 	}
 }
 
 /*
 * Checks if Ctrl & Shift is pressed.
 */
-function ctrlPressed (e) {
-	if (e.ctrlKey && ctrlKeyVar == false) {
+function ctrlPressed (e, ctrl, shift, key) {
+	if (ctrl || shift || key) {
+		ctrl = stringToBoolean(ctrl);
+		shift = stringToBoolean(shift);
+	} else {
+		ctrl = e.ctrlKey;
+		shift = e.shiftKey;
+		key = e.key;
+	}
+	if (popout == true) {
+		sendMessage('ctrlPressed+x+' + ctrl + '+' + shift + '+' + key);
+		return;
+	}
+	if (ctrl && ctrlKeyVar == false) {
 		ctrlKeyVar = true;
 		if (getValue('mobileTypeMinus') == false) {
 			editValue('mobileTypeMinus', true);
 		} else if (getValue('mobileTypeMinus') == true) {
 			editValue('mobileTypeMinus', false);
 		}
-	} else if (e.shiftKey && shiftKeyVar == false) {
+	} else if (shift && shiftKeyVar == false) {
 		if (getValue('type1') == true) {
 			shiftKeyVar = true;
 			editValue('type5', true);
@@ -439,11 +451,11 @@ function ctrlPressed (e) {
 			shiftKeyVar = true;
 			editValue('type1', true);
 		}
-	} else if (e.key == '1') {
+	} else if (key == '1') {
 		editValue('type1', true);
-	} else if (e.key == '5') {
+	} else if (key == '5') {
 		editValue('type5', true);
-	} else if (e.key == '0') {
+	} else if (key == '0') {
 		editValue('type10', true);
 	}
 }
@@ -451,15 +463,22 @@ function ctrlPressed (e) {
 /*
 * Checks if Ctrl & Shift is released.
 */
-function ctrlReleased (e) {
-	if (e.key == 'Control' && ctrlKeyVar == true) {
+function ctrlReleased (e, key) {
+	if (key) {} else {
+		key = e.key;
+	}
+	if (popout == true) {
+		sendMessage('ctrlReleased+x+' + key);
+		return;
+	}
+	if (key == 'Control' && ctrlKeyVar == true) {
 		ctrlKeyVar = false
 		if (getValue('mobileTypeMinus') == false) {
 			editValue('mobileTypeMinus', true);
 		} else if (getValue('mobileTypeMinus') == true) {
 			editValue('mobileTypeMinus', false);
 		}
-	} else if (e.key == 'Shift' && shiftKeyVar == true) {
+	} else if (key == 'Shift' && shiftKeyVar == true) {
 		shiftKeyVar = false;
 		if (getValue('type5') == true) {
 			editValue('type1', true);
@@ -474,12 +493,14 @@ var shiftKeyVar = false;
 window.onkeydown = ctrlPressed;
 window.onkeyup = ctrlReleased;
 
+var shortcutLoaded = false;
 /*
 * Loads settings.js to start the shortcut feature.
 */
 function prepareShortcut () {
 	var script = document.createElement("script");
 	script.src = 'settings.js';
+	shortcutLoaded = true;
 
 	document.head.appendChild(script);
 }
@@ -542,6 +563,10 @@ function changeTheme (theme) {
 				document.getElementById('bodyElement').style = 'background: url(img/NSMBW-bg.jpg)' + styleExtra;
 				curTheme = 3
 				break;
+			case 4:
+				document.getElementById('bodyElement').style = 'background: url(img/MK8-bg.jpg)' + styleExtra;
+				curTheme = 4
+				break;
 			default:
 				document.getElementById('bodyElement').style = 'background: url(img/background.jpg)' + styleExtra;
 				curTheme = 1
@@ -551,9 +576,11 @@ function changeTheme (theme) {
 	document.getElementById('themeB1').style = '';
 	document.getElementById('themeB2').style = '';
 	document.getElementById('themeB3').style = '';
+	document.getElementById('themeB4').style = '';
 	document.getElementById('themeB1').disabled = '';
 	document.getElementById('themeB2').disabled = '';
 	document.getElementById('themeB3').disabled = '';
+	document.getElementById('themeB4').disabled = '';
 	switch (theme) {
 		case 2:
 			document.getElementById('themeB2').style = 'border-color: green;';
@@ -564,6 +591,11 @@ function changeTheme (theme) {
 			document.getElementById('themeB3').style = 'border-color: green;';
 			document.getElementById('themeB3').disabled = 'true';
 			curTheme = 3;
+			break;
+		case 4:
+			document.getElementById('themeB4').style = 'border-color: green;';
+			document.getElementById('themeB4').disabled = 'true';
+			curTheme = 4;
 			break;
 		default:
 			document.getElementById('themeB1').style = 'border-color: green;';
@@ -803,6 +835,9 @@ function mpoSettingsPopout () {
 		} else {
 			mpoSettings = window.open('index.html?p=1', 'mpoSettings', 'height=830px,width=1002px');
 			console.log('[MPO] Popout activated.');
+			if (shortcutLoaded == true) {
+				getAlly('close');
+			}
 		}
 		popoutActivated = true;
 	}

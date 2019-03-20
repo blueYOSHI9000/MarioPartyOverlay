@@ -50,7 +50,7 @@ function resetBackup () {
 		document.getElementById('p' + num + 'CoinsText').innerHTML = 10;
 	}
 
-	turns('curTurn', 1, 'set');
+	turns('curTurn', 1, 'S');
 	coinStarTie();
 	callHighlight(false, true);
 }
@@ -132,7 +132,7 @@ function restore (forceRestore) {
 			document.getElementById('p' + num + 'CoinsText').innerHTML = coins[num2];
 		}
 
-		turns('curTurn', curTurn, 'Set');
+		turns('curTurn', curTurn, 'S');
 		coinStarTie();
 		callHighlight();
 	}
@@ -320,6 +320,9 @@ function resetCounters () {
 function saveSettings (close) {
 	if (close == true && popout != true) {
 		showHideDiv(['settings']);
+		if (shortcutLoaded == true) {
+			getAlly('close');
+		}
 	}
 	
 	localStorage.setItem('saving', 'true');
@@ -620,11 +623,11 @@ var statSynced = false;
 function statSync () {
 	for (var num = 0; num < countersUp.length; num++) {
 		for (var num2 = 1; num2 < 5; num2++) {
-			sendMessage('counterButtons+' + num2 + '+set+' + getInner('p' + num2 + countersUp[num] + 'Text') + '+' + countersUp[num]);
+			sendMessage('counterButtons+' + num2 + '+S+' + getInner('p' + num2 + countersUp[num] + 'Text') + '+' + countersUp[num]);
 		}
 	}
-	sendMessage('counterButtons+1+set+' + getInner('curTurnText') + '+curTurn');
-	sendMessage('counterButtons+1+set+' + getInner('maxTurnText') + '+maxTurn');
+	sendMessage('counterButtons+1+S+' + getInner('curTurnText') + '+curTurn');
+	sendMessage('counterButtons+1+S+' + getInner('maxTurnText') + '+maxTurn');
 	statSynced = true;
 }
 
@@ -638,6 +641,8 @@ function stringToBoolean (boolean) {
 		return true;
 	} else if (boolean == 'false') {
 		return false;
+	} else {
+		return boolean;
 	}
 }
 
