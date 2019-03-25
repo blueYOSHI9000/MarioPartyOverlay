@@ -16,7 +16,7 @@
 <body id="bodyElement" style="background: url(img/background.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;">
 
 	<noscript>
-		<span style="position: absolute; top: 0; left: 0; background-color: black; padding: 10px; margin: 5px; border: 2px solid yellow; color: white; border-radius: 1.2rem;"> Javascript is required for MPO to work. <br> MPO does not save or send any information anywhere aside from saving stats & settings in your browser. </span>
+		<span style="position: absolute; top: 0; left: 0; background-color: black; padding: 10px; margin: 5px; border: 2px solid yellow; color: white; border-radius: 1.2rem;"> Javascript is required for MPO to work. <br> MPO does not save or send any information anywhere. <br> It only saves stats & settings in your browser which no other website can access. </span>
 	</noscript>
 	
 	<span id="noSettings">
@@ -26,8 +26,9 @@
 		<span id="toGenerateSpan" class="grayBG">
 			<button onclick="textOutput(true)">Generate & Copy</button> <input id="textOutput" onClick="this.select()" value="No stats generated yet." readonly>
 		</span>
-		<span id="saveReloadSpan" class="grayBG">
-			<button onclick="backup()"> Save </button> <button onclick="restore()" id="reloadButton" disabled> Reload </button> <br>
+		<span id="saveReloadSpanContainer" class="grayBG">
+			<span id="saveReloadSpan"> <button onclick="backup()"> Save </button> <button onclick="restore()" id="reloadButton" disabled> Reload </button> <button style="margin-left: 20px;" onclick="this.parentNode.style.display = 'none'; document.getElementById('resetSpan').style.display = 'unset';"> Reset</button> </span>
+			<span id="resetSpan" style="display: none;"> <button onclick="this.parentNode.style.display = 'none'; document.getElementById('saveReloadSpan').style.display = 'unset'; resetCounters();"> Reset! </button> <button onclick="this.parentNode.style.display = 'none'; document.getElementById('saveReloadSpan').style.display = 'unset';"> Cancel </button> </span> <br>
 		</span>
 
 		<div id="mobileTypeSpan" class="grayBG">
@@ -379,13 +380,19 @@
 
 				<!-- General Settings -->
 				<div id="generalMPOSettings" class="visible">
-					<span id="siteError" class="error"> MPO could not be loaded properly, try reloading or clearing local storage. <br> This might also appear if cookies are blocked. </span>
+					<span id="siteError" class="error"> MPO could not be loaded properly, try reloading or clearing local storage. <br> This might also appear if cookies are blocked. <br> <br> </span>
 
 
-					<label for="enableInteract"> <span class="settingsText"> Enable Drag 'n' Drop: </span> </label> <input type="checkbox" id="enableInteract" onchange="sendSettingsMsg(this.id, this.checked)"> <button onclick="changeSettings('interactSave')">Save Positions</button> <button onclick="changeSettings('interactReset')">Reset Positions</button> <br> <br>
 
-					<label for="autoPopout"> <span class="settingsText"> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="sendSettingsMsg(this.id, this.checked)"> </label> <br> <br>
-					
+					<span class="settingsTitle"> Features </span> <br>
+					<label for="enableHighlight"> <span class="settingsText"> Enable counter highlighting: </span> </label> <input type="checkbox" id="enableHighlight" onchange="sendSettingsMsg(this.id, + this.checked);changeSettings('resetHighlights')" checked> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('callHighlight', [false, true])" value="#FF0000" id="highlightColor"> <br> <br>
+
+					<label for="noTie"> <span class="settingsText"> Don't use ties for Coin Star: </span> </label> <input type="checkbox" id="noTie" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('coinStarTie')"> <br>
+					<label for="autoSave"> <span class="settingsText"> Automatically save/reload when updating turns: </span> </label> <input type="checkbox" id="autoSave" onchange="sendSettingsMsg(this.id, this.checked);if (this.checked == true) {changeSettings('backup')}"> <br>
+					<span style="display: none;"> <label for="permSave"> <span class="settingsText"> Save counters permanently (not getting deleted on site reload): </span> </label> <input type="checkbox" id="permSave" onchange="sendSettingsMsg(this.id, this.checked)" checked> <br> </span> <br>
+
+
+					<span class="settingsTitle"> Interface </span> <br>
 					<span class="settingsText"> Background: </span> <button id="themeB1" class="themeButtons" onclick="changeSettings('changeTheme', [1])" style="border-color: green;" disabled></button> <button id="themeB2" class="themeButtons" onclick="changeSettings('changeTheme', [2])"></button> <button id="themeB3" class="themeButtons" onclick="changeSettings('changeTheme', [3])"></button> <button id="themeB4" class="themeButtons" onclick="changeSettings('changeTheme', [4])"></button> <br>
 					<span class="settingsText" style="position: relative; top: -13px;"> Default icon style: </span> 
 						<span class="charSelector" id="iconSelector">
@@ -404,14 +411,17 @@
 
 					<label for="greenscreen"> <span class="settingsText"> Enable greenscreen: </span> </label> <input type="checkbox" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('changeTheme')" id="greenscreen"> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('changeBGColor', ['bgColor'])" value="#0000ff" id="bgColor"><br>
 					<span class="settingsText"> Change text color: </span> <input type="color" id="textColor" value="#ffffff" onchange="sendSettingsMsg(this.id, this.value);changeSettings('changeTextColor', [this.id])"> <br> <br>
-
-					<label for="enableHighlight"> <span class="settingsText"> Enable counter highlight: </span> </label> <input type="checkbox" id="enableHighlight" onchange="sendSettingsMsg(this.id, + this.checked);changeSettings('resetHighlights')" checked> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('callHighlight', [false, true])" value="#FF0000" id="highlightColor"> <br>
 					<label for="enableAnimation"> <span class="settingsText"> Enable counter animation: </span> </label> <input type="checkbox" id="enableAnimation" onchange="sendSettingsMsg(this.id, this.checked)" checked> <br> <br>
-					
-					<label for="noTie"> <span class="settingsText"> Don't use ties for the Coin Star: </span> </label> <input type="checkbox" id="noTie" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('coinStarTie')"> <br>
-					<label for="autoSave"> <span class="settingsText"> Automatically save/reload when updating turns: </span> </label> <input type="checkbox" id="autoSave" onchange="sendSettingsMsg(this.id, this.checked);if (this.checked == true) {changeSettings('backup')}"> <br>
-					<label for="permSave"> <span class="settingsText"> Save counters permanently (not getting deleted on site reload): </span> </label> <input type="checkbox" id="permSave" onchange="sendSettingsMsg(this.id, this.checked)" checked> <br> <br> <br>
-					
+
+
+					<span class="settingsTitle"> Misc </span> <br>
+					<label for="autoPopout"> <span class="settingsText"> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="sendSettingsMsg(this.id, this.checked)"> </label> <br> <br>
+
+					<label for="enableInteract"> <span class="settingsText"> Enable Drag 'n' Drop: </span> </label> <input type="checkbox" id="enableInteract" onchange="sendSettingsMsg(this.id, this.checked)"> <button onclick="changeSettings('interactSave')">Save Positions</button> <button onclick="changeSettings('interactReset')">Reset Positions</button> <br> <br>
+
+					<span class="settingsTitle"> Reset </span> <br>
+					<button onclick="changeSettings('resetSettings')" id="resetSettingsButton"> Reset Settings </button>
+					<button onclick="changeSettings('resetPlayers')"> Reset Players & Counters </button> <br> <br>
 					<button onclick="localStorage.clear()">Clear local storage</button> <span class="settingsNote">(This will clear all saved settings, characters and counters)</span>
 				</div>
 
@@ -425,10 +435,10 @@
 					</div>
 					<label for="toListAllCoin"> <span class="settingsText"> List all players instead of "everyone" for the Coin Star: </span> </label> <input type="checkbox" id="toListAllCoin" onchange="sendSettingsMsg(this.id, this.checked)"> <br> <br>
 					
-					<span class="settingsText">  Player 1 name: </span> <input id="toP1Name" onchange="sendSettingsMsg(this.id, this.value)">
-					<span class="settingsText marginLeft">  Player 2 name: </span> <input id="toP2Name" onchange="sendSettingsMsg(this.id, this.value)"> <br>
-					<span class="settingsText">  Player 3 name: </span> <input id="toP3Name" onchange="sendSettingsMsg(this.id, this.value)">
-					<span class="settingsText marginLeft">  Player 4 name: </span> <input id="toP4Name" onchange="sendSettingsMsg(this.id, this.value)"> <br>
+					<span class="settingsText"> Player 1 name: </span> <input id="toP1Name" onchange="sendSettingsMsg(this.id, this.value)">
+					<span class="settingsText marginLeft"> Player 2 name: </span> <input id="toP2Name" onchange="sendSettingsMsg(this.id, this.value)"> <br>
+					<span class="settingsText"> Player 3 name: </span> <input id="toP3Name" onchange="sendSettingsMsg(this.id, this.value)">
+					<span class="settingsText marginLeft"> Player 4 name: </span> <input id="toP4Name" onchange="sendSettingsMsg(this.id, this.value)"> <br>
 					<span class="settingsText"> Counter seperation: </span> <input id="toSeperation" value=" | " onchange="sendSettingsMsg(this.id, this.value)"> <br> <br>
 					
 					<label for="toUseActive"> <span class="settingsText"> Only use active counters: </span> <input type="checkbox" id="toUseActive" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('updateCounterInput')" checked> </label> <br> <br>
@@ -452,9 +462,9 @@
 					<span id="shortcutSpan">
 						<span class="settingsText" style="width: 100%; white-space: normal; line-height: 30px;">
 							Games currently supported: <img src="img/mpds.png" style="width: 40px;"> <img src="img/smp.png" style="width: 40px;"> <br>
-							Only 4 players without Teams (this includes Partner Party) are currently supported. <br> <i>Reminder that all games still work normally outside of this Shortcut mode!</i> <br> <br>
+							Only 4 players without Teams (this includes Partner Party) are currently supported. <br> <br>
 
-							A lot of features depend on the coin counter, it's recommended to show it and keep it up to date. An option to ignore coin count is planned. <br>
+							A lot of features depend on the coin counter, it's recommended to show it and keep it up to date. <br>
 							This is currently in heavy development and some features might not work as intended. <br> <br>
 							<button onclick="prepareShortcut()">Start game</button> <br> <br>
 
@@ -462,7 +472,7 @@
 							In case something breaks or doesn't provide the expected output, please click on "Generate & Copy" and <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">contact me</a> or <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new?template=bug_report.md" class="settingsLink" rel="noopener" target="_blank">open a Github issue</a> with a screenshot or copy-paste of your browsers console (Ctrl + Shift + I > "Console"). It shows the last actions done and potential errors. Thank you! <br> <br>
 
 							<span class="settingsTitle"> Potential broken features </span> <br>
-							Mario Party is hugely RNG based so some events are really rare and as such hard to figure out how they work. <br>
+							Mario Party is hugely RNG based so some events are rare and as such hard to figure out how they work. <br>
 							Be sure to check your coin count after some of these as it might not be correct anymore:
 							<ul>
 								<li>SMP Minigame tied rewards</li>
@@ -1089,10 +1099,9 @@
 					<div class="counterSelection">
 						<span class="relative"> <label for="coinsOnOff" class="counterOnOffText">Coins:</label> <input type="checkbox" id="coinsOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['coins'])"> <label for="coinsOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </span>
 					</div> <br>
-					<span class="relative"> <label for="deactivateUnused"> <span class="settingsText"> Deactivate unused counters when changing games: </span> </label> <input type="checkbox" id="deactivateUnused" style="top: 5px;" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('deactivateUnused')" checked> </span> <br>
-					<button onclick="changeSettings('saveCounters')" id="permSaveCounters" style="margin-right: 10px;">Save Stats</button> <button onclick="changeSettings('resetCounters')">Reset Stats</button>
+					<span class="relative"> <label for="deactivateUnused"> <span class="settingsText"> Deactivate unused counters when changing games: </span> </label> <input type="checkbox" id="deactivateUnused" style="top: 5px;" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('deactivateUnused')" checked> </span> <br> <br>
 
-					<span style="font-size: 21px; margin-left: 50px;"><a class="settingsLink" rel="noopener" target="_blank" href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Mario-Party-Bonus-Star-List">Bonus Star List</a></span>
+					<span style="font-size: 21px;"><a class="settingsLink" rel="noopener" target="_blank" href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Mario-Party-Bonus-Star-List">Bonus Star List</a></span>
 				</div>
 				<div id="tutorialSettings" class="hidden"> <span class="settingsText"> Click on the numbers to increase the counters, by holding Ctrl you can decrease them instead. The amount can be changed at the top (1, 5 or 10). <br class="lineHeight">
 					It's possible to switch between 1 and 5 by holding Shift, if one of the two is selected. <br class="lineHeight">
@@ -1121,10 +1130,8 @@
 			<!-- Reset/save Settings -->
 			<div id="settingsFooter">
 				<div id="settingsFooterBorder"></div>
-				<button onclick="changeSettings('resetSettings')" id="resetSettingsButton" style="flex: auto;"> Reset Settings </button>
-				<button onclick="changeSettings('resetPlayers')" style="flex: auto;"> Reset Players & Counters </button>
+					<button id="popoutButton" onclick="mpoSettingsPopout()" style="flex: auto;"> Popout Settings </button>
 				<span id="settingsClose">
-					<button id="popoutButton" onclick="mpoSettingsPopout()"> Popout Settings </button>
 					<button onclick="saveSettings(true); savePlayers()" id="saveButton"> Save </button>
 					<button onclick="if (popout == true) {window.close()} else {showHideDiv(['settings']); if (shortcutLoaded == true) {getAlly('close');}}" id="settingsCloseButton"> Close </button>
 				</span>

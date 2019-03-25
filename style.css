@@ -982,17 +982,17 @@ button {
 }
 #toGenerateSpan {
 	display: inline-block;
-	margin-left: 46px;
+	margin-left: 23px;
 	padding-top: 5px;
 	padding-left: 5px;
 	height: 32px;
 	width: 380px;
 }
-#saveReloadSpan {
+#saveReloadSpanContainer {
 	display: inline-block;
 	margin-left: 30px;
 	padding-top: 5px;
 	padding-left: 5px;
 	height: 32px;
-	width: 139px;
+	width: 228px;
 }

@@ -284,6 +284,10 @@ function saveCounters () {
 * Resets all counters.
 */
 function resetCounters () {
+	if (shortcutLoaded === true && popoutActivated === true && popout === false) {
+		sendMessage('resetCounters');
+	}
+
 	document.getElementById('maxTurnText').innerHTML = 20;
 
 	resetBackup();
@@ -384,7 +388,8 @@ function prepareMPO () {
 		popout = true;
 		showHideDiv(['settings']);
 
-		document.getElementById('popoutButton').style.display = 'none';
+		document.getElementById('popoutButton').innerText = 'Normal Settings';
+		document.getElementById('popoutButton').setAttribute('onclick', 'sendMessage(\'openSettings+true\');window.close();');
 		document.getElementById('settingsContent').classList.add('settingsContentPopout');
 		document.getElementById('settingsContent').classList.remove('popupContent');
 		document.getElementById('settingsContent').classList.remove('settingsPopup');
@@ -611,6 +616,8 @@ function syncPopout () {
 		sendMessage('changeCom+' + 3);
 		sendMessage('changeCom+' + 4);
 		sendMessage('updateCounterInput');
+
+		sendMessage('showHideSettings+' + openedSettings);
 
 		console.log('[MPO] Popout synced');
 	}

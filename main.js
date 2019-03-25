@@ -380,12 +380,17 @@ function showHideDiv (ids) {
 	}
 }
 
+var openedSettings = 'generalMPO';
 /*
 * Show certain settings and hide all others, also updates the cursor.
 *
 * @param {string} id Which settings should be shown.
 */
 function showHideSettings (id) {
+	if (popout === true) {
+		sendMessage('showHideSettings+' + id);
+	}
+	openedSettings = id;
 	var ids = ['generalMPO', 'textOutput', 'shortcut', 'player', 'counter', 'tutorial'];
 	for (let num = 0; num < ids.length; num++) {
 		document.getElementById(ids[num] + 'Settings').classList.add('hidden');
@@ -507,8 +512,14 @@ function prepareShortcut () {
 
 /*
 * Opens normal settings or puts popout on top if it's activated.
+* 
+* @param {boolean} force If true, opens settings on main regardless of the auto-popout option.
 */
-function openSettings () {
+function openSettings (force) {
+	if (force === true || force === 'true') {
+		showHideDiv(['settings']);
+		return;
+	}
 	if (popoutActivated == true) {
 		window.open('', 'mpoSettings');
 	} else if (getValue('autoPopout') == true) {
