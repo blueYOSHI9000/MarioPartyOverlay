@@ -387,6 +387,100 @@ function changeGame (game) {
 	if (getValue('deactivateUnused') == true) {
 		deactivateUnused();
 	}
+
+	switch (curGame) {
+		case 'mp1':
+		case 'mp2':
+		case 'mp3':
+		case 'mp4':
+		case 'mp5':
+			editInner('happeningOnOffText', 'Happening:');
+			editInner('minigameOnOffText', 'Minigame:');
+			editInner('coinStarOnOffText', 'Coin Star:');
+			break;
+		case 'mp6':
+			editInner('happeningOnOffText', 'Event:');
+			editInner('minigameOnOffText', 'Minigame:');
+			editInner('itemOnOffText', 'Orbs used:');
+			break;
+		case 'mp7':
+			editInner('happeningOnOffText', 'Action:');
+			editInner('minigameOnOffText', 'Minigame:');
+			editInner('redSpaceOnOffText', 'Red:');
+			editInner('runningOnOffText', 'Running:');
+			editInner('shoppingOnOffText', 'Shopping:');
+			editInner('itemOnOffText', 'Orb:');
+			break;
+		case 'mp8':
+			editInner('happeningOnOffText', 'Green:');
+			editInner('minigameOnOffText', 'Minigame:');
+			editInner('runningOnOffText', 'Running:');
+			editInner('redSpaceOnOffText', 'Red:');
+			editInner('shoppingOnOffText', 'Shopping:');
+			editInner('itemOnOffText', 'Candy:');
+			break;
+		case 'mp9':
+		case 'mp10':
+			editInner('minigameOnOffText', 'Minigame:');
+			editInner('runningOnOffText', 'Far:');
+			editInner('slowOnOffText', 'Slow:');
+			editInner('spinSpaceOnOffText', 'Spin:');
+			editInner('minusOnOffText', 'Minus:');
+			editInner('specialDiceOnOffText', 'Dice Block:');
+			editInner('miniStarsOnOffText', 'Mini-stars:');
+			editInner('bananasOnOffText', 'Bananas:');
+			break;
+		case 'mpds':
+			editInner('happeningOnOffText', 'Green:');
+			editInner('minigameOnOffText', 'Minigame:');
+			editInner('runningOnOffText', 'Running:');
+			editInner('itemOnOffText', 'Item:');
+			editInner('friendSpaceOnOffText', 'Friendship:');
+			editInner('hexOnOffText', 'Hex:');
+			break;
+		case 'mpsr':
+		case 'mptt100':
+			editInner('minigameOnOffText', 'Champion:');
+			editInner('runningOnOffText', 'Sightseer:');
+			editInner('slowOnOffText', 'Slowpoke:');
+			editInner('itemSpaceOnOffText', 'Item:');
+			editInner('balloonOnOffText', 'Balloon:');
+			break;
+		case 'smp':
+			editInner('happeningOnOffText', 'Eventful:');
+			editInner('minigameOnOffText', 'Minigame:');
+			editInner('coinStarOnOffText', 'Rich:');
+			editInner('redSpaceOnOffText', 'Unlucky:');
+			editInner('runningOnOffText', 'Sightseer:');
+			editInner('slowOnOffText', 'Slowpoke:');
+			editInner('itemOnOffText', 'Item:');
+			editInner('allyOnOffText', 'Ally:');
+			editInner('stompyOnOffText', 'Stompy:');
+			editInner('doormatOnOffText', 'Doormat:');
+			break;
+		default:
+			editInner('happeningOnOffText', 'Happening (1-8, DS, SMP):');
+			editInner('minigameOnOffText', 'Minigame (1-10, DS, SMP):');
+			editInner('coinStarOnOffText', 'Coin Star (1-5, SMP):');
+			editInner('redSpaceOnOffText', 'Red (7, 8, SMP):');
+			editInner('runningOnOffText', 'Running (7-10, DS-SMP):');
+			editInner('slowOnOffText', 'Slow (9, 10, SR-SMP):');
+			editInner('shoppingOnOffText', 'Shopping (7, 8):');
+			editInner('itemOnOffText', 'Item/Orb/Candy (6-8, DS-SMP):');
+			editInner('friendSpaceOnOffText', 'Friendship (DS):');
+			editInner('hexOnOffText', 'Hex (DS):');
+			editInner('balloonOnOffText', 'Balloon (SR, TT100):');
+			editInner('spinSpaceOnOffText', 'Spin (9):');
+			editInner('minusOnOffText', 'Minus (9, 10):');
+			editInner('specialDiceOnOffText', 'Dice Block (9, 10):');
+			editInner('allyOnOffText', 'Ally (SMP):');
+			editInner('stompyOnOffText', 'Stompy (SMP):');
+			editInner('doormatOnOffText', 'Doormat (SMP):');
+			editInner('starsOnOffText', 'Stars:');
+			editInner('miniStarsOnOffText', 'Mini-stars (9 & 10):');
+			editInner('bananasOnOffText', 'Bananas (9):');
+			editInner('coinsOnOffText', 'Coins:');
+	}
 }
 var curGame = 'all';
 var pastResults = [];
