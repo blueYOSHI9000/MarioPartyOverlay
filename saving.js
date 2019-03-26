@@ -37,7 +37,7 @@ for (let num = 0; num < counters.length; num++) {
 * Resets the backup.
 */
 function resetBackup () {
-	document.getElementById('coinStarText').innerHTML = 10;
+	editInner('coinStarText', 10);
 	editValue('p1CoinStarTie', false);
 	editValue('p2CoinStarTie', false);
 	editValue('p3CoinStarTie', false);
@@ -45,9 +45,9 @@ function resetBackup () {
 
 	for (let num = 1; num < 5; num++) {
 		for (let num2 = 0; num2 < counters.length; num2++) {
-			document.getElementById('p' + num + countersUp[num2] + 'Text').innerHTML = 0;
+			editInner('p' + num + countersUp[num2] + 'Text', 0);
 		}
-		document.getElementById('p' + num + 'CoinsText').innerHTML = 10;
+		editInner('p' + num + 'CoinsText', 10);
 	}
 
 	turns('curTurn', 1, 'S');
@@ -62,34 +62,34 @@ function backup () {
 	document.getElementById('reloadButton').disabled = false;
 	backuped = true;
 
-	coinStarVar = document.getElementById('coinStarText').innerHTML;
+	coinStarVar = getInner('coinStarText');
 	coinStarTie1 = getValue('p1CoinStarTie');
 	coinStarTie2 = getValue('p2CoinStarTie');
 	coinStarTie3 = getValue('p3CoinStarTie');
 	coinStarTie4 = getValue('p4CoinStarTie');
 
-	curTurn = parseInt(document.getElementById('curTurnText').innerHTML);
+	curTurn = parseInt(getInner('curTurnText'));
 
 	var num = 0
 	for (let num2 = 0; num2 < 4; num2++) {
 		num++
-		hap[num2] = document.getElementById('p' + num + 'HappeningText').innerHTML;
-		mini[num2] = document.getElementById('p' + num + 'MinigameText').innerHTML;
-		red[num2] = document.getElementById('p' + num + 'RedSpaceText').innerHTML;
-		run[num2] = document.getElementById('p' + num + 'RunningText').innerHTML;
-		shop[num2] = document.getElementById('p' + num + 'ShoppingText').innerHTML;
-		item[num2] = document.getElementById('p' + num + 'ItemText').innerHTML;
-		friend[num2] = document.getElementById('p' + num + 'FriendSpaceText').innerHTML;
-		hex[num2] = document.getElementById('p' + num + 'HexText').innerHTML;
-		balloon[num2] = document.getElementById('p' + num + 'BalloonText').innerHTML;
-		spin[num2] = document.getElementById('p' + num + 'SpinSpaceText').innerHTML;
-		minus[num2] = document.getElementById('p' + num + 'MinusText').innerHTML;
-		dice[num2] = document.getElementById('p' + num + 'SpecialDiceText').innerHTML;
-		spin[num2] = document.getElementById('p' + num + 'AllyText').innerHTML;
-		minus[num2] = document.getElementById('p' + num + 'StompyText').innerHTML;
-		dice[num2] = document.getElementById('p' + num + 'DoormatText').innerHTML;
-		stars[num2] = document.getElementById('p' + num + 'StarsText').innerHTML;
-		coins[num2] = document.getElementById('p' + num + 'CoinsText').innerHTML;
+		hap[num2] = getInner('p' + num + 'HappeningText');
+		mini[num2] = getInner('p' + num + 'MinigameText');
+		red[num2] = getInner('p' + num + 'RedSpaceText');
+		run[num2] = getInner('p' + num + 'RunningText');
+		shop[num2] = getInner('p' + num + 'ShoppingText');
+		item[num2] = getInner('p' + num + 'ItemText');
+		friend[num2] = getInner('p' + num + 'FriendSpaceText');
+		hex[num2] = getInner('p' + num + 'HexText');
+		balloon[num2] = getInner('p' + num + 'BalloonText');
+		spin[num2] = getInner('p' + num + 'SpinSpaceText');
+		minus[num2] = getInner('p' + num + 'MinusText');
+		dice[num2] = getInner('p' + num + 'SpecialDiceText');
+		spin[num2] = getInner('p' + num + 'AllyText');
+		minus[num2] = getInner('p' + num + 'StompyText');
+		dice[num2] = getInner('p' + num + 'DoormatText');
+		stars[num2] = getInner('p' + num + 'StarsText');
+		coins[num2] = getInner('p' + num + 'CoinsText');
 	}
 
 	if (getValue('permSave') == true) {
@@ -104,7 +104,7 @@ function backup () {
 */
 function restore (forceRestore) {
 	if (backuped == true || forceRestore == true) {
-		document.getElementById('coinStarText').innerHTML = coinStarVar;
+		editInner('coinStarText', coinStarVar);
 		editValue('p1CoinStarTie', coinStarTie1);
 		editValue('p2CoinStarTie', coinStarTie2);
 		editValue('p3CoinStarTie', coinStarTie3);
@@ -113,23 +113,23 @@ function restore (forceRestore) {
 		var num = 0
 		for (let num2 = 0; num2 < 4; num2++) {
 			num++
-			document.getElementById('p' + num + 'HappeningText').innerHTML = hap[num2];
-			document.getElementById('p' + num + 'MinigameText').innerHTML = mini[num2];
-			document.getElementById('p' + num + 'RedSpaceText').innerHTML = red[num2];
-			document.getElementById('p' + num + 'RunningText').innerHTML = run[num2];
-			document.getElementById('p' + num + 'ShoppingText').innerHTML = shop[num2];
-			document.getElementById('p' + num + 'ItemText').innerHTML = item[num2];
-			document.getElementById('p' + num + 'FriendSpaceText').innerHTML = friend[num2];
-			document.getElementById('p' + num + 'HexText').innerHTML = hex[num2];
-			document.getElementById('p' + num + 'BalloonText').innerHTML = balloon[num2];
-			document.getElementById('p' + num + 'SpinSpaceText').innerHTML = spin[num2];
-			document.getElementById('p' + num + 'MinusText').innerHTML = minus[num2];
-			document.getElementById('p' + num + 'SpecialDiceText').innerHTML = dice[num2];
-			document.getElementById('p' + num + 'AllyText').innerHTML = ally[num2];
-			document.getElementById('p' + num + 'StompyText').innerHTML = stompy[num2];
-			document.getElementById('p' + num + 'DoormatText').innerHTML = doormat[num2];
-			document.getElementById('p' + num + 'StarsText').innerHTML = stars[num2];
-			document.getElementById('p' + num + 'CoinsText').innerHTML = coins[num2];
+			editInner('p' + num + 'HappeningText', hap[num2]);
+			editInner('p' + num + 'MinigameText', mini[num2]);
+			editInner('p' + num + 'RedSpaceText', red[num2]);
+			editInner('p' + num + 'RunningText', run[num2]);
+			editInner('p' + num + 'ShoppingText', shop[num2]);
+			editInner('p' + num + 'ItemText', item[num2]);
+			editInner('p' + num + 'FriendSpaceText', friend[num2]);
+			editInner('p' + num + 'HexText', hex[num2]);
+			editInner('p' + num + 'BalloonText', balloon[num2]);
+			editInner('p' + num + 'SpinSpaceText', spin[num2]);
+			editInner('p' + num + 'MinusText', minus[num2]);
+			editInner('p' + num + 'SpecialDiceText', dice[num2]);
+			editInner('p' + num + 'AllyText', ally[num2]);
+			editInner('p' + num + 'StompyText', stompy[num2]);
+			editInner('p' + num + 'DoormatText', doormat[num2]);
+			editInner('p' + num + 'StarsText', stars[num2]);
+			editInner('p' + num + 'CoinsText', coins[num2]);
 		}
 
 		turns('curTurn', curTurn, 'S');
@@ -263,18 +263,18 @@ function resetPlayers () {
 function saveCounters () {
 	localStorage.setItem('saveCounters', true);
 
-	localStorage.setItem('coinStarVar', document.getElementById('coinStarText').innerHTML);
+	localStorage.setItem('coinStarVar', getInner('coinStarText'));
 	localStorage.setItem('coinStarTie1', getValue('p1CoinStarTie'));
 	localStorage.setItem('coinStarTie2', getValue('p2CoinStarTie'));
 	localStorage.setItem('coinStarTie3', getValue('p3CoinStarTie'));
 	localStorage.setItem('coinStarTie4', getValue('p4CoinStarTie'));
 
-	localStorage.setItem('curTurn', document.getElementById('curTurnText').innerHTML);
-	localStorage.setItem('maxTurn', document.getElementById('maxTurnText').innerHTML);
+	localStorage.setItem('curTurn', getInner('curTurnText'));
+	localStorage.setItem('maxTurn', getInner('maxTurnText'));
 
 	for (let num2 = 0; num2 < counters.length; num2++) {
 		for (let num = 1; num < 5; num++) {
-			localStorage.setItem(countersShort[num2] + num, document.getElementById('p' + num + countersUp[num2] + 'Text').innerHTML);
+			localStorage.setItem(countersShort[num2] + num, getInner('p' + num + countersUp[num2] + 'Text'));
 		}
 	}
 
@@ -288,7 +288,7 @@ function resetCounters () {
 		sendMessage('resetCounters');
 	}
 
-	document.getElementById('maxTurnText').innerHTML = 20;
+	editInner('maxTurnText', 20);
 
 	resetBackup();
 	updateStars();
@@ -496,18 +496,18 @@ function prepareMPO () {
 	}
 
 	if (localStorage.getItem('saveCounters') == 'true') {
-		document.getElementById('coinStarText').innerHTML = localStorage.getItem('coinStarVar');
+		editInner('coinStarText', localStorage.getItem('coinStarVar'));
 		editValue('p1CoinStarTie', stringToBoolean(localStorage.getItem('coinStarTie1')));
 		editValue('p2CoinStarTie', stringToBoolean(localStorage.getItem('coinStarTie2')));
 		editValue('p3CoinStarTie', stringToBoolean(localStorage.getItem('coinStarTie3')));
 		editValue('p4CoinStarTie', stringToBoolean(localStorage.getItem('coinStarTie4')));
 	
-		document.getElementById('curTurnText').innerHTML = localStorage.getItem('curTurn');
-		document.getElementById('maxTurnText').innerHTML = localStorage.getItem('maxTurn');
+		editInner('curTurnText', localStorage.getItem('curTurn'));
+		editInner('maxTurnText', localStorage.getItem('maxTurn'));
 	
 		for (let num2 = 0; num2 < counters.length; num2++) {
 			for (let num = 1; num < 5; num++) {
-				document.getElementById('p' + num + countersUp[num2] + 'Text').innerHTML = localStorage.getItem(countersShort[num2] + num);
+				editInner('p' + num + countersUp[num2] + 'Text', localStorage.getItem(countersShort[num2] + num));
 			}
 		}
 

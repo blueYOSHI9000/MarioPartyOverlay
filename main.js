@@ -53,10 +53,10 @@ function highlight (counter, stars) {
 	}
 	counter = counter.charAt(0).toUpperCase() + counter.slice(1);
 
-	var counterP1 = document.getElementById('p1' + counter + 'Text').innerHTML;
-	var counterP2 = document.getElementById('p2' + counter + 'Text').innerHTML;
-	var counterP3 = document.getElementById('p3' + counter + 'Text').innerHTML;
-	var counterP4 = document.getElementById('p4' + counter + 'Text').innerHTML;
+	var counterP1 = getInner('p1' + counter + 'Text');
+	var counterP2 = getInner('p2' + counter + 'Text');
+	var counterP3 = getInner('p3' + counter + 'Text');
+	var counterP4 = getInner('p4' + counter + 'Text');
 
 	var counterNum = Math.max(counterP1, counterP2, counterP3, counterP4);
 
@@ -132,10 +132,10 @@ function slowStar () {
 * Highlights the slow star.
 */
 function slowHighlight (stars) {
-	var counterP1 = document.getElementById('p1RunningText').innerHTML;
-	var counterP2 = document.getElementById('p2RunningText').innerHTML;
-	var counterP3 = document.getElementById('p3RunningText').innerHTML;
-	var counterP4 = document.getElementById('p4RunningText').innerHTML;
+	var counterP1 = getInner('p1RunningText');
+	var counterP2 = getInner('p2RunningText');
+	var counterP3 = getInner('p3RunningText');
+	var counterP4 = getInner('p4RunningText');
 
 	var counterNumMax = Math.max(counterP1, counterP2, counterP3, counterP4);
 	var counterNumMin = Math.min(counterP1, counterP2, counterP3, counterP4);
@@ -407,6 +407,10 @@ function showHideSettings (id) {
 		document.getElementById('shortcutHeader').style.display = 'block';
 	} else {
 		document.getElementById('shortcutHeader').style.display = 'none';
+	}
+
+	if (shortcutLoaded === true) {
+		getAlly('close');
 	}
 }
 

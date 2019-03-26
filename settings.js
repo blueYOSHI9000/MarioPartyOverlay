@@ -33,7 +33,7 @@ function startShortcut () {
 			shortcutState = 1;
 			document.getElementById('shortcutTurn').style.display = 'none';
 			playerOrder = [''];
-			document.getElementById('shortcutSpan').innerHTML = '<span class="settingsTitle"> Choose order </span> <br> <span class="settingsText" id="chooseOrderText"> Which character is first? </span> <br> <span> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="chooseP1" onclick="chooseOrder(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="chooseP2" onclick="chooseOrder(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="chooseP3" onclick="chooseOrder(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="chooseP4" onclick="chooseOrder(4)"> <br> <button onclick="chooseOrder(0, true)">Reset Order</button> <br> <span id="chooseFirst" class="chooseImgOrder"> </span> <br> <span id="chooseSecond" class="chooseImgOrder"> </span> <br> <span id="chooseThird" class="chooseImgOrder"> </span> <br> <span id="chooseFourth" class="chooseImgOrder"> </span> <br> <button onclick="startShortcut()" id="chooseContinue" style="display:none;">Continue?</button> </span>';
+			editInner('shortcutSpan', '<span class="settingsTitle"> Choose order </span> <br> <span class="settingsText" id="chooseOrderText"> Which character is first? </span> <br> <span> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="chooseP1" onclick="chooseOrder(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="chooseP2" onclick="chooseOrder(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="chooseP3" onclick="chooseOrder(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="chooseP4" onclick="chooseOrder(4)"> <br> <button onclick="chooseOrder(0, true)">Reset Order</button> <br> <span id="chooseFirst" class="chooseImgOrder"> </span> <br> <span id="chooseSecond" class="chooseImgOrder"> </span> <br> <span id="chooseThird" class="chooseImgOrder"> </span> <br> <span id="chooseFourth" class="chooseImgOrder"> </span> <br> <button onclick="startShortcut()" id="chooseContinue" style="display:none;">Continue?</button> </span>');
 				shortcutNotif('Choose the order of the players.');
 			break;
 
@@ -47,12 +47,12 @@ function startShortcut () {
 
 			shortcutState = 2;
 			turnCurPlayer = 1;
-			document.getElementById('shortcutSpan').innerHTML = '';
+			editInner('shortcutSpan', '');
 			document.getElementById('shortcutTurn').style.display = '';
 			document.getElementById('finishTurn').disabled = '';
 
 
-			document.getElementById('turnPlayerName').innerHTML = getCharName(orderCurPlayer);
+			editInner('turnPlayerName', getCharName(orderCurPlayer));
 			document.getElementById('turnPlayerIcon').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[orderCurPlayer] + '.png';
 
 			editInner('turnHexCharSelection', '<span class="settingsText"> Select the character that placed the hex: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" onclick="turnHex(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" onclick="turnHex(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" onclick="turnHex(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" onclick="turnHex(4)">');
@@ -77,14 +77,14 @@ function startShortcut () {
 			shortcutState = 3;
 			document.getElementById('shortcutTurn').style.display = 'none';
 			if (shortcutGame === 'smp') {
-				document.getElementById('shortcutSpan').innerHTML = '<span class="settingsTitle"> Normal Minigame </span> <br> <span id="normalMinigame"> <span class="settingsText"> Select minigame type: </span> <br> <span class="shortcutText spanSelection"> <span onclick="startMinigame(\'4p\')"> 4-Player </span> <span onclick="startMinigame(\'2v2\')"> 2vs2 </span> <span onclick="startMinigame(\'1v3\')"> 1vs3 </span> </span> </span> <br> <br> <span class="settingsTitle"> Coin Minigame </span> <br> <span class="settingsText"> WIP, add coins manually for now. <br> Reminder that you can add 5 at once if you hold shift while 1 is selected. </span> <br> <button onclick="coinMinigame()">Done</button>';
+				editInner('shortcutSpan', '<span class="settingsTitle"> Normal Minigame </span> <br> <span id="normalMinigame"> <span class="settingsText"> Select minigame type: </span> <br> <span class="shortcutText spanSelection"> <span onclick="startMinigame(\'4p\')"> 4-Player </span> <span onclick="startMinigame(\'2v2\')"> 2vs2 </span> <span onclick="startMinigame(\'1v3\')"> 1vs3 </span> </span> </span> <br> <br> <span class="settingsTitle"> Coin Minigame </span> <br> <span class="settingsText"> WIP, add coins manually for now. <br> Reminder that you can add 5 at once if you hold shift while 1 is selected. </span> <br> <button onclick="coinMinigame()">Done</button>');
 			} else {
-				document.getElementById('shortcutSpan').innerHTML = '<span class="settingsTitle"> Normal Minigame </span> <br> <span id="normalMinigame"> <span class="settingsText"> Who won? </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="p1Minigame" onclick="startMinigame(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="p2Minigame" onclick="startMinigame(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="p3Minigame" onclick="startMinigame(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="p4Minigame" onclick="startMinigame(4)"> <br> <button onClick="startMinigame()">Done</button> </span> <br> <br> <span class="settingsTitle"> Coin Minigame </span> <br> <span class="settingsText"> WIP, add coins manually for now. <br> Reminder that you can add 5 at once if you hold shift while 1 is selected. </span> <br> <button onclick="coinMinigame()">Done</button> <br> <br> <span class="settingsTitle"> Battle Minigame </span> <br> <button onclick="chooseMinigame(\'battle\')">Start Battle Minigame</button>';
+				editInner('shortcutSpan', '<span class="settingsTitle"> Normal Minigame </span> <br> <span id="normalMinigame"> <span class="settingsText"> Who won? </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="p1Minigame" onclick="startMinigame(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="p2Minigame" onclick="startMinigame(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="p3Minigame" onclick="startMinigame(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="p4Minigame" onclick="startMinigame(4)"> <br> <button onClick="startMinigame()">Done</button> </span> <br> <br> <span class="settingsTitle"> Coin Minigame </span> <br> <span class="settingsText"> WIP, add coins manually for now. <br> Reminder that you can add 5 at once if you hold shift while 1 is selected. </span> <br> <button onclick="coinMinigame()">Done</button> <br> <br> <span class="settingsTitle"> Battle Minigame </span> <br> <button onclick="chooseMinigame(\'battle\')">Start Battle Minigame</button>');
 			}
 			break;
 
 		case 3: // turn finished - start next turn/final 5/end game
-			if (document.getElementById('curTurnText').innerText == document.getElementById('maxTurnText').innerText) {
+			if (getInner('curTurnText') == getInner('maxTurnText')) {
 				shortcutState = 0;
 				document.getElementById('shortcutTurn').style.display = 'none';
 
@@ -95,7 +95,7 @@ function startShortcut () {
 			} else { // Final 5 turns
 				shortcutState = 1;
 				execOnMain('counterButtons', [1, 'P', 1, 'curTurn']);
-				if ((document.getElementById('curTurnText').innerText == parseInt(document.getElementById('maxTurnText').innerText) - 4 && shortcutGame != 'smp') || (document.getElementById('curTurnText').innerText == parseInt(document.getElementById('maxTurnText').innerText) - 2 && shortcutGame === 'smp')) {
+				if ((getInner('curTurnText') == parseInt(getInner('maxTurnText')) - 4 && shortcutGame != 'smp') || (getInner('curTurnText') == parseInt(getInner('maxTurnText')) - 2 && shortcutGame === 'smp')) {
 					shortcutState = 4;
 					if (shortcutGame === 'smp') {
 						finalFiveEvent = 'doubleSpaces';
@@ -315,10 +315,10 @@ function chooseOrder (player, reset) {
 	if (shortcutState == 1) {
 		if (reset == true) {
 			playerOrder = [''];
-			document.getElementById('chooseFirst').innerHTML = '';
-			document.getElementById('chooseSecond').innerHTML = '';
-			document.getElementById('chooseThird').innerHTML = '';
-			document.getElementById('chooseFourth').innerHTML = '';
+			editInner('chooseFirst', '');
+			editInner('chooseSecond', '');
+			editInner('chooseThird', '');
+			editInner('chooseFourth', '');
 			document.getElementById('chooseContinue').style.display = 'none';
 
 			for (var num = 1; num < 5; num++) {
@@ -335,16 +335,16 @@ function chooseOrder (player, reset) {
 		document.getElementById('chooseP' + player).classList.remove('chooseImg');
 		switch (playerOrder.length) {
 			case 2:
-				document.getElementById('chooseFirst').innerHTML = '<img src="img/1st.png"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[player] + '.png">';
+				editInner('chooseFirst','<img src="img/1st.png"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[player] + '.png">');
 				break;
 			case 3:
-				document.getElementById('chooseSecond').innerHTML = '<img src="img/2nd.png"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[player] + '.png">';
+				editInner('chooseSecond', '<img src="img/2nd.png"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[player] + '.png">');
 				break;
 			case 4:
-				document.getElementById('chooseThird').innerHTML = '<img src="img/3rd.png"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[player] + '.png">';
+				editInner('chooseThird','<img src="img/3rd.png"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[player] + '.png">');
 				break;
 			case 5:
-				document.getElementById('chooseFourth').innerHTML = '<img src="img/4th.png"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[player] + '.png">';
+				editInner('chooseFourth', '<img src="img/4th.png"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[player] + '.png">');
 				document.getElementById('chooseContinue').style.display = 'block';
 				break;
 		}
@@ -416,14 +416,14 @@ function turnItem (item) {
 
 	if (activeItem == item) { // undo the item if it's already selected
 		document.getElementById('itemImg').src = 'img/tie.png';
-		document.getElementById('itemEventSpan').innerHTML = '';
+		editInner('itemEventSpan', '');
 		activeItem = '';
 		document.getElementById('turnCurDice').src = 'img/shortcut/mpds/diceblock.png';
 
 		if (diceRolls.length != 0) {
-			document.getElementById('turnCurDiceText').innerHTML = diceRolls[0];
+			editInner('turnCurDiceText', diceRolls[0]);
 		} else {
-			document.getElementById('turnCurDiceText').innerHTML = '??';
+			editInner('turnCurDiceText', '??');
 		}
 		diceCursor = 0;
 
@@ -444,7 +444,7 @@ function turnItem (item) {
 			execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'hex']);
 		}
 	}
-	document.getElementById('itemEventSpan').innerHTML = '';
+	editInner('itemEventSpan', '');
 
 	switch (item) {
 		case 'Double':
@@ -453,16 +453,16 @@ function turnItem (item) {
 
 			switch (diceRolls.length) {
 				case 1:
-					document.getElementById('turnCurDiceText').innerHTML = diceRolls[0] + ' + <span style="color: ' + selColor + ';"> ?? </span>';
+					editInner('turnCurDiceText', diceRolls[0] + ' + <span style="color: ' + selColor + ';"> ?? </span>');
 					diceCursor = 1;
 					break;
 				case 2:
 				case 3:
-					document.getElementById('turnCurDiceText').innerHTML = diceRolls[0] + ' + ' + diceRolls[1];
+					editInner('turnCurDiceText', diceRolls[0] + ' + ' + diceRolls[1]);
 					diceCursor = 0;
 					break;
 				default:
-					document.getElementById('turnCurDiceText').innerHTML = '?? + ??';
+					editInner('turnCurDiceText', '?? + ??');
 					diceCursor = 0;
 			}
 			shortcutNotif(getCharName(orderCurPlayer) + ' used a double dice.');
@@ -474,19 +474,19 @@ function turnItem (item) {
 
 			switch (diceRolls.length) {
 				case 1:
-					document.getElementById('turnCurDiceText').innerHTML = diceRolls[0] + ' + <span style="color: ' + selColor + ';"> ?? </span> + ??';
+					editInner('turnCurDiceText', diceRolls[0] + ' + <span style="color: ' + selColor + ';"> ?? </span> + ??');
 					diceCursor = 1;
 					break;
 				case 2:
-					document.getElementById('turnCurDiceText').innerHTML = diceRolls[0] + ' + ' + diceRolls[1] + ' + <span style="color: ' + selColor + ';"> ?? </span>';
+					editInner('turnCurDiceText', diceRolls[0] + ' + ' + diceRolls[1] + ' + <span style="color: ' + selColor + ';"> ?? </span>');
 					diceCursor = 2;
 					break;
 				case 3:
-					document.getElementById('turnCurDiceText').innerHTML = diceRolls[0] + ' + ' + diceRolls[1] + ' + ' + diceRolls[2];
+					editInner('turnCurDiceText', diceRolls[0] + ' + ' + diceRolls[1] + ' + ' + diceRolls[2]);
 					diceCursor = 0;
 					break;
 				default:
-					document.getElementById('turnCurDiceText').innerHTML = '?? + ?? + ??';
+					editInner('turnCurDiceText', '?? + ?? + ??');
 					diceCursor = 0;
 			}
 			shortcutNotif(getCharName(orderCurPlayer) + ' used a triple dice.');
@@ -499,9 +499,9 @@ function turnItem (item) {
 				document.getElementById('dice' + num).style.display = 'none';
 			}
 			if (diceRolls.length != 0) {
-				document.getElementById('turnCurDiceText').innerHTML = diceRolls[0];
+				editInner('turnCurDiceText', diceRolls[0]);
 			} else {
-				document.getElementById('turnCurDiceText').innerHTML = '??';
+				editInner('turnCurDiceText', '??');
 			}
 			diceCursor = 0;
 			shortcutNotif(getCharName(orderCurPlayer) + ' used a half dice.');
@@ -558,9 +558,9 @@ function turnItem (item) {
 			shortcutNotif(getCharName(orderCurPlayer) + ' used a misc item.');
 
 			if (diceRolls.length != 0) {
-				document.getElementById('turnCurDiceText').innerHTML = diceRolls[0];
+				editInner('turnCurDiceText', diceRolls[0]);
 			} else {
-				document.getElementById('turnCurDiceText').innerHTML = '??';
+				editInner('turnCurDiceText', '??');
 			}
 			diceCursor = 0;
 	}
@@ -755,7 +755,7 @@ function turnDice (num) {
 		default:
 			diceCursor = 0;
 			diceRolls = [num];
-			document.getElementById('turnCurDiceText').innerText = num;
+			editInner('turnCurDiceText', num);
 			if (typeof num == 'string') {
 				if (num.startsWith('+') == true) {
 					diceRollsTotal = num;
@@ -1264,11 +1264,11 @@ function turnSpace (space) {
 
 	if (activeSpace == space) { //stop function if the exact same space is selected
 		document.getElementById('spaceEventImg').src = '';
-		document.getElementById('spaceEventsSpan').innerHTML = '';
+		editInner('spaceEventsSpan', '');
 		activeSpace = '';
 		return;
 	}
-	document.getElementById('spaceEventsSpan').innerHTML = '';
+	editInner('spaceEventsSpan', '');
 
 	switch (space) {
 		case 'Blue':
@@ -1355,7 +1355,7 @@ function turnSpace (space) {
 			break;
 		default:
 			document.getElementById('spaceEventImg').src = '';
-			document.getElementById('spaceEventsSpan').innerHTML = '';
+			editInner('spaceEventsSpan', '');
 			return;
 	}
 	document.getElementById('space' + space).classList.add('selected');
@@ -2339,7 +2339,7 @@ function turnEnd () {
 	activeSpace = undefined;
 	document.getElementById('turnCurDice').src = 'img/shortcut/mpds/diceblock.png';
 	document.getElementById('spaceEventImg').src = '';
-	document.getElementById('spaceEventsSpan').innerHTML = '';
+	editInner('spaceEventsSpan', '');
 	battleResult = [];
 	editInner('battleResult', '');
 	document.getElementById('battleReset').style.display = 'none';
@@ -2365,7 +2365,7 @@ function turnEnd () {
 	for (var num = 0; num < elems.length; num++) {
 		elems[num].classList.remove('selected');
 	}
-	document.getElementById('turnCurDiceText').innerHTML = '??';
+	editInner('turnCurDiceText', '??');
 	activeItem = undefined;
 	poisonSub = 0;
 	itemEventState = [];
@@ -2498,7 +2498,7 @@ function chooseMinigame (minigame) {
 		case 'coin':
 			break;
 		case 'battle':
-			document.getElementById('shortcutSpan').innerHTML = '';
+			editInner('shortcutSpan', '');
 			document.getElementById('shortcutBattle').style.display = '';
 			break;
 	}
@@ -2672,8 +2672,8 @@ function startBattle () {
 	var coinReq = parseInt(getValue('battleCoins'));
 	battleCoins = 0;
 	for (var num = 1; num < 5; num++) {
-		if (parseInt(document.getElementById('p' + num + 'CoinsText').innerText) < coinReq) {
-			battleCoins = battleCoins + parseInt(document.getElementById('p' + num + 'CoinsText').innerText);
+		if (parseInt(getInner('p' + num + 'CoinsText')) < coinReq) {
+			battleCoins = battleCoins + parseInt(getInner('p' + num + 'CoinsText'));
 			execOnMain('counterButtons', [num, 'M', coinReq, 'coins']);
 		} else {
 			battleCoins = battleCoins + coinReq;
@@ -2685,8 +2685,8 @@ function startBattle () {
 	battleRanks.second = [];
 	battleRanks.third = [];
 	battleRanks.fourth = [];
-	document.getElementById('battleTextCoins').innerHTML = 'Fighting for ' + battleCoins + ' coins.';
-	document.getElementById('battleText').innerHTML = 'Select place for Player 1 "' + getCharName(characters[1]) + '".'
+	editInner('battleTextCoins', 'Fighting for ' + battleCoins + ' coins.');
+	editInner('battleText', 'Select place for Player 1 "' + getCharName(characters[1]) + '".');
 	document.getElementById('battleStart').style.display = 'none';
 	document.getElementById('battlePlayers').style.display = 'block';
 	document.getElementById('battleReset').style.display = '';
@@ -2704,22 +2704,22 @@ function calcBattle (place) {
 		battleResult = [];
 		editInner('battleResult', '');
 		battleCurPlayer = 1;
-		document.getElementById('battleText').innerHTML = 'Select place for Player 1 "' + getCharName(characters[1]) + '".';
+		editInner('battleText', 'Select place for Player 1 "' + getCharName(characters[1]) + '".');
 		return;
 	}
 
 	switch (battleCurPlayer) {
 		case 1:
 			battleCurPlayer = 2;
-			document.getElementById('battleText').innerHTML = 'Select place for Player 2 "' + getCharName(characters[2]) + '".';
+			editInner('battleText', 'Select place for Player 2 "' + getCharName(characters[2]) + '".');
 			break;
 		case 2:
 			battleCurPlayer = 3;
-			document.getElementById('battleText').innerHTML = 'Select place for Player 3 "' + getCharName(characters[3]) + '".';
+			editInner('battleText', 'Select place for Player 3 "' + getCharName(characters[3]) + '".');
 			break;
 		case 3:
 			battleCurPlayer = 4;
-			document.getElementById('battleText').innerHTML = 'Select place for Player 4 "' + getCharName(characters[4]) + '".';
+			editInner('battleText', 'Select place for Player 4 "' + getCharName(characters[4]) + '".');
 			break;
 		case 4:
 			battleCurPlayer = 5;

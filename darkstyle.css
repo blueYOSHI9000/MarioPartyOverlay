@@ -19,6 +19,10 @@
 	border-bottom: #4288ee 2px solid;
 	color: #4288ee;
 }
+.settingsSelection:hover {
+	color: #e64940;
+	border-bottom: #e64940 2px solid;
+}
 .settingsContentPopout {
 	background-color: #F3F3F3;
 }

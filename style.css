@@ -336,13 +336,13 @@ body {
 	border-bottom: #e64940 2px solid;
 }
 .settingsSelected {
-	color: #f10d00;
-	border-bottom: #f10d00 2px solid;
+	color: #f10d00 !important;
+	border-bottom: #f10d00 2px solid !important;
 	cursor: default;
 }
 .settingsSelected:hover {
-	color: #f10d00;
-	border-bottom: #f10d00 2px solid;
+	color: #f10d00 !important;
+	border-bottom: #f10d00 2px solid !important;
 }
 .flexAuto {
 	flex: auto;

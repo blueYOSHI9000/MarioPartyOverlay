@@ -23,7 +23,7 @@ function counterButtons (player, action, amount, counter) {
 			console.warn('[MPO] Counter was NaN, player: ' + player + ', counter: ' + counter);
 			shortcutNotif('Error: ' + counter + ' for player ' + player + ' was NaN', true);
 		} else {
-			result = parseInt(document.getElementById('p' + player + counter + 'Text').innerHTML);
+			result = parseInt(getInner('p' + player + counter + 'Text'));
 		}
 
 		if (action == 'P') {
@@ -44,7 +44,7 @@ function counterButtons (player, action, amount, counter) {
 	}
 
 	if (counter == 'coinStar') {
-		result = parseInt(document.getElementById('coinStarText').innerHTML);
+		result = parseInt(getInner('coinStarText'));
 
 		if (action == 'P') {
 			result = result + amount;
@@ -81,10 +81,10 @@ function counterButtons (player, action, amount, counter) {
 * @param {boolean} noAnimation If the animation should be skipped.
 */
 function updateCounter (id, change, noAnimation) {
-	if (document.getElementById(id).innerHTML == change) {
+	if (getInner(id) == change) {
 		return;
 	}
-	document.getElementById(id).innerHTML = change;
+	editInner(id, change);
 	if (getValue('enableAnimation') == false && noAnimation != true) {
 		return;
 	}
@@ -151,7 +151,7 @@ function updateStars (player, action, amount) {
 	}
 
 	var activated = getValue('inclBonusOnOff');
-	var result = ['', document.getElementById('p1StarsText').innerHTML, document.getElementById('p2StarsText').innerHTML, document.getElementById('p3StarsText').innerHTML, document.getElementById('p4StarsText').innerHTML];
+	var result = ['', getInner('p1StarsText'), getInner('p2StarsText'), getInner('p3StarsText'), getInner('p4StarsText')];
 
 	for (let num = 1; num < 5; num++) {
 		var resultSplit = result[num].split('');
@@ -223,8 +223,8 @@ function updateStars (player, action, amount) {
 * @param {number} player Which player should be updated.
 */
 function updateCoins (player) {
-	var result = parseInt(document.getElementById('p' + player + 'CoinsText').innerHTML);
-	var coinStar = parseInt(document.getElementById('coinStarText').innerHTML);
+	var result = parseInt(getInner('p' + player + 'CoinsText'));
+	var coinStar = parseInt(getInner('coinStarText'));
 
 	if (getValue('coinStarOnOff') == true) {
 		if (result == coinStar) {
@@ -253,8 +253,8 @@ function updateCoins (player) {
 * @param {string} action If it should be added, subtracted or set to the amount.
 */
 function turns (counter, amount, action) {
-	var curTurnVar = parseInt(document.getElementById('curTurnText').innerHTML);
-	var maxTurnVar = parseInt(document.getElementById('maxTurnText').innerHTML);
+	var curTurnVar = parseInt(getInner('curTurnText'));
+	var maxTurnVar = parseInt(getInner('maxTurnText'));
 
 	if (action === 'P' && getValue('autoSave') === true && counter === 'curTurn') {
 		backup();
@@ -301,8 +301,8 @@ function turns (counter, amount, action) {
 	}
 
 	//console.log('Current:' + curTurnVar + ' Max:' + maxTurnVar)
-	document.getElementById('curTurnText').innerHTML = curTurnVar;
-	document.getElementById('maxTurnText').innerHTML = maxTurnVar;
+	editInner('curTurnText', curTurnVar);
+	editInner('maxTurnText', maxTurnVar);
 }
 
 /*

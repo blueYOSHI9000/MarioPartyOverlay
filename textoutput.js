@@ -100,7 +100,7 @@ function textOutput () {
 		switch (toCounters[num].toLowerCase()) {
 			case 'turn':
 			case 'turns':
-				output[num] = counterNames[num] + ': ' + document.getElementById('curTurnText').innerHTML + '/' + document.getElementById('maxTurnText').innerHTML;
+				output[num] = counterNames[num] + ': ' + getInner('curTurnText') + '/' + getInner('maxTurnText');
 				break;
 
 			case 'coin':
@@ -141,7 +141,7 @@ function textOutput () {
 					}
 				}
 
-				output[num] = counterNames[num] + ': ' + document.getElementById('coinStarText').innerHTML + ' ' + coinStarString;
+				output[num] = counterNames[num] + ': ' + getInner('coinStarText') + ' ' + coinStarString;
 				break;
 
 			default: //Add everything new to textOutputTest() too
@@ -153,35 +153,35 @@ function textOutput () {
 					var result = [];
 					var resultNum = [];
 
-					var counterP1 = document.getElementById('p1' + toCounters[num] + 'Text').innerHTML;
-					var counterP2 = document.getElementById('p2' + toCounters[num] + 'Text').innerHTML;
-					var counterP3 = document.getElementById('p3' + toCounters[num] + 'Text').innerHTML;
-					var counterP4 = document.getElementById('p4' + toCounters[num] + 'Text').innerHTML;
+					var counterP1 = getInner('p1' + toCounters[num] + 'Text');
+					var counterP2 = getInner('p2' + toCounters[num] + 'Text');
+					var counterP3 = getInner('p3' + toCounters[num] + 'Text');
+					var counterP4 = getInner('p4' + toCounters[num] + 'Text');
 
 					var counterNum = Math.max(counterP1, counterP2, counterP3, counterP4);
 
 					if (counterP1 == counterP2 && counterP1 == counterP3 && counterP1 == counterP4 && getValue('toListAll') == false) {
 						result.push('everyone');
-						resultNum.push(document.getElementById('p1' + toCounters[num] + 'Text').innerHTML);
+						resultNum.push(getInner('p1' + toCounters[num] + 'Text'));
 					} else {
 						if (counterNum == counterP1) {
 							result.push(playerName[1]);
-							resultNum.push(document.getElementById('p1' + toCounters[num] + 'Text').innerHTML);
+							resultNum.push(getInner('p1' + toCounters[num] + 'Text'));
 						}
 
 						if (counterNum == counterP2) {
 							result.push(playerName[2]);
-							resultNum.push(document.getElementById('p2' + toCounters[num] + 'Text').innerHTML);
+							resultNum.push(getInner('p2' + toCounters[num] + 'Text'));
 						}
 
 						if (counterNum == counterP3) {
 							result.push(playerName[3]);
-							resultNum.push(document.getElementById('p3' + toCounters[num] + 'Text').innerHTML);
+							resultNum.push(getInner('p3' + toCounters[num] + 'Text'));
 						}
 
 						if (counterNum == counterP4) {
 							result.push(playerName[4]);
-							resultNum.push(document.getElementById('p4' + toCounters[num] + 'Text').innerHTML);
+							resultNum.push(getInner('p4' + toCounters[num] + 'Text'));
 						}
 					}
 
@@ -212,7 +212,7 @@ function textOutput () {
 					}
 
 				} else {
-					output[num] = counterNames[num] + ': ' + playerName[1] + ' ' + document.getElementById('p1' + toCounters[num] + 'Text').innerHTML.replace(/ /g,'') + ', ' + playerName[2] + ' ' + document.getElementById('p2' + toCounters[num] + 'Text').innerHTML.replace(/ /g,'') + ', ' + playerName[3] + ' ' + document.getElementById('p3' + toCounters[num] + 'Text').innerHTML.replace(/ /g,'') + ', ' + playerName[4] + ' ' + document.getElementById('p4' + toCounters[num] + 'Text').innerHTML.replace(/ /g,'');
+					output[num] = counterNames[num] + ': ' + playerName[1] + ' ' + getInner('p1' + toCounters[num] + 'Text').replace(/ /g,'') + ', ' + playerName[2] + ' ' + getInner('p2' + toCounters[num] + 'Text').replace(/ /g,'') + ', ' + playerName[3] + ' ' + getInner('p3' + toCounters[num] + 'Text').replace(/ /g,'') + ', ' + playerName[4] + ' ' + getInner('p4' + toCounters[num] + 'Text').replace(/ /g,'');
 				}
 		}
 	}
@@ -263,16 +263,16 @@ function textOutputTest (nameonly) {
 	}
 
 	if (error.length == 1) {
-		document.getElementById('textOutputWarning').innerHTML = '"' + error.join(', ') + '" isn\'t a valid counter.';
+		editInner('textOutputWarning', '"' + error.join(', ') + '" isn\'t a valid counter.');
 		document.getElementById('textOutputWarning').style = 'visibility: visible;';
 	} else if (error.length > 1) {
-		document.getElementById('textOutputWarning').innerHTML = '"' + error.join(', ') + '" aren\'t valid counters.';
+		editInner('textOutputWarning', '"' + error.join(', ') + '" aren\'t valid counters.');
 		document.getElementById('textOutputWarning').style = 'visibility: visible;';
 	} else if (toCounters.length > counterNames.length) {
-		document.getElementById('textOutputWarning').innerHTML = 'Counter name(s) missing.';
+		editInner('textOutputWarning', 'Counter name(s) missing.');
 		document.getElementById('textOutputWarning').style = 'visibility: visible;';
 	} else if (toCounters.length < counterNames.length) {
-		document.getElementById('textOutputWarning').innerHTML = 'Too many counter counterNames.';
+		editInner('textOutputWarning', 'Too many counter counterNames.');
 		document.getElementById('textOutputWarning').style = 'visibility: visible;';
 	} else {
 		document.getElementById('textOutputWarning').style = 'visibility: hidden;';
