@@ -408,7 +408,7 @@
 
 					<label for="customGameIcons"> <span class="settingsText"> Use game-based icons if available: </span> </label> <input type="checkbox" id="customGameIcons" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('changeCharacters');changeSettings('changeCounterIcons')" checked> <br> <br>
 
-					<span class="settingsText"> Settings style: <input type="radio" id="settingsLight" name="settingsMode" onchange="settingsMode()" checked><label for="settingsLight" style="margin-right: 10px;">Light </label> <input type="radio" name="settingsMode" onchange="settingsMode()" id="settingsDark"><label for="settingsDark">Dark </label> </span> <br> <br>
+					<span class="settingsText"> Settings style: <input type="radio" id="settingsLight" name="settingsMode" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('settingsMode')" checked><label for="settingsLight" style="margin-right: 10px;">Light </label> <input type="radio" name="settingsMode" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('settingsMode')" id="settingsDark"><label for="settingsDark">Dark </label> </span> <br> <br>
 
 					<label for="greenscreen"> <span class="settingsText"> Enable greenscreen: </span> </label> <input type="checkbox" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('changeTheme')" id="greenscreen"> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('changeBGColor', ['bgColor'])" value="#0000ff" id="bgColor"><br>
 					<span class="settingsText"> Change text color: </span> <input type="color" id="textColor" value="#ffffff" onchange="sendSettingsMsg(this.id, this.value);changeSettings('changeTextColor', [this.id])"> <br> <br>
