@@ -677,6 +677,46 @@ function resetTextColor () {
 }
 
 /*
+* 
+*/
+function settingsMode () {
+	var filetype = 'css';
+	var filename = 'darkstyle.css';
+	if (getValue('settingsDark') === true) {
+		var headID = document.getElementsByTagName("head")[0];
+		var cssNode = document.createElement('link');
+		cssNode.type = 'text/css';
+		cssNode.rel = 'stylesheet';
+		cssNode.href = 'darkstyle.css';
+		cssNode.media = 'screen';
+		headID.appendChild(cssNode);
+	} else {
+		var targetElement = "link"; 
+		var targetAttr = "href"; 
+
+		var allCtrl = document.getElementsByTagName(targetElement);
+		for (var i=allCtrl.length; i>=0; i--)  { //search backwards within nodelist for matching elements to remove
+			if (allCtrl[i] && allCtrl[i].getAttribute(targetAttr)!=null && allCtrl[i].getAttribute(targetAttr).indexOf(filename)!=-1) {
+				allCtrl[i].parentNode.removeChild(allCtrl[i]);
+			}
+		}
+	}
+
+
+
+}
+
+function removejscssfile(filename, filetype){
+    var targetelement=(filetype=="js")? "script" : (filetype=="css")? "link" : "none" //determine element type to create nodelist from
+    var targetattr=(filetype=="js")? "src" : (filetype=="css")? "href" : "none" //determine corresponding attribute to test for
+    var allsuspects=document.getElementsByTagName(targetelement)
+    for (var i=allsuspects.length; i>=0; i--){ //search backwards within nodelist for matching elements to remove
+    if (allsuspects[i] && allsuspects[i].getAttribute(targetattr)!=null && allsuspects[i].getAttribute(targetattr).indexOf(filename)!=-1)
+        allsuspects[i].parentNode.removeChild(allsuspects[i]) //remove element by calling parentNode.removeChild()
+    }
+}
+
+/*
 * Gets the InnerHTML of an element
 * 
 * @param {string} id The ID of the element that should be changed.

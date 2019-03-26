@@ -7,7 +7,7 @@
 * @param {string} character Which character should be used (only used when changing characters).
 */
 function changeCharacters (player, character) {
-	if (getValue('customCharacterIcons') == true) {
+	if (getValue('customGameIcons') == true) {
 		for (let num = 1; num < 5; num++) {
 			if (player) {
 				characters[player] = character;
@@ -76,7 +76,7 @@ function changeCharactersBackup (elem) {
 */
 var characters = ['', 'mario', 'luigi', 'yoshi', 'peach'];
 function changeCounterIcons () {
-	if (getValue('customCounterIcons') == true) {
+	if (getValue('customGameIcons') == true) {
 		for (let num = 0; num < counters.length; num++) {
 			var elems = document.getElementsByClassName(counters[num]);
 

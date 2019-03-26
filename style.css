@@ -222,6 +222,7 @@ body {
 .settingsLink {
 	font-size: 20px;
 	white-space: nowrap;
+	color: #4242ee;
 }
 .settingsNote {
 	color: #666666;
@@ -299,7 +300,8 @@ body {
 }
 .settingsTitle {
 	font-size: 27px;
-	border-bottom: 2px black solid;
+	border-bottom: 2px #111111 solid;
+	color: #111111;
 	margin-bottom: 10px;
 	display: inline-block;
 }
@@ -369,7 +371,7 @@ body {
 #settingsContent {
 	width: 962px;
 	height: 800px;
-	background: no-repeat url(img/settings-bg.png), linear-gradient(#F6F6F6, #E7E7E7);
+	background: no-repeat url(img/settingsbg-light.png), linear-gradient(#F6F6F6, #E7E7E7);
 	display: flex;
 	flex-direction: column;
 	white-space: nowrap;
@@ -624,6 +626,7 @@ body {
 #gameSelectorDiv {
 	font-family: 'Mario';
 	font-size: 18px;
+	color: #111111;
 	display: flex;
 	max-width: 1044px;
 }

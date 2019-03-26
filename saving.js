@@ -335,8 +335,8 @@ function saveSettings (close) {
 	localStorage.setItem('autoPopout', getValue('autoPopout'));
 	localStorage.setItem('curTheme', curTheme);
 	localStorage.setItem('iconStyle', document.querySelector('input[name="icons"]:checked').id);
-	localStorage.setItem('customCounterIcons', getValue('customCounterIcons'));
-	localStorage.setItem('customCharacterIcons', getValue('customCharacterIcons'));
+	localStorage.setItem('customGameIcons', getValue('customGameIcons'));
+	localStorage.setItem('settingsMode', document.querySelector('input[name="settingsMode"]:checked').id);
 	localStorage.setItem('greenscreen', getValue('greenscreen'));
 	localStorage.setItem('bgColor', getValue('bgColor'));
 	localStorage.setItem('textColor', getValue('textColor'));
@@ -419,11 +419,17 @@ function prepareMPO () {
 			editValue('mpsr', true);
 		}
 		
-		editValue('customCounterIcons', localStorage.getItem('customCounterIcons'));
-		editValue('customCharacterIcons', localStorage.getItem('customCharacterIcons'));
+		editValue('customGameIcons', localStorage.getItem('customGameIcons'));
 		changeCharacters();
 		editValue('textColor', localStorage.getItem('textColor'));
 		changeTextColor('textColor');
+
+		if (localStorage.getItem('settingsMode') == 'settingsDark') {
+			editValue('settingsDark', true);
+		} else {
+			editValue('settingsLight', true);
+		}
+		settingsMode();
 
 		editValue('enableHighlight', stringToBoolean(localStorage.getItem('counterHighlight')));
 		editValue('highlightColor', localStorage.getItem('highlightColor'));
@@ -554,8 +560,9 @@ function syncPopout () {
 		sendSettingsMsg('autoPopout', getValue('autoPopout'), true);
 		sendSettingsMsg('mpsrIcons', getValue('mpsrIcons'), true);
 		sendSettingsMsg('mk8Icons', getValue('mk8Icons'), true);
-		sendSettingsMsg('customCounterIcons', getValue('customCounterIcons'), true);
-		sendSettingsMsg('customCharacterIcons', getValue('customCharacterIcons'), true);
+		sendSettingsMsg('settingsLight', getValue('settingsLight'), true);
+		sendSettingsMsg('settingsDark', getValue('settingsDark'), true);
+		sendSettingsMsg('customGameIcons', getValue('customGameIcons'), true);
 		sendSettingsMsg('greenscreen', getValue('greenscreen'), true);
 		sendSettingsMsg('bgColor', getValue('bgColor'), true);
 		sendSettingsMsg('textColor', getValue('textColor'), true);
@@ -616,6 +623,7 @@ function syncPopout () {
 		sendMessage('changeCom+' + 3);
 		sendMessage('changeCom+' + 4);
 		sendMessage('updateCounterInput');
+		sendMessage('settingsMode');
 
 		sendMessage('showHideSettings+' + openedSettings);
 
@@ -660,8 +668,8 @@ function resetSettings () {
 	editValue('enableInteract', false);
 	editValue('autoPopout', false);
 	editValue('mpsrIcons', true);
-	editValue('customCounterIcons', true);
-	editValue('customCharacterIcons', true);
+	editValue('settingsLight', true);
+	editValue('customGameIcons', true);
 	editValue('greenscreen', false);
 	editValue('bgColor', '#0000FF');
 	editValue('textColor', '#ffffff');
@@ -690,6 +698,7 @@ function resetSettings () {
 	changeGame('all')
 
 	editValue('greenscreen', false);
+	settingsMode();
 	changeTheme(1);
 	changeCharacters()
 	changeTextColor('textColor');
@@ -704,8 +713,8 @@ function resetSettings () {
 	localStorage.setItem('autoPopout', getValue('autoPopout'));
 	localStorage.setItem('curTheme', curTheme);
 	localStorage.setItem('iconStyle', document.querySelector('input[name="icons"]:checked'));
-	localStorage.setItem('customCounterIcons', getValue('customCounterIcons'));
-	localStorage.setItem('customCharacterIcons', getValue('customCharacterIcons'));
+	localStorage.setItem('customGameIcons', getValue('customGameIcons'));
+	localStorage.setItem('settingsMode', document.querySelector('input[name="settingsMode"]:checked'));
 	localStorage.setItem('greenscreen', getValue('greenscreen'));
 	localStorage.setItem('bgColor', getValue('bgColor'));
 	localStorage.setItem('textColor', getValue('textColor'));
