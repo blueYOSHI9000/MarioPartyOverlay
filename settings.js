@@ -11,6 +11,7 @@ var setup = false;
 var turnCurPlayer = 0;
 var shortcutGame = 'smp'; //Shortcut features use this instead of curGame as otherwise the player could change the game mid-shortcut which would break everything
 var orderCurPlayer = 0;
+var minigameSpaces = ['', '', '', '', ''];
 /*
 * Starts the shortcut feature or advances to the next state.
 */
@@ -45,7 +46,7 @@ function startShortcut () {
 				prepareTurn();
 				setup = true;
 			}
-
+			minigameSpaces = ['', '', '', '', ''];
 			shortcutState = 2;
 			turnCurPlayer = 1;
 			editInner('shortcutSpan', '');
@@ -58,29 +59,32 @@ function startShortcut () {
 
 			editInner('turnHexCharSelection', '<span class="settingsText"> Select the character that placed the hex: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" onclick="turnHex(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" onclick="turnHex(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" onclick="turnHex(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" onclick="turnHex(4)">');
 			orderCurPlayer = playerOrder[turnCurPlayer];
-			switch (orderCurPlayer) {
-				case 1:
-					document.getElementById('turnPlayerName').style.color = '#0000EB';
-					break;
-				case 2:
-					document.getElementById('turnPlayerName').style.color = '#E60000';
-					break;
-				case 3:
-					document.getElementById('turnPlayerName').style.color = '#00A705';
-					break;
-				case 4:
-					document.getElementById('turnPlayerName').style.color = '#e0dc00';
-					break;
-			}
+			document.getElementById('turnPlayerName').style.color = 'unset';
 			break;
 
 		case 2: // start minigame
 			shortcutState = 3;
 			document.getElementById('shortcutTurn').style.display = 'none';
 			if (shortcutGame === 'smp') {
-				editInner('shortcutSpan', '<span class="settingsTitle"> Normal Minigame </span> <br> <span id="normalMinigame"> <span class="settingsText"> Select minigame type: </span> <br> <span class="shortcutText spanSelection"> <span onclick="startMinigame(\'4p\')"> 4-Player </span> <span onclick="startMinigame(\'2v2\')"> 2vs2 </span> <span onclick="startMinigame(\'1v3\')"> 1vs3 </span> </span> </span> <br> <br> <span class="settingsTitle"> Coin Minigame </span> <br> <span class="settingsText"> WIP, add coins manually for now. <br> Reminder that you can add 5 at once if you hold shift while 1 is selected. </span> <br> <button onclick="coinMinigame()">Done</button>');
+				editInner('shortcutSpan', '<span class="settingsTitle"> Normal Minigame </span> <br> <span id="normalMinigame"> <span class="settingsText"> Select minigame type: </span> <br> <span class="shortcutText spanSelection"> <span onclick="startMinigame(\'4p\')"> 4-Player </span> <span onclick="startMinigame(\'2v2\')"> 2vs2 </span> <span onclick="startMinigame(\'1v3\')"> 1vs3 </span> </span> </span> <br> <br> <span class="settingsTitle"> Coin Minigame </span> <br> <span class="settingsText"> WIP, add coins manually for now. </span> <br> <span class="settingsNote"> Reminder that you can add 5 at once if you hold shift while 1 is selected. </span> <br> <button onclick="coinMinigame()">Done</button>');
+				var blueS = [];
+				var redS = [];
+				for (var num = 1; num < 5; num++) {
+					if (minigameSpaces[num] === 'blue') {
+						blueS.push(0);
+					} else if (minigameSpaces[num] === 'red') {
+						redS.push(0);
+					}
+				}
+				if (blueS.length === 4 || redS.length === 4) {
+					startMinigame('4p');
+				} else if ((blueS.length === 3 && redS.length === 1) || (blueS.length === 1 && redS.length === 3)) {
+					startMinigame('1v3');
+				} else if (blueS.length === 2 && redS.length === 2) {
+					startMinigame('2v2');
+				}
 			} else {
-				editInner('shortcutSpan', '<span class="settingsTitle"> Normal Minigame </span> <br> <span id="normalMinigame"> <span class="settingsText"> Who won? </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="p1Minigame" onclick="startMinigame(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="p2Minigame" onclick="startMinigame(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="p3Minigame" onclick="startMinigame(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="p4Minigame" onclick="startMinigame(4)"> <br> <button onClick="startMinigame()">Done</button> </span> <br> <br> <span class="settingsTitle"> Coin Minigame </span> <br> <span class="settingsText"> WIP, add coins manually for now. <br> Reminder that you can add 5 at once if you hold shift while 1 is selected. </span> <br> <button onclick="coinMinigame()">Done</button> <br> <br> <span class="settingsTitle"> Battle Minigame </span> <br> <button onclick="chooseMinigame(\'battle\')">Start Battle Minigame</button>');
+				editInner('shortcutSpan', '<span class="settingsTitle"> Normal Minigame </span> <br> <span id="normalMinigame"> <span class="settingsText"> Who won? </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="p1Minigame" onclick="startMinigame(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="p2Minigame" onclick="startMinigame(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="p3Minigame" onclick="startMinigame(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="p4Minigame" onclick="startMinigame(4)"> <br> <button onClick="startMinigame()">Done</button> </span> <br> <br> <span class="settingsTitle"> Coin Minigame </span> <br> <span class="settingsText"> WIP, add coins manually for now. </span> <br> <span class="settingsNote"> Reminder that you can add 5 at once if you hold shift while 1 is selected. </span> <br> <button onclick="coinMinigame()">Done</button> <br> <br> <span class="settingsTitle"> Battle Minigame </span> <br> <button onclick="chooseMinigame(\'battle\')">Start Battle Minigame</button>');
 			}
 			break;
 
@@ -1205,6 +1209,7 @@ function turnSpace (space) {
 	space = space.substring(5);
 
 	if (activeSpace != '' && activeSpace != undefined) { //undo space if it's already selected or changed into a different one
+		document.getElementById('turnPlayerName').style.color = 'unset';
 		switch (activeSpace) {
 			case 'Blue':
 				if (starPrice != 0) {
@@ -1376,6 +1381,23 @@ function turnSpace (space) {
 		return;
 	}
 	editInner('spaceEventsSpan', '');
+	switch (space) {
+		case 'Blue':
+			minigameSpaces[orderCurPlayer] = 'blue';
+			document.getElementById('turnPlayerName').style.color = '#1859f4';
+			break;
+		case 'Red':
+		case 'Bowser':
+		case 'BadLuck':
+		case 'ExtraBadLuck':
+			minigameSpaces[orderCurPlayer] = 'red';
+			document.getElementById('turnPlayerName').style.color = '#f43629';
+			break;
+		default:
+			minigameSpaces[orderCurPlayer] = 'green';
+			document.getElementById('turnPlayerName').style.color = '#1dc632';
+			break;
+	}
 
 	switch (space) {
 		case 'Blue':
@@ -2511,20 +2533,8 @@ function turnEnd () {
 
 	editInner('turnPlayerName', getCharName(orderCurPlayer));
 	document.getElementById('turnPlayerIcon').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[orderCurPlayer] + '.png';
-	switch (orderCurPlayer) {
-		case 1:
-			document.getElementById('turnPlayerName').style.color = '#0000EB';
-			break;
-		case 2:
-			document.getElementById('turnPlayerName').style.color = '#E60000';
-			break;
-		case 3:
-			document.getElementById('turnPlayerName').style.color = '#00A705';
-			break;
-		case 4:
-			document.getElementById('turnPlayerName').style.color = '#e0dc00';
-			break;
-	}
+	document.getElementById('turnPlayerName').style.color = 'unset';
+
 	spaceEventState = [];
 	activeSpace = undefined;
 	document.getElementById('turnCurDice').src = 'img/shortcut/mpds/diceblock.png';
@@ -2715,7 +2725,7 @@ function startMinigame (player) {
 	var high5 = false;
 	if (player === '4p') {
 		minigameMode = '4p';
-		editInner('normalMinigame', '<span class="settingsNote"> Reminder: If there are two 1st-places, the next player is 3rd, not 2nd; same applies to all ties. </span> <br> <span id="4pMinigame" class="settingsText"> Select place for Player 1 "' + getCharName(1) + '": </span> <br> <span> <img src="img/1st.png" class="battleImg" onclick="startMinigame(\'first\')"> <img src="img/2nd.png" class="battleImg" onclick="startMinigame(\'second\')"> <img src="img/3rd.png" class="battleImg" onclick="startMinigame(\'third\')"> <img src="img/4th.png" class="battleImg" onclick="startMinigame(\'fourth\')"> </span>');
+		editInner('normalMinigame', '<button onclick="startMinigame(\'back\')">Select minigame mode</button> <br> <span class="settingsNote"> Reminder: If there are two 1st-places, the next player is 3rd, not 2nd; same applies to all ties. </span> <br> <span id="4pMinigame" class="settingsText"> Select place for Player 1 "' + getCharName(1) + '": </span> <br> <span> <img src="img/1st.png" class="battleImg" onclick="startMinigame(\'first\')"> <img src="img/2nd.png" class="battleImg" onclick="startMinigame(\'second\')"> <img src="img/3rd.png" class="battleImg" onclick="startMinigame(\'third\')"> <img src="img/4th.png" class="battleImg" onclick="startMinigame(\'fourth\')"> </span>');
 		minigameRanks = {
 			first: [],
 			second: [],
@@ -2726,11 +2736,15 @@ function startMinigame (player) {
 		return;
 	} else if (player === '2v2') {
 		minigameMode = '2v2';
-		editInner('normalMinigame', '<span class="settingsText"> Who won? </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="p1Minigame" onclick="startMinigame(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="p2Minigame" onclick="startMinigame(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="p3Minigame" onclick="startMinigame(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="p4Minigame" onclick="startMinigame(4)"> <br> <button onClick="startMinigame()">Done</button> <button onClick="startMinigame(\'high5\')">High five</button> <span class="settingsNote"> High five gives the 1st-place team 2 additional coins. </span> <br> <button onclick="startMinigame(\'tie\')" style="margin-top: 5px;">Tie</button>');
+		editInner('normalMinigame', '<button onclick="startMinigame(\'back\')">Select minigame mode</button> <br> <span class="settingsText"> Who won? </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="p1Minigame" onclick="startMinigame(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="p2Minigame" onclick="startMinigame(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="p3Minigame" onclick="startMinigame(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="p4Minigame" onclick="startMinigame(4)"> <br> <button onClick="startMinigame()">Done</button> <button onClick="startMinigame(\'high5\')">High five</button> <span class="settingsNote"> High five gives the 1st-place team 2 additional coins. </span> <br> <button onclick="startMinigame(\'tie\')" style="margin-top: 5px;">Tie</button>');
 		return;
 	} else if (player === '1v3') {
 		minigameMode = '1v3';
-		editInner('normalMinigame', '<span class="settingsText"> Who won? </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="p1Minigame" onclick="startMinigame(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="p2Minigame" onclick="startMinigame(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="p3Minigame" onclick="startMinigame(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="p4Minigame" onclick="startMinigame(4)"> <br> <button onClick="startMinigame()">Done</button> <button onClick="startMinigame(\'high5\')">High five</button> <span class="settingsNote"> High five gives the 1st-place team 2 additional coins. </span> <br> <button onclick="startMinigame(\'tie\')" style="margin-top: 5px;">Tie</button>');
+		editInner('normalMinigame', '<button onclick="startMinigame(\'back\')">Select minigame mode</button> <br> <span class="settingsText"> Who won? </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="p1Minigame" onclick="startMinigame(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="p2Minigame" onclick="startMinigame(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="p3Minigame" onclick="startMinigame(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="p4Minigame" onclick="startMinigame(4)"> <br> <button onClick="startMinigame()">Done</button> <button onClick="startMinigame(\'high5\')">High five</button> <span class="settingsNote"> High five gives the 1st-place team 2 additional coins. </span> <br> <button onclick="startMinigame(\'tie\')" style="margin-top: 5px;">Tie</button>');
+		return;
+	} else if (player === 'back') {
+		editInner('shortcutSpan', '<span class="settingsTitle"> Normal Minigame </span> <br> <span id="normalMinigame"> <span class="settingsText"> Select minigame type: </span> <br> <span class="shortcutText spanSelection"> <span onclick="startMinigame(\'4p\')"> 4-Player </span> <span onclick="startMinigame(\'2v2\')"> 2vs2 </span> <span onclick="startMinigame(\'1v3\')"> 1vs3 </span> </span> </span> <br> <br> <span class="settingsTitle"> Coin Minigame </span> <br> <span class="settingsText"> WIP, add coins manually for now. <br> Reminder that you can add 5 at once if you hold shift while 1 is selected. </span> <br> <button onclick="coinMinigame()">Done</button>');
+		minigamePlayers = [];
 		return;
 	} else if (player === 'high5') {
 		high5 = true;
@@ -2784,6 +2798,9 @@ function startMinigame (player) {
 			}
 			shortcutNotif(minigamePlayers.join(' & ') + ' won a minigame.');
 		case 'smp':
+			if (minigamePlayers.length === 0 || minigamePlayers.length === 4) {
+				player = 'tie';
+			}
 			if (player === 'tie') {
 				for (var num = 1; num < 5; num++) {
 					execOnMain('counterButtons', [num, 'P', 5, 'coins']);
