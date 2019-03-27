@@ -1018,6 +1018,9 @@ function removeAlly (player, ally) {
 		return;
 	}
 	if (player === 1) {
+		if (diceUsed[orderCurPlayer] === allies['p' + orderCurPlayer][ally - 1]) {
+			changeAllyDice(0);
+		}
 		var elems = document.getElementById('removeAllySelection').children;
 		var elems2 = [document.getElementById('allyDice1'), document.getElementById('allyDice2'), document.getElementById('allyDice3'), document.getElementById('allyDice4')];
 		elems[allies['p' + orderCurPlayer].length - 1].style.visibility = 'hidden';
@@ -1044,6 +1047,7 @@ function removeAlly (player, ally) {
 		for (var num = 2; num < allies['p' + orderCurPlayer].length + 2; num++) {
 			elems[num].src = 'img/smp/' + allies['p' + orderCurPlayer][num - 2] + '.png';
 		}
+
 	} else {
 		var char = parseInt(document.getElementById('removeAllyChar' + (player - 1)).getAttribute('player'));
 		var elems = document.getElementById('removeAllyChar' + (player - 1)).children;
@@ -1061,6 +1065,7 @@ function removeAlly (player, ally) {
 	//getAlly('close');
 }
 
+var diceUsed = ['', 0, 0, 0, 0];
 /*
 * Changes the dice numbers based on ally selected.
 * 
@@ -1070,6 +1075,7 @@ function changeAllyDice (ally) {
 	var elems = document.getElementById('allyDiceSelection').children;
 	removeSelected(elems);
 	elems[ally].classList.add('selected');
+	diceUsed[orderCurPlayer] = elems[ally].src.replace(/^.*[\\\/]/, '').slice(0, -4);
 
 	var dice = [];
 
@@ -1136,6 +1142,9 @@ function changeAllyDice (ally) {
 				break;
 			case 'pompom':
 				dice = [0, 3, 3, 3, 3, 8];
+				break;
+			case 'bobomb': //failsafe
+				dice = [0, 0, 0, 0, 0, 0];
 				break;
 		}
 	}
@@ -2581,7 +2590,6 @@ function turnEnd () {
 			for (var num = 0; num < elems.length; num++) {
 				elems[num].classList.remove('selected');
 			}
-			changeAllyDice(0);
 			elems = document.getElementById('allyDiceSelection').children;
 			var elems2 = document.getElementById('removeAllySelection').children;
 			elems[1].src = 'img/smp/' + characters[orderCurPlayer] + '.png';
@@ -2638,6 +2646,22 @@ function turnEnd () {
 				removeAlly(orderCurPlayer, 4);
 				bobombAlly[orderCurPlayer] = 0;
 				shortcutNotif(getCharName(orderCurPlayer) + '\'s Bob-Omb exploded.');
+			}
+
+			if (characters[orderCurPlayer] === diceUsed[orderCurPlayer]) {
+				changeAllyDice(1);
+			} else {
+				var runV = true;
+				for (var num2 = 0; num2 < allies['p' + orderCurPlayer].length; num2++) {
+					if (diceUsed[orderCurPlayer] === allies['p' + orderCurPlayer][num2]) {
+						changeAllyDice(num2 + 2);
+						runV = false;
+						break;
+					}
+				}
+				if (runV === true) {
+					changeAllyDice(0);
+				}
 			}
 			break;
 	}
