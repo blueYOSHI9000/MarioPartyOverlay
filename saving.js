@@ -326,6 +326,7 @@ function saveSettings (close) {
 		showHideDiv(['settings']);
 		if (shortcutLoaded == true) {
 			getAlly('close');
+			shortcutSettings(true);
 		}
 	}
 	
@@ -360,6 +361,8 @@ function saveSettings (close) {
 	localStorage.setItem('toShowNum', getValue('toShowNum'));
 	localStorage.setItem('toListAll', getValue('toListAll'));
 	localStorage.setItem('toListAllCoin', getValue('toListAllCoin'));
+
+	localStorage.setItem('shortcutAutoEnd', getValue('shortcutAutoEnd'));
 }
 
 /*
@@ -452,6 +455,8 @@ function prepareMPO () {
 		editValue('toShowNum', stringToBoolean(localStorage.getItem('toShowNum')));
 		editValue('toListAll', stringToBoolean(localStorage.getItem('toListAll')));
 		editValue('toListAllCoin', stringToBoolean(localStorage.getItem('toListAllCoin')));
+
+		editValue('shortcutAutoEnd', localStorage.getItem('shortcutAutoEnd'));
 
 		updateCounterInput();
 	} else {
@@ -618,6 +623,8 @@ function syncPopout () {
 		sendSettingsMsg('bananasOnOff', getValue('bananasOnOff'), true);
 		sendSettingsMsg('coinsOnOff', getValue('coinsOnOff'), true);
 
+		sendSettingsMsg('shortcutAutoEnd', getValue('shortcutAutoEnd'), true);
+
 		sendMessage('changeCom+' + 1);
 		sendMessage('changeCom+' + 2);
 		sendMessage('changeCom+' + 3);
@@ -696,6 +703,8 @@ function resetSettings () {
 	editValue('toListAll', false);
 	editValue('toListAllCoin', false);
 	changeGame('all')
+	
+	editValue('shortcutAutoEnd', false);
 
 	editValue('greenscreen', false);
 	settingsMode();
@@ -736,4 +745,6 @@ function resetSettings () {
 	localStorage.setItem('toShowNum', getValue('toShowNum'));
 	localStorage.setItem('toListAll', getValue('toListAll'));
 	localStorage.setItem('toListAllCoin', getValue('toListAllCoin'));
+
+	localStorage.setItem('shortcutAutoEnd', getValue('shortcutAutoEnd'));
 }

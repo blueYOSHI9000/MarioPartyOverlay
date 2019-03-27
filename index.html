@@ -176,6 +176,26 @@
 		</div>
 	</span>
 
+	<div id="shortcutSettingsPopup" class="popupContent">
+		<button onclick="shortcutSettings(true)" style="float: right; margin-right: 10px;">Close</button>
+
+		<span class="settingsTitle"> Options </span> <br>
+		<label for="shortcutAutoEnd"> <span class="settingsText"> Automatically end turn after selecting a space </span></label> <input type="checkbox" id="shortcutAutoEnd" onchange="sendSettingsMsg(this.id, + this.checked)"> <br> <br>
+
+		<span class="settingsTitle"> Shortcut Variables </span> <br>
+		<span class="settingsText"> Final 5 Turns Event: </span>
+		<select id="finalFiveSelect" onchange="finalFiveEvent = getValue(this.id)">
+			<option value="undefined" selected="">Nothing</option>
+			<option value="doubleSpaces">Double coins for spaces</option>
+			<option value="cheapStars">Stars for 5 coins</option>
+		</select> <br> <br>
+		<span class="settingsText">Player order:</span> <br>
+		<span id="shortcutOrder"></span> <br> <br>
+
+		<button onclick="showHideDiv(['shortcutDebug']); if (this.innerText === 'Show Debug Info') {this.innerText = 'Hide Debug Info'} else {this.innerText = 'Show Debug Info'}">Show Debug Info</button>
+		<span id="shortcutDebug" class="hidden settingsText" style="font-size: 15px;">
+		</span>
+	</div>
 	
 	<div id="allySelection" class="popupContent imgSelection">
 		<div style="text-align: center;"> <button style="position: absolute; bottom: 8px;" onclick="getAlly('close')">Close</button> </div>
@@ -372,8 +392,9 @@
 			<div id="settingsHeaderBorder"></div>
 
 			<span id="shortcutHeader" style="width: 100%;">
-				<!--button style="float: left;" onclick="turnEnd()">Finish turn?</button-->
-				<button id="finishTurn" onclick="turnEnd()" disabled="true">Finish turn</button>
+				<button id="shortcutSettingsButton" onclick="shortcutSettings()" style="float: left;" disabled="true">Settings</button>
+				<button id="skipButton" onclick="shortcutSkip()" style="float: right;" disabled="true">Skip</button>
+				<button id="backButton" onclick="shortcutBack()" style="float: right; margin-right: 5px;" disabled="true">Back</button>
 				<div id="shortcutNotif" class="settingsText">Start the game.</div>
 			</span>
 			<div id="settingsMain">
@@ -424,7 +445,7 @@
 					<span class="settingsTitle"> Reset </span> <br>
 					<button onclick="changeSettings('resetSettings')" id="resetSettingsButton"> Reset Settings </button>
 					<button onclick="changeSettings('resetPlayers')"> Reset Players & Counters </button> <br> <br>
-					<button onclick="localStorage.clear()">Clear local storage</button> <span class="settingsNote">(This will clear all saved settings, characters and counters)</span>
+					<button onclick="localStorage.clear()">Clear local storage</button> <span class="settingsNote">(This will clear all saved settings, characters, counters and stats)</span>
 				</div>
 
 				<!-- Text Output Settings -->

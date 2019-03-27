@@ -29,6 +29,7 @@ function startShortcut () {
 				shortcutNotif('The selected game is not supported.', true);
 				return;
 			}
+			document.getElementById('backButton').disabled = '';
 
 			shortcutState = 1;
 			document.getElementById('shortcutTurn').style.display = 'none';
@@ -49,7 +50,7 @@ function startShortcut () {
 			turnCurPlayer = 1;
 			editInner('shortcutSpan', '');
 			document.getElementById('shortcutTurn').style.display = '';
-			document.getElementById('finishTurn').disabled = '';
+			document.getElementById('skipButton').disabled = '';
 
 
 			editInner('turnPlayerName', getCharName(orderCurPlayer));
@@ -87,8 +88,10 @@ function startShortcut () {
 			if (getInner('curTurnText') == getInner('maxTurnText')) {
 				shortcutState = 0;
 				document.getElementById('shortcutTurn').style.display = 'none';
+				document.getElementById('skipButton').disabled = 'true';
 
-				editInner('shortcutSpan', '<span class="settingsText" style="width: 100%; white-space: normal; line-height: 30px;"> Games currently supported: <img src="img/mpds.png" style="width: 40px;"> <img src="img/smp.png" style="width: 40px;"> <br> Only 4 players without Teams (this includes Partner Party) are currently supported. <br> <br> A lot of features depend on the coin counter, it\'s recommended to show it and keep it up to date. <br> This is currently in heavy development and some features might not work as intended. <br> <br> <button onclick="startShortcut()">Start game</button> <br> <br> <span class="settingsTitle"> Report Bugs </span> <br> In case something breaks or doesn\'t provide the expected output, please click on "Generate & Copy" and <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">contact me</a> or <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new?template=bug_report.md" class="settingsLink" rel="noopener" target="_blank">open a Github issue</a> with a screenshot or copy-paste of your browsers console (Ctrl + Shift + I > "Console"). It shows the last actions done and potential errors. Thank you! <br> <br> <span class="settingsTitle"> Potential broken features </span> <br> Mario Party is hugely RNG based so some events are rare and as such hard to figure out how they work. <br> Be sure to check your coin count after some of these as it might not be correct anymore: <ul> 	<li>SMP Minigame tied rewards</li> 	<li>Battle Minigames (especially ties)</li> <li>Lucky/ Extra- Bad Luck Events (some might even be missing)</li> <li>VS space in SMP</li> <li>MPDS Duel space</li> </ul> </span>'); //remember to replace prepareShortcut() with startSHortcut()
+				editInner('shortcutSpan', '<span class="settingsText" style="width: 100%; white-space: normal; line-height: 30px;"> Games currently supported: <img src="img/mpds.png" style="width: 40px;"> <img src="img/smp.png" style="width: 40px;"> <br> Only 4 players without Teams (this includes Partner Party) are currently supported. <br> <br> A lot of features depend on the coin counter, it\'s recommended to show it and keep it up to date. <br> This is currently in heavy development and some features might not work as intended. <br> <br> <button onclick="startShortcut()">Start game</button> <br> <br> <span class="settingsTitle"> Report Bugs </span> <br> In case something breaks or doesn\'t provide the expected output, please click on "Generate & Copy" and <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">contact me</a> or <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new?template=bug_report.md" class="settingsLink" rel="noopener" target="_blank">open a Github issue</a> with a screenshot or copy-paste of your browsers console (Ctrl + Shift + I > "Console"). It shows the last actions done and potential errors. Thank you! <br> <br> <span class="settingsTitle"> Potential broken features </span> <br> Mario Party is hugely RNG based so some events are rare and as such hard to figure out how they work. <br> Be sure to check your coin count after some of these as it might not be correct anymore: <ul> 	<li>SMP Minigame tied rewards</li> 	<li>Battle Minigames (especially ties)</li> <li>Lucky/ Extra- Bad Luck Events (some might even be missing)</li> <li>VS space in SMP</li> <li>MPDS Duel space</li> </ul> </span>');
+				//^^ remember to replace prepareShortcut() with startSHortcut() & add copy-paste it in shortcutBack()
 				setup = false;
 				shortcutNotif('Game completed! Start a new one?');
 				//game done
@@ -104,6 +107,7 @@ function startShortcut () {
 						startShortcut();
 						return;
 					} else {
+						document.getElementById('skipButton').disabled = 'true';
 						editInner('shortcutSpan', '<span class="shortcutText"> Final 5 Turns! </span> <br> <br> <span id="finalFiveTie"></span> <span class="settingsText"> Select the event: </span> <select id="finalFiveEvent"> <option value="20coins">Get 20 Coins</option> <option value="30coins">Get 30 Coins</option> <option value="1star">Get 1 Star</option> <option value="charity">Get 10 Coins from others</option> <option value="cheapStars">Stars for 5 coins</option> <option value="100stars">Get 100 Stars</option> <option value="300stars">Get 300 Stars</option> </select> <br> <br> <button onclick="finalFive()">Continue</button>');
 					}
 
@@ -115,6 +119,7 @@ function startShortcut () {
 					} else if (shortcutGame === 'smp') {
 						finalFive();
 					}
+					lastPlace = 0;
 				}
 				startShortcut();
 				return;
@@ -179,6 +184,94 @@ function prepareTurn () {
 			}			
 			break;
 	}
+}
+
+/*
+* Skips to the next shortcut screen.
+*/
+function shortcutSkip () {
+	switch (shortcutState) {
+		case 0:
+		case 1:
+		case 4:
+			return;
+		case 2:
+			turnEnd();
+			break;
+		case 3:
+			startShortcut();
+			break;
+	}
+}
+
+/*
+* Goes to the last shortcut screen.
+*/
+function shortcutBack () {
+	switch (shortcutState) {
+		case 0:
+			return;
+		case 1:
+			shortcutState = 0;
+			editInner('shortcutSpan', '<span class="settingsText" style="width: 100%; white-space: normal; line-height: 30px;"> Games currently supported: <img src="img/mpds.png" style="width: 40px;"> <img src="img/smp.png" style="width: 40px;"> <br> Only 4 players without Teams (this includes Partner Party) are currently supported. <br> <br> A lot of features depend on the coin counter, it\'s recommended to show it and keep it up to date. <br> This is currently in heavy development and some features might not work as intended. <br> <br> <button onclick="startShortcut()">Start game</button> <br> <br> <span class="settingsTitle"> Report Bugs </span> <br> In case something breaks or doesn\'t provide the expected output, please click on "Generate & Copy" and <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">contact me</a> or <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new?template=bug_report.md" class="settingsLink" rel="noopener" target="_blank">open a Github issue</a> with a screenshot or copy-paste of your browsers console (Ctrl + Shift + I > "Console"). It shows the last actions done and potential errors. Thank you! <br> <br> <span class="settingsTitle"> Potential broken features </span> <br> Mario Party is hugely RNG based so some events are rare and as such hard to figure out how they work. <br> Be sure to check your coin count after some of these as it might not be correct anymore: <ul> 	<li>SMP Minigame tied rewards</li> 	<li>Battle Minigames (especially ties)</li> <li>Lucky/ Extra- Bad Luck Events (some might even be missing)</li> <li>VS space in SMP</li> <li>MPDS Duel space</li> </ul> </span>');
+			document.getElementById('skipButton').disabled = 'true';
+			document.getElementById('backButton').disabled = 'true';
+			break;
+		case 2:
+			if (turnCurPlayer === 1) {
+				if (getInner('curTurnText') == 1) {
+					playerOrder = undefined;
+					shortcutState = 0;
+					document.getElementById('skipButton').disabled = 'true';
+				} else {
+					execOnMain('turns', ['curTurn', 1, 'M']);
+					shortcutState = 2;
+				}
+				startShortcut();
+			} else {
+				turnCurPlayer = turnCurPlayer - 2;
+				turnEnd();
+			}
+			break;
+		case 3:
+			turnCurPlayer = 3;
+			shortcutState = 1;
+			turnEnd();
+			startShortcut();
+			turnCurPlayer = 4;
+			break;
+		case 4:
+			execOnMain('turns', ['curTurn', 1, 'M']);
+			shortcutState = 2;
+			document.getElementById('skipButton').disabled = '';
+			startShortcut();
+			break;
+	}
+}
+
+/*
+* 
+*/
+function shortcutSettings (close) {
+	if (close === true) {
+		document.getElementById('settingsMain').style = '';
+		document.getElementById('shortcutSettings').style = '';
+		document.getElementById('settingsMain').onclick = '';
+		document.getElementById('shortcutSettingsPopup').style.display = 'none';
+		return;
+	}
+	if (shortcutState === 1 || playerOrder.length != 5) {
+		editInner('shortcutOrder', '<span class="settingsText"> Player order is not decided yet. </span>');
+	} else {
+		var iconStyle = document.querySelector('input[name="icons"]:checked').value;
+		editInner('shortcutOrder', '<img src="img/1st.png"> <img src="img/' + iconStyle + '/' + characters[playerOrder[1]] + '.png"> <img src="img/2nd.png"> <img src="img/' + iconStyle + '/' + characters[playerOrder[2]] + '.png"> <img src="img/3rd.png"> <img src="img/' + iconStyle + '/' + characters[playerOrder[3]] + '.png"> <img src="img/4th.png"> <img src="img/' + iconStyle + '/' + characters[playerOrder[4]] + '.png">');
+	}
+	editInner('shortcutDebug', '<span> shortcutState: ' + shortcutState + '<br> spaceEventState: ' + spaceEventState.join(', ') + '<br> itemEventState: ' + itemEventState.join(', ') + '<br> diceCursor: ' + diceCursor + ' - diceRolls: ' + diceRolls.join(', ') + '<br> <br> statusEffects: <br> - P1: ' + statusEffects['p1'].join(', ') + '<br> - P2: ' + statusEffects['p2'].join(', ') + '<br> - P3: ' + statusEffects['p3'].join(', ') + '<br> - P4: ' + statusEffects['p4'].join(', ') + '<br> <br> allies: <br> - P1: ' + allies['p1'].join(', ') + '<br> - P2: ' + allies['p2'].join(', ') + '<br> - P3: ' + allies['p3'].join(', ') + '<br> - P4: ' + allies['p4'].join(', ') + '<br> bobombAlly: ' + bobombAlly.join(', ') + '</span>');
+
+	document.getElementById('settingsMain').style = '-webkit-filter: blur(5px); filter: blur(5px);';
+	document.getElementById('shortcutSettings').style = 'pointer-events: none;'; //filter and pointer event need to be different as blur wouldn't be smooth with 'shortcutSettings' and pointer-event would remove onClick
+	document.getElementById('shortcutSettingsPopup').style.display = 'initial';
+	setTimeout(function () {document.getElementById('settingsMain').setAttribute('onclick','shortcutSettings(true)');}, 10); //required because chrome would immediately execute the function if it was changed directly
 }
 
 /*
@@ -300,6 +393,7 @@ function finalFive (player) {
 			shortcutNotif('Final 5 Frenzy: ' + getCharName(lastPlace) + ' got something that shouldn\'t happen.');
 			break;
 	}
+	document.getElementById('skipButton').disabled = '';
 	shortcutState = 1;
 	startShortcut();
 }
@@ -815,6 +909,9 @@ function getAlly (ally, nobobomb) {
 			document.getElementById('shortcutSettings').style = '';
 			document.getElementById('settingsMain').onclick = '';
 			document.getElementById('allySelection').style.display = 'none';
+			if (closeAlly === true) {
+				turnEnd();
+			}
 			return;
 		}
 
@@ -882,10 +979,13 @@ function getAlly (ally, nobobomb) {
 		document.getElementById(ally + 'Ally').classList.add('allySelected');
 		execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'ally']);
 		shortcutNotif(getCharName(orderCurPlayer) + ' got ' + getCharName(ally) + ' as an ally.');
-
+		if (closeAlly === true) {
+			turnEnd();
+		}
 		getAlly('close');
 		return;
 	} else {
+		closeAlly = false;
 		document.getElementById('settingsMain').style = '-webkit-filter: blur(5px); filter: blur(5px);';
 		document.getElementById('shortcutSettings').style = 'pointer-events: none;'; //filter and pointer event need to be different as blur wouldn't be smooth with 'shortcutSettings' and pointer-event would remove onClick
 		document.getElementById('allySelection').style.display = 'initial';
@@ -1086,6 +1186,7 @@ function allyDice (ally, dice) {
 	shortcutNotif(getCharName(allies['p' + orderCurPlayer][ally - 1]) + ' rolled a ' + dice + ' for ' + getCharName(orderCurPlayer) + '.');
 }
 
+var closeAlly = false;
 var activeSpace;
 /*
 * Activates spaces.
@@ -1286,6 +1387,10 @@ function turnSpace (space) {
 				}
 			}
 			shortcutNotif(getCharName(orderCurPlayer) + ' got 3 coins from a blue space.');
+			if (getValue('shortcutAutoEnd') === true) {
+				turnEnd();
+				return;
+			}
 			break;
 		case 'Red':
 			if (starPrice != 0) {
@@ -1303,10 +1408,18 @@ function turnSpace (space) {
 			}
 			execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'redSpace']);
 			shortcutNotif(getCharName(orderCurPlayer) + ' lost 3 coins from a red space.');
+			if (getValue('shortcutAutoEnd') === true) {
+				turnEnd();
+				return;
+			}
 			break;
 		case 'Happening':
 			execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'happening']);
 			shortcutNotif(getCharName(orderCurPlayer) + ' landed on a happening space, coins gotten in it need to be added manually.');
+			if (getValue('shortcutAutoEnd') === true) {
+				turnEnd();
+				return;
+			}
 			break;
 		case 'Friend':
 			execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'friendSpace']);
@@ -1328,8 +1441,13 @@ function turnSpace (space) {
 			break;
 		case 'Ally':
 			getAlly();
+			closeAlly = true;
 			break;
 		case 'Item':
+			if (getValue('shortcutAutoEnd') === true) {
+				turnEnd();
+				return;
+			}
 			break;
 		case 'Lucky':
 			shortcutNotif(getCharName(orderCurPlayer) + ' landed on a lucky space, select the event.');
@@ -1397,6 +1515,9 @@ function spaceEvent (space, attr) {
 				execOnMain('counterButtons', [orderCurPlayer, 'P', 5, 'coins']);
 			}
 			execOnMain('counterButtons', [attr[0], 'P', 5, 'coins']);
+			if (getValue('shortcutAutoEnd') === true) {
+				turnEnd();
+			}
 			shortcutNotif(getCharName(orderCurPlayer) + ' landed on a friend space and got 5 coins together with ' + getCharName(attr[0]) + '.');
 			spaceEventState[1] = attr[0];
 			break;
@@ -1420,6 +1541,9 @@ function spaceEvent (space, attr) {
 				}
 				editInner('spaceEventsSpan', '');
 				spaceEventState = ['duel', 'done', spaceEventState[3], spaceEventState[4], spaceEventState[5], spaceEventState[2], attr[1], spaceEventState[1]];
+				if (getValue('shortcutAutoEnd') === true) {
+					turnEnd();
+				}
 				return;
 			} else if (attr[0] == 'tie') {
 				if (spaceEventState[2] == '1star' || spaceEventState[2] == '2stars') {
@@ -1431,6 +1555,11 @@ function spaceEvent (space, attr) {
 					execOnMain('counterButtons', [orderCurPlayer, 'P', spaceEventState[4], 'coins']);
 					shortcutNotif('The duel was a tie and both got their coins back.');
 				}
+				editInner('spaceEventsSpan', '');
+				if (getValue('shortcutAutoEnd') === true) {
+					turnEnd();
+				}
+				return;
 			} else if (attr[0] == 'start') {
 				if (spaceEventState[1] == undefined || spaceEventState[1] == 'undo') {
 					shortcutNotif('Select a character to fight against.', true)
@@ -1596,6 +1725,9 @@ function spaceEvent (space, attr) {
 					shortcutNotif('Bowser Space "Gimme Equality!" - Set everyones coin count to ' + coinNum + '.');
 					break;
 			}
+			if (getValue('shortcutAutoEnd') === true) {
+				turnEnd();
+			}
 			editInner('spaceEventsSpan', '');
 			break;
 
@@ -1612,11 +1744,17 @@ function spaceEvent (space, attr) {
 				case '3coins':
 					spaceEventState = ['lucky', 'done', 'coins', 3];
 					execOnMain('counterButtons', [orderCurPlayer, 'P', 3, 'coins']);
+					if (getValue('shortcutAutoEnd') === true) {
+						turnEnd();
+					}
 					shortcutNotif('Lucky Event: ' + getCharName(orderCurPlayer) + ' got 3 coins.');
 					break;
 				case '5coins':
 					spaceEventState = ['lucky', 'done', 'coins', 5];
 					execOnMain('counterButtons', [orderCurPlayer, 'P', 5, 'coins']);
+					if (getValue('shortcutAutoEnd') === true) {
+						turnEnd();
+					}
 					shortcutNotif('Lucky Event: ' + getCharName(orderCurPlayer) + ' got 5 coins.');
 					break;
 				case '5coinsrival':
@@ -1637,6 +1775,9 @@ function spaceEvent (space, attr) {
 					execOnMain('counterButtons', [orderCurPlayer, 'P', coins, 'coins']);
 					execOnMain('counterButtons', [random, 'M', coins, 'coins']);
 					spaceEventState = ['lucky', 'done', 'coinsrival', coins, random];
+					if (getValue('shortcutAutoEnd') === true) {
+						turnEnd();
+					}
 					shortcutNotif('Lucky Event: ' + getCharName(orderCurPlayer) + ' got ' + coins + ' coins from ' + getCharName(random) + '.');
 					break;
 				case '10coinsrival':
@@ -1657,9 +1798,15 @@ function spaceEvent (space, attr) {
 					execOnMain('counterButtons', [orderCurPlayer, 'P', coins, 'coins']);
 					execOnMain('counterButtons', [random, 'M', coins, 'coins']);
 					spaceEventState = ['lucky', 'done', 'coinsrival', coins, random];
+					if (getValue('shortcutAutoEnd') === true) {
+						turnEnd();
+					}
 					shortcutNotif('Lucky Event: ' + getCharName(orderCurPlayer) + ' got ' + coins + ' coins from ' + getCharName(random) + '.');
 					break;
 				case 'items':
+					if (getValue('shortcutAutoEnd') === true) {
+						turnEnd();
+					}
 					shortcutNotif('Lucky Event: ' + getCharName(orderCurPlayer) + ' got Items.');
 					break;
 			}
@@ -1680,6 +1827,9 @@ function spaceEvent (space, attr) {
 						spaceEventState = ['badluck', 'done', 'coins', 5];
 					}
 					execOnMain('counterButtons', [orderCurPlayer, 'M', 5, 'coins']);
+					if (getValue('shortcutAutoEnd') === true) {
+						turnEnd();
+					}
 					shortcutNotif('Bad Luck Event: Took 5 coins from ' + getCharName(orderCurPlayer) + '.');
 					break;
 				case '10coins':
@@ -1689,6 +1839,9 @@ function spaceEvent (space, attr) {
 						spaceEventState = ['badluck', 'done', 'coins', 10];
 					}
 					execOnMain('counterButtons', [orderCurPlayer, 'M', 10, 'coins']);
+					if (getValue('shortcutAutoEnd') === true) {
+						turnEnd();
+					}
 					shortcutNotif('Bad Luck Event: Took 10 coins from ' + getCharName(orderCurPlayer) + '.');
 					break;
 				case '20coins':
@@ -1698,12 +1851,18 @@ function spaceEvent (space, attr) {
 						spaceEventState = ['badluck', 'done', 'coins', 20];
 					}
 					execOnMain('counterButtons', [orderCurPlayer, 'M', 20, 'coins']);
+					if (getValue('shortcutAutoEnd') === true) {
+						turnEnd();
+					}
 					shortcutNotif('Bad Luck Event: Took 20 coins from ' + getCharName(orderCurPlayer) + '.');
 					break;
 				case 'halfcoins':
 					var coinNum = Math.floor(parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) / 2);
 					execOnMain('counterButtons', [orderCurPlayer, 'M', coinNum, 'coins']);
 					spaceEventState = ['badluck', 'done', 'coins', coinNum];
+					if (getValue('shortcutAutoEnd') === true) {
+						turnEnd();
+					}
 					shortcutNotif('Bad Luck Event: Took half the coins (' + coinNum + ') from ' + getCharName(orderCurPlayer) + '.');
 					break;
 				case '3coinsothers':
@@ -1745,6 +1904,9 @@ function spaceEvent (space, attr) {
 						execOnMain('counterButtons', [orderCurPlayer, 'M', (coinNum * 3) + coinNum, 'coins']);
 						shortcutNotif('Bad Luck Event: Took ' + coinNum + ' coins from ' + getCharName(orderCurPlayer) + ' and gave ' + coinNum + ' coins to everyone else.');
 					}
+					if (getValue('shortcutAutoEnd') === true) {
+						turnEnd();
+					}
 					break;
 				case '5coinslast':
 					if (attr && isNaN(attr[1]) == false) {
@@ -1768,6 +1930,9 @@ function spaceEvent (space, attr) {
 						execOnMain('counterButtons', [orderCurPlayer, 'M', coins, 'coins']);
 						execOnMain('counterButtons', [lastPlace[0], 'P', coins, 'coins']);
 						spaceEventState = ['badluck', 'done', 'coinsrandom', coins, lastPlace[0]];
+						if (getValue('shortcutAutoEnd') === true) {
+							turnEnd();
+						}
 						shortcutNotif('Bad Luck Event: ' + getCharName(orderCurPlayer) + ' gave ' + coins + ' coins to ' + getCharName(lastPlace[0]) + '.');
 					}
 					break;
@@ -1793,6 +1958,9 @@ function spaceEvent (space, attr) {
 						execOnMain('counterButtons', [orderCurPlayer, 'M', coins, 'coins']);
 						execOnMain('counterButtons', [lastPlace[0], 'P', coins, 'coins']);
 						spaceEventState = ['badluck', 'done', 'coinsrandom', coins, lastPlace[0]];
+						if (getValue('shortcutAutoEnd') === true) {
+							turnEnd();
+						}
 						shortcutNotif('Bad Luck Event: ' + getCharName(orderCurPlayer) + ' gave ' + coins + ' coins to ' + getCharName(lastPlace[0]) + '.');
 					}
 					break;
@@ -1814,20 +1982,32 @@ function spaceEvent (space, attr) {
 					execOnMain('counterButtons', [orderCurPlayer, 'M', coins, 'coins']);
 					execOnMain('counterButtons', [random, 'P', coins, 'coins']);
 					spaceEventState = ['badluck', 'done', 'coinsrandom', coins, random];
+					if (getValue('shortcutAutoEnd') === true) {
+						turnEnd();
+					}
 					shortcutNotif('Bad Luck Event: ' + getCharName(orderCurPlayer) + ' gave ' + coins + ' coins to ' + getCharName(random) + '.');
 					break;
 				case '1star':
 					execOnMain('counterButtons', [orderCurPlayer, 'M', 1, 'stars']);
 					spaceEventState = ['badluck', 'done', 'coinsrandom', 'stars', 1];
+					if (getValue('shortcutAutoEnd') === true) {
+						turnEnd();
+					}
 					shortcutNotif('Bad Luck Event: Took 1 star from ' + getCharName(orderCurPlayer) + '.');
 					break;
 				case 'movestar':
 					spaceEventState = ['badluck', 'done', 'movestar'];
+					if (getValue('shortcutAutoEnd') === true) {
+						turnEnd();
+					}
 					shortcutNotif('Bad Luck Event: Moved the star.');
 					break;
 				case 'raisestarcost':
 					var starCost = 'double';
 					spaceEventState = ['badluck', 'done', 'raisestarcost'];
+					if (getValue('shortcutAutoEnd') === true) {
+						turnEnd();
+					}
 					shortcutNotif('Bad Luck Event: Raised the star cost to 20 coins.');
 					break;
 			}
@@ -1880,6 +2060,9 @@ function spaceEvent (space, attr) {
 							}
 
 						}
+					}
+					if (getValue('shortcutAutoEnd') === true) {
+						turnEnd();
 					}
 
 					shortcutNotif('VS Space finished, leftover coins need to be added manually.');
@@ -2314,7 +2497,6 @@ function turnEnd () {
 	turnCurPlayer++;
 	if (turnCurPlayer == 5) {
 		turnCurPlayer = 1;
-		document.getElementById('finishTurn').disabled = 'true';
 		var done = true;
 	}
 	orderCurPlayer = playerOrder[turnCurPlayer];
@@ -2361,10 +2543,6 @@ function turnEnd () {
 	for (var num = 0; num < elems.length; num++) {
 		elems[num].classList.remove('selected');
 	}
-	elems = document.getElementById('allyDiceSelection').children;
-	for (var num = 0; num < elems.length; num++) {
-		elems[num].classList.remove('selected');
-	}
 	editInner('turnCurDiceText', '??');
 	activeItem = undefined;
 	poisonSub = 0;
@@ -2381,6 +2559,10 @@ function turnEnd () {
 			}
 			break;
 		case 'smp':
+			elems = document.getElementById('allyDiceSelection').children;
+			for (var num = 0; num < elems.length; num++) {
+				elems[num].classList.remove('selected');
+			}
 			changeAllyDice(0);
 			elems = document.getElementById('allyDiceSelection').children;
 			var elems2 = document.getElementById('removeAllySelection').children;
@@ -2449,6 +2631,8 @@ function turnEnd () {
 				break;
 		}
 	}
+	getAlly('close');
+	shortcutSettings(true);
 
 	if (done && done == true) {
 		startShortcut();

@@ -369,8 +369,14 @@ function callDisplayOnOff () {
 function showHideDiv (ids) {
 	for (let num = 0; num < ids.length; num++) {
 		var div = document.getElementById(ids[num]).classList;
+		for (let num2 = 0; num2 < div.length; num2++) {
+			if (div[num2] == 'hidden') {
+				var cont = true;
+				break;
+			}
+		}
 
-		if (div == 'hidden') {
+		if (cont === true) {
 			document.getElementById(ids[num]).classList.add('visible');
 			document.getElementById(ids[num]).classList.remove('hidden');
 		} else {
@@ -411,6 +417,7 @@ function showHideSettings (id) {
 
 	if (shortcutLoaded === true) {
 		getAlly('close');
+		shortcutSettings(true);
 	}
 }
 
@@ -425,6 +432,7 @@ function windowOnClick (event) {
 		showHideDiv(['settings']);
 		if (shortcutLoaded == true) {
 			getAlly('close');
+			shortcutSettings(true);
 		}
 	}
 }
@@ -507,9 +515,13 @@ var shortcutLoaded = false;
 * Loads settings.js to start the shortcut feature.
 */
 function prepareShortcut () {
+	if (shortcutLoaded === true) {
+		startShortcut();
+	}
 	var script = document.createElement("script");
 	script.src = 'settings.js';
 	shortcutLoaded = true;
+	document.getElementById('shortcutSettingsButton').disabled = '';
 
 	document.head.appendChild(script);
 }
@@ -681,7 +693,7 @@ function resetTextColor () {
 }
 
 /*
-* 
+* Switches from light to dark mode and back by un- & loading darkstyle.css.
 */
 function settingsMode () {
 	var filetype = 'css';
@@ -705,19 +717,6 @@ function settingsMode () {
 			}
 		}
 	}
-
-
-
-}
-
-function removejscssfile(filename, filetype){
-    var targetelement=(filetype=="js")? "script" : (filetype=="css")? "link" : "none" //determine element type to create nodelist from
-    var targetattr=(filetype=="js")? "src" : (filetype=="css")? "href" : "none" //determine corresponding attribute to test for
-    var allsuspects=document.getElementsByTagName(targetelement)
-    for (var i=allsuspects.length; i>=0; i--){ //search backwards within nodelist for matching elements to remove
-    if (allsuspects[i] && allsuspects[i].getAttribute(targetattr)!=null && allsuspects[i].getAttribute(targetattr).indexOf(filename)!=-1)
-        allsuspects[i].parentNode.removeChild(allsuspects[i]) //remove element by calling parentNode.removeChild()
-    }
 }
 
 /*
@@ -892,6 +891,7 @@ function mpoSettingsPopout () {
 			console.log('[MPO] Popout activated.');
 			if (shortcutLoaded == true) {
 				getAlly('close');
+				shortcutSettings(true);
 			}
 		}
 		popoutActivated = true;

@@ -441,6 +441,24 @@ body {
 	opacity: 1 !important;
 }
 
+
+#shortcutSettingsPopup {
+	width: 500px;
+	padding: 1rem;
+	z-index: 999;
+	display: none;
+}
+#shortcutOrder img {
+	width: 50px;
+}
+#shortcutOrder img:nth-child(even) {
+	padding-right: 10px;
+	width: 50px;
+}
+#shortcutDebug {
+	line-height: 25px;
+}
+
 #turnPlayerIcon {
 	width: 45px;
 }
