@@ -910,6 +910,7 @@ function getAlly (ally, nobobomb) {
 			document.getElementById('settingsMain').onclick = '';
 			document.getElementById('allySelection').style.display = 'none';
 			if (closeAlly === true) {
+				closeAlly = false;
 				turnEnd();
 			}
 			return;
@@ -932,6 +933,11 @@ function getAlly (ally, nobobomb) {
 			document.getElementById('allyDice4').style.visibility = 'visible';
 			document.getElementById('removeAllySelection').children[3].src = 'img/smp/bobomb.png';
 			document.getElementById('removeAllySelection').children[3].style.visibility = 'visible';
+
+			if (closeAlly === true) {
+				closeAlly = false;
+				turnEnd();
+			}
 			getAlly('close');
 			return;
 		}
@@ -980,12 +986,12 @@ function getAlly (ally, nobobomb) {
 		execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'ally']);
 		shortcutNotif(getCharName(orderCurPlayer) + ' got ' + getCharName(ally) + ' as an ally.');
 		if (closeAlly === true) {
+			closeAlly = false;
 			turnEnd();
 		}
 		getAlly('close');
 		return;
 	} else {
-		closeAlly = false;
 		document.getElementById('settingsMain').style = '-webkit-filter: blur(5px); filter: blur(5px);';
 		document.getElementById('shortcutSettings').style = 'pointer-events: none;'; //filter and pointer event need to be different as blur wouldn't be smooth with 'shortcutSettings' and pointer-event would remove onClick
 		document.getElementById('allySelection').style.display = 'initial';
@@ -1440,8 +1446,10 @@ function turnSpace (space) {
 			editInner('spaceEventsSpan', '<span class="settingsText"> Select the Bowser event: </span> <br> <select id="bowserEvent"> <option value="coins">Gimme Coins!</option> <option value="stars">Gimme Stars!</option> <option value="charity">Gimme Charity!</option> <option value="equality">Gimme Equality!</option> </select> <br> <br> <button onclick="spaceEvent(\'bowser\')">Start event!</button>');
 			break;
 		case 'Ally':
+			if (getValue('shortcutAutoEnd') === true) {
+				closeAlly = true;
+			}
 			getAlly();
-			closeAlly = true;
 			break;
 		case 'Item':
 			if (getValue('shortcutAutoEnd') === true) {
@@ -2631,6 +2639,7 @@ function turnEnd () {
 				break;
 		}
 	}
+	closeAlly = false;
 	getAlly('close');
 	shortcutSettings(true);
 
