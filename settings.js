@@ -99,9 +99,10 @@ function startShortcut () {
 				setup = false;
 				shortcutNotif('Game completed! Start a new one?');
 				//game done
-			} else { // Final 5 turns
+			} else {
 				shortcutState = 1;
 				execOnMain('counterButtons', [1, 'P', 1, 'curTurn']);
+				// Final 5 turns
 				if ((getInner('curTurnText') == parseInt(getInner('maxTurnText')) - 4 && shortcutGame != 'smp') || (getInner('curTurnText') == parseInt(getInner('maxTurnText')) - 2 && shortcutGame === 'smp')) {
 					shortcutState = 4;
 					if (shortcutGame === 'smp') {
@@ -118,12 +119,11 @@ function startShortcut () {
 					lastPlace = getLastPlace();
 
 					if (lastPlace.length > 1) {
-						lastPlace[0] = 0;
+						lastPlace = 0;
 						editInner('finalFiveTie', '<span class="settingsText"> Select the last player: </span> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="finalFive(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="finalFive(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="finalFive(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="finalFive(4)"> <br> <br>');
 					} else if (shortcutGame === 'smp') {
 						finalFive();
 					}
-					lastPlace = 0;
 				}
 				startShortcut();
 				return;
