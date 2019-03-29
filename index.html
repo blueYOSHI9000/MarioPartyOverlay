@@ -202,6 +202,7 @@
 		<div>
 			<span style="float: left; padding-right: 10px; border-right: 2px solid black; margin-right: 10px; margin-bottom: 20px;">
 				<span style="position: relative;"> <span class="shortcutText" style="position: absolute; white-space: nowrap; top: -50px;"> Choose an ally </span> </span> <img src="img/smp/bobomb.png" id="bobombAlly" style="margin-left: 287px;" onclick="getAlly('bobomb')"> <br>
+				<span style="position: relative;"> <span class="settingsNote" style="position: absolute; white-space: nowrap; top: -75px; left: 2px;"> Click on a used ally to steal them </span> </span>
 				<img src="img/smp/mario.png" id="marioAlly" onclick="getAlly('mario')">
 				<img src="img/smp/luigi.png" id="luigiAlly" onclick="getAlly('luigi')">
 				<img src="img/smp/peach.png" id="peachAlly" onclick="getAlly('peach')">
@@ -510,7 +511,6 @@
 					<span id="shortcutTurn" style="display: none;">
 						<span class="shortcutText"> Current Player: </span> <span class="shortcutText" id="turnPlayerName"> Mario </span> <span style="position: relative;"> <img src="img/mpsrIcons/mario.png" style="position: absolute; top: -20px; margin-left: 3px;" id="turnPlayerIcon"> <span id="statusEffectsContainer"> <span id="statusEffects"></span> </span> </span> <br> <br>
 
-
 						<span id="starColumn" class="column">
 							<span id="turnStars" class="settingsTitle"> Stars </span> <br>
 							<span id="turnStarsSelection" class="imgSelection">
@@ -551,7 +551,6 @@
 					</span>
 
 					<!-- Battle -->
-
 					<span id="shortcutBattle" style="display: none;">
 						<span class="settingsTitle"> Battle Minigame </span> <br> <br>
 						<span id="battleStart"> Start Battle Minigame for <input type="number" id="battleCoins" min="10" max="60" value="10"> coins <br>

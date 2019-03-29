@@ -544,7 +544,6 @@ body {
 	-webkit-filter: grayscale(100%) !important;
 			filter: grayscale(100%) !important;
 	opacity: .4 !important;
-	cursor: default !important;
 }
 .allySelected:hover {
 	-webkit-filter: grayscale(100%) !important;
@@ -555,6 +554,9 @@ body {
 	-webkit-filter: grayscale(100%) !important;
 			filter: grayscale(100%) !important;
 	opacity: .4 !important;
+}
+.allySelectedChar {
+	cursor: default !important;
 }
 .removeAllyChar {
 	opacity: 1 !important;
@@ -615,6 +617,11 @@ body {
 	text-align: center;
 	background: url(img/coins.png) no-repeat;
 	background-size: 40px;
+}
+#coinMinigameSpan img {
+	width: 50px;
+	position: relative;
+	top: 16px;
 }
 
 .battleImg {

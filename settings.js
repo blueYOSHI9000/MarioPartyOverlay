@@ -66,7 +66,7 @@ function startShortcut () {
 			shortcutState = 3;
 			document.getElementById('shortcutTurn').style.display = 'none';
 			if (shortcutGame === 'smp') {
-				editInner('shortcutSpan', '<span class="settingsTitle"> Normal Minigame </span> <br> <span id="normalMinigame"> <span class="settingsText"> Select minigame type: </span> <br> <span class="shortcutText spanSelection"> <span onclick="startMinigame(\'4p\')"> 4-Player </span> <span onclick="startMinigame(\'2v2\')"> 2vs2 </span> <span onclick="startMinigame(\'1v3\')"> 1vs3 </span> </span> </span> <br> <br> <span class="settingsTitle"> Coin Minigame </span> <br> <span class="settingsText"> WIP, add coins manually for now. </span> <br> <span class="settingsNote"> Reminder that you can add 5 at once if you hold shift while 1 is selected. </span> <br> <button onclick="coinMinigame()">Done</button>');
+				editInner('shortcutSpan', '<span class="settingsTitle"> Normal Minigame </span> <br> <span id="normalMinigame"> <span class="settingsText"> Select minigame type: </span> <br> <span class="shortcutText spanSelection"> <span onclick="startMinigame(\'4p\')"> 4-Player </span> <span onclick="startMinigame(\'2v2\')"> 2vs2 </span> <span onclick="startMinigame(\'1v3\')"> 1vs3 </span> </span> </span> <br> <br> <span class="settingsTitle"> Coin Minigame </span> <br> <span class="settingsText" style="white-space: normal;"> Add the coins gained in the minigame here, after pressing "Done" they will be added. </span> <br> <span id="coinMinigameSpan"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png"> <button onclick="coinMinigame(1, 5, \'M\')">-5</button> <button onclick="coinMinigame(1, 1, \'M\')">-1</button> <input type="number" id="coinMinigame1" style="width: 40px;" min="0" value="0"> <button onclick="coinMinigame(1, 1, \'P\')">+1</button> <button onclick="coinMinigame(1, 3)">+3</button> <button onclick="coinMinigame(1, 5, \'P\')">+5</button> <button onclick="coinMinigame(1, 10, \'P\')">+10</button> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png"> <button onclick="coinMinigame(2, 5, \'M\')">-5</button> <button onclick="coinMinigame(2, 1, \'M\')">-1</button> <input type="number" id="coinMinigame2" style="width: 40px;" min="0" value="0"> <button onclick="coinMinigame(2, 1, \'P\')">+1</button> <button onclick="coinMinigame(2, 3)">+3</button> <button onclick="coinMinigame(2, 5, \'P\')">+5</button> <button onclick="coinMinigame(2, 10, \'P\')">+10</button> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png"> <button onclick="coinMinigame(3, 5, \'M\')">-5</button> <button onclick="coinMinigame(3, 1, \'M\')">-1</button> <input type="number" id="coinMinigame3" style="width: 40px;" min="0" value="0"> <button onclick="coinMinigame(3, 1, \'P\')">+1</button> <button onclick="coinMinigame(3, 3)">+3</button> <button onclick="coinMinigame(3, 5, \'P\')">+5</button> <button onclick="coinMinigame(3, 10, \'P\')">+10</button> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png"> <button onclick="coinMinigame(4, 5, \'M\')">-5</button> <button onclick="coinMinigame(4, 1, \'M\')">-1</button> <input type="number" id="coinMinigame4" style="width: 40px;" min="0" value="0"> <button onclick="coinMinigame(4, 1, \'P\')">+1</button> <button onclick="coinMinigame(4, 3)">+3</button> <button onclick="coinMinigame(4, 5, \'P\')">+5</button> <button onclick="coinMinigame(4, 10, \'P\')">+10</button> <br> <br> <button onclick="coinMinigame(\'done\')">Done</button> </span>');
 				var blueS = [];
 				var redS = [];
 				for (var num = 1; num < 5; num++) {
@@ -84,7 +84,7 @@ function startShortcut () {
 					startMinigame('2v2');
 				}
 			} else {
-				editInner('shortcutSpan', '<span class="settingsTitle"> Normal Minigame </span> <br> <span id="normalMinigame"> <span class="settingsText"> Who won? </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="p1Minigame" onclick="startMinigame(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="p2Minigame" onclick="startMinigame(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="p3Minigame" onclick="startMinigame(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="p4Minigame" onclick="startMinigame(4)"> <br> <button onClick="startMinigame()">Done</button> </span> <br> <br> <span class="settingsTitle"> Coin Minigame </span> <br> <span class="settingsText"> WIP, add coins manually for now. </span> <br> <span class="settingsNote"> Reminder that you can add 5 at once if you hold shift while 1 is selected. </span> <br> <button onclick="coinMinigame()">Done</button> <br> <br> <span class="settingsTitle"> Battle Minigame </span> <br> <button onclick="chooseMinigame(\'battle\')">Start Battle Minigame</button>');
+				editInner('shortcutSpan', '<span class="settingsTitle"> Normal Minigame </span> <br> <span id="normalMinigame"> <span class="settingsText"> Who won? </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="p1Minigame" onclick="startMinigame(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="p2Minigame" onclick="startMinigame(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="p3Minigame" onclick="startMinigame(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="p4Minigame" onclick="startMinigame(4)"> <br> <button onClick="startMinigame()">Done</button> </span> <br> <br> <span class="settingsTitle"> Coin Minigame </span> <br> <span class="settingsText" style="white-space: normal;"> Add the coins gained in the minigame here, after pressing "Done" they will be added. </span> <br> <span id="coinMinigameSpan"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png"> <button onclick="coinMinigame(1, 5, \'M\')">-5</button> <button onclick="coinMinigame(1, 1, \'M\')">-1</button> <input type="number" id="coinMinigame1" style="width: 40px;" min="0" value="0"> <button onclick="coinMinigame(1, 1, \'P\')">+1</button> <button onclick="coinMinigame(1, 3)">+3</button> <button onclick="coinMinigame(1, 5, \'P\')">+5</button> <button onclick="coinMinigame(1, 10, \'P\')">+10</button> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png"> <button onclick="coinMinigame(2, 5, \'M\')">-5</button> <button onclick="coinMinigame(2, 1, \'M\')">-1</button> <input type="number" id="coinMinigame2" style="width: 40px;" min="0" value="0"> <button onclick="coinMinigame(2, 1, \'P\')">+1</button> <button onclick="coinMinigame(2, 3)">+3</button> <button onclick="coinMinigame(2, 5, \'P\')">+5</button> <button onclick="coinMinigame(2, 10, \'P\')">+10</button> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png"> <button onclick="coinMinigame(3, 5, \'M\')">-5</button> <button onclick="coinMinigame(3, 1, \'M\')">-1</button> <input type="number" id="coinMinigame3" style="width: 40px;" min="0" value="0"> <button onclick="coinMinigame(3, 1, \'P\')">+1</button> <button onclick="coinMinigame(3, 3)">+3</button> <button onclick="coinMinigame(3, 5, \'P\')">+5</button> <button onclick="coinMinigame(3, 10, \'P\')">+10</button> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png"> <button onclick="coinMinigame(4, 5, \'M\')">-5</button> <button onclick="coinMinigame(4, 1, \'M\')">-1</button> <input type="number" id="coinMinigame4" style="width: 40px;" min="0" value="0"> <button onclick="coinMinigame(4, 1, \'P\')">+1</button> <button onclick="coinMinigame(4, 3)">+3</button> <button onclick="coinMinigame(4, 5, \'P\')">+5</button> <button onclick="coinMinigame(4, 10, \'P\')">+10</button> <br> <br> <button onclick="coinMinigame(\'done\')">Done</button> </span> <br> <br> <span class="settingsTitle"> Battle Minigame </span> <br> <button onclick="editInner(\'shortcutSpan\', \'\'); document.getElementById(\'shortcutBattle\').style.display = \'\';">Start Battle Minigame</button>');
 			}
 			break;
 
@@ -93,6 +93,13 @@ function startShortcut () {
 				shortcutState = 0;
 				document.getElementById('shortcutTurn').style.display = 'none';
 				document.getElementById('skipButton').disabled = 'true';
+
+				if (shortcutGame === 'smp') {
+					for (var num = 1; num < 5; num++) {
+						document.getElementById(characters[num] + 'Ally').classList.remove('allySelectedChar');
+						document.getElementById(characters[num] + 'Ally').classList.remove('allySelected');
+					}	
+				}
 
 				editInner('shortcutSpan', '<span class="settingsText" style="width: 100%; white-space: normal; line-height: 30px;"> Games currently supported: <img src="img/mpds.png" style="width: 40px;"> <img src="img/smp.png" style="width: 40px;"> <br> Only 4 players without Teams (this includes Partner Party) are currently supported. <br> <br> A lot of features depend on the coin counter, it\'s recommended to show it and keep it up to date. <br> This is currently in heavy development and some features might not work as intended. <br> <br> <button onclick="startShortcut()">Start game</button> <br> <br> <span class="settingsTitle"> Report Bugs </span> <br> In case something breaks or doesn\'t provide the expected output, please click on "Generate & Copy" and <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">contact me</a> or <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new?template=bug_report.md" class="settingsLink" rel="noopener" target="_blank">open a Github issue</a> with a screenshot or copy-paste of your browsers console (Ctrl + Shift + I > "Console"). It shows the last actions done and potential errors. Thank you! <br> <br> <span class="settingsTitle"> Potential broken features </span> <br> Mario Party is hugely RNG based so some events are rare and as such hard to figure out how they work. <br> Be sure to check your coin count after some of these as it might not be correct anymore: <ul> 	<li>SMP Minigame tied rewards</li> 	<li>Battle Minigames (especially ties)</li> <li>Lucky/ Extra- Bad Luck Events (some might even be missing)</li> <li>VS space in SMP</li> <li>MPDS Duel space</li> </ul> </span>');
 				//^^ remember to replace prepareShortcut() with startSHortcut() & add copy-paste it in shortcutBack()
@@ -184,6 +191,7 @@ function prepareTurn () {
 			document.getElementById('allyDiceSelection').children[1].src = 'img/smp/' + characters[orderCurPlayer] + '.png';
 
 			for (var num = 1; num < 5; num++) {
+				document.getElementById(characters[num] + 'Ally').classList.add('allySelectedChar');
 				document.getElementById(characters[num] + 'Ally').classList.add('allySelected');
 			}			
 			break;
@@ -773,6 +781,20 @@ function turnDice (num) {
 		execOnMain('counterButtons', [orderCurPlayer, 'M', diceRollsTotal, 'running']);
 	}
 
+	if (diceRolls.length === 2) { //undo coin bonus for getting the same number multiple times
+		if (diceRolls[0] === 7 && diceRolls[1] === 7) {
+			execOnMain('counterButtons', [orderCurPlayer, 'M', 30, 'coins']);
+		} else if (diceRolls[0] == diceRolls[1]) {
+			execOnMain('counterButtons', [orderCurPlayer, 'M', 10, 'coins']);
+		}
+	} else if (diceRolls.length === 3) {
+		if (diceRolls[0] === 7 && diceRolls[1] === 7 && diceRolls[2] === 7) {
+			execOnMain('counterButtons', [orderCurPlayer, 'M', 50, 'coins']);
+		} else if (diceRolls[0] === diceRolls[1] && diceRolls[0] === diceRolls[2]) {
+			execOnMain('counterButtons', [orderCurPlayer, 'M', 20, 'coins']);
+		}
+	}
+
 	switch (activeItem) { //checks active items in case nultiple dices should be used
 		case 'Double':
 		case 'Triple':
@@ -875,6 +897,20 @@ function turnDice (num) {
 	}
 	execOnMain('counterButtons', [orderCurPlayer, 'P', diceRollsTotal, 'running']);
 
+	if (diceRolls.length === 2) { //coin bonus for getting the same number multiple times
+		if (diceRolls[0] === 7 && diceRolls[1] === 7) {
+			execOnMain('counterButtons', [orderCurPlayer, 'P', 30, 'coins']);
+		} else if (diceRolls[0] == diceRolls[1]) {
+			execOnMain('counterButtons', [orderCurPlayer, 'P', 10, 'coins']);
+		}
+	} else if (diceRolls.length === 3) {
+		if (diceRolls[0] === 7 && diceRolls[1] === 7 && diceRolls[2] === 7) {
+			execOnMain('counterButtons', [orderCurPlayer, 'P', 50, 'coins']);
+		} else if (diceRolls[0] === diceRolls[1] && diceRolls[0] === diceRolls[2]) {
+			execOnMain('counterButtons', [orderCurPlayer, 'P', 20, 'coins']);
+		}
+	}
+
 	poisonSub = 0;
 	for (var num2 = 0; num2 < statusEffects['p' + orderCurPlayer].length; num2++) {
 		switch (statusEffects['p' + orderCurPlayer][num2]) {
@@ -890,6 +926,7 @@ function turnDice (num) {
 				break;
 		}
 	}
+
 	execOnMain('counterButtons', [orderCurPlayer, 'M', poisonSub, 'running']);
 }
 
@@ -945,13 +982,19 @@ function getAlly (ally, nobobomb) {
 			getAlly('close');
 			return;
 		}
+		loop1:
 		for (var num = 1; num < 5; num++) {
 			if (ally == characters[num]) {
 				return;
 			}
-			for (var num2 = 0; num2 < allies['p' + num].length; num2++) {
+			for (var num2 = 0; num2 < allies['p' + num].length; num2++) { //check if someone else already uses this ally - if true, remove it
 				if (ally == allies['p' + num][num2]) {
-					return;
+					for (var num3 = 1; num3 < 4; num3++) {
+						if (document.getElementById('removeAllyChar' + num3).getAttribute('player') == num) {
+							removeAlly(num3 + 1, num2 + 1);
+							break loop1;
+						}
+					}
 				}
 			}
 		}	
@@ -1319,7 +1362,7 @@ function turnSpace (space) {
 				shortcutNotif('Undid the bowser space.');
 				break;
 			case 'Ally':
-				//getAlly();
+				shortcutNotif('Undid Ally space. Allies gotten need to be removed manually.');
 				break;
 			case 'Lucky':
 				if (spaceEventState[1] == 'done') {
@@ -2713,24 +2756,6 @@ function removeError () {
 	document.getElementById('shortcutNotif').classList.remove('errorAni');
 }
 
-/*
-* Choose a minigame type.
-* 
-* @param {string} minigame The minigame type that should be used
-*/
-function chooseMinigame (minigame) {
-	switch (minigame) {
-		case 'normal':
-			break;
-		case 'coin':
-			break;
-		case 'battle':
-			editInner('shortcutSpan', '');
-			document.getElementById('shortcutBattle').style.display = '';
-			break;
-	}
-}
-
 var minigameMode;
 var minigameRanks = {
 	first: [],
@@ -2887,13 +2912,35 @@ function startMinigame (player) {
 }
 
 /*
-* Starts a coin minigame. -WIP-
+* Starts a coin minigame.
+* 
+* @param {number/string} player The player coins should be added to - if 'done', it ends the minigame instead
+* @param {number} amount The amount of coins that should be added
+* @param {string} action If it should be added or subtracted
 */
-function coinMinigame () {
-	for (var num = 1; num < 5; num++) {
-		execOnMain('counterButtons', [num, 'P', 1, 'minigame']);
+function coinMinigame (player, amount, action) {
+	if (isNaN(player) === false) {
+		if (action === 'M') {
+			editValue('coinMinigame' + player, parseInt(getValue('coinMinigame' + player)) - amount);
+			if (parseInt(getValue('coinMinigame' + player)) < 0) {
+				editValue('coinMinigame' + player, 0);
+			}
+		} else {
+			editValue('coinMinigame' + player, parseInt(getValue('coinMinigame' + player)) + amount);
+		}
+		return;
 	}
-	startShortcut();
+	if (player === 'done') {
+		for (var num = 1; num < 5; num++) {
+			if (parseInt(getValue('coinMinigame' + num)) > 0) {
+				execOnMain('counterButtons', [num, 'P', parseInt(getValue('coinMinigame' + num)), 'coins']);
+				execOnMain('counterButtons', [num, 'P', 1, 'minigame']);
+			}
+		}
+		shortcutNotif('Coins from coin minigame have been succesfully added.');
+		startShortcut();
+		return;
+	}
 }
 
 var battleCurPlayer;

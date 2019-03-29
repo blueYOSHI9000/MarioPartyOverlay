@@ -37,7 +37,17 @@ for (let num = 0; num < counters.length; num++) {
 * Resets the backup.
 */
 function resetBackup () {
-	editInner('coinStarText', 10);
+	if (popout === false && popoutActivated === true) {
+		sendMessage('resetBackup');
+	}
+	if (popout === true && shortcutLoaded != true) {
+		return;
+	}
+	if (curGame === 'smp') {
+		editInner('coinStarText', 5);
+	} else {
+		editInner('coinStarText', 10);
+	}
 	editValue('p1CoinStarTie', false);
 	editValue('p2CoinStarTie', false);
 	editValue('p3CoinStarTie', false);
@@ -47,7 +57,11 @@ function resetBackup () {
 		for (let num2 = 0; num2 < counters.length; num2++) {
 			editInner('p' + num + countersUp[num2] + 'Text', 0);
 		}
-		editInner('p' + num + 'CoinsText', 10);
+		if (curGame === 'smp') {
+			editInner('p' + num + 'CoinsText', 5);
+		} else {
+			editInner('p' + num + 'CoinsText', 10);
+		}
 	}
 
 	turns('curTurn', 1, 'S');
@@ -518,6 +532,15 @@ function prepareMPO () {
 
 		callHighlight(false, true);
 		backup();
+	} else {
+		if (curGame === 'smp') {
+			if (curGame === 'smp') {
+				editInner('coinStarText', 5);
+				for (let num = 1; num < 5; num++) {
+					editInner('p' + num + 'CoinsText', 5);
+				}
+			}
+		}
 	}
 	if (localStorage.getItem('datax')) {
 		var arrX = localStorage.getItem('datax').split(',');
