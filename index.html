@@ -411,8 +411,6 @@
 				<div id="generalMPOSettings" class="visible">
 					<span id="siteError" class="error"> MPO could not be loaded properly, try reloading or clearing local storage. <br> This might also appear if cookies are blocked. <br> <br> </span>
 
-
-
 					<span class="settingsTitle"> Features </span> <br>
 					<label for="enableHighlight"> <span class="settingsText"> Enable counter highlighting: </span> </label> <input type="checkbox" id="enableHighlight" onchange="sendSettingsMsg(this.id, + this.checked);changeSettings('resetHighlights')" checked> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('callHighlight', [false, true])" value="#FF0000" id="highlightColor"> <br> <br>
 
@@ -536,7 +534,7 @@
 							</span>
 						</span>
 						<br class="turnBreak">
-						<span class="column">
+						<span class="column" style="margin-bottom: 3px;">
 							<span id="turnItemsTitle" class="settingsTitle"> Items used </span> <br>
 							<span id="turnItems" class="imgSelection spanSelection"> </span> <br>
 							<img src="img/tie.png" id="itemImg"> <span id="itemEventSpan"></span> <br> <br>
