@@ -607,11 +607,14 @@ body {
 .chooseImgOrder img {
 	width: 50px;
 }
+.smallImg {
+	width: 45px;
+}
 
 #turnStarsSelection img {
 	width: 45px;
 }
-#turnShoppingSelection span {
+#shoppingSpan span {
 	display: inline-block;
 	width: 40px;
 	text-align: center;

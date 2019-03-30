@@ -153,7 +153,7 @@ function prepareTurn () {
 			editInner('turnDiceSelectionSpan', '<span id="turnDiceSelection" class="shortcutText spanSelection"> <span id="dice1" onclick="turnDice(this.id)">1</span> <span id="dice2" onclick="turnDice(this.id)">2</span> <span id="dice3" onclick="turnDice(this.id)">3</span> <span id="dice4" onclick="turnDice(this.id)">4</span> <span id="dice5" onclick="turnDice(this.id)">5</span> <span id="dice6" onclick="turnDice(this.id)">6</span> <span id="dice7" onclick="turnDice(this.id)">7</span> <span id="dice8" onclick="turnDice(this.id)">8</span> <span id="dice9" onclick="turnDice(this.id)">9</span> <span id="dice10" onclick="turnDice(this.id)">10</span> </span> <br> <img src="img/shortcut/mpds/diceblock.png" id="turnCurDice"> <span id="turnCurDiceText" class="shortcutText">??</span> <br> <br>');
 
 			editInner('turnShoppingTitle', 'Shopping');
-			editInner('turnShoppingSelection', '<span onclick="shopping(1)">1</span> <span onclick="shopping(2)">2</span> <span onclick="shopping(3)">3</span> <span onclick="shopping(7)">7</span> <br> <span onclick="shopping(8)">8</span> <span onclick="shopping(15)">15</span> <span onclick="shopping(20)">20</span> <span onclick="shopping(25)">25</span>');
+			editInner('turnShoppingSelection', '<span class="settingsNote"> Hold Ctrl to undo, same applies to stars. </span> <br> <span id="shoppingSpan" class="spanSelection shortcutText"> <span onclick="shopping(1)">1</span> <span onclick="shopping(2)">2</span> <span onclick="shopping(3)">3</span> <span onclick="shopping(7)">7</span> <br> <span onclick="shopping(8)">8</span> <span onclick="shopping(15)">15</span> <span onclick="shopping(20)">20</span> <span onclick="shopping(25)">25</span> </span>');
 
 			editInner('turnItemsTitle', 'Items used');
 			editInner('turnItems', '<img src="img/shortcut/mpds/double.png" id="itemDouble" onclick="turnItem(this.id)"> <img src="img/shortcut/mpds/triple.png" id="itemTriple" onclick="turnItem(this.id)"> <img src="img/shortcut/mpds/half.png" id="itemHalf" onclick="turnItem(this.id)"> <img src="img/hex.png" id="itemHex" onclick="turnItem(this.id)"> <span class="shortcutText" id="itemOther" onclick="turnItem(this.id)">Other</span>');
@@ -173,7 +173,7 @@ function prepareTurn () {
 			editInner('turnDiceSelectionSpan', '<div style="width: 350px; position: relative;"> <span style="position: absolute; right: 0;"> <span id="allyDice1" class="spanSelection shortcutText"> <img src="img/smp/rosalina.png" style="width: 30px;"> <span onclick="allyDice(1, 1)"> 1 </span> <span onclick="allyDice(1, 2)"> 2 </span> </span> <br> <span id="allyDice2" class="spanSelection shortcutText"> <img src="img/smp/bowser.png" style="width: 30px;"> <span onclick="allyDice(2, 1)"> 1 </span> <span onclick="allyDice(2, 2)"> 2 </span> </span> <br> <span id="allyDice3" class="spanSelection shortcutText"> <img src="img/smp/yoshi.png" style="width: 30px;"> <span onclick="allyDice(3, 1)"> 1 </span> <span onclick="allyDice(3, 2)"> 2 </span> 	</span>  <br> <span id="allyDice4" class="spanSelection shortcutText"> <img src="img/smp/bowserjr.png" style="width: 30px;"> <span onclick="allyDice(4, 1)"> 1 </span> <span onclick="allyDice(4, 2)"> 2 </span> </span> </span><span id="allyDiceSelection" class="imgSelection"> <img src="img/shortcut/smp/defaultdice.png" class="selected" onclick="changeAllyDice(0)"> <img src="img/smp/daisy.png" onclick="changeAllyDice(1)"> <img src="img/smp/bowser.png" onclick="changeAllyDice(2)" style="display: none;"> <img src="img/smp/peach.png" onclick="changeAllyDice(3)" style="display: none;"> <img src="img/smp/drybones.png" onclick="changeAllyDice(4)" style="display: none;"> <img src="img/smp/bowserjr.png" onclick="changeAllyDice(5)" style="display: none;"> </span>  <br><span id="turnDiceSelection" class="shortcutText spanSelection"> <span id="dice1" onclick="turnDice(this.id)">1</span> <span id="dice2" onclick="turnDice(this.id)">2</span> <span id="dice3" onclick="turnDice(this.id)">3</span> <span id="dice4" onclick="turnDice(this.id)">4</span> <span id="dice5" onclick="turnDice(this.id)">5</span> <span id="dice6" onclick="turnDice(this.id)">6</span> </span> <br> <img src="img/shortcut/mpds/diceblock.png" id="turnCurDice"> <span id="turnCurDiceText" class="shortcutText">??</span> </div> <br>');
 
 			editInner('turnShoppingTitle', 'Shopping');
-			editInner('turnShoppingSelection', '<span onclick="shopping(3)">3</span> <span onclick="shopping(5)">5</span> <span onclick="shopping(6)">6</span> <span onclick="shopping(10)">10</span>');
+			editInner('turnShoppingSelection', '<span class="settingsNote"> Hold Ctrl to undo, same applies to stars. </span> <br> <span id="shoppingSpan" class="spanSelection shortcutText"> <span onclick="shopping(3)">3</span> <span onclick="shopping(5)">5</span> <span onclick="shopping(6)">6</span> <span onclick="shopping(10)">10</span> </span>');
 
 			editInner('turnItemsTitle', 'Items used');
 			editInner('turnItems', '<img src="img/shortcut/smp/mushroom.png" id="itemMushroom" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/goldmushroom.png" id="itemGoldMushroom" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/poisonmushroom.png" id="itemPoisonMushroom" onclick="turnItem(this.id)"> <br> <img src="img/shortcut/smp/coinado.png" id="itemCoinado" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/allyphone.png" id="itemAllyPhone" onclick="turnItem(this.id)"> <span class="shortcutText" id="itemOther" onclick="turnItem(this.id)">Other</span>');
@@ -262,7 +262,9 @@ function shortcutBack () {
 }
 
 /*
+* Opens shortcut settings and updates all variables in it.
 * 
+* @param {boolean} close If it should be closed or not.
 */
 function shortcutSettings (close) {
 	if (close === true) {
@@ -278,6 +280,23 @@ function shortcutSettings (close) {
 		var iconStyle = document.querySelector('input[name="icons"]:checked').value;
 		editInner('shortcutOrder', '<img src="img/1st.png"> <img src="img/' + iconStyle + '/' + characters[playerOrder[1]] + '.png"> <img src="img/2nd.png"> <img src="img/' + iconStyle + '/' + characters[playerOrder[2]] + '.png"> <img src="img/3rd.png"> <img src="img/' + iconStyle + '/' + characters[playerOrder[3]] + '.png"> <img src="img/4th.png"> <img src="img/' + iconStyle + '/' + characters[playerOrder[4]] + '.png">');
 	}
+	var selVar = false;
+	var elems = document.getElementById('finalFiveSelect').children;
+	for (var num = 1; num < elems.length; num++) {
+		if (finalFiveEvent == elems[num].value) {
+			elems[num].selected = true;
+			selVar = true;
+		}
+	}
+	if (selVar != true) {
+		elems[0].selected = true;
+	}
+	if (starCost === 'double') {
+		document.getElementById('starCostSelect').children[1].selected = true;
+	} else {
+		document.getElementById('starCostSelect').children[0].selected = true;
+	}
+
 	editInner('shortcutDebug', '<span> shortcutState: ' + shortcutState + '<br> spaceEventState: ' + spaceEventState.join(', ') + '<br> itemEventState: ' + itemEventState.join(', ') + '<br> diceCursor: ' + diceCursor + ' - diceRolls: ' + diceRolls.join(', ') + '<br> <br> statusEffects: <br> - P1: ' + statusEffects['p1'].join(', ') + '<br> - P2: ' + statusEffects['p2'].join(', ') + '<br> - P3: ' + statusEffects['p3'].join(', ') + '<br> - P4: ' + statusEffects['p4'].join(', ') + '<br> <br> allies: <br> - P1: ' + allies['p1'].join(', ') + '<br> - P2: ' + allies['p2'].join(', ') + '<br> - P3: ' + allies['p3'].join(', ') + '<br> - P4: ' + allies['p4'].join(', ') + '<br> bobombAlly: ' + bobombAlly.join(', ') + '</span>');
 
 	document.getElementById('settingsMain').style = '-webkit-filter: blur(5px); filter: blur(5px);';
@@ -448,13 +467,19 @@ function chooseOrder (player, reset) {
 				break;
 			case 4:
 				editInner('chooseThird','<img src="img/3rd.png"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[player] + '.png">');
+				for (var num = 1; num < 5; num++) {
+					if (playerOrder.includes(num) === false) {
+						chooseOrder(num);
+						return;
+					}
+				}
 				break;
 			case 5:
 				editInner('chooseFourth', '<img src="img/4th.png"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[player] + '.png">');
 				document.getElementById('chooseContinue').style.display = 'block';
 				break;
 		}
-	orderCurPlayer = playerOrder[1];
+		orderCurPlayer = playerOrder[1];
 	}
 }
 
@@ -484,30 +509,25 @@ function turnItem (item) {
 				execOnMain('counterButtons', [orderCurPlayer, 'M', 5, 'running']);
 				break;
 			case 'PoisonMushroom':
-				var num3
-				for (var num2 = 0; num2 < statusEffects['p' + orderCurPlayer].length; num2++) {
-					switch (statusEffects['p' + orderCurPlayer][num2]) {
-						case 'poison':
-							num3++
-							break;
-					}
-				}
-				if (poisonSub > 2) {
-					execOnMain('counterButtons', [orderCurPlayer, 'P', 2, 'running']);
-					poisonSub = poisonSub - 2;
-					if (poisonSub < 0) {
+				statusEffects['p' + itemEventState[1]] = removeArrayItem(statusEffects['p' + itemEventState[1]], 'poison');
+				if (itemEventState[1] === orderCurPlayer) {
+					if (poisonSub > 2) {
+						execOnMain('counterButtons', [orderCurPlayer, 'P', 2, 'running']);
+						poisonSub = poisonSub - 2;
+						if (poisonSub < 0) {
+							poisonSub = 0;
+						}
+					} else {
+						execOnMain('counterButtons', [orderCurPlayer, 'P', poisonSub, 'running']);
 						poisonSub = 0;
 					}
-				} else {
-					execOnMain('counterButtons', [orderCurPlayer, 'P', poisonSub, 'running']);
-					poisonSub = 0;
-				}
-				statusEffects['p' + orderCurPlayer] = removeArrayItem(statusEffects['p' + orderCurPlayer], 'poison');
+					statusEffects['p' + orderCurPlayer] = removeArrayItem(statusEffects['p' + orderCurPlayer], 'poison');
 
-				var elems = document.getElementById('statusEffects').children;
-				for (var num2 = 0; num2 < elems.length; num2++) {
-					if (elems[num2].getAttribute('src') === 'img/shortcut/smp/poisonmushroom.png') {
-						elems[num2].parentElement.removeChild(elems[num2]);
+					var elems = document.getElementById('statusEffects').children;
+					for (var num2 = 0; num2 < elems.length; num2++) {
+						if (elems[num2].getAttribute('src') === 'img/shortcut/smp/poisonmushroom.png') {
+							elems[num2].parentElement.removeChild(elems[num2]);
+						}
 					}
 				}
 				break;
@@ -644,7 +664,7 @@ function turnItem (item) {
 
 		case 'Coinado':
 			document.getElementById('itemImg').src = 'img/shortcut/smp/coinado.png';
-			editInner('itemEventSpan', '<span class="settingsText"> Select the amount of coins: <select id="coinadoSelect"> <option value="5">5</option> <option value="6">6</option> <option value="7">7</option> <option value="8">8</option> <option value="9">9</option> <option value="10">10</option> </select> and your rival: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="itemEvent(\'coinado\', [1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="itemEvent(\'coinado\', [2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="itemEvent(\'coinado\', [3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="itemEvent(\'coinado\', [4])"> <br> <button onclick="itemEvent(\'coinado\', [\'start\'])"> Start! </button>');
+			editInner('itemEventSpan', '<span class="settingsText"> Select the amount of coins: <select id="coinadoSelect"> <option value="5">5</option> <option value="6">6</option> <option value="7">7</option> <option value="8">8</option> <option value="9">9</option> <option value="10">10</option> </select> and your rival: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="itemEvent(\'coinado\', [1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="itemEvent(\'coinado\', [2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="itemEvent(\'coinado\', [3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="itemEvent(\'coinado\', [4])"> <button style="position: relative; top: -22px;" onclick="itemEvent(\'coinado\', [\'start\'])"> Start! </button>');
 				document.getElementById('itemEventSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
 			break;
 
@@ -717,6 +737,7 @@ function itemEvent (item, attr) {
 			} else {
 				statusEffects['p' + attr[0]].push('poison');
 			}
+			shortcutNotif(getCharName(orderCurPlayer) + ' used a poison mushroom on ' + getCharName(attr[0]));
 			itemEventState = ['poison', attr[0]];
 			editInner('itemEventSpan', '');
 			break;
@@ -1517,7 +1538,7 @@ function turnSpace (space) {
 		case 'Bowser':
 			shortcutNotif(getCharName(orderCurPlayer) + ' landed on a bowser space, select the event.');
 
-			editInner('spaceEventsSpan', '<span class="settingsText"> Select the Bowser event: </span> <br> <select id="bowserEvent"> <option value="coins">Gimme Coins!</option> <option value="stars">Gimme Stars!</option> <option value="charity">Gimme Charity!</option> <option value="equality">Gimme Equality!</option> </select> <br> <br> <button onclick="spaceEvent(\'bowser\')">Start event!</button>');
+			editInner('spaceEventsSpan', '<span class="settingsText"> Select the Bowser event: </span> <br> <select id="bowserEvent"> <option value="coins">Gimme Coins!</option> <option value="stars">Gimme Stars!</option> <option value="charity">Gimme Charity!</option> <option value="equality">Gimme Equality!</option> </select> <button onclick="spaceEvent(\'bowser\')">Start event!</button>');
 			break;
 		case 'Ally':
 			if (getValue('shortcutAutoEnd') === true) {
@@ -1534,19 +1555,19 @@ function turnSpace (space) {
 		case 'Lucky':
 			shortcutNotif(getCharName(orderCurPlayer) + ' landed on a lucky space, select the event.');
 
-			editInner('spaceEventsSpan', '<span class="settingsText"> Select the event: </span> <br> <select id="luckyEvent"> <option value="stealally">Steal one ally from a rival.</option> <option value="3coins">Receive 3 coins.</option> <option value="5coins">Receive 5 coins.</option> <option value="5coinsrival">Make a rival lose 5 coins.</option> <option value="10coinsrival">Make a rival lose 10 coins.</option> <option value="items">Receive item(s).</option> </select> <br> <br> <button onclick="spaceEvent(\'lucky\')">Start event!</button>');
+			editInner('spaceEventsSpan', '<span class="settingsText"> Select the event: </span> <br> <select id="luckyEvent"> <option value="stealally">Steal one ally from a rival.</option> <option value="3coins">Receive 3 coins.</option> <option value="5coins">Receive 5 coins.</option> <option value="5coinsrival">Make a rival lose 5 coins.</option> <option value="10coinsrival">Make a rival lose 10 coins.</option> <option value="items">Receive item(s).</option> </select> <button onclick="spaceEvent(\'lucky\')">Start event!</button>');
 			break;
 		case 'BadLuck':
 			execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'redSpace']);
 			shortcutNotif(getCharName(orderCurPlayer) + ' landed on a bad luck space, select the event.');
 
-			editInner('spaceEventsSpan', '<span class="settingsText"> Select the event: </span> <br> <select id="badluckEvent"> <option value="5coins">Lose 5 coins.</option> <option value="10coins">Lose 10 coins.</option> <option value="3coinsothers">Give 3 coins to all other players.</option> <option value="5coinsothers">Give 5 coins to all other players.</option> <option value="5coinslast">Give 5 coins to the last-place player.</option> <option value="10coinslast">Give 10 coins to the last-place player.</option> <option value="5coinsrandom">Give 5 coins to a random player.</option> <option value="movestar">The Star moves.</option> <option value="raisestarcost">Raise the coin cost for a Star.</option> </select> <br> <br> <button onclick="spaceEvent(\'badluck\')">Start event!</button>');
+			editInner('spaceEventsSpan', '<span class="settingsText"> Select the event: </span> <br> <select id="badluckEvent"> <option value="5coins">Lose 5 coins.</option> <option value="10coins">Lose 10 coins.</option> <option value="3coinsothers">Give 3 coins to all other players.</option> <option value="5coinsothers">Give 5 coins to all other players.</option> <option value="5coinslast">Give 5 coins to the last-place player.</option> <option value="10coinslast">Give 10 coins to the last-place player.</option> <option value="5coinsrandom">Give 5 coins to a random player.</option> <option value="movestar">The Star moves.</option> <option value="raisestarcost">Raise the coin cost for a Star.</option> </select> <button onclick="spaceEvent(\'badluck\')">Start event!</button>');
 			break;
 		case 'ExtraBadLuck':
 			execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'redSpace']);
 			shortcutNotif(getCharName(orderCurPlayer) + ' landed on a extra bad luck space, select the event.');
 
-			editInner('spaceEventsSpan', '<span class="settingsText"> Select the event: </span> <br> <select id="badluckEvent"> <option value="1star">Lose one Star.</option> <option value="5coins">Lose 5 coins.</option> <option value="10coins">Lose 10 coins.</option> <option value="20coins">Lose 20 coins.</option> <option value="halfcoins">Lose half your coins.</option> <option value="5coinsothers">Give 5 coins to all other players.</option> <option value="10coinsothers">Give 10 coins to all other players.</option> <option value="10coinslast">Give 10 coins to the last-place player.</option> </select> <br> <br> <button onclick="spaceEvent(\'badluck\')">Start event!</button>');
+			editInner('spaceEventsSpan', '<span class="settingsText"> Select the event: </span> <br> <select id="badluckEvent"> <option value="1star">Lose one Star.</option> <option value="5coins">Lose 5 coins.</option> <option value="10coins">Lose 10 coins.</option> <option value="20coins">Lose 20 coins.</option> <option value="halfcoins">Lose half your coins.</option> <option value="5coinsothers">Give 5 coins to all other players.</option> <option value="10coinsothers">Give 10 coins to all other players.</option> <option value="10coinslast">Give 10 coins to the last-place player.</option> </select> <button onclick="spaceEvent(\'badluck\')">Start event!</button>');
 			break;
 		case 'VS':
 			shortcutNotif(getCharName(orderCurPlayer) + ' landed on a VS space, select the event.');
@@ -2085,7 +2106,7 @@ function spaceEvent (space, attr) {
 					shortcutNotif('Bad Luck Event: Moved the star.');
 					break;
 				case 'raisestarcost':
-					var starCost = 'double';
+					starCost = 'double';
 					spaceEventState = ['badluck', 'done', 'raisestarcost'];
 					if (getValue('shortcutAutoEnd') === true) {
 						turnEnd();
@@ -2148,6 +2169,7 @@ function spaceEvent (space, attr) {
 					}
 
 					shortcutNotif('VS Space finished, leftover coins need to be added manually.');
+					console.log('[MPO Shortcut] End VS Space - First: ' + battleRanks.first + ' - Second: ' + battleRanks.second + ' - Third: ' + battleRanks.third + ' - Fourth: ' + battleRanks.fourth + ' - Coins: ' + getInner('p1CoinsText') + ' - ' + getInner('p2CoinsText') + ' - ' + getInner('p3CoinsText') + ' - ' + getInner('p4CoinsText'));
 					editInner('spaceEventsSpan', '');
 					return;
 				} else {
@@ -2155,6 +2177,7 @@ function spaceEvent (space, attr) {
 				}
 			} else {
 				var coinNum = parseInt(getValue('vsspaceSelect'));
+				console.log('[MPO Shortcut] Start VS Space - Requirement: ' + coinNum + ' - Coins: ' + getInner('p1CoinsText') + ' - ' + getInner('p2CoinsText') + ' - ' + getInner('p3CoinsText') + ' - ' + getInner('p4CoinsText'));
 
 				spaceEventState = ['vsspace', 'done', 0, getInner('p1CoinsText'), getInner('p2CoinsText'), getInner('p3CoinsText'), getInner('p4CoinsText')];
 
@@ -2356,7 +2379,15 @@ function turnHex (hex) {
 * @param {number} amount Amount of coins spent.
 */
 function shopping (amount) {
-	if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= amount) {
+	if (getValue('mobileTypeMinus') === true) {
+		if (parseInt(getInner('p' + orderCurPlayer + 'ShoppingText')) >= amount) {
+			execOnMain('counterButtons', [orderCurPlayer, 'P', amount, 'coins']);
+			execOnMain('counterButtons', [orderCurPlayer, 'M', amount, 'shopping']);
+			shortcutNotif('Undid shopping for ' + amount + ' coins.');
+		} else {
+			shortcutNotif('There\'s nothing to undo, release Ctrl to shop.', true);
+		}
+	} else if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= amount) {
 		execOnMain('counterButtons', [orderCurPlayer, 'M', amount, 'coins']);
 		execOnMain('counterButtons', [orderCurPlayer, 'P', amount, 'shopping']);
 		shortcutNotif(getCharName(orderCurPlayer) + ' bought an item for ' + amount + ' coins.');
@@ -2387,133 +2418,85 @@ function starPrices (amount) {
 * @param {string} star What kind of star, empty if normal one.
 */
 function buyStar (star) {
+	var coinNum
 	if (star) {
 		switch (star) {
 			case 'jarstar':
-				if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= 10) {
-					execOnMain('counterButtons', [orderCurPlayer, 'M', 10, 'coins']);
-					execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'stars']);
-					shortcutNotif(getCharName(orderCurPlayer) + ' got a star for 10 coins.');
-				} else {
-					shortcutNotif('Not enough coins!', true);
-				}
+				var coinNum = 10;
 				break;
-
 			case 'jarcoins':
-				if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= 10) {
+				if (getValue('mobileTypeMinus') === true) {
+					execOnMain('counterButtons', [orderCurPlayer, 'P', 5, 'coins']);
+					shortcutNotif('Undid opening a magic jar, gained 5 coins.');
+				} else if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= 10) {
 					execOnMain('counterButtons', [orderCurPlayer, 'M', 5, 'coins']);
 					shortcutNotif(getCharName(orderCurPlayer) + ' lost 5 coins thanks to a magic jar.');
 				} else {
 					shortcutNotif('Not enough coins!', true);
 				}
-				break;
-
+				return;
 			case 'jarfail':
-				if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= 10) {
+				if (getValue('mobileTypeMinus') === true) {
+					execOnMain('counterButtons', [orderCurPlayer, 'P', 10, 'coins']);
+					shortcutNotif('Undid opening a magic jar, gained 10 coins.');
+				} else if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= 10) {
 					execOnMain('counterButtons', [orderCurPlayer, 'M', 10, 'coins']);
 					shortcutNotif(getCharName(orderCurPlayer) + ' lost 10 coins thanks to a magic jar.');
 				} else {
 					shortcutNotif('Not enough coins!', true);
 				}
-				break;
-
+				return;
 			case 'bluenote':
-				if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= 5) {
-					execOnMain('counterButtons', [orderCurPlayer, 'M', 5, 'coins']);
-					execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'stars']);
-					shortcutNotif(getCharName(orderCurPlayer) + ' got a star for 5 coins.');
-				} else {
-					shortcutNotif('Not enough coins!', true);
-				}
+				coinNum = 5;
 				break;
-
 			case 'greennote':
-				if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= 10) {
-					execOnMain('counterButtons', [orderCurPlayer, 'M', 10, 'coins']);
-					execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'stars']);
-					shortcutNotif(getCharName(orderCurPlayer) + ' got a star for 10 coins.');
-				} else {
-					shortcutNotif('Not enough coins!', true);
-				}
+				coinNum = 10;
 				break;
-
 			case 'yellownote':
-				if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= 15) {
-					execOnMain('counterButtons', [orderCurPlayer, 'M', 15, 'coins']);
-					execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'stars']);
-					shortcutNotif(getCharName(orderCurPlayer) + ' got a star for 15 coins.');
-				} else {
-					shortcutNotif('Not enough coins!', true);
-				}
+				coinNum = 15;
 				break;
-
 			case 'orangenote':
-				if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= 20) {
-					execOnMain('counterButtons', [orderCurPlayer, 'M', 20, 'coins']);
-					execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'stars']);
-					shortcutNotif(getCharName(orderCurPlayer) + ' got a star for 20 coins.');
-				} else {
-					shortcutNotif('Not enough coins!', true);
-				}
+				coinNum = 20;
 				break;
-
 			case 'rednote':
-				if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= 30) {
-					execOnMain('counterButtons', [orderCurPlayer, 'M', 30, 'coins']);
-					execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'stars']);
-					shortcutNotif(getCharName(orderCurPlayer) + ' got a star for 30 coins.');
-				} else {
-					shortcutNotif('Not enough coins!', true);
-				}
+				coinNum = 30;
 				break;
+			default:
 		}
 	} else {
 		if (shortcutGame == 'smp') {
-			if (starCost == 'double') {
-				if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= 20) {
-					execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'stars']);
-					if (starPrice != 0) {
-						execOnMain('counterButtons', [orderCurPlayer, 'M', (starPrice * 2), 'coins']);
-					} else {
-						execOnMain('counterButtons', [orderCurPlayer, 'M', 20, 'coins']);
-					}
-					shortcutNotif(getCharName(orderCurPlayer) + ' got a star for 20 coins.');
-					starCost = '';
-				} else {
-					shortcutNotif('Not enough coins!', true);
-				}
+			if (starPrice != 0) {
+				coinNum = starPrice;
 			} else {
-				if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= 10) {
-					execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'stars']);
-					if (starPrice != 0) {
-						execOnMain('counterButtons', [orderCurPlayer, 'M', starPrice, 'coins']);
-					} else {
-						execOnMain('counterButtons', [orderCurPlayer, 'M', 10, 'coins']);
-					}
-					shortcutNotif(getCharName(orderCurPlayer) + ' got a star for 10 coins.');
-				} else {
-					shortcutNotif('Not enough coins!', true);
-				}
+				coinNum = 10;
 			}
 		} else {
 			if (finalFiveEvent == 'cheapStars') {
-				if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= 5) {
-					execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'stars']);
-					execOnMain('counterButtons', [orderCurPlayer, 'M', 5, 'coins']);
-					shortcutNotif(getCharName(orderCurPlayer) + ' got a star for 5 coins.');
-				} else {
-					shortcutNotif('Not enough coins!', true);
-				}
+				coinNum = 5;
 			} else {
-				if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= 20) {
-					execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'stars']);
-					execOnMain('counterButtons', [orderCurPlayer, 'M', 20, 'coins']);
-					shortcutNotif(getCharName(orderCurPlayer) + ' got a star for 20 coins.');
-				} else {
-					shortcutNotif('Not enough coins!', true);
-				}
+				coinNum = 20;
 			}
 		}
+	}
+	if (starCost === 'double' && getValue('mobileTypeMinus') != true) {
+		coinNum = (coinNum * 2);
+	}
+
+	if (getValue('mobileTypeMinus') === true) {
+		if (parseInt(getInner('p' + orderCurPlayer + 'StarsText')) >= 1) {
+			execOnMain('counterButtons', [orderCurPlayer, 'P', coinNum, 'coins']);
+			execOnMain('counterButtons', [orderCurPlayer, 'M', 1, 'stars']);
+			shortcutNotif('Undid buying a star for ' + coinNum + ' coins.');
+		} else {
+			shortcutNotif('No stars to undo, release Ctrl to buy one.', true)
+		}
+	} else if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= coinNum) {
+		execOnMain('counterButtons', [orderCurPlayer, 'M', coinNum, 'coins']);
+		execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'stars']);
+		starCost = '';
+		shortcutNotif(getCharName(orderCurPlayer) + ' got a star for ' + coinNum + ' coins.');
+	} else {
+		shortcutNotif('Not enough coins!', true);
 	}
 }
 
@@ -2562,7 +2545,7 @@ function steal (attr) {
 			document.getElementById('starPricesContainer').style.display = 'unset';
 			stealOpen = false;
 		} else {
-			editInner('stealSpan', '<span class="settingsText"> <input type="radio" name="stealInput" id="stealStars"> <label for="stealStars"> Stars </label> - <input type="radio" name="stealInput" id="stealCoins" checked> <label for="stealCoins"> <input type="number" onclick="editValue(\'stealCoins\', true)" style="width: 33px;" id="stealCoinsInput" min="1" max="99" value="7"> Coins </label> from: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="steal(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="steal(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="steal(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="steal(4)"> <button onclick="steal(\'done\')"> Steal! </button>');
+			editInner('stealSpan', '<span class="settingsText"> <input type="radio" name="stealInput" id="stealStars"> <label for="stealStars"> Stars </label> - <input type="radio" name="stealInput" id="stealCoins" checked> <label for="stealCoins"> <input type="number" onclick="editValue(\'stealCoins\', true)" style="width: 33px;" id="stealCoinsInput" min="1" max="99" value="7"> Coins </label> from: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="steal(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="steal(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="steal(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="steal(4)"> <button onclick="steal(\'done\')" style="position: relative; top: -15px;"> Steal! </button>');
 			document.getElementById('starPricesContainer').style.display = 'none';
 			stealFrom = 0;
 			document.getElementById('stealSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
@@ -2629,6 +2612,10 @@ function turnEnd () {
 			}
 			break;
 		case 'smp':
+			editInner('stealSpan', ''); //close steal
+			document.getElementById('starPricesContainer').style.display = 'unset';
+			stealOpen = false;
+
 			elems = document.getElementById('allyDiceSelection').children;
 			for (var num = 0; num < elems.length; num++) {
 				elems[num].classList.remove('selected');
@@ -2951,6 +2938,7 @@ var battleCoins;
 */
 function startBattle () {
 	var coinReq = parseInt(getValue('battleCoins'));
+	console.log('[MPO Shortcut] Start Battle Minigame - Requirement: ' + coinReq + ' - Coins: ' + getInner('p1CoinsText') + ' - ' + getInner('p2CoinsText') + ' - ' + getInner('p3CoinsText') + ' - ' + getInner('p4CoinsText'));
 	battleCoins = 0;
 	for (var num = 1; num < 5; num++) {
 		if (parseInt(getInner('p' + num + 'CoinsText')) < coinReq) {
@@ -3067,6 +3055,7 @@ function calcBattle (place) {
 				} else {
 					shortcutNotif('Coins from battle minigame succesfully given to the players.');
 				}
+				console.log('[MPO Shortcut] End Battle Minigame - First: ' + battleRanks.first + ' - Second: ' + battleRanks.second + ' - Third: ' + battleRanks.third + ' - Fourth: ' + battleRanks.fourth + ' - Coins: ' + getInner('p1CoinsText') + ' - ' + getInner('p2CoinsText') + ' - ' + getInner('p3CoinsText') + ' - ' + getInner('p4CoinsText'));
 				editInner('battleText', '');
 				editInner('battleTextCoins', '');
 				document.getElementById('battleStart').style.display = 'block';
@@ -3127,6 +3116,7 @@ function calcBattle (place) {
 					} else {
 						shortcutNotif('Coins from battle minigame succesfully given to the players.');
 					}
+					console.log('[MPO Shortcut] End Battle Minigame - First: ' + battleRanks.first + ' - Second: ' + battleRanks.second + ' - Third: ' + battleRanks.third + ' - Fourth: ' + battleRanks.fourth + ' - Coins: ' + getInner('p1CoinsText') + ' - ' + getInner('p2CoinsText') + ' - ' + getInner('p3CoinsText') + ' - ' + getInner('p4CoinsText'));
 					editInner('battleText', '');
 					editInner('battleTextCoins', '');
 					document.getElementById('battleStart').style.display = 'block';
@@ -3199,6 +3189,7 @@ function calcBattle (place) {
 				} else {
 					shortcutNotif('Coins from battle minigame succesfully given to the players.');
 				}
+				console.log('[MPO Shortcut] End Battle Minigame - First: ' + battleRanks.first + ' - Second: ' + battleRanks.second + ' - Third: ' + battleRanks.third + ' - Fourth: ' + battleRanks.fourth + ' - Coins: ' + getInner('p1CoinsText') + ' - ' + getInner('p2CoinsText') + ' - ' + getInner('p3CoinsText') + ' - ' + getInner('p4CoinsText'));
 				editInner('battleText', '');
 				editInner('battleTextCoins', '');
 				document.getElementById('battleStart').style.display = 'block';

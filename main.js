@@ -451,7 +451,6 @@ function ctrlPressed (e, ctrl, shift, key) {
 	}
 	if (popout == true) {
 		sendMessage('ctrlPressed+x+' + ctrl + '+' + shift + '+' + key);
-		return;
 	}
 	if (ctrl && ctrlKeyVar == false) {
 		ctrlKeyVar = true;
@@ -486,7 +485,6 @@ function ctrlReleased (e, key) {
 	}
 	if (popout == true) {
 		sendMessage('ctrlReleased+x+' + key);
-		return;
 	}
 	if (key == 'Control' && ctrlKeyVar == true) {
 		ctrlKeyVar = false

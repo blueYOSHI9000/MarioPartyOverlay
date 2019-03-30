@@ -188,13 +188,20 @@
 			<option value="undefined" selected="">Nothing</option>
 			<option value="doubleSpaces">Double coins for spaces</option>
 			<option value="cheapStars">Stars for 5 coins</option>
-		</select> <br> <br>
+		</select> <br>
+
+		<span class="settingsText"> Star Cost: </span>
+		<select id="starCostSelect" onchange="starCost = getValue('starCostSelect')">
+			<option value="undefined">Normal</option>
+			<option value="double">Doubled</option>
+		</select> <br>
+		<span class="settingsNote">Star cost automatically resets after buying a star.</span> <br> <br>
+
 		<span class="settingsText">Player order:</span> <br>
 		<span id="shortcutOrder"></span> <br> <br>
 
 		<button onclick="showHideDiv(['shortcutDebug']); if (this.innerText === 'Show Debug Info') {this.innerText = 'Hide Debug Info'} else {this.innerText = 'Show Debug Info'}">Show Debug Info</button>
-		<span id="shortcutDebug" class="hidden settingsText" style="font-size: 15px;">
-		</span>
+		<span id="shortcutDebug" class="hidden settingsText" style="font-size: 15px;"></span>
 	</div>
 	
 	<div id="allySelection" class="popupContent imgSelection">
@@ -525,7 +532,7 @@
 						
 						<span class="column">
 							<span id="turnShoppingTitle" class="settingsTitle"> Shopping </span> <br>
-							<span id="turnShoppingSelection" class="spanSelection shortcutText">
+							<span id="turnShoppingSelection">
 							</span>
 						</span>
 						<br class="turnBreak">
