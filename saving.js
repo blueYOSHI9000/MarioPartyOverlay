@@ -282,8 +282,10 @@ function savePlayers (close) {
 
 /*
 * Resets all characters.
+* 
+* @param {boolean} noLS If true localstorage won't get updated
 */
-function resetPlayers () {
+function resetPlayers (noLS) {
 	editValue('happeningOnOff', true);
 	editValue('minigameOnOff', true);
 	editValue('redSpaceOnOff', false);
@@ -362,7 +364,9 @@ function resetPlayers () {
 	slots[sel].coinsOnOff = false;
 	slots[sel].coinStarOnOff = true;
 
-	localStorage.removeItem('slots');
+	if (noLS != true) {
+		localStorage.removeItem('slots');
+	}
 }
 
 /*
@@ -456,7 +460,7 @@ function prepareMPO () {
 	}
 
 	localStorage.getItem('enableHighlight'); //If cookies are blocked, this will break the function immediately
-	if (localStorage.getItem('saving') == 'true') {
+	if (localStorage.getItem('saving') === 'true') {
 
 		editValue('enableInteract', stringToBoolean(localStorage.getItem('enableInteract')));
 		editValue('autoPopout', stringToBoolean(localStorage.getItem('autoPopout')));
@@ -524,7 +528,7 @@ function prepareMPO () {
 				slots['s' + slots.sel][coins][num - 1] = 5;
 			}
 		}
-		legacyPrepareMPO();
+		resetPlayers(true);
 	}
 	if (localStorage.getItem('datax') != null) {
 		var arrX = localStorage.getItem('datax').split(',');
@@ -542,101 +546,6 @@ function prepareMPO () {
 	localStorage.setItem('lsVer', 1); //localStorage version, used to check how everything is stored
 
 	prepared = true;
-}
-
-/*
-* Loads the old localstorage and converts it into the new version
-*/
-function legacyPrepareMPO () {
-	if (localStorage.getItem('savePlayers') == 'true') {
-		changeCharacters(1, localStorage.getItem('char1'));
-		changeCharacters(2, localStorage.getItem('char2'));
-		changeCharacters(3, localStorage.getItem('char3'));
-		changeCharacters(4, localStorage.getItem('char4'));
-
-		editValue('com1', stringToBoolean(localStorage.getItem('com1')));
-		editValue('com2', stringToBoolean(localStorage.getItem('com2')));
-		editValue('com3', stringToBoolean(localStorage.getItem('com3')));
-		editValue('com4', stringToBoolean(localStorage.getItem('com4')));
-
-		changeCom(1, true);
-		changeCom(2, true);
-		changeCom(3, true);
-		changeCom(4, true);
-
-		for (let num2 = 0; num2 < counters.length; num2++) {
-			editValue(counters[num2] + 'OnOff', stringToBoolean(localStorage.getItem(counters[num2])));
-		}
-		
-		editValue('slowOnOff', stringToBoolean(localStorage.getItem('slow')));
-		editValue('inclBonusOnOff', stringToBoolean(localStorage.getItem('inclBonus')));
-		editValue('miniStarsOnOff', stringToBoolean(localStorage.getItem('miniStars')));
-		editValue('bananasOnOff', stringToBoolean(localStorage.getItem('bananas')));
-		editValue('coinStarOnOff', stringToBoolean(localStorage.getItem('coinstar')));
-
-		if (localStorage.getItem('miniStars') == 'true') {
-			changeStars('miniStars');
-		} else if (localStorage.getItem('bananas') == 'true') {
-			changeStars('bananas');
-		}
-
-		changeGame(localStorage.getItem('curGame'));
-	} else {
-		var noLS1 = true;
-		var resetPlayersVar = true;
-	}
-
-	if (localStorage.getItem('saveCounters') == 'true') {
-		editInner('coinStarText', localStorage.getItem('coinStarVar'));
-		editValue('p1CoinStarTie', stringToBoolean(localStorage.getItem('coinStarTie1')));
-		editValue('p2CoinStarTie', stringToBoolean(localStorage.getItem('coinStarTie2')));
-		editValue('p3CoinStarTie', stringToBoolean(localStorage.getItem('coinStarTie3')));
-		editValue('p4CoinStarTie', stringToBoolean(localStorage.getItem('coinStarTie4')));
-	
-		editInner('curTurnText', localStorage.getItem('curTurn'));
-		editInner('maxTurnText', localStorage.getItem('maxTurn'));
-	
-		for (let num2 = 0; num2 < counters.length; num2++) {
-			for (let num = 1; num < 5; num++) {
-				editInner('p' + num + countersUp[num2] + 'Text', localStorage.getItem(countersShort[num2] + num));
-			}
-		}
-
-		callHighlight(false, true);
-		backup();
-	} else {
-		var noLS2 = true;
-		if (curGame === 'smp') {
-			if (curGame === 'smp') {
-				editInner('coinStarText', 5);
-				for (let num = 1; num < 5; num++) {
-					editInner('p' + num + 'CoinsText', 5);
-				}
-			}
-		}
-	}
-	if (localStorage.getItem('datax') != null) {
-		var arrX = localStorage.getItem('datax').split(',');
-		var arrY = localStorage.getItem('datay').split(',');
-		var elems = document.getElementsByClassName('draggable');
-		for (var num = 0; num < elems.length; num++) {
-			elems[num].style.transform = 'translate(' + arrX[num] + 'px, ' + arrY[num] + 'px)';
-			elems[num].setAttribute('data-x', arrX[num]);
-			elems[num].setAttribute('data-y', arrY[num]);
-		}
-	} else {
-		var noLS3 = true;
-	}
-
-	coinStarTie();
-	callDisplayOnOff();
-
-	localStorage.clear();
-
-	backup();
-	savePlayers();
-	saveSettings();
-	interactSave();
 }
 
 /*
