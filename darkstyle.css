@@ -31,7 +31,10 @@
 }
 .characterSelector {
 	background-color: #4f4f4f;
-	border: 2px solid rgba(17, 17, 17, 0.5);
+	border-color: #dadada;
+}
+.slotDiv {
+	border-color: #dadada;
 }
 
 
@@ -58,7 +61,10 @@
 			filter: grayscale(40%);
 }
 #shoppingSpan span {
-	color: #FFFFFF;
+	color: #d6d6d6;
+}
+#turnPlayerName {
+
 }
 
 @keyframes error {

@@ -397,7 +397,7 @@ function showHideSettings (id) {
 		sendMessage('showHideSettings+' + id);
 	}
 	openedSettings = id;
-	var ids = ['generalMPO', 'textOutput', 'shortcut', 'player', 'counter', 'tutorial'];
+	var ids = ['generalMPO', 'slots', 'shortcut', 'player', 'counter', 'tutorial'];
 	for (let num = 0; num < ids.length; num++) {
 		document.getElementById(ids[num] + 'Settings').classList.add('hidden');
 		document.getElementById(ids[num] + 'Settings').classList.remove('visible');

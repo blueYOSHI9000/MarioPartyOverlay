@@ -284,11 +284,9 @@ function textOutputTest (nameonly) {
 */
 function updateCounterInput () {
 	if (getValue('toUseActive') == false) {
-		document.getElementById('counterNote').style.display = 'block';
-		document.getElementById('counterDiv').style.display = 'block';
+		document.getElementById('customTOCounters').style.display = 'block';
 	} else {
-		document.getElementById('counterNote').style.display = 'none';
-		document.getElementById('counterDiv').style.display = 'none';
+		document.getElementById('customTOCounters').style.display = 'none';
 		editValue('toUseActive', true);
 	}
 }

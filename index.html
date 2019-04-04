@@ -28,7 +28,7 @@
 		</span>
 		<span id="saveReloadSpanContainer" class="grayBG">
 			<span id="saveReloadSpan"> <button onclick="backup()"> Save </button> <button onclick="restore()" id="reloadButton" disabled> Reload </button> <button style="margin-left: 20px;" onclick="this.parentNode.style.display = 'none'; document.getElementById('resetSpan').style.display = 'unset';"> Reset</button> </span>
-			<span id="resetSpan" style="display: none;"> <button onclick="this.parentNode.style.display = 'none'; document.getElementById('saveReloadSpan').style.display = 'unset'; resetCounters();"> Reset! </button> <button onclick="this.parentNode.style.display = 'none'; document.getElementById('saveReloadSpan').style.display = 'unset';" style="float: right; margin-right: 4px;"> Cancel </button> </span> <br>
+			<span id="resetSpan" style="display: none;"> <button onclick="this.parentNode.style.display = 'none'; document.getElementById('saveReloadSpan').style.display = 'unset'; resetBackup();"> Reset! </button> <button onclick="this.parentNode.style.display = 'none'; document.getElementById('saveReloadSpan').style.display = 'unset';" style="float: right; margin-right: 4px;"> Cancel </button> </span> <br>
 		</span>
 
 		<div id="mobileTypeSpan" class="grayBG">
@@ -273,7 +273,7 @@
 			<div id="settingsHeader">
 				<span id="settingsSelectionSpan">
 					<b id="generalMPOSelector" class="settingsSelection settingsSelected" onclick="showHideSettings('generalMPO')">General</b> <span class="flexAuto"></span>
-					<b id="textOutputSelector" class="settingsSelection nowrap" onclick="showHideSettings('textOutput')">Text Output</b> <span class="flexAuto"></span>
+					<b id="slotsSelector" class="settingsSelection nowrap" onclick="showHideSettings('slots')">Savefile</b> <span class="flexAuto"></span>
 					<b id="shortcutSelector" class="settingsSelection nowrap" onclick="showHideSettings('shortcut')">Shortcuts</b> <span class="flexAuto"></span>
 					<b id="playerSelector" class="settingsSelection" onclick="showHideSettings('player')">Characters</b> <span class="flexAuto"></span>
 					<b id="counterSelector" class="settingsSelection" onclick="showHideSettings('counter')">Counters</b> <span class="flexAuto"></span>
@@ -283,7 +283,7 @@
 				<span id="settingsSelectionSpanBreak">
 					<span style="display: flex;">
 						<b id="generalMPOSelectorBreak" class="settingsSelection settingsSelected" onclick="showHideSettings('generalMPO')">General</b> <span class="flexAuto"></span>
-						<b id="textOutputSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('textOutput')">Text Output</b> <span class="flexAuto"></span>
+						<b id="slotsSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('slots')">Savefile</b> <span class="flexAuto"></span>
 						<b id="shortcutSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('shortcut')">Shortcuts</b>
 					</span>
 					<span style="display: flex;">
@@ -448,15 +448,7 @@
 
 					<label for="enableInteract"> <span class="settingsText"> Enable Drag 'n' Drop: </span> </label> <input type="checkbox" id="enableInteract" onchange="sendSettingsMsg(this.id, this.checked)"> <button onclick="changeSettings('interactSave')">Save Positions</button> <button onclick="changeSettings('interactReset')">Reset Positions</button> <br> <br>
 
-					<span class="settingsTitle"> Reset </span> <br>
-					<button onclick="changeSettings('resetSettings')" id="resetSettingsButton"> Reset Settings </button>
-					<button onclick="changeSettings('resetPlayers')"> Reset Players & Counters </button> <br> <br>
-					<button onclick="localStorage.clear()">Clear local storage</button> <span class="settingsNote">(This will clear all saved settings, characters, counters and stats)</span>
-				</div>
-
-				<!-- Text Output Settings -->
-				<div id="textOutputSettings" class="hidden">
-
+					<span class="settingsTitle"> Text Output </span>
 					<div style="border: 2px rgba(120, 120, 120, 0.4) solid; width: 405px; padding-left: 3px;">
 						<label for="toBonusOnly"> <span class="settingsText"> Only show who got the bonus star: </span> </label> <input type="checkbox" id="toBonusOnly" onchange="sendSettingsMsg(this.id, this.checked)"> <br> 
 						<label for="toShowNum"> <span class="settingsText marginLeft"> Show counter next to player: </span> </label> <input type="checkbox" id="toShowNum" onchange="sendSettingsMsg(this.id, this.checked)" checked> <br> 
@@ -470,20 +462,41 @@
 					<span class="settingsText marginLeft"> Player 4 name: </span> <input id="toP4Name" onchange="sendSettingsMsg(this.id, this.value)"> <br>
 					<span class="settingsText"> Counter seperation: </span> <input id="toSeperation" value=" | " onchange="sendSettingsMsg(this.id, this.value)"> <br> <br>
 					
-					<label for="toUseActive"> <span class="settingsText"> Only use active counters: </span> <input type="checkbox" id="toUseActive" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('updateCounterInput')" checked> </label> <br> <br>
-					<span class="settingsNote hidden" id="counterNote"> Seperate counters with ", ". </span>
-					<div style="columns: 2;" class="hidden" id="counterDiv">
-						<span id="counterOrder">
-							<span class="settingsText"> Counter order: </span> <span class="settingsNote"> (Only counters listed will be used) </span> <br>
-							<textarea class="resizableInput" id="toCounters" onchange="textOutputTest();sendSettingsMsg(this.id, this.value)">Turns, Happening, Minigame, Red Space, Coin Star</textarea>
-						</span>
-						<span id="counterNames">
-							<span class="settingsText"> Counter names: </span> <span class="settingsNote"> (Used to describe the counter) </span> <br>
-							<textarea class="resizableInput" id="toOutput" onchange="textOutputTest(true);sendSettingsMsg(this.id, this.value)">Turns, ?, MG, Red, Coin Star</textarea>
-						</span>
+					<label for="toUseActive"> <span class="settingsText"> Only use active counters: </span> <input type="checkbox" id="toUseActive" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('updateCounterInput')" checked> </label> <br>
+					<span id="customTOCounters">
+						<span class="settingsNote" id="counterNote"> Seperate counters with ", ". </span>
+						<div id="counterDiv">
+							<span id="counterNames">
+								<span class="settingsText"> Counter names: </span> <span class="settingsNote"> (Used to describe the counter) </span> <br>
+								<textarea class="resizableInput" id="toOutput" onchange="textOutputTest(true);sendSettingsMsg(this.id, this.value)">Turns, ?, MG, Red, Coin Star</textarea>
+							</span>
+							<span id="counterOrder">
+								<span class="settingsText"> Counter order: </span> <span class="settingsNote"> (Only counters listed will be used) </span> <br>
+								<textarea class="resizableInput" id="toCounters" onchange="textOutputTest();sendSettingsMsg(this.id, this.value)">Turns, Happening, Minigame, Red Space, Coin Star</textarea>
+							</span>
+						</div>
+						<b class="warningText" id="textOutputWarning" style="visibility: hidden;"> Hi if you see this </b>
+					</span> <br>
+
+					<span class="settingsTitle"> Reset </span> <br>
+					<button onclick="changeSettings('resetSettings')" id="resetSettingsButton"> Reset Settings </button>
+					<button onclick="changeSettings('resetPlayers')"> Reset Slots </button> <br> <br>
+					<button onclick="localStorage.clear()">Clear local storage</button> <span class="settingsNote">(This will clear all saved settings, characters, counters and stats)</span>
+				</div>
+
+				<!-- Savefile/slot Settings -->
+				<div id="slotsSettings" class="hidden">
+					<span class="settingsText">WIP - Text output has been moved to general</span>
+					<!--div class="slotDiv">
+						<span class="slotButtons" style="float: right;"> <button>Load</button> <br> <button>Duplicate</button> <br> <button>Delete</button> </span>
+						<span style="position: relative;"> <span class="settingsText slotTurnText"> <span class="slotTurn"> 7/20 </span> Turn </span> <img src="img/smp.png" style="height: 30px; margin-right: 20px;"> </span> <br>
+						<img src="img/smp/dk.png"> <img src="img/smp/peach.png"> <img src="img/smp/drybones.png"> <img src="img/smp/pompom.png"> <br>
 					</div> <br>
-					
-					<b class="warningText" id="textOutputWarning" style="visibility: hidden;"> Hi if you see this </b>
+					<div class="slotDiv">
+						<span class="slotButtons" style="float: right;"> <button>Load</button> <br> <button>Duplicate</button> <br> <button>Delete</button> </span>
+						<span style="position: relative;"> <span class="settingsText slotTurnText"> <span class="slotTurn"> 12/30 </span> Turn </span><img src="img/mp6.png" style="height: 30px; margin-right: 20px;"> </span> <br>
+						<img src="img/mp6/daisy.png"> <img src="img/mp6/yoshi.png"> <img src="img/mp6/waluigi.png"> <img src="img/mp6/boo.png"> <br>
+					</div-->
 				</div>
 
 				<!-- Shortcuts -->

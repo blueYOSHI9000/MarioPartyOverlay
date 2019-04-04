@@ -1,32 +1,67 @@
 var backuped = false;
 
-var coinStarVar = 10;
-var coinStarTie1 = false;
-var coinStarTie2 = false;
-var coinStarTie3 = false;
-var coinStarTie4 = false;
+var slots = {
+	sel: 0,
+	s0: {
+		curTurn: 1,
+		maxTurn: 20,
+		coinStar: 10,
+		coinStarTie1: false,
+		coinStarTie2: false,
+		coinStarTie3: false,
+		coinStarTie4: false,
+		stars: [0, 0, 0, 0],
+		coins: [10, 10, 10, 10],
+		happening: [0, 0, 0, 0],
+		minigame: [0, 0, 0, 0],
+		redSpace: [0, 0, 0, 0],
+		running: [0, 0, 0, 0],
+		shopping: [0, 0, 0, 0],
+		item: [0, 0, 0, 0],
+		friendSpace: [0, 0, 0, 0],
+		hex: [0, 0, 0, 0],
+		balloon: [0, 0, 0, 0],
+		spinSpace: [0, 0, 0, 0],
+		minus: [0, 0, 0, 0],
+		specialDice: [0, 0, 0, 0],
+		ally: [0, 0, 0, 0],
+		stompy: [0, 0, 0, 0],
+		doormat: [0, 0, 0, 0],
+		//
+		curGame: 'all',
+		char1: 'mario',
+		char2: 'luigi',
+		char3: 'yoshi',
+		char4: 'peach',
+		com1: false,
+		com2: false,
+		com3: false,
+		com4: false,
+		starsOnOff: false,
+		coinsOnOff: false,
+		happeningOnOff: true,
+		minigameOnOff: true,
+		redSpaceOnOff: false,
+		runningOnOff: false,
+		shoppingOnOff: false,
+		itemOnOff: false,
+		friendSpaceOnOff: false,
+		hexOnOff: false,
+		balloonOnOff: false,
+		spinSpaceOnOff: false,
+		minusOnOff: false,
+		specialDiceOnOff: false,
+		allyOnOff: false,
+		stompyOnOff: false,
+		doormatOnOff: false,
+		slowOnOff: false,
+		miniStarsOnOff: false,
+		bananasOnOff: false,
+		inclBonusOnOff: false,
+		coinStarOnOff: true
+	}
+}
 
-var curTurn = 1;
-
-var hap = [0, 0, 0, 0];
-var mini = [0, 0, 0, 0];
-var red = [0, 0, 0, 0];
-var run = [0, 0, 0, 0];
-var shop = [0, 0, 0, 0];
-var item = [0, 0, 0, 0];
-var friend = [0, 0, 0, 0];
-var hex = [0, 0, 0, 0];
-var balloon = [0, 0, 0, 0];
-var spin = [0, 0, 0, 0];
-var minus = [0, 0, 0, 0];
-var dice = [0, 0, 0, 0];
-var ally = [0, 0, 0, 0];
-var stompy = [0, 0, 0, 0];
-var doormat = [0, 0, 0, 0];
-var stars = [0, 0, 0, 0];
-var coins = [0, 0, 0, 0];
-
-var countersShort = ['stars', 'coins', 'hap', 'mini', 'red', 'run', 'shop', 'item', 'friend', 'hex', 'balloon', 'spin', 'minus', 'dice', 'ally', 'stompy', 'doormat'];
 var counters = ['stars', 'coins', 'happening', 'minigame', 'redSpace', 'running', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat'];
 var countersUp = [];
 for (let num = 0; num < counters.length; num++) {
@@ -75,35 +110,23 @@ function resetBackup () {
 function backup () {
 	document.getElementById('reloadButton').disabled = false;
 	backuped = true;
+	var sel = 's' + slots.sel;
 
-	coinStarVar = getInner('coinStarText');
-	coinStarTie1 = getValue('p1CoinStarTie');
-	coinStarTie2 = getValue('p2CoinStarTie');
-	coinStarTie3 = getValue('p3CoinStarTie');
-	coinStarTie4 = getValue('p4CoinStarTie');
+	slots[sel].coinStar = getInner('coinStarText');
+	slots[sel].coinStarTie1 = getValue('p1CoinStarTie');
+	slots[sel].coinStarTie2 = getValue('p2CoinStarTie');
+	slots[sel].coinStarTie3 = getValue('p3CoinStarTie');
+	slots[sel].coinStarTie4 = getValue('p4CoinStarTie');
 
-	curTurn = parseInt(getInner('curTurnText'));
+	slots[sel].curTurn = getInner('curTurnText');
+	slots[sel].maxTurn = getInner('maxTurnText');
 
-	var num = 0
+	var num = 0;
 	for (let num2 = 0; num2 < 4; num2++) {
-		num++
-		hap[num2] = getInner('p' + num + 'HappeningText');
-		mini[num2] = getInner('p' + num + 'MinigameText');
-		red[num2] = getInner('p' + num + 'RedSpaceText');
-		run[num2] = getInner('p' + num + 'RunningText');
-		shop[num2] = getInner('p' + num + 'ShoppingText');
-		item[num2] = getInner('p' + num + 'ItemText');
-		friend[num2] = getInner('p' + num + 'FriendSpaceText');
-		hex[num2] = getInner('p' + num + 'HexText');
-		balloon[num2] = getInner('p' + num + 'BalloonText');
-		spin[num2] = getInner('p' + num + 'SpinSpaceText');
-		minus[num2] = getInner('p' + num + 'MinusText');
-		dice[num2] = getInner('p' + num + 'SpecialDiceText');
-		spin[num2] = getInner('p' + num + 'AllyText');
-		minus[num2] = getInner('p' + num + 'StompyText');
-		dice[num2] = getInner('p' + num + 'DoormatText');
-		stars[num2] = getInner('p' + num + 'StarsText');
-		coins[num2] = getInner('p' + num + 'CoinsText');
+		num++;
+		for (let num3 = 0; num3 < counters.length; num3++) {
+			slots[sel][counters[num3]][num2] = getInner('p' + num + countersUp[num3] + 'Text');
+		}
 	}
 
 	if (getValue('permSave') == true) {
@@ -117,39 +140,110 @@ function backup () {
 * @param {boolean} forceRestore If the restore should be forced.
 */
 function restore (forceRestore) {
+	var sel = 's' + slots.sel;
 	if (backuped == true || forceRestore == true) {
-		editInner('coinStarText', coinStarVar);
-		editValue('p1CoinStarTie', coinStarTie1);
-		editValue('p2CoinStarTie', coinStarTie2);
-		editValue('p3CoinStarTie', coinStarTie3);
-		editValue('p4CoinStarTie', coinStarTie4);
+		editInner('coinStarText', slots[sel][coinStar]);
+		editValue('p1CoinStarTie', slots[sel][coinStarTie1]);
+		editValue('p2CoinStarTie', slots[sel][coinStarTie2]);
+		editValue('p3CoinStarTie', slots[sel][coinStarTie3]);
+		editValue('p4CoinStarTie', slots[sel][coinStarTie4]);
 
-		var num = 0
+		var num = 0;
 		for (let num2 = 0; num2 < 4; num2++) {
-			num++
-			editInner('p' + num + 'HappeningText', hap[num2]);
-			editInner('p' + num + 'MinigameText', mini[num2]);
-			editInner('p' + num + 'RedSpaceText', red[num2]);
-			editInner('p' + num + 'RunningText', run[num2]);
-			editInner('p' + num + 'ShoppingText', shop[num2]);
-			editInner('p' + num + 'ItemText', item[num2]);
-			editInner('p' + num + 'FriendSpaceText', friend[num2]);
-			editInner('p' + num + 'HexText', hex[num2]);
-			editInner('p' + num + 'BalloonText', balloon[num2]);
-			editInner('p' + num + 'SpinSpaceText', spin[num2]);
-			editInner('p' + num + 'MinusText', minus[num2]);
-			editInner('p' + num + 'SpecialDiceText', dice[num2]);
-			editInner('p' + num + 'AllyText', ally[num2]);
-			editInner('p' + num + 'StompyText', stompy[num2]);
-			editInner('p' + num + 'DoormatText', doormat[num2]);
-			editInner('p' + num + 'StarsText', stars[num2]);
-			editInner('p' + num + 'CoinsText', coins[num2]);
+			num++;
+			for (let num3 = 0; num3 < counters.length; num3++) {
+				editInner('p' + num + countersUp[num3] + 'Text', slots[sel][counters[num3]][num2]);
+			}
 		}
 
-		turns('curTurn', curTurn, 'S');
+		turns('curTurn', slots[sel][curTurn], 'S');
+		turns('maxTurn', slots[sel][maxTurn], 'S');
 		coinStarTie();
 		callHighlight();
 	}
+}
+
+/*
+* 
+*/
+function loadSlot () {
+	var sel = 's' + slots.sel;
+
+	editInner('curTurnText', slots[sel].curTurn);
+	editInner('maxTurnText', slots[sel].maxTurn);
+
+	editInner('coinStarText', slots[sel].coinStar);
+	editValue('p1CoinStarTie', slots[sel].coinStarTie1);
+	editValue('p2CoinStarTie', slots[sel].coinStarTie2);
+	editValue('p3CoinStarTie', slots[sel].coinStarTie3);
+	editValue('p4CoinStarTie', slots[sel].coinStarTie4);
+
+	var num = 0;
+	for (let num2 = 0; num2 < 4; num2++) {
+		num++;
+		for (let num3 = 0; num3 < counters.length; num3++) {
+			editInner('p' + num + countersUp[num3] + 'Text', slots[sel][counters[num3]][num2]);
+		}
+	}
+
+	changeCharacters(1, slots[sel].char1);
+	changeCharacters(2, slots[sel].char2);
+	changeCharacters(3, slots[sel].char3);
+	changeCharacters(4, slots[sel].char4);
+
+	editValue('com1', slots[sel].com1);
+	editValue('com2', slots[sel].com2);
+	editValue('com3', slots[sel].com3);
+	editValue('com4', slots[sel].com4);
+
+	changeCom(1, true);
+	changeCom(2, true);
+	changeCom(3, true);
+	changeCom(4, true);
+
+	for (let num2 = 0; num2 < counters.length; num2++) {
+		editValue(counters[num2] + 'OnOff', slots[sel][counters[num2] + 'OnOff']);
+	}
+	
+	editValue('slowOnOff', slots[sel].slowOnOff);
+	editValue('inclBonusOnOff', slots[sel].inclBonusOnOff);
+	editValue('miniStarsOnOff', slots[sel].miniStarsOnOff);
+	editValue('bananasOnOff', slots[sel].bananasOnOff);
+	editValue('coinStarOnOff', slots[sel].coinStarOnOff);
+
+	if (slots[sel].miniStarsOnOff === true) {
+		changeStars('miniStars');
+	} else if (slots[sel].bananasOnOff === true) {
+		changeStars('bananas');
+	}
+
+	changeGame(slots[sel].curGame);
+	changeGame(slots[sel].curGame);
+	callHighlight(false, true);
+	backup();
+}
+
+/*
+* Saves all counters.
+*/
+function saveCounters () {
+	localStorage.setItem('slots', JSON.stringify(slots));
+}
+
+/*
+* Resets all counters.
+*/
+function resetCounters () {
+	if (popoutActivated === false && popout === true) {
+		sendMessage('resetCounters');
+		return;
+	}
+	changeGame('all');
+
+	resetBackup();
+	updateStars();
+
+	localStorage.removeItem('slots');
 }
 
 /*
@@ -158,28 +252,29 @@ function restore (forceRestore) {
 * @param {boolean} close If the settings should be closed after saving. True = should be closed.
 */
 function savePlayers (close) {
-	localStorage.setItem('savePlayers', true);
+	var sel = 's' + slots.sel;
 
-	localStorage.setItem('char1', characters[1]);
-	localStorage.setItem('char2', characters[2]);
-	localStorage.setItem('char3', characters[3]);
-	localStorage.setItem('char4', characters[4]);
-	localStorage.setItem('com1', getValue('com1'));
-	localStorage.setItem('com2', getValue('com2'));
-	localStorage.setItem('com3', getValue('com3'));
-	localStorage.setItem('com4', getValue('com4'));
+	slots[sel].char1 = characters[1];
+	slots[sel].char2 = characters[2];
+	slots[sel].char3 = characters[3];
+	slots[sel].char4 = characters[4];
+	slots[sel].com1 = getValue('com1');
+	slots[sel].com2 = getValue('com2');
+	slots[sel].com3 = getValue('com3');
+	slots[sel].com4 = getValue('com4');
 
 	for (let num = 0; num < counters.length; num++) {
-		localStorage.setItem(counters[num], getValue(counters[num] + 'OnOff'));
+		slots[sel][counters[num] + 'OnOff'] = getValue(counters[num] + 'OnOff');
 	}
-	localStorage.setItem('slow', getValue('slowOnOff'));
-	localStorage.setItem('miniStars', getValue('miniStarsOnOff'));
-	localStorage.setItem('bananas', getValue('bananasOnOff'));
-	localStorage.setItem('inclBonus', getValue('inclBonusOnOff'));
-	localStorage.setItem('coinstar', getValue('coinStarOnOff'));
+	slots[sel].slowOnOff = getValue('slowOnOff');
+	slots[sel].miniStarsOnOff = getValue('miniStarsOnOff');
+	slots[sel].bananasOnOff = getValue('bananasOnOff');
+	slots[sel].inclBonusOnOff = getValue('inclBonusOnOff');
+	slots[sel].coinStarOnOff = getValue('coinStarOnOff');
 
-	localStorage.setItem('curGame', curGame);
+	slots[sel].curGame = curGame;
 
+	localStorage.setItem('slots', JSON.stringify(slots));
 	if (close == true && popout != true) {
 		showHideDiv(['settings']);
 	}
@@ -234,100 +329,40 @@ function resetPlayers () {
 	callDisplayOnOff();
 	changeStars();
 
-	localStorage.setItem('curGame', 'all');
+	var sel = 's' + slots.sel;
+	slots[sel].curGame = 'all';
+	slots[sel].char1 = 'mario';
+	slots[sel].char2 = 'luigi';
+	slots[sel].char3 = 'yoshi';
+	slots[sel].char4 = 'peach';
+	slots[sel].com1 = false;
+	slots[sel].com2 = false;
+	slots[sel].com3 = false;
+	slots[sel].com4 = false;
+	slots[sel].happeningOnOff = true;
+	slots[sel].minigameOnOff = true;
+	slots[sel].redSpaceOnOff = false;
+	slots[sel].runningOnOff = false;
+	slots[sel].slowOnOff = false;
+	slots[sel].shoppingOnOff = false;
+	slots[sel].itemOnOff = false;
+	slots[sel].friendSpaceOnOff = false;
+	slots[sel].hexOnOff = false;
+	slots[sel].balloonOnOff = false;
+	slots[sel].spinSpaceOnOff = false;
+	slots[sel].minusOnOff = false;
+	slots[sel].specialDiceOnOff = false;
+	slots[sel].allyOnOff = false;
+	slots[sel].stompyOnOff = false;
+	slots[sel].doormatOnOff = false;
+	slots[sel].starsOnOff = false;
+	slots[sel].inclBonusOnOff = false;
+	slots[sel].miniStarsOnOff = false;
+	slots[sel].bananasOnOff = false;
+	slots[sel].coinsOnOff = false;
+	slots[sel].coinStarOnOff = true;
 
-	localStorage.setItem('savePlayers', false);
-
-	localStorage.setItem('char1', 'mario');
-	localStorage.setItem('char2', 'luigi');
-	localStorage.setItem('char3', 'yoshi');
-	localStorage.setItem('char4', 'peach');
-	localStorage.setItem('com1', false);
-	localStorage.setItem('com2', false);
-	localStorage.setItem('com3', false);
-	localStorage.setItem('com4', false);
-
-	localStorage.setItem('happening', true);
-	localStorage.setItem('minigame', true);
-	localStorage.setItem('redSpace', false);
-	localStorage.setItem('running', false);
-	localStorage.setItem('slow', false);
-	localStorage.setItem('shopping', false);
-	localStorage.setItem('item', false);
-	localStorage.setItem('friendSpace', false);
-	localStorage.setItem('hex', false);
-	localStorage.setItem('balloon', false);
-	localStorage.setItem('spinSpace', false);
-	localStorage.setItem('minus', false);
-	localStorage.setItem('specialDice', false);
-	localStorage.setItem('ally', false);
-	localStorage.setItem('stompy', false);
-	localStorage.setItem('doormat', false);
-	localStorage.setItem('stars', false);
-	localStorage.setItem('inclBonus', false);
-	localStorage.setItem('miniStars', false);
-	localStorage.setItem('bananas', false);
-	localStorage.setItem('coins', false);
-	localStorage.setItem('coinstar', true);
-}
-
-/*
-* Saves all counters.
-*/
-function saveCounters () {
-	localStorage.setItem('saveCounters', true);
-
-	localStorage.setItem('coinStarVar', getInner('coinStarText'));
-	localStorage.setItem('coinStarTie1', getValue('p1CoinStarTie'));
-	localStorage.setItem('coinStarTie2', getValue('p2CoinStarTie'));
-	localStorage.setItem('coinStarTie3', getValue('p3CoinStarTie'));
-	localStorage.setItem('coinStarTie4', getValue('p4CoinStarTie'));
-
-	localStorage.setItem('curTurn', getInner('curTurnText'));
-	localStorage.setItem('maxTurn', getInner('maxTurnText'));
-
-	for (let num2 = 0; num2 < counters.length; num2++) {
-		for (let num = 1; num < 5; num++) {
-			localStorage.setItem(countersShort[num2] + num, getInner('p' + num + countersUp[num2] + 'Text'));
-		}
-	}
-
-}
-
-/*
-* Resets all counters.
-*/
-function resetCounters () {
-	if (shortcutLoaded === true && popoutActivated === true && popout === false) {
-		sendMessage('resetCounters');
-	}
-
-	editInner('maxTurnText', 20);
-
-	resetBackup();
-	updateStars();
-
-	for (let num = 1; num < 5; num++) {
-		for (let num2 = 1; num2 < counters.length; num2++) {
-			localStorage.setItem(countersShort[num2] + num, 0);
-		}
-	}
-
-	localStorage.setItem('coins1', 10);
-	localStorage.setItem('coins2', 10);
-	localStorage.setItem('coins3', 10);
-	localStorage.setItem('coins4', 10);
-	
-	localStorage.setItem('saveCounters', false);
-
-	localStorage.setItem('coinStarVar', 10);
-	localStorage.setItem('coinStarTie1', false);
-	localStorage.setItem('coinStarTie2', false);
-	localStorage.setItem('coinStarTie3', false);
-	localStorage.setItem('coinStarTie4', false);
-
-	localStorage.setItem('curTurn', 1);
-	localStorage.setItem('maxTurn', 20);
+	localStorage.removeItem('slots');
 }
 
 /*
@@ -474,9 +509,45 @@ function prepareMPO () {
 
 		updateCounterInput();
 	} else {
-		resetSettings();
+		resetSettings(true);
 	}
 
+	if (localStorage.getItem('slots') != null) {
+		slots = JSON.parse(localStorage.getItem('slots'));
+		loadSlot(slots.sel);
+	} else {
+		if (curGame === 'smp') {
+			editInner('coinStarText', 5);
+			slots['s' + slots.sel][coinStar] = 5;
+			for (let num = 1; num < 5; num++) {
+				editInner('p' + num + 'CoinsText', 5);
+				slots['s' + slots.sel][coins][num - 1] = 5;
+			}
+		}
+		legacyPrepareMPO();
+	}
+	if (localStorage.getItem('datax') != null) {
+		var arrX = localStorage.getItem('datax').split(',');
+		var arrY = localStorage.getItem('datay').split(',');
+		var elems = document.getElementsByClassName('draggable');
+		for (var num = 0; num < elems.length; num++) {
+			elems[num].style.transform = 'translate(' + arrX[num] + 'px, ' + arrY[num] + 'px)';
+			elems[num].setAttribute('data-x', arrX[num]);
+			elems[num].setAttribute('data-y', arrY[num]);
+		}
+	}
+
+	coinStarTie();
+	callDisplayOnOff();
+	localStorage.setItem('lsVer', 1); //localStorage version, used to check how everything is stored
+
+	prepared = true;
+}
+
+/*
+* Loads the old localstorage and converts it into the new version
+*/
+function legacyPrepareMPO () {
 	if (localStorage.getItem('savePlayers') == 'true') {
 		changeCharacters(1, localStorage.getItem('char1'));
 		changeCharacters(2, localStorage.getItem('char2'));
@@ -511,6 +582,7 @@ function prepareMPO () {
 
 		changeGame(localStorage.getItem('curGame'));
 	} else {
+		var noLS1 = true;
 		var resetPlayersVar = true;
 	}
 
@@ -533,6 +605,7 @@ function prepareMPO () {
 		callHighlight(false, true);
 		backup();
 	} else {
+		var noLS2 = true;
 		if (curGame === 'smp') {
 			if (curGame === 'smp') {
 				editInner('coinStarText', 5);
@@ -542,7 +615,7 @@ function prepareMPO () {
 			}
 		}
 	}
-	if (localStorage.getItem('datax')) {
+	if (localStorage.getItem('datax') != null) {
 		var arrX = localStorage.getItem('datax').split(',');
 		var arrY = localStorage.getItem('datay').split(',');
 		var elems = document.getElementsByClassName('draggable');
@@ -551,12 +624,19 @@ function prepareMPO () {
 			elems[num].setAttribute('data-x', arrX[num]);
 			elems[num].setAttribute('data-y', arrY[num]);
 		}
+	} else {
+		var noLS3 = true;
 	}
 
 	coinStarTie();
 	callDisplayOnOff();
 
-	prepared = true;
+	localStorage.clear();
+
+	backup();
+	savePlayers();
+	saveSettings();
+	interactSave();
 }
 
 /*
@@ -693,8 +773,10 @@ function stringToBoolean (boolean) {
 
 /*
 * Resets settings.
+* 
+* @param {boolean} noLS If true, localStorage won't get reset
 */
-function resetSettings () {
+function resetSettings (noLS) {
 	editValue('enableInteract', false);
 	editValue('autoPopout', false);
 	editValue('mpsrIcons', true);
@@ -725,7 +807,6 @@ function resetSettings () {
 	editValue('toShowNum', true);
 	editValue('toListAll', false);
 	editValue('toListAllCoin', false);
-	changeGame('all')
 	
 	editValue('shortcutAutoEnd', false);
 
@@ -739,35 +820,37 @@ function resetSettings () {
 	callHighlight(false, true);
 	resetHighlights();
 
-	localStorage.setItem('saving', 'false');
+	if (noLS != true) {
+		localStorage.setItem('saving', 'false');
 
-	localStorage.setItem('enableInteract', getValue('enableInteract'));
-	localStorage.setItem('autoPopout', getValue('autoPopout'));
-	localStorage.setItem('curTheme', curTheme);
-	localStorage.setItem('iconStyle', document.querySelector('input[name="icons"]:checked'));
-	localStorage.setItem('customGameIcons', getValue('customGameIcons'));
-	localStorage.setItem('settingsMode', document.querySelector('input[name="settingsMode"]:checked'));
-	localStorage.setItem('greenscreen', getValue('greenscreen'));
-	localStorage.setItem('bgColor', getValue('bgColor'));
-	localStorage.setItem('textColor', getValue('textColor'));
-	localStorage.setItem('counterHighlight', getValue('enableHighlight'));
-	localStorage.setItem('highlightColor', getValue('highlightColor'));
-	localStorage.setItem('noTie', getValue('noTie'));
-	localStorage.setItem('autoSave', getValue('autoSave'));
-	localStorage.setItem('permSave', getValue('permSave'));
-	localStorage.setItem('deactivateUnused', getValue('deactivateUnused'));
+		localStorage.setItem('enableInteract', getValue('enableInteract'));
+		localStorage.setItem('autoPopout', getValue('autoPopout'));
+		localStorage.setItem('curTheme', curTheme);
+		localStorage.setItem('iconStyle', document.querySelector('input[name="icons"]:checked'));
+		localStorage.setItem('customGameIcons', getValue('customGameIcons'));
+		localStorage.setItem('settingsMode', document.querySelector('input[name="settingsMode"]:checked'));
+		localStorage.setItem('greenscreen', getValue('greenscreen'));
+		localStorage.setItem('bgColor', getValue('bgColor'));
+		localStorage.setItem('textColor', getValue('textColor'));
+		localStorage.setItem('counterHighlight', getValue('enableHighlight'));
+		localStorage.setItem('highlightColor', getValue('highlightColor'));
+		localStorage.setItem('noTie', getValue('noTie'));
+		localStorage.setItem('autoSave', getValue('autoSave'));
+		localStorage.setItem('permSave', getValue('permSave'));
+		localStorage.setItem('deactivateUnused', getValue('deactivateUnused'));
 
-	localStorage.setItem('toP1Name', getValue('toP1Name'));
-	localStorage.setItem('toP2Name', getValue('toP2Name'));
-	localStorage.setItem('toP3Name', getValue('toP3Name'));
-	localStorage.setItem('toP4Name', getValue('toP4Name'));
-	localStorage.setItem('toSeperation', getValue('toSeperation'));
-	localStorage.setItem('toCounters', getValue('toCounters'));
-	localStorage.setItem('toOutput', getValue('toOutput'));
-	localStorage.setItem('toBonusOnly', getValue('toBonusOnly'));
-	localStorage.setItem('toShowNum', getValue('toShowNum'));
-	localStorage.setItem('toListAll', getValue('toListAll'));
-	localStorage.setItem('toListAllCoin', getValue('toListAllCoin'));
+		localStorage.setItem('toP1Name', getValue('toP1Name'));
+		localStorage.setItem('toP2Name', getValue('toP2Name'));
+		localStorage.setItem('toP3Name', getValue('toP3Name'));
+		localStorage.setItem('toP4Name', getValue('toP4Name'));
+		localStorage.setItem('toSeperation', getValue('toSeperation'));
+		localStorage.setItem('toCounters', getValue('toCounters'));
+		localStorage.setItem('toOutput', getValue('toOutput'));
+		localStorage.setItem('toBonusOnly', getValue('toBonusOnly'));
+		localStorage.setItem('toShowNum', getValue('toShowNum'));
+		localStorage.setItem('toListAll', getValue('toListAll'));
+		localStorage.setItem('toListAllCoin', getValue('toListAllCoin'));
 
-	localStorage.setItem('shortcutAutoEnd', getValue('shortcutAutoEnd'));
+		localStorage.setItem('shortcutAutoEnd', getValue('shortcutAutoEnd'));
+	}
 }

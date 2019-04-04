@@ -59,7 +59,7 @@ function startShortcut () {
 
 			editInner('turnHexCharSelection', '<span class="settingsText"> Select the character that placed the hex: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" onclick="turnHex(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" onclick="turnHex(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" onclick="turnHex(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" onclick="turnHex(4)">');
 			orderCurPlayer = playerOrder[turnCurPlayer];
-			document.getElementById('turnPlayerName').style.color = 'unset';
+			document.getElementById('turnPlayerName').style.color = '';
 			break;
 
 		case 2: // start minigame
@@ -1282,7 +1282,7 @@ function turnSpace (space) {
 	space = space.substring(5);
 
 	if (activeSpace != '' && activeSpace != undefined) { //undo space if it's already selected or changed into a different one
-		document.getElementById('turnPlayerName').style.color = 'unset';
+		document.getElementById('turnPlayerName').style.color = '';
 		switch (activeSpace) {
 			case 'Blue':
 				if (starPrice != 0) {
@@ -2568,7 +2568,7 @@ function turnEnd () {
 
 	editInner('turnPlayerName', getCharName(orderCurPlayer));
 	document.getElementById('turnPlayerIcon').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[orderCurPlayer] + '.png';
-	document.getElementById('turnPlayerName').style.color = 'unset';
+	document.getElementById('turnPlayerName').style.color = '';
 
 	spaceEventState = [];
 	activeSpace = undefined;

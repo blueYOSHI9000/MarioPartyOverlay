@@ -314,11 +314,11 @@ body {
 }
 
 #counterOrder {
-	margin-right: 1000px;
 	white-space: nowrap;
 }
 #counterNames {
 	white-space: nowrap;
+	float: right;
 }
 
 .warningText {
@@ -398,6 +398,32 @@ body {
 	}
 	#settingsCloseSpan { position: fixed; }
 	#settingsCloseSave { display: block !important; }
+}
+
+/* == Slots == */
+.slotDiv {
+	border: 2px solid #252525;
+	padding: 5px;
+	width: 400px;
+}
+.slotTurnText {
+	font-family: 'Mario';
+	font-size: 20px;
+	position: absolute;
+	margin-left: 80px;
+	top: -20px;
+}
+.slotTurn {
+	position: absolute;
+	right: -110px;
+}
+.slotDiv img {
+	height: 45px;
+}
+.slotButtons button {
+	width: 95px;
+	float: right;
+	margin-bottom: 4px;
 }
 
 /* == Shortcuts == */
@@ -665,7 +691,7 @@ body {
 	overflow-y: scroll;
 	display: inline-block;
 	position: relative;
-	border: 2px solid rgba(17, 17, 17, 0.5);
+	border: 2px solid #252525;
 	background-color: #e5e5e5;
 	padding-left: 12px;
 	padding-top: 6px;
