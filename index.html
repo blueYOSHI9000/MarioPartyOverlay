@@ -183,6 +183,7 @@
 		<label for="shortcutAutoEnd"> <span class="settingsText"> Automatically end turn after selecting a space </span></label> <input type="checkbox" id="shortcutAutoEnd" onchange="sendSettingsMsg(this.id, + this.checked)"> <br> <br>
 
 		<span class="settingsTitle"> Shortcut Variables </span> <br>
+		<span class="settingsText" id="shortcutCurGame">Current shortcut game: Not decided yet.</span> <br> <span class="settingsNote"> Only used inside shortcuts. Currently can't be changed mid-game. </span> <br> <br>
 		<span class="settingsText"> Final 5 Turns Event: </span>
 		<select id="finalFiveSelect" onchange="finalFiveEvent = getValue(this.id)">
 			<option value="undefined" selected="">Nothing</option>
@@ -273,7 +274,7 @@
 			<div id="settingsHeader">
 				<span id="settingsSelectionSpan">
 					<b id="generalMPOSelector" class="settingsSelection settingsSelected" onclick="showHideSettings('generalMPO')">General</b> <span class="flexAuto"></span>
-					<b id="slotsSelector" class="settingsSelection nowrap" onclick="showHideSettings('slots')">Savefile</b> <span class="flexAuto"></span>
+					<b id="slotsSelector" class="settingsSelection nowrap" onclick="showHideSettings('slots')">Savefiles</b> <span class="flexAuto"></span>
 					<b id="shortcutSelector" class="settingsSelection nowrap" onclick="showHideSettings('shortcut')">Shortcuts</b> <span class="flexAuto"></span>
 					<b id="playerSelector" class="settingsSelection" onclick="showHideSettings('player')">Characters</b> <span class="flexAuto"></span>
 					<b id="counterSelector" class="settingsSelection" onclick="showHideSettings('counter')">Counters</b> <span class="flexAuto"></span>
@@ -283,7 +284,7 @@
 				<span id="settingsSelectionSpanBreak">
 					<span style="display: flex;">
 						<b id="generalMPOSelectorBreak" class="settingsSelection settingsSelected" onclick="showHideSettings('generalMPO')">General</b> <span class="flexAuto"></span>
-						<b id="slotsSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('slots')">Savefile</b> <span class="flexAuto"></span>
+						<b id="slotsSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('slots')">Savefiles</b> <span class="flexAuto"></span>
 						<b id="shortcutSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('shortcut')">Shortcuts</b>
 					</span>
 					<span style="display: flex;">

@@ -61,10 +61,9 @@
 			filter: grayscale(40%);
 }
 #shoppingSpan span {
-	color: #d6d6d6;
-}
-#turnPlayerName {
-
+	color: #000000;
+	-webkit-text-stroke: 1.5px #d6d6d6;
+			text-stroke: 1.5px #d6d6d6;
 }
 
 @keyframes error {

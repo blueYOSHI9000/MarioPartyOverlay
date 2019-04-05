@@ -32,10 +32,11 @@ function startShortcut () {
 			}
 			document.getElementById('backButton').disabled = '';
 
+			shortcutGame = curGame;
 			shortcutState = 1;
 			document.getElementById('shortcutTurn').style.display = 'none';
 			playerOrder = [''];
-			editInner('shortcutSpan', '<span class="settingsTitle"> Choose order </span> <br> <span class="settingsText" id="chooseOrderText"> Which character is first? </span> <br> <span> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="chooseP1" onclick="chooseOrder(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="chooseP2" onclick="chooseOrder(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="chooseP3" onclick="chooseOrder(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="chooseP4" onclick="chooseOrder(4)"> <br> <button onclick="chooseOrder(0, true)">Reset Order</button> <br> <span id="chooseFirst" class="chooseImgOrder"> </span> <br> <span id="chooseSecond" class="chooseImgOrder"> </span> <br> <span id="chooseThird" class="chooseImgOrder"> </span> <br> <span id="chooseFourth" class="chooseImgOrder"> </span> <br> <button onclick="startShortcut()" id="chooseContinue" style="display:none;">Continue?</button> </span>');
+			editInner('shortcutSpan', '<span class="settingsTitle"> Choose order </span> <br> <span class="settingsText" id="chooseOrderText"> Which character is first? </span> <br> <span> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="chooseP1" onclick="chooseOrder(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="chooseP2" onclick="chooseOrder(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="chooseP3" onclick="chooseOrder(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="chooseP4" onclick="chooseOrder(4)"> <br> <button onclick="chooseOrder(0, true)">Reset Order</button> <br> <span id="chooseFirst" class="chooseImgOrder"> </span> <br> <span id="chooseSecond" class="chooseImgOrder"> </span> <br> <span id="chooseThird" class="chooseImgOrder"> </span> <br> <span id="chooseFourth" class="chooseImgOrder"> </span> <br> <span id="chooseContinue" style="display:none;"> <button onclick="startShortcut()">Continue?</button> </span> </span>');
 				shortcutNotif('Choose the order of the players.');
 			break;
 
@@ -143,7 +144,6 @@ function startShortcut () {
 * Prepares the shortcut turn screen depending on the selected game.
 */
 function prepareTurn () {
-	shortcutGame = curGame;
 	switch (shortcutGame) {
 		case 'mpds':
 			editInner('turnStars', 'Stars');
@@ -296,6 +296,7 @@ function shortcutSettings (close) {
 	} else {
 		document.getElementById('starCostSelect').children[0].selected = true;
 	}
+	editInner('shortcutCurGame', 'Current shortcut game: ' + shortcutGame.toUpperCase());
 
 	editInner('shortcutDebug', '<span> shortcutState: ' + shortcutState + '<br> spaceEventState: ' + spaceEventState.join(', ') + '<br> itemEventState: ' + itemEventState.join(', ') + '<br> diceCursor: ' + diceCursor + ' - diceRolls: ' + diceRolls.join(', ') + '<br> <br> statusEffects: <br> - P1: ' + statusEffects['p1'].join(', ') + '<br> - P2: ' + statusEffects['p2'].join(', ') + '<br> - P3: ' + statusEffects['p3'].join(', ') + '<br> - P4: ' + statusEffects['p4'].join(', ') + '<br> <br> allies: <br> - P1: ' + allies['p1'].join(', ') + '<br> - P2: ' + allies['p2'].join(', ') + '<br> - P3: ' + allies['p3'].join(', ') + '<br> - P4: ' + allies['p4'].join(', ') + '<br> bobombAlly: ' + bobombAlly.join(', ') + '</span>');
 
@@ -437,8 +438,8 @@ var playerOrder;
 * @param {boolean} reset If the order should be reset.
 */
 function chooseOrder (player, reset) {
-	if (shortcutState == 1) {
-		if (reset == true) {
+	if (shortcutState === 1) {
+		if (reset === true) {
 			playerOrder = [''];
 			editInner('chooseFirst', '');
 			editInner('chooseSecond', '');
