@@ -9,8 +9,8 @@ var shortcutState = 0;
 */
 var setup = false;
 var turnCurPlayer = 0;
-var shortcutGame = 'smp'; //Shortcut features use this instead of curGame as otherwise the player could change the game mid-shortcut which would break everything
 var orderCurPlayer = 0;
+var shortcutGame = 'smp'; //Shortcut features use this instead of curGame as otherwise the player could change the game mid-shortcut which would break everything
 var minigameSpaces = ['', '', '', '', ''];
 /*
 * Starts the shortcut feature or advances to the next state.
@@ -231,6 +231,13 @@ function shortcutBack () {
 			break;
 		case 2:
 			if (turnCurPlayer === 1) {
+				if ((getInner('curTurnText') == parseInt(getInner('maxTurnText')) - 4 && shortcutGame != 'smp') || (getInner('curTurnText') == parseInt(getInner('maxTurnText')) - 2 && shortcutGame === 'smp')) { //if final 5
+					execOnMain('turns', ['curTurn', 1, 'M']);
+					shortcutState = 3;
+					document.getElementById('shortcutTurn').style.display = 'none';
+					startShortcut();
+					return;
+				}
 				if (getInner('curTurnText') == 1) {
 					playerOrder = undefined;
 					shortcutState = 0;
@@ -959,6 +966,7 @@ var allies = {
 	p4: []
 };
 var bobombAlly = ['', 0, 0, 0, 0];
+var closeAlly = false;
 /*
 * Adds an ally to the current player.
 * 
@@ -1270,7 +1278,6 @@ function allyDice (ally, dice) {
 	shortcutNotif(getCharName(allies['p' + orderCurPlayer][ally - 1]) + ' rolled a ' + dice + ' for ' + getCharName(orderCurPlayer) + '.');
 }
 
-var closeAlly = false;
 var activeSpace;
 /*
 * Activates spaces.
@@ -2713,12 +2720,6 @@ function turnEnd () {
 		return;
 	}
 }
-var allies = {
-	p1: [],
-	p2: [],
-	p3: [],
-	p4: []
-};
 
 /*
 * Edits the "notification" bar at the top.

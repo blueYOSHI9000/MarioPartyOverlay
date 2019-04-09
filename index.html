@@ -177,7 +177,7 @@
 	</span>
 
 	<div id="shortcutSettingsPopup" class="popupContent">
-		<button onclick="shortcutSettings(true)" style="float: right; margin-right: 10px;">Close</button>
+		<span style="float: right; margin-right: 10px;"> <button onclick="shortcutSettings(true)">Close</button> </span>
 
 		<span class="settingsTitle"> Options </span> <br>
 		<label for="shortcutAutoEnd"> <span class="settingsText"> Automatically end turn after selecting a space </span></label> <input type="checkbox" id="shortcutAutoEnd" onchange="sendSettingsMsg(this.id, + this.checked)"> <br> <br>
@@ -1174,7 +1174,7 @@
 					<button id="popoutButton" onclick="mpoSettingsPopout()" style="flex: auto;"> Popout Settings </button>
 				<span id="settingsClose">
 					<button onclick="saveSettings(true); savePlayers()" id="saveButton"> Save </button>
-					<button onclick="if (popout == true) {window.close()} else {showHideDiv(['settings']); if (shortcutLoaded == true) {getAlly('close');}}" id="settingsCloseButton"> Close </button>
+					<button onclick="if (popout == true) {window.close()} else {showHideDiv(['settings']); if (shortcutLoaded == true) {getAlly('close');shortcutSettings(true);}}" id="settingsCloseButton"> Close </button>
 				</span>
 			</div>
 		</div>

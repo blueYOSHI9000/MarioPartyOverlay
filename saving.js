@@ -26,8 +26,9 @@ var slots = {
 		specialDice: [0, 0, 0, 0],
 		ally: [0, 0, 0, 0],
 		stompy: [0, 0, 0, 0],
-		doormat: [0, 0, 0, 0],
-		//
+		doormat: [0, 0, 0, 0]
+	},
+	c0: {
 		curGame: 'all',
 		char1: 'mario',
 		char2: 'luigi',
@@ -128,10 +129,7 @@ function backup () {
 			slots[sel][counters[num3]][num2] = getInner('p' + num + countersUp[num3] + 'Text');
 		}
 	}
-
-	if (getValue('permSave') == true) {
-		saveCounters();
-	}
+	localStorage.setItem(sel, JSON.stringify(slots[sel]));
 }
 
 /*
@@ -164,10 +162,12 @@ function restore (forceRestore) {
 }
 
 /*
+* Loads savefiles - WIP
 * 
+* @param {number} slot Which slot to load.
 */
-function loadSlot () {
-	var sel = 's' + slots.sel;
+function loadSlot (slot) {
+	var sel = 's' + slot;
 
 	editInner('curTurnText', slots[sel].curTurn);
 	editInner('maxTurnText', slots[sel].maxTurn);
@@ -185,6 +185,7 @@ function loadSlot () {
 			editInner('p' + num + countersUp[num3] + 'Text', slots[sel][counters[num3]][num2]);
 		}
 	}
+	var sel = 'c' + slot;
 
 	changeCharacters(1, slots[sel].char1);
 	changeCharacters(2, slots[sel].char2);
@@ -224,13 +225,6 @@ function loadSlot () {
 }
 
 /*
-* Saves all counters.
-*/
-function saveCounters () {
-	localStorage.setItem('slots', JSON.stringify(slots));
-}
-
-/*
 * Resets all counters.
 */
 function resetCounters () {
@@ -243,7 +237,8 @@ function resetCounters () {
 	resetBackup();
 	updateStars();
 
-	localStorage.removeItem('slots');
+	localStorage.removeItem('s0');
+	localStorage.removeItem('c0');
 }
 
 /*
@@ -252,7 +247,7 @@ function resetCounters () {
 * @param {boolean} close If the settings should be closed after saving. True = should be closed.
 */
 function savePlayers (close) {
-	var sel = 's' + slots.sel;
+	var sel = 'c' + slots.sel;
 
 	slots[sel].char1 = characters[1];
 	slots[sel].char2 = characters[2];
@@ -274,7 +269,7 @@ function savePlayers (close) {
 
 	slots[sel].curGame = curGame;
 
-	localStorage.setItem('slots', JSON.stringify(slots));
+	localStorage.setItem(sel, JSON.stringify(slots[sel]));
 	if (close == true && popout != true) {
 		showHideDiv(['settings']);
 	}
@@ -331,7 +326,7 @@ function resetPlayers (noLS) {
 	callDisplayOnOff();
 	changeStars();
 
-	var sel = 's' + slots.sel;
+	var sel = 'c' + slots.sel;
 	slots[sel].curGame = 'all';
 	slots[sel].char1 = 'mario';
 	slots[sel].char2 = 'luigi';
@@ -365,7 +360,8 @@ function resetPlayers (noLS) {
 	slots[sel].coinStarOnOff = true;
 
 	if (noLS != true) {
-		localStorage.removeItem('slots');
+		localStorage.removeItem('s0');
+		localStorage.removeItem('c0');
 	}
 }
 
@@ -515,21 +511,28 @@ function prepareMPO () {
 	} else {
 		resetSettings(true);
 	}
-
-	if (localStorage.getItem('slots') != null) {
-		slots = JSON.parse(localStorage.getItem('slots'));
-		loadSlot(slots.sel);
+	if (localStorage.getItem('lsVer') === '1') {
+		legacyPrepare();
 	} else {
-		if (curGame === 'smp') {
-			editInner('coinStarText', 5);
-			slots['s' + slots.sel][coinStar] = 5;
-			for (let num = 1; num < 5; num++) {
-				editInner('p' + num + 'CoinsText', 5);
-				slots['s' + slots.sel][coins][num - 1] = 5;
-			}
+		if (localStorage.getItem('c0') != null) {
+			slots.c0 = JSON.parse(localStorage.getItem('c0'));
 		}
-		resetPlayers(true);
+		if (localStorage.getItem('s0') != null) {
+			slots.s0 = JSON.parse(localStorage.getItem('s0'));
+		} else {
+			if (curGame === 'smp') {
+				editInner('coinStarText', 5);
+				slots['s' + slots.sel][coinStar] = 5;
+				for (let num = 1; num < 5; num++) {
+					editInner('p' + num + 'CoinsText', 5);
+					slots['s' + slots.sel][coins][num - 1] = 5;
+				}
+			}
+			resetPlayers(true);
+		}
+		loadSlot(slots.sel);
 	}
+
 	if (localStorage.getItem('datax') != null) {
 		var arrX = localStorage.getItem('datax').split(',');
 		var arrY = localStorage.getItem('datay').split(',');
@@ -543,9 +546,87 @@ function prepareMPO () {
 
 	coinStarTie();
 	callDisplayOnOff();
-	localStorage.setItem('lsVer', 1); //localStorage version, used to check how everything is stored
+	localStorage.setItem('lsVer', 2); //localStorage version, used to check how everything is stored
 
 	prepared = true;
+}
+
+/*
+* Used to load localStorage if it's not up to date and updates it.
+*/
+function legacyPrepare () {
+	if (localStorage.getItem('slots') != null && localStorage.getItem('lsVer') === '1') {
+		slots = JSON.parse(localStorage.getItem('slots'));
+		slots.c0 = {
+			allyOnOff: slots.s0.allyOnOff,
+			balloonOnOff: slots.s0.balloonOnOff,
+			bananasOnOff: slots.s0.bananasOnOff,
+			char1: slots.s0.char1,
+			char2: slots.s0.char2,
+			char3: slots.s0.char3,
+			char4: slots.s0.char4,
+			coinStarOnOff: slots.s0.coinStarOnOff,
+			coinsOnOff: slots.s0.coinsOnOff,
+			com1: slots.s0.com1,
+			com2: slots.s0.com2,
+			com3: slots.s0.com3,
+			com4: slots.s0.com4,
+			curGame: slots.s0.curGame,
+			doormatOnOff: slots.s0.doormatOnOff,
+			friendSpaceOnOff: slots.s0.friendSpaceOnOff,
+			happeningOnOff: slots.s0.happeningOnOff,
+			hexOnOff: slots.s0.hexOnOff,
+			inclBonusOnOff: slots.s0.inclBonusOnOff,
+			itemOnOff: slots.s0.itemOnOff,
+			miniStarsOnOff: slots.s0.miniStarsOnOff,
+			minigameOnOff: slots.s0.minigameOnOff,
+			minusOnOff: slots.s0.minusOnOff,
+			redSpaceOnOff: slots.s0.redSpaceOnOff,
+			runningOnOff: slots.s0.runningOnOff,
+			shoppingOnOff: slots.s0.shoppingOnOff,
+			slowOnOff: slots.s0.slowOnOff,
+			specialDiceOnOff: slots.s0.specialDiceOnOff,
+			spinSpaceOnOff: slots.s0.spinSpaceOnOff,
+			starsOnOff: slots.s0.starsOnOff,
+			stompyOnOff: slots.s0.stompyOnOff
+		}
+		delete slots.s0.allyOnOff
+		delete slots.s0.balloonOnOff
+		delete slots.s0.bananasOnOff
+		delete slots.s0.char1
+		delete slots.s0.char2
+		delete slots.s0.char3
+		delete slots.s0.char4
+		delete slots.s0.coinStarOnOff
+		delete slots.s0.coinsOnOff
+		delete slots.s0.com1
+		delete slots.s0.com2
+		delete slots.s0.com3
+		delete slots.s0.com4
+		delete slots.s0.curGame
+		delete slots.s0.doormatOnOff
+		delete slots.s0.friendSpaceOnOff
+		delete slots.s0.happeningOnOff
+		delete slots.s0.hexOnOff
+		delete slots.s0.inclBonusOnOff
+		delete slots.s0.itemOnOff
+		delete slots.s0.miniStarsOnOff
+		delete slots.s0.minigameOnOff
+		delete slots.s0.minusOnOff
+		delete slots.s0.redSpaceOnOff
+		delete slots.s0.runningOnOff
+		delete slots.s0.shoppingOnOff
+		delete slots.s0.slowOnOff
+		delete slots.s0.specialDiceOnOff
+		delete slots.s0.spinSpaceOnOff
+		delete slots.s0.starsOnOff
+		delete slots.s0.stompyOnOff
+		loadSlot(slots.sel);
+	}
+	saveSettings();
+	savePlayers();
+	//saveShortcut();
+	backup();
 }
 
 /*
@@ -730,36 +811,36 @@ function resetSettings (noLS) {
 	resetHighlights();
 
 	if (noLS != true) {
-		localStorage.setItem('saving', 'false');
+		localStorage.removeItem('saving');
 
-		localStorage.setItem('enableInteract', getValue('enableInteract'));
-		localStorage.setItem('autoPopout', getValue('autoPopout'));
-		localStorage.setItem('curTheme', curTheme);
-		localStorage.setItem('iconStyle', document.querySelector('input[name="icons"]:checked'));
-		localStorage.setItem('customGameIcons', getValue('customGameIcons'));
-		localStorage.setItem('settingsMode', document.querySelector('input[name="settingsMode"]:checked'));
-		localStorage.setItem('greenscreen', getValue('greenscreen'));
-		localStorage.setItem('bgColor', getValue('bgColor'));
-		localStorage.setItem('textColor', getValue('textColor'));
-		localStorage.setItem('counterHighlight', getValue('enableHighlight'));
-		localStorage.setItem('highlightColor', getValue('highlightColor'));
-		localStorage.setItem('noTie', getValue('noTie'));
-		localStorage.setItem('autoSave', getValue('autoSave'));
-		localStorage.setItem('permSave', getValue('permSave'));
-		localStorage.setItem('deactivateUnused', getValue('deactivateUnused'));
+		localStorage.removeItem('enableInteract');
+		localStorage.removeItem('autoPopout');
+		localStorage.removeItem('curTheme');
+		localStorage.removeItem('iconStyle');
+		localStorage.removeItem('customGameIcons');
+		localStorage.removeItem('settingsMode');
+		localStorage.removeItem('greenscreen');
+		localStorage.removeItem('bgColor');
+		localStorage.removeItem('textColor');
+		localStorage.removeItem('counterHighlight');
+		localStorage.removeItem('highlightColor');
+		localStorage.removeItem('noTie');
+		localStorage.removeItem('autoSave');
+		localStorage.removeItem('permSave');
+		localStorage.removeItem('deactivateUnused');
 
-		localStorage.setItem('toP1Name', getValue('toP1Name'));
-		localStorage.setItem('toP2Name', getValue('toP2Name'));
-		localStorage.setItem('toP3Name', getValue('toP3Name'));
-		localStorage.setItem('toP4Name', getValue('toP4Name'));
-		localStorage.setItem('toSeperation', getValue('toSeperation'));
-		localStorage.setItem('toCounters', getValue('toCounters'));
-		localStorage.setItem('toOutput', getValue('toOutput'));
-		localStorage.setItem('toBonusOnly', getValue('toBonusOnly'));
-		localStorage.setItem('toShowNum', getValue('toShowNum'));
-		localStorage.setItem('toListAll', getValue('toListAll'));
-		localStorage.setItem('toListAllCoin', getValue('toListAllCoin'));
+		localStorage.removeItem('toP1Name');
+		localStorage.removeItem('toP2Name');
+		localStorage.removeItem('toP3Name');
+		localStorage.removeItem('toP4Name');
+		localStorage.removeItem('toSeperation');
+		localStorage.removeItem('toCounters');
+		localStorage.removeItem('toOutput');
+		localStorage.removeItem('toBonusOnly');
+		localStorage.removeItem('toShowNum');
+		localStorage.removeItem('toListAll');
+		localStorage.removeItem('toListAllCoin');
 
-		localStorage.setItem('shortcutAutoEnd', getValue('shortcutAutoEnd'));
+		localStorage.removeItem('shortcutAutoEnd');
 	}
 }
