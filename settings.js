@@ -45,6 +45,19 @@ function startShortcut () {
 				starPrice = 0;
 				finalFiveEvent = '';
 				prepareTurn();
+				statusEffects = {
+					p1: [],
+					p2: [],
+					p3: [],
+					p4: []
+				};
+				allies = {
+					p1: [],
+					p2: [],
+					p3: [],
+					p4: []
+				};
+				starPrice = 0;
 				setup = true;
 			}
 			minigameSpaces = ['', '', '', '', ''];
@@ -311,6 +324,17 @@ function shortcutSettings (close) {
 	document.getElementById('shortcutSettings').style = 'pointer-events: none;'; //filter and pointer event need to be different as blur wouldn't be smooth with 'shortcutSettings' and pointer-event would remove onClick
 	document.getElementById('shortcutSettingsPopup').style.display = 'initial';
 	setTimeout(function () {document.getElementById('settingsMain').setAttribute('onclick','shortcutSettings(true)');}, 10); //required because chrome would immediately execute the function if it was changed directly
+}
+
+/*
+* 
+*/
+function resetShortcut () {
+	shortcutState = 3;
+	var turn = getInner('curTurnText');
+	counterButtons(1, 'S', parseInt(getInner('maxTurnText')), 'curTurn');
+	startShortcut();
+	counterButtons(1, 'S', turn, 'curTurn');
 }
 
 /*

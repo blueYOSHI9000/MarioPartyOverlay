@@ -182,6 +182,8 @@
 		<span class="settingsTitle"> Options </span> <br>
 		<label for="shortcutAutoEnd"> <span class="settingsText"> Automatically end turn after selecting a space </span></label> <input type="checkbox" id="shortcutAutoEnd" onchange="sendSettingsMsg(this.id, + this.checked)"> <br> <br>
 
+		<span id="resetShortcut"> <button onclick="resetShortcut()">Reset Shortcut game</button> </span> <br> <br>
+
 		<span class="settingsTitle"> Shortcut Variables </span> <br>
 		<span class="settingsText" id="shortcutCurGame">Current shortcut game: Not decided yet.</span> <br> <span class="settingsNote"> Only used inside shortcuts. Currently can't be changed mid-game. </span> <br> <br>
 		<span class="settingsText"> Final 5 Turns Event: </span>
@@ -196,7 +198,9 @@
 			<option value="undefined">Normal</option>
 			<option value="double">Doubled</option>
 		</select> <br>
-		<span class="settingsNote">Star cost automatically resets after buying a star.</span> <br> <br>
+		<span class="settingsNote">Star cost automatically resets after buying a star.</span> <br>
+
+		<span class="settingsText"> Star Price: </span> <input type="number" min="0" max="99" onchange="starPrice = this.value"> <span class="settingsNote"> Changes the default star price, 0 is default.</span> <br> <br>
 
 		<span class="settingsText">Player order:</span> <br>
 		<span id="shortcutOrder"></span> <br> <br>
