@@ -408,7 +408,6 @@ function saveSettings (close) {
 	localStorage.setItem('toOutput', getValue('toOutput'));
 	localStorage.setItem('toBonusOnly', getValue('toBonusOnly'));
 	localStorage.setItem('toShowNum', getValue('toShowNum'));
-	localStorage.setItem('toListAll', getValue('toListAll'));
 	localStorage.setItem('toListAllCoin', getValue('toListAllCoin'));
 
 	localStorage.setItem('shortcutAutoEnd', getValue('shortcutAutoEnd'));
@@ -502,7 +501,6 @@ function prepareMPO () {
 		editValue('toOutput', localStorage.getItem('toOutput'));
 		editValue('toBonusOnly', stringToBoolean(localStorage.getItem('toBonusOnly')));
 		editValue('toShowNum', stringToBoolean(localStorage.getItem('toShowNum')));
-		editValue('toListAll', stringToBoolean(localStorage.getItem('toListAll')));
 		editValue('toListAllCoin', stringToBoolean(localStorage.getItem('toListAllCoin')));
 
 		editValue('shortcutAutoEnd', localStorage.getItem('shortcutAutoEnd'));
@@ -672,7 +670,6 @@ function syncPopout () {
 		sendSettingsMsg('autoSave', getValue('autoSave'), true);
 		sendSettingsMsg('toBonusOnly', getValue('toBonusOnly'), true);
 		sendSettingsMsg('toShowNum', getValue('toShowNum'), true);
-		sendSettingsMsg('toListAll', getValue('toListAll'), true);
 		sendSettingsMsg('toListAllCoin', getValue('toListAllCoin'), true);
 		if (getValue('toP1Name') != '') {
 			sendSettingsMsg('toP1Name', getValue('toP1Name'), true);
@@ -795,7 +792,6 @@ function resetSettings (noLS) {
 	editValue('toOutput', 'Turns, ?, MG, Red, Coin Star');
 	editValue('toBonusOnly', false);
 	editValue('toShowNum', true);
-	editValue('toListAll', false);
 	editValue('toListAllCoin', false);
 	
 	editValue('shortcutAutoEnd', false);
@@ -838,7 +834,6 @@ function resetSettings (noLS) {
 		localStorage.removeItem('toOutput');
 		localStorage.removeItem('toBonusOnly');
 		localStorage.removeItem('toShowNum');
-		localStorage.removeItem('toListAll');
 		localStorage.removeItem('toListAllCoin');
 
 		localStorage.removeItem('shortcutAutoEnd');

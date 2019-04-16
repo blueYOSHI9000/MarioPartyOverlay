@@ -453,13 +453,10 @@
 
 					<label for="enableInteract"> <span class="settingsText"> Enable Drag 'n' Drop: </span> </label> <input type="checkbox" id="enableInteract" onchange="sendSettingsMsg(this.id, this.checked)"> <button onclick="changeSettings('interactSave')">Save Positions</button> <button onclick="changeSettings('interactReset')">Reset Positions</button> <br> <br>
 
-					<span class="settingsTitle"> Text Output </span>
-					<div style="border: 2px rgba(120, 120, 120, 0.4) solid; width: 405px; padding-left: 3px;">
-						<label for="toBonusOnly"> <span class="settingsText"> Only show who got the bonus star: </span> </label> <input type="checkbox" id="toBonusOnly" onchange="sendSettingsMsg(this.id, this.checked)"> <br> 
-						<label for="toShowNum"> <span class="settingsText marginLeft"> Show counter next to player: </span> </label> <input type="checkbox" id="toShowNum" onchange="sendSettingsMsg(this.id, this.checked)" checked> <br> 
-						<label for="toListAll"> <span class="settingsText marginLeft"> List all players instead of "everyone": </span> </label> <input type="checkbox" id="toListAll" onchange="sendSettingsMsg(this.id, this.checked)">
-					</div>
-					<label for="toListAllCoin"> <span class="settingsText"> List all players instead of "everyone" for the Coin Star: </span> </label> <input type="checkbox" id="toListAllCoin" onchange="sendSettingsMsg(this.id, this.checked)"> <br> <br>
+					<span class="settingsTitle"> Text Output </span> <br>
+						<label for="toBonusOnly"> <span class="settingsText"> Only show who got the bonus star: </span> </label> <input type="checkbox" id="toBonusOnly" onchange="sendSettingsMsg(this.id, this.checked)"> <br>
+						<label for="toShowNum"> <span class="settingsText" style="border-left: 2px rgba(120, 120, 120, 0.4) solid; margin-left: 48px; padding-left: 3px;"> Show counter next to player: </span> </label> <input type="checkbox" id="toShowNum" onchange="sendSettingsMsg(this.id, this.checked)" checked> <br> <br>
+					<label for="toListAllCoin"> <span class="settingsText"> List all players instead of "everyone": </span> </label> <input type="checkbox" id="toListAllCoin" onchange="sendSettingsMsg(this.id, this.checked)"> <br> <br>
 					
 					<span class="settingsText"> Player 1 name: </span> <input id="toP1Name" onchange="sendSettingsMsg(this.id, this.value)">
 					<span class="settingsText marginLeft"> Player 2 name: </span> <input id="toP2Name" onchange="sendSettingsMsg(this.id, this.value)"> <br>
@@ -468,7 +465,7 @@
 					<span class="settingsText"> Counter seperation: </span> <input id="toSeperation" value=" | " onchange="sendSettingsMsg(this.id, this.value)"> <br> <br>
 					
 					<label for="toUseActive"> <span class="settingsText"> Only use active counters: </span> <input type="checkbox" id="toUseActive" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('updateCounterInput')" checked> </label> <br>
-					<span id="customTOCounters">
+					<span id="customTOCounters" style="display: none;">
 						<span class="settingsNote" id="counterNote"> Seperate counters with ", ". </span>
 						<div id="counterDiv">
 							<span id="counterNames">

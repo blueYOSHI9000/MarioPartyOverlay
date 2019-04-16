@@ -160,7 +160,7 @@ function textOutput () {
 
 					var counterNum = Math.max(counterP1, counterP2, counterP3, counterP4);
 
-					if (counterP1 == counterP2 && counterP1 == counterP3 && counterP1 == counterP4 && getValue('toListAll') == false) {
+					if (counterP1 == counterP2 && counterP1 == counterP3 && counterP1 == counterP4 && getValue('toListAllCoin') == false) {
 						result.push('everyone');
 						resultNum.push(getInner('p1' + toCounters[num] + 'Text'));
 					} else {
