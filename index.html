@@ -63,7 +63,7 @@
 				<span class="coinStarTieDiv"> <img src="img/tie.png" id="coinStarTie5" class="coinStarTie"> <img src="img/tie.png" id="coinStarTie1" class="coinStarTie"> <img src="img/tie.png" id="coinStarTie2" class="coinStarTie"> 
 				<img src="img/tie.png" id="coinStarTie3" class="coinStarTie"> <img src="img/tie.png" id="coinStarTie4" class="coinStarTie"> </span>
 				<img src="img/coins.png" id="coinStar" onerror="this.src = 'img/coins.png'"> <img src="img/question.png" id="coinStarCharacter">
-				<span class="counterText" id="coinStarText"> 10 </span>
+				<span class="counterText" id="coinStarText">10</span>
 			</span>
 		</span> <br>
 
@@ -278,22 +278,22 @@
 			<div id="settingsHeader">
 				<span id="settingsSelectionSpan">
 					<b id="generalMPOSelector" class="settingsSelection settingsSelected" onclick="showHideSettings('generalMPO')">General</b> <span class="flexAuto"></span>
-					<b id="slotsSelector" class="settingsSelection nowrap" onclick="showHideSettings('slots')">Savefiles</b> <span class="flexAuto"></span>
-					<b id="shortcutSelector" class="settingsSelection nowrap" onclick="showHideSettings('shortcut')">Shortcuts</b> <span class="flexAuto"></span>
 					<b id="playerSelector" class="settingsSelection" onclick="showHideSettings('player')">Characters</b> <span class="flexAuto"></span>
 					<b id="counterSelector" class="settingsSelection" onclick="showHideSettings('counter')">Counters</b> <span class="flexAuto"></span>
+					<b id="slotsSelector" class="settingsSelection nowrap" onclick="showHideSettings('slots')">Savefiles</b> <span class="flexAuto"></span>
+					<b id="shortcutSelector" class="settingsSelection nowrap" onclick="showHideSettings('shortcut')">Shortcuts</b> <span class="flexAuto"></span>
 					<b id="tutorialSelector" class="settingsSelection" style="margin: 0px;" onclick="showHideSettings('tutorial')">Credits</b>
 				</span>
 
 				<span id="settingsSelectionSpanBreak">
 					<span style="display: flex;">
 						<b id="generalMPOSelectorBreak" class="settingsSelection settingsSelected" onclick="showHideSettings('generalMPO')">General</b> <span class="flexAuto"></span>
-						<b id="slotsSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('slots')">Savefiles</b> <span class="flexAuto"></span>
-						<b id="shortcutSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('shortcut')">Shortcuts</b>
+						<b id="playerSelectorBreak" class="settingsSelection" onclick="showHideSettings('player')">Characters</b> <span class="flexAuto"></span>
+						<b id="counterSelectorBreak" class="settingsSelection" onclick="showHideSettings('counter')">Counters</b>
 					</span>
 					<span style="display: flex;">
-						<b id="playerSelectorBreak" class="settingsSelection" onclick="showHideSettings('player')">Characters</b> <span class="flexAuto"></span>
-						<b id="counterSelectorBreak" class="settingsSelection" onclick="showHideSettings('counter')">Counters</b> <span class="flexAuto"></span>
+						<b id="slotsSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('slots')">Savefiles</b> <span class="flexAuto"></span>
+						<b id="shortcutSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('shortcut')">Shortcuts</b> <span class="flexAuto"></span>
 						<b id="tutorialSelectorBreak" class="settingsSelection" style="margin: 0px;" onclick="showHideSettings('tutorial')">Credits</b>
 					</span>
 				</span>
@@ -417,12 +417,14 @@
 					<span id="siteError" class="error"> MPO could not be loaded properly, try reloading or clearing local storage. <br> This might also appear if cookies are blocked. <br> <br> </span>
 
 					<span class="settingsTitle"> Features </span> <br>
+					<label for="autoPopout"> <span class="settingsText"> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="sendSettingsMsg(this.id, this.checked)"> </label> <br> <br>
 					<label for="enableHighlight"> <span class="settingsText"> Enable counter highlighting: </span> </label> <input type="checkbox" id="enableHighlight" onchange="sendSettingsMsg(this.id, + this.checked);changeSettings('resetHighlights')" checked> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('callHighlight', [false, true])" value="#FF0000" id="highlightColor"> <br> <br>
 
 					<label for="noTie"> <span class="settingsText"> Don't use ties for Coin Star: </span> </label> <input type="checkbox" id="noTie" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('coinStarTie')"> <br>
-					<label for="autoSave"> <span class="settingsText"> Automatically save/reload when updating turns: </span> </label> <input type="checkbox" id="autoSave" onchange="sendSettingsMsg(this.id, this.checked);if (this.checked == true) {changeSettings('backup')}"> <br>
-					<span style="display: none;"> <label for="permSave"> <span class="settingsText"> Save counters permanently (not getting deleted on site reload): </span> </label> <input type="checkbox" id="permSave" onchange="sendSettingsMsg(this.id, this.checked)" checked> <br> </span> <br>
+					<label for="autoSave"> <span class="settingsText"> Automatically save/reload when updating turns: </span> </label> <input type="checkbox" id="autoSave" onchange="sendSettingsMsg(this.id, this.checked);if (this.checked == true) {changeSettings('backup')}"> <br> <br>
+					<label for="enableInteract"> <span class="settingsText"> Enable Drag 'n' Drop: </span> </label> <input type="checkbox" id="enableInteract" onchange="sendSettingsMsg(this.id, this.checked)"> <button onclick="changeSettings('interactSave')">Save Positions</button> <button onclick="changeSettings('interactReset')">Reset Positions</button> <br>
 
+					<span style="display: none;"> <label for="permSave"> <span class="settingsText"> Save counters permanently (not getting deleted on site reload): </span> </label> <input type="checkbox" id="permSave" onchange="sendSettingsMsg(this.id, this.checked)" checked> <br> </span> <br>
 
 					<span class="settingsTitle"> Interface </span> <br>
 					<span class="settingsText"> Background: </span> <button id="themeB1" class="themeButtons" onclick="changeSettings('changeTheme', [1])" style="border-color: green;" disabled></button> <button id="themeB2" class="themeButtons" onclick="changeSettings('changeTheme', [2])"></button> <button id="themeB3" class="themeButtons" onclick="changeSettings('changeTheme', [3])"></button> <button id="themeB4" class="themeButtons" onclick="changeSettings('changeTheme', [4])"></button> <br>
@@ -440,24 +442,19 @@
 
 					<label for="customGameIcons"> <span class="settingsText"> Use game-based icons if available: </span> </label> <input type="checkbox" id="customGameIcons" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('changeCharacters');changeSettings('changeCounterIcons')" checked> <br> <br>
 
-					<span class="settingsText"> Settings style: <input type="radio" id="settingsLight" name="settingsMode" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('settingsMode')" checked><label for="settingsLight" style="margin-right: 10px;">Light </label> <input type="radio" name="settingsMode" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('settingsMode')" id="settingsDark"><label for="settingsDark">Dark </label> </span> <br> <br>
+					<span class="settingsText"> Settings theme: <input type="radio" id="settingsLight" name="settingsMode" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('settingsMode')" checked><label for="settingsLight" style="margin-right: 10px;">Light </label> <input type="radio" name="settingsMode" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('settingsMode')" id="settingsDark"><label for="settingsDark">Dark </label> </span> <br> <br>
 
 					<label for="greenscreen"> <span class="settingsText"> Enable greenscreen: </span> </label> <input type="checkbox" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('changeTheme')" id="greenscreen"> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('changeBGColor', ['bgColor'])" value="#0000ff" id="bgColor"><br>
 					<span class="settingsText"> Change text color: </span> <input type="color" id="textColor" value="#ffffff" onchange="sendSettingsMsg(this.id, this.value);changeSettings('changeTextColor', [this.id])"> <br> <br>
 
 					<label for="enableAnimation"> <span class="settingsText"> Enable counter animation: </span> </label> <input type="checkbox" id="enableAnimation" onchange="sendSettingsMsg(this.id, this.checked)" checked> <br> <br>
 
-
-					<span class="settingsTitle"> Misc </span> <br>
-					<label for="autoPopout"> <span class="settingsText"> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="sendSettingsMsg(this.id, this.checked)"> </label> <br> <br>
-
-					<label for="enableInteract"> <span class="settingsText"> Enable Drag 'n' Drop: </span> </label> <input type="checkbox" id="enableInteract" onchange="sendSettingsMsg(this.id, this.checked)"> <button onclick="changeSettings('interactSave')">Save Positions</button> <button onclick="changeSettings('interactReset')">Reset Positions</button> <br> <br>
-
 					<span class="settingsTitle"> Text Output </span> <br>
 						<label for="toBonusOnly"> <span class="settingsText"> Only show who got the bonus star: </span> </label> <input type="checkbox" id="toBonusOnly" onchange="sendSettingsMsg(this.id, this.checked)"> <br>
 						<label for="toShowNum"> <span class="settingsText" style="border-left: 2px rgba(120, 120, 120, 0.4) solid; margin-left: 48px; padding-left: 3px;"> Show counter next to player: </span> </label> <input type="checkbox" id="toShowNum" onchange="sendSettingsMsg(this.id, this.checked)" checked> <br> <br>
-					<label for="toListAllCoin"> <span class="settingsText"> List all players instead of "everyone": </span> </label> <input type="checkbox" id="toListAllCoin" onchange="sendSettingsMsg(this.id, this.checked)"> <br> <br>
+					<label for="toListAllCoin"> <span class="settingsText"> List all players instead of "everyone" for ties: </span> </label> <input type="checkbox" id="toListAllCoin" onchange="sendSettingsMsg(this.id, this.checked)"> <br> <br>
 					
+					<span class="settingsNote"> The characters name will be used if no player name is entered. </span> <br>
 					<span class="settingsText"> Player 1 name: </span> <input id="toP1Name" onchange="sendSettingsMsg(this.id, this.value)">
 					<span class="settingsText marginLeft"> Player 2 name: </span> <input id="toP2Name" onchange="sendSettingsMsg(this.id, this.value)"> <br>
 					<span class="settingsText"> Player 3 name: </span> <input id="toP3Name" onchange="sendSettingsMsg(this.id, this.value)">
@@ -1153,18 +1150,17 @@
 
 					Note: All settings are applied immediately, the save button will only save it permanently as otherwise they get reset when you refresh the site.</span>
 
-					<br> <br> <div style="border-bottom: rgba(0, 0, 0, 0.4) 2px solid;"></div> <br>
+					<br> <br> <div id="creditsBorder"></div> <br>
 					<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki" class="settingsLink" rel="noopener" target="_blank">More in-depth Tutorial</a> </span> <br class="lineHeight">
 
 					<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new/choose" class="settingsLink" rel="noopener" target="_blank">Got an issue or want to request a feature?</a> </span> <span class="settingsNote"> (You can also @ me on Twitter if you don't have a Github account)</span> <br> <br>
 
+					<b class="settingsText">All characters, products and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them. <br> Mario Party is a registered trademark of Nintendo. </b> <br> <br>
+
 					<span class="settingsText" style="line-height: 27px;"> Created by <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI9000</a> <br>
-					Default icons created by <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI9000</a> using official artwork and inspired by <a href="https://mariopartylegacy.com/" class="settingsLink" rel="noopener" target="_blank">Mario Party Legacy</a> <br>
-					Mario Kart 8 character icons ripped by <a href="https://twitter.com/RandomTBush" class="settingsLink" rel="noopener" target="_blank">Random Talking Bush</a> and edited by <a href="https://twitter.com/Der_RicoDexter" class="settingsLink" rel="noopener" target="_blank"> RicoDexter</a> & <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI9000</a> <br>
-					Super Mario Party character icons ripped by <a href="https://www.spriters-resource.com/submitter/xX-CamTro-Xx/" class="settingsLink" rel="noopener" target="_blank">CamTro</a> <br>
-					Mario Party 9 character icons ripped by <a href="https://www.spriters-resource.com/submitter/larsenv/" class="settingsLink" rel="noopener" target="_blank">larsenv</a> <br>
-					Mario Party DS icons ripped by <a href="https://www.spriters-resource.com/submitter/FieryExplosion/" class="settingsLink" rel="noopener" target="_blank">FieryExplosion</a> & <a href="https://www.spriters-resource.com/submitter/Anonymous/" class="settingsLink" rel="noopener" target="_blank">Anonymous</a> & <a href="https://www.mariowiki.com/User:Arend" class="settingsLink" rel="noopener" target="_blank">Arend</a> <br>
-					<a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="settingsLink" rel="noopener" target="_blank">Counter Font</a> <br>
+					All icons were created or inspired from officially published media by Nintendo. <br>
+					Icons (re)created or ripped by <a href="https://www.spriters-resource.com/submitter/Anonymous/" class="settingsLink" rel="noopener" target="_blank">Anonymous</a>, <a href="https://www.mariowiki.com/User:Arend" class="settingsLink" rel="noopener" target="_blank">Arend</a>, <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI9000</a>, <a href="https://www.spriters-resource.com/submitter/xX-CamTro-Xx/" class="settingsLink" rel="noopener" target="_blank">CamTro</a>, <a href="https://www.spriters-resource.com/submitter/FieryExplosion/" class="settingsLink" rel="noopener" target="_blank">FieryExplosion</a>, <a href="https://www.spriters-resource.com/submitter/larsenv/" class="settingsLink" rel="noopener" target="_blank">larsenv</a>, <a href="https://mariopartylegacy.com/" class="settingsLink" rel="noopener" target="_blank">Mario Party Legacy</a>,  <a href="https://www.spriters-resource.com/submitter/Random+Talking+Bush/" class="settingsLink" rel="noopener" target="_blank">Random Talking Bush</a>. <br>
+					<a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="settingsLink" rel="noopener" target="_blank">Mario Font</a> <br>
 					<a href="https://interactjs.io/" class="settingsLink" rel="noopener" target="_blank"> Interact.js</a> (enables drag 'n' drop) </span>
 				</div>
 			</div>

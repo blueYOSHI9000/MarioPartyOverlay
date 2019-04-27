@@ -33,13 +33,16 @@
 	background-color: #4f4f4f;
 	border-color: #dadada;
 }
+.playerText {
+	color: #d6d6d6;
+}
 .slotDiv {
 	border-color: #dadada;
 }
 
 
 #settingsContent {
-	background: no-repeat url(img/settingsbg-dark.png), linear-gradient(#4d4d4d, #333333);
+	background: no-repeat url(img/settingsbg-dark.png), linear-gradient(#454545, #333333);
 }
 #settingsHeaderBorder {
 	border-bottom: #b0b0b0 3px solid;
@@ -52,6 +55,9 @@
 }
 #gameSelectorDiv {
 	color: #d6d6d6;
+}
+#creditsBorder {
+	border-bottom: rgba(255, 255, 255, 0.4) 2px solid;
 }
 
 

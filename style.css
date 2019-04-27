@@ -210,7 +210,7 @@ body {
 	text-shadow: 3px 3px 4px #202020;
 	letter-spacing: -.5px;
 	cursor: pointer;
-	margin-left: 220px;
+	margin-left: 260px;
 }
 #settingsButton:hover {
 	color: #b50000;
@@ -371,7 +371,7 @@ body {
 #settingsContent {
 	width: 962px;
 	height: 800px;
-	background: no-repeat url(img/settingsbg-light.png), linear-gradient(#F6F6F6, #E7E7E7);
+	background: no-repeat url(img/settingsbg-light.png), linear-gradient(#F6F6F6, #d6d6d6);
 	display: flex;
 	flex-direction: column;
 	white-space: nowrap;
@@ -381,6 +381,9 @@ body {
 }
 #toSeperation {
 	width: 35px;
+}
+#creditsBorder {
+	border-bottom: rgba(0, 0, 0, 0.4) 2px solid;
 }
 
 @media screen and (max-width: 1040px), screen and (max-height: 860px) { /* Will be used when screen is small enough - reminder to change it in popout too */
@@ -691,7 +694,7 @@ body {
 	overflow-y: scroll;
 	display: inline-block;
 	position: relative;
-	border: 2px solid #252525;
+	border: 2px solid #404040;
 	background-color: #e5e5e5;
 	padding-left: 12px;
 	padding-top: 6px;
@@ -1032,7 +1035,7 @@ button {
 #mobileTypeSpan {
 	border-radius: 12px;
 	margin-top: 10px;
-	margin-left: 120px;
+	margin-left: 190px;
 	padding-left: 3px;
 	width: 325px;
 	font-size: 10px;
