@@ -414,7 +414,7 @@ function saveSettings (close) {
 	localStorage.setItem('curTheme', curTheme);
 	localStorage.setItem('iconStyle', document.querySelector('input[name="icons"]:checked').id);
 	localStorage.setItem('customGameIcons', getValue('customGameIcons'));
-	localStorage.setItem('settingsMode', document.querySelector('input[name="settingsMode"]:checked').id);
+	localStorage.setItem('darkTheme', darkTheme);
 	localStorage.setItem('greenscreen', getValue('greenscreen'));
 	localStorage.setItem('bgColor', getValue('bgColor'));
 	localStorage.setItem('textColor', getValue('textColor'));
@@ -503,12 +503,9 @@ function prepareMPO () {
 		editValue('textColor', localStorage.getItem('textColor'));
 		changeTextColor('textColor');
 
-		if (localStorage.getItem('settingsMode') == 'settingsDark') {
-			editValue('settingsDark', true);
-		} else {
-			editValue('settingsLight', true);
+		if (localStorage.getItem('darkTheme') === 'true') {
+			settingsTheme();
 		}
-		settingsMode();
 
 		editValue('enableHighlight', stringToBoolean(localStorage.getItem('counterHighlight')));
 		editValue('highlightColor', localStorage.getItem('highlightColor'));
@@ -537,7 +534,7 @@ function prepareMPO () {
 	} else {
 		resetSettings(true);
 	}
-	if (localStorage.getItem('lsVer') === '1') {
+	if (localStorage.getItem('lsVer') != '3') {
 		legacyPrepare();
 	} else {
 		if (localStorage.getItem('c0') != null) {
@@ -572,7 +569,7 @@ function prepareMPO () {
 
 	coinStarTie();
 	callDisplayOnOff();
-	localStorage.setItem('lsVer', 2); //localStorage version, used to check how everything is stored
+	localStorage.setItem('lsVer', 3); //localStorage version, used to check how everything is stored
 
 	prepared = true;
 }
@@ -581,74 +578,85 @@ function prepareMPO () {
 * Used to load localStorage if it's not up to date and updates it.
 */
 function legacyPrepare () {
-	if (localStorage.getItem('slots') != null && localStorage.getItem('lsVer') === '1') {
-		slots = JSON.parse(localStorage.getItem('slots'));
-		slots.c0 = {
-			allyOnOff: slots.s0.allyOnOff,
-			balloonOnOff: slots.s0.balloonOnOff,
-			bananasOnOff: slots.s0.bananasOnOff,
-			char1: slots.s0.char1,
-			char2: slots.s0.char2,
-			char3: slots.s0.char3,
-			char4: slots.s0.char4,
-			coinStarOnOff: slots.s0.coinStarOnOff,
-			coinsOnOff: slots.s0.coinsOnOff,
-			com1: slots.s0.com1,
-			com2: slots.s0.com2,
-			com3: slots.s0.com3,
-			com4: slots.s0.com4,
-			curGame: slots.s0.curGame,
-			doormatOnOff: slots.s0.doormatOnOff,
-			friendSpaceOnOff: slots.s0.friendSpaceOnOff,
-			happeningOnOff: slots.s0.happeningOnOff,
-			hexOnOff: slots.s0.hexOnOff,
-			inclBonusOnOff: slots.s0.inclBonusOnOff,
-			itemOnOff: slots.s0.itemOnOff,
-			miniStarsOnOff: slots.s0.miniStarsOnOff,
-			minigameOnOff: slots.s0.minigameOnOff,
-			minusOnOff: slots.s0.minusOnOff,
-			redSpaceOnOff: slots.s0.redSpaceOnOff,
-			runningOnOff: slots.s0.runningOnOff,
-			shoppingOnOff: slots.s0.shoppingOnOff,
-			slowOnOff: slots.s0.slowOnOff,
-			specialDiceOnOff: slots.s0.specialDiceOnOff,
-			spinSpaceOnOff: slots.s0.spinSpaceOnOff,
-			starsOnOff: slots.s0.starsOnOff,
-			stompyOnOff: slots.s0.stompyOnOff
-		}
-		delete slots.s0.allyOnOff
-		delete slots.s0.balloonOnOff
-		delete slots.s0.bananasOnOff
-		delete slots.s0.char1
-		delete slots.s0.char2
-		delete slots.s0.char3
-		delete slots.s0.char4
-		delete slots.s0.coinStarOnOff
-		delete slots.s0.coinsOnOff
-		delete slots.s0.com1
-		delete slots.s0.com2
-		delete slots.s0.com3
-		delete slots.s0.com4
-		delete slots.s0.curGame
-		delete slots.s0.doormatOnOff
-		delete slots.s0.friendSpaceOnOff
-		delete slots.s0.happeningOnOff
-		delete slots.s0.hexOnOff
-		delete slots.s0.inclBonusOnOff
-		delete slots.s0.itemOnOff
-		delete slots.s0.miniStarsOnOff
-		delete slots.s0.minigameOnOff
-		delete slots.s0.minusOnOff
-		delete slots.s0.redSpaceOnOff
-		delete slots.s0.runningOnOff
-		delete slots.s0.shoppingOnOff
-		delete slots.s0.slowOnOff
-		delete slots.s0.specialDiceOnOff
-		delete slots.s0.spinSpaceOnOff
-		delete slots.s0.starsOnOff
-		delete slots.s0.stompyOnOff
-		loadSlot(slots.sel);
+	switch (localStorage.getItem('lsVer')) {
+		case '1':
+			if (localStorage.getItem('slots') != null) {
+				slots = JSON.parse(localStorage.getItem('slots'));
+				slots.c0 = {
+					allyOnOff: slots.s0.allyOnOff,
+					balloonOnOff: slots.s0.balloonOnOff,
+					bananasOnOff: slots.s0.bananasOnOff,
+					char1: slots.s0.char1,
+					char2: slots.s0.char2,
+					char3: slots.s0.char3,
+					char4: slots.s0.char4,
+					coinStarOnOff: slots.s0.coinStarOnOff,
+					coinsOnOff: slots.s0.coinsOnOff,
+					com1: slots.s0.com1,
+					com2: slots.s0.com2,
+					com3: slots.s0.com3,
+					com4: slots.s0.com4,
+					curGame: slots.s0.curGame,
+					doormatOnOff: slots.s0.doormatOnOff,
+					friendSpaceOnOff: slots.s0.friendSpaceOnOff,
+					happeningOnOff: slots.s0.happeningOnOff,
+					hexOnOff: slots.s0.hexOnOff,
+					inclBonusOnOff: slots.s0.inclBonusOnOff,
+					itemOnOff: slots.s0.itemOnOff,
+					miniStarsOnOff: slots.s0.miniStarsOnOff,
+					minigameOnOff: slots.s0.minigameOnOff,
+					minusOnOff: slots.s0.minusOnOff,
+					redSpaceOnOff: slots.s0.redSpaceOnOff,
+					runningOnOff: slots.s0.runningOnOff,
+					shoppingOnOff: slots.s0.shoppingOnOff,
+					slowOnOff: slots.s0.slowOnOff,
+					specialDiceOnOff: slots.s0.specialDiceOnOff,
+					spinSpaceOnOff: slots.s0.spinSpaceOnOff,
+					starsOnOff: slots.s0.starsOnOff,
+					stompyOnOff: slots.s0.stompyOnOff
+				}
+				delete slots.s0.allyOnOff
+				delete slots.s0.balloonOnOff
+				delete slots.s0.bananasOnOff
+				delete slots.s0.char1
+				delete slots.s0.char2
+				delete slots.s0.char3
+				delete slots.s0.char4
+				delete slots.s0.coinStarOnOff
+				delete slots.s0.coinsOnOff
+				delete slots.s0.com1
+				delete slots.s0.com2
+				delete slots.s0.com3
+				delete slots.s0.com4
+				delete slots.s0.curGame
+				delete slots.s0.doormatOnOff
+				delete slots.s0.friendSpaceOnOff
+				delete slots.s0.happeningOnOff
+				delete slots.s0.hexOnOff
+				delete slots.s0.inclBonusOnOff
+				delete slots.s0.itemOnOff
+				delete slots.s0.miniStarsOnOff
+				delete slots.s0.minigameOnOff
+				delete slots.s0.minusOnOff
+				delete slots.s0.redSpaceOnOff
+				delete slots.s0.runningOnOff
+				delete slots.s0.shoppingOnOff
+				delete slots.s0.slowOnOff
+				delete slots.s0.specialDiceOnOff
+				delete slots.s0.spinSpaceOnOff
+				delete slots.s0.starsOnOff
+				delete slots.s0.stompyOnOff
+				loadSlot(slots.sel);
+			}
+			break;
+		case '2':
+			if (localStorage.getItem('settingsMode') == 'settingsDark') {
+				darkTheme = true;
+				settingsTheme();
+			}
+			localStorage.removeItem('settingsMode');
 	}
+	
 	saveSettings();
 	savePlayers();
 	//saveShortcut();
@@ -748,7 +756,9 @@ function syncPopout () {
 		sendMessage('changeCom+' + 3);
 		sendMessage('changeCom+' + 4);
 		sendMessage('updateCounterInput');
-		sendMessage('settingsMode');
+		if (darkTheme === true) {
+			sendMessage('settingsTheme');
+		}
 
 		sendMessage('showHideSettings+' + openedSettings);
 
@@ -795,7 +805,6 @@ function resetSettings (noLS) {
 	editValue('enableInteract', false);
 	editValue('autoPopout', false);
 	editValue('mpsrIcons', true);
-	editValue('settingsLight', true);
 	editValue('customGameIcons', true);
 	editValue('greenscreen', false);
 	editValue('bgColor', '#0000FF');
@@ -808,6 +817,9 @@ function resetSettings (noLS) {
 	editValue('deactivateUnused', true);
 	if (prepared != true) {} else {
 		editValue('permSave', true);
+	}
+	if (darkTheme === true) {
+		settingsTheme();
 	}
 
 	editValue('toP1Name', '');
@@ -825,7 +837,9 @@ function resetSettings (noLS) {
 	editValue('shortcutAutoEnd', false);
 
 	editValue('greenscreen', false);
-	settingsMode();
+	if (darkTheme === true) {
+		settingsTheme();
+	}
 	changeTheme(1);
 	changeCharacters()
 	changeTextColor('textColor');
@@ -842,7 +856,7 @@ function resetSettings (noLS) {
 		localStorage.removeItem('curTheme');
 		localStorage.removeItem('iconStyle');
 		localStorage.removeItem('customGameIcons');
-		localStorage.removeItem('settingsMode');
+		localStorage.removeItem('darkTheme');
 		localStorage.removeItem('greenscreen');
 		localStorage.removeItem('bgColor');
 		localStorage.removeItem('textColor');

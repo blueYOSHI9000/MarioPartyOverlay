@@ -445,8 +445,6 @@
 
 					<label for="customGameIcons"> <span class="settingsText"> Use game-based icons if available: </span> </label> <input type="checkbox" id="customGameIcons" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('changeCharacters');changeSettings('changeCounterIcons')" checked> <br> <br>
 
-					<span class="settingsText"> Settings theme: <input type="radio" id="settingsLight" name="settingsMode" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('settingsMode')" checked><label for="settingsLight" style="margin-right: 10px;">Light </label> <input type="radio" name="settingsMode" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('settingsMode')" id="settingsDark"><label for="settingsDark">Dark </label> </span> <br> <br>
-
 					<label for="greenscreen"> <span class="settingsText"> Enable greenscreen: </span> </label> <input type="checkbox" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('changeTheme')" id="greenscreen"> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('changeBGColor', ['bgColor'])" value="#0000ff" id="bgColor"><br>
 					<span class="settingsText"> Change text color: </span> <input type="color" id="textColor" value="#ffffff" onchange="sendSettingsMsg(this.id, this.value);changeSettings('changeTextColor', [this.id])"> <br> <br>
 
@@ -1172,6 +1170,7 @@
 			<div id="settingsFooter">
 				<div id="settingsFooterBorder"></div>
 					<button id="popoutButton" onclick="mpoSettingsPopout()" style="flex: auto;"> Popout Settings </button>
+					<button id="lightDarkButton" onclick="changeSettings('settingsTheme')">Dark mode</button>
 				<span id="settingsClose">
 					<button onclick="saveSettings(true); savePlayers()" id="saveButton"> Save </button>
 					<button onclick="if (popout == true) {window.close()} else {showHideDiv(['settings']); if (shortcutLoaded == true) {getAlly('close');shortcutSettings(true);}}" id="settingsCloseButton"> Close </button>

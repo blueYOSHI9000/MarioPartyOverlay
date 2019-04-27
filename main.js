@@ -690,13 +690,22 @@ function resetTextColor () {
 	changeTextColor('textColor');
 }
 
+var darkTheme = false;
 /*
 * Switches from light to dark mode and back by un- & loading darkstyle.css.
 */
-function settingsMode () {
+function settingsTheme () {
+	if (darkTheme === true) {
+		darkTheme = false;
+		editInner('lightDarkButton', 'Dark mode');
+	} else {
+		darkTheme = true;
+		editInner('lightDarkButton', 'Light mode');
+	}
+
 	var filetype = 'css';
 	var filename = 'darkstyle.css';
-	if (getValue('settingsDark') === true) {
+	if (darkTheme === true) {
 		var headID = document.getElementsByTagName("head")[0];
 		var cssNode = document.createElement('link');
 		cssNode.type = 'text/css';
