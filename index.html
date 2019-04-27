@@ -27,8 +27,11 @@
 			<button onclick="textOutput(true)">Generate & Copy</button> <input id="textOutput" onClick="this.select()" value="No stats generated yet." readonly>
 		</span>
 		<span id="saveReloadSpanContainer" class="grayBG">
-			<span id="saveReloadSpan"> <button onclick="backup()"> Save </button> <button onclick="restore()" id="reloadButton" disabled> Reload </button> <button style="margin-left: 20px;" onclick="this.parentNode.style.display = 'none'; document.getElementById('resetSpan').style.display = 'unset';"> Reset</button> </span>
-			<span id="resetSpan" style="display: none;"> <button onclick="this.parentNode.style.display = 'none'; document.getElementById('saveReloadSpan').style.display = 'unset'; resetBackup();"> Reset! </button> <button onclick="this.parentNode.style.display = 'none'; document.getElementById('saveReloadSpan').style.display = 'unset';" style="float: right; margin-right: 4px;"> Cancel </button> </span> <br>
+			<span class="relative"> <span id="saveReloadText"> Saved! </span> </span>
+			<span id="saveReloadButtons">
+				<span id="saveReloadSpan"> <button onclick="backup()"> Save </button> <button onclick="restore()" id="reloadButton" disabled> Reload </button> <button style="margin-left: 20px;" onclick="this.parentNode.style.display = 'none'; document.getElementById('resetSpan').style.display = 'unset';"> Reset</button> </span>
+				<span id="resetSpan" style="display: none;"> <button onclick="this.parentNode.style.display = 'none'; document.getElementById('saveReloadSpan').style.display = 'unset'; resetBackup();"> Reset! </button> <button onclick="this.parentNode.style.display = 'none'; document.getElementById('saveReloadSpan').style.display = 'unset';" style="float: right; margin-right: 4px;"> Cancel </button> </span> <br>
+			</span>
 		</span>
 
 		<div id="mobileTypeSpan" class="grayBG">
@@ -273,7 +276,7 @@
 	</div>
 
 	<!-- Settings -->
-	<div class="hidden" id="settings">
+	<div class="hidden" id="settings" style="z-index: 99;">
 		<div class="popupContent settingsPopup" id="settingsContent">
 			<div id="settingsHeader">
 				<span id="settingsSelectionSpan">

@@ -103,6 +103,9 @@ function resetBackup () {
 	turns('curTurn', 1, 'S');
 	coinStarTie();
 	callHighlight(false, true);
+
+	editInner('saveReloadText', 'Reset!');
+	saveReloadAnimation('#ff1f1f');
 }
 
 /*
@@ -129,6 +132,10 @@ function backup () {
 			slots[sel][counters[num3]][num2] = getInner('p' + num + countersUp[num3] + 'Text');
 		}
 	}
+
+	editInner('saveReloadText', 'Saved!');
+	saveReloadAnimation();
+
 	localStorage.setItem(sel, JSON.stringify(slots[sel]));
 }
 
@@ -140,11 +147,11 @@ function backup () {
 function restore (forceRestore) {
 	var sel = 's' + slots.sel;
 	if (backuped == true || forceRestore == true) {
-		editInner('coinStarText', slots[sel][coinStar]);
-		editValue('p1CoinStarTie', slots[sel][coinStarTie1]);
-		editValue('p2CoinStarTie', slots[sel][coinStarTie2]);
-		editValue('p3CoinStarTie', slots[sel][coinStarTie3]);
-		editValue('p4CoinStarTie', slots[sel][coinStarTie4]);
+		editInner('coinStarText', slots[sel].coinStar);
+		editValue('p1CoinStarTie', slots[sel].coinStarTie1);
+		editValue('p2CoinStarTie', slots[sel].coinStarTie2);
+		editValue('p3CoinStarTie', slots[sel].coinStarTie3);
+		editValue('p4CoinStarTie', slots[sel].coinStarTie4);
 
 		var num = 0;
 		for (let num2 = 0; num2 < 4; num2++) {
@@ -154,11 +161,32 @@ function restore (forceRestore) {
 			}
 		}
 
-		turns('curTurn', slots[sel][curTurn], 'S');
-		turns('maxTurn', slots[sel][maxTurn], 'S');
+		turns('curTurn', slots[sel].curTurn, 'S');
+		turns('maxTurn', slots[sel].maxTurn, 'S');
 		coinStarTie();
 		callHighlight();
+
+		editInner('saveReloadText', 'Reloaded!');
+		saveReloadAnimation('#e8cb00');
 	}
+}
+
+/*
+* Creates an animation on top of the Save & Reload buttons to display that the action has been done.
+* 
+* @param {string} color What color the text should be, defaults to green.
+*/
+function saveReloadAnimation (color) {
+	if (!color) {
+		color = '#00be00';
+	}
+	document.getElementById('saveReloadText').style.color = color;
+	document.getElementById('saveReloadText').classList.add('saveReloadSaved');
+	document.getElementById('saveReloadButtons').classList.add('saveReloadInactive');
+	setTimeout(function(){
+		document.getElementById('saveReloadText').classList.remove('saveReloadSaved');
+		document.getElementById('saveReloadButtons').classList.remove('saveReloadInactive');
+	}, 1300);
 }
 
 /*
