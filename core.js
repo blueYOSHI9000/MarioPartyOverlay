@@ -305,6 +305,12 @@ function turns (counter, amount, action) {
 	//console.log('Current:' + curTurnVar + ' Max:' + maxTurnVar)
 	editInner('curTurnText', curTurnVar);
 	editInner('maxTurnText', maxTurnVar);
+
+
+	document.getElementById(counter + 'Text').classList.add('counterAnimation');
+	setTimeout(function () {
+		document.getElementById(counter + 'Text').classList.remove('counterAnimation');
+	}, 190);
 }
 
 /*
@@ -376,7 +382,7 @@ function coinStarTie (player) {
 	document.getElementById('coinStarTie4').style.left = '';
 
 	document.getElementById('coinStarDiv').style.marginLeft = '5px';
-	document.getElementById('coinStarText').style.left = '5px';
+	document.getElementById('coinStarText').style.left = '10px';
 
 	var player1 = getValue('p1CoinStarTie');
 	var player2 = getValue('p2CoinStarTie');
@@ -411,7 +417,7 @@ function coinStarTie (player) {
 		document.getElementById('coinStarCharacter').src = 'img/' + icons + '/' + tied[0] + '.png';
 
 		if (icons == 'mpsrIcons') {
-			document.getElementById('coinStarText').style.left = '5px';
+			document.getElementById('coinStarText').style.left = '10px';
 		}
 	} else if (tied.length == 2) {
 		document.getElementById('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png';
@@ -426,7 +432,7 @@ function coinStarTie (player) {
 		document.getElementById('coinStarTie4').style.left = '-69px';
 
 		if (icons == 'mpsrIcons') {
-			document.getElementById('coinStarText').style.left = '5px';
+			document.getElementById('coinStarText').style.left = '10px';
 		}
 	} else if (tied.length == 3) {
 		document.getElementById('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png';

@@ -57,15 +57,15 @@
 	</div>
 
 		<!-- Turns -->
-		<span class="turns"> <b id="turnText" onclick="mobileButtons('curTurn')"> Turn </b> <b id="curTurnText" onclick="mobileButtons('curTurn')">1</b><b style="margin-left: 60px; font-size: 30px;" onclick="mobileButtons('curTurn')">/</b><b id="maxTurnText" onclick="mobileButtons('maxTurn')">20</b> </span>
+		<span class="turns"> <b id="turnText" onclick="mobileButtons('curTurn')"> Turn </b> <span style="position: absolute;"> <b id="curTurnText" onclick="mobileButtons('curTurn')">1</b></span><b style="margin-left: 60px; font-size: 30px;" onclick="mobileButtons('curTurn')">/</b><span style="position: absolute;"><b id="maxTurnText" style="position: absolute;" onclick="mobileButtons('maxTurn')">20</b></span> </span>
 
 		<!-- Most Coins -->
-		<span class="nowrap" style="margin-left: 100px; cursor: pointer;" id="coinStarFullDiv">
-			<img src="img/tie.png" onclick="mobileButtons('coinStar')" id="coinStarHitbox">
+		<span class="nowrap" style="margin-left: 150px; cursor: pointer;" id="coinStarFullDiv">
+			<span class="relative"> <img src="img/tie.png" onclick="mobileButtons('coinStar')" id="coinStarHitbox"> </span>
 			<span id="coinStarDiv">
 				<span class="coinStarTieDiv"> <img src="img/tie.png" id="coinStarTie5" class="coinStarTie"> <img src="img/tie.png" id="coinStarTie1" class="coinStarTie"> <img src="img/tie.png" id="coinStarTie2" class="coinStarTie"> 
 				<img src="img/tie.png" id="coinStarTie3" class="coinStarTie"> <img src="img/tie.png" id="coinStarTie4" class="coinStarTie"> </span>
-				<img src="img/coins.png" id="coinStar" onerror="this.src = 'img/coins.png'"> <img src="img/question.png" id="coinStarCharacter">
+				<img src="img/coins.png" id="coinStar" onerror="this.src = 'img/coins.png'"> <span class="relative"> <img src="img/question.png" id="coinStarCharacter"> </span>
 				<span class="counterText" id="coinStarText">10</span>
 			</span>
 		</span> <br>
