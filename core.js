@@ -306,7 +306,6 @@ function turns (counter, amount, action) {
 	editInner('curTurnText', curTurnVar);
 	editInner('maxTurnText', maxTurnVar);
 
-
 	document.getElementById(counter + 'Text').classList.add('counterAnimation');
 	setTimeout(function () {
 		document.getElementById(counter + 'Text').classList.remove('counterAnimation');
