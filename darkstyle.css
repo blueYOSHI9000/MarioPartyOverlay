@@ -39,6 +39,14 @@
 .slotDiv {
 	border-color: #dadada;
 }
+#emptySlot:hover {
+	background-color: rgba(0, 190, 0, 0.2);
+	border-color: #dadada;
+	color: #bbbbbb;
+}
+#emptySlot:active {
+	background-color: rgba(0, 190, 0, 0.4);
+}
 
 
 #settingsContent {

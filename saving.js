@@ -1,8 +1,7 @@
 var backuped = false;
 
-var slots = {
-	sel: 0,
-	s0: {
+//empty slot templates, used on site-load and when creating empty slots
+var defS = {
 		curTurn: 1,
 		maxTurn: 20,
 		coinStar: 10,
@@ -27,8 +26,8 @@ var slots = {
 		ally: [0, 0, 0, 0],
 		stompy: [0, 0, 0, 0],
 		doormat: [0, 0, 0, 0]
-	},
-	c0: {
+	};
+var defC = {
 		curGame: 'all',
 		char1: 'mario',
 		char2: 'luigi',
@@ -60,8 +59,14 @@ var slots = {
 		bananasOnOff: false,
 		inclBonusOnOff: false,
 		coinStarOnOff: true
-	}
+	};
+
+var slots = {
+	sel: 0,
+	max: 0, //highest slot number, used to determine how many slots there are
 }
+slots.s0 = defS;
+slots.c0 = defC
 
 var counters = ['stars', 'coins', 'happening', 'minigame', 'redSpace', 'running', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat'];
 var countersUp = [];
@@ -136,6 +141,7 @@ function backup () {
 	editInner('saveReloadText', 'Saved!');
 	saveReloadAnimation();
 
+	createSlot(slots.sel, true);
 	localStorage.setItem(sel, JSON.stringify(slots[sel]));
 }
 
@@ -189,12 +195,71 @@ function saveReloadAnimation (color) {
 	}, 1300);
 }
 
+var slotCooldown = false;
+/*
+* 
+*/
+function slotSel (slot) {
+	if (typeof slot === 'object') { //get slot parameter from div when called from settings
+		slot = parseInt(slot.slot);
+	} else if (typeof slot === 'string') {
+		switch (slot) {
+			case 'duplicate':
+				if (getValue('slotDuplicate') != true) {
+					editValue('slotDuplicate', true);
+					document.getElementById('slotList').setAttribute('class', 'slotDuplicate');
+				} else {
+					editValue('slotLoad', true);
+					document.getElementById('slotList').setAttribute('class', '');
+				}
+				break;
+			case 'delete':
+				if (getValue('slotDelete') != true) {
+					editValue('slotDelete', true);
+					document.getElementById('slotList').setAttribute('class', 'slotDelete');
+				} else {
+					editValue('slotLoad', true);
+					document.getElementById('slotList').setAttribute('class', '');
+				}
+				break;
+		}
+		return;
+	}
+	if (slotCooldown === true) {
+		return;
+	} else {
+		slotCooldown = true;
+		setTimeout(function () { slotCooldown = false; }, 150);
+	}
+
+	switch (document.querySelector('input[name="slotType"]:checked').id) {
+		case 'slotDuplicate':
+			createSlot(slot);
+			break;
+		case 'slotDelete':
+			if (slot === slots.sel) {
+				return;
+			}
+			deleteSlot(slot);
+			break;
+		default:
+			if (slot === slots.sel) {
+				backup();
+				savePlayers();
+				return;
+			}
+			loadSlot(slot);
+	}
+}
+
 /*
 * Loads savefiles - WIP
 * 
 * @param {number} slot Which slot to load.
 */
 function loadSlot (slot) {
+	slots.sel = slot;
+
 	var sel = 's' + slot;
 
 	editInner('curTurnText', slots[sel].curTurn);
@@ -213,6 +278,7 @@ function loadSlot (slot) {
 			editInner('p' + num + countersUp[num3] + 'Text', slots[sel][counters[num3]][num2]);
 		}
 	}
+
 	var sel = 'c' + slot;
 
 	changeCharacters(1, slots[sel].char1);
@@ -246,10 +312,111 @@ function loadSlot (slot) {
 		changeStars('bananas');
 	}
 
+	var elems = document.getElementsByClassName('slotSelected');
+	for (var num = 0; num < elems.length; num++) {
+		elems[num].classList.remove('slotSelected');
+	}
+	document.getElementById('slotList').children[slot].classList.add('slotSelected');
+
 	changeGame(slots[sel].curGame);
 	changeGame(slots[sel].curGame);
 	callHighlight(false, true);
 	backup();
+}
+
+/*
+* 
+*/
+function createSlot (slot, update) {
+	if (typeof slot === 'undefined') {
+		slot = slots.sel;
+	}
+	if (update != true) {
+		slots.max++;
+		selS = 's' + slots.max;
+		selC = 'c' + slots.max;
+
+		if (slot === 'empty') {
+			slots[selS] = JSON.parse(JSON.stringify(defS));
+			slots[selC] = JSON.parse(JSON.stringify(defC)); //JS sucks so it would reference instead of copy the object without JSON
+		} else {
+			slots[selS] = slots['s' + slot];
+			slots[selC] = slots['c' + slot];
+		}
+		selM = slots.max;
+	} else {
+		selS = 's' + slot;
+		selC = 'c' + slot;
+		selM = slot;
+	}
+
+	if (update === true) {
+		var elem = document.getElementById('slotList').children[slot];
+	} else {
+		var elem = document.createElement("div");
+		document.getElementById('slotList').appendChild(elem);
+		elem.classList.add('slotDiv');
+		elem.setAttribute('onclick', 'slotSel(this)');
+		elem.slot = slots.max;
+	}
+
+	var game = slots[selC].curGame;
+	elem.innerHTML = '<span style="position: relative;"> <span class="settingsText slotTurnText"> <span class="slotTurn"> ' + slots[selS].curTurn + '/' + slots[selS].maxTurn + ' </span> Turn </span> <span class="settingsText slotAllText" id="slotAll' + selM + '">All</span> <img src="img/' + game + '.png" class="slotImg" id="slotImg' + selM + '"> </span> <br> <img src="img/' + game + '/' + slots[selC].char1 + '.png" onerror="imgError(this)"> <img src="img/' + game + '/' + slots[selC].char2 + '.png" onerror="imgError(this)"> <img src="img/' + game + '/' + slots[selC].char3 + '.png" onerror="imgError(this)"> <img src="img/' + game + '/' + slots[selC].char4 + '.png" onerror="imgError(this)"> <br>';
+	if (slots[selC].curGame === 'all') {
+		document.getElementById('slotImg' + selM).style.visibility = 'hidden';
+		document.getElementById('slotImg' + selM).src = 'img/smp.png';
+	} else {
+		document.getElementById('slotAll' + selM).style.visibility = 'hidden';
+	}
+
+	localStorage.setItem(selC, JSON.stringify(slots[selC]));
+	localStorage.setItem(selS, JSON.stringify(slots[selS]));
+	localStorage.setItem('sMax', slots.max);
+}
+
+/*
+* 
+*/
+function deleteSlot (slot) {
+	if (slot === slots.sel) {
+		return;
+	}
+	document.getElementById('slotAll' + slot).id = 'xyzyx1';
+	document.getElementById('slotImg' + slot).id = 'xyzyx2'; //needs to be changed so it's previous ID can be used
+	var num2;
+	for (let num = slot + 1; num < slots.max + 1; num++) {
+		num2 = num - 1;
+		document.getElementById('slotList').children[num].slot = num2;
+		slots['s' + num2] = slots['s' + num];
+		slots['c' + num2] = slots['c' + num];
+		document.getElementById('slotAll' + num).id = 'slotAll' + num2;
+		document.getElementById('slotImg' + num).id = 'slotImg' + num2;
+	}
+	var elem = document.getElementById('slotList').children[slot];
+	elem.parentElement.removeChild(elem);
+	delete slots['s' + slots.max];
+	delete slots['c' + slots.max];
+	slots.max--;
+	if (slots.sel > slot) {
+		loadSlot(slots.sel - 1);
+	}
+
+	localStorage.removeItem('s' + slots.max + 1);
+	localStorage.removeItem('c' + slots.max + 1);
+	for (let num = slot; num < slots.max + 1; num++) {
+		localStorage.setItem('s' + num, JSON.stringify(slots['s' + num]));
+		localStorage.setItem('c' + num, JSON.stringify(slots['c' + num]));
+	}
+	localStorage.setItem('sMax', slots.max);
+}
+
+/*
+* 
+*/
+function imgError (elem) {
+	var v = elem.getAttribute('src').split('/');
+	v[1] = document.querySelector('input[name="icons"]:checked').id;
+	elem.src = v.join('/');
 }
 
 /*
@@ -297,10 +464,12 @@ function savePlayers (close) {
 
 	slots[sel].curGame = curGame;
 
-	localStorage.setItem(sel, JSON.stringify(slots[sel]));
 	if (close == true && popout != true) {
 		showHideDiv(['settings']);
 	}
+	createSlot(slots.sel, true);
+
+	localStorage.setItem(sel, JSON.stringify(slots[sel]));
 }
 
 /*
@@ -534,24 +703,23 @@ function prepareMPO () {
 	} else {
 		resetSettings(true);
 	}
-	if (localStorage.getItem('lsVer') != '3') {
+	editValue('slotLoad', true);
+	if (localStorage.getItem('lsVer') != '4') {
 		legacyPrepare();
 	} else {
-		if (localStorage.getItem('c0') != null) {
-			slots.c0 = JSON.parse(localStorage.getItem('c0'));
+		var num2 = parseInt(localStorage.getItem('sMax'));
+		if (isNaN(num2) === true) {
+			num2 = 0;
 		}
-		if (localStorage.getItem('s0') != null) {
-			slots.s0 = JSON.parse(localStorage.getItem('s0'));
-		} else {
-			if (curGame === 'smp') {
-				editInner('coinStarText', 5);
-				slots['s' + slots.sel][coinStar] = 5;
-				for (let num = 1; num < 5; num++) {
-					editInner('p' + num + 'CoinsText', 5);
-					slots['s' + slots.sel][coins][num - 1] = 5;
-				}
+		num2++;
+		for (var num = 0; num < num2; num++) {
+			slots['s' + num] = JSON.parse(localStorage.getItem('s' + num));
+			slots['c' + num] = JSON.parse(localStorage.getItem('c' + num));
+			if (num === 0) {
+				createSlot(num, true);
+			} else {
+				createSlot(num);
 			}
-			resetPlayers(true);
 		}
 		loadSlot(slots.sel);
 	}
@@ -569,7 +737,7 @@ function prepareMPO () {
 
 	coinStarTie();
 	callDisplayOnOff();
-	localStorage.setItem('lsVer', 3); //localStorage version, used to check how everything is stored
+	localStorage.setItem('lsVer', 4); //localStorage version, used to check how everything is stored
 
 	prepared = true;
 }
@@ -655,6 +823,26 @@ function legacyPrepare () {
 				settingsTheme();
 			}
 			localStorage.removeItem('settingsMode');
+			break;
+		case '3':
+			if (localStorage.getItem('c0') != null) {
+				slots.c0 = JSON.parse(localStorage.getItem('c0'));
+			}
+			if (localStorage.getItem('s0') != null) {
+				slots.s0 = JSON.parse(localStorage.getItem('s0'));
+			} else {
+				if (curGame === 'smp') {
+					editInner('coinStarText', 5);
+					slots['s' + slots.sel][coinStar] = 5;
+					for (let num = 1; num < 5; num++) {
+						editInner('p' + num + 'CoinsText', 5);
+						slots['s' + slots.sel][coins][num - 1] = 5;
+					}
+				}
+				resetPlayers(true);
+			}
+			loadSlot(slots.sel);
+			break;
 	}
 	
 	saveSettings();

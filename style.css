@@ -427,10 +427,50 @@ body {
 }
 
 /* == Slots == */
+#slotList .slotDiv:hover {
+	background-color: rgba(0, 190, 0, 0.2);
+}
+#slotList .slotDiv:active {
+	background-color: rgba(0, 190, 0, 0.4);
+}
+.slotDuplicate .slotDiv:hover:not(.slotSelected) {
+	background-color: rgba(45, 137, 204, 0.4) !important;
+}
+.slotDuplicate .slotDiv:active:not(.slotSelected) {
+	background-color: rgba(49, 148, 221, 0.6) !important;
+}
+.slotDelete .slotDiv:hover:not(.slotSelected) {
+	background-color: rgba(255, 0, 0, 0.6) !important;
+}
+.slotDelete .slotDiv:active:not(.slotSelected) {
+	background-color: rgba(255, 0, 0, 0.8) !important;
+}
+
 .slotDiv {
 	border: 2px solid #252525;
+	border-radius: 20px;
 	padding: 5px;
-	width: 400px;
+	width: 295px;
+	margin-bottom: 15px;
+	cursor: pointer;
+}
+#emptySlot {
+	border-color: #919191;
+	color: #919191;
+	font-family: 'Mario';
+	font-size: 16px;
+	text-align: center;
+}
+#emptySlot:hover {
+	background-color: rgba(0, 190, 0, 0.2);
+	border-color: #252525;
+	color: #252525;
+}
+#emptySlot:active {
+	background-color: rgba(0, 190, 0, 0.4);
+}
+.slotSelected {
+	background-color: rgba(0, 190, 0, 0.6) !important;
 }
 .slotTurnText {
 	font-family: 'Mario';
@@ -443,14 +483,59 @@ body {
 	position: absolute;
 	right: -110px;
 }
+.slotAllText {
+	font-family: 'Mario';
+	font-size: 20px;
+	position: absolute;
+	top: -19px;
+}
+.slotImg {
+	height: 30px !important;
+	margin-right: 20px;
+}
 .slotDiv img {
 	height: 45px;
 }
-.slotButtons button {
+.slotButtons {
+	font-family: 'Mario';
+	font-size: 19px;
+	color: #000000;
+	margin-right: 20px;
+	cursor: pointer;
+	-webkit-text-stroke: 1px #c4c4c4;
+			text-stroke: 1px #c4c4c4;
+}
+.slotButtons:hover {
+	color: #d70000;
+}
+.slotButtons:active {
+	color: #ff0000;
+}
+#slotDuplicate + label:hover {
+	color: #2e8bcf;
+}
+#slotDuplicate + label:active {
+	color: #38a9fc;
+}
+
+#slotDuplicate:checked + label {
+	color: #38a9fc;
+	text-shadow: 0px 0px 10px #fffc00;
+}
+#slotDelete:checked + label {
+	color: #ff0000;
+	text-shadow: 0px 0px 10px #fffc00;
+}
+
+#slotLoad, #slotDuplicate, #slotDelete {
+	display: none;
+}
+
+/*.slotButtons button { //unused - maybe reused later on
 	width: 95px;
 	float: right;
 	margin-bottom: 4px;
-}
+}*/
 
 /* == Shortcuts == */
 .turnBreak {

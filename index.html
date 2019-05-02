@@ -486,17 +486,21 @@
 
 				<!-- Savefile/slot Settings -->
 				<div id="slotsSettings" class="hidden">
-					<span class="settingsText">WIP - Text output has been moved to general</span>
-					<!--div class="slotDiv">
-						<span class="slotButtons" style="float: right;"> <button>Load</button> <br> <button>Duplicate</button> <br> <button>Delete</button> </span>
-						<span style="position: relative;"> <span class="settingsText slotTurnText"> <span class="slotTurn"> 7/20 </span> Turn </span> <img src="img/smp.png" style="height: 30px; margin-right: 20px;"> </span> <br>
-						<img src="img/smp/dk.png"> <img src="img/smp/peach.png"> <img src="img/smp/drybones.png"> <img src="img/smp/pompom.png"> <br>
-					</div> <br>
-					<div class="slotDiv">
-						<span class="slotButtons" style="float: right;"> <button>Load</button> <br> <button>Duplicate</button> <br> <button>Delete</button> </span>
-						<span style="position: relative;"> <span class="settingsText slotTurnText"> <span class="slotTurn"> 12/30 </span> Turn </span><img src="img/mp6.png" style="height: 30px; margin-right: 20px;"> </span> <br>
-						<img src="img/mp6/daisy.png"> <img src="img/mp6/yoshi.png"> <img src="img/mp6/waluigi.png"> <img src="img/mp6/boo.png"> <br>
-					</div-->
+					<span class="settingsText">Save to the current savefile by loading it. <br> It's not possible to delete the selected file, select another one instead.</span> <br>
+
+					<input type="radio" name="slotType" id="slotLoad" checked>
+					<input type="radio" name="slotType" id="slotDuplicate"> <label class="slotButtons" onclick="slotSel('duplicate')">Duplicate</label>
+					<input type="radio" name="slotType" id="slotDelete"> <label class="slotButtons" onclick="slotSel('delete')">Delete</label> <br> <br>
+
+					<span id="slotList">
+						<div class="slotDiv" onclick="slotSel(this)" slot="0">
+							<span style="position: relative;"> <span class="settingsText slotTurnText"> <span class="slotTurn"> 4/20 </span> Turn </span> <span class="settingsText slotAllText" id="slotAll0" style="visibility: hidden;">All</span> <img src="img/smp.png" class="slotImg" id="slotImg0"> </span> <br>
+							<img src="img/smp/dk.png"> <img src="img/smp/peach.png"> <img src="img/smp/drybones.png"> <img src="img/smp/pompom.png"> <br>
+						</div>
+					</span>
+					<div class="slotDiv" id="emptySlot" onclick="createSlot('empty')">
+						Create empty file
+					</div>
 				</div>
 
 				<!-- Shortcuts -->
