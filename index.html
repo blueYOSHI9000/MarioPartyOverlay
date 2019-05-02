@@ -422,6 +422,7 @@
 					<span class="settingsTitle"> Features </span> <br>
 					<label for="autoPopout"> <span class="settingsText"> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="sendSettingsMsg(this.id, this.checked)"> </label> <br> <br>
 					<label for="enableHighlight"> <span class="settingsText"> Enable counter highlighting: </span> </label> <input type="checkbox" id="enableHighlight" onchange="sendSettingsMsg(this.id, + this.checked);changeSettings('resetHighlights')" checked> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('callHighlight', [false, true])" value="#FF0000" id="highlightColor"> <br> <br>
+					<label for="deactivateUnused"> <span class="settingsText"> Deactivate unused counters when changing games: </span> </label> <input type="checkbox" id="deactivateUnused" style="top: 5px;" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('deactivateUnused')" checked> <br> <br>
 
 					<label for="noTie"> <span class="settingsText"> Don't use ties for Coin Star: </span> </label> <input type="checkbox" id="noTie" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('coinStarTie')"> <br>
 					<label for="autoSave"> <span class="settingsText"> Automatically save/reload when updating turns: </span> </label> <input type="checkbox" id="autoSave" onchange="sendSettingsMsg(this.id, this.checked);if (this.checked == true) {changeSettings('backup')}"> <br> <br>
@@ -479,14 +480,13 @@
 					</span> <br>
 
 					<span class="settingsTitle"> Reset </span> <br>
-					<button onclick="changeSettings('resetSettings')" id="resetSettingsButton"> Reset Settings </button>
-					<button onclick="changeSettings('resetPlayers')"> Reset Slots </button> <br> <br>
+					<button onclick="changeSettings('resetSettings')" id="resetSettingsButton"> Reset Settings </button> <br> <br>
 					<button onclick="localStorage.clear()">Clear local storage</button> <span class="settingsNote">(This will clear all saved settings, characters, counters and stats)</span>
 				</div>
 
 				<!-- Savefile/slot Settings -->
 				<div id="slotsSettings" class="hidden">
-					<span class="settingsText">Save to the current savefile by loading it. <br> It's not possible to delete the selected file, select another one instead.</span> <br>
+					<span class="settingsText">Savefiles get saved automatically when loading one. <br> It's not possible to delete the file played on, select another one instead.</span> <br>
 
 					<input type="radio" name="slotType" id="slotLoad" checked>
 					<input type="radio" name="slotType" id="slotDuplicate"> <label class="slotButtons" onclick="slotSel('duplicate')">Duplicate</label>
@@ -1142,11 +1142,11 @@
 					</div>
 					<div class="counterSelection">
 						<span class="relative"> <label for="coinsOnOff" id="coinsOnOffText" class="counterOnOffText">Coins:</label> <input type="checkbox" id="coinsOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['coins'])"> <label for="coinsOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </span>
-					</div> <br>
-					<span class="relative"> <label for="deactivateUnused"> <span class="settingsText"> Deactivate unused counters when changing games: </span> </label> <input type="checkbox" id="deactivateUnused" style="top: 5px;" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('deactivateUnused')" checked> </span> <br> <br>
+					</div> <br> <br>
 
 					<span style="font-size: 21px;"><a class="settingsLink" rel="noopener" target="_blank" href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Mario-Party-Bonus-Star-List">Bonus Star List</a></span>
 				</div>
+
 				<div id="tutorialSettings" class="hidden"> <span class="settingsText"> Click on the numbers to increase the counters, by holding Ctrl you can decrease them instead. The amount can be changed at the top (1, 5 or 10). <br class="lineHeight">
 					It's possible to switch between 1 and 5 by holding Shift, if one of the two is selected. <br class="lineHeight">
 					To give/take the coin star, you just click on the character. <br> <br>
@@ -1166,7 +1166,7 @@
 
 					<span class="settingsText" style="line-height: 27px;"> Created by <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI9000</a> <br>
 					All icons were created or inspired from officially published media by Nintendo. <br>
-					Icons (re)created or ripped by <a href="https://www.spriters-resource.com/submitter/Anonymous/" class="settingsLink" rel="noopener" target="_blank">Anonymous</a>, <a href="https://www.mariowiki.com/User:Arend" class="settingsLink" rel="noopener" target="_blank">Arend</a>, <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI9000</a>, <a href="https://www.spriters-resource.com/submitter/xX-CamTro-Xx/" class="settingsLink" rel="noopener" target="_blank">CamTro</a>, <a href="https://www.spriters-resource.com/submitter/FieryExplosion/" class="settingsLink" rel="noopener" target="_blank">FieryExplosion</a>, <a href="https://www.spriters-resource.com/submitter/larsenv/" class="settingsLink" rel="noopener" target="_blank">larsenv</a>, <a href="https://mariopartylegacy.com/" class="settingsLink" rel="noopener" target="_blank">Mario Party Legacy</a>,  <a href="https://www.spriters-resource.com/submitter/Random+Talking+Bush/" class="settingsLink" rel="noopener" target="_blank">Random Talking Bush</a>. <br>
+					Icons (re)created or ripped by <a href="https://www.spriters-resource.com/submitter/Anonymous/" class="settingsLink" rel="noopener" target="_blank">Anonymous</a>, <a href="https://www.mariowiki.com/User:Arend" class="settingsLink" rel="noopener" target="_blank">Arend</a>, <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI9000</a>, <a href="https://www.spriters-resource.com/submitter/xX-CamTro-Xx/" class="settingsLink" rel="noopener" target="_blank">CamTro</a>, <a href="https://www.spriters-resource.com/submitter/FieryExplosion/" class="settingsLink" rel="noopener" target="_blank">FieryExplosion</a>, <a href="https://www.spriters-resource.com/submitter/larsenv/" class="settingsLink" rel="noopener" target="_blank">larsenv</a>, <a href="https://mariopartylegacy.com/" class="settingsLink" rel="noopener" target="_blank">Mario Party Legacy</a>,  <a href="https://www.spriters-resource.com/submitter/Random+Talking+Bush/" class="settingsLink" rel="noopener" target="_blank">Random Talking Bush</a>, <a href="https://twitter.com/Der_RicoDexter" class="settingsLink" rel="noopener" target="_blank">RicoDexter</a>. <br>
 					<a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="settingsLink" rel="noopener" target="_blank">Mario Font</a> <br>
 					<a href="https://interactjs.io/" class="settingsLink" rel="noopener" target="_blank"> Interact.js</a> (enables drag 'n' drop) </span>
 				</div>

@@ -197,7 +197,9 @@ function saveReloadAnimation (color) {
 
 var slotCooldown = false;
 /*
+* Called when a slot is selected, loaded/duplicated/deleted based on what is selected.
 * 
+* @param {object/string} slot Object of the slots element/string of what should be done to slots
 */
 function slotSel (slot) {
 	if (typeof slot === 'object') { //get slot parameter from div when called from settings
@@ -243,9 +245,9 @@ function slotSel (slot) {
 			deleteSlot(slot);
 			break;
 		default:
+			backup();
+			savePlayers();
 			if (slot === slots.sel) {
-				backup();
-				savePlayers();
 				return;
 			}
 			loadSlot(slot);
@@ -253,7 +255,7 @@ function slotSel (slot) {
 }
 
 /*
-* Loads savefiles - WIP
+* Loads savefiles
 * 
 * @param {number} slot Which slot to load.
 */
@@ -325,7 +327,10 @@ function loadSlot (slot) {
 }
 
 /*
+* Creates/duplicates savefiles
 * 
+* @param {number/string} slot Which slot to load, if empty it used the current slot, if 'empty' it creates an empty slot
+* @param {boolean} update If true, a savefile gets updated instead of created.
 */
 function createSlot (slot, update) {
 	if (typeof slot === 'undefined') {
@@ -375,7 +380,9 @@ function createSlot (slot, update) {
 }
 
 /*
+* Deletes savefiles
 * 
+* @param {number} slot The slot that should get deleted
 */
 function deleteSlot (slot) {
 	if (slot === slots.sel) {
@@ -411,7 +418,9 @@ function deleteSlot (slot) {
 }
 
 /*
+* Loads a default image if a custom one doesn't exist. Called from onerror.
 * 
+* @param {object} elem The element which couldn't load a image.
 */
 function imgError (elem) {
 	var v = elem.getAttribute('src').split('/');
