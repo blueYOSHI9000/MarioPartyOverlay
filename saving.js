@@ -741,6 +741,9 @@ function prepareMPO () {
 				createSlot(num);
 			}
 		}
+		if (localStorage.getItem('sel') === null) {
+			localStorage.setItem('sel', 0);
+		}
 		loadSlot(parseInt(localStorage.getItem('sel')));
 	}
 
