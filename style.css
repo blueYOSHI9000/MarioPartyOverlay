@@ -358,6 +358,10 @@ body {
 	color: #e64940;
 	border-bottom: #e64940 2px solid;
 }
+.settingsSelection:active {
+	color: #f10d00;
+	border-bottom: #f10d00 2px solid;
+}
 .settingsSelected {
 	color: #f10d00 !important;
 	border-bottom: #f10d00 2px solid !important;
@@ -413,7 +417,7 @@ body {
 	.settingsPopup {
 		padding: 20px;
 		position: absolute;
-		border: none;
+		border: none !important;
 		background-color: #F3F3F3;
 		width: calc(100% - 40px) !important;
 		height: calc(100% - 40px) !important;

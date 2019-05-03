@@ -141,6 +141,11 @@ function backup () {
 	editInner('saveReloadText', 'Saved!');
 	saveReloadAnimation();
 
+	if (popout != true && popoutActivated === true) {
+		console.log(JSON.stringify(slots[sel]))
+		sendMessage('updateS+' + JSON.stringify(slots[sel]));
+	}
+
 	createSlot(slots.sel, true);
 	localStorage.setItem(sel, JSON.stringify(slots[sel]));
 }
@@ -236,21 +241,25 @@ function slotSel (slot) {
 
 	switch (document.querySelector('input[name="slotType"]:checked').id) {
 		case 'slotDuplicate':
-			createSlot(slot);
+			execOnMain('createSlot', [slot]);
 			break;
 		case 'slotDelete':
 			if (slot === slots.sel) {
 				return;
 			}
-			deleteSlot(slot);
+			execOnMain('deleteSlot', [slot]);
 			break;
 		default:
-			backup();
+			if (popout === true) {
+				sendMessage('backup');
+			} else {
+				backup();
+			}
 			savePlayers();
 			if (slot === slots.sel) {
 				return;
 			}
-			loadSlot(slot);
+			execOnMain('loadSlot', [slot]);
 	}
 }
 
@@ -324,6 +333,8 @@ function loadSlot (slot) {
 	changeGame(slots[sel].curGame);
 	callHighlight(false, true);
 	backup();
+
+	localStorage.setItem('sel', slots.sel);
 }
 
 /*
@@ -730,7 +741,7 @@ function prepareMPO () {
 				createSlot(num);
 			}
 		}
-		loadSlot(slots.sel);
+		loadSlot(parseInt(localStorage.getItem('sel')));
 	}
 
 	if (localStorage.getItem('datax') != null) {
@@ -889,8 +900,9 @@ function syncPopout () {
 		sendSettingsMsg('autoPopout', getValue('autoPopout'), true);
 		sendSettingsMsg('mpsrIcons', getValue('mpsrIcons'), true);
 		sendSettingsMsg('mk8Icons', getValue('mk8Icons'), true);
-		sendSettingsMsg('settingsLight', getValue('settingsLight'), true);
-		sendSettingsMsg('settingsDark', getValue('settingsDark'), true);
+		if (darkTheme === true) {
+			sendSettingsMsg('settingsDark', getValue('settingsDark'), true);
+		}
 		sendSettingsMsg('customGameIcons', getValue('customGameIcons'), true);
 		sendSettingsMsg('greenscreen', getValue('greenscreen'), true);
 		sendSettingsMsg('bgColor', getValue('bgColor'), true);
@@ -959,8 +971,42 @@ function syncPopout () {
 
 		sendMessage('showHideSettings+' + openedSettings);
 
+		sendMessage('setSlots+' + JSON.stringify(slots));
+
 		console.log('[MPO] Popout synced');
 	}
+}
+
+/*
+* Sets slots in popout.
+*/
+function setSlots (text) {
+	var slots2 = JSON.parse(text);
+
+	var num2 = slots2.max;
+	if (isNaN(num2) === true) {
+		num2 = 0;
+	}
+	num2++;
+	for (var num = 0; num < num2; num++) {
+		slots['s' + num] = slots2['s' + num];
+		slots['c' + num] = slots2['c' + num];
+		if (num === 0) {
+			createSlot(num, true);
+		} else {
+			createSlot(num);
+		}
+	}
+	loadSlot(slots2.sel);
+}
+
+/*
+* 
+*/
+function updateS (text) {
+	console.log(text)
+	slots['s' + slots.sel] = JSON.parse(text);
+	createSlot(slots.sel, true);
 }
 
 var statSynced = false;

@@ -489,7 +489,7 @@
 					<span class="settingsText">Savefiles get saved automatically when loading one. <br> It's not possible to delete the file played on, select another one instead.</span> <br>
 
 					<input type="radio" name="slotType" id="slotLoad" checked>
-					<input type="radio" name="slotType" id="slotDuplicate"> <label class="slotButtons" onclick="slotSel('duplicate')">Duplicate</label>
+					<input type="radio" name="slotType" id="slotDuplicate"> <label class="slotButtons" onclick="slotSel('duplicate')" style="margin-left: 10px;">Duplicate</label>
 					<input type="radio" name="slotType" id="slotDelete"> <label class="slotButtons" onclick="slotSel('delete')">Delete</label> <br> <br>
 
 					<span id="slotList">
@@ -498,7 +498,7 @@
 							<img src="img/smp/dk.png"> <img src="img/smp/peach.png"> <img src="img/smp/drybones.png"> <img src="img/smp/pompom.png"> <br>
 						</div>
 					</span>
-					<div class="slotDiv" id="emptySlot" onclick="createSlot('empty')">
+					<div class="slotDiv" id="emptySlot" onclick="execOnMain('createSlot', ['empty'])">
 						Create empty file
 					</div>
 				</div>
