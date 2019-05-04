@@ -487,6 +487,8 @@
 				<!-- Savefile/slot Settings -->
 				<div id="slotsSettings" class="hidden">
 					<span class="settingsText">Savefiles get saved automatically when loading one. <br> It's not possible to delete the file played on, select another one instead.</span> <br>
+					<span class="settingsText error" id="savefileError" style="display: none;"> Note that MPO might start to lag a bit when there are a lot of savefiles. <br> </span>
+					<span class="settingsText error" id="savefileCookieError"> Make sure cookies are enabled, otherwise savefiles won't be able to save. <br> </span>
 
 					<input type="radio" name="slotType" id="slotLoad" checked>
 					<input type="radio" name="slotType" id="slotDuplicate"> <label class="slotButtons" onclick="slotSel('duplicate')" style="margin-left: 10px;">Duplicate</label>
@@ -499,7 +501,7 @@
 						</div>
 					</span>
 					<div class="slotDiv" id="emptySlot" onclick="execOnMain('createSlot', ['empty'])">
-						Create empty file
+						Create new file
 					</div>
 				</div>
 

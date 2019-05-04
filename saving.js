@@ -385,6 +385,10 @@ function createSlot (slot, update) {
 		document.getElementById('slotAll' + selM).style.visibility = 'hidden';
 	}
 
+	if (slots.max > 20) {
+		document.getElementById('savefileError').style.display = 'unset';
+	}
+
 	localStorage.setItem(selC, JSON.stringify(slots[selC]));
 	localStorage.setItem(selS, JSON.stringify(slots[selS]));
 	localStorage.setItem('sMax', slots.max);
@@ -417,6 +421,10 @@ function deleteSlot (slot) {
 	slots.max--;
 	if (slots.sel > slot) {
 		loadSlot(slots.sel - 1);
+	}
+
+	if (slots.max <= 20) {
+		document.getElementById('savefileError').style.display = 'none';
 	}
 
 	localStorage.removeItem('s' + slots.max + 1);
@@ -746,6 +754,7 @@ function prepareMPO () {
 		}
 		loadSlot(parseInt(localStorage.getItem('sel')));
 	}
+	document.getElementById('savefileCookieError').style.display = 'none';
 
 	if (localStorage.getItem('datax') != null) {
 		var arrX = localStorage.getItem('datax').split(',');

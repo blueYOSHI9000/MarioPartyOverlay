@@ -48,6 +48,9 @@
 	background-color: rgba(0, 190, 0, 0.4);
 }
 
+.error {
+	color: red;
+}
 
 #settingsContent {
 	background: no-repeat url(img/settingsbg-dark.png), linear-gradient(#454545, #333333);
