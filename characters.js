@@ -1,5 +1,3 @@
-
-
 /*
 * Changes characters and their icons depending on the options selected.
 * 
