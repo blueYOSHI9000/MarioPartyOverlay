@@ -23,6 +23,19 @@
 	color: #e64940;
 	border-bottom: #e64940 2px solid;
 }
+.settingsSelectionImportant {
+	color: #0096b3;
+	border-color: #0096b3;
+}
+.settingsSelectionImportant:hover {
+	color: #e64940;
+	border-bottom: #e64940 2px solid;
+}
+.settingsSelectionImportant:active {
+	color: #f10d00;
+	border-bottom: #f10d00 2px solid;
+}
+
 .settingsContentPopout {
 	background-color: #F3F3F3;
 }
