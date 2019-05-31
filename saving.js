@@ -60,18 +60,64 @@ var defC = {
 		inclBonusOnOff: false,
 		coinStarOnOff: true
 	};
+var defA = {
+	assistOn: false
+};
 
 var slots = {
 	sel: 0,
 	max: 0, //highest slot number, used to determine how many slots there are
-}
-slots.s0 = defS;
-slots.c0 = defC
+};
+slots.s0 = copyVar(defS);
+slots.c0 = copyVar(defC);
+slots.a0 = copyVar(defA);
+
+var assistVer = 0; //assist version for slots, increased if variables are added/changed etc
 
 var counters = ['stars', 'coins', 'happening', 'minigame', 'redSpace', 'running', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat'];
 var countersUp = [];
 for (let num = 0; num < counters.length; num++) {
 	countersUp.push(counters[num].charAt(0).toUpperCase() + counters[num].slice(1));
+}
+
+/*
+* Copies variables without a reference.
+* 
+* @param {any} v Variable that should be copies.
+*/
+function copyVar (v) {
+	return JSON.parse(JSON.stringify(v));
+}
+
+/*
+* Saves assist
+*/
+function saveAssist () {
+	var sel = 'a' + slots.sel;
+	if (shortcutLoaded === false) {
+		return;
+	} else if (slots[sel].assistOn != true) {
+		slots[sel] = copyVar(defA);
+	} else {
+		slots[sel].assistOn = true;
+		slots[sel].assistVer = assistVer;
+
+		slots[sel].shortcutState = shortcutState;
+		slots[sel].setup = setup;
+		slots[sel].turnCurPlayer = turnCurPlayer;
+		slots[sel].orderCurPlayer = orderCurPlayer;
+		slots[sel].shortcutGame = shortcutGame;
+		slots[sel].minigameSpaces = minigameSpaces;
+		slots[sel].finalFiveEvent = finalFiveEvent;
+		slots[sel].playerOrder = playerOrder;
+		slots[sel].statusEffects = statusEffects;
+		slots[sel].allies = allies;
+		slots[sel].bobombAlly = bobombAlly;
+		slots[sel].diceUsed = diceUsed;
+		slots[sel].starCost = starCost;
+		slots[sel].starPrice = starPrice;
+	}
+	localStorage.setItem(sel, JSON.stringify(slots[sel]));
 }
 
 /*
@@ -256,6 +302,7 @@ function slotSel (slot) {
 				backup();
 			}
 			savePlayers();
+			saveAssist();
 			if (slot === slots.sel) {
 				return;
 			}
@@ -334,6 +381,10 @@ function loadSlot (slot) {
 	callHighlight(false, true);
 	backup();
 
+	if (shortcutLoaded === true) {
+		loadAssistSlot();
+	}
+
 	localStorage.setItem('sel', slots.sel);
 }
 
@@ -351,18 +402,22 @@ function createSlot (slot, update) {
 		slots.max++;
 		selS = 's' + slots.max;
 		selC = 'c' + slots.max;
+		selA = 'a' + slots.max;
 
 		if (slot === 'empty') {
-			slots[selS] = JSON.parse(JSON.stringify(defS));
-			slots[selC] = JSON.parse(JSON.stringify(defC)); //JS sucks so it would reference instead of copy the object without JSON
+			slots[selS] = copyVar(defS);
+			slots[selC] = copyVar(defC);
+			slots[selA] = copyVar(defA);
 		} else {
 			slots[selS] = slots['s' + slot];
 			slots[selC] = slots['c' + slot];
+			slots[selA] = slots['a' + slot];
 		}
 		selM = slots.max;
 	} else {
 		selS = 's' + slot;
 		selC = 'c' + slot;
+		selA = 'a' + slot;
 		selM = slot;
 	}
 
@@ -391,6 +446,7 @@ function createSlot (slot, update) {
 
 	localStorage.setItem(selC, JSON.stringify(slots[selC]));
 	localStorage.setItem(selS, JSON.stringify(slots[selS]));
+	localStorage.setItem(selA, JSON.stringify(slots[selA]));
 	localStorage.setItem('sMax', slots.max);
 }
 
@@ -411,6 +467,7 @@ function deleteSlot (slot) {
 		document.getElementById('slotList').children[num].slot = num2;
 		slots['s' + num2] = slots['s' + num];
 		slots['c' + num2] = slots['c' + num];
+		slots['a' + num2] = slots['a' + num];
 		document.getElementById('slotAll' + num).id = 'slotAll' + num2;
 		document.getElementById('slotImg' + num).id = 'slotImg' + num2;
 	}
@@ -418,6 +475,7 @@ function deleteSlot (slot) {
 	elem.parentElement.removeChild(elem);
 	delete slots['s' + slots.max];
 	delete slots['c' + slots.max];
+	delete slots['a' + slots.max];
 	slots.max--;
 	if (slots.sel > slot) {
 		loadSlot(slots.sel - 1);
@@ -429,9 +487,11 @@ function deleteSlot (slot) {
 
 	localStorage.removeItem('s' + slots.max + 1);
 	localStorage.removeItem('c' + slots.max + 1);
+	localStorage.removeItem('a' + slots.max + 1);
 	for (let num = slot; num < slots.max + 1; num++) {
 		localStorage.setItem('s' + num, JSON.stringify(slots['s' + num]));
 		localStorage.setItem('c' + num, JSON.stringify(slots['c' + num]));
+		localStorage.setItem('a' + num, JSON.stringify(slots['c' + num]));
 	}
 	localStorage.setItem('sMax', slots.max);
 }
@@ -732,9 +792,8 @@ function prepareMPO () {
 		resetSettings(true);
 	}
 	editValue('slotLoad', true);
-	if (localStorage.getItem('lsVer') != '4') {
-		legacyPrepare();
-	} else {
+
+	if (localStorage.getItem('sMax') != null) {
 		var num2 = parseInt(localStorage.getItem('sMax'));
 		if (isNaN(num2) === true) {
 			num2 = 0;
@@ -743,6 +802,11 @@ function prepareMPO () {
 		for (var num = 0; num < num2; num++) {
 			slots['s' + num] = JSON.parse(localStorage.getItem('s' + num));
 			slots['c' + num] = JSON.parse(localStorage.getItem('c' + num));
+			if (localStorage.getItem('a' + num) != null) {
+				slots['a' + num] = JSON.parse(localStorage.getItem('a' + num));
+			} else {
+				slots['a' + num] = copyVar(defA);
+			}
 			if (num === 0) {
 				createSlot(num, true);
 			} else {
@@ -754,6 +818,7 @@ function prepareMPO () {
 		}
 		loadSlot(parseInt(localStorage.getItem('sel')));
 	}
+
 	document.getElementById('savefileCookieError').style.display = 'none';
 
 	if (localStorage.getItem('datax') != null) {
@@ -769,118 +834,9 @@ function prepareMPO () {
 
 	coinStarTie();
 	callDisplayOnOff();
-	localStorage.setItem('lsVer', 4); //localStorage version, used to check how everything is stored
+	localStorage.setItem('lsVer', 5); //localStorage version, used to check how everything is stored
 
 	prepared = true;
-}
-
-/*
-* Used to load localStorage if it's not up to date and updates it.
-*/
-function legacyPrepare () {
-	switch (localStorage.getItem('lsVer')) {
-		case '1':
-			if (localStorage.getItem('slots') != null) {
-				slots = JSON.parse(localStorage.getItem('slots'));
-				slots.c0 = {
-					allyOnOff: slots.s0.allyOnOff,
-					balloonOnOff: slots.s0.balloonOnOff,
-					bananasOnOff: slots.s0.bananasOnOff,
-					char1: slots.s0.char1,
-					char2: slots.s0.char2,
-					char3: slots.s0.char3,
-					char4: slots.s0.char4,
-					coinStarOnOff: slots.s0.coinStarOnOff,
-					coinsOnOff: slots.s0.coinsOnOff,
-					com1: slots.s0.com1,
-					com2: slots.s0.com2,
-					com3: slots.s0.com3,
-					com4: slots.s0.com4,
-					curGame: slots.s0.curGame,
-					doormatOnOff: slots.s0.doormatOnOff,
-					friendSpaceOnOff: slots.s0.friendSpaceOnOff,
-					happeningOnOff: slots.s0.happeningOnOff,
-					hexOnOff: slots.s0.hexOnOff,
-					inclBonusOnOff: slots.s0.inclBonusOnOff,
-					itemOnOff: slots.s0.itemOnOff,
-					miniStarsOnOff: slots.s0.miniStarsOnOff,
-					minigameOnOff: slots.s0.minigameOnOff,
-					minusOnOff: slots.s0.minusOnOff,
-					redSpaceOnOff: slots.s0.redSpaceOnOff,
-					runningOnOff: slots.s0.runningOnOff,
-					shoppingOnOff: slots.s0.shoppingOnOff,
-					slowOnOff: slots.s0.slowOnOff,
-					specialDiceOnOff: slots.s0.specialDiceOnOff,
-					spinSpaceOnOff: slots.s0.spinSpaceOnOff,
-					starsOnOff: slots.s0.starsOnOff,
-					stompyOnOff: slots.s0.stompyOnOff
-				}
-				delete slots.s0.allyOnOff
-				delete slots.s0.balloonOnOff
-				delete slots.s0.bananasOnOff
-				delete slots.s0.char1
-				delete slots.s0.char2
-				delete slots.s0.char3
-				delete slots.s0.char4
-				delete slots.s0.coinStarOnOff
-				delete slots.s0.coinsOnOff
-				delete slots.s0.com1
-				delete slots.s0.com2
-				delete slots.s0.com3
-				delete slots.s0.com4
-				delete slots.s0.curGame
-				delete slots.s0.doormatOnOff
-				delete slots.s0.friendSpaceOnOff
-				delete slots.s0.happeningOnOff
-				delete slots.s0.hexOnOff
-				delete slots.s0.inclBonusOnOff
-				delete slots.s0.itemOnOff
-				delete slots.s0.miniStarsOnOff
-				delete slots.s0.minigameOnOff
-				delete slots.s0.minusOnOff
-				delete slots.s0.redSpaceOnOff
-				delete slots.s0.runningOnOff
-				delete slots.s0.shoppingOnOff
-				delete slots.s0.slowOnOff
-				delete slots.s0.specialDiceOnOff
-				delete slots.s0.spinSpaceOnOff
-				delete slots.s0.starsOnOff
-				delete slots.s0.stompyOnOff
-				loadSlot(slots.sel);
-			}
-			break;
-		case '2':
-			if (localStorage.getItem('settingsMode') == 'settingsDark') {
-				darkTheme = true;
-				settingsTheme();
-			}
-			localStorage.removeItem('settingsMode');
-			break;
-		case '3':
-			if (localStorage.getItem('c0') != null) {
-				slots.c0 = JSON.parse(localStorage.getItem('c0'));
-			}
-			if (localStorage.getItem('s0') != null) {
-				slots.s0 = JSON.parse(localStorage.getItem('s0'));
-			} else {
-				if (curGame === 'smp') {
-					editInner('coinStarText', 5);
-					slots['s' + slots.sel][coinStar] = 5;
-					for (let num = 1; num < 5; num++) {
-						editInner('p' + num + 'CoinsText', 5);
-						slots['s' + slots.sel][coins][num - 1] = 5;
-					}
-				}
-				resetPlayers(true);
-			}
-			loadSlot(slots.sel);
-			break;
-	}
-	
-	saveSettings();
-	savePlayers();
-	//saveShortcut();
-	backup();
 }
 
 /*
@@ -1003,6 +959,7 @@ function setSlots (text) {
 	for (var num = 0; num < num2; num++) {
 		slots['s' + num] = slots2['s' + num];
 		slots['c' + num] = slots2['c' + num];
+		slots['a' + num] = slots2['a' + num];
 		if (num === 0) {
 			createSlot(num, true);
 		} else {

@@ -515,6 +515,7 @@ var shortcutLoaded = false;
 function prepareShortcut () {
 	if (shortcutLoaded === true) {
 		startShortcut();
+		return;
 	}
 	var script = document.createElement("script");
 	script.src = 'settings.js';
@@ -865,6 +866,11 @@ function executeFunctionByName (functionName, args) {
 function popoutClosed () {
 	popoutActivated = false;
 	console.log('[MPO] Popout deactivated.');
+
+	if (shortcutLoaded === true) {
+		slots['a' + slots.sel] = JSON.parse(localStorage.getItem('a' + slots.sel));
+		loadAssistSlot();
+	}
 }
 
 /*
@@ -872,6 +878,7 @@ function popoutClosed () {
 */
 function closePopout () {
 	if (popout == true) {
+		saveAssist();
 		window.close();
 	} else {
 		sendMessage('closePopout');
@@ -987,6 +994,7 @@ window.addEventListener("message", receiveMessage, false);
 
 window.onbeforeunload = function(){
 	if (popout == true) {
+		saveAssist();
 		sendMessage('popoutClosed');
 	} else {
 		closePopout();

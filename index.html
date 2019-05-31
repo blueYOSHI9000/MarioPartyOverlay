@@ -185,10 +185,10 @@
 		<span class="settingsTitle"> Options </span> <br>
 		<label for="shortcutAutoEnd"> <span class="settingsText"> Automatically end turn after selecting a space </span></label> <input type="checkbox" id="shortcutAutoEnd" onchange="sendSettingsMsg(this.id, + this.checked)"> <br> <br>
 
-		<span id="resetShortcut"> <button onclick="resetShortcut()">Reset Shortcut game</button> </span> <br> <br>
+		<span id="resetShortcut"> <button onclick="resetShortcut()">Reset Shortcut game</button> <button onclick="loadShortcut()">Load Shortcut game</button> </span> <br> <br>
 
 		<span class="settingsTitle"> Shortcut Variables </span> <br>
-		<span class="settingsText" id="shortcutCurGame">Current shortcut game: Not decided yet.</span> <br> <span class="settingsNote"> Only used inside shortcuts. Currently can't be changed mid-game. </span> <br> <br>
+		<span class="settingsText" id="shortcutCurGame">Current shortcut game: Not decided yet.</span> <br> <span class="settingsNote"> Only used inside assist. Currently can't be changed mid-game. </span> <br> <br>
 		<span class="settingsText"> Final 5 Turns Event: </span>
 		<select id="finalFiveSelect" onchange="finalFiveEvent = getValue(this.id)">
 			<option value="undefined" selected="">Nothing</option>
@@ -514,7 +514,8 @@
 
 							A lot of features depend on the coin counter, it's recommended to show it and keep it up to date. <br>
 							This is currently in heavy development and some features might not work as intended. <br> <br>
-							<button onclick="prepareShortcut()">Start game</button> <br> <br>
+							<button onclick="prepareShortcut()">Start game</button> <br>
+							<span class="settingsNote">When switching from popout back to normal settings it might not display the correct state, just load the save from inside the assist settings (top left) when that happens.</span> <br> <br>
 
 							<span class="settingsTitle"> Report Bugs </span> <br>
 							In case something breaks or doesn't provide the expected output, please click on "Generate & Copy" and <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">contact me</a> or <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new?template=bug_report.md" class="settingsLink" rel="noopener" target="_blank">open a Github issue</a> with a screenshot or copy-paste of your browsers console (Ctrl + Shift + I > "Console"). It shows the last actions done and potential errors. Thank you! <br> <br>
@@ -1177,11 +1178,11 @@
 			<!-- Reset/save Settings -->
 			<div id="settingsFooter">
 				<div id="settingsFooterBorder"></div>
-					<button id="popoutButton" onclick="mpoSettingsPopout()" style="flex: auto;"> Popout Settings </button>
+					<button id="popoutButton" onclick="saveAssist();mpoSettingsPopout()" style="flex: auto;"> Popout Settings </button>
 					<button id="lightDarkButton" onclick="changeSettings('settingsTheme')">Dark mode</button>
 				<span id="settingsClose">
-					<button onclick="saveSettings(true); savePlayers()" id="saveButton"> Save </button>
-					<button onclick="if (popout == true) {window.close()} else {showHideDiv(['settings']); if (shortcutLoaded == true) {getAlly('close');shortcutSettings(true);}}" id="settingsCloseButton"> Close </button>
+					<button onclick="saveSettings(true); savePlayers(); saveAssist()" id="saveButton"> Save </button>
+					<button onclick="if (popout == true) {window.close();} else {showHideDiv(['settings']); if (shortcutLoaded == true) {getAlly('close');shortcutSettings(true);}}" id="settingsCloseButton"> Close </button>
 				</span>
 			</div>
 		</div>

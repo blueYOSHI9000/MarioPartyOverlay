@@ -12,6 +12,7 @@ var turnCurPlayer = 0;
 var orderCurPlayer = 0;
 var shortcutGame = 'smp'; //Shortcut features use this instead of curGame as otherwise the player could change the game mid-shortcut which would break everything
 var minigameSpaces = ['', '', '', '', ''];
+var defaultText = '<span class="settingsText" style="width: 100%; white-space: normal; line-height: 30px;"> Games currently supported: <img src="img/mpds.png" style="width: 40px;"> <img src="img/smp.png" style="width: 40px;"> <br> Only 4 players without Teams (this includes Partner Party) are currently supported. <br> <br> A lot of features depend on the coin counter, it\'s recommended to show it and keep it up to date. <br> This is currently in heavy development and some features might not work as intended. <br> <br> <button onclick="startShortcut()">Start game</button> <br> <br> <span class="settingsTitle"> Report Bugs </span> <br> In case something breaks or doesn\'t provide the expected output, please click on "Generate & Copy" and <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">contact me</a> or <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new?template=bug_report.md" class="settingsLink" rel="noopener" target="_blank">open a Github issue</a> with a screenshot or copy-paste of your browsers console (Ctrl + Shift + I > "Console"). It shows the last actions done and potential errors. Thank you! <br> <br> <span class="settingsTitle"> Potential broken features </span> <br> Mario Party is hugely RNG based so some events are rare and as such hard to figure out how they work. <br> Be sure to check your coin count after some of these as it might not be correct anymore: <ul> 	<li>SMP Minigame tied rewards</li> 	<li>Battle Minigames (especially ties)</li> <li>Lucky/ Extra- Bad Luck Events (some might even be missing)</li> <li>VS space in SMP</li> <li>MPDS Duel space</li> </ul> </span>';
 /*
 * Starts the shortcut feature or advances to the next state.
 */
@@ -21,15 +22,23 @@ function startShortcut () {
 		statSynced = true;
 	}
 
+	if (curGame != 'mpds' && curGame != 'smp') {
+		shortcutNotif('The selected game is not supported.', true);
+		return;
+	}
+
+	if (slots['a' + slots.sel].assistOn != true) {
+		shortcutState = 0;
+		setup = false;
+		slots['a' + slots.sel].assistOn = true;
+		saveAssist();
+	}
+
 	console.log('[MPO] Shortcut State: ' + shortcutState);
-	document.getElementById('shortcutBattle').style.display = 'none'; //remove later - actually, nevermind
+	document.getElementById('shortcutBattle').style.display = 'none';
 
 	switch (shortcutState) {
 		case 0: // start "choose order"
-			if (curGame != 'mpds' && curGame != 'smp') {
-				shortcutNotif('The selected game is not supported.', true);
-				return;
-			}
 			document.getElementById('backButton').disabled = '';
 
 			shortcutGame = curGame;
@@ -115,8 +124,7 @@ function startShortcut () {
 					}	
 				}
 
-				editInner('shortcutSpan', '<span class="settingsText" style="width: 100%; white-space: normal; line-height: 30px;"> Games currently supported: <img src="img/mpds.png" style="width: 40px;"> <img src="img/smp.png" style="width: 40px;"> <br> Only 4 players without Teams (this includes Partner Party) are currently supported. <br> <br> A lot of features depend on the coin counter, it\'s recommended to show it and keep it up to date. <br> This is currently in heavy development and some features might not work as intended. <br> <br> <button onclick="startShortcut()">Start game</button> <br> <br> <span class="settingsTitle"> Report Bugs </span> <br> In case something breaks or doesn\'t provide the expected output, please click on "Generate & Copy" and <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">contact me</a> or <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new?template=bug_report.md" class="settingsLink" rel="noopener" target="_blank">open a Github issue</a> with a screenshot or copy-paste of your browsers console (Ctrl + Shift + I > "Console"). It shows the last actions done and potential errors. Thank you! <br> <br> <span class="settingsTitle"> Potential broken features </span> <br> Mario Party is hugely RNG based so some events are rare and as such hard to figure out how they work. <br> Be sure to check your coin count after some of these as it might not be correct anymore: <ul> 	<li>SMP Minigame tied rewards</li> 	<li>Battle Minigames (especially ties)</li> <li>Lucky/ Extra- Bad Luck Events (some might even be missing)</li> <li>VS space in SMP</li> <li>MPDS Duel space</li> </ul> </span>');
-				//^^ remember to replace prepareShortcut() with startShortcut() & add copy-paste it in shortcutBack()
+				editInner('shortcutSpan', defaultText);
 				setup = false;
 				shortcutNotif('Game completed! Start a new one?');
 				//game done
@@ -125,26 +133,7 @@ function startShortcut () {
 				execOnMain('counterButtons', [1, 'P', 1, 'curTurn']);
 				// Final 5 turns
 				if ((getInner('curTurnText') == parseInt(getInner('maxTurnText')) - 4 && shortcutGame != 'smp') || (getInner('curTurnText') == parseInt(getInner('maxTurnText')) - 2 && shortcutGame === 'smp')) {
-					shortcutState = 4;
-					if (shortcutGame === 'smp') {
-						finalFiveEvent = 'doubleSpaces';
-						shortcutState = 1;
-						shortcutNotif('Started Final 3 Turns.');
-						startShortcut();
-						return;
-					} else {
-						document.getElementById('skipButton').disabled = 'true';
-						editInner('shortcutSpan', '<span class="shortcutText"> Final 5 Turns! </span> <br> <br> <span id="finalFiveTie"></span> <span class="settingsText"> Select the event: </span> <select id="finalFiveEvent"> <option value="20coins">Get 20 Coins</option> <option value="30coins">Get 30 Coins</option> <option value="1star">Get 1 Star</option> <option value="charity">Get 10 Coins from others</option> <option value="cheapStars">Stars for 5 coins</option> <option value="100stars">Get 100 Stars</option> <option value="300stars">Get 300 Stars</option> </select> <br> <br> <button onclick="finalFive()">Continue</button>');
-					}
-
-					lastPlace = getLastPlace();
-
-					if (lastPlace.length > 1) {
-						lastPlace = 0;
-						editInner('finalFiveTie', '<span class="settingsText"> Select the last player: </span> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="finalFive(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="finalFive(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="finalFive(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="finalFive(4)"> <br> <br>');
-					} else if (shortcutGame === 'smp') {
-						finalFive();
-					}
+					startFinalFive();
 				}
 				startShortcut();
 				return;
@@ -238,7 +227,7 @@ function shortcutBack () {
 			return;
 		case 1:
 			shortcutState = 0;
-			editInner('shortcutSpan', '<span class="settingsText" style="width: 100%; white-space: normal; line-height: 30px;"> Games currently supported: <img src="img/mpds.png" style="width: 40px;"> <img src="img/smp.png" style="width: 40px;"> <br> Only 4 players without Teams (this includes Partner Party) are currently supported. <br> <br> A lot of features depend on the coin counter, it\'s recommended to show it and keep it up to date. <br> This is currently in heavy development and some features might not work as intended. <br> <br> <button onclick="startShortcut()">Start game</button> <br> <br> <span class="settingsTitle"> Report Bugs </span> <br> In case something breaks or doesn\'t provide the expected output, please click on "Generate & Copy" and <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">contact me</a> or <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new?template=bug_report.md" class="settingsLink" rel="noopener" target="_blank">open a Github issue</a> with a screenshot or copy-paste of your browsers console (Ctrl + Shift + I > "Console"). It shows the last actions done and potential errors. Thank you! <br> <br> <span class="settingsTitle"> Potential broken features </span> <br> Mario Party is hugely RNG based so some events are rare and as such hard to figure out how they work. <br> Be sure to check your coin count after some of these as it might not be correct anymore: <ul> 	<li>SMP Minigame tied rewards</li> 	<li>Battle Minigames (especially ties)</li> <li>Lucky/ Extra- Bad Luck Events (some might even be missing)</li> <li>VS space in SMP</li> <li>MPDS Duel space</li> </ul> </span>');
+			editInner('shortcutSpan', defaultText);
 			document.getElementById('skipButton').disabled = 'true';
 			document.getElementById('backButton').disabled = 'true';
 			break;
@@ -271,12 +260,77 @@ function shortcutBack () {
 			turnEnd();
 			startShortcut();
 			turnCurPlayer = 4;
+			orderCurPlayer = playerOrder[turnCurPlayer];
 			break;
 		case 4:
 			execOnMain('turns', ['curTurn', 1, 'M']);
 			shortcutState = 2;
 			document.getElementById('skipButton').disabled = '';
 			startShortcut();
+			break;
+	}
+}
+
+/*
+* Loads Assist slot.
+*/
+function loadAssistSlot () {
+	var sel = 'a' + slots.sel;
+	if (slots[sel].assistOn != true) {
+		editInner('shortcutSpan', defaultText);
+		return;
+	}
+	shortcutState = slots[sel].shortcutState;
+	setup = slots[sel].setup;
+	turnCurPlayer = slots[sel].turnCurPlayer;
+	orderCurPlayer = slots[sel].orderCurPlayer;
+	shortcutGame = slots[sel].shortcutGame;
+	minigameSpaces = slots[sel].minigameSpaces;
+	finalFiveEvent = slots[sel].finalFiveEvent;
+	playerOrder = slots[sel].playerOrder;
+	statusEffects = slots[sel].statusEffects;
+	allies = slots[sel].allies;
+	bobombAlly = slots[sel].bobombAlly;
+	diceUsed = slots[sel].diceUsed;
+	starCost = slots[sel].starCost;
+	starPrice = slots[sel].starPrice;
+
+	document.getElementById('skipButton').disabled = '';
+	document.getElementById('backButton').disabled = '';
+
+	prepareTurn();
+
+	switch (shortcutState) {
+		case 0:
+			editInner('shortcutSpan', defaultText);
+			document.getElementById('skipButton').disabled = 'true';
+			document.getElementById('backButton').disabled = 'true';
+			return;
+		case 1:
+			shortcutState = 0;
+			var curGameBackup = curGame;
+			curGame = shortcutGame;
+			startShortcut();
+			curGame = curGameBackup;
+			break;
+		case 2:
+			shortcutState = 1;
+			var turnCurPlayerBackup = turnCurPlayer;
+			var orderCurPlayerBackup = orderCurPlayer;
+			startShortcut();
+
+			turnCurPlayer = turnCurPlayerBackup;
+			orderCurPlayer = orderCurPlayerBackup;
+			if (turnCurPlayer != 1) {
+				//turnEnd();
+			}
+			break;
+		case 3:
+			shortcutState = 2;
+			startShortcut();
+			break;
+		case 4:
+			startFinalFive();
 			break;
 	}
 }
@@ -327,7 +381,7 @@ function shortcutSettings (close) {
 }
 
 /*
-* 
+* Resets the current Shortcut game.
 */
 function resetShortcut () {
 	shortcutState = 3;
@@ -335,6 +389,21 @@ function resetShortcut () {
 	counterButtons(1, 'S', parseInt(getInner('maxTurnText')), 'curTurn');
 	startShortcut();
 	counterButtons(1, 'S', turn, 'curTurn');
+}
+
+/*
+* Loads the previously saved shortcut game.
+*/
+function loadShortcut () {
+	var slots2 = JSON.parse(localStorage.getItem('a' + slots.sel));
+	if (slots2.assistOn === true) {
+		slots['a' + slots.sel] = slots2;
+		loadAssistSlot();
+		shortcutNotif('Loaded previously saved assist state.');
+	} else {
+		shortcutNotif('There was no previous assist save.', true);
+	}
+	shortcutSettings(true);
 }
 
 /*
@@ -394,6 +463,32 @@ function removeArrayItem (arr, item) {
 		}
 	}
 	return arr;
+}
+
+/*
+* Starts Final Five.
+*/
+function startFinalFive () {
+	shortcutState = 4;
+	if (shortcutGame === 'smp') {
+		finalFiveEvent = 'doubleSpaces';
+		shortcutState = 1;
+		shortcutNotif('Started Final 3 Turns.');
+		startShortcut();
+		return;
+	} else {
+		document.getElementById('skipButton').disabled = 'true';
+		editInner('shortcutSpan', '<span class="shortcutText"> Final 5 Turns! </span> <br> <br> <span id="finalFiveTie"></span> <span class="settingsText"> Select the event: </span> <select id="finalFiveEvent"> <option value="20coins">Get 20 Coins</option> <option value="30coins">Get 30 Coins</option> <option value="1star">Get 1 Star</option> <option value="charity">Get 10 Coins from others</option> <option value="cheapStars">Stars for 5 coins</option> <option value="100stars">Get 100 Stars</option> <option value="300stars">Get 300 Stars</option> </select> <br> <br> <button onclick="finalFive()">Continue</button>');
+	}
+
+	lastPlace = getLastPlace();
+
+	if (lastPlace.length > 1) {
+		lastPlace = 0;
+		editInner('finalFiveTie', '<span class="settingsText"> Select the last player: </span> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="finalFive(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="finalFive(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="finalFive(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="finalFive(4)"> <br> <br>');
+	} else if (shortcutGame === 'smp') {
+		finalFive();
+	}
 }
 
 var lastPlace;
@@ -3241,5 +3336,9 @@ function removeSelected (elems) {
 	}
 }
 
+if (slots['a' + slots.sel].assistOn === true) {
+	loadAssistSlot();
+} else {
+	startShortcut();
+}
 console.log('[MPO] settings.js is loaded.');
-startShortcut();
