@@ -457,6 +457,10 @@ body {
 }
 
 /* == Slots == */
+#slotList {
+	-webkit-user-select: none;
+			user-select: none;
+}
 #slotList .slotDiv:hover {
 	background-color: rgba(0, 190, 0, 0.2);
 }
