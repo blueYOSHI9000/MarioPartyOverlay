@@ -509,20 +509,29 @@ window.onkeydown = ctrlPressed;
 window.onkeyup = ctrlReleased;
 
 var shortcutLoaded = false;
+var shortcutLoadType = 0; //0 = continue/setup game | 1 = force setup start | 2 = quick start
 /*
-* Loads settings.js to start the shortcut feature.
+* Loads the assist files to start the shortcut feature.
+* 
+* @param {number} type How it should be started, see shortcutLoadType var.
 */
-function prepareShortcut () {
+function prepareShortcut (type) {
 	if (shortcutLoaded === true) {
 		startShortcut();
 		return;
 	}
-	var script = document.createElement("script");
-	script.src = 'settings.js';
-	shortcutLoaded = true;
-	document.getElementById('shortcutSettingsButton').disabled = '';
+	if (isNaN(type) === false) {
+		shortcutLoadType = type;
+	}
+	var scripts = ['assist-misc.js', 'assist-minigame.js', 'assist-turn.js', 'assist-spaces.js', 'assist-core.js'];
+	for (let num = 0; num < scripts.length; num++) {
+		var script = document.createElement("script");
+		script.src = scripts[num];
+		shortcutLoaded = true;
+		document.getElementById('shortcutSettingsButton').disabled = '';
 
-	document.head.appendChild(script);
+		document.head.appendChild(script);
+	}
 }
 
 /*

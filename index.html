@@ -200,8 +200,7 @@
 		<select id="starCostSelect" onchange="starCost = getValue('starCostSelect')">
 			<option value="undefined">Normal</option>
 			<option value="double">Doubled</option>
-		</select> <br>
-		<span class="settingsNote">Star cost automatically resets after buying a star.</span> <br>
+		</select> <span class="settingsNote">Star cost automatically resets after buying a star.</span> <br>
 
 		<span class="settingsText"> Star Price: </span> <input type="number" min="0" max="99" onchange="starPrice = this.value"> <span class="settingsNote"> Changes the default star price, 0 is default.</span> <br> <br>
 
@@ -514,7 +513,8 @@
 
 							A lot of features depend on the coin counter, it's recommended to show it and keep it up to date. <br>
 							This is currently in heavy development and some features might not work as intended. <br> <br>
-							<button onclick="prepareShortcut()">Start game</button> <br>
+							<span onclick="prepareShortcut(0)" class="assistButton">Start game</span> <br>
+							<!--button onclick="prepareShortcut(1)" style="margin: 20px 25px 0px 15px;">Start over</button> <button onclick="prepareShortcut(2)">Quick start</button> <br-->
 							<span class="settingsNote">When switching from popout back to normal settings it might not display the correct state, just load the save from inside the assist settings (top left) when that happens.</span> <br> <br>
 
 							<span class="settingsTitle"> Report Bugs </span> <br>
@@ -1192,7 +1192,6 @@
 	<script src="saving.js"></script>
 	<script src="textoutput.js"></script>
 	<script src="characters.js"></script>
-	<!--script src="settings.js"></script-->
 	<script src="core.js"></script>
 	<script src="main.js"></script>
 	<script type="text/javascript"> window.onload = prepareMPOBackup(); </script>

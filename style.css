@@ -393,6 +393,20 @@ body {
 	border-bottom: #f10d00 2px solid;
 }
 
+.assistButton {
+	font-family: 'Mario';
+	font-size: 22px;
+	color: #000000;
+	-webkit-text-stroke: 1.5px #d7d7d7;
+			text-stroke: 1.5px #d7d7d7;	
+	text-shadow: 3px 3px 4px #202020;
+	letter-spacing: -.5px;
+	cursor: pointer;
+}
+.assistButton:hover {
+	color: #b50000;
+}
+
 #settings {
 	position: fixed;
 	left: 0;
@@ -596,10 +610,14 @@ body {
 
 
 #shortcutSettingsPopup {
+	position: absolute;
+	overflow-y: scroll;
+	max-height: 80%;
 	width: 500px;
 	padding: 1rem;
 	z-index: 999;
 	display: none;
+	border-radius: 25px 0px 0px 25px;
 }
 #shortcutOrder img {
 	width: 50px;
@@ -1189,5 +1207,4 @@ button {
 	z-index: 98;
 	opacity: 0;
 	font-size: 25px;
-	top: -3px;
 }
