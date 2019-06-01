@@ -1012,5 +1012,12 @@ window.onbeforeunload = function(){
 
 document.getElementById('type1').focus();
 
+new Sortable(document.getElementById('slotList'), {
+	animation: 150,
+	onUpdate: function (evt) {
+		updateSlotOrder();
+	}
+});
+
 window.onload = prepareMPO();
 window.onload = changeBGColor('bgColor');

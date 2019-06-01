@@ -67,6 +67,7 @@ var defA = {
 var slots = {
 	sel: 0,
 	max: 0, //highest slot number, used to determine how many slots there are
+	order: [0]
 };
 slots.s0 = copyVar(defS);
 slots.c0 = copyVar(defC);
@@ -284,6 +285,7 @@ function slotSel (slot) {
 		slotCooldown = true;
 		setTimeout(function () { slotCooldown = false; }, 150);
 	}
+	setTimeout(function () { console.log(JSON.parse(JSON.stringify(slots.order))); }, 30);
 
 	switch (document.querySelector('input[name="slotType"]:checked').id) {
 		case 'slotDuplicate':
@@ -298,11 +300,13 @@ function slotSel (slot) {
 		default:
 			if (popout === true) {
 				sendMessage('backup');
+				sendMessage('savePlayers');
+				sendMessage('saveAssist');
 			} else {
 				backup();
+				savePlayers();
+				saveAssist();
 			}
-			savePlayers();
-			saveAssist();
 			if (slot === slots.sel) {
 				return;
 			}
@@ -374,12 +378,11 @@ function loadSlot (slot) {
 	for (var num = 0; num < elems.length; num++) {
 		elems[num].classList.remove('slotSelected');
 	}
-	document.getElementById('slotList').children[slot].classList.add('slotSelected');
+	document.querySelectorAll('[slot="' + slot + '"]')[0].classList.add('slotSelected');
 
 	changeGame(slots[sel].curGame);
-	changeGame(slots[sel].curGame);
 	callHighlight(false, true);
-	backup();
+	//backup();
 
 	if (shortcutLoaded === true) {
 		loadAssistSlot();
@@ -409,11 +412,12 @@ function createSlot (slot, update) {
 			slots[selC] = copyVar(defC);
 			slots[selA] = copyVar(defA);
 		} else {
-			slots[selS] = slots['s' + slot];
-			slots[selC] = slots['c' + slot];
-			slots[selA] = slots['a' + slot];
+			slots[selS] = copyVar(slots['s' + slot]);
+			slots[selC] = copyVar(slots['c' + slot]);
+			slots[selA] = copyVar(slots['a' + slot]);
 		}
 		selM = slots.max;
+		slots.order.push(slots.max);
 	} else {
 		selS = 's' + slot;
 		selC = 'c' + slot;
@@ -422,7 +426,7 @@ function createSlot (slot, update) {
 	}
 
 	if (update === true) {
-		var elem = document.getElementById('slotList').children[slot];
+		var elem = document.querySelectorAll('[slot="' + slot + '"]')[0];
 	} else {
 		var elem = document.createElement("div");
 		document.getElementById('slotList').appendChild(elem);
@@ -461,17 +465,18 @@ function deleteSlot (slot) {
 	}
 	document.getElementById('slotAll' + slot).id = 'xyzyx1';
 	document.getElementById('slotImg' + slot).id = 'xyzyx2'; //needs to be changed so it's previous ID can be used
+	document.querySelectorAll('[slot="' + slot + '"]')[0].id = 'xyzyxdel';
 	var num2;
 	for (let num = slot + 1; num < slots.max + 1; num++) {
 		num2 = num - 1;
-		document.getElementById('slotList').children[num].slot = num2;
-		slots['s' + num2] = slots['s' + num];
-		slots['c' + num2] = slots['c' + num];
-		slots['a' + num2] = slots['a' + num];
+		document.getElementById('slotAll' + num).parentNode.parentNode.slot = num2;
 		document.getElementById('slotAll' + num).id = 'slotAll' + num2;
 		document.getElementById('slotImg' + num).id = 'slotImg' + num2;
+		slots['s' + num2] = copyVar(slots['s' + num]);
+		slots['c' + num2] = copyVar(slots['c' + num]);
+		slots['a' + num2] = copyVar(slots['a' + num]);
 	}
-	var elem = document.getElementById('slotList').children[slot];
+	var elem = document.getElementById('xyzyxdel');
 	elem.parentElement.removeChild(elem);
 	delete slots['s' + slots.max];
 	delete slots['c' + slots.max];
@@ -484,6 +489,7 @@ function deleteSlot (slot) {
 	if (slots.max <= 20) {
 		document.getElementById('savefileError').style.display = 'none';
 	}
+	updateSlotOrder();
 
 	localStorage.removeItem('s' + slots.max + 1);
 	localStorage.removeItem('c' + slots.max + 1);
@@ -494,6 +500,20 @@ function deleteSlot (slot) {
 		localStorage.setItem('a' + num, JSON.stringify(slots['c' + num]));
 	}
 	localStorage.setItem('sMax', slots.max);
+	localStorage.setItem('sOrder', JSON.stringify(slots.order));
+}
+
+/*
+* Updates the slot order.
+*/
+function updateSlotOrder () {
+	var elems = document.getElementById('slotList').children;
+	var arr = [];
+	for (let num = 0; num < elems.length; num++) {
+		arr.push(parseInt(elems[num].slot));
+	}
+	slots.order = arr;
+	localStorage.setItem('sOrder', JSON.stringify(arr));
 }
 
 /*
@@ -817,6 +837,13 @@ function prepareMPO () {
 			localStorage.setItem('sel', 0);
 		}
 		loadSlot(parseInt(localStorage.getItem('sel')));
+		if (parseInt(localStorage.getItem('lsVer')) >= 6) {
+			var arr = JSON.parse(localStorage.getItem('sOrder'));
+			for (var num = 0; num < arr.length; num++) {
+				var d = document.querySelectorAll('[slot="' + arr[num] + '"]')[0];
+				d.parentNode.appendChild(d);
+			}
+		}
 	}
 
 	document.getElementById('savefileCookieError').style.display = 'none';
@@ -834,7 +861,7 @@ function prepareMPO () {
 
 	coinStarTie();
 	callDisplayOnOff();
-	localStorage.setItem('lsVer', 5); //localStorage version, used to check how everything is stored
+	localStorage.setItem('lsVer', 6); //localStorage version, used to check how everything is stored
 
 	prepared = true;
 }

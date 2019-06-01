@@ -494,9 +494,9 @@
 					<input type="radio" name="slotType" id="slotDelete"> <label class="slotButtons" onclick="slotSel('delete')">Delete</label> <br> <br>
 
 					<span id="slotList">
-						<div class="slotDiv" onclick="slotSel(this)" slot="0">
-							<span style="position: relative;"> <span class="settingsText slotTurnText"> <span class="slotTurn"> 4/20 </span> Turn </span> <span class="settingsText slotAllText" id="slotAll0" style="visibility: hidden;">All</span> <img src="img/smp.png" class="slotImg" id="slotImg0"> </span> <br>
-							<img src="img/smp/dk.png"> <img src="img/smp/peach.png"> <img src="img/smp/drybones.png"> <img src="img/smp/pompom.png"> <br>
+						<div class="slotDiv slotSelected" onclick="slotSel(this)" slot="0">
+							<span style="position: relative;"> <span class="settingsText slotTurnText"> <span class="slotTurn"> 1/20 </span> Turn </span> <span class="settingsText slotAllText" id="slotAll0">All</span> <img src="img/smp.png" class="slotImg" id="slotImg0" style="visibility: hidden;"> </span> <br>
+							<img src="img/mpsrIcons/mario.png"> <img src="img/mpsrIcons/luigi.png"> <img src="img/mpsrIcons/yoshi.png"> <img src="img/mpsrIcons/peach.png"> <br>
 						</div>
 					</span>
 					<div class="slotDiv" id="emptySlot" onclick="execOnMain('createSlot', ['empty'])">
@@ -1189,6 +1189,7 @@
 	</div>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/interact.js/1.2.6/interact.min.js"></script>
+	<script src="sortable.min.js"></script>
 	<script src="saving.js"></script>
 	<script src="textoutput.js"></script>
 	<script src="characters.js"></script>
