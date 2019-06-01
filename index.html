@@ -479,6 +479,11 @@
 						<b class="warningText" id="textOutputWarning" style="visibility: hidden;"> Hi if you see this </b>
 					</span> <br>
 
+					<span class="settingsTitle"> Local Backup </span> <br>
+					<button onclick="downloadFile();" style="margin-bottom: 10px;">Save Backup</button> <br>
+					<label for="uploadFile"> Load Backup: </label> <input type="file" id="uploadFile" name="uploadFile" onchange="uploadFile()" accept="application/json"> <br>
+					<span class="error" id="backupError" style="opacity: 0;">The uploaded file could not be recognized.</span> <br> <br>
+
 					<span class="settingsTitle"> Reset </span> <br>
 					<button onclick="changeSettings('resetSettings')" id="resetSettingsButton"> Reset Settings </button> <br> <br>
 					<button onclick="localStorage.clear()">Clear local storage</button> <span class="settingsNote">(This will clear all saved settings, characters, counters and stats)</span>

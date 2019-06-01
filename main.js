@@ -786,6 +786,63 @@ function getValue (id) {
 }
 
 /*
+* Outputs a JSON file with localStorage in it.
+*/
+function downloadFile () {
+	var data = JSON.stringify(localStorage);
+	//data = data.replace(/\\/g, '\\');
+	var filename = 'MPO Backup';
+	var type = 'application/json';
+    var file = new Blob([data], {type: type});
+    if (window.navigator.msSaveOrOpenBlob) // IE10+
+        window.navigator.msSaveOrOpenBlob(file, filename);
+    else { // Others
+        var a = document.createElement("a"),
+                url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);  
+        }, 0); 
+    }
+}
+
+/*
+* Checks an uploaded backup file if it's valid or not.
+*/
+function uploadFile () {
+	var file = document.getElementById('uploadFile').files[0];
+	var reader = new FileReader();
+	reader.readAsText(file);
+	reader.onload = function () {
+		setTimeout(function () {
+			document.getElementById('backupError').style.opacity = 1;
+		}, 50);
+		var text = JSON.parse(reader.result);
+		if (text.lsVer != null) {
+			writeLocalStorage(text);
+			location = location;
+		}
+	};
+}
+
+/*
+* Updates localStorage with new data.
+* 
+* @param {object} data The data.
+*/
+function writeLocalStorage(data) {
+	for (var property in o) {
+		if (o.hasOwnProperty(property)) {
+			localStorage.setItem(property, o[property]);
+		}
+	}
+}
+
+/*
 * Checks if it's executed in the popout and calls sendMessage() if it is.
 * 
 * @param {string} id The first attribute.

@@ -571,11 +571,10 @@ body {
 	display: none;
 }
 
-/*.slotButtons button { //unused - maybe reused later on
-	width: 95px;
-	float: right;
-	margin-bottom: 4px;
-}*/
+
+#uploadFile {
+	font-size: 17px;
+}
 
 /* == Shortcuts == */
 .turnBreak {
