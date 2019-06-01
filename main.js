@@ -832,9 +832,9 @@ function uploadFile () {
 /*
 * Updates localStorage with new data.
 * 
-* @param {object} data The data.
+* @param {object} o The data.
 */
-function writeLocalStorage(data) {
+function writeLocalStorage(o) {
 	for (var property in o) {
 		if (o.hasOwnProperty(property)) {
 			localStorage.setItem(property, o[property]);
