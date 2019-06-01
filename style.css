@@ -246,6 +246,8 @@ body {
 	font-size: 20px;
 	white-space: nowrap;
 	color: #4242ee;
+	cursor: pointer;
+	text-decoration: underline;
 }
 .settingsNote {
 	color: #666666;
@@ -329,6 +331,10 @@ body {
 	display: inline-block;
 }
 #siteError {
+	display: none;
+	font-size: 20px;
+}
+#cookieError {
 	display: none;
 	font-size: 20px;
 }

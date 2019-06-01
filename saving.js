@@ -737,6 +737,7 @@ function getUrl(variable) {
 * Prepares all settings that were saved in local storage when the site gets loaded.
 */
 var prepared = false;
+var cookiesOn = false;
 var popout = false;
 function prepareMPO () {
 	if (getUrl('p') == 1) {
@@ -755,11 +756,13 @@ function prepareMPO () {
 
 		sendMessage('syncPopout');
 		localStorage.getItem('enableHighlight'); //If cookies are blocked, this will break the function immediately
+		cookiesOn = true;
 		prepared = true;
 		return;
 	}
 
 	localStorage.getItem('enableHighlight'); //If cookies are blocked, this will break the function immediately
+	cookiesOn = true;
 	if (localStorage.getItem('saving') === 'true') {
 
 		editValue('enableInteract', stringToBoolean(localStorage.getItem('enableInteract')));
@@ -858,6 +861,10 @@ function prepareMPO () {
 			elems[num].setAttribute('data-y', arrY[num]);
 		}
 	}
+	if (localStorage.getItem('new') != '1') {
+		showHideSettings('tutorial');
+		localStorage.setItem('new', '1');
+	}
 
 	coinStarTie();
 	callDisplayOnOff();
@@ -872,7 +879,11 @@ function prepareMPO () {
 function prepareMPOBackup () {
 	if (prepared != true) {
 		console.warn('[MPO] Could not properly start MPO.');
-		document.getElementById('siteError').style.display = 'block';
+		if (cookiesOn === false) {
+			document.getElementById('cookieError').style.display = 'block';
+		} else {
+			document.getElementById('siteError').style.display = 'block';
+		}
 		if (popout != true) {
 			callDisplayOnOff();
 		}

@@ -416,7 +416,8 @@
 
 				<!-- General Settings -->
 				<div id="generalMPOSettings" class="visible">
-					<span id="siteError" class="error"> MPO could not be loaded properly, try reloading or clearing local storage. <br> This might also appear if cookies are blocked. <br> <br> </span>
+					<span id="siteError" class="error"> MPO could not be loaded properly, try reloading or clearing local storage. <br> <br> </span>
+					<span id="cookieError" class="error"> Cookies seem to be blocked, the site still works but nothing can be saved. <br> MPO only saves stats & settings. It does <b>NOT</b> save any information related to you. <br> <br> </span>
 
 					<span class="settingsTitle"> Features </span> <br>
 					<label for="autoPopout"> <span class="settingsText"> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="sendSettingsMsg(this.id, this.checked)"> </label> <br> <br>
@@ -1150,17 +1151,19 @@
 					<span style="font-size: 21px;"><a class="settingsLink" rel="noopener" target="_blank" href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Mario-Party-Bonus-Star-List">Bonus Star List</a></span>
 				</div>
 
-				<div id="tutorialSettings" class="hidden"> <span class="settingsText"> Click on the numbers to increase the counters, by holding Ctrl you can decrease them instead. The amount can be changed at the top (1, 5 or 10). <br class="lineHeight">
-					It's possible to switch between 1 and 5 by holding Shift, if one of the two is selected. <br class="lineHeight">
-					To give/take the coin star, you just click on the character. <br> <br>
-					The "Generate & Copy" button outputs all stats as text and copies it. <br class="lineHeight">
-					The Save/Reload buttons save & reload all stats. Not settings, characters or anything else; only stats. They will be stored permanently in your browser too. <br> <br>
+				<div id="tutorialSettings" class="hidden"> <span class="settingsText">
+					Click on the numbers to increase the counters. Hold Ctrl to subtract instead. <br>
+					If 1/5 is selected, hold Shift to switch the two. <br>
+					Click on the characters to give or take the coin star. <br> <br>
 
-					Note: All settings are applied immediately, the save button will only save it permanently as otherwise they get reset when you refresh the site.</span>
+					In settings, the various tabs help to set everything up. <br>
+					<a class="settingsLink" onclick="showHideSettings('slots')">Savefiles</a> saves characters, activated counters, stats and assist progress; not settings. <br>
+					<a class="settingsLink" onclick="showHideSettings('shortcut')">Assist</a> makes tracking all the stats way easier but is a bit more complicated and might not support all games yet.
+				</span>
 
 					<br> <br> <div id="creditsBorder"></div> <br>
 					<!--span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki" class="settingsLink" rel="noopener" target="_blank">More in-depth Tutorial</a> </span> <br class="lineHeight"-->
-
+					<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Using-MPO-inside-OBS" class="settingsLink" rel="noopener" target="_blank">Record MPO with Greenscreen</a> </span> <br class="lineHeight">
 					<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/projects/6" class="settingsLink" rel="noopener" target="_blank">Planned features</a> </span> <br class="lineHeight">
 
 					<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new/choose" class="settingsLink" rel="noopener" target="_blank">Got an issue or want to request a feature?</a> </span> <span class="settingsNote"> (You can also @ me on <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank" style="font-size: 18px;">Twitter</a>)</span> <br> <br>
