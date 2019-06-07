@@ -16,14 +16,8 @@ body {
 }
 
 /* == Global == */
-.whiteText {
-	color: white;
-}
 .marginLeft {
 	padding-left: 50px;
-}
-.lineHeight {
-	line-height: 150%;
 }
 .draggable {
 	cursor: pointer;

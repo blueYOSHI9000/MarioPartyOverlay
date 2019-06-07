@@ -89,7 +89,7 @@ function startMinigame (player) {
 			}
 			shortcutNotif(minigamePlayers.join(' & ') + ' won a minigame.');
 		case 'smp':
-			if (minigamePlayers.length === 0 || minigamePlayers.length === 4) {
+			if (minigameRanks.first.length === 4 || minigameRanks.second.length === 4 || minigameRanks.third.length === 4 || minigameRanks.fourth.length === 4) {
 				player = 'tie';
 			}
 			if (player === 'tie') {

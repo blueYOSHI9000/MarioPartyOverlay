@@ -568,7 +568,7 @@ function openSettings (force) {
 * @param {array} attributes The attributes that the function should use.
 */
 function changeSettings (functionName, attributes) {
-	//console.log('functionName: '  + functionName + ', attributes: ' + attributes)
+	//console.log('functionName: '  + functionName + ', attributes: ' + attributes);
 	if (popout == true) {
 		if (attributes) {
 			sendMessage(functionName + '+' + attributes.join('+'));

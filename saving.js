@@ -449,6 +449,7 @@ function createSlot (slot, update) {
 	localStorage.setItem(selC, JSON.stringify(slots[selC]));
 	localStorage.setItem(selS, JSON.stringify(slots[selS]));
 	localStorage.setItem(selA, JSON.stringify(slots[selA]));
+	localStorage.setItem('sOrder', JSON.stringify(slots.order));
 	localStorage.setItem('sMax', slots.max);
 }
 
@@ -843,6 +844,9 @@ function prepareMPO () {
 		loadSlot(parseInt(localStorage.getItem('sel')));
 		if (parseInt(localStorage.getItem('lsVer')) >= 6) {
 			var arr = JSON.parse(localStorage.getItem('sOrder'));
+			if (typeof arr != 'array') {
+				arr = [0];
+			}
 			for (var num = 0; num < arr.length; num++) {
 				var d = document.querySelectorAll('[slot="' + arr[num] + '"]')[0];
 				d.parentNode.appendChild(d);

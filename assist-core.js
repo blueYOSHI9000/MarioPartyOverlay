@@ -30,8 +30,8 @@ function startShortcut () {
 	if (slots['a' + slots.sel].assistOn != true) {
 		shortcutState = 0;
 		setup = false;
-		slots['a' + slots.sel].assistOn = true;
 		saveAssist();
+		slots['a' + slots.sel].assistOn = true;
 	}
 
 	console.log('[MPO] Shortcut State: ' + shortcutState);
@@ -457,8 +457,10 @@ function turnEnd () {
 			}
 			break;
 		case 'smp':
-			editInner('stealSpan', ''); //close steal
-			document.getElementById('starPricesContainer').style.display = 'unset';
+			if (getValue('shortcutSimpleMode') != true) {
+				editInner('stealSpan', ''); //close steal
+				document.getElementById('starPricesContainer').style.display = 'unset';
+			}
 			stealOpen = false;
 
 			elems = document.getElementById('allyDiceSelection').children;
