@@ -146,57 +146,111 @@ function startShortcut () {
 * Prepares the shortcut turn screen depending on the selected game.
 */
 function prepareTurn () {
-	switch (shortcutGame) {
-		case 'mpds':
-			editInner('turnStars', 'Stars');
-			editInner('turnStarsSelection', '<img src="img/stars.png" onclick="buyStar()"> <img src="img/shortcut/mpds/magicjarstars.png" style="margin-left: 50px;" onclick="buyStar(\'jarstar\')"> <img src="img/shortcut/mpds/magicjarcoins.png" onclick="buyStar(\'jarcoins\')"> <img src="img/shortcut/mpds/magicjarfail.png" onclick="buyStar(\'jarfail\')"> <br> <img src="img/shortcut/mpds/bluenote.png" onclick="buyStar(\'bluenote\')"> <img src="img/shortcut/mpds/greennote.png" onclick="buyStar(\'greennote\')"> <img src="img/shortcut/mpds/yellownote.png" onclick="buyStar(\'yellownote\')"> <img src="img/shortcut/mpds/orangenote.png" onclick="buyStar(\'orangenote\')"> <img src="img/shortcut/mpds/rednote.png" onclick="buyStar(\'rednote\')">');
+	document.getElementById('shoppingColumn').style.display = 'unset';
+	document.getElementById('hexColumn').style.display = 'unset';
+	editInner('itemEventSpan', '');
+	editInner('spaceEventsSpan', '');
+	if (getValue('shortcutSimpleMode') === true) {
+		switch (shortcutGame) {
+			case 'mpds':
+				editInner('turnStars', 'Stars');
+				editInner('turnStarsSelection', '<img src="img/stars.png" onclick="buyStar()">');
 
-			editInner('turnDiceTitle', 'Dice number rolled');
-			editInner('turnDiceSelectionSpan', '<span id="turnDiceSelection" class="shortcutText spanSelection"> <span id="dice1" onclick="turnDice(this.id)">1</span> <span id="dice2" onclick="turnDice(this.id)">2</span> <span id="dice3" onclick="turnDice(this.id)">3</span> <span id="dice4" onclick="turnDice(this.id)">4</span> <span id="dice5" onclick="turnDice(this.id)">5</span> <span id="dice6" onclick="turnDice(this.id)">6</span> <span id="dice7" onclick="turnDice(this.id)">7</span> <span id="dice8" onclick="turnDice(this.id)">8</span> <span id="dice9" onclick="turnDice(this.id)">9</span> <span id="dice10" onclick="turnDice(this.id)">10</span> </span> <br> <img src="img/shortcut/mpds/diceblock.png" id="turnCurDice"> <span id="turnCurDiceText" class="shortcutText">??</span> <br> <br>');
+				editInner('turnDiceTitle', 'Dice number rolled');
+				editInner('turnDiceSelectionSpan', '<span id="turnDiceSelection" class="shortcutText spanSelection"> <span id="dice1" onclick="turnDice(this.id)">1</span> <span id="dice2" onclick="turnDice(this.id)">2</span> <span id="dice3" onclick="turnDice(this.id)">3</span> <span id="dice4" onclick="turnDice(this.id)">4</span> <span id="dice5" onclick="turnDice(this.id)">5</span> <span id="dice6" onclick="turnDice(this.id)">6</span> <span id="dice7" onclick="turnDice(this.id)">7</span> <span id="dice8" onclick="turnDice(this.id)">8</span> <span id="dice9" onclick="turnDice(this.id)">9</span> <span id="dice10" onclick="turnDice(this.id)">10</span> </span> <br> <img src="img/shortcut/mpds/diceblock.png" id="turnCurDice"> <span id="turnCurDiceText" class="shortcutText">??</span> <br> <br>');
 
-			editInner('turnShoppingTitle', 'Shopping');
-			editInner('turnShoppingSelection', '<span class="settingsNote"> Hold Ctrl to undo, same applies to stars. </span> <br> <span id="shoppingSpan" class="spanSelection shortcutText"> <span onclick="shopping(1)">1</span> <span onclick="shopping(2)">2</span> <span onclick="shopping(3)">3</span> <span onclick="shopping(7)">7</span> <br> <span onclick="shopping(8)">8</span> <span onclick="shopping(15)">15</span> <span onclick="shopping(20)">20</span> <span onclick="shopping(25)">25</span> </span>');
+				editInner('turnShoppingTitle', '');
+				editInner('turnShoppingSelection', '');
 
-			editInner('turnItemsTitle', 'Items used');
-			editInner('turnItems', '<img src="img/shortcut/mpds/double.png" id="itemDouble" onclick="turnItem(this.id)"> <img src="img/shortcut/mpds/triple.png" id="itemTriple" onclick="turnItem(this.id)"> <img src="img/shortcut/mpds/half.png" id="itemHalf" onclick="turnItem(this.id)"> <img src="img/hex.png" id="itemHex" onclick="turnItem(this.id)"> <span class="shortcutText" id="itemOther" onclick="turnItem(this.id)">Other</span>');
+				editInner('turnItemsTitle', 'Items used');
+				editInner('turnItems', '<img src="img/hex.png" id="itemHex" onclick="turnItem(this.id)"> <span class="shortcutText" id="itemOther" onclick="turnItem(this.id)">Other</span>');
 
-			editInner('turnSpacesTitle', 'Space landed on');
-			editInner('turnSpaces', '<img src="img/shortcut/mpds/bluespace.png" id="spaceBlue" onclick="turnSpace(this.id)"> <img src="img/shortcut/mpds/redspace.png" id="spaceRed" onclick="turnSpace(this.id)"> <img src="img/shortcut/mpds/happeningspace.png" id="spaceHappening" onclick="turnSpace(this.id)"> <img src="img/shortcut/mpds/friendspace.png" id="spaceFriend" onclick="turnSpace(this.id)"> <img src="img/shortcut/mpds/duelspace.png" id="spaceDuel" onclick="turnSpace(this.id)"> <img src="img/shortcut/mpds/bowserspace.png" id="spaceBowser" onclick="turnSpace(this.id)">');
+				editInner('turnSpacesTitle', 'Space landed on');
+				editInner('turnSpaces', '<img src="img/shortcut/mpds/bluespace.png" id="spaceBlue" onclick="turnSpace(this.id)"> <img src="img/shortcut/mpds/redspace.png" id="spaceRed" onclick="turnSpace(this.id)"> <img src="img/shortcut/mpds/happeningspace.png" id="spaceHappening" onclick="turnSpace(this.id)"> <img src="img/shortcut/mpds/friendspace.png" id="spaceFriend" onclick="turnSpace(this.id)"> <img src="img/shortcut/mpds/duelspace.png" id="spaceDuel" onclick="turnSpace(this.id)"> <img src="img/shortcut/mpds/bowserspace.png" id="spaceBowser" onclick="turnSpace(this.id)">');
 
-			document.getElementById('hexColumn').style.display = '';
-			editInner('turnHexTitle', 'Hex landed on');
-			editInner('turnHexSelection', '<img src="img/shortcut/mpds/coinsm10.png" id="coinsm10" onclick="turnHex(this.id)"> <img src="img/shortcut/mpds/coinsm20.png" id="coinsm20" onclick="turnHex(this.id)"> <img src="img/shortcut/mpds/coinswap.png" id="coinswap" onclick="turnHex(this.id)"> <img src="img/shortcut/mpds/starm1.png" id="starm1" onclick="turnHex(this.id)"> <img src="img/shortcut/mpds/starm2.png" id="starm2" onclick="turnHex(this.id)"> <img src="img/shortcut/mpds/spaceswap.png" id="spaceswap" onclick="turnHex(this.id)"> <img src="img/shortcut/mpds/coinblock.png" id="coinblock" onclick="turnHex(this.id)"> <img src="img/shortcut/mpds/starblock.png" id="starblock" onclick="turnHex(this.id)">');
-			break;
-		case 'smp':
-			editInner('turnStars', 'Stars');
-			editInner('turnStarsSelection', '<img src="img/stars.png" onclick="buyStar()"> <img style="margin-left: 45px;" src="img/shortcut/smp/lakitu.png" onclick="steal()"> <img style="margin-left: 45px;" src="img/ally.png" onclick="getAlly()"> <br> <span id="stealSpan"> </span> <span id="starPricesContainer" class="imgSelection"> <span class="settingsNote"> <i> Only </i> select a star price when playing on <br> Kamek\'s Tantalizing Tower. </span> <br> <span id="starPricesSpan"> <img src="img/shortcut/smp/kamek5.png" id="kamek5" onclick="starPrices(5)"> <img src="img/shortcut/smp/kamek10.png" id="kamek10" onclick="starPrices(10)"> <img src="img/shortcut/smp/kamek15.png" id="kamek15" onclick="starPrices(15)"> </span> </span>');
+				editInner('turnHexTitle', 'Hex landed on');
+				editInner('turnHexSelection', '<img src="img/shortcut/mpds/starm1.png" id="starm1" onclick="turnHex(this.id)"> <img src="img/shortcut/mpds/starm2.png" id="starm2" onclick="turnHex(this.id)">');
+				break;
+			case 'smp':
+				editInner('turnStars', 'Stars');
+				editInner('turnStarsSelection', '<img src="img/stars.png" onclick="buyStar()"> <img style="margin-left: 90px;" src="img/ally.png" onclick="getAlly()">');
 
-			editInner('turnDiceTitle', 'Dice number rolled');
-			editInner('turnDiceSelectionSpan', '<div style="width: 350px; position: relative;"> <span style="position: absolute; right: 0;"> <span id="allyDice1" class="spanSelection shortcutText"> <img src="img/smp/rosalina.png" style="width: 30px;"> <span onclick="allyDice(1, 1)"> 1 </span> <span onclick="allyDice(1, 2)"> 2 </span> </span> <br> <span id="allyDice2" class="spanSelection shortcutText"> <img src="img/smp/bowser.png" style="width: 30px;"> <span onclick="allyDice(2, 1)"> 1 </span> <span onclick="allyDice(2, 2)"> 2 </span> </span> <br> <span id="allyDice3" class="spanSelection shortcutText"> <img src="img/smp/yoshi.png" style="width: 30px;"> <span onclick="allyDice(3, 1)"> 1 </span> <span onclick="allyDice(3, 2)"> 2 </span> 	</span>  <br> <span id="allyDice4" class="spanSelection shortcutText"> <img src="img/smp/bowserjr.png" style="width: 30px;"> <span onclick="allyDice(4, 1)"> 1 </span> <span onclick="allyDice(4, 2)"> 2 </span> </span> </span><span id="allyDiceSelection" class="imgSelection"> <img src="img/shortcut/smp/defaultdice.png" class="selected" onclick="changeAllyDice(0)"> <img src="img/smp/daisy.png" onclick="changeAllyDice(1)"> <img src="img/smp/bowser.png" onclick="changeAllyDice(2)" style="display: none;"> <img src="img/smp/peach.png" onclick="changeAllyDice(3)" style="display: none;"> <img src="img/smp/drybones.png" onclick="changeAllyDice(4)" style="display: none;"> <img src="img/smp/bowserjr.png" onclick="changeAllyDice(5)" style="display: none;"> </span>  <br><span id="turnDiceSelection" class="shortcutText spanSelection"> <span id="dice1" onclick="turnDice(this.id)">1</span> <span id="dice2" onclick="turnDice(this.id)">2</span> <span id="dice3" onclick="turnDice(this.id)">3</span> <span id="dice4" onclick="turnDice(this.id)">4</span> <span id="dice5" onclick="turnDice(this.id)">5</span> <span id="dice6" onclick="turnDice(this.id)">6</span> </span> <br> <img src="img/shortcut/mpds/diceblock.png" id="turnCurDice"> <span id="turnCurDiceText" class="shortcutText">??</span> </div> <br>');
+				editInner('turnDiceTitle', 'Dice number rolled');
+				editInner('turnDiceSelectionSpan', '<div style="width: 350px; position: relative;"> <span style="position: absolute; right: 0;"> <span id="allyDice1" class="spanSelection shortcutText"> <img src="img/smp/rosalina.png" style="width: 30px;"> <span onclick="allyDice(1, 1)"> 1 </span> <span onclick="allyDice(1, 2)"> 2 </span> </span> <br> <span id="allyDice2" class="spanSelection shortcutText"> <img src="img/smp/bowser.png" style="width: 30px;"> <span onclick="allyDice(2, 1)"> 1 </span> <span onclick="allyDice(2, 2)"> 2 </span> </span> <br> <span id="allyDice3" class="spanSelection shortcutText"> <img src="img/smp/yoshi.png" style="width: 30px;"> <span onclick="allyDice(3, 1)"> 1 </span> <span onclick="allyDice(3, 2)"> 2 </span> 	</span>  <br> <span id="allyDice4" class="spanSelection shortcutText"> <img src="img/smp/bowserjr.png" style="width: 30px;"> <span onclick="allyDice(4, 1)"> 1 </span> <span onclick="allyDice(4, 2)"> 2 </span> </span> </span><span id="allyDiceSelection" class="imgSelection"> <img src="img/shortcut/smp/defaultdice.png" class="selected" onclick="changeAllyDice(0)"> <img src="img/smp/daisy.png" onclick="changeAllyDice(1)"> <img src="img/smp/bowser.png" onclick="changeAllyDice(2)" style="display: none;"> <img src="img/smp/peach.png" onclick="changeAllyDice(3)" style="display: none;"> <img src="img/smp/drybones.png" onclick="changeAllyDice(4)" style="display: none;"> <img src="img/smp/bowserjr.png" onclick="changeAllyDice(5)" style="display: none;"> </span>  <br><span id="turnDiceSelection" class="shortcutText spanSelection"> <span id="dice1" onclick="turnDice(this.id)">1</span> <span id="dice2" onclick="turnDice(this.id)">2</span> <span id="dice3" onclick="turnDice(this.id)">3</span> <span id="dice4" onclick="turnDice(this.id)">4</span> <span id="dice5" onclick="turnDice(this.id)">5</span> <span id="dice6" onclick="turnDice(this.id)">6</span> </span> <br> <img src="img/shortcut/mpds/diceblock.png" id="turnCurDice"> <span id="turnCurDiceText" class="shortcutText">??</span> </div> <br>');
 
-			editInner('turnShoppingTitle', 'Shopping');
-			editInner('turnShoppingSelection', '<span class="settingsNote"> Hold Ctrl to undo, same applies to stars. </span> <br> <span id="shoppingSpan" class="spanSelection shortcutText"> <span onclick="shopping(3)">3</span> <span onclick="shopping(5)">5</span> <span onclick="shopping(6)">6</span> <span onclick="shopping(10)">10</span> </span>');
+				document.getElementById('shoppingColumn').style.display = 'none';
 
-			editInner('turnItemsTitle', 'Items used');
-			editInner('turnItems', '<img src="img/shortcut/smp/mushroom.png" id="itemMushroom" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/goldmushroom.png" id="itemGoldMushroom" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/poisonmushroom.png" id="itemPoisonMushroom" onclick="turnItem(this.id)"> <br> <img src="img/shortcut/smp/coinado.png" id="itemCoinado" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/allyphone.png" id="itemAllyPhone" onclick="turnItem(this.id)"> <span class="shortcutText" id="itemOther" onclick="turnItem(this.id)">Other</span>');
-			// if partner party == true
-			//editInner('turnItems', '<img src="img/shortcut/smp/mushroom.png" id="itemMushroom" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/goldmushroom.png" id="itemGoldMushroom" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/poisonmushroom.png" id="itemPoisonMushroom" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/golddrink.png" id="itemGoldDrink" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/peepabell.png" id="itemPeepaBell" onclick="turnItem(this.id)"> <br> <img src="img/shortcut/smp/coinado.png" id="itemCoinado" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/duelglove.png" id="itemDuelGlove" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/allyphone.png" id="itemAllyPhone" onclick="turnItem(this.id)"> <span class="shortcutText" id="itemOther" onclick="turnItem(this.id)">Other</span>');
+				editInner('turnItemsTitle', 'Items used');
+				editInner('turnItems', '<img src="img/shortcut/smp/mushroom.png" id="itemMushroom" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/goldmushroom.png" id="itemGoldMushroom" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/poisonmushroom.png" id="itemPoisonMushroom" onclick="turnItem(this.id)"> <br> <img src="img/shortcut/smp/allyphone.png" id="itemAllyPhone" onclick="turnItem(this.id)"> <span class="shortcutText" id="itemOther" onclick="turnItem(this.id)">Other</span>');
 
-			editInner('turnSpacesTitle', 'Space landed on');
-			editInner('turnSpaces', '<img src="img/shortcut/smp/bluespace.png" id="spaceBlue" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/redspace.png" id="spaceRed" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/happeningspace.png" id="spaceHappening" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/allyspace.png" id="spaceAlly" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/itemspace.png" id="spaceItem" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/luckyspace.png" id="spaceLucky" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/badluckspace.png" id="spaceBadLuck" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/extrabadluckspace.png" id="spaceExtraBadLuck" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/vsspace.png" id="spaceVS" onclick="turnSpace(this.id)">');
+				editInner('turnSpacesTitle', 'Space landed on');
+				editInner('turnSpaces', '<img src="img/shortcut/smp/bluespace.png" id="spaceBlue" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/redspace.png" id="spaceRed" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/happeningspace.png" id="spaceHappening" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/allyspace.png" id="spaceAlly" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/itemspace.png" id="spaceItem" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/luckyspace.png" id="spaceLucky" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/badluckspace.png" id="spaceBadLuck" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/extrabadluckspace.png" id="spaceExtraBadLuck" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/vsspace.png" id="spaceVS" onclick="turnSpace(this.id)">');
 
-			document.getElementById('hexColumn').style.display = 'none';
+				document.getElementById('hexColumn').style.display = 'none';
 
-			document.getElementById('removeAllyChar1').children[0].src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[playerOrder[2]] + '.png';
-			document.getElementById('removeAllyChar2').children[0].src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[playerOrder[3]] + '.png';
-			document.getElementById('removeAllyChar3').children[0].src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[playerOrder[4]] + '.png';
-			document.getElementById('allyDiceSelection').children[1].src = 'img/smp/' + characters[orderCurPlayer] + '.png';
+				document.getElementById('removeAllyChar1').children[0].src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[playerOrder[2]] + '.png';
+				document.getElementById('removeAllyChar2').children[0].src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[playerOrder[3]] + '.png';
+				document.getElementById('removeAllyChar3').children[0].src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[playerOrder[4]] + '.png';
+				document.getElementById('allyDiceSelection').children[1].src = 'img/smp/' + characters[orderCurPlayer] + '.png';
 
-			for (var num = 1; num < 5; num++) {
-				document.getElementById(characters[num] + 'Ally').classList.add('allySelectedChar');
-				document.getElementById(characters[num] + 'Ally').classList.add('allySelected');
-			}			
-			break;
+				for (var num = 1; num < 5; num++) {
+					document.getElementById(characters[num] + 'Ally').classList.add('allySelectedChar');
+					document.getElementById(characters[num] + 'Ally').classList.add('allySelected');
+				}			
+				break;
+		}
+	} else {
+		switch (shortcutGame) {
+			case 'mpds':
+				editInner('turnStars', 'Stars');
+				editInner('turnStarsSelection', '<img src="img/stars.png" onclick="buyStar()"> <img src="img/shortcut/mpds/magicjarstars.png" style="margin-left: 50px;" onclick="buyStar(\'jarstar\')"> <img src="img/shortcut/mpds/magicjarcoins.png" onclick="buyStar(\'jarcoins\')"> <img src="img/shortcut/mpds/magicjarfail.png" onclick="buyStar(\'jarfail\')"> <br> <img src="img/shortcut/mpds/bluenote.png" onclick="buyStar(\'bluenote\')"> <img src="img/shortcut/mpds/greennote.png" onclick="buyStar(\'greennote\')"> <img src="img/shortcut/mpds/yellownote.png" onclick="buyStar(\'yellownote\')"> <img src="img/shortcut/mpds/orangenote.png" onclick="buyStar(\'orangenote\')"> <img src="img/shortcut/mpds/rednote.png" onclick="buyStar(\'rednote\')">');
+
+				editInner('turnDiceTitle', 'Dice number rolled');
+				editInner('turnDiceSelectionSpan', '<span id="turnDiceSelection" class="shortcutText spanSelection"> <span id="dice1" onclick="turnDice(this.id)">1</span> <span id="dice2" onclick="turnDice(this.id)">2</span> <span id="dice3" onclick="turnDice(this.id)">3</span> <span id="dice4" onclick="turnDice(this.id)">4</span> <span id="dice5" onclick="turnDice(this.id)">5</span> <span id="dice6" onclick="turnDice(this.id)">6</span> <span id="dice7" onclick="turnDice(this.id)">7</span> <span id="dice8" onclick="turnDice(this.id)">8</span> <span id="dice9" onclick="turnDice(this.id)">9</span> <span id="dice10" onclick="turnDice(this.id)">10</span> </span> <br> <img src="img/shortcut/mpds/diceblock.png" id="turnCurDice"> <span id="turnCurDiceText" class="shortcutText">??</span> <br> <br>');
+
+				editInner('turnShoppingTitle', 'Shopping');
+				editInner('turnShoppingSelection', '<span class="settingsNote"> Hold Ctrl to undo, same applies to stars. </span> <br> <span id="shoppingSpan" class="spanSelection shortcutText"> <span onclick="shopping(1)">1</span> <span onclick="shopping(2)">2</span> <span onclick="shopping(3)">3</span> <span onclick="shopping(7)">7</span> <br> <span onclick="shopping(8)">8</span> <span onclick="shopping(15)">15</span> <span onclick="shopping(20)">20</span> <span onclick="shopping(25)">25</span> </span>');
+
+				editInner('turnItemsTitle', 'Items used');
+				editInner('turnItems', '<img src="img/shortcut/mpds/double.png" id="itemDouble" onclick="turnItem(this.id)"> <img src="img/shortcut/mpds/triple.png" id="itemTriple" onclick="turnItem(this.id)"> <img src="img/shortcut/mpds/half.png" id="itemHalf" onclick="turnItem(this.id)"> <img src="img/hex.png" id="itemHex" onclick="turnItem(this.id)"> <span class="shortcutText" id="itemOther" onclick="turnItem(this.id)">Other</span>');
+
+				editInner('turnSpacesTitle', 'Space landed on');
+				editInner('turnSpaces', '<img src="img/shortcut/mpds/bluespace.png" id="spaceBlue" onclick="turnSpace(this.id)"> <img src="img/shortcut/mpds/redspace.png" id="spaceRed" onclick="turnSpace(this.id)"> <img src="img/shortcut/mpds/happeningspace.png" id="spaceHappening" onclick="turnSpace(this.id)"> <img src="img/shortcut/mpds/friendspace.png" id="spaceFriend" onclick="turnSpace(this.id)"> <img src="img/shortcut/mpds/duelspace.png" id="spaceDuel" onclick="turnSpace(this.id)"> <img src="img/shortcut/mpds/bowserspace.png" id="spaceBowser" onclick="turnSpace(this.id)">');
+
+				editInner('turnHexTitle', 'Hex landed on');
+				editInner('turnHexSelection', '<img src="img/shortcut/mpds/coinsm10.png" id="coinsm10" onclick="turnHex(this.id)"> <img src="img/shortcut/mpds/coinsm20.png" id="coinsm20" onclick="turnHex(this.id)"> <img src="img/shortcut/mpds/coinswap.png" id="coinswap" onclick="turnHex(this.id)"> <img src="img/shortcut/mpds/starm1.png" id="starm1" onclick="turnHex(this.id)"> <img src="img/shortcut/mpds/starm2.png" id="starm2" onclick="turnHex(this.id)"> <img src="img/shortcut/mpds/spaceswap.png" id="spaceswap" onclick="turnHex(this.id)"> <img src="img/shortcut/mpds/coinblock.png" id="coinblock" onclick="turnHex(this.id)"> <img src="img/shortcut/mpds/starblock.png" id="starblock" onclick="turnHex(this.id)">');
+				break;
+			case 'smp':
+				editInner('turnStars', 'Stars');
+				editInner('turnStarsSelection', '<img src="img/stars.png" onclick="buyStar()"> <img style="margin-left: 45px;" src="img/shortcut/smp/lakitu.png" onclick="steal()"> <img style="margin-left: 45px;" src="img/ally.png" onclick="getAlly()"> <br> <span id="stealSpan"> </span> <span id="starPricesContainer" class="imgSelection"> <span class="settingsNote"> <i> Only </i> select a star price when playing on <br> Kamek\'s Tantalizing Tower. </span> <br> <span id="starPricesSpan"> <img src="img/shortcut/smp/kamek5.png" id="kamek5" onclick="starPrices(5)"> <img src="img/shortcut/smp/kamek10.png" id="kamek10" onclick="starPrices(10)"> <img src="img/shortcut/smp/kamek15.png" id="kamek15" onclick="starPrices(15)"> </span> </span>');
+
+				editInner('turnDiceTitle', 'Dice number rolled');
+				editInner('turnDiceSelectionSpan', '<div style="width: 350px; position: relative;"> <span style="position: absolute; right: 0;"> <span id="allyDice1" class="spanSelection shortcutText"> <img src="img/smp/rosalina.png" style="width: 30px;"> <span onclick="allyDice(1, 1)"> 1 </span> <span onclick="allyDice(1, 2)"> 2 </span> </span> <br> <span id="allyDice2" class="spanSelection shortcutText"> <img src="img/smp/bowser.png" style="width: 30px;"> <span onclick="allyDice(2, 1)"> 1 </span> <span onclick="allyDice(2, 2)"> 2 </span> </span> <br> <span id="allyDice3" class="spanSelection shortcutText"> <img src="img/smp/yoshi.png" style="width: 30px;"> <span onclick="allyDice(3, 1)"> 1 </span> <span onclick="allyDice(3, 2)"> 2 </span> 	</span>  <br> <span id="allyDice4" class="spanSelection shortcutText"> <img src="img/smp/bowserjr.png" style="width: 30px;"> <span onclick="allyDice(4, 1)"> 1 </span> <span onclick="allyDice(4, 2)"> 2 </span> </span> </span><span id="allyDiceSelection" class="imgSelection"> <img src="img/shortcut/smp/defaultdice.png" class="selected" onclick="changeAllyDice(0)"> <img src="img/smp/daisy.png" onclick="changeAllyDice(1)"> <img src="img/smp/bowser.png" onclick="changeAllyDice(2)" style="display: none;"> <img src="img/smp/peach.png" onclick="changeAllyDice(3)" style="display: none;"> <img src="img/smp/drybones.png" onclick="changeAllyDice(4)" style="display: none;"> <img src="img/smp/bowserjr.png" onclick="changeAllyDice(5)" style="display: none;"> </span>  <br><span id="turnDiceSelection" class="shortcutText spanSelection"> <span id="dice1" onclick="turnDice(this.id)">1</span> <span id="dice2" onclick="turnDice(this.id)">2</span> <span id="dice3" onclick="turnDice(this.id)">3</span> <span id="dice4" onclick="turnDice(this.id)">4</span> <span id="dice5" onclick="turnDice(this.id)">5</span> <span id="dice6" onclick="turnDice(this.id)">6</span> </span> <br> <img src="img/shortcut/mpds/diceblock.png" id="turnCurDice"> <span id="turnCurDiceText" class="shortcutText">??</span> </div> <br>');
+
+				editInner('turnShoppingTitle', 'Shopping');
+				editInner('turnShoppingSelection', '<span class="settingsNote"> Hold Ctrl to undo, same applies to stars. </span> <br> <span id="shoppingSpan" class="spanSelection shortcutText"> <span onclick="shopping(3)">3</span> <span onclick="shopping(5)">5</span> <span onclick="shopping(6)">6</span> <span onclick="shopping(10)">10</span> </span>');
+
+				editInner('turnItemsTitle', 'Items used');
+				editInner('turnItems', '<img src="img/shortcut/smp/mushroom.png" id="itemMushroom" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/goldmushroom.png" id="itemGoldMushroom" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/poisonmushroom.png" id="itemPoisonMushroom" onclick="turnItem(this.id)"> <br> <img src="img/shortcut/smp/coinado.png" id="itemCoinado" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/allyphone.png" id="itemAllyPhone" onclick="turnItem(this.id)"> <span class="shortcutText" id="itemOther" onclick="turnItem(this.id)">Other</span>');
+				// if partner party == true
+				//editInner('turnItems', '<img src="img/shortcut/smp/mushroom.png" id="itemMushroom" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/goldmushroom.png" id="itemGoldMushroom" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/poisonmushroom.png" id="itemPoisonMushroom" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/golddrink.png" id="itemGoldDrink" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/peepabell.png" id="itemPeepaBell" onclick="turnItem(this.id)"> <br> <img src="img/shortcut/smp/coinado.png" id="itemCoinado" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/duelglove.png" id="itemDuelGlove" onclick="turnItem(this.id)"> <img src="img/shortcut/smp/allyphone.png" id="itemAllyPhone" onclick="turnItem(this.id)"> <span class="shortcutText" id="itemOther" onclick="turnItem(this.id)">Other</span>');
+
+				editInner('turnSpacesTitle', 'Space landed on');
+				editInner('turnSpaces', '<img src="img/shortcut/smp/bluespace.png" id="spaceBlue" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/redspace.png" id="spaceRed" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/happeningspace.png" id="spaceHappening" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/allyspace.png" id="spaceAlly" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/itemspace.png" id="spaceItem" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/luckyspace.png" id="spaceLucky" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/badluckspace.png" id="spaceBadLuck" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/extrabadluckspace.png" id="spaceExtraBadLuck" onclick="turnSpace(this.id)"> <img src="img/shortcut/smp/vsspace.png" id="spaceVS" onclick="turnSpace(this.id)">');
+
+				document.getElementById('hexColumn').style.display = 'none';
+
+				document.getElementById('removeAllyChar1').children[0].src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[playerOrder[2]] + '.png';
+				document.getElementById('removeAllyChar2').children[0].src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[playerOrder[3]] + '.png';
+				document.getElementById('removeAllyChar3').children[0].src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[playerOrder[4]] + '.png';
+				document.getElementById('allyDiceSelection').children[1].src = 'img/smp/' + characters[orderCurPlayer] + '.png';
+
+				for (var num = 1; num < 5; num++) {
+					document.getElementById(characters[num] + 'Ally').classList.add('allySelectedChar');
+					document.getElementById(characters[num] + 'Ally').classList.add('allySelected');
+				}			
+				break;
+		}
 	}
 }
 

@@ -4,6 +4,16 @@
 * @param {string} star What kind of star, empty if normal one.
 */
 function buyStar (star) {
+	if (getValue('shortcutSimpleMode') === true) {
+		if (getValue('mobileTypeMinus') === true) {
+			execOnMain('counterButtons', [orderCurPlayer, 'M', 1, 'stars']);
+			shortcutNotif(getCharName(orderCurPlayer) + ' lost a star.');
+		} else {
+			execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'stars']);
+			shortcutNotif(getCharName(orderCurPlayer) + ' got a star.');
+		}
+		return;
+	}
 	var coinNum
 	if (star) {
 		switch (star) {
@@ -712,7 +722,9 @@ function turnItem (item) {
 				execOnMain('counterButtons', [orderCurPlayer, 'M', 5, 'running']);
 				break;
 			case 'PoisonMushroom':
-				statusEffects['p' + itemEventState[1]] = removeArrayItem(statusEffects['p' + itemEventState[1]], 'poison');
+				if (typeof statusEffects['p' + itemEventState[1]] === 'number') { //failsafe if array is empty
+					statusEffects['p' + itemEventState[1]] = removeArrayItem(statusEffects['p' + itemEventState[1]], 'poison');
+				}
 				if (itemEventState[1] === orderCurPlayer) {
 					if (poisonSub > 2) {
 						execOnMain('counterButtons', [orderCurPlayer, 'P', 2, 'running']);

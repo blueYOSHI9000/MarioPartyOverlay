@@ -11,167 +11,13 @@ function turnSpace (space) {
 
 	if (activeSpace != '' && activeSpace != undefined) { //undo space if it's already selected or changed into a different one
 		document.getElementById('turnPlayerName').style.color = '';
-		switch (activeSpace) {
-			case 'Blue':
-				if (starPrice != 0) {
-					if (finalFiveEvent === 'doubleSpaces') {
-						execOnMain('counterButtons', [orderCurPlayer, 'M', 10, 'coins']);
-					} else {
-						execOnMain('counterButtons', [orderCurPlayer, 'M', 6, 'coins']);
-					}
-				} else {
-					if (finalFiveEvent === 'doubleSpaces') {
-						execOnMain('counterButtons', [orderCurPlayer, 'M', 6, 'coins']);
-					} else {
-						execOnMain('counterButtons', [orderCurPlayer, 'M', 3, 'coins']);
-					}
-				}
-				shortcutNotif('Undid the blue space.');
-				break;
-			case 'Red':
-				if (starPrice != 0) {
-					if (finalFiveEvent === 'doubleSpaces') {
-						execOnMain('counterButtons', [orderCurPlayer, 'P', 10, 'coins']);
-					} else {
-						execOnMain('counterButtons', [orderCurPlayer, 'P', 6, 'coins']);
-					}
-				} else {
-					if (finalFiveEvent === 'doubleSpaces') {
-						execOnMain('counterButtons', [orderCurPlayer, 'P', 6, 'coins']);
-					} else {
-						execOnMain('counterButtons', [orderCurPlayer, 'P', 3, 'coins']);
-					}
-				}
-				execOnMain('counterButtons', [orderCurPlayer, 'M', 1, 'redSpace']);
-				shortcutNotif('Undid the red space.');
-				break;
-			case 'Happening':
-				execOnMain('counterButtons', [orderCurPlayer, 'M', 1, 'happening']);
-				shortcutNotif('Undid the happening space, coins gathered need to be removed manually.');
-				break;
-			case 'Friend':
+		if (getValue('shortcutSimpleMode') != true) {
+			undoSpace(space);
+		} else {
+			if (space === 'Friend') {
 				execOnMain('counterButtons', [orderCurPlayer, 'M', 1, 'friendSpace']);
-
-				if (spaceEventState[0] == 'friend' && spaceEventState[1] != 0) {
-					execOnMain('counterButtons', [orderCurPlayer, 'M', 5, 'coins']);
-					execOnMain('counterButtons', [spaceEventState[1], 'M', 5, 'coins']);
-				}
-				spaceEventState = [];
-				shortcutNotif('Undid the friend space.');
-				break;
-			case 'Duel':
-				if (spaceEventState[5]) {
-					if (spaceEventState[1] == 'done') {
-						if (spaceEventState[5] == '1star' || spaceEventState[5] == '2stars') {
-							execOnMain('counterButtons', [spaceEventState[6], 'M', spaceEventState[2], 'stars']);
-							execOnMain('counterButtons', [orderCurPlayer, 'P', spaceEventState[3], 'stars']);
-							execOnMain('counterButtons', [spaceEventState[7], 'P', spaceEventState[4], 'stars']);
-						} else {
-							execOnMain('counterButtons', [spaceEventState[6], 'M', spaceEventState[2], 'coins']);
-							execOnMain('counterButtons', [orderCurPlayer, 'P', spaceEventState[3], 'coins']);
-							execOnMain('counterButtons', [spaceEventState[7], 'P', spaceEventState[4], 'coins']);
-						}
-					} else if (spaceEventState[0] == 'duel') {
-						if (spaceEventState[2] == '1star' || spaceEventState[2] == '2stars') {
-							execOnMain('counterButtons', [orderCurPlayer, 'P', spaceEventState[4], 'stars']);
-							execOnMain('counterButtons', [spaceEventState[1], 'P', spaceEventState[5], 'stars']);
-						} else {
-							execOnMain('counterButtons', [orderCurPlayer, 'P', spaceEventState[4], 'coins']);
-							execOnMain('counterButtons', [spaceEventState[1], 'P', spaceEventState[5], 'coins']);
-						}
-					}
-				}
-				spaceEventState = ['duel', 'undo'];
-				shortcutNotif('Undid the duel space.');
-				break;
-			case 'Bowser':
-				if (spaceEventState[1] == 'done') {
-					switch (spaceEventState[2]) {
-						case 'coins':
-							execOnMain('counterButtons', [orderCurPlayer, 'P', spaceEventState[3], 'coins']);
-							break;
-						case 'stars':
-							execOnMain('counterButtons', [orderCurPlayer, 'P', spaceEventState[3], 'stars']);
-							break;
-						case 'charity':
-							execOnMain('counterButtons', [1, 'S', spaceEventState[3], 'coins']);
-							execOnMain('counterButtons', [2, 'S', spaceEventState[4], 'coins']);
-							execOnMain('counterButtons', [3, 'S', spaceEventState[5], 'coins']);
-							execOnMain('counterButtons', [4, 'S', spaceEventState[6], 'coins']);
-							break;
-						case 'equality':
-							execOnMain('counterButtons', [1, 'S', spaceEventState[3], 'coins']);
-							execOnMain('counterButtons', [2, 'S', spaceEventState[4], 'coins']);
-							execOnMain('counterButtons', [3, 'S', spaceEventState[5], 'coins']);
-							execOnMain('counterButtons', [4, 'S', spaceEventState[6], 'coins']);
-							break;
-					}
-					spaceEventState = ['bowser', 'undo'];
-				}
-				shortcutNotif('Undid the bowser space.');
-				break;
-			case 'Ally':
-				shortcutNotif('Undid Ally space. Allies gotten need to be removed manually.');
-				break;
-			case 'Lucky':
-				if (spaceEventState[1] == 'done') {
-					switch (spaceEventState[2]) {
-						case 'coins':
-							execOnMain('counterButtons', [orderCurPlayer, 'M', spaceEventState[3], 'coins']);
-							break;
-						case 'coinsrival':
-							execOnMain('counterButtons', [orderCurPlayer, 'M', spaceEventState[3], 'coins']);
-							execOnMain('counterButtons', [spaceEventState[4], 'P', spaceEventState[3], 'coins']);
-							break;
-						case 'stealally':
-							break;
-					}
-					spaceEventState = ['badluck', 'undo'];
-				}
-				shortcutNotif('Undid the lucky space.');
-				break;
-			case 'BadLuck':
-			case 'ExtraBadLuck':
-				if (spaceEventState[1] == 'done') {
-					switch (spaceEventState[2]) {
-						case 'coins':
-							execOnMain('counterButtons', [orderCurPlayer, 'P', spaceEventState[3], 'coins']);
-							break;
-						case 'coinsothers':
-							execOnMain('counterButtons', [1, 'S', spaceEventState[3], 'coins']);
-							execOnMain('counterButtons', [2, 'S', spaceEventState[4], 'coins']);
-							execOnMain('counterButtons', [3, 'S', spaceEventState[5], 'coins']);
-							execOnMain('counterButtons', [4, 'S', spaceEventState[6], 'coins']);
-							break;
-						case 'coinsrandom':
-							execOnMain('counterButtons', [orderCurPlayer, 'P', spaceEventState[3], 'coins']);
-							execOnMain('counterButtons', [spaceEventState[4], 'M', spaceEventState[3], 'coins']);
-							break;
-						case 'stars':
-							execOnMain('counterButtons', [1, 'S', spaceEventState[3], 'coins']);
-							execOnMain('counterButtons', [2, 'S', spaceEventState[4], 'coins']);
-							execOnMain('counterButtons', [3, 'S', spaceEventState[5], 'coins']);
-							execOnMain('counterButtons', [4, 'S', spaceEventState[6], 'coins']);
-							break;
-						case 'raisestarcost':
-							break;
-					}
-					spaceEventState = ['badluck', 'undo'];
-				}
-				execOnMain('counterButtons', [orderCurPlayer, 'M', 1, 'redSpace']);
-				shortcutNotif('Undid the bad luck space.');
-				break;
-
-			case 'VS':
-				if (spaceEventState[1] === 'done') {
-					execOnMain('counterButtons', [1, 'S', spaceEventState[3], 'coins']);
-					execOnMain('counterButtons', [2, 'S', spaceEventState[4], 'coins']);
-					execOnMain('counterButtons', [3, 'S', spaceEventState[5], 'coins']);
-					execOnMain('counterButtons', [4, 'S', spaceEventState[6], 'coins']);
-					spaceEventState = ['vsspace', 'undo'];
-				}
-				shortcutNotif('Undid the VS space.');
-				break;
+			}
+			shortcutNotif('Undid space landed on.');
 		}
 	}
 
@@ -198,6 +44,15 @@ function turnSpace (space) {
 			minigameSpaces[orderCurPlayer] = 'green';
 			document.getElementById('turnPlayerName').style.color = '#1dc632';
 			break;
+	}
+	if (getValue('shortcutSimpleMode') === true) {
+		if (space === 'Friend') {
+			execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'friendSpace']);
+		}
+		document.getElementById('space' + space).classList.add('selected');
+		document.getElementById('spaceEventImg').src = 'img/shortcut/' + shortcutGame + '/' + space.toLowerCase() + 'space.png';
+		activeSpace = space;
+		return;
 	}
 
 	switch (space) {
@@ -310,6 +165,176 @@ function turnSpace (space) {
 	document.getElementById('space' + space).classList.add('selected');
 	document.getElementById('spaceEventImg').src = 'img/shortcut/' + shortcutGame + '/' + space.toLowerCase() + 'space.png';
 	activeSpace = space;
+}
+
+/*
+* Undo the space previously landed on.
+*
+* @param {string} space The space.
+*/
+function undoSpace (space) {
+	switch (activeSpace) {
+		case 'Blue':
+			if (starPrice != 0) {
+				if (finalFiveEvent === 'doubleSpaces') {
+					execOnMain('counterButtons', [orderCurPlayer, 'M', 10, 'coins']);
+				} else {
+					execOnMain('counterButtons', [orderCurPlayer, 'M', 6, 'coins']);
+				}
+			} else {
+				if (finalFiveEvent === 'doubleSpaces') {
+					execOnMain('counterButtons', [orderCurPlayer, 'M', 6, 'coins']);
+				} else {
+					execOnMain('counterButtons', [orderCurPlayer, 'M', 3, 'coins']);
+				}
+			}
+			shortcutNotif('Undid the blue space.');
+			break;
+		case 'Red':
+			if (starPrice != 0) {
+				if (finalFiveEvent === 'doubleSpaces') {
+					execOnMain('counterButtons', [orderCurPlayer, 'P', 10, 'coins']);
+				} else {
+					execOnMain('counterButtons', [orderCurPlayer, 'P', 6, 'coins']);
+				}
+			} else {
+				if (finalFiveEvent === 'doubleSpaces') {
+					execOnMain('counterButtons', [orderCurPlayer, 'P', 6, 'coins']);
+				} else {
+					execOnMain('counterButtons', [orderCurPlayer, 'P', 3, 'coins']);
+				}
+			}
+			execOnMain('counterButtons', [orderCurPlayer, 'M', 1, 'redSpace']);
+			shortcutNotif('Undid the red space.');
+			break;
+		case 'Happening':
+			execOnMain('counterButtons', [orderCurPlayer, 'M', 1, 'happening']);
+			shortcutNotif('Undid the happening space, coins gathered need to be removed manually.');
+			break;
+		case 'Friend':
+			execOnMain('counterButtons', [orderCurPlayer, 'M', 1, 'friendSpace']);
+
+			if (spaceEventState[0] == 'friend' && spaceEventState[1] != 0) {
+				execOnMain('counterButtons', [orderCurPlayer, 'M', 5, 'coins']);
+				execOnMain('counterButtons', [spaceEventState[1], 'M', 5, 'coins']);
+			}
+			spaceEventState = [];
+			shortcutNotif('Undid the friend space.');
+			break;
+		case 'Duel':
+			if (spaceEventState[5]) {
+				if (spaceEventState[1] == 'done') {
+					if (spaceEventState[5] == '1star' || spaceEventState[5] == '2stars') {
+						execOnMain('counterButtons', [spaceEventState[6], 'M', spaceEventState[2], 'stars']);
+						execOnMain('counterButtons', [orderCurPlayer, 'P', spaceEventState[3], 'stars']);
+						execOnMain('counterButtons', [spaceEventState[7], 'P', spaceEventState[4], 'stars']);
+					} else {
+						execOnMain('counterButtons', [spaceEventState[6], 'M', spaceEventState[2], 'coins']);
+						execOnMain('counterButtons', [orderCurPlayer, 'P', spaceEventState[3], 'coins']);
+						execOnMain('counterButtons', [spaceEventState[7], 'P', spaceEventState[4], 'coins']);
+					}
+				} else if (spaceEventState[0] == 'duel') {
+					if (spaceEventState[2] == '1star' || spaceEventState[2] == '2stars') {
+						execOnMain('counterButtons', [orderCurPlayer, 'P', spaceEventState[4], 'stars']);
+						execOnMain('counterButtons', [spaceEventState[1], 'P', spaceEventState[5], 'stars']);
+					} else {
+						execOnMain('counterButtons', [orderCurPlayer, 'P', spaceEventState[4], 'coins']);
+						execOnMain('counterButtons', [spaceEventState[1], 'P', spaceEventState[5], 'coins']);
+					}
+				}
+			}
+			spaceEventState = ['duel', 'undo'];
+			shortcutNotif('Undid the duel space.');
+			break;
+		case 'Bowser':
+			if (spaceEventState[1] == 'done') {
+				switch (spaceEventState[2]) {
+					case 'coins':
+						execOnMain('counterButtons', [orderCurPlayer, 'P', spaceEventState[3], 'coins']);
+						break;
+					case 'stars':
+						execOnMain('counterButtons', [orderCurPlayer, 'P', spaceEventState[3], 'stars']);
+						break;
+					case 'charity':
+						execOnMain('counterButtons', [1, 'S', spaceEventState[3], 'coins']);
+						execOnMain('counterButtons', [2, 'S', spaceEventState[4], 'coins']);
+						execOnMain('counterButtons', [3, 'S', spaceEventState[5], 'coins']);
+						execOnMain('counterButtons', [4, 'S', spaceEventState[6], 'coins']);
+						break;
+					case 'equality':
+						execOnMain('counterButtons', [1, 'S', spaceEventState[3], 'coins']);
+						execOnMain('counterButtons', [2, 'S', spaceEventState[4], 'coins']);
+						execOnMain('counterButtons', [3, 'S', spaceEventState[5], 'coins']);
+						execOnMain('counterButtons', [4, 'S', spaceEventState[6], 'coins']);
+						break;
+				}
+				spaceEventState = ['bowser', 'undo'];
+			}
+			shortcutNotif('Undid the bowser space.');
+			break;
+		case 'Ally':
+			shortcutNotif('Undid Ally space. Allies gotten need to be removed manually.');
+			break;
+		case 'Lucky':
+			if (spaceEventState[1] == 'done') {
+				switch (spaceEventState[2]) {
+					case 'coins':
+						execOnMain('counterButtons', [orderCurPlayer, 'M', spaceEventState[3], 'coins']);
+						break;
+					case 'coinsrival':
+						execOnMain('counterButtons', [orderCurPlayer, 'M', spaceEventState[3], 'coins']);
+						execOnMain('counterButtons', [spaceEventState[4], 'P', spaceEventState[3], 'coins']);
+						break;
+					case 'stealally':
+						break;
+				}
+				spaceEventState = ['badluck', 'undo'];
+			}
+			shortcutNotif('Undid the lucky space.');
+			break;
+		case 'BadLuck':
+		case 'ExtraBadLuck':
+			if (spaceEventState[1] == 'done') {
+				switch (spaceEventState[2]) {
+					case 'coins':
+						execOnMain('counterButtons', [orderCurPlayer, 'P', spaceEventState[3], 'coins']);
+						break;
+					case 'coinsothers':
+						execOnMain('counterButtons', [1, 'S', spaceEventState[3], 'coins']);
+						execOnMain('counterButtons', [2, 'S', spaceEventState[4], 'coins']);
+						execOnMain('counterButtons', [3, 'S', spaceEventState[5], 'coins']);
+						execOnMain('counterButtons', [4, 'S', spaceEventState[6], 'coins']);
+						break;
+					case 'coinsrandom':
+						execOnMain('counterButtons', [orderCurPlayer, 'P', spaceEventState[3], 'coins']);
+						execOnMain('counterButtons', [spaceEventState[4], 'M', spaceEventState[3], 'coins']);
+						break;
+					case 'stars':
+						execOnMain('counterButtons', [1, 'S', spaceEventState[3], 'coins']);
+						execOnMain('counterButtons', [2, 'S', spaceEventState[4], 'coins']);
+						execOnMain('counterButtons', [3, 'S', spaceEventState[5], 'coins']);
+						execOnMain('counterButtons', [4, 'S', spaceEventState[6], 'coins']);
+						break;
+					case 'raisestarcost':
+						break;
+				}
+				spaceEventState = ['badluck', 'undo'];
+			}
+			execOnMain('counterButtons', [orderCurPlayer, 'M', 1, 'redSpace']);
+			shortcutNotif('Undid the bad luck space.');
+			break;
+
+		case 'VS':
+			if (spaceEventState[1] === 'done') {
+				execOnMain('counterButtons', [1, 'S', spaceEventState[3], 'coins']);
+				execOnMain('counterButtons', [2, 'S', spaceEventState[4], 'coins']);
+				execOnMain('counterButtons', [3, 'S', spaceEventState[5], 'coins']);
+				execOnMain('counterButtons', [4, 'S', spaceEventState[6], 'coins']);
+				spaceEventState = ['vsspace', 'undo'];
+			}
+			shortcutNotif('Undid the VS space.');
+			break;
+	}
 }
 
 var starCost = '';
