@@ -848,7 +848,7 @@ body {
 	padding-left: 12px;
 	padding-top: 6px;
 }
-.charSelector input{
+.charSelector input {
 	margin: 0;
 	padding: 0;
 	position: absolute;
@@ -857,28 +857,31 @@ body {
 #iconSelector input {
 	top: -24px;
 }
-.charSelector input:active +.charSelectorLabel, .charSelector input:active +.drinkcard-cc{opacity: .9;}
-.charSelector input:checked +.charSelectorLabel, .charSelector input:checked +.drinkcard-cc{
+.charSelector input:active +.charSelectorLabel, .charSelector input:active +.drinkcard-cc {
+	opacity: .9;
+}
+.charSelector input:checked +.charSelectorLabel, .charSelector input:checked +.drinkcard-cc {
 	-webkit-filter: none;
 	   -moz-filter: none;
 	        filter: none;
 }
 
-.charSelectorLabel{
+.charSelectorLabel {
 	cursor: pointer;
 	background-size: contain;
 	background-repeat: no-repeat;
 	display: inline-block;
 	height: 70px;
 	width: 70px;
-	/*-webkit-transition: all 100ms ease-in;
-	   -moz-transition: all 100ms ease-in;
-	        transition: all 100ms ease-in;*/
 	-webkit-filter: grayscale(.6) opacity(.5);
 	   -moz-filter: grayscale(.6) opacity(.5);
 	        filter: grayscale(.6) opacity(.5);
 }
-.charSelectorLabel:hover{
+.charSelectorLabelImg {
+	height: 70px;
+	width: 70px;
+}
+.charSelectorLabel:hover {
 	-webkit-filter: grayscale(.3) opacity(.9);
 	   -moz-filter: grayscale(.3) opacity(.9);
 	        filter: grayscale(.3) opacity(.9);

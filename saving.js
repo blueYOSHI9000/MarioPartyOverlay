@@ -73,6 +73,8 @@ slots.s0 = copyVar(defS);
 slots.c0 = copyVar(defC);
 slots.a0 = copyVar(defA);
 
+var characterList = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'toad', 'toadette', 'wario', 'waluigi', 'dk', 'diddy', 'birdo', 'bowser', 'bowserjr', 'koopakid', 'pompom', 'goomba', 'koopa', 'drybones', 'monty', 'boo', 'spike', 'blooper', 'shyguy', 'hammerbro', 'kamek'];
+
 var assistVer = 0; //assist version for slots, increased if variables are added/changed etc
 
 var counters = ['stars', 'coins', 'happening', 'minigame', 'redSpace', 'running', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat'];
@@ -739,6 +741,21 @@ var prepared = false;
 var cookiesOn = false;
 var popout = false;
 function prepareMPO () {
+
+	//load character list inside the characters tab
+	var arr = [];
+	for (let num = 1; num < 5; num++) {
+		for (let num2 = 0; num2 < characterList.length; num2++) {
+			arr.push('<span class="' + characterList[num2] + 'Span"> <input type="radio" name="charSelectorInput' + num + '" id="' + characterList[num2] + num + '" value="' + characterList[num2] + '" onchange="changeSettings(\'changeCharacters\', [' + num + ', \'' + characterList[num2] + '\'])"> <label class="charSelectorLabel" for="' + characterList[num2] + num + '"> <img class="charSelectorLabelImg" src="img/mpsrIcons/' + characterList[num2] + '.png" onerror="imgError(this)"> </label> <br> </span>');
+		}
+		editInner('charSelector' + num, arr.join(''));
+		arr = [];
+	}
+	editValue('mario1', true);
+	editValue('luigi2', true);
+	editValue('yoshi3', true);
+	editValue('peach4', true);
+
 	if (getUrl('p') == 1) {
 		mpoMain = window.opener;
 		popout = true;

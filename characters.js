@@ -158,6 +158,24 @@ function counterImgError (elem) {
 }
 
 /*
+* Changes the icons for the characters tab in settings.
+*/
+function changeCharSelectionIcons () {
+	var imgSrc = curGame;
+	if (curGame === 'all') {
+		imgSrc = document.querySelector('input[name="icons"]:checked').id;
+	}
+	for (let num = 0; num < characterList.length; num++) {
+		if (document.getElementById(characterList[num] + '1').parentNode.style.display != 'none') {
+			document.getElementById(characterList[num] + '1').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + characterList[num] + '.png';
+			document.getElementById(characterList[num] + '2').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + characterList[num] + '.png';
+			document.getElementById(characterList[num] + '3').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + characterList[num] + '.png';
+			document.getElementById(characterList[num] + '4').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + characterList[num] + '.png';
+		}
+	}
+}
+
+/*
 * Changes com status of a character.
 * 
 * @param {number} player Which player should be updated.
@@ -379,6 +397,7 @@ function changeGame (game) {
 			showCounters[num][num2].style.visibility = 'visible';
 		}
 	}
+	changeCharSelectionIcons();
 	changeCounterIcons();
 	changeCharacters();
 	changeComImg();

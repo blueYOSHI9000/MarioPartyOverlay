@@ -1116,3 +1116,4 @@ new Sortable(document.getElementById('slotList'), {
 
 window.onload = prepareMPO();
 window.onload = changeBGColor('bgColor');
+
