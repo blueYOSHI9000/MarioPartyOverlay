@@ -737,6 +737,29 @@ function settingsTheme () {
 }
 
 /*
+* Opens shortcut settings before shortcut is actually opened. This function gets overwritten by the one in assist-misc.js.
+* 
+* @param {boolean} close If it should be closed or not.
+*/
+function shortcutSettings (close) {
+	if (close === true) {
+		document.getElementById('settingsMain').style = '';
+		document.getElementById('shortcutSettings').style = '';
+		document.getElementById('settingsMain').onclick = '';
+		document.getElementById('shortcutSettingsPopup').style.display = 'none';
+		return;
+	}
+
+	document.getElementById('shortcutVariablesError').style.display = 'unset';
+	document.getElementById('shortcutVariables').style.display = 'none';
+
+	document.getElementById('settingsMain').style = '-webkit-filter: blur(5px); filter: blur(5px);';
+	document.getElementById('shortcutSettings').style = 'pointer-events: none;'; //filter and pointer event need to be different as blur wouldn't be smooth with 'shortcutSettings' and pointer-event would remove onClick
+	document.getElementById('shortcutSettingsPopup').style.display = 'initial';
+	setTimeout(function () {document.getElementById('settingsMain').setAttribute('onclick','shortcutSettings(true)');}, 10); //required because chrome would immediately execute the function if it was changed directly
+}
+
+/*
 * Gets the InnerHTML of an element
 * 
 * @param {string} id The ID of the element that should be changed.

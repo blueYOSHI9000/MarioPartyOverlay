@@ -132,6 +132,10 @@ function shortcutSettings (close) {
 
 	editInner('shortcutDebug', '<span> shortcutState: ' + shortcutState + '<br> spaceEventState: ' + spaceEventState.join(', ') + '<br> itemEventState: ' + itemEventState.join(', ') + '<br> diceCursor: ' + diceCursor + ' - diceRolls: ' + diceRolls.join(', ') + '<br> <br> statusEffects: <br> - P1: ' + statusEffects['p1'].join(', ') + '<br> - P2: ' + statusEffects['p2'].join(', ') + '<br> - P3: ' + statusEffects['p3'].join(', ') + '<br> - P4: ' + statusEffects['p4'].join(', ') + '<br> <br> allies: <br> - P1: ' + allies['p1'].join(', ') + '<br> - P2: ' + allies['p2'].join(', ') + '<br> - P3: ' + allies['p3'].join(', ') + '<br> - P4: ' + allies['p4'].join(', ') + '<br> bobombAlly: ' + bobombAlly.join(', ') + '</span>');
 
+
+	document.getElementById('shortcutVariablesError').style.display = 'none';
+	document.getElementById('shortcutVariables').style.display = 'unset';
+
 	document.getElementById('settingsMain').style = '-webkit-filter: blur(5px); filter: blur(5px);';
 	document.getElementById('shortcutSettings').style = 'pointer-events: none;'; //filter and pointer event need to be different as blur wouldn't be smooth with 'shortcutSettings' and pointer-event would remove onClick
 	document.getElementById('shortcutSettingsPopup').style.display = 'initial';
