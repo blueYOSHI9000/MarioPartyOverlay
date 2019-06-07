@@ -843,6 +843,13 @@ function uploadFile () {
 	reader.onload = function () {
 		setTimeout(function () {
 			document.getElementById('backupError').style.opacity = 1;
+			setTimeout(function () {
+				document.getElementById('backupError').classList.add('hiddenAnimation');
+				setTimeout(function () {
+					document.getElementById('backupError').classList.remove('hiddenAnimation');
+					document.getElementById('backupError').style.opacity = 0;
+				}, 510);
+			}, 3500);
 		}, 50);
 		var text = JSON.parse(reader.result);
 		if (text.lsVer != null) {

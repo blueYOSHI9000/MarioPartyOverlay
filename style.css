@@ -494,19 +494,19 @@ body {
 	margin-bottom: 15px;
 	cursor: pointer;
 }
-#emptySlot {
+.emptySlot {
 	border-color: #919191;
 	color: #919191;
 	font-family: 'Mario';
 	font-size: 16px;
 	text-align: center;
 }
-#emptySlot:hover {
+.emptySlot:hover {
 	background-color: rgba(0, 190, 0, 0.2);
 	border-color: #252525;
 	color: #252525;
 }
-#emptySlot:active {
+.emptySlot:active {
 	background-color: rgba(0, 190, 0, 0.4);
 }
 .slotSelected {
@@ -571,6 +571,10 @@ body {
 	display: none;
 }
 
+#dataBackupContainer * {
+	width: 132px;
+	display: inline-block;
+}
 
 #uploadFile {
 	font-size: 17px;

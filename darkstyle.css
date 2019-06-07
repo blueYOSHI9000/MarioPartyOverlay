@@ -52,12 +52,15 @@
 .slotDiv {
 	border-color: #dadada;
 }
-#emptySlot:hover {
+.emptySlot {
+	border-color: #919191;
+}
+.emptySlot:hover {
 	background-color: rgba(0, 190, 0, 0.2);
 	border-color: #dadada;
 	color: #bbbbbb;
 }
-#emptySlot:active {
+.emptySlot:active {
 	background-color: rgba(0, 190, 0, 0.4);
 }
 

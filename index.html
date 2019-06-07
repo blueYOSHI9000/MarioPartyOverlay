@@ -483,11 +483,6 @@
 						<b class="warningText" id="textOutputWarning" style="visibility: hidden;"> Hi if you see this </b>
 					</span> <br>
 
-					<span class="settingsTitle"> Local Backup </span> <br>
-					<button onclick="downloadFile();" style="margin-bottom: 10px;">Save Backup</button> <br>
-					<label for="uploadFile"> Load Backup: </label> <input type="file" id="uploadFile" name="uploadFile" onchange="uploadFile()" accept="application/json"> <br>
-					<span class="error" id="backupError" style="opacity: 0;">The uploaded file could not be recognized.</span> <br> <br>
-
 					<span class="settingsTitle"> Reset </span> <br>
 					<button onclick="changeSettings('resetSettings')" id="resetSettingsButton"> Reset Settings </button> <br> <br>
 					<button onclick="localStorage.clear()">Clear local storage</button> <span class="settingsNote">(This will clear all saved settings, characters, counters and stats)</span>
@@ -495,7 +490,7 @@
 
 				<!-- Savefile/slot Settings -->
 				<div id="slotsSettings" class="hidden">
-					<span class="settingsText">Savefiles get saved automatically when loading one. <br> It's not possible to delete the file played on, select another one instead.</span> <br>
+					<span class="settingsText">Savefiles get saved automatically when loading one. <br> Backups store everything, incl all savefiles and settings.</span> <br>
 					<span class="settingsText error" id="savefileError" style="display: none;"> Note that MPO might start to lag a bit when there are a lot of savefiles. <br> </span>
 					<span class="settingsText error" id="savefileCookieError"> Make sure cookies are enabled, otherwise savefiles won't be able to save. <br> </span>
 
@@ -509,9 +504,21 @@
 							<img src="img/mpsrIcons/mario.png"> <img src="img/mpsrIcons/luigi.png"> <img src="img/mpsrIcons/yoshi.png"> <img src="img/mpsrIcons/peach.png"> <br>
 						</div>
 					</span>
-					<div class="slotDiv" id="emptySlot" onclick="execOnMain('createSlot', ['empty'])">
+					<div class="slotDiv emptySlot" onclick="execOnMain('createSlot', ['empty'])">
 						Create new file
 					</div>
+					<div id="dataBackupContainer">
+						<div class="slotDiv emptySlot" style="margin-right: 12px;" onclick="downloadFile();">
+							Backup
+						</div>
+						<label class="slotDiv emptySlot" for="uploadFile">
+							Restore
+						</label>
+					</div>
+					<span class="error settingsText" id="backupError" style="opacity: 0;">The uploaded file could not be recognized.</span>
+
+
+					<input type="file" id="uploadFile" name="uploadFile" style="display: none;" onchange="uploadFile()" accept="application/json">
 				</div>
 
 				<!-- Shortcuts -->

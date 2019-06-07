@@ -189,7 +189,6 @@ function backup () {
 	saveReloadAnimation();
 
 	if (popout != true && popoutActivated === true) {
-		console.log(JSON.stringify(slots[sel]))
 		sendMessage('updateS+' + JSON.stringify(slots[sel]));
 	}
 
@@ -285,7 +284,6 @@ function slotSel (slot) {
 		slotCooldown = true;
 		setTimeout(function () { slotCooldown = false; }, 150);
 	}
-	setTimeout(function () { console.log(JSON.parse(JSON.stringify(slots.order))); }, 30);
 
 	switch (document.querySelector('input[name="slotType"]:checked').id) {
 		case 'slotDuplicate':
@@ -1011,7 +1009,6 @@ function setSlots (text) {
 * 
 */
 function updateS (text) {
-	console.log(text)
 	slots['s' + slots.sel] = JSON.parse(text);
 	createSlot(slots.sel, true);
 }
