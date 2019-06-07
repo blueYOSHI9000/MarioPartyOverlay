@@ -709,8 +709,11 @@ function randomChar () {
 	}
 	for (var num = 1; num < 5; num++) {
 		//console.log(chars + num);
-		editValue(chars[num] + num, true);
+		//editValue(chars[num] + num, true);
 		document.getElementById(chars[num] + num).scrollIntoView(true);
 		changeCharacters(num, chars[num]);
+		if (popout === true) {
+			changeSettings('changeCharacters', [num, chars[num]]);
+		}
 	}
 }

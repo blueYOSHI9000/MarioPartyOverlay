@@ -912,7 +912,7 @@ function syncPopout () {
 		sendSettingsMsg('mpsrIcons', getValue('mpsrIcons'), true);
 		sendSettingsMsg('mk8Icons', getValue('mk8Icons'), true);
 		if (darkTheme === true) {
-			sendSettingsMsg('settingsDark', getValue('settingsDark'), true);
+			sendMessage('settingsTheme');
 		}
 		sendSettingsMsg('customGameIcons', getValue('customGameIcons'), true);
 		sendSettingsMsg('greenscreen', getValue('greenscreen'), true);
@@ -977,9 +977,6 @@ function syncPopout () {
 		sendMessage('changeCom+' + 3);
 		sendMessage('changeCom+' + 4);
 		sendMessage('updateCounterInput');
-		if (darkTheme === true) {
-			sendMessage('settingsTheme');
-		}
 
 		sendMessage('showHideSettings+' + openedSettings);
 
