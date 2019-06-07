@@ -806,6 +806,9 @@ function prepareMPO () {
 		editValue('toShowNum', stringToBoolean(localStorage.getItem('toShowNum')));
 		editValue('toListAllCoin', stringToBoolean(localStorage.getItem('toListAllCoin')));
 
+		if (localStorage.getItem('shortcutSimpleMode') != null) {
+			editValue('shortcutSimpleMode', localStorage.getItem('shortcutSimpleMode'));
+		}
 		editValue('shortcutAutoEnd', localStorage.getItem('shortcutAutoEnd'));
 
 		updateCounterInput();
@@ -962,6 +965,7 @@ function syncPopout () {
 		sendSettingsMsg('bananasOnOff', getValue('bananasOnOff'), true);
 		sendSettingsMsg('coinsOnOff', getValue('coinsOnOff'), true);
 
+		sendSettingsMsg('shortcutSimpleMode', getValue('shortcutSimpleMode'), true);
 		sendSettingsMsg('shortcutAutoEnd', getValue('shortcutAutoEnd'), true);
 
 		sendMessage('changeCom+' + 1);
@@ -1081,6 +1085,7 @@ function resetSettings (noLS) {
 	editValue('toShowNum', true);
 	editValue('toListAllCoin', false);
 	
+	editValue('shortcutSimpleMode', false);
 	editValue('shortcutAutoEnd', false);
 
 	editValue('greenscreen', false);
