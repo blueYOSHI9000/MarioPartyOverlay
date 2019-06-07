@@ -479,9 +479,61 @@ function changeGame (game) {
 			editInner('bananasOnOffText', 'Bananas (9):');
 			editInner('coinsOnOffText', 'Coins:');
 	}
+	updateCounterList();
 }
 var curGame = 'all';
 var pastResults = [];
+
+/*
+* 
+*/
+function updateCounterList () {
+	var cStats = [];
+	var cStatsHidden = [];
+
+	for (var num = 0; num < counters.length; num++) {
+		document.getElementById(counters[num] + 'OnOffText').style.color = 'unset';
+	}
+
+	for (var num = 0; num < counters.length; num++) {
+		var arr = [];
+		for (var num2 = 1; num2 < 5; num2++) {
+			if (parseInt(getInner('p' + num2 + countersUp[num] + 'Text')) === 0) {
+				arr.push(0);
+			}
+			if (num2 === 4 && arr.length != 4) {
+				cStats.push(counters[num]);
+			}
+		}
+	}
+	for (var num = 0; num < cStats.length; num++) {
+		document.getElementById(cStats[num] + 'OnOffText').style.color = '#009f00';
+		if (getComputedStyle(document.getElementById(cStats[num] + 'OnOffText'), null).visibility != 'visible') {
+			cStatsHidden.push(cStats[num]);
+		}
+	}
+	if (parseInt(getInner('coinStarText')) != 10) {
+		if (getComputedStyle(document.getElementById('coinStarOnOffText'), null).visibility != 'visible') {
+			cStatsHidden.push('coinStar');
+		} else {
+			document.getElementById('coinStarOnOffText').style.color = '#009f00';
+		}
+	} else {
+		document.getElementById('coinStarOnOffText').style.color = 'unset';
+	}
+
+	if (cStatsHidden.length > 0) {
+		for (var num = 0; num < cStatsHidden.length; num++) {
+			var str = cStatsHidden[num];
+			str = str.replace(/([A-Z])/g, ' $1');
+			str = str.charAt(0).toUpperCase() + str.slice(1);
+			cStatsHidden[num] = str;
+		}
+		editInner('hiddenCountersText', 'Counters from other games with stats: <span  style="color: #009f00;">' + cStatsHidden.join(', ') + '</span>');
+	} else {
+		editInner('hiddenCountersText', '');
+	}
+}
 
 /*
 * Deactivates all counters not used by the current game.

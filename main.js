@@ -419,6 +419,10 @@ function showHideSettings (id) {
 		getAlly('close');
 		shortcutSettings(true);
 	}
+
+	if (id === 'counter') {
+		updateCounterList();
+	}
 }
 
 /*
@@ -550,6 +554,10 @@ function openSettings (force) {
 		mpoSettingsPopout();
 	} else {
 		showHideDiv(['settings']);
+	}
+
+	if (document.getElementById('counterSettings').classList.contains('visible')) {
+		updateCounterList();
 	}
 }
 

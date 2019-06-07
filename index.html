@@ -428,7 +428,7 @@
 					<span class="settingsTitle"> Features </span> <br>
 					<label for="autoPopout"> <span class="settingsText"> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="sendSettingsMsg(this.id, this.checked)"> </label> <br> <br>
 					<label for="enableHighlight"> <span class="settingsText"> Enable counter highlighting: </span> </label> <input type="checkbox" id="enableHighlight" onchange="sendSettingsMsg(this.id, + this.checked);changeSettings('resetHighlights')" checked> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('callHighlight', [false, true])" value="#FF0000" id="highlightColor"> <br> <br>
-					<label for="deactivateUnused"> <span class="settingsText"> Deactivate unused counters when changing games: </span> </label> <input type="checkbox" id="deactivateUnused" style="top: 5px;" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('deactivateUnused')" checked> <br> <br>
+					<label for="deactivateUnused"> <span class="settingsText"> Deactivate counters not used by the current game: </span> </label> <input type="checkbox" id="deactivateUnused" style="top: 5px;" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('deactivateUnused')" checked> <br> <br>
 
 					<label for="noTie"> <span class="settingsText"> Don't use ties for Coin Star: </span> </label> <input type="checkbox" id="noTie" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('coinStarTie')"> <br>
 					<label for="autoSave"> <span class="settingsText"> Automatically save/reload when updating turns: </span> </label> <input type="checkbox" id="autoSave" onchange="sendSettingsMsg(this.id, this.checked);if (this.checked == true) {changeSettings('backup')}"> <br> <br>
@@ -1150,6 +1150,7 @@
 						<span class="flexAuto"></span>
 						<span class="relative"> <label for="doormatOnOff" id="doormatOnOffText" class="counterOnOffText">Doormat (SMP):</label> <input type="checkbox" id="doormatOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['doormat'])"> <label for="doormatOnOff" class="charSelectorLabel counterOnOff doormatOnOff"></label> </span>
 					</div>
+					<span id="hiddenCountersText" class="settingsText"></span> <br>
 					<span class="settingsNote"> Minigame Star Reminder: MP 1-8 uses coins, MP DS & SMP uses wins and MP 9 & 10 uses Mini-stars. </span> <br> <br>
 
 					<span class="settingsTitle">In-game counters</span> <br>
