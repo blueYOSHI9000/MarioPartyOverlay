@@ -504,7 +504,7 @@ var curGame = 'all';
 var pastResults = [];
 
 /*
-* 
+* Checks what counters are empty, displays used counters in settings.
 */
 function updateCounterList () {
 	var cStats = [];
@@ -517,12 +517,24 @@ function updateCounterList () {
 	for (var num = 0; num < counters.length; num++) {
 		var arr = [];
 		for (var num2 = 1; num2 < 5; num2++) {
+			if (counters[num] === 'coins') {
+				break;
+			}
 			if (parseInt(getInner('p' + num2 + countersUp[num] + 'Text')) === 0) {
 				arr.push(0);
 			}
 			if (num2 === 4 && arr.length != 4) {
 				cStats.push(counters[num]);
 			}
+		}
+	}
+	arr = [];
+	for (var num2 = 1; num2 < 5; num2++) {
+		if (parseInt(getInner('p' + num2 + 'CoinsText')) === 5 || parseInt(getInner('p' + num2 + 'CoinsText')) === 10) {
+			arr.push(0);
+		}
+		if (num2 === 4 && arr.length != 4) {
+			cStats.push('coins');
 		}
 	}
 	for (var num = 0; num < cStats.length; num++) {
