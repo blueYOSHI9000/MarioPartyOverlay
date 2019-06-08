@@ -14,6 +14,13 @@ function counterButtons (player, action, amount, counter) {
 	if (amount === '') {
 		amount = 1;
 	}
+	/*if (parseInt(getInner('p' + player + counter + 'Text')).isNaN == true) {
+		editInner('p' + player + counter + 'Text', 0);
+		console.warn('[MPO] Counter was NaN, player: ' + player + ', counter: ' + counter);
+		if (shortcutLoaded === true) {
+			shortcutNotif('Error: ' + counter + ' for player ' + player + ' was NaN', true);
+		}
+	}*/
 
 	if (counter != 'curTurn' && counter != 'maxTurn' && counter != 'coinStar') {
 		counter = counter.charAt(0).toUpperCase() + counter.slice(1);
@@ -302,14 +309,16 @@ function turns (counter, amount, action) {
 		maxTurnVar = 95;
 	}
 
+	if (parseInt(getInner(counter + 'Text')) != eval(counter + 'Var')) {
+		document.getElementById(counter + 'Text').classList.add('counterAnimation');
+		setTimeout(function () {
+			document.getElementById(counter + 'Text').classList.remove('counterAnimation');
+		}, 190);
+	}
+
 	//console.log('Current:' + curTurnVar + ' Max:' + maxTurnVar)
 	editInner('curTurnText', curTurnVar);
 	editInner('maxTurnText', maxTurnVar);
-
-	document.getElementById(counter + 'Text').classList.add('counterAnimation');
-	setTimeout(function () {
-		document.getElementById(counter + 'Text').classList.remove('counterAnimation');
-	}, 190);
 }
 
 /*

@@ -45,7 +45,7 @@ function startShortcut () {
 			shortcutState = 1;
 			document.getElementById('shortcutTurn').style.display = 'none';
 			playerOrder = [''];
-			editInner('shortcutSpan', '<span class="settingsTitle"> Choose order </span> <br> <span class="settingsText" id="chooseOrderText"> Which character is first? </span> <br> <span> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="chooseP1" onclick="chooseOrder(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="chooseP2" onclick="chooseOrder(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="chooseP3" onclick="chooseOrder(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="chooseP4" onclick="chooseOrder(4)"> <br> <button onclick="chooseOrder(0, true)">Reset Order</button> <br> <span id="chooseFirst" class="chooseImgOrder"> </span> <br> <span id="chooseSecond" class="chooseImgOrder"> </span> <br> <span id="chooseThird" class="chooseImgOrder"> </span> <br> <span id="chooseFourth" class="chooseImgOrder"> </span> <br> <span id="chooseContinue" style="display:none;"> <button onclick="startShortcut()">Continue?</button> </span> </span>');
+			editInner('shortcutSpan', '<span class="settingsTitle"> Choose order </span> <br> <span class="settingsText" id="chooseOrderText"> Which character is first? </span> <br> <span> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="chooseP1" onclick="chooseOrder(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="chooseP2" onclick="chooseOrder(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="chooseP3" onclick="chooseOrder(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="chooseP4" onclick="chooseOrder(4)"> <br> <button onclick="chooseOrder(0, true)">Reset Order</button> <br> <span id="chooseFirst" class="chooseImgOrder"> </span> <br> <span id="chooseSecond" class="chooseImgOrder"> </span> <br> <span id="chooseThird" class="chooseImgOrder"> </span> <br> <span id="chooseFourth" class="chooseImgOrder"> </span> <br> <span id="chooseContinue" style="display:none;"> <button onclick="startShortcut()">Continue?</button> <br> <button onclick="changeOrder(playerOrder);startShortcut()" style="margin-top: 10px;">Change order & continue?</button> <span class="settingsNote"> This replaces the player order with the order chosen here. </span> </span> </span>');
 				shortcutNotif('Choose the order of the players.');
 			break;
 
@@ -400,6 +400,29 @@ function chooseOrder (player, reset) {
 }
 
 /*
+* 
+*/
+function changeOrder (order) {
+	backup();
+
+	var sel = 's' + slots.sel;
+	var sBackup = copyVar(slots[sel]);
+	for (var num = 0; num < counters.length; num++) {
+		for (var num2 = 1; num2 < 5; num2++) {
+			slots[sel][counters[num]][num2 - 1] = sBackup[counters[num]][order[num2] - 1];
+		}
+	}
+	restore();
+	var cBackup = copyVar(characters);
+	changeCharacters(1, cBackup[order[1]]);
+	changeCharacters(2, cBackup[order[2]]);
+	changeCharacters(3, cBackup[order[3]]);
+	changeCharacters(4, cBackup[order[4]]);
+	playerOrder = ['', 1, 2, 3, 4];
+	orderCurPlayer = playerOrder[1];
+}
+
+/*
 * Ends the turn, empties all variables used in a turn.img/shortcut/smp/poisonmushroom.png"
 */
 function turnEnd () {
@@ -560,8 +583,9 @@ function turnEnd () {
 	}
 }
 
-if (slots['a' + slots.sel].assistOn === true) {
+if (slots['a' + slots.sel].assistOn === true && typeof slots['a' + slots.sel].shortcutState === 'number') {
 	loadAssistSlot();
 } else {
+	slots['a' + slots.sel].assistOn = false;
 	startShortcut();
 }
