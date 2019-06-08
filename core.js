@@ -76,6 +76,8 @@ function counterButtons (player, action, amount, counter) {
 	}
 	if (getValue('starsOnOff') == true && getValue('inclBonusOnOff') == true) {
 		updateStars();
+	} else if (getValue('starsOnOff') == true) {
+		updateCounter('p' + player + 'StarsBonusText', result);
 	}
 	if (getValue('coinsOnOff') == true && counter == 'Coins') {
 		updateCoins(player);
@@ -212,7 +214,11 @@ function updateStars (player, action, amount) {
 			} else if (result[num] <= 0) {
 				result[num] = 0;
 			}
-			updateCounter('p' + num + 'StarsText', result[num] + ' + ' + bonusStars[num]);
+			if (getValue('combineBonus') === true) {
+				updateCounter('p' + num + 'StarsBonusText', parseInt(result[num]) + parseInt(bonusStars[num]));
+			} else {
+				updateCounter('p' + num + 'StarsBonusText', result[num] + ' + ' + bonusStars[num]);
+			}
 		}
 	} else {
 		for (let num = 1; num < 5; num++) {
@@ -221,7 +227,7 @@ function updateStars (player, action, amount) {
 			} else if (result[num] <= 0) {
 				result[num] = 0;
 			}
-			updateCounter('p' + num + 'StarsText', result[num]);
+			updateCounter('p' + num + 'StarsBonusText', result[num]);
 		}
 	}
 }

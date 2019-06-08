@@ -106,7 +106,7 @@ function shortcutSettings (close) {
 		document.getElementById('shortcutSettingsPopup').style.display = 'none';
 		return;
 	}
-	if (shortcutState === 1 || playerOrder.length != 5) {
+	if (shortcutState === 1 || (typeof playerOrder === 'array' && playerOrder.length != 5)) {
 		editInner('shortcutOrder', '<span class="settingsText"> Player order is not decided yet. </span>');
 	} else {
 		var iconStyle = document.querySelector('input[name="icons"]:checked').value;

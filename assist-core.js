@@ -582,7 +582,7 @@ function turnEnd () {
 		return;
 	}
 }
-
+document.getElementById('shortcutSimpleMode').onclick = 'sendSettingsMsg(this.id, + this.checked);execOnMain(\'prepareTurn\')';
 if (slots['a' + slots.sel].assistOn === true && typeof slots['a' + slots.sel].shortcutState === 'number') {
 	loadAssistSlot();
 } else {

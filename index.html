@@ -91,8 +91,9 @@
 
 		<!-- Player Images & Counter Display -->
 		<div class="player"> <div class="draggable characterDiv" onclick="coinStarTie(1)"> <img src="img/com.png" class="comImg" id="p1ComDisplay" onerror="changeComImgError()"> <img src="img/mpsrIcons/mario.png" class="characterImg" id="p1Img" onerror="changeCharactersBackup(this)"> <br> </div>
-			<div class="draggable stars" onclick="mobileButtons('stars', 1)"> <img class="counterDisplay" src="img/stars.png" id="p1StarsDisplay" onerror="changeStarsError(this)"> <span class="counterText" id="p1StarsText">0</span> <br> </div>
-			<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/stars.png"> <span class="counterText">0</span> <br> </div>
+			<span class="starsHitbox" onclick="mobileButtons('stars', 1)"></span>
+			<div class="draggable stars"> <img class="counterDisplay" src="img/stars.png" id="p1StarsDisplay" onerror="changeStarsError(this)"> <span class="counterText" id="p1StarsBonusText">0</span> <br> </div>
+			<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/stars.png"> <span class="counterText" id="p1StarsText">0</span> <br> </div>
 			<div class="draggable coins" onclick="mobileButtons('coins', 1)"> <img class="counterDisplay" src="img/coins.png" id="p1CoinsDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p1CoinsText"> 10 </span> <br> </div>
 
 			<div class="draggable happening" onclick="mobileButtons('happening', 1)"> <img class="counterDisplay" src="img/happening.png" id="p1HappeningDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p1HappeningText"> 0 </span> <br> </div>
@@ -118,8 +119,9 @@
 		</div>
 
 		<div class="player"> <div class="draggable characterDiv" onclick="coinStarTie(2)"> <img src="img/com.png" class="comImg" id="p2ComDisplay" onerror="changeComImgError()"> <img src="img/mpsrIcons/luigi.png" class="characterImg " id="p2Img" onerror="changeCharactersBackup(this)"> <br> </div>
-			<div class="draggable stars" onclick="mobileButtons('stars', 2)"> <img class="counterDisplay" src="img/stars.png" id="p2StarsDisplay" onerror="changeStarsError(this)"> <span class="counterText" id="p2StarsText">0</span> <br> </div>
-			<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/stars.png"> <span class="counterText">0</span> <br> </div>
+			<span class="starsHitbox" onclick="mobileButtons('stars', 2)"></span>
+			<div class="draggable stars"> <img class="counterDisplay" src="img/stars.png" id="p2StarsDisplay" onerror="changeStarsError(this)"> <span class="counterText" id="p2StarsBonusText">0</span> <br> </div>
+			<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/stars.png"> <span class="counterText" id="p2StarsText">0</span> <br> </div>
 			<div class="draggable coins" onclick="mobileButtons('coins', 2)"> <img class="counterDisplay" src="img/coins.png" id="p2CoinsDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p2CoinsText"> 10 </span> <br> </div>
 
 			<div class="draggable happening" onclick="mobileButtons('happening', 2)"> <img class="counterDisplay" src="img/happening.png" id="p2HappeningDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p2HappeningText"> 0 </span> <br> </div>
@@ -145,8 +147,9 @@
 		</div>
 
 		<div class="player"> <div class="draggable characterDiv" onclick="coinStarTie(3)"> <img src="img/com.png" class="comImg" id="p3ComDisplay" onerror="changeComImgError()"> <img src="img/mpsrIcons/yoshi.png" class="characterImg " id="p3Img" onerror="changeCharactersBackup(this)"> <br> </div>
-			<div class="draggable stars" onclick="mobileButtons('stars', 3)"> <img class="counterDisplay" src="img/stars.png" id="p3StarsDisplay" onerror="changeStarsError(this)"> <span class="counterText" id="p3StarsText">0</span> <br> </div>
-			<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/stars.png"> <span class="counterText">0</span> <br> </div>
+			<span class="starsHitbox" onclick="mobileButtons('stars', 3)"></span>
+			<div class="draggable stars"> <img class="counterDisplay" src="img/stars.png" id="p3StarsDisplay" onerror="changeStarsError(this)"> <span class="counterText" id="p3StarsBonusText">0</span> <br> </div>
+			<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/stars.png"> <span class="counterText" id="p3StarsText">0</span> <br> </div>
 			<div class="draggable coins" onclick="mobileButtons('coins', 3)"> <img class="counterDisplay" src="img/coins.png" id="p3CoinsDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p3CoinsText"> 10 </span> <br> </div>
 
 			<div class="draggable happening" onclick="mobileButtons('happening', 3)"> <img class="counterDisplay" src="img/happening.png" id="p3HappeningDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p3HappeningText"> 0 </span> <br> </div>
@@ -172,8 +175,9 @@
 		</div>
 
 		<div class="player"> <div class="draggable characterDiv" onclick="coinStarTie(4)"> <img src="img/com.png" class="comImg" id="p4ComDisplay" onerror="changeComImgError()"> <img src="img/mpsrIcons/peach.png" class="characterImg " id="p4Img" onerror="changeCharactersBackup(this)"> <br> </div>
-			<div class="draggable stars" onclick="mobileButtons('stars', 4)"> <img class="counterDisplay" src="img/stars.png" id="p4StarsDisplay" onerror="changeStarsError(this)"> <span class="counterText" id="p4StarsText">0</span> <br> </div>
-			<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/stars.png"> <span class="counterText">0</span> <br> </div>
+			<span class="starsHitbox" onclick="mobileButtons('stars', 4)"></span>
+			<div class="draggable stars"> <img class="counterDisplay" src="img/stars.png" id="p4StarsDisplay" onerror="changeStarsError(this)"> <span class="counterText" id="p4StarsBonusText">0</span> <br> </div>
+			<div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/stars.png"> <span class="counterText" id="p4StarsText">0</span> <br> </div>
 			<div class="draggable coins" onclick="mobileButtons('coins', 4)"> <img class="counterDisplay" src="img/coins.png" id="p4CoinsDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p4CoinsText"> 10 </span> <br> </div>
 
 			<div class="draggable happening" onclick="mobileButtons('happening', 4)"> <img class="counterDisplay" src="img/happening.png" id="p4HappeningDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p4HappeningText"> 0 </span> <br> </div>
@@ -202,7 +206,7 @@
 		<span style="float: right; margin-right: 10px;"> <button onclick="shortcutSettings(true)">Close</button> </span>
 
 		<span class="settingsTitle"> Options </span> <br>
-		<label for="shortcutSimpleMode" class="settingsText"> Only show important features: </label> <input type="checkbox" id="shortcutSimpleMode" onchange="sendSettingsMsg(this.id, + this.checked);execOnMain('prepareTurn')">
+		<label for="shortcutSimpleMode" class="settingsText"> Only show important features: </label> <input type="checkbox" id="shortcutSimpleMode" onchange="sendSettingsMsg(this.id, + this.checked)">
 		<span class="settingsNote"> This only shows features related to tracking bonus-/stars, coins are ignored. </span> <br>
 		<label for="shortcutAutoEnd" class="settingsText"> Automatically end turn after selecting a space: </label> <input type="checkbox" id="shortcutAutoEnd" onchange="sendSettingsMsg(this.id, + this.checked)"> <br> <br>
 
@@ -449,6 +453,7 @@
 					<label for="enableHighlight"> <span class="settingsText"> Enable counter highlighting: </span> </label> <input type="checkbox" id="enableHighlight" onchange="sendSettingsMsg(this.id, + this.checked);changeSettings('resetHighlights')" checked> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('callHighlight', [false, true])" value="#FF0000" id="highlightColor"> <br> <br>
 					<label for="deactivateUnused"> <span class="settingsText"> Deactivate counters not used by the current game: </span> </label> <input type="checkbox" id="deactivateUnused" style="top: 5px;" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('deactivateUnused')" checked> <br> <br>
 
+					<label for="combineBonus"> <span class="settingsText"> Combine bonus stars: </span> </label> <input type="checkbox" id="combineBonus" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('updateStars')" checked> <span class="settingsNote"> Requires "Auto-add bonus stars" to be on under "Counters" </span> <br>
 					<label for="noTie"> <span class="settingsText"> Don't use ties for Coin Star: </span> </label> <input type="checkbox" id="noTie" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('coinStarTie')"> <br>
 					<label for="autoSave"> <span class="settingsText"> Automatically save/reload when updating turns: </span> </label> <input type="checkbox" id="autoSave" onchange="sendSettingsMsg(this.id, this.checked);if (this.checked == true) {changeSettings('backup')}"> <br> <br>
 					<label for="enableInteract"> <span class="settingsText"> Enable Drag 'n' Drop: </span> </label> <input type="checkbox" id="enableInteract" onchange="sendSettingsMsg(this.id, this.checked)"> <button onclick="changeSettings('interactSave')">Save Positions</button> <button onclick="changeSettings('interactReset')">Reset Positions</button> <br>

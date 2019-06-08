@@ -71,6 +71,15 @@ body {
 .stars {
 	position: absolute;
 }
+.starsHitbox {
+	display: block;
+	position: absolute;
+	opacity: 0;
+	height: 51px;
+	width: 190px;
+	cursor: pointer;
+	z-index: 50;
+}
 .turns {
 	font-size: 20px;
 	font-family: 'Mario';
