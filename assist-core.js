@@ -585,6 +585,9 @@ function turnEnd () {
 document.getElementById('shortcutSimpleMode').onclick = 'sendSettingsMsg(this.id, + this.checked);execOnMain(\'prepareTurn\')';
 if (slots['a' + slots.sel].assistOn === true && typeof slots['a' + slots.sel].shortcutState === 'number') {
 	loadAssistSlot();
+	if (shortcutState === 0) {
+		startShortcut();
+	}
 } else {
 	slots['a' + slots.sel].assistOn = false;
 	startShortcut();
