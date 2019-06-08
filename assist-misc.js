@@ -193,6 +193,10 @@ function loadAssistSlot () {
 	starCost = slots[sel].starCost;
 	starPrice = slots[sel].starPrice;
 
+	if (typeof playerOrder != 'array' || playerOrder.length != 5) {
+		playerOrder = ['', 1, 2, 3, 4];
+	}
+
 	document.getElementById('skipButton').disabled = '';
 	document.getElementById('backButton').disabled = '';
 
