@@ -770,11 +770,18 @@ function prepareMPO () {
 		document.getElementById('settingsContent').style.height = 'calc(100% - 40px)'; //-40px is required as otherwise there would be 40px offscreen which would destroy the whole layout
 		document.getElementById('noSettings').style.display = 'none';
 
+		document.getElementById('savefileCookieError').style.display = 'none';
+
 		sendMessage('syncPopout');
 		localStorage.getItem('enableHighlight'); //If cookies are blocked, this will break the function immediately
 		cookiesOn = true;
 		prepared = true;
 		return;
+	}
+	var str = getUrl('ls');
+	if (str != false) {
+		window.history.replaceState({}, document.title, "/" + location.host + location.pathname);
+		parseFile(atob(str));
 	}
 
 	localStorage.getItem('enableHighlight'); //If cookies are blocked, this will break the function immediately
@@ -917,6 +924,8 @@ function prepareMPOBackup () {
 */
 function syncPopout () {
 	if (popout == false && popoutActivated == true) {
+		sendMessage('setSlots+' + JSON.stringify(slots));
+		
 		sendMessage('changeTheme+' + curTheme);
 		sendMessage('changeGame+' + curGame);
 		sendMessage('changeCharacters+' + 1 + '+' + characters[1]);
@@ -996,8 +1005,6 @@ function syncPopout () {
 		sendMessage('updateCounterInput');
 
 		sendMessage('showHideSettings+' + openedSettings);
-
-		sendMessage('setSlots+' + JSON.stringify(slots));
 
 		console.log('[MPO] Popout synced');
 	}

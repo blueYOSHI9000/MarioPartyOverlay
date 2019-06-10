@@ -63,6 +63,14 @@
 .emptySlot:active {
 	background-color: rgba(0, 190, 0, 0.4);
 }
+.slotButtons {
+	color: #bbbbbb;
+	-webkit-text-stroke: 1px #000000;
+	text-stroke: 1px #c4c4c4;
+}
+#savefileLoadReminder {
+	background: linear-gradient(#454545, #333333);
+}
 
 .error {
 	color: red;

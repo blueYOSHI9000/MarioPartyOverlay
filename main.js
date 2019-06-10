@@ -842,6 +842,23 @@ function downloadFile () {
 }
 
 /*
+* Shares all settings, savefiles etc as a link.
+*/
+function linkShare () {
+	var data = JSON.stringify(localStorage);
+	var url = location.protocol + '//' + location.host + location.pathname + '?ls=' + btoa(data);
+
+
+	var outputElement = document.getElementById('textShareOutput');
+	outputElement.style.display = 'unset';
+	outputElement.value = url;
+	outputElement.select();
+	outputElement.focus();
+	document.execCommand("copy");
+}
+
+var newLS;
+/*
 * Checks an uploaded backup file if it's valid or not.
 */
 function uploadFile () {
@@ -849,22 +866,72 @@ function uploadFile () {
 	var reader = new FileReader();
 	reader.readAsText(file);
 	reader.onload = function () {
-		setTimeout(function () {
-			document.getElementById('backupError').style.opacity = 1;
-			setTimeout(function () {
-				document.getElementById('backupError').classList.add('hiddenAnimation');
-				setTimeout(function () {
-					document.getElementById('backupError').classList.remove('hiddenAnimation');
-					document.getElementById('backupError').style.opacity = 0;
-				}, 510);
-			}, 3500);
-		}, 50);
-		var text = JSON.parse(reader.result);
-		if (text.lsVer != null) {
-			writeLocalStorage(text);
-			location = location;
-		}
+		parseFile(reader.result);
+
+		 //reminder for popout
 	};
+}
+
+/*
+* Parses an uploaded file or from link share and then loads it.
+* 
+* @param {string} str Stringified localStorage that should be loaded.
+*/
+function parseFile (str) {
+	newLS = parseJSON(str);
+	var newC = parseJSON(newLS['c' + newLS.sel]);
+	var newS = parseJSON(newLS['s' + newLS.sel]);
+	document.getElementById('savefileLoadReminder').style.display = 'unset';
+
+	if (typeof newLS != 'object' || typeof parseInt(newLS.lsVer) != 'number' || typeof newC != 'object' || typeof newC.char2 != 'string' || typeof newS.coinStarTie3 != 'boolean') { //check if it's a valid file, kinda
+		document.getElementById('sflCorrect').style.display = 'none';
+		document.getElementById('sflError').style.display = 'unset';
+		return;
+	} else {
+		document.getElementById('sflCorrect').style.display = 'unset';
+		document.getElementById('sflError').style.display = 'none';
+	}
+	if (newC.curGame === 'all') {
+		document.getElementById('sflReminderAll').style.display = 'unset';
+		document.getElementById('sflReminderGame').style.display = 'none';
+	} else {
+		document.getElementById('sflReminderAll').style.display = 'none';
+		document.getElementById('sflReminderGame').style.display = 'unset';
+		document.getElementById('sflReminderGame').src = 'img/' + newC.curGame + '.png';
+	}
+	editInner('sflReminderTurn', newS.curTurn + '/' + newS.maxTurn);
+	var elems = document.getElementById('sflReminderChars').children;
+	elems[0].src = 'img/' + newC.curGame + '/' + newC.char1 + '.png';
+	elems[1].src = 'img/' + newC.curGame + '/' + newC.char2 + '.png';
+	elems[2].src = 'img/' + newC.curGame + '/' + newC.char3 + '.png';
+	elems[3].src = 'img/' + newC.curGame + '/' + newC.char4 + '.png';
+	if (newLS.sMax >= 1) {
+		document.getElementById('sflReminderMore').style.display = 'unset';
+		editInner('sflReminderAmount', newLS.sMax);
+	} else {
+		document.getElementById('sflReminderMore').style.display = 'none';
+	}
+}
+
+/*
+* Reloads the site.
+*/
+function reload () {
+	location = location;
+}
+
+/*
+* Parses JSON, returns false if it's not JSON.
+* 
+* @param {string} str The JSON stringified string.
+*/
+function parseJSON (str) {
+	try {
+		str = JSON.parse(str);
+	} catch (e) {
+		return false;
+	}
+	return str;
 }
 
 /*

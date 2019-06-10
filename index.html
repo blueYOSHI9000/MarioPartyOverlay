@@ -37,6 +37,43 @@
 	<noscript>
 		<span style="position: absolute; top: 0; left: 0; background-color: black; padding: 10px; margin: 5px; border: 2px solid yellow; color: white; border-radius: 1.2rem;"> Javascript is required for MPO to work. <br> MPO does not save or send any information anywhere. <br> It only saves stats & settings in your browser which no other website can access. </span>
 	</noscript>
+
+	<div id="savefileLoadReminder">
+		<span id="sflCorrect">
+			<span style="width: calc(100% - 305px); padding-left: 10px;">
+				<span class="settingsText" style="font-family: 'Mario';">
+					<span id="sflReminderAll">All</span> <img id="sflReminderGame" style="height: 33px; position: relative; top: 3px; display: none;" src="img/smp.png"> - 
+					Turn <span id="sflReminderTurn">6/20</span>
+					<span id="sflReminderChars">
+						<img src="img/smp/bowser.png" onerror="imgError(this)">
+						<img src="img/smp/pompom.png" onerror="imgError(this)">
+						<img src="img/smp/boo.png" onerror="imgError(this)">
+						<img src="img/smp/luigi.png" onerror="imgError(this)">
+					</span>
+					<span id="sflReminderMore">
+						& <span id="sflReminderAmount"> 2 </span> more savefiles...
+					</span>
+				</span>
+			</span>
+			<span style="float: right;">
+				<!--span class="slotButtons">More...</span-->
+				<span class="slotButtons" onclick="if (typeof newLS === 'object') { writeLocalStorage(newLS); changeSettings('reload'); } else { document.getElementById('sflCorrect').style.display = 'none'; document.getElementById('sflError').style.display = 'unset'; }">Load</span>
+				<span class="slotButtons" onclick="newLS = undefined; document.getElementById('savefileLoadReminder').style.display = 'none';">Cancel</span>
+			</span>
+		</span>
+		<span id="sflError" class="settingsText error" style="font-family: 'Mario'; padding-left: 10px;">
+			Could not recognize file.
+			<span style="float: right;">
+				<label class="slotButtons" for="uploadFile">Retry</label>
+				<span class="slotButtons" onclick="newLS = undefined; document.getElementById('savefileLoadReminder').style.display = 'none';">Close</span>
+			</span>
+		</span>
+		<!--span style="float: right; text-align: right; display: flex; height: 100%; flex-wrap: wrap; width: 305px;">
+			<span class="slotButtons" style="flex-basis: 100%;">Load</span> <br>
+			<span class="slotButtons" style="flex-basis: 100%;">Load Savefiles</span> <br>
+			<span class="slotButtons" style="flex-basis: 100%;">Cancel</span>
+		</span-->
+	</div>
 	
 	<span id="noSettings">
 	<span onclick="openSettings()" id="settingsButton"> Settings </span>
@@ -530,14 +567,17 @@
 						Create new file
 					</div>
 					<div id="dataBackupContainer">
-						<div class="slotDiv emptySlot" style="margin-right: 12px;" onclick="downloadFile();">
+						<div class="slotDiv emptySlot" style="margin-right: 12px;" onclick="downloadFile()">
 							Backup
 						</div>
 						<label class="slotDiv emptySlot" for="uploadFile">
 							Restore
 						</label>
 					</div>
-					<span class="error settingsText" id="backupError" style="opacity: 0;">The uploaded file could not be recognized.</span>
+					<div class="slotDiv emptySlot" style="display: inline-block;" onclick="linkShare()">
+						Link share
+					</div>
+					<input id="textShareOutput" style="display: none;">
 
 
 					<input type="file" id="uploadFile" name="uploadFile" style="display: none;" onchange="uploadFile()" accept="application/json">
