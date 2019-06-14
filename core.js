@@ -44,12 +44,11 @@ function counterButtons (player, action, amount, counter) {
 		}
 		
 		if (result >= 999) {
-			updateCounter('p' + player + counter + 'Text', 999);
+			result = 999;
 		} else if (result <= 0) {
-			updateCounter('p' + player + counter + 'Text', 0);
-		} else {
-			updateCounter('p' + player + counter + 'Text', result);
+			result = 0;
 		}
+		updateCounter('p' + player + counter + 'Text', result);
 	}
 
 	if (counter == 'coinStar') {
