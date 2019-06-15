@@ -73,9 +73,10 @@ function counterButtons (player, action, amount, counter) {
 	if (getValue('slowOnOff') == true) {
 		slowHighlight();
 	}
+	console.log(counter)
 	if (getValue('starsOnOff') == true && getValue('inclBonusOnOff') == true) {
 		updateStars();
-	} else if (getValue('starsOnOff') == true) {
+	} else if (getValue('starsOnOff') == true && counter === 'Stars') {
 		updateCounter('p' + player + 'StarsBonusText', result);
 	}
 	if (getValue('coinsOnOff') == true && counter == 'Coins') {
