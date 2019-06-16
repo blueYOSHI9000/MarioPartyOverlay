@@ -57,7 +57,6 @@ var defC = {
 		slowOnOff: false,
 		miniStarsOnOff: false,
 		bananasOnOff: false,
-		inclBonusOnOff: false,
 		coinStarOnOff: true
 	};
 var defA = {
@@ -363,7 +362,6 @@ function loadSlot (slot) {
 	}
 	
 	editValue('slowOnOff', slots[sel].slowOnOff);
-	editValue('inclBonusOnOff', slots[sel].inclBonusOnOff);
 	editValue('miniStarsOnOff', slots[sel].miniStarsOnOff);
 	editValue('bananasOnOff', slots[sel].bananasOnOff);
 	editValue('coinStarOnOff', slots[sel].coinStarOnOff);
@@ -568,7 +566,6 @@ function savePlayers (close) {
 	slots[sel].slowOnOff = getValue('slowOnOff');
 	slots[sel].miniStarsOnOff = getValue('miniStarsOnOff');
 	slots[sel].bananasOnOff = getValue('bananasOnOff');
-	slots[sel].inclBonusOnOff = getValue('inclBonusOnOff');
 	slots[sel].coinStarOnOff = getValue('coinStarOnOff');
 
 	slots[sel].curGame = curGame;
@@ -604,7 +601,6 @@ function resetPlayers (noLS) {
 	editValue('stompyOnOff', false);
 	editValue('doormatOnOff', false);
 	editValue('starsOnOff', false);
-	editValue('inclBonusOnOff', false);
 	editValue('miniStarsOnOff', false);
 	editValue('bananasOnOff', false);
 	editValue('coinsOnOff', false);
@@ -659,7 +655,6 @@ function resetPlayers (noLS) {
 	slots[sel].stompyOnOff = false;
 	slots[sel].doormatOnOff = false;
 	slots[sel].starsOnOff = false;
-	slots[sel].inclBonusOnOff = false;
 	slots[sel].miniStarsOnOff = false;
 	slots[sel].bananasOnOff = false;
 	slots[sel].coinsOnOff = false;
@@ -691,6 +686,7 @@ function saveSettings (close) {
 	localStorage.setItem('autoPopout', getValue('autoPopout'));
 	localStorage.setItem('curTheme', curTheme);
 	localStorage.setItem('iconStyle', document.querySelector('input[name="icons"]:checked').id);
+	localStorage.setItem('bonusStarAdd', document.querySelector('input[name="bonusStarAdd"]:checked').id);
 	localStorage.setItem('customGameIcons', getValue('customGameIcons'));
 	localStorage.setItem('darkTheme', darkTheme);
 	localStorage.setItem('greenscreen', getValue('greenscreen'));
@@ -741,7 +737,6 @@ var prepared = false;
 var cookiesOn = false;
 var popout = false;
 function prepareMPO () {
-
 	//load character list inside the characters tab
 	var arr = [];
 	for (let num = 1; num < 5; num++) {
@@ -795,10 +790,17 @@ function prepareMPO () {
 		editValue('bgColor', localStorage.getItem('bgColor'));
 		changeTheme(curTheme)
 
-		if (localStorage.getItem('iconStyle') == 'mk8Icons') {
+		if (localStorage.getItem('iconStyle') === 'mk8Icons') {
 			editValue('mk8Icons', true);
 		} else {
 			editValue('mpsr', true);
+		}
+		if (localStorage.getItem('bonusStarAdd') === 'bonusSeperately') {
+			editValue('bonusSeperately', true);
+		} else if (localStorage.getItem('bonusStarAdd') === 'bonusCombine') {
+			editValue('bonusCombine', true);
+		} else {
+			editValue('bonusDont', true);
 		}
 		
 		editValue('customGameIcons', localStorage.getItem('customGameIcons'));
@@ -876,6 +878,11 @@ function prepareMPO () {
 				d.parentNode.appendChild(d);
 			}
 		}
+		if (parseInt(localStorage.getItem('lsVer')) < 7) {
+			for (var num = 0; num < slots.max + 1; num++) {
+				delete slots['c' + num].inclBonusOnOff;
+			}
+		}
 	}
 
 	document.getElementById('savefileCookieError').style.display = 'none';
@@ -897,7 +904,7 @@ function prepareMPO () {
 
 	coinStarTie();
 	callDisplayOnOff();
-	localStorage.setItem('lsVer', 6); //localStorage version, used to check how everything is stored
+	localStorage.setItem('lsVer', 7); //localStorage version, used to check how everything is stored
 
 	prepared = true;
 }
@@ -935,11 +942,11 @@ function syncPopout () {
 
 		sendSettingsMsg('enableInteract', getValue('enableInteract'), true);
 		sendSettingsMsg('autoPopout', getValue('autoPopout'), true);
-		sendSettingsMsg('mpsrIcons', getValue('mpsrIcons'), true);
-		sendSettingsMsg('mk8Icons', getValue('mk8Icons'), true);
+		sendSettingsMsg(document.querySelector('input[name="icons"]:checked').id, true, true);
 		if (darkTheme === true) {
 			sendMessage('settingsTheme');
 		}
+		sendSettingsMsg(document.querySelector('input[name="bonusStarAdd"]:checked').id, true, true);
 		sendSettingsMsg('customGameIcons', getValue('customGameIcons'), true);
 		sendSettingsMsg('greenscreen', getValue('greenscreen'), true);
 		sendSettingsMsg('bgColor', getValue('bgColor'), true);
@@ -990,7 +997,6 @@ function syncPopout () {
 		sendSettingsMsg('stompyOnOff', getValue('stompyOnOff'), true);
 		sendSettingsMsg('doormatOnOff', getValue('doormatOnOff'), true);
 		sendSettingsMsg('starsOnOff', getValue('starsOnOff'), true);
-		sendSettingsMsg('inclBonusOnOff', getValue('inclBonusOnOff'), true);
 		sendSettingsMsg('miniStarsOnOff', getValue('miniStarsOnOff'), true);
 		sendSettingsMsg('bananasOnOff', getValue('bananasOnOff'), true);
 		sendSettingsMsg('coinsOnOff', getValue('coinsOnOff'), true);
@@ -1091,6 +1097,7 @@ function resetSettings (noLS) {
 	editValue('noTie', false);
 	editValue('autoSave', false);
 	editValue('deactivateUnused', true);
+	editValue('bonusDont', true);
 	if (prepared != true) {} else {
 		editValue('permSave', true);
 	}

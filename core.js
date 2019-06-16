@@ -73,11 +73,8 @@ function counterButtons (player, action, amount, counter) {
 	if (getValue('slowOnOff') == true) {
 		slowHighlight();
 	}
-	console.log(counter)
-	if (getValue('starsOnOff') == true && getValue('inclBonusOnOff') == true) {
+	if (counter === 'Stars' || document.querySelector('input[name="bonusStarAdd"]:checked').id != 'bonusDont') {
 		updateStars();
-	} else if (getValue('starsOnOff') == true && counter === 'Stars') {
-		updateCounter('p' + player + 'StarsBonusText', result);
 	}
 	if (getValue('coinsOnOff') == true && counter == 'Coins') {
 		updateCoins(player);
@@ -156,12 +153,13 @@ function mobileButtons (counter, player) {
 */
 var bonusStars = ['', 0, 0, 0, 0];
 function updateStars (player, action, amount) {
-	if (getValue('starsOnOff') == false && getValue('inclBonusOnOff') == true) {
-		editValue('starsOnOff', true);
-		displayOnOff('stars', false, true);
+	if (document.querySelector('input[name="bonusStarAdd"]:checked').id === 'bonusDont') {
+		for (let num = 1; num < 5; num++) {
+			updateCounter('p' + num + 'StarsBonusText', getInner('p' + num + 'StarsText'));
+		}
+		return;
 	}
 
-	var activated = getValue('inclBonusOnOff');
 	var result = ['', getInner('p1StarsText'), getInner('p2StarsText'), getInner('p3StarsText'), getInner('p4StarsText')];
 
 	for (let num = 1; num < 5; num++) {
@@ -188,46 +186,35 @@ function updateStars (player, action, amount) {
 	}
 
 
-	if (activated == true) {
-		bonusStars = ['', 0, 0, 0, 0];
-		callHighlight(false, false, true);
+	bonusStars = ['', 0, 0, 0, 0];
+	callHighlight(false, false, true);
 
-		for (let num = 1; num < 5; num++) {
-			if (getValue('p' + num + 'CoinStarTie') == true) {
-				bonusStars[num]++
-			}
+	for (let num = 1; num < 5; num++) {
+		if (getValue('p' + num + 'CoinStarTie') == true) {
+			bonusStars[num]++
 		}
+	}
 
-		if (getValue('miniStarsOnOff') == true) {
-			for (let num = 1; num < 5; num++) {
-				bonusStars[num] = bonusStars[num] * 5;
-			}
-		} else if (getValue('bananasOnOff') == true) {
-			for (let num = 1; num < 5; num++) {
-				bonusStars[num] = bonusStars[num] * 10;
-			}
+	if (getValue('miniStarsOnOff') == true) {
+		for (let num = 1; num < 5; num++) {
+			bonusStars[num] = bonusStars[num] * 5;
 		}
+	} else if (getValue('bananasOnOff') == true) {
+		for (let num = 1; num < 5; num++) {
+			bonusStars[num] = bonusStars[num] * 10;
+		}
+	}
 
-		for (let num = 1; num < 5; num++) {
-			if (result[num] >= 999) {
-				result[num] = 999;
-			} else if (result[num] <= 0) {
-				result[num] = 0;
-			}
-			if (getValue('combineBonus') === true) {
-				updateCounter('p' + num + 'StarsBonusText', parseInt(result[num]) + parseInt(bonusStars[num]));
-			} else {
-				updateCounter('p' + num + 'StarsBonusText', result[num] + ' + ' + bonusStars[num]);
-			}
+	for (let num = 1; num < 5; num++) {
+		if (result[num] >= 999) {
+			result[num] = 999;
+		} else if (result[num] <= 0) {
+			result[num] = 0;
 		}
-	} else {
-		for (let num = 1; num < 5; num++) {
-			if (result[num] >= 999) {
-				result[num] = 999;
-			} else if (result[num] <= 0) {
-				result[num] = 0;
-			}
-			updateCounter('p' + num + 'StarsBonusText', result[num]);
+		if (document.querySelector('input[name="bonusStarAdd"]:checked').id === 'bonusSeperately') {
+			updateCounter('p' + num + 'StarsBonusText', result[num] + ' + ' + bonusStars[num]);
+		} else {
+			updateCounter('p' + num + 'StarsBonusText', parseInt(result[num]) + parseInt(bonusStars[num]));
 		}
 	}
 }

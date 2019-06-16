@@ -486,7 +486,22 @@
 					<label for="enableHighlight"> <span class="settingsText"> Enable counter highlighting: </span> </label> <input type="checkbox" id="enableHighlight" onchange="sendSettingsMsg(this.id, + this.checked);changeSettings('resetHighlights')" checked> <input type="color" onchange="sendSettingsMsg(this.id, this.value);changeSettings('callHighlight', [false, true])" value="#FF0000" id="highlightColor"> <br> <br>
 					<label for="deactivateUnused"> <span class="settingsText"> Deactivate counters not used by the current game: </span> </label> <input type="checkbox" id="deactivateUnused" style="top: 5px;" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('deactivateUnused')" checked> <br> <br>
 
-					<label for="combineBonus"> <span class="settingsText"> Combine bonus stars: </span> </label> <input type="checkbox" id="combineBonus" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('updateStars')" checked> <span class="settingsNote"> Requires "Auto-add bonus stars" under "Counters" to be activated. </span> <br>
+					<span class="settingsText" style="position: relative; top: -13px;"> Add bonus-stars to star counter:
+						<span id="bonusStarSelector">
+							<span class="relative">
+								<label for="bonusDont"> Don't add </label>
+								<input type="radio" name="bonusStarAdd" id="bonusDont" onchange="updateStars()" checked>
+							</span> - 
+							<span class="relative">
+								<label for="bonusCombine"> Combine </label>
+								<input type="radio" name="bonusStarAdd" id="bonusCombine" onchange="updateStars()">
+							</span> - 
+							<span class="relative">
+								<label for="bonusSeperately"> Seperately </label>
+								<input type="radio" name="bonusStarAdd" id="bonusSeperately" onchange="updateStars()">
+							</span>
+						</span> <br>
+
 					<label for="noTie"> <span class="settingsText"> Don't use ties for Coin Star: </span> </label> <input type="checkbox" id="noTie" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('coinStarTie')"> <br>
 					<label for="autoSave"> <span class="settingsText"> Automatically save/reload when updating turns: </span> </label> <input type="checkbox" id="autoSave" onchange="sendSettingsMsg(this.id, this.checked);if (this.checked == true) {changeSettings('backup')}"> <br> <br>
 					<label for="enableInteract"> <span class="settingsText"> Enable Drag 'n' Drop: </span> </label> <input type="checkbox" id="enableInteract" onchange="sendSettingsMsg(this.id, this.checked)"> <button onclick="changeSettings('interactSave')">Save Positions</button> <button onclick="changeSettings('interactReset')">Reset Positions</button> <br>
@@ -778,15 +793,13 @@
 						<span class="flexAuto"></span>
 						<span class="relative"> <label for="doormatOnOff" id="doormatOnOffText" class="counterOnOffText">Doormat (SMP):</label> <input type="checkbox" id="doormatOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['doormat'])"> <label for="doormatOnOff" class="charSelectorLabel counterOnOff doormatOnOff"></label> </span>
 					</div>
-					<span id="hiddenCountersText" class="settingsText"></span> <br>
-					<span class="settingsNote"> Minigame Star Reminder: MP 1-8 uses coins, MP DS & SMP uses wins and MP 9 & 10 uses Mini-stars. </span> <br> <br>
+					<span id="hiddenCountersText" class="settingsText"></span> <br> <br>
 
 					<span class="settingsTitle">In-game counters</span> <br>
 					<span class="settingsNote" style="white-space: nowrap;"> (Useful to completely replace the in-game display - Highlighting does not affect these counters) </span> <br>
 					<div class="counterSelection">
 						<span class="relative"> <label for="starsOnOff" id="starsOnOffText" class="counterOnOffText">Stars:</label> <input type="checkbox" id="starsOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['stars'])"> <label for="starsOnOff" class="charSelectorLabel counterOnOff starsOnOff"></label> </span>
-						<span class="flexAuto"></span>
-						<span class="relative"> <label for="inclBonusOnOff" id="inclBonusOnOffText" class="counterOnOffText">Auto-add bonus stars:</label> <input type="checkbox" id="inclBonusOnOff" class="counterOnOffInput" onclick="sendSettingsMsg(this.id, this.checked);changeSettings('updateStars')"> <label for="inclBonusOnOff" class="charSelectorLabel counterOnOff starsOnOff"></label> </span>
+						<span class="flexAuto"></span><span></span>
 						<span class="flexAuto"></span><span></span>
 					</div>
 					<div class="counterSelection mp9C mp10C">

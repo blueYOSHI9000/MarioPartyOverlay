@@ -262,11 +262,6 @@ function changeStarsError (elem) {
 	elem2 = elem2.parentNode;
 
 	elem2.children[2].style = 'background-image: url(img/stars.png);';
-
-	elem2 = document.getElementById('inclBonusOnOff');
-	elem2 = elem2.parentNode;
-
-	elem2.children[2].style = 'background-image: url(img/stars.png);';
 	}
 }
 
@@ -291,8 +286,6 @@ function displayOnOff (counter, start, force) {
 		if (counter == 'running' && getValue('slowOnOff') == true) {
 			editValue('slowOnOff', false);
 			highlight('running');
-		} else if (counter == 'stars' && getValue('inclBonusOnOff') == true) {
-			editValue('inclBonusOnOff', false);
 		}
 		if (counter == 'stars' && getValue('miniStarsOnOff') == true) {
 			editValue('miniStarsOnOff', false);
@@ -330,7 +323,7 @@ function displayOnOff (counter, start, force) {
 		slowStar();
 		callSlowStar = false;
 	}
-	if ((getValue('starsOnOff') == true && getValue('inclBonusOnOff')== true) || counter == 'stars') {
+	if (getValue('starsOnOff') == true || counter == 'stars') {
 		updateStars();
 		changeStars();
 	}

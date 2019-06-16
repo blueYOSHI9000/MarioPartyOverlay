@@ -460,7 +460,7 @@ function changeGame (game) {
 			editInner('minigameOnOffText', 'Champion:');
 			editInner('runningOnOffText', 'Sightseer:');
 			editInner('slowOnOffText', 'Slowpoke:');
-			editInner('itemSpaceOnOffText', 'Item:');
+			editInner('itemOnOffText', 'Item:');
 			editInner('balloonOnOffText', 'Balloon:');
 			break;
 		case 'smp':
@@ -507,6 +507,7 @@ var pastResults = [];
 * Checks what counters are empty, displays used counters in settings.
 */
 function updateCounterList () {
+	console.log('x')
 	var cStats = [];
 	var cStatsHidden = [];
 
