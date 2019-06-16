@@ -898,6 +898,7 @@ function prepareMPO () {
 		if (parseInt(localStorage.getItem('lsVer')) < 7) {
 			for (var num = 0; num < slots.max + 1; num++) {
 				delete slots['c' + num].inclBonusOnOff;
+				localStorage.setItem('c' + num, JSON.stringify(slots['c' + num]));
 			}
 		}
 	}
