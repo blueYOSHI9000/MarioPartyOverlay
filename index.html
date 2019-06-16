@@ -32,7 +32,7 @@
 	<link rel="stylesheet" href="style.css">
 </head>
 
-<body id="bodyElement" style="background: url(img/background.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;">
+<body id="bodyElement">
 
 	<noscript>
 		<span style="position: absolute; top: 0; left: 0; background-color: black; padding: 10px; margin: 5px; border: 2px solid yellow; color: white; border-radius: 1.2rem;"> Javascript is required for MPO to work. <br> MPO does not save or send any information anywhere. <br> It only saves stats & settings in your browser which no other website can access. </span>
@@ -509,7 +509,8 @@
 					<span style="display: none;"> <label for="permSave"> <span class="settingsText"> Save counters permanently (not getting deleted on site reload): </span> </label> <input type="checkbox" id="permSave" onchange="sendSettingsMsg(this.id, this.checked)" checked> <br> </span> <br>
 
 					<span class="settingsTitle"> Interface </span> <br>
-					<span class="settingsText"> Background: </span> <button id="themeB1" class="themeButtons" onclick="changeSettings('changeTheme', [1])" style="border-color: green;" disabled></button> <button id="themeB2" class="themeButtons" onclick="changeSettings('changeTheme', [2])"></button> <button id="themeB3" class="themeButtons" onclick="changeSettings('changeTheme', [3])"></button> <button id="themeB4" class="themeButtons" onclick="changeSettings('changeTheme', [4])"></button> <br>
+					<span class="settingsText"> Background: </span> <button id="themeDefault" class="themeButtons" onclick="changeSettings('changeTheme', ['default'])"></button> <button id="themeCastle" class="themeButtons" onclick="changeSettings('changeTheme', ['castle'])"></button> <button id="themeNsmbw" class="themeButtons" onclick="changeSettings('changeTheme', ['nsmbw'])"></button> <button id="themeToadroad" class="themeButtons" onclick="changeSettings('changeTheme', ['toadroad'])"></button> <br>
+
 					<span class="settingsText" style="position: relative; top: -13px;"> Default icon style: </span> 
 						<span class="charSelector" id="iconSelector">
 							<span class="relative">

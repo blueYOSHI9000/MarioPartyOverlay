@@ -578,66 +578,23 @@ function changeSettings (functionName, attributes) {
 * @param {number} theme Which theme should be used.
 */
 var bgColor = '#0000ff';
-var curTheme = 1;
+var curTheme = 'default';
 function changeTheme (theme) {
-	bgColor = getValue('bgColor');
-	styleExtra = 'no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"';
-
-	if (theme) {} else {
+	if (!theme) {
 		theme = curTheme;
-	}
-
-	if (getValue('greenscreen') == true) {
-		document.getElementById('bodyElement').style.background = bgColor;
 	} else {
-		switch (theme) {
-			case 2:
-				document.getElementById('bodyElement').style = 'background: url(img/MP9-bg.jpg)' + styleExtra;
-				curTheme = 2
-				break;
-			case 3:
-				document.getElementById('bodyElement').style = 'background: url(img/NSMBW-bg.jpg)' + styleExtra;
-				curTheme = 3
-				break;
-			case 4:
-				document.getElementById('bodyElement').style = 'background: url(img/MK8-bg.jpg)' + styleExtra;
-				curTheme = 4
-				break;
-			default:
-				document.getElementById('bodyElement').style = 'background: url(img/background.jpg)' + styleExtra;
-				curTheme = 1
-				break;
-		}
+		document.getElementById('theme' + capStr(curTheme)).style = '';
+		document.getElementById('theme' + capStr(curTheme)).disabled = '';
+		document.getElementById('theme' + capStr(theme)).style = 'border-color: green;';
+		document.getElementById('theme' + capStr(theme)).disabled = 'true';
+		curTheme = theme;
 	}
-	document.getElementById('themeB1').style = '';
-	document.getElementById('themeB2').style = '';
-	document.getElementById('themeB3').style = '';
-	document.getElementById('themeB4').style = '';
-	document.getElementById('themeB1').disabled = '';
-	document.getElementById('themeB2').disabled = '';
-	document.getElementById('themeB3').disabled = '';
-	document.getElementById('themeB4').disabled = '';
-	switch (theme) {
-		case 2:
-			document.getElementById('themeB2').style = 'border-color: green;';
-			document.getElementById('themeB2').disabled = 'true';
-			curTheme = 2;
-			break;
-		case 3:
-			document.getElementById('themeB3').style = 'border-color: green;';
-			document.getElementById('themeB3').disabled = 'true';
-			curTheme = 3;
-			break;
-		case 4:
-			document.getElementById('themeB4').style = 'border-color: green;';
-			document.getElementById('themeB4').disabled = 'true';
-			curTheme = 4;
-			break;
-		default:
-			document.getElementById('themeB1').style = 'border-color: green;';
-			document.getElementById('themeB1').disabled = 'true';
-			curTheme = 1;
-			break;
+	if (getValue('greenscreen') === true) {
+		document.getElementById('bodyElement').style.backgroundImage = 'unset';
+		document.getElementById('bodyElement').style.backgroundColor = bgColor;
+	} else {
+		document.getElementById('bodyElement').style.backgroundImage = 'url("img/bgs/' + theme + '.jpg"), url("img/bgs/default.jpg")';
+		document.getElementById('bodyElement').style.backgroundColor = 'unset';
 	}
 }
 
@@ -646,10 +603,11 @@ function changeTheme (theme) {
 * 
 * @param {string} id Id of the input element that changed its value.
 */
-function changeBGColor (id) {
-	bgColor = getValue(id);
-	if (getValue('greenscreen') == true) {
-		document.getElementById('bodyElement').style.background = bgColor;
+function changeBGColor () {
+	bgColor = getValue('bgColor');
+	if (getValue('greenscreen') === true) {
+		document.getElementById('bodyElement').style.backgroundColor = bgColor;
+		document.getElementById('bodyElement').style.backgroundImage = 'unset';
 	}
 	editValue('bgColor', bgColor);
 }
@@ -758,6 +716,15 @@ function shortcutSettings (close) {
 	document.getElementById('shortcutSettings').style = 'pointer-events: none;'; //filter and pointer event need to be different as blur wouldn't be smooth with 'shortcutSettings' and pointer-event would remove onClick
 	document.getElementById('shortcutSettingsPopup').style.display = 'initial';
 	setTimeout(function () {document.getElementById('settingsMain').setAttribute('onclick','shortcutSettings(true)');}, 10); //required because chrome would immediately execute the function if it was changed directly
+}
+
+/*
+* Capitalize a string.
+* 
+* @param {string} str The string to capitalize.
+*/
+function capStr (str) {
+	return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 /*

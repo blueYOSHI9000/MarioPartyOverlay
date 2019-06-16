@@ -507,7 +507,6 @@ var pastResults = [];
 * Checks what counters are empty, displays used counters in settings.
 */
 function updateCounterList () {
-	console.log('x')
 	var cStats = [];
 	var cStatsHidden = [];
 

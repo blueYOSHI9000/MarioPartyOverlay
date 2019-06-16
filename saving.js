@@ -785,9 +785,26 @@ function prepareMPO () {
 
 		editValue('enableInteract', stringToBoolean(localStorage.getItem('enableInteract')));
 		editValue('autoPopout', stringToBoolean(localStorage.getItem('autoPopout')));
-		curTheme = parseInt(localStorage.getItem('curTheme'));
 		editValue('greenscreen', stringToBoolean(localStorage.getItem('greenscreen')));
 		editValue('bgColor', localStorage.getItem('bgColor'));
+		curTheme = localStorage.getItem('curTheme');
+		if (parseInt(curTheme) != NaN) {
+			curTheme = parseInt(curTheme);
+			switch (curTheme) {
+				case 1:
+					curTheme = 'default';
+					break;
+				case 2:
+					curTheme = 'toadroad';
+					break;
+				case 3:
+					curTheme = 'nsmbw';
+					break;
+				case 4:
+					curTheme = 'castle';
+					break;
+			}
+		}
 		changeTheme(curTheme)
 
 		if (localStorage.getItem('iconStyle') === 'mk8Icons') {
