@@ -1000,6 +1000,7 @@ function syncPopout () {
 		sendSettingsMsg('com4', getValue('com4'), true);
 		sendSettingsMsg('happeningOnOff', getValue('happeningOnOff'), true);
 		sendSettingsMsg('minigameOnOff', getValue('minigameOnOff'), true);
+		sendSettingsMsg('coinStarOnOff', getValue('coinStarOnOff'), true);
 		sendSettingsMsg('redSpaceOnOff', getValue('redSpaceOnOff'), true);
 		sendSettingsMsg('runningOnOff', getValue('runningOnOff'), true);
 		sendSettingsMsg('slowOnOff', getValue('slowOnOff'), true);
