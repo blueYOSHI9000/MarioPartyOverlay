@@ -402,8 +402,9 @@ function loadSlot (slot) {
 * 
 * @param {number/string} slot Which slot to load, if empty it used the current slot, if 'empty' it creates an empty slot
 * @param {boolean} update If true, a savefile gets updated instead of created.
+* 
 */
-function createSlot (slot, update) {
+function createSlot (slot, update, noorder) {
 	if (typeof slot === 'undefined') {
 		slot = slots.sel;
 	}
@@ -423,7 +424,9 @@ function createSlot (slot, update) {
 			slots[selA] = copyVar(slots['a' + slot]);
 		}
 		selM = slots.max;
-		slots.order.push(slots.max);
+		if (noorder != true) {
+			slots.order.push(slots.max);
+		}
 	} else {
 		selS = 's' + slot;
 		selC = 'c' + slot;
@@ -457,7 +460,9 @@ function createSlot (slot, update) {
 	localStorage.setItem(selC, JSON.stringify(slots[selC]));
 	localStorage.setItem(selS, JSON.stringify(slots[selS]));
 	localStorage.setItem(selA, JSON.stringify(slots[selA]));
-	localStorage.setItem('sOrder', JSON.stringify(slots.order));
+	if (noorder != true) {
+		localStorage.setItem('sOrder', JSON.stringify(slots.order));
+	}
 	localStorage.setItem('sMax', slots.max);
 }
 
@@ -521,6 +526,28 @@ function updateSlotOrder () {
 	}
 	slots.order = arr;
 	localStorage.setItem('sOrder', JSON.stringify(arr));
+	if (popout === true) {
+		sendMessage('changeSlotOrder+' + JSON.stringify(slots.order));
+	}
+}
+
+/*
+* Changes the slot order.
+* 
+* @param {array} so The order.
+*/
+function changeSlotOrder (so) {
+	if (typeof so === 'string') {
+		so = JSON.parse(so);
+	}
+	if (typeof so != 'object') {
+		return;
+	}
+	for (var num = 0; num < so.length; num++) {
+		var d = document.querySelectorAll('[slot="' + so[num] + '"]')[0];
+		d.parentNode.appendChild(d);
+	}
+	slots.order = so;
 }
 
 /*
@@ -916,9 +943,9 @@ function prepareMPO () {
 				slots['a' + num] = copyVar(defA);
 			}
 			if (num === 0) {
-				createSlot(num, true);
+				createSlot(num, true, true);
 			} else {
-				createSlot(num);
+				createSlot(num, false, true);
 			}
 		}
 		if (localStorage.getItem('sel') === null) {
@@ -927,13 +954,10 @@ function prepareMPO () {
 		loadSlot(parseInt(localStorage.getItem('sel')));
 		if (parseInt(localStorage.getItem('lsVer')) >= 6) {
 			var arr = JSON.parse(localStorage.getItem('sOrder'));
-			if (typeof arr != 'array') {
+			if (typeof arr != 'object') {
 				arr = [0];
 			}
-			for (var num = 0; num < arr.length; num++) {
-				var d = document.querySelectorAll('[slot="' + arr[num] + '"]')[0];
-				d.parentNode.appendChild(d);
-			}
+			changeSlotOrder(arr);
 		}
 		if (parseInt(localStorage.getItem('lsVer')) < 7) {
 			for (var num = 0; num < slots.max + 1; num++) {
@@ -1084,6 +1108,7 @@ function syncPopout () {
 */
 function setSlots (text) {
 	var slots2 = JSON.parse(text);
+	var arr = copyVar(slots2.order);
 
 	var num2 = slots2.max;
 	if (isNaN(num2) === true) {
@@ -1101,6 +1126,7 @@ function setSlots (text) {
 		}
 	}
 	loadSlot(slots2.sel);
+	changeSlotOrder(arr);
 }
 
 /*
