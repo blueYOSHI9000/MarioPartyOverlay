@@ -328,7 +328,7 @@ function changeGame (game) {
 	if (game === 'mpds' || game === 'all') {
 		showCounters.push(document.querySelectorAll('.mpDSC'));
 	}
-	if (game === 'mpit' || game === 'mpsr' || game === 'mptt100' || game === 'smp') {
+	if (game === 'mpsr' || game === 'mptt100' || game === 'smp') {
 		showChars.push(document.querySelectorAll('.rosalinaSpan'));
 	}
 	if (game === 'mpit') {
