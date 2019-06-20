@@ -70,8 +70,11 @@ function counterButtons (player, action, amount, counter) {
 		highlight(counter);
 	}
 
-	if (getValue('slowOnOff') == true) {
+	if (counter === 'Running' && getValue('slowOnOff') === true) {
 		slowHighlight();
+	}
+	if (counter === 'Item' && getValue('unusedOnOff') === true) {
+		slowHighlight(false, 'unused');
 	}
 	if (counter === 'Stars' || document.querySelector('input[name="bonusStarAdd"]:checked').id != 'bonusDont') {
 		updateStars();

@@ -1060,8 +1060,17 @@ body {
 .minusOnOff {
 	background-image:url(img/minus.png);
 }
-.specialDiceOnOff {
-	background-image:url(img/specialdice.png);
+.almostOnOff {
+	background-image:url(img/almost.png);
+}
+.lonerOnOff {
+	background-image:url(img/loner.png);
+}
+.duelOnOff {
+	background-image:url(img/duel.png);
+}
+.wandererOnOff {
+	background-image:url(img/wanderer.png);
 }
 .allyOnOff {
 	background-image:url(img/ally.png);

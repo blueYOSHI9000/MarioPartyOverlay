@@ -23,8 +23,6 @@ function callHighlight (resetHighlights, all, stars) {
 		editValue('highlightColor', textColor);
 	}
 
-	var counters = ['happening', 'minigame', 'redSpace', 'running', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat'];
-
 	if (getValue('enableHighlight') == true || resetHighlights == true || all == true || stars == true) {
 		for (let num = 0; num < counters.length; num++) {
 			if (getValue(counters[num] + 'OnOff') == true || all == true) {
@@ -33,6 +31,9 @@ function callHighlight (resetHighlights, all, stars) {
 		}
 		if (getValue('slowOnOff') == true) {
 			slowHighlight(true);
+		}
+		if (getValue('unusedOnOff') == true) {
+			slowHighlight(true, 'unused');
 		}
 	}
 
@@ -48,7 +49,8 @@ function callHighlight (resetHighlights, all, stars) {
 * @param {string} stars If the bonus star counter should be updated instead.
 */
 function highlight (counter, stars) {
-	if (counter == 'Stars' || counter == 'Coins') {
+	console.log(counter)
+	if (counter === 'Stars' || counter === 'Coins' || counter === 'stars' || counter === 'coins') {
 		return;
 	}
 	counter = counter.charAt(0).toUpperCase() + counter.slice(1);
@@ -58,7 +60,11 @@ function highlight (counter, stars) {
 	var counterP3 = getInner('p3' + counter + 'Text');
 	var counterP4 = getInner('p4' + counter + 'Text');
 
-	var counterNum = Math.max(counterP1, counterP2, counterP3, counterP4);
+	if (counter === 'Almost' || counter === 'Loner' || counter === 'Wanderer') {
+		var counterNum = Math.min(counterP1, counterP2, counterP3, counterP4);
+	} else {
+		var counterNum = Math.max(counterP1, counterP2, counterP3, counterP4);
+	}
 
 	if (stars == true) {
 		if (counterP1 == 0 && counterP2 == 0 && counterP3 == 0 && counterP4 == 0) {} else {
@@ -129,18 +135,42 @@ function slowStar () {
 }
 
 /*
-* Highlights the slow star.
+* Turns the slow star feature on or off.
 */
-function slowHighlight (stars) {
-	var counterP1 = getInner('p1RunningText');
-	var counterP2 = getInner('p2RunningText');
-	var counterP3 = getInner('p3RunningText');
-	var counterP4 = getInner('p4RunningText');
+function unusedStar () {
+	if (getValue('itemOnOff') == false && getValue('unusedOnOff') == true) {
+		editValue('itemOnOff', true);
+		displayOnOff('item', false, true);
+	}
+
+	if (getValue('unusedOnOff') == true && getValue('enableHighlight') == true) {
+		slowHighlight(false, 'unused');
+	} else if (getValue('enableHighlight') == true) {
+		highlight('item');
+	}
+}
+
+/*
+* Highlights the slow star.
+* 
+* 
+* @param {string} counter If Slow or Unused should be calculated.
+*/
+function slowHighlight (stars, counter) {
+	if (counter === 'unused') {
+		counter = 'Item';
+	} else {
+		counter = 'Running';
+	}
+	var counterP1 = getInner('p1' + counter + 'Text');
+	var counterP2 = getInner('p2' + counter + 'Text');
+	var counterP3 = getInner('p3' + counter + 'Text');
+	var counterP4 = getInner('p4' + counter + 'Text');
 
 	var counterNumMax = Math.max(counterP1, counterP2, counterP3, counterP4);
 	var counterNumMin = Math.min(counterP1, counterP2, counterP3, counterP4);
 
-	if (stars == true) {
+	if (stars === true) {
 		if (counterP1 == 0) {} else if (counterNumMin == counterP1) {
 			bonusStars[1]++;
 		}
@@ -158,35 +188,35 @@ function slowHighlight (stars) {
 		var textColor = getValue('textColor');
 
 		if (counterP1 == 0) {
-			document.getElementById('p1RunningText').style.color = textColor;
+			document.getElementById('p1' + counter + 'Text').style.color = textColor;
 		} else if (counterNumMax == counterP1 || counterNumMin == counterP1) {
-			document.getElementById('p1RunningText').style.color = highlightColor;
+			document.getElementById('p1' + counter + 'Text').style.color = highlightColor;
 		} else {
-			document.getElementById('p1RunningText').style.color = textColor;
+			document.getElementById('p1' + counter + 'Text').style.color = textColor;
 		}
 
 		if (counterP2 == 0) {
-			document.getElementById('p2RunningText').style.color = textColor;
+			document.getElementById('p2' + counter + 'Text').style.color = textColor;
 		} else if (counterNumMax == counterP2 || counterNumMin == counterP2) {
-			document.getElementById('p2RunningText').style.color = highlightColor;
+			document.getElementById('p2' + counter + 'Text').style.color = highlightColor;
 		} else {
-			document.getElementById('p2RunningText').style.color = textColor;
+			document.getElementById('p2' + counter + 'Text').style.color = textColor;
 		}
 
 		if (counterP3 == 0) {
-			document.getElementById('p3RunningText').style.color = textColor;
+			document.getElementById('p3' + counter + 'Text').style.color = textColor;
 		} else if (counterNumMax == counterP3 || counterNumMin == counterP3) {
-			document.getElementById('p3RunningText').style.color = highlightColor;
+			document.getElementById('p3' + counter + 'Text').style.color = highlightColor;
 		} else {
-			document.getElementById('p3RunningText').style.color = textColor;
+			document.getElementById('p3' + counter + 'Text').style.color = textColor;
 		}
 
 		if (counterP4 == 0) {
-			document.getElementById('p4RunningText').style.color = textColor;
+			document.getElementById('p4' + counter + 'Text').style.color = textColor;
 		} else if (counterNumMax == counterP4 || counterNumMin == counterP4) {
-			document.getElementById('p4RunningText').style.color = highlightColor;
+			document.getElementById('p4' + counter + 'Text').style.color = highlightColor;
 		} else {
-			document.getElementById('p4RunningText').style.color = textColor;
+			document.getElementById('p4' + counter + 'Text').style.color = textColor;
 		}
 	}
 }
@@ -271,7 +301,8 @@ function changeStarsError (elem) {
 * @param {string} counter Which counter should be hidden/shown.
 * @param {boolean} start Hide/show certain counters depending on what they should be (used when loading the site).
 */
-var callSlowStar = true
+var callSlowStar = true;
+var callUnusedStar = true;
 function displayOnOff (counter, start, force) {
 	if (popout == false && popoutActivated == true && force != true) {
 		if (getValue(counter + 'OnOff') == true) {
@@ -286,6 +317,10 @@ function displayOnOff (counter, start, force) {
 		if (counter == 'running' && getValue('slowOnOff') == true) {
 			editValue('slowOnOff', false);
 			highlight('running');
+		}
+		if (counter === 'item' && getValue('unusedOnOff') === true) {
+			editValue('unusedOnOff', false);
+			highlight('item');
 		}
 		if (counter == 'stars' && getValue('miniStarsOnOff') == true) {
 			editValue('miniStarsOnOff', false);
@@ -319,9 +354,13 @@ function displayOnOff (counter, start, force) {
 		counterClass[num].style.display = displayVar;
 	}
 
-	if (start) {} else if (callSlowStar == true && counter == 'running') {
+	if (start) {} else if (callSlowStar === true && counter === 'running') {
 		slowStar();
 		callSlowStar = false;
+	}
+	if (start) {} else if (callUnusedStar === true && counter === 'item') {
+		unusedStar();
+		callUnusedStar = false;
 	}
 	if (getValue('starsOnOff') == true || counter == 'stars') {
 		updateStars();
@@ -344,7 +383,10 @@ function callDisplayOnOff () {
 	displayOnOff('balloon', true, true);
 	displayOnOff('spinSpace', true, true);
 	displayOnOff('minus', true, true);
-	displayOnOff('specialDice', true, true);
+	displayOnOff('almost', true, true);
+	displayOnOff('loner', true, true);
+	displayOnOff('duel', true, true);
+	displayOnOff('wanderer', true, true);
 	displayOnOff('ally', true, true);
 	displayOnOff('stompy', true, true);
 	displayOnOff('doormat', true, true);

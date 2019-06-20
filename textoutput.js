@@ -77,12 +77,13 @@ function textOutput () {
 				switch (countersUp[num]) {
 					case 'RedSpace':
 						counterNames.push('Red Space');
+						break;
 					case 'FriendSpace':
 						counterNames.push('Friendship');
+						break;
 					case 'SpinSpace':
 						counterNames.push('Spin');
-					case 'SpecialDice':
-						counterNames.push('Dice Block');
+						break;
 					default:
 						counterNames.push(countersUp[num]);
 				}

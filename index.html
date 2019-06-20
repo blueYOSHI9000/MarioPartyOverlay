@@ -34,6 +34,31 @@
 
 <body id="bodyElement">
 
+	<script type="text/javascript">
+		function counterImgError (elem) {
+			var id = elem.id;
+			elem = elem.parentNode;
+			elem = elem.className.split(' ');
+			document.getElementById(id).src = 'img/' + elem[1].toLowerCase()  + '.png';
+
+			var elem2 = document.getElementById(elem[1] + 'OnOff');
+			elem2 = elem2.parentNode;
+
+			elem2.children[2].style = 'background-image: url(img/' + elem[1].toLowerCase()  + '.png);';
+			if (elem[1] == 'coins') {
+				elem2 = document.getElementById('coinStarOnOff');
+				elem2 = elem2.parentNode;
+
+				elem2.children[2].style = 'background-image: url(img/coins.png);';
+			} else if (elem[1] == 'running') {
+				elem2 = document.getElementById('slowOnOff');
+				elem2 = elem2.parentNode;
+
+				elem2.children[2].style = 'background-image: url(img/running.png);';
+			}
+		}
+	</script>
+
 	<noscript>
 		<span style="position: absolute; top: 0; left: 0; background-color: black; padding: 10px; margin: 5px; border: 2px solid yellow; color: white; border-radius: 1.2rem;"> Javascript is required for MPO to work. <br> MPO does not save or send any information anywhere. <br> It only saves stats & settings in your browser which no other website can access. </span>
 	</noscript>
@@ -147,7 +172,11 @@
 
 			<div class="draggable spinSpace" onclick="mobileButtons('spinSpace', 1)"> <img class="counterDisplay" src="img/spinspace.png" id="p1SpinSpaceDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p1SpinSpaceText"> 0 </span> <br> </div>
 			<div class="draggable minus" onclick="mobileButtons('minus', 1)"> <img class="counterDisplay" src="img/minus.png" id="p1MinusDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p1MinusText"> 0 </span> <br> </div>
-			<div class="draggable specialDice" onclick="mobileButtons('specialDice', 1)"> <img class="counterDisplay" src="img/specialdice.png" id="p1SpecialDiceDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p1SpecialDiceText"> 0 </span> <br> </div>
+			<div class="draggable almost" onclick="mobileButtons('almost', 1)"> <img class="counterDisplay" src="img/almost.png" id="p1AlmostDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p1AlmostText"> 0 </span> <br> </div>
+
+			<div class="draggable loner" onclick="mobileButtons('loner', 1)"> <img class="counterDisplay" src="img/loner.png" id="p1LonerDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p1LonerText"> 0 </span> <br> </div>
+			<div class="draggable duel" onclick="mobileButtons('duel', 1)"> <img class="counterDisplay" src="img/duel.png" id="p1DuelDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p1DuelText"> 0 </span> <br> </div>
+			<div class="draggable wanderer" onclick="mobileButtons('wanderer', 1)"> <img class="counterDisplay" src="img/wanderer.png" id="p1WandererDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p1WandererText"> 0 </span> <br> </div>
 
 			<div class="draggable ally" onclick="mobileButtons('ally', 1)"> <img class="counterDisplay" src="img/ally.png" id="p1AllyDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p1AllyText"> 0 </span> <br> </div>
 			<div class="draggable stompy" onclick="mobileButtons('stompy', 1)"> <img class="counterDisplay" src="img/stompy.png" id="p1StompyDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p1StompyText"> 0 </span> <br> </div>
@@ -174,7 +203,11 @@
 
 			<div class="draggable spinSpace" onclick="mobileButtons('spinSpace', 2)"> <img class="counterDisplay" src="img/spinspace.png" id="p2SpinSpaceDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p2SpinSpaceText"> 0 </span> <br> </div>
 			<div class="draggable minus" onclick="mobileButtons('minus', 2)"> <img class="counterDisplay" src="img/minus.png" id="p2MinusDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p2MinusText"> 0 </span> <br> </div>
-			<div class="draggable specialDice" onclick="mobileButtons('specialDice', 2)"> <img class="counterDisplay" src="img/specialdice.png" id="p2SpecialDiceDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p2SpecialDiceText"> 0 </span> <br> </div>
+			<div class="draggable almost" onclick="mobileButtons('almost', 2)"> <img class="counterDisplay" src="img/almost.png" id="p2AlmostDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p2AlmostText"> 0 </span> <br> </div>
+
+			<div class="draggable loner" onclick="mobileButtons('loner', 2)"> <img class="counterDisplay" src="img/loner.png" id="p2LonerDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p2LonerText"> 0 </span> <br> </div>
+			<div class="draggable duel" onclick="mobileButtons('duel', 2)"> <img class="counterDisplay" src="img/duel.png" id="p2DuelDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p2DuelText"> 0 </span> <br> </div>
+			<div class="draggable wanderer" onclick="mobileButtons('wanderer', 2)"> <img class="counterDisplay" src="img/wanderer.png" id="p2WandererDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p2WandererText"> 0 </span> <br> </div>
 
 			<div class="draggable ally" onclick="mobileButtons('ally', 2)"> <img class="counterDisplay" src="img/ally.png" id="p2AllyDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p2AllyText"> 0 </span> <br> </div>
 			<div class="draggable stompy" onclick="mobileButtons('stompy', 2)"> <img class="counterDisplay" src="img/stompy.png" id="p2StompyDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p2StompyText"> 0 </span> <br> </div>
@@ -201,7 +234,11 @@
 
 			<div class="draggable spinSpace" onclick="mobileButtons('spinSpace', 3)"> <img class="counterDisplay" src="img/spinspace.png" id="p3SpinSpaceDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p3SpinSpaceText"> 0 </span> <br> </div>
 			<div class="draggable minus" onclick="mobileButtons('minus', 3)"> <img class="counterDisplay" src="img/minus.png" id="p3MinusDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p3MinusText"> 0 </span> <br> </div>
-			<div class="draggable specialDice" onclick="mobileButtons('specialDice', 3)"> <img class="counterDisplay" src="img/specialdice.png" id="p3SpecialDiceDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p3SpecialDiceText"> 0 </span> <br> </div>
+			<div class="draggable almost" onclick="mobileButtons('almost', 3)"> <img class="counterDisplay" src="img/almost.png" id="p3AlmostDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p3AlmostText"> 0 </span> <br> </div>
+
+			<div class="draggable loner" onclick="mobileButtons('loner', 3)"> <img class="counterDisplay" src="img/loner.png" id="p3LonerDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p3LonerText"> 0 </span> <br> </div>
+			<div class="draggable duel" onclick="mobileButtons('duel', 3)"> <img class="counterDisplay" src="img/duel.png" id="p3DuelDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p3DuelText"> 0 </span> <br> </div>
+			<div class="draggable wanderer" onclick="mobileButtons('wanderer', 3)"> <img class="counterDisplay" src="img/wanderer.png" id="p3WandererDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p3WandererText"> 0 </span> <br> </div>
 
 			<div class="draggable ally" onclick="mobileButtons('ally', 3)"> <img class="counterDisplay" src="img/ally.png" id="p3AllyDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p3AllyText"> 0 </span> <br> </div>
 			<div class="draggable stompy" onclick="mobileButtons('stompy', 3)"> <img class="counterDisplay" src="img/stompy.png" id="p3StompyDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p3StompyText"> 0 </span> <br> </div>
@@ -227,7 +264,11 @@
 
 			<div class="draggable spinSpace" onclick="mobileButtons('spinSpace', 4)"> <img class="counterDisplay" src="img/spinspace.png" id="p4SpinSpaceDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p4SpinSpaceText"> 0 </span> <br> </div>
 			<div class="draggable minus" onclick="mobileButtons('minus', 4)"> <img class="counterDisplay" src="img/minus.png" id="p4MinusDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p4MinusText"> 0 </span> <br> </div>
-			<div class="draggable specialDice" onclick="mobileButtons('specialDice', 4)"> <img class="counterDisplay" src="img/specialdice.png" id="p4SpecialDiceDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p4SpecialDiceText"> 0 </span> <br> </div>
+			<div class="draggable almost" onclick="mobileButtons('almost', 4)"> <img class="counterDisplay" src="img/almost.png" id="p4AlmostDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p4AlmostText"> 0 </span> <br> </div>
+
+			<div class="draggable loner" onclick="mobileButtons('loner', 4)"> <img class="counterDisplay" src="img/loner.png" id="p4LonerDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p4LonerText"> 0 </span> <br> </div>
+			<div class="draggable duel" onclick="mobileButtons('duel', 4)"> <img class="counterDisplay" src="img/duel.png" id="p4DuelDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p4DuelText"> 0 </span> <br> </div>
+			<div class="draggable wanderer" onclick="mobileButtons('wanderer', 4)"> <img class="counterDisplay" src="img/wanderer.png" id="p4WandererDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p4WandererText"> 0 </span> <br> </div>
 
 			<div class="draggable ally" onclick="mobileButtons('ally', 4)"> <img class="counterDisplay" src="img/ally.png" id="p4AllyDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p4AllyText"> 0 </span> <br> </div>
 			<div class="draggable stompy" onclick="mobileButtons('stompy', 4)"> <img class="counterDisplay" src="img/stompy.png" id="p4StompyDisplay" onerror="counterImgError(this)"> <span class="counterText" id="p4StompyText"> 0 </span> <br> </div>
@@ -759,33 +800,40 @@
 						<span class="flexAuto"></span>
 						<span class="coinStarC relative"> <label for="coinStarOnOff" id="coinStarOnOffText" class="counterOnOffText">Coin Star (1-5, SMP):</label> <input type="checkbox" id="coinStarOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['coinStar'])" checked> <label for="coinStarOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </span>
 					</div>
-					<div class="counterSelection mp7C mp8C mp9C mp10C mpDSC mpsrC smpC">
+					<div class="counterSelection mp7C mp8C mp9C mp10C mpDSC mpsrC mptt100C smpC">
 						<span class="mp7C mp8C smpC relative"> <label for="redSpaceOnOff" id="redSpaceOnOffText" class="counterOnOffText">Red (7, 8, SMP):</label> <input type="checkbox" id="redSpaceOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['redSpace'])"> <label for="redSpaceOnOff" class="charSelectorLabel counterOnOff redSpaceOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="mp7C mp8C mp9C mp10C mpDSC mpsrC smpC relative"> <label for="runningOnOff" id="runningOnOffText" class="counterOnOffText">Running (7-10, DS-SMP):</label> <input type="checkbox" id="runningOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['running'])"> <label for="runningOnOff" class="charSelectorLabel counterOnOff runningOnOff"></label> </span>
+						<span class="mp7C mp8C mp9C mp10C mpDSC mpsrC mptt100C smpC relative"> <label for="runningOnOff" id="runningOnOffText" class="counterOnOffText">Running (7-10, DS-SMP):</label> <input type="checkbox" id="runningOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['running'])"> <label for="runningOnOff" class="charSelectorLabel counterOnOff runningOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="mp9C mp10C mpsrC smpC relative"> <label for="slowOnOff" id="slowOnOffText" class="counterOnOffText">Slow (9, 10, SR-SMP):</label> <input type="checkbox" id="slowOnOff" class="counterOnOffInput" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('slowStar')"> <label for="slowOnOff" class="charSelectorLabel counterOnOff runningOnOff"></label> </span>
+						<span class="mp9C mp10C mpsrC mptt100C smpC relative"> <label for="slowOnOff" id="slowOnOffText" class="counterOnOffText">Slow (9, 10, SR-SMP):</label> <input type="checkbox" id="slowOnOff" class="counterOnOffInput" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('slowStar')"> <label for="slowOnOff" class="charSelectorLabel counterOnOff runningOnOff"></label> </span>
 					</div>
-					<div class="counterSelection mp6C mp7C mp8C mpDSC mpsrC smpC">
+					<div class="counterSelection mp6C mp7C mp8C mp9C mpDSC mpsrC mptt100C smpC">
 						<span class="mp7C mp8C relative"> <label for="shoppingOnOff" id="shoppingOnOffText" class="counterOnOffText">Shopping (7, 8):</label> <input type="checkbox" id="shoppingOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['shopping'])"> <label for="shoppingOnOff" class="charSelectorLabel counterOnOff shoppingOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="relative"> <label for="itemOnOff" id="itemOnOffText" class="counterOnOffText">Item/Orb/Candy (6-8, DS-SMP):</label> <input type="checkbox" id="itemOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['item'])"> <label for="itemOnOff" class="charSelectorLabel counterOnOff itemOnOff"></label> </span>
+						<span class="relative"> <label for="itemOnOff" id="itemOnOffText" class="counterOnOffText">Item (6-8, DS-SMP):</label> <input type="checkbox" id="itemOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['item'])"> <label for="itemOnOff" class="charSelectorLabel counterOnOff itemOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="relative"></span>
+						<span class="mpsrC mptt100C relative"> <label for="unusedOnOff" id="unusedOnOffText" class="counterOnOffText">Unused (SR & TT100):</label> <input type="checkbox" id="unusedOnOff" class="counterOnOffInput" onchange="sendSettingsMsg(this.id, this.checked);changeSettings('unusedStar')"> <label for="unusedOnOff" class="charSelectorLabel counterOnOff itemOnOff"></label> </span>
 					</div>
 					<div class="counterSelection mpDSC">
 						<span class="mpDSC relative"> <label for="friendSpaceOnOff" id="friendSpaceOnOffText" class="counterOnOffText">Friendship (DS):</label> <input type="checkbox" id="friendSpaceOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['friendSpace'])"> <label for="friendSpaceOnOff" class="charSelectorLabel counterOnOff friendSpaceOnOff"></label> </span>
 						<span class="flexAuto"></span>
 						<span class="mpDSC relative"> <label for="hexOnOff" id="hexOnOffText" class="counterOnOffText">Hex (DS):</label> <input type="checkbox" id="hexOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['hex'])"> <label for="hexOnOff" class="charSelectorLabel counterOnOff hexOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="mpsrC relative"> <label for="balloonOnOff" id="balloonOnOffText" class="counterOnOffText">Balloon (SR, TT100):</label> <input type="checkbox" id="balloonOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['balloon'])"> <label for="balloonOnOff" class="charSelectorLabel counterOnOff balloonOnOff"></label> </span>
+						<span class="mpsrC mptt100C relative"> <label for="balloonOnOff" id="balloonOnOffText" class="counterOnOffText">Balloon (SR, TT100):</label> <input type="checkbox" id="balloonOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['balloon'])"> <label for="balloonOnOff" class="charSelectorLabel counterOnOff balloonOnOff"></label> </span>
 					</div>
-					<div class="counterSelection mp9C mp10C">
+					<div class="counterSelection mp9C mp10C mpsrC mptt100C">
 						<span class="mp9C relative"> <label for="spinSpaceOnOff" id="spinSpaceOnOffText" class="counterOnOffText">Spin (9):</label> <input type="checkbox" id="spinSpaceOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['spinSpace'])"> <label for="spinSpaceOnOff" class="charSelectorLabel counterOnOff spinSpaceOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="relative"> <label for="minusOnOff" id="minusOnOffText" class="counterOnOffText">Minus (9, 10):</label> <input type="checkbox" id="minusOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['minus'])"> <label for="minusOnOff" class="charSelectorLabel counterOnOff minusOnOff"></label> </span>
+						<span class="mp9C mp10C relative"> <label for="minusOnOff" id="minusOnOffText" class="counterOnOffText">Minus (9, 10):</label> <input type="checkbox" id="minusOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['minus'])"> <label for="minusOnOff" class="charSelectorLabel counterOnOff minusOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="relative"> <label for="specialDiceOnOff" id="specialDiceOnOffText" class="counterOnOffText">Dice Block (9, 10):</label> <input type="checkbox" id="specialDiceOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['specialDice'])"> <label for="specialDiceOnOff" class="charSelectorLabel counterOnOff specialDiceOnOff"></label> </span>
+						<span class="mpsrC mptt100C relative"> <label for="almostOnOff" id="almostOnOffText" class="counterOnOffText">Almost (SR & TT100):</label> <input type="checkbox" id="almostOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['almost'])"> <label for="almostOnOff" class="charSelectorLabel counterOnOff almostOnOff"></label> </span>
+					</div>
+					<div class="counterSelection mpsrC">
+						<span class="relative"> <label for="lonerOnOff" id="lonerOnOffText" class="counterOnOffText">Loner (SR):</label> <input type="checkbox" id="lonerOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['loner'])"> <label for="lonerOnOff" class="charSelectorLabel counterOnOff lonerOnOff"></label> </span>
+						<span class="flexAuto"></span>
+						<span class="relative"> <label for="duelOnOff" id="duelOnOffText" class="counterOnOffText">Duel (SR):</label> <input type="checkbox" id="duelOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['duel'])"> <label for="duelOnOff" class="charSelectorLabel counterOnOff duelOnOff"></label> </span>
+						<span class="flexAuto"></span>
+						<span class="relative"> <label for="wandererOnOff" id="wandererOnOffText" class="counterOnOffText">Wanderer (SR):</label> <input type="checkbox" id="wandererOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['wanderer'])"> <label for="wandererOnOff" class="charSelectorLabel counterOnOff wandererOnOff"></label> </span>
 					</div>
 					<div class="counterSelection smpC">
 						<span class="relative"> <label for="allyOnOff" id="allyOnOffText" class="counterOnOffText">Ally (SMP):</label> <input type="checkbox" id="allyOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['ally'])"> <label for="allyOnOff" class="charSelectorLabel counterOnOff allyOnOff"></label> </span>
@@ -809,7 +857,7 @@
 						<span class="mp9C relative"> <label for="bananasOnOff" id="bananasOnOffText" class="counterOnOffText">Bananas (9):</label> <input type="checkbox" id="bananasOnOff" class="counterOnOffInput" onclick="sendSettingsMsg(this.id, this.checked);changeSettings('changeStars', ['bananas']);changeSettings('updateStars')"> <label for="bananasOnOff" class="charSelectorLabel counterOnOff bananasOnOff"></label></span>
 						<span class="flexAuto"></span><span></span>
 					</div>
-					<div class="counterSelection">
+					<div class="counterSelection coinC">
 						<span class="relative"> <label for="coinsOnOff" id="coinsOnOffText" class="counterOnOffText">Coins:</label> <input type="checkbox" id="coinsOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['coins'])"> <label for="coinsOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </span>
 					</div> <br> <br>
 

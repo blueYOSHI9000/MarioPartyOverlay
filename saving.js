@@ -22,7 +22,10 @@ var defS = {
 		balloon: [0, 0, 0, 0],
 		spinSpace: [0, 0, 0, 0],
 		minus: [0, 0, 0, 0],
-		specialDice: [0, 0, 0, 0],
+		almost: [0, 0, 0, 0],
+		loner: [0, 0, 0, 0],
+		duel: [0, 0, 0, 0],
+		wanderer: [0, 0, 0, 0],
 		ally: [0, 0, 0, 0],
 		stompy: [0, 0, 0, 0],
 		doormat: [0, 0, 0, 0]
@@ -43,18 +46,22 @@ var defC = {
 		minigameOnOff: true,
 		redSpaceOnOff: false,
 		runningOnOff: false,
+		slowOnOff: false,
 		shoppingOnOff: false,
 		itemOnOff: false,
+		unusedOnOff: false,
 		friendSpaceOnOff: false,
 		hexOnOff: false,
 		balloonOnOff: false,
 		spinSpaceOnOff: false,
 		minusOnOff: false,
-		specialDiceOnOff: false,
+		almostOnOff: false,
+		lonerOnOff: false,
+		duelOnOff: false,
+		wandererOnOff: false,
 		allyOnOff: false,
 		stompyOnOff: false,
 		doormatOnOff: false,
-		slowOnOff: false,
 		miniStarsOnOff: false,
 		bananasOnOff: false,
 		coinStarOnOff: true
@@ -76,7 +83,7 @@ var characterList = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 't
 
 var assistVer = 0; //assist version for slots, increased if variables are added/changed etc
 
-var counters = ['stars', 'coins', 'happening', 'minigame', 'redSpace', 'running', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat'];
+var counters = ['stars', 'coins', 'happening', 'minigame', 'redSpace', 'running', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'loner', 'almost', 'duel', 'wanderer', 'ally', 'stompy', 'doormat'];
 var countersUp = [];
 for (let num = 0; num < counters.length; num++) {
 	countersUp.push(counters[num].charAt(0).toUpperCase() + counters[num].slice(1));
@@ -362,6 +369,7 @@ function loadSlot (slot) {
 	}
 	
 	editValue('slowOnOff', slots[sel].slowOnOff);
+	editValue('unusedOnOff', slots[sel].unusedOnOff);
 	editValue('miniStarsOnOff', slots[sel].miniStarsOnOff);
 	editValue('bananasOnOff', slots[sel].bananasOnOff);
 	editValue('coinStarOnOff', slots[sel].coinStarOnOff);
@@ -564,6 +572,7 @@ function savePlayers (close) {
 		slots[sel][counters[num] + 'OnOff'] = getValue(counters[num] + 'OnOff');
 	}
 	slots[sel].slowOnOff = getValue('slowOnOff');
+	slots[sel].unusedOnOff = getValue('unusedOnOff');
 	slots[sel].miniStarsOnOff = getValue('miniStarsOnOff');
 	slots[sel].bananasOnOff = getValue('bananasOnOff');
 	slots[sel].coinStarOnOff = getValue('coinStarOnOff');
@@ -591,12 +600,16 @@ function resetPlayers (noLS) {
 	editValue('slowOnOff', false);
 	editValue('shoppingOnOff', false);
 	editValue('itemOnOff', false);
+	editValue('unusedOnOff', false);
 	editValue('friendSpaceOnOff', false);
 	editValue('hexOnOff', false);
 	editValue('spinSpaceOnOff', false);
 	editValue('balloonOnOff', false);
 	editValue('minusOnOff', false);
-	editValue('specialDiceOnOff', false);
+	editValue('almostOnOff', false);
+	editValue('lonerOnOff', false);
+	editValue('duelOnOff', false);
+	editValue('wandererOnOff', false);
 	editValue('allyOnOff', false);
 	editValue('stompyOnOff', false);
 	editValue('doormatOnOff', false);
@@ -645,12 +658,16 @@ function resetPlayers (noLS) {
 	slots[sel].slowOnOff = false;
 	slots[sel].shoppingOnOff = false;
 	slots[sel].itemOnOff = false;
+	slots[sel].unusedOnOff = false;
 	slots[sel].friendSpaceOnOff = false;
 	slots[sel].hexOnOff = false;
 	slots[sel].balloonOnOff = false;
 	slots[sel].spinSpaceOnOff = false;
 	slots[sel].minusOnOff = false;
-	slots[sel].specialDiceOnOff = false;
+	slots[sel].almostOnOff = false;
+	slots[sel].lonerOnOff = false;
+	slots[sel].duelOnOff = false;
+	slots[sel].wandererOnOff = false;
 	slots[sel].allyOnOff = false;
 	slots[sel].stompyOnOff = false;
 	slots[sel].doormatOnOff = false;
@@ -782,18 +799,14 @@ function prepareMPO () {
 	localStorage.getItem('enableHighlight'); //If cookies are blocked, this will break the function immediately
 	cookiesOn = true;
 	if (localStorage.getItem('saving') === 'true') {
-
 		editValue('enableInteract', stringToBoolean(localStorage.getItem('enableInteract')));
 		editValue('autoPopout', stringToBoolean(localStorage.getItem('autoPopout')));
 		editValue('greenscreen', stringToBoolean(localStorage.getItem('greenscreen')));
 		editValue('bgColor', localStorage.getItem('bgColor'));
 		curTheme = localStorage.getItem('curTheme');
-		if (parseInt(curTheme) != NaN) {
+		if (isNaN(parseInt(curTheme)) != true) {
 			curTheme = parseInt(curTheme);
 			switch (curTheme) {
-				case 1:
-					curTheme = 'default';
-					break;
 				case 2:
 					curTheme = 'toadroad';
 					break;
@@ -802,6 +815,9 @@ function prepareMPO () {
 					break;
 				case 4:
 					curTheme = 'castle';
+					break;
+				default:
+					curTheme = 'default';
 					break;
 			}
 		}
@@ -860,6 +876,30 @@ function prepareMPO () {
 		resetSettings(true);
 	}
 	editValue('slotLoad', true);
+
+	if (parseInt(localStorage.getItem('lsVer')) < 8) {
+		var num2 = parseInt(localStorage.getItem('sMax'));
+		if (isNaN(num2) === true) {
+			num2 = 0;
+		}
+		num2++;
+		for (var num = 0; num < num2; num++) {
+			var lsSlot = JSON.parse(localStorage.getItem('s' + num));
+			lsSlot.almost = [0, 0, 0, 0];
+			lsSlot.loner = [0, 0, 0, 0];
+			lsSlot.duel = [0, 0, 0, 0];
+			lsSlot.wanderer = [0, 0, 0, 0];
+			delete lsSlot.specialDice;
+			localStorage.setItem('s' + num, JSON.stringify(lsSlot));
+			var lsSlot = JSON.parse(localStorage.getItem('c' + num));
+			lsSlot.almostOnOff = false;
+			lsSlot.lonerOnOff = false;
+			lsSlot.duelOnOff = false;
+			lsSlot.wandererOnOff = false;
+			delete lsSlot.specialDiceOnOff;
+			localStorage.setItem('c' + num, JSON.stringify(lsSlot));
+		}
+	}
 
 	if (localStorage.getItem('sMax') != null) {
 		var num2 = parseInt(localStorage.getItem('sMax'));
@@ -922,7 +962,7 @@ function prepareMPO () {
 
 	coinStarTie();
 	callDisplayOnOff();
-	localStorage.setItem('lsVer', 7); //localStorage version, used to check how everything is stored
+	localStorage.setItem('lsVer', 8); //localStorage version, used to check how everything is stored
 
 	prepared = true;
 }
@@ -1006,12 +1046,16 @@ function syncPopout () {
 		sendSettingsMsg('slowOnOff', getValue('slowOnOff'), true);
 		sendSettingsMsg('shoppingOnOff', getValue('shoppingOnOff'), true);
 		sendSettingsMsg('itemOnOff', getValue('itemOnOff'), true);
+		sendSettingsMsg('unusedOnOff', getValue('unusedOnOff'), true);
 		sendSettingsMsg('friendSpaceOnOff', getValue('friendSpaceOnOff'), true);
 		sendSettingsMsg('hexOnOff', getValue('hexOnOff'), true);
 		sendSettingsMsg('balloonOnOff', getValue('balloonOnOff'), true);
 		sendSettingsMsg('spinSpaceOnOff', getValue('spinSpaceOnOff'), true);
 		sendSettingsMsg('minusOnOff', getValue('minusOnOff'), true);
-		sendSettingsMsg('specialDiceOnOff', getValue('specialDiceOnOff'), true);
+		sendSettingsMsg('almostOnOff', getValue('almostOnOff'), true);
+		sendSettingsMsg('lonerOnOff', getValue('lonerOnOff'), true);
+		sendSettingsMsg('duelOnOff', getValue('duelOnOff'), true);
+		sendSettingsMsg('wandererOnOff', getValue('wandererOnOff'), true);
 		sendSettingsMsg('allyOnOff', getValue('allyOnOff'), true);
 		sendSettingsMsg('stompyOnOff', getValue('stompyOnOff'), true);
 		sendSettingsMsg('doormatOnOff', getValue('doormatOnOff'), true);
@@ -1143,7 +1187,7 @@ function resetSettings (noLS) {
 	if (darkTheme === true) {
 		settingsTheme();
 	}
-	changeTheme(1);
+	changeTheme('default');
 	changeCharacters()
 	changeTextColor('textColor');
 	updateCounterInput()

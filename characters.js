@@ -154,6 +154,11 @@ function counterImgError (elem) {
 		elem2 = elem2.parentNode;
 
 		elem2.children[2].style = 'background-image: url(img/running.png);';
+	} else if (elem[1] == 'item') {
+		elem2 = document.getElementById('unusedOnOff');
+		elem2 = elem2.parentNode;
+
+		elem2.children[2].style = 'background-image: url(img/item.png);';
 	}
 }
 
@@ -242,6 +247,7 @@ function changeGame (game) {
 	hideCounters.push(document.querySelectorAll('.mp9C'));
 	hideCounters.push(document.querySelectorAll('.mpDSC'));
 	hideCounters.push(document.querySelectorAll('.mpsrC'));
+	hideCounters.push(document.querySelectorAll('.mptt100C'));
 	hideCounters.push(document.querySelectorAll('.smpC'));
 
 	showChars.push(document.querySelectorAll('.marioSpan'));
@@ -252,92 +258,93 @@ function changeGame (game) {
 		showChars.push(document.querySelectorAll('.warioSpan'));
 	}
 
-	if (game == 'mp1' || game == 'mp2' || game == 'mp3' || game == 'mp4' || game == 'mp4' || game == 'mp10' || game == 'mpsr' || game == 'smp' || game == 'all') {
+	if (game === 'mp1' || game === 'mp2' || game === 'mp3' || game === 'mp4' || game === 'mp4' || game === 'mp10' || game === 'mpsr' || game === 'smp' || game === 'all') {
 		showChars.push(document.querySelectorAll('.dkSpan'));
 	}
-	if (game == 'mp3' || game == 'mp4' || game == 'mp5' || game == 'mp6' || game == 'mp7' || game == 'mp8' || game == 'mp9' || game == 'mp10' || game == 'mpds' || game == 'mpit' || game == 'mpsr' || game == 'mptt100' || game == 'smp' || game == 'all') {
+	if (game === 'mp3' || game === 'mp4' || game === 'mp5' || game === 'mp6' || game === 'mp7' || game === 'mp8' || game === 'mp9' || game === 'mp10' || game === 'mpds' || game === 'mpit' || game === 'mpsr' || game === 'mptt100' || game === 'smp' || game === 'all') {
 		showChars.push(document.querySelectorAll('.waluigiSpan'));
 		showChars.push(document.querySelectorAll('.daisySpan'));
 	}
-	if (game == 'mp6' || game == 'all') {
+	if (game === 'mp6' || game === 'all') {
 		showChars.push(document.querySelectorAll('.koopakidSpan'));
 		showCounters.push(document.querySelectorAll('.mp6C'));
 	}
-	if (game == 'mp6' || game == 'mp7' || game == 'mp8') {
+	if (game === 'mp6' || game === 'mp7' || game === 'mp8') {
 		showChars.push(document.querySelectorAll('.booSpan'));
 		showChars.push(document.querySelectorAll('.toadetteSpan'));
 	}
-	if (game == 'mp6' || game == 'mp7' || game == 'mp8' || game == 'mp9' || game == 'mp10' || game == 'mpds' || game == 'mpit' || game == 'mpsr' || game == 'all')  {
+	if (game === 'mp6' || game === 'mp7' || game === 'mp8' || game === 'mp9' || game === 'mp10' || game === 'mpds' || game === 'mpit' || game === 'mpsr' || game === 'all')  {
 		showChars.push(document.querySelectorAll('.toadSpan'));
 	}
-	if (game == 'mp7' || game == 'mp8' || game == 'all') {
+	if (game === 'mp7' || game === 'mp8' || game === 'all') {
 		showChars.push(document.querySelectorAll('.birdoSpan'));
 		showChars.push(document.querySelectorAll('.drybonesSpan'));
 	}
-	if (game == 'mp7' || game == 'all') {
+	if (game === 'mp7' || game === 'all') {
 		showCounters.push(document.querySelectorAll('.mp7C'))
 	}
-	if (game == 'mp8') {
+	if (game === 'mp8') {
 		showChars.push(document.querySelectorAll('.blooperSpan'))
 		showChars.push(document.querySelectorAll('.hammerbroSpan'))
 		showCounters.push(document.querySelectorAll('.mp8C'))
 	}
-	if (game == 'mp9') {
+	if (game === 'mp9') {
 		showChars.push(document.querySelectorAll('.koopaSpan'));
 		showChars.push(document.querySelectorAll('.shyguySpan'));
 		showChars.push(document.querySelectorAll('.kamekSpan'));
 		showChars.push(document.querySelectorAll('.birdoSpan'));
 		showCounters.push(document.querySelectorAll('.mp9C'));
 	}
-	if (game == 'mp9' || game == 'mp10' || game == 'mpsr' || game == 'mptt100') {
+	if (game === 'mp9' || game === 'mp10') {
+		hideCounters.push(document.querySelectorAll('.coinC'));
+	} else {
+		showCounters.push(document.querySelectorAll('.coinC'));
+	}
+	if (game === 'mp9' || game === 'mp10' || game === 'mpsr' || game === 'mptt100') {
 		hideCounters.push(document.querySelectorAll('.happeningC'));
 	} else {
 		showCounters.push(document.querySelectorAll('.happeningC'));
 	}
-	if (game == 'mp6' || game == 'mp7' || game == 'mp8' || game == 'mp9' || game == 'mp10' || game == 'mpds' || game == 'mpsr' || game == 'mptt100') {
+	if (game === 'mp6' || game === 'mp7' || game === 'mp8' || game === 'mp9' || game === 'mp10' || game === 'mpds' || game === 'mpsr' || game === 'mptt100') {
 		hideCounters.push(document.querySelectorAll('.coinStarC'));
 	} else {
 		showCounters.push(document.querySelectorAll('.coinStarC'));
 	}
-	if (game == 'smp' || game ==  'all') {
+	if (game === 'smp' || game === 'all') {
 		showChars.push(document.querySelectorAll('.koopaSpan'));
 		showChars.push(document.querySelectorAll('.shyguySpan'));
 	}
-	if (game == 'mp10' || game == 'all') {
+	if (game === 'mp10' || game === 'all') {
 		showChars.push(document.querySelectorAll('.rosalinaSpan'));
 		showChars.push(document.querySelectorAll('.spikeSpan'));
 		showChars.push(document.querySelectorAll('.toadetteSpan'));
 	}
-	if (game == 'mp10' || game == 'all') {
+	if (game === 'mp10' || game === 'all') {
 		showChars.push(document.querySelectorAll('.rosalinaSpan'));
 		showChars.push(document.querySelectorAll('.spikeSpan'));
 		showChars.push(document.querySelectorAll('.toadetteSpan'));
 		showCounters.push(document.querySelectorAll('.mp10C'));
 	}
-	if (game == 'mpds' || game == 'all') {
+	if (game === 'mpds' || game === 'all') {
 		showCounters.push(document.querySelectorAll('.mpDSC'));
 	}
-	if (game == 'mpit' || game == 'mpsr' || game == 'mptt100' || game == 'smp') {
+	if (game === 'mpit' || game === 'mpsr' || game === 'mptt100' || game === 'smp') {
 		showChars.push(document.querySelectorAll('.rosalinaSpan'));
 	}
-	if (game == 'mpit') {
+	if (game === 'mpit') {
 		showChars.push(document.querySelectorAll('.booSpan'));
 		showChars.push(document.querySelectorAll('.bowserjrSpan'));
 	}
-	if (game == 'mpsr') {
+	if (game === 'mpsr') {
 		showChars.push(document.querySelectorAll('.toadetteSpan'));
 		showChars.push(document.querySelectorAll('.diddySpan'));
 		showCounters.push(document.querySelectorAll('.mpsrC'));
 	}
-	if (game == 'mpsr' || game == 'mptt100') {
-		hideCounters.push(document.querySelectorAll('.minigameC'));
-	} else {
-		showCounters.push(document.querySelectorAll('.minigameC'));
+	if (game === 'mptt100') {
+		showCounters.push(document.querySelectorAll('.mptt100C'));
+		showCounters.push(document.querySelectorAll('.coinStarC'));
 	}
-	if (game == 'mptt100') {
-		showCounters.push(document.querySelectorAll('.mpsrC'));
-	}
-	if (game == 'smp' || game == 'all') {
+	if (game === 'smp' || game === 'all') {
 		showChars.push(document.querySelectorAll('.bowserSpan'));
 		showChars.push(document.querySelectorAll('.goombaSpan'));
 		showChars.push(document.querySelectorAll('.montySpan'));
@@ -349,7 +356,7 @@ function changeGame (game) {
 		showChars.push(document.querySelectorAll('.pompomSpan'));
 		showCounters.push(document.querySelectorAll('.smpC'));
 	}
-	if (game == 'all') {
+	if (game === 'all') {
 		showChars.push(document.querySelectorAll('.blooperSpan'));
 		showChars.push(document.querySelectorAll('.kamekSpan'));
 		showCounters.push(document.querySelectorAll('.mp8C'));
@@ -357,7 +364,7 @@ function changeGame (game) {
 		showCounters.push(document.querySelectorAll('.mpsrC'));
 	}
 
-	if (game == 'mpa' || game == 'mpit') {
+	if (game === 'mpa' || game === 'mpit') {
 		showCounters.push(document.querySelectorAll('.mp6C'));
 		showCounters.push(document.querySelectorAll('.mp7C'));
 		showCounters.push(document.querySelectorAll('.mp8C'));
@@ -441,9 +448,9 @@ function changeGame (game) {
 			editInner('minigameOnOffText', 'Minigame:');
 			editInner('runningOnOffText', 'Far:');
 			editInner('slowOnOffText', 'Slow:');
+			editInner('itemOnOffText', 'Dice Block:');
 			editInner('spinSpaceOnOffText', 'Spin:');
 			editInner('minusOnOffText', 'Minus:');
-			editInner('specialDiceOnOffText', 'Dice Block:');
 			editInner('miniStarsOnOffText', 'Mini-stars:');
 			editInner('bananasOnOffText', 'Bananas:');
 			break;
@@ -456,12 +463,25 @@ function changeGame (game) {
 			editInner('hexOnOffText', 'Hex:');
 			break;
 		case 'mpsr':
-		case 'mptt100':
 			editInner('minigameOnOffText', 'Champion:');
 			editInner('runningOnOffText', 'Sightseer:');
 			editInner('slowOnOffText', 'Slowpoke:');
-			editInner('itemOnOffText', 'Item:');
+			editInner('unusedOnOffText', 'Anti-Items:');
 			editInner('balloonOnOffText', 'Balloon:');
+			editInner('almostOnOffText', 'Almost:');
+			editInner('lonerOnOffText', 'Loner:');
+			editInner('duelOnOffText', 'Duel:');
+			editInner('wandererOnOffText', 'Wanderer:');
+			break;
+		case 'mptt100':
+			editInner('coinStarOnOffText', 'Rich:');
+			editInner('minigameOnOffText', 'Minigame:');
+			editInner('runningOnOffText', 'Running:');
+			editInner('slowOnOffText', 'Easygoing:');
+			editInner('itemOnOffText', 'Item:');
+			editInner('unusedOnOffText', 'Unused:');
+			editInner('balloonOnOffText', 'Balloon:');
+			editInner('almostOnOffText', 'So-close:');
 			break;
 		case 'smp':
 			editInner('happeningOnOffText', 'Eventful:');
@@ -479,20 +499,31 @@ function changeGame (game) {
 			editInner('happeningOnOffText', 'Happening (1-8, DS, SMP):');
 			editInner('minigameOnOffText', 'Minigame (1-10, DS, SMP):');
 			editInner('coinStarOnOffText', 'Coin Star (1-5, SMP):');
+
 			editInner('redSpaceOnOffText', 'Red (7, 8, SMP):');
 			editInner('runningOnOffText', 'Running (7-10, DS-SMP):');
 			editInner('slowOnOffText', 'Slow (9, 10, SR-SMP):');
+
 			editInner('shoppingOnOffText', 'Shopping (7, 8):');
-			editInner('itemOnOffText', 'Item/Orb/Candy (6-8, DS-SMP):');
+			editInner('itemOnOffText', 'Item (6-9, DS-SMP):');
+			editInner('unusedOnOffText', 'Unused (SR & TT100):');
+
 			editInner('friendSpaceOnOffText', 'Friendship (DS):');
 			editInner('hexOnOffText', 'Hex (DS):');
 			editInner('balloonOnOffText', 'Balloon (SR, TT100):');
+
 			editInner('spinSpaceOnOffText', 'Spin (9):');
 			editInner('minusOnOffText', 'Minus (9, 10):');
-			editInner('specialDiceOnOffText', 'Dice Block (9, 10):');
+			editInner('almostOnOffText', 'Almost (SR & TT100):');
+
+			editInner('lonerOnOffText', 'Loner (SR):');
+			editInner('duelOnOffText', 'Duel (SR):');
+			editInner('wandererOnOffText', 'Wanderer (SR):');
+
 			editInner('allyOnOffText', 'Ally (SMP):');
 			editInner('stompyOnOffText', 'Stompy (SMP):');
 			editInner('doormatOnOffText', 'Doormat (SMP):');
+
 			editInner('starsOnOffText', 'Stars:');
 			editInner('miniStarsOnOffText', 'Mini-stars (9 & 10):');
 			editInner('bananasOnOffText', 'Bananas (9):');
@@ -571,38 +602,41 @@ function updateCounterList () {
 */
 function deactivateUnused () {
 	var unused;
-	switch (curGame) {
+	//all: unused = ['coinStar', 'happening', 'minigame', 'redSpace', 'running', 'slow', 'shopping', 'item', 'unused', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'almost', 'loner', 'duel', 'wanderer', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
+	switch (curGame) { //list the unused counters, not the ones used
 		case 'mp1':
 		case 'mp2':
 		case 'mp3':
 		case 'mp4':
 		case 'mp5':
-			unused = ['redSpace', 'running', 'slow', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
+			unused = ['redSpace', 'running', 'slow', 'shopping', 'item', 'unused', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'almost', 'loner', 'duel', 'wanderer', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
 			break;
 		case 'mp6':
-			unused = ['coinStar', 'redSpace', 'running', 'slow', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
+			unused = ['coinStar', 'redSpace', 'running', 'slow', 'shopping', 'item', 'unused', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'almost', 'loner', 'duel', 'wanderer', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
 			break;
 		case 'mp7':
-			unused = ['coinStar', 'slow', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
+			unused = ['coinStar', 'slow', 'item', 'unused', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'almost', 'loner', 'duel', 'wanderer', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
 			break;
 		case 'mp8':
-			unused = ['coinStar', 'slow', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
+			unused = ['coinStar', 'slow', 'unused', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'almost', 'loner', 'duel', 'wanderer', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
 			break;
 		case 'mp9':
-			unused = ['coinStar', 'redSpace', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'ally', 'stompy', 'doormat'];
+			unused = ['coinStar', 'redSpace', 'shopping', 'unused', 'friendSpace', 'hex', 'balloon', 'almost', 'loner', 'duel', 'wanderer', 'ally', 'stompy', 'doormat'];
 			break;
 		case 'mp10':
-			unused = ['coinStar', 'redSpace', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'ally', 'stompy', 'doormat', 'miniStars'];
+			unused = ['coinStar', 'redSpace', 'shopping', 'unused', 'friendSpace', 'hex', 'balloon', 'almost', 'loner', 'duel', 'wanderer', 'spinSpace', 'ally', 'stompy', 'doormat', 'miniStars'];
 			break;
 		case 'mpds':
-			unused = ['coinStar', 'redSpace', 'slow', 'shopping', 'balloon', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
+			unused = ['coinStar', 'redSpace', 'slow', 'shopping', 'unused', 'balloon', 'spinSpace', 'minus', 'almost', 'loner', 'duel', 'wanderer', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
 			break;
 		case 'mpsr':
+			unused = ['coinStar', 'happening', 'redSpace', 'shopping', 'item', 'friendSpace', 'hex', 'spinSpace', 'minus', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
+			break;
 		case 'mptt100':
-			unused = ['coinStar', 'happening', 'minigame', 'redSpace', 'shopping', 'friendSpace', 'hex', 'spinSpace', 'minus', 'specialDice', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
+			unused = ['happening', 'redSpace', 'shopping', 'friendSpace', 'hex', 'spinSpace', 'minus', 'loner', 'duel', 'wanderer', 'ally', 'stompy', 'doormat', 'miniStars', 'bananas'];
 			break;
 		case 'smp':
-			unused = ['shopping', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'specialDice', 'miniStars', 'bananas'];
+			unused = ['shopping', 'unused', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'almost', 'loner', 'duel', 'wanderer', 'miniStars', 'bananas'];
 			break;
 		default:
 			return;
