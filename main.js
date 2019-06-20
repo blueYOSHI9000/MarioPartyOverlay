@@ -49,7 +49,6 @@ function callHighlight (resetHighlights, all, stars) {
 * @param {string} stars If the bonus star counter should be updated instead.
 */
 function highlight (counter, stars) {
-	console.log(counter)
 	if (counter === 'Stars' || counter === 'Coins' || counter === 'stars' || counter === 'coins') {
 		return;
 	}
