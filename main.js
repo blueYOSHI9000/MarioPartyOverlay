@@ -17,27 +17,27 @@ function resetHighlights () {
 * @param {boolean} stars If the bonus stars should be counted instead.
 */
 function callHighlight (resetHighlights, all, stars) {
-	if (resetHighlights == true) {
+	if (resetHighlights === true) {
 		var originalHighlightColor = getValue('highlightColor');
 		var textColor = getValue('textColor');
 		editValue('highlightColor', textColor);
 	}
 
-	if (getValue('enableHighlight') == true || resetHighlights == true || all == true || stars == true) {
+	if (getValue('enableHighlight') === true || resetHighlights === true || all === true || stars === true) {
 		for (let num = 0; num < counters.length; num++) {
-			if (getValue(counters[num] + 'OnOff') == true || all == true) {
+			if (getValue(counters[num] + 'OnOff') === true || all === true) {
 				highlight(counters[num], stars);
 			}
 		}
-		if (getValue('slowOnOff') == true) {
+		if (getValue('slowOnOff') === true) {
 			slowHighlight(true);
 		}
-		if (getValue('unusedOnOff') == true) {
+		if (getValue('unusedOnOff') === true) {
 			slowHighlight(true, 'unused');
 		}
 	}
 
-	if (resetHighlights == true) {
+	if (resetHighlights === true) {
 		editValue('highlightColor', originalHighlightColor);
 	}
 }
@@ -65,7 +65,10 @@ function highlight (counter, stars) {
 		var counterNum = Math.max(counterP1, counterP2, counterP3, counterP4);
 	}
 
-	if (stars == true) {
+	if (stars === true) {
+		if (getValue(counter[0].toLowerCase() + counter.substring(1) + 'OnOff') != true)
+			return;
+
 		if (counterP1 == 0 && counterP2 == 0 && counterP3 == 0 && counterP4 == 0) {} else {
 			if (counterNum == counterP1) {
 				bonusStars[1]++;
@@ -85,33 +88,33 @@ function highlight (counter, stars) {
 		var highlightColor = getValue('highlightColor');
 
 		if (counterP1 == 0 && counterP2 == 0 && counterP3 == 0 && counterP4 == 0) {
-			document.getElementById('p1' + counter + 'Text').style.color = textColor;
-			document.getElementById('p2' + counter + 'Text').style.color = textColor;
-			document.getElementById('p3' + counter + 'Text').style.color = textColor;
-			document.getElementById('p4' + counter + 'Text').style.color = textColor;
+			getElem('p1' + counter + 'Text').style.color = textColor;
+			getElem('p2' + counter + 'Text').style.color = textColor;
+			getElem('p3' + counter + 'Text').style.color = textColor;
+			getElem('p4' + counter + 'Text').style.color = textColor;
 		} else {
 			if (counterNum == counterP1) {
-				document.getElementById('p1' + counter + 'Text').style.color = highlightColor;
+				getElem('p1' + counter + 'Text').style.color = highlightColor;
 			} else {
-				document.getElementById('p1' + counter + 'Text').style.color = textColor;
+				getElem('p1' + counter + 'Text').style.color = textColor;
 			}
 
 			if (counterNum == counterP2) {
-				document.getElementById('p2' + counter + 'Text').style.color = highlightColor;
+				getElem('p2' + counter + 'Text').style.color = highlightColor;
 			} else {
-				document.getElementById('p2' + counter + 'Text').style.color = textColor;
+				getElem('p2' + counter + 'Text').style.color = textColor;
 			}
 
 			if (counterNum == counterP3) {
-				document.getElementById('p3' + counter + 'Text').style.color = highlightColor;
+				getElem('p3' + counter + 'Text').style.color = highlightColor;
 			} else {
-				document.getElementById('p3' + counter + 'Text').style.color = textColor;
+				getElem('p3' + counter + 'Text').style.color = textColor;
 			}
 
 			if (counterNum == counterP4) {
-				document.getElementById('p4' + counter + 'Text').style.color = highlightColor;
+				getElem('p4' + counter + 'Text').style.color = highlightColor;
 			} else {
-				document.getElementById('p4' + counter + 'Text').style.color = textColor;
+				getElem('p4' + counter + 'Text').style.color = textColor;
 			}
 		}
 	}
@@ -151,8 +154,8 @@ function unusedStar () {
 
 /*
 * Highlights the slow star.
-* 
-* 
+*
+*
 * @param {string} counter If Slow or Unused should be calculated.
 */
 function slowHighlight (stars, counter) {
@@ -187,42 +190,42 @@ function slowHighlight (stars, counter) {
 		var textColor = getValue('textColor');
 
 		if (counterP1 == 0) {
-			document.getElementById('p1' + counter + 'Text').style.color = textColor;
+			getElem('p1' + counter + 'Text').style.color = textColor;
 		} else if (counterNumMax == counterP1 || counterNumMin == counterP1) {
-			document.getElementById('p1' + counter + 'Text').style.color = highlightColor;
+			getElem('p1' + counter + 'Text').style.color = highlightColor;
 		} else {
-			document.getElementById('p1' + counter + 'Text').style.color = textColor;
+			getElem('p1' + counter + 'Text').style.color = textColor;
 		}
 
 		if (counterP2 == 0) {
-			document.getElementById('p2' + counter + 'Text').style.color = textColor;
+			getElem('p2' + counter + 'Text').style.color = textColor;
 		} else if (counterNumMax == counterP2 || counterNumMin == counterP2) {
-			document.getElementById('p2' + counter + 'Text').style.color = highlightColor;
+			getElem('p2' + counter + 'Text').style.color = highlightColor;
 		} else {
-			document.getElementById('p2' + counter + 'Text').style.color = textColor;
+			getElem('p2' + counter + 'Text').style.color = textColor;
 		}
 
 		if (counterP3 == 0) {
-			document.getElementById('p3' + counter + 'Text').style.color = textColor;
+			getElem('p3' + counter + 'Text').style.color = textColor;
 		} else if (counterNumMax == counterP3 || counterNumMin == counterP3) {
-			document.getElementById('p3' + counter + 'Text').style.color = highlightColor;
+			getElem('p3' + counter + 'Text').style.color = highlightColor;
 		} else {
-			document.getElementById('p3' + counter + 'Text').style.color = textColor;
+			getElem('p3' + counter + 'Text').style.color = textColor;
 		}
 
 		if (counterP4 == 0) {
-			document.getElementById('p4' + counter + 'Text').style.color = textColor;
+			getElem('p4' + counter + 'Text').style.color = textColor;
 		} else if (counterNumMax == counterP4 || counterNumMin == counterP4) {
-			document.getElementById('p4' + counter + 'Text').style.color = highlightColor;
+			getElem('p4' + counter + 'Text').style.color = highlightColor;
 		} else {
-			document.getElementById('p4' + counter + 'Text').style.color = textColor;
+			getElem('p4' + counter + 'Text').style.color = textColor;
 		}
 	}
 }
 
 /*
 * Updates the star counter image.
-* 
+*
 * @param {string} image Which image should be used.
 */
 function changeStars (image) {
@@ -258,9 +261,9 @@ function changeStars (image) {
 
 	for (let num = 1; num < 5; num++) {
 		if (curGame != 'all') {
-			document.getElementById('p' + num + 'StarsDisplay').src = 'img/' + curGame + '/' + source + '.png';
+			getElem('p' + num + 'StarsDisplay').src = 'img/' + curGame + '/' + source + '.png';
 		} else {
-			document.getElementById('p' + num + 'StarsDisplay').src = 'img/' + source + '.png';
+			getElem('p' + num + 'StarsDisplay').src = 'img/' + source + '.png';
 		}
 	}
 }
@@ -271,11 +274,11 @@ function changeStars (image) {
 function changeStarsError (elem) {
 	var id = elem.id;
 	if (getValue('miniStarsOnOff') == true) {
-		document.getElementById(id).src = 'img/ministar.png';
+		getElem(id).src = 'img/ministar.png';
 	} else if (getValue('bananasOnOff') == true) {
-		document.getElementById(id).src = 'img/banana.png';
+		getElem(id).src = 'img/banana.png';
 	} else {
-		document.getElementById(id).src = 'img/stars.png';
+		getElem(id).src = 'img/stars.png';
 	}
 	for (let num = 0; num < 3; num++) {
 		switch (num) {
@@ -287,7 +290,7 @@ function changeStarsError (elem) {
 				elem = 'stars';
 		}
 
-	var elem2 = document.getElementById('starsOnOff');
+	var elem2 = getElem('starsOnOff');
 	elem2 = elem2.parentNode;
 
 	elem2.children[2].style = 'background-image: url(img/stars.png);';
@@ -336,7 +339,7 @@ function displayOnOff (counter, start, force) {
 	}
 
 	if (counter == 'coinStar') {
-		document.getElementById('coinStarFullDiv').style.display = displayVar;
+		getElem('coinStarFullDiv').style.display = displayVar;
 		if (getValue('coinStarOnOff') == false) {
 			editValue('p1CoinStarTie', false);
 			editValue('p2CoinStarTie', false);
@@ -371,26 +374,9 @@ function displayOnOff (counter, start, force) {
 * Calls displayOnOff() when loading the page.
 */
 function callDisplayOnOff () {
-	displayOnOff('happening', true, true);
-	displayOnOff('minigame', true, true);
-	displayOnOff('redSpace', true, true);
-	displayOnOff('running', true, true);
-	displayOnOff('shopping', true, true);
-	displayOnOff('item', true, true);
-	displayOnOff('friendSpace', true, true);
-	displayOnOff('hex', true, true);
-	displayOnOff('balloon', true, true);
-	displayOnOff('spinSpace', true, true);
-	displayOnOff('minus', true, true);
-	displayOnOff('almost', true, true);
-	displayOnOff('loner', true, true);
-	displayOnOff('duel', true, true);
-	displayOnOff('wanderer', true, true);
-	displayOnOff('ally', true, true);
-	displayOnOff('stompy', true, true);
-	displayOnOff('doormat', true, true);
-	displayOnOff('stars', true, true);
-	displayOnOff('coins', true, true);
+	for (let num = 0; num < counters.length; num++) {
+		displayOnOff(counters[num], true, true);
+	}
 	displayOnOff('coinStar', true, true);
 }
 
@@ -402,7 +388,7 @@ function callDisplayOnOff () {
 */
 function showHideDiv (ids) {
 	for (let num = 0; num < ids.length; num++) {
-		var div = document.getElementById(ids[num]).classList;
+		var div = getElem(ids[num]).classList;
 		for (let num2 = 0; num2 < div.length; num2++) {
 			if (div[num2] == 'hidden') {
 				var cont = true;
@@ -411,16 +397,24 @@ function showHideDiv (ids) {
 		}
 
 		if (cont === true) {
-			document.getElementById(ids[num]).classList.add('visible');
-			document.getElementById(ids[num]).classList.remove('hidden');
+			getElem(ids[num]).classList.add('visible');
+			getElem(ids[num]).classList.remove('hidden');
 		} else {
-			document.getElementById(ids[num]).classList.remove('visible');
-			document.getElementById(ids[num]).classList.add('hidden');
+			getElem(ids[num]).classList.remove('visible');
+			getElem(ids[num]).classList.add('hidden');
 		}
 	}
 }
 
 var openedSettings = 'generalMPO';
+var scrollPos = {
+	generalMPO: 0,
+	slots: 0,
+	shortcut: 0, // === assist settings arent closing when changing tabs before assist loaded
+	player: 0,
+	counter: 0,
+	tutorial: 0
+}
 /*
 * Show certain settings and hide all others, also updates the cursor.
 *
@@ -430,48 +424,58 @@ function showHideSettings (id) {
 	if (popout === true) {
 		sendMessage('showHideSettings+' + id);
 	}
+
+	scrollPos[openedSettings] = getElem('settingsMain').scrollTop;
 	openedSettings = id;
+
 	var ids = ['generalMPO', 'slots', 'shortcut', 'player', 'counter', 'tutorial'];
 	for (let num = 0; num < ids.length; num++) {
-		document.getElementById(ids[num] + 'Settings').classList.add('hidden');
-		document.getElementById(ids[num] + 'Settings').classList.remove('visible');
-		document.getElementById(ids[num] + 'Selector').classList.remove('settingsSelected');
-		document.getElementById(ids[num] + 'SelectorBreak').classList.remove('settingsSelected');
+		getElem(ids[num] + 'Settings').classList.add('hidden');
+		getElem(ids[num] + 'Settings').classList.remove('visible');
+		getElem(ids[num] + 'Selector').classList.remove('settingsSelected');
+		getElem(ids[num] + 'SelectorBreak').classList.remove('settingsSelected');
 	}
-	document.getElementById(id + 'Settings').classList.add('visible');
-	document.getElementById(id + 'Settings').classList.remove('hidden');
-	document.getElementById(id + 'Selector').classList.add('settingsSelected');
-	document.getElementById(id + 'SelectorBreak').classList.add('settingsSelected');
+	getElem(id + 'Settings').classList.add('visible');
+	getElem(id + 'Settings').classList.remove('hidden');
+	getElem(id + 'Selector').classList.add('settingsSelected');
+	getElem(id + 'SelectorBreak').classList.add('settingsSelected');
 
 	if (id == 'shortcut') {
-		document.getElementById('shortcutHeader').style.display = 'block';
+		getElem('shortcutHeader').style.display = 'block';
+		getElem('settingsMain').classList.add('scroll');
 	} else {
-		document.getElementById('shortcutHeader').style.display = 'none';
+		getElem('shortcutHeader').style.display = 'none';
+		getElem('settingsMain').classList.remove('scroll');
 	}
 
 	if (shortcutLoaded === true) {
 		getAlly('close');
-		shortcutSettings(true);
 	}
+	shortcutSettings(true); //can be still be opened despite shortcuts not being loaded
 
 	if (id === 'counter') {
 		updateCounterList();
 	}
-}
 
+	getElem('settingsMain').scrollTop = scrollPos[openedSettings];
+}
+var test;
 /*
-* Closes the settings if the user doesn't click on the settings while they are opened.
+* Closes the settings & navbar dropdown if the user doesn't click on the settings or navbar dropdown while they are opened.
 *
 * @param {string} event What event got fired.
 */
 function windowOnClick (event) {
-	var settings = document.querySelector("#settings");
-	if (event.target === settings) {
-		showHideDiv(['settings']);
+	if (event.target === getElem('settings')) {
+		closeSettings();
 		if (shortcutLoaded == true) {
 			getAlly('close');
 			shortcutSettings(true);
 		}
+	}
+	test = event.target;
+	if (event.target === getElem('navbar')) {
+		closeNavbar();
 	}
 }
 
@@ -479,6 +483,9 @@ function windowOnClick (event) {
 * Checks if Ctrl & Shift is pressed.
 */
 function ctrlPressed (e, ctrl, shift, key) {
+	if (getValue('useHotkeys') != true) {
+		return;
+	}
 	if (ctrl || shift || key) {
 		ctrl = stringToBoolean(ctrl);
 		shift = stringToBoolean(shift);
@@ -487,57 +494,66 @@ function ctrlPressed (e, ctrl, shift, key) {
 		shift = e.shiftKey;
 		key = e.key;
 	}
-	if (popout == true) {
+	if (popout == true && ((e.key == 'Control' && ctrlKeyVar === false) || (e.key == 'Shift' && shiftKeyVar === false))) {
 		sendMessage('ctrlPressed+x+' + ctrl + '+' + shift + '+' + key);
 	}
 	if (ctrl && ctrlKeyVar == false) {
 		ctrlKeyVar = true;
-		if (getValue('mobileTypeMinus') == false) {
-			editValue('mobileTypeMinus', true);
-		} else if (getValue('mobileTypeMinus') == true) {
-			editValue('mobileTypeMinus', false);
-		}
+		getElem('nvCtrlHeld').style.display = 'inline-block';
+		switchAction();
 	} else if (shift && shiftKeyVar == false) {
-		if (getValue('type1') == true) {
-			shiftKeyVar = true;
-			editValue('type5', true);
-		} else if (getValue('type5') == true) {
-			shiftKeyVar = true;
-			editValue('type1', true);
+		shiftKeyVar = true;
+		getElem('nvShiftHeld').style.display = 'inline-block';
+		updateAmount();
+	} else {
+		switch (key) {
+			case '1':
+				ga.ogAmount = 1;
+				updateAmount();
+				break;
+			case '5':
+				ga.ogAmount = 5;
+				updateAmount();
+				break;
+			case '0':
+				ga.ogAmount = 10;
+				updateAmount();
+				break;
+			case 'Escape':
+				if (popout != true) {
+					closeSettings();
+				}
+				break;
 		}
-	} else if (key == '1') {
-		editValue('type1', true);
-	} else if (key == '5') {
-		editValue('type5', true);
-	} else if (key == '0') {
-		editValue('type10', true);
 	}
 }
 
 /*
 * Checks if Ctrl & Shift is released.
+*
+* @param {object} e Event.
+* @param {string} key The key that got released, overrides event.
+* @param {boolean} force Force runs it if true.
 */
-function ctrlReleased (e, key) {
+function ctrlReleased (e, key, force) {
+	if (getValue('useHotkeys') != true && force != true) {
+		return;
+	}
 	if (key) {} else {
 		key = e.key;
 	}
-	if (popout == true) {
-		sendMessage('ctrlReleased+x+' + key);
+	if (popout === true) {
+		sendMessage('ctrlReleased+x+' + key + '+' + force);
 	}
-	if (key == 'Control' && ctrlKeyVar == true) {
-		ctrlKeyVar = false
-		if (getValue('mobileTypeMinus') == false) {
-			editValue('mobileTypeMinus', true);
-		} else if (getValue('mobileTypeMinus') == true) {
-			editValue('mobileTypeMinus', false);
-		}
-	} else if (key == 'Shift' && shiftKeyVar == true) {
+	if (key === 'Control' && ctrlKeyVar === true) {
+		ctrlKeyVar = false;
+		getElem('nvCtrlHeld').style.display = 'none';
+		switchAction();
+	} else if (key === 'Shift' && shiftKeyVar === true) {
 		shiftKeyVar = false;
-		if (getValue('type5') == true) {
-			editValue('type1', true);
-		} else if (getValue('type1') == true) {
-			editValue('type5', true);
-		}
+		getElem('nvShiftHeld').style.display = 'none';
+		ga.amount = ga.ogAmount;
+		editInner('nvAmountText', ga.amount);
 	}
 }
 
@@ -550,7 +566,7 @@ var shortcutLoaded = false;
 var shortcutLoadType = 0; //0 = continue/setup game | 1 = force setup start | 2 = quick start
 /*
 * Loads the assist files to start the shortcut feature.
-* 
+*
 * @param {number} type How it should be started, see shortcutLoadType var.
 */
 function prepareShortcut (type) {
@@ -561,12 +577,15 @@ function prepareShortcut (type) {
 	if (isNaN(type) === false) {
 		shortcutLoadType = type;
 	}
-	var scripts = ['assist-misc.js', 'assist-minigame.js', 'assist-turn.js', 'assist-spaces.js', 'assist-core.js'];
+	var scripts = ['assist-misc.js', 'assist-minigame.js', 'assist-turn.js', 'assist-spaces.js', 'assist-core.js']; //Reminder that the browser finishes loading these in a seemingly random order, THEY ARE NOT LOADED IN THE ORDER HERE
 	for (let num = 0; num < scripts.length; num++) {
 		var script = document.createElement("script");
+
 		script.src = scripts[num];
+		//script.src = scripts[num] + '?' + (Date.now() % 10000); //create a unique filename because chrome fucking sucks and just loads a 10 year old version of the file
+
 		shortcutLoaded = true;
-		document.getElementById('shortcutSettingsButton').disabled = '';
+		getElem('shortcutSettingsButton').disabled = '';
 
 		document.head.appendChild(script);
 	}
@@ -574,12 +593,14 @@ function prepareShortcut (type) {
 
 /*
 * Opens normal settings or puts popout on top if it's activated.
-* 
+*
 * @param {boolean} force If true, opens settings on main regardless of the auto-popout option.
 */
 function openSettings (force) {
 	if (force === true || force === 'true') {
-		showHideDiv(['settings']);
+		getElem('settings').style.visibility = 'visible';
+		getElem('settings').style.opacity = 1;
+		getElem('settings').style.pointerEvents = 'unset';
 		return;
 	}
 	if (popoutActivated == true) {
@@ -587,23 +608,57 @@ function openSettings (force) {
 	} else if (getValue('autoPopout') == true) {
 		mpoSettingsPopout();
 	} else {
-		showHideDiv(['settings']);
+		getElem('settings').style.visibility = 'visible';
+		getElem('settings').style.opacity = 1;
+		getElem('settings').style.pointerEvents = 'unset';
 	}
+	newSettingsHint();
 
-	if (document.getElementById('counterSettings').classList.contains('visible')) {
+	if (getElem('counterSettings').classList.contains('visible')) {
 		updateCounterList();
 	}
 }
 
+var settingsHints = ['Click on the gear while holding Ctrl to open settings directly.', 'Click on the gear while holding Shift to copy text output directly.', 'Click on a character while holding Ctrl to make them the only coin star holder.', 'Hover over this to read the full tip.', 'Click on this text to get another tip.', 'Press 1, 5 or 10 to set the amount to add/subtract to that number.', 'Everything is automatically saved when closing settings, even without hitting the save button.'];
+/*
+* Gets a new hint and displays it in settings.
+*/
+function newSettingsHint () {
+	var str = settingsHints[randomCharFor(settingsHints.length)];
+	editInner('settingsHints', str);
+	getElem('settingsHintsContainer').title = str;
+}
+
+/*
+* Closes settings.
+*/
+function closeSettings () {
+	if (popout === true) {
+		return;
+	}
+	getElem('settings').style.visibility = 'hidden';
+	getElem('settings').style.opacity = 0;
+	getElem('settings').style.pointerEvents = 'none';
+
+	if (shortcutLoaded == true) {
+		getAlly('close');
+		shortcutSettings(true);
+	}
+
+	saveSettings();
+	savePlayers();
+	saveAssist();
+}
+
 /*
 * Calls a function for the main site and the settings popout (if activated).
-* 
+*
 * @param {string} functionName The function that shoudl be called (without the '()').
 * @param {array} attributes The attributes that the function should use.
 */
 function changeSettings (functionName, attributes) {
 	//console.log('functionName: '  + functionName + ', attributes: ' + attributes);
-	if (popout == true) {
+	if (popout === true || popoutActivated === true) {
 		if (attributes) {
 			sendMessage(functionName + '+' + attributes.join('+'));
 		} else {
@@ -615,7 +670,7 @@ function changeSettings (functionName, attributes) {
 
 /*
 * Changes Themes incl. greenscreen.
-* 
+*
 * @param {number} theme Which theme should be used.
 */
 var bgColor = '#0000ff';
@@ -624,31 +679,31 @@ function changeTheme (theme) {
 	if (!theme) {
 		theme = curTheme;
 	} else {
-		document.getElementById('theme' + capStr(curTheme)).style = '';
-		document.getElementById('theme' + capStr(curTheme)).disabled = '';
-		document.getElementById('theme' + capStr(theme)).style = 'border-color: green;';
-		document.getElementById('theme' + capStr(theme)).disabled = 'true';
+		getElem('theme' + capStr(curTheme)).style = '';
+		getElem('theme' + capStr(curTheme)).disabled = '';
+		getElem('theme' + capStr(theme)).style = 'border-color: green;';
+		getElem('theme' + capStr(theme)).disabled = 'true';
 		curTheme = theme;
 	}
 	if (getValue('greenscreen') === true) {
-		document.getElementById('bodyElement').style.backgroundImage = 'unset';
-		document.getElementById('bodyElement').style.backgroundColor = bgColor;
+		getElem('bodyElement').style.backgroundImage = 'unset';
+		getElem('bodyElement').style.backgroundColor = bgColor;
 	} else {
-		document.getElementById('bodyElement').style.backgroundImage = 'url("img/bgs/' + theme + '.jpg"), url("img/bgs/default.jpg")';
-		document.getElementById('bodyElement').style.backgroundColor = 'unset';
+		getElem('bodyElement').style.backgroundImage = 'url("img/bgs/' + theme + '.jpg"), url("img/bgs/default.jpg")';
+		getElem('bodyElement').style.backgroundColor = 'unset';
 	}
 }
 
 /*
 * Changes background color if greenscreen is used.
-* 
+*
 * @param {string} id Id of the input element that changed its value.
 */
 function changeBGColor () {
 	bgColor = getValue('bgColor');
 	if (getValue('greenscreen') === true) {
-		document.getElementById('bodyElement').style.backgroundColor = bgColor;
-		document.getElementById('bodyElement').style.backgroundImage = 'unset';
+		getElem('bodyElement').style.backgroundColor = bgColor;
+		getElem('bodyElement').style.backgroundImage = 'unset';
 	}
 	editValue('bgColor', bgColor);
 }
@@ -664,28 +719,20 @@ function resetBGColor () {
 
 /*
 * Changes text color for everything outside of settings.
-* 
+*
 * @param {string} id Id of the input element that changed its value.
 */
 function changeTextColor (id) {
-	var whiteText = document.querySelectorAll(".whiteText");
-	var counterText = document.querySelectorAll(".counterText");
-	var turns = document.querySelectorAll(".turns");
-	var mobile = document.querySelectorAll(".mobileTypeLabel");
+	var counterText = document.querySelectorAll('.counterText');
+	var turns = document.querySelectorAll('.turns');
 
 	var color = getValue(id);
 
-	for (var num = 0; num < whiteText.length; num++) {
-		whiteText[num].style.color = color;
-	}
 	for (var num = 0; num < counterText.length; num++) {
 		counterText[num].style.color = color;
 	}
 	for (var num = 0; num < turns.length; num++) {
 		turns[num].style.color = color;
-	}
-	for (var num = 0; num < mobile.length; num++) {
-		mobile[num].style.color = color;
 	}
 
 	editValue('textColor', color);
@@ -700,68 +747,123 @@ function resetTextColor () {
 	changeTextColor('textColor');
 }
 
-var darkTheme = false;
 /*
-* Switches from light to dark mode and back by un- & loading darkstyle.css.
+* Hides advanced settings in the "General" tab.
 */
-function settingsTheme () {
-	if (darkTheme === true) {
-		darkTheme = false;
-		editInner('lightDarkButton', 'Dark mode');
+function hideAdvancedSettings () {
+	var advanced = document.querySelectorAll('.advanced');
+
+	if (getValue('hideAdvanced') === true) {
+		var disVar = 'none';
 	} else {
-		darkTheme = true;
-		editInner('lightDarkButton', 'Light mode');
+		var disVar = 'unset';
 	}
 
-	var filetype = 'css';
-	var filename = 'darkstyle.css';
-	if (darkTheme === true) {
-		var headID = document.getElementsByTagName("head")[0];
-		var cssNode = document.createElement('link');
-		cssNode.type = 'text/css';
-		cssNode.rel = 'stylesheet';
-		cssNode.href = 'darkstyle.css';
-		cssNode.media = 'screen';
-		headID.appendChild(cssNode);
-	} else {
-		var targetElement = "link"; 
-		var targetAttr = "href"; 
+	for (var num = 0; num < advanced.length; num++) {
+		advanced[num].style.display = disVar;
+	}
+}
 
-		var allCtrl = document.getElementsByTagName(targetElement);
-		for (var i=allCtrl.length; i>=0; i--)  { //search backwards within nodelist for matching elements to remove
-			if (allCtrl[i] && allCtrl[i].getAttribute(targetAttr)!=null && allCtrl[i].getAttribute(targetAttr).indexOf(filename)!=-1) {
-				allCtrl[i].parentNode.removeChild(allCtrl[i]);
-			}
+/*
+* Switches from vertical layout to horizontal and back.
+*/
+function changeLayout () {
+	if (getValue('layoutHorizontal') === true) {
+		var elems = document.querySelectorAll('.player');
+		for (var num = 0; num < elems.length; num++) {
+			elems[num].style.display = 'flex';
+			elems[num].style.height = '116px';
+		}
+
+		var elems = document.querySelectorAll('.characterDiv');
+		for (var num = 0; num < elems.length; num++) {
+			elems[num].style.top = '-6px';
+		}
+
+		var elems = document.querySelectorAll('.characterImg');
+		for (var num = 0; num < elems.length; num++) {
+			elems[num].style.marginRight = '0';
+		}
+
+		var elems = document.querySelectorAll('.player .draggable:nth-child(n+2)');
+		for (var num = 0; num < elems.length; num++) {
+			elems[num].style.width = '130px';
+			elems[num].style.marginTop = '7px';
+		}
+
+		var elems = document.querySelectorAll('.starsHitbox');
+		for (var num = 0; num < elems.length; num++) {
+			elems[num].style.width = '130px';
+		}
+
+	} else {
+		var elems = document.querySelectorAll('.player');
+		for (var num = 0; num < elems.length; num++) {
+			elems[num].style.display = '';
+			elems[num].style.height = '';
+			elems[num].style.marginLeft = '';
+		}
+
+		var elems = document.querySelectorAll('.characterDiv');
+		for (var num = 0; num < elems.length; num++) {
+			elems[num].style.position = '';
+			elems[num].style.top = '';
+		}
+
+		var elems = document.querySelectorAll('.characterDiv div');
+		for (var num = 0; num < elems.length; num++) {
+			elems[num].style.left = '';
+		}
+
+		var elems = document.querySelectorAll('.characterImg');
+		for (var num = 0; num < elems.length; num++) {
+			elems[num].style.marginRight = '65px';
+		}
+
+		var elems = document.querySelectorAll('.player .draggable:nth-child(n+2)');
+		for (var num = 0; num < elems.length; num++) {
+			elems[num].style.width = '';
+			elems[num].style.marginTop = '';
+		}
+
+		var elems = document.querySelectorAll('.starsHitbox');
+		for (var num = 0; num < elems.length; num++) {
+			elems[num].style.width = '190px';
 		}
 	}
 }
 
+
 /*
 * Opens shortcut settings before shortcut is actually opened. This function gets overwritten by the one in assist-misc.js.
-* 
+*
 * @param {boolean} close If it should be closed or not.
 */
 function shortcutSettings (close) {
 	if (close === true) {
-		document.getElementById('settingsMain').style = '';
-		document.getElementById('shortcutSettings').style = '';
-		document.getElementById('settingsMain').onclick = '';
-		document.getElementById('shortcutSettingsPopup').style.display = 'none';
+		getElem('settingsMain').style = '';
+		getElem('shortcutSettings').style = '';
+		getElem('settingsMain').onclick = '';
+		getElem('shortcutSettingsPopup').style.pointerEvents = 'none';
+		getElem('shortcutSettingsPopup').style.visibility = 'hidden';
+		getElem('shortcutSettingsPopup').style.opacity = 0;
 		return;
 	}
 
-	document.getElementById('shortcutVariablesError').style.display = 'unset';
-	document.getElementById('shortcutVariables').style.display = 'none';
+	getElem('shortcutVariablesError').style.display = 'unset';
+	getElem('shortcutVariables').style.display = 'none';
 
-	document.getElementById('settingsMain').style = '-webkit-filter: blur(5px); filter: blur(5px);';
-	document.getElementById('shortcutSettings').style = 'pointer-events: none;'; //filter and pointer event need to be different as blur wouldn't be smooth with 'shortcutSettings' and pointer-event would remove onClick
-	document.getElementById('shortcutSettingsPopup').style.display = 'initial';
-	setTimeout(function () {document.getElementById('settingsMain').setAttribute('onclick','shortcutSettings(true)');}, 10); //required because chrome would immediately execute the function if it was changed directly
+	getElem('settingsMain').style = '-webkit-filter: blur(5px); filter: blur(5px);';
+	getElem('shortcutSettings').style = 'pointer-events: none;'; //filter and pointer event need to be different as blur wouldn't be smooth with 'shortcutSettings' and pointer-event would remove onClick
+	getElem('shortcutSettingsPopup').style.pointerEvents = 'unset';
+	getElem('shortcutSettingsPopup').style.visibility = 'visible';
+	getElem('shortcutSettingsPopup').style.opacity = 1;
+	setTimeout(function () {getElem('settingsMain').setAttribute('onclick','shortcutSettings(true)');}, 10); //required because chrome would immediately execute the function if it was changed directly
 }
 
 /*
 * Capitalize a string.
-* 
+*
 * @param {string} str The string to capitalize.
 */
 function capStr (str) {
@@ -770,50 +872,113 @@ function capStr (str) {
 
 /*
 * Gets the InnerHTML of an element
-* 
+*
 * @param {string} id The ID of the element that should be changed.
 */
 function getInner (id) {
-	return document.getElementById(id).innerHTML;
+	return getElem(id).innerHTML;
 }
 /*
 * Edits the InnerHTML of an element.
-* 
+*
 * @param {string} id The ID of the element that should be changed.
 * @param {string/boolean} value The text that it should be changed to
 */
 function editInner (id, value) {
 	//console.log('id: ' + id + ', value: ' + value);
-	document.getElementById(id).innerHTML = value;
+	getElem(id).innerHTML = value;
 }
 
 
 /*
 * Edits the value of an input element. If element is a checkbox and no value is given it changes it to the opposite instead.
-* 
+*
 * @param {string} id The ID of the element that should be changed.
 * @param {string/boolean} value The value that it should be changed to
 */
 function editValue (id, value) {
 	//console.log('id: ' + id + ', value: ' + value);
-	if (document.getElementById(id).type == 'checkbox' || document.getElementById(id).type == 'radio') {
-		if (value != true && value != false) { value = stringToBoolean(value); }
-		document.getElementById(id).checked = value;
+	if (getElem(id).type == 'checkbox' || getElem(id).type == 'radio') {
+		if (typeof value === 'undefined') {
+			if (getValue(id) === false){
+				getElem(id).checked = true;
+			} else {
+				getElem(id).checked = false;
+			}
+		} else {
+			if (typeof value === 'string')
+				value = stringToBoolean(value);
+			getElem(id).checked = value;
+		}
 	} else {
-		document.getElementById(id).value = value;
+		getElem(id).value = value;
 	}
 }
 
 /*
 * Gets the value of an input element
-* 
+*
 * @param {string} id The ID of the element that should be changed.
 */
 function getValue (id) {
-	if (document.getElementById(id).type == 'checkbox' || document.getElementById(id).type == 'radio') {
-		return document.getElementById(id).checked;
+	if (getElem(id).type == 'checkbox' || getElem(id).type == 'radio') {
+		return getElem(id).checked;
 	} else {
-		return document.getElementById(id).value;
+		return getElem(id).value;
+	}
+}
+
+/*
+* Returns DOM element.
+*
+* @param {string} id The ID of the element
+*/
+function getElem (id) {
+	return document.getElementById(id);
+}
+
+/*
+* Creates an element and returns it.
+*
+* @param {string} type The element type it should be.
+* @param {string/DOM Element} parent The parent element, if an id is given it gets the DOM Element of it
+*/
+function cElem (type, parent) {
+	if (typeof parent === 'string') {
+		parent = getElem(parent);
+	}
+	var elem = document.createElement(type);
+	parent.appendChild(elem);
+	return elem;
+}
+
+/*
+* Gets variable from URL and returns it.
+*
+* @param {string} variable The variable it should get.
+*/
+function getUrl(variable) {
+	var query = window.location.search.substring(1);
+	var vars = query.split("&");
+	for (var i=0;i<vars.length;i++) {
+		var pair = vars[i].split("=");
+		if(pair[0] == variable){return pair[1];}
+	}
+ 	return(false);
+}
+
+/*
+* Converts a string into a boolean.
+*
+* @param {string} boolean The string that should get coverted.
+*/
+function stringToBoolean (boolean) {
+	if (boolean == 'true') {
+		return true;
+	} else if (boolean == 'false') {
+		return false;
+	} else {
+		return boolean;
 	}
 }
 
@@ -825,21 +990,21 @@ function downloadFile () {
 	//data = data.replace(/\\/g, '\\');
 	var filename = 'MPO Backup';
 	var type = 'application/json';
-    var file = new Blob([data], {type: type});
-    if (window.navigator.msSaveOrOpenBlob) // IE10+
-        window.navigator.msSaveOrOpenBlob(file, filename);
-    else { // Others
-        var a = document.createElement("a"),
-                url = URL.createObjectURL(file);
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function() {
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);  
-        }, 0); 
-    }
+	var file = new Blob([data], {type: type});
+	if (window.navigator.msSaveOrOpenBlob) // IE10+
+		window.navigator.msSaveOrOpenBlob(file, filename);
+	else { // Others
+		var a = document.createElement("a"),
+			url = URL.createObjectURL(file);
+		a.href = url;
+		a.download = filename;
+		document.body.appendChild(a);
+		a.click();
+		setTimeout(function() {
+			document.body.removeChild(a);
+			window.URL.revokeObjectURL(url);
+		}, 0);
+	}
 }
 
 /*
@@ -850,7 +1015,7 @@ function linkShare () {
 	var url = location.protocol + '//' + location.host + location.pathname + '?ls=' + btoa(data);
 
 
-	var outputElement = document.getElementById('textShareOutput');
+	var outputElement = getElem('textShareOutput');
 	outputElement.style.display = 'unset';
 	outputElement.value = url;
 	outputElement.select();
@@ -863,54 +1028,54 @@ var newLS;
 * Checks an uploaded backup file if it's valid or not.
 */
 function uploadFile () {
-	var file = document.getElementById('uploadFile').files[0];
+	var file = getElem('uploadFile').files[0];
 	var reader = new FileReader();
 	reader.readAsText(file);
 	reader.onload = function () {
 		parseFile(reader.result);
 
-		 //reminder for popout
+		 //reminder for popout - update: no idea what this is supposed to mean
 	};
 }
 
 /*
 * Parses an uploaded file or from link share and then loads it.
-* 
+*
 * @param {string} str Stringified localStorage that should be loaded.
 */
 function parseFile (str) {
 	newLS = parseJSON(str);
 	var newC = parseJSON(newLS['c' + newLS.sel]);
 	var newS = parseJSON(newLS['s' + newLS.sel]);
-	document.getElementById('savefileLoadReminder').style.display = 'unset';
+	getElem('savefileLoadReminder').style.display = 'unset';
 
 	if (typeof newLS != 'object' || typeof parseInt(newLS.lsVer) != 'number' || typeof newC != 'object' || typeof newC.char2 != 'string' || typeof newS.coinStarTie3 != 'boolean') { //check if it's a valid file, kinda
-		document.getElementById('sflCorrect').style.display = 'none';
-		document.getElementById('sflError').style.display = 'unset';
+		getElem('sflCorrect').style.display = 'none';
+		getElem('sflError').style.display = 'unset';
 		return;
 	} else {
-		document.getElementById('sflCorrect').style.display = 'unset';
-		document.getElementById('sflError').style.display = 'none';
+		getElem('sflCorrect').style.display = 'unset';
+		getElem('sflError').style.display = 'none';
 	}
 	if (newC.curGame === 'all') {
-		document.getElementById('sflReminderAll').style.display = 'unset';
-		document.getElementById('sflReminderGame').style.display = 'none';
+		getElem('sflReminderAll').style.display = 'unset';
+		getElem('sflReminderGame').style.display = 'none';
 	} else {
-		document.getElementById('sflReminderAll').style.display = 'none';
-		document.getElementById('sflReminderGame').style.display = 'unset';
-		document.getElementById('sflReminderGame').src = 'img/' + newC.curGame + '.png';
+		getElem('sflReminderAll').style.display = 'none';
+		getElem('sflReminderGame').style.display = 'unset';
+		getElem('sflReminderGame').src = 'img/' + newC.curGame + '.png';
 	}
 	editInner('sflReminderTurn', newS.curTurn + '/' + newS.maxTurn);
-	var elems = document.getElementById('sflReminderChars').children;
+	var elems = getElem('sflReminderChars').children;
 	elems[0].src = 'img/' + newC.curGame + '/' + newC.char1 + '.png';
 	elems[1].src = 'img/' + newC.curGame + '/' + newC.char2 + '.png';
 	elems[2].src = 'img/' + newC.curGame + '/' + newC.char3 + '.png';
 	elems[3].src = 'img/' + newC.curGame + '/' + newC.char4 + '.png';
 	if (newLS.sMax >= 1) {
-		document.getElementById('sflReminderMore').style.display = 'unset';
+		getElem('sflReminderMore').style.display = 'unset';
 		editInner('sflReminderAmount', newLS.sMax);
 	} else {
-		document.getElementById('sflReminderMore').style.display = 'none';
+		getElem('sflReminderMore').style.display = 'none';
 	}
 }
 
@@ -923,7 +1088,7 @@ function reload () {
 
 /*
 * Parses JSON, returns false if it's not JSON.
-* 
+*
 * @param {string} str The JSON stringified string.
 */
 function parseJSON (str) {
@@ -937,7 +1102,7 @@ function parseJSON (str) {
 
 /*
 * Updates localStorage with new data.
-* 
+*
 * @param {object} o The data.
 */
 function writeLocalStorage(o) {
@@ -950,12 +1115,12 @@ function writeLocalStorage(o) {
 
 /*
 * Checks if it's executed in the popout and calls sendMessage() if it is.
-* 
+*
 * @param {string} id The first attribute.
 * @param {string} attribute Other attributes.
 * @param {boolean} force Forces it to send the message if true.
 */
-function sendSettingsMsg (id, attribute, force) {
+function editValueOnBoth (id, attribute, force) {
 	if (popout == true || force == true) {
 		sendMessage('editValue+' + id + '+' + attribute);
 	}
@@ -963,7 +1128,7 @@ function sendSettingsMsg (id, attribute, force) {
 
 /*
 * Checks if it's executed in the popout and calls sendMessage() if it is.
-* 
+*
 * @param {string} id The first attribute.
 * @param {array} attribute Other attributes.
 */
@@ -978,7 +1143,7 @@ function execOnMain (func, attribute) {
 
 /*
 * Sends a message to the settings-popout/main window with a funcion in it.
-* 
+*
 * @param {string} text String with a funtion pointer in it that will be executed when received.
 */
 function sendMessage (text) {
@@ -1016,7 +1181,7 @@ function receiveMessage (e) {
 
 /*
 * Executes a function from a string.
-* 
+*
 * @param {string} functionName The name of the function that should be executed.
 * @param {array} args Arguments that should be used.
 */
@@ -1065,8 +1230,7 @@ var mpoSettings;
 var popoutActivated = false;
 function mpoSettingsPopout () {
 	if (popout != true) {
-		document.getElementById('settings').classList.remove('visible');
-		document.getElementById('settings').classList.add('hidden');
+		closeSettings();
 		//saveSettings();
 		//savePlayers();
 
@@ -1081,6 +1245,41 @@ function mpoSettingsPopout () {
 			}
 		}
 		popoutActivated = true;
+	}
+}
+
+/*
+* Loads Service Worker for offline use.
+*/
+function startSW () {
+	navigator.serviceWorker && navigator.serviceWorker.register('./sw.js').then(function(registration) {
+		console.log('[MPO] Service Worker added.');
+	});
+}
+
+/*
+* Removes all service workers and kindof but not really cleares cache (only actually clears after reload).
+*/
+function unloadSW () {
+	navigator.serviceWorker.getRegistrations().then(function(registrations) {
+		for(let registration of registrations) {
+			registration.unregister()
+		}
+	});
+	caches.delete('mpo-cache').then(function(boolean) {});
+}
+
+/*
+* Starts or unloads service workers depending on if the option is on or not.
+*/
+function runSW () {
+	if (popout === true) {
+		return;
+	}
+	if (getValue('useSW') === true) {
+		startSW();
+	} else {
+		unloadSW();
 	}
 }
 
@@ -1124,7 +1323,7 @@ interact('.draggable')
 			restriction: "parent",
 			endOnly: true,
 			elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
-		},*/ 
+		},*/
 		// enable autoScroll
 		autoScroll: true,
 
@@ -1143,7 +1342,7 @@ interact('.draggable')
 });
 
 function dragMoveListener (event) {
-	if (document.getElementById('enableInteract').checked == true) {
+	if (getElem('enableInteract').checked == true) {
 		var target = event.target,
 			// keep the dragged position in the data-x/data-y attributes
 			x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
@@ -1166,6 +1365,8 @@ window.addEventListener("message", receiveMessage, false);
 
 window.onbeforeunload = function(){
 	if (popout == true) {
+		saveSettings();
+		savePlayers();
 		saveAssist();
 		sendMessage('popoutClosed');
 	} else {
@@ -1173,9 +1374,7 @@ window.onbeforeunload = function(){
 	}
 }
 
-document.getElementById('type1').focus();
-
-new Sortable(document.getElementById('slotList'), {
+new Sortable(getElem('slotList'), {
 	animation: 150,
 	onUpdate: function (evt) {
 		updateSlotOrder();
@@ -1184,4 +1383,3 @@ new Sortable(document.getElementById('slotList'), {
 
 window.onload = prepareMPO();
 window.onload = changeBGColor('bgColor');
-

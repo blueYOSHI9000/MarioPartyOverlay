@@ -1,6 +1,6 @@
 /*
 * Changes characters and their icons depending on the options selected.
-* 
+*
 * @param {number} player Which player should be changed (only used when changing characters).
 * @param {string} character Which character should be used (only used when changing characters).
 */
@@ -13,9 +13,9 @@ function changeCharacters (player, character) {
 				num = player;
 			}
 			if (curGame != 'all') {
-				document.getElementById('p' + num + 'Img').src = 'img/' + curGame + '/' + characters[num].toLowerCase() + '.png';
+				getElem('p' + num + 'Img').src = 'img/' + curGame + '/' + characters[num].toLowerCase() + '.png';
 			} else {
-				document.getElementById('p' + num + 'Img').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[num].toLowerCase() + '.png';
+				getElem('p' + num + 'Img').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[num].toLowerCase() + '.png';
 			}
 			if (player) {
 				break;
@@ -28,13 +28,14 @@ function changeCharacters (player, character) {
 				editValue(character + player, true);
 				num = player;
 			}
-			document.getElementById('p' + num + 'Img').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[num].toLowerCase() + '.png';
+			getElem('p' + num + 'Img').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[num].toLowerCase() + '.png';
 			if (player) {
 				break;
 			}
 		}
 	}
 	coinStarTie();
+	updateNavbar(player);
 }
 
 /*
@@ -43,9 +44,9 @@ function changeCharacters (player, character) {
 function changeComImg () {
 	for (let num = 1; num < 5; num++) {
 		if (curGame != 'all') {
-			document.getElementById('p' + num + 'ComDisplay').src = 'img/' + curGame + '/com.png';
+			getElem('p' + num + 'ComDisplay').src = 'img/' + curGame + '/com.png';
 		} else {
-			document.getElementById('p' + num + 'ComDisplay').src = 'img/com.png';
+			getElem('p' + num + 'ComDisplay').src = 'img/com.png';
 		}
 	}
 }
@@ -53,10 +54,14 @@ function changeComImg () {
 /*
 * Changes COM image back in case there's no custom one.
 */
-function changeComImgError () {
-	for (let num = 1; num < 5; num++) {
-		document.getElementById('p' + num + 'ComDisplay').src = 'img/com.png';
+function comImgError (elem) {
+	if (elem) {
+		elem.src = 'img/com.png';
 	}
+	for (let num = 1; num < 5; num++) {
+		getElem('p' + num + 'ComDisplay').src = 'img/com.png';
+	}
+	getElem('nvComImg').src = 'img/com.png';
 }
 
 /*
@@ -66,7 +71,7 @@ function changeCharactersBackup (elem) {
 	var id = elem.id;
 
 	var player = id.split('');
-	document.getElementById(id).src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/'  + characters[player[1]].toLowerCase() + '.png';
+	getElem(id).src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/'  + characters[player[1]].toLowerCase() + '.png';
 }
 
 /*
@@ -101,9 +106,9 @@ function changeCounterIcons () {
 			}
 		}
 		if (curGame != 'all') {
-			document.getElementById('coinStar').src = 'img/' + curGame + '/coins.png';
+			getElem('coinStar').src = 'img/' + curGame + '/coins.png';
 		} else {
-			document.getElementById('coinStar').src = 'img/coins.png';
+			getElem('coinStar').src = 'img/coins.png';
 		}
 	} else {
 		for (let num = 0; num < counters.length; num++) {
@@ -124,9 +129,9 @@ function changeCounterIcons () {
 			}
 		}
 		if (curGame != 'all') {
-			document.getElementById('coinStar').src = 'img/' + curGame + '/coins.png';
+			getElem('coinStar').src = 'img/' + curGame + '/coins.png';
 		} else {
-			document.getElementById('coinStar').src = 'img/coins.png';
+			getElem('coinStar').src = 'img/coins.png';
 		}
 	}
 }
@@ -138,28 +143,39 @@ function counterImgError (elem) {
 	var id = elem.id;
 	elem = elem.parentNode;
 	elem = elem.className.split(' ');
-	document.getElementById(id).src = 'img/' + elem[1].toLowerCase()  + '.png';
+	getElem(id).src = 'img/' + elem[1].toLowerCase()  + '.png';
 
-	var elem2 = document.getElementById(elem[1] + 'OnOff');
+	var elem2 = getElem(elem[1] + 'OnOff');
 	elem2 = elem2.parentNode;
 
 	elem2.children[2].style = 'background-image: url(img/' + elem[1].toLowerCase()  + '.png);';
 	if (elem[1] == 'coins') {
-		elem2 = document.getElementById('coinStarOnOff');
+		elem2 = getElem('coinStarOnOff');
 		elem2 = elem2.parentNode;
 
 		elem2.children[2].style = 'background-image: url(img/coins.png);';
 	} else if (elem[1] == 'running') {
-		elem2 = document.getElementById('slowOnOff');
+		elem2 = getElem('slowOnOff');
 		elem2 = elem2.parentNode;
 
 		elem2.children[2].style = 'background-image: url(img/running.png);';
 	} else if (elem[1] == 'item') {
-		elem2 = document.getElementById('unusedOnOff');
+		elem2 = getElem('unusedOnOff');
 		elem2 = elem2.parentNode;
 
 		elem2.children[2].style = 'background-image: url(img/item.png);';
 	}
+}
+
+/*
+* Loads a default image if a custom one doesn't exist. Called from onerror.
+*
+* @param {object} elem The element which couldn't load a image.
+*/
+function imgError (elem) {
+	var v = elem.getAttribute('src').split('/');
+	v[1] = document.querySelector('input[name="icons"]:checked').id;
+	elem.src = v.join('/');
 }
 
 /*
@@ -170,43 +186,44 @@ function changeCharSelectionIcons () {
 	if (curGame === 'all') {
 		imgSrc = document.querySelector('input[name="icons"]:checked').id;
 	}
-	for (let num = 0; num < characterList.length; num++) {
-		if (document.getElementById(characterList[num] + '1').parentNode.style.display != 'none') {
-			document.getElementById(characterList[num] + '1').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + characterList[num] + '.png';
-			document.getElementById(characterList[num] + '2').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + characterList[num] + '.png';
-			document.getElementById(characterList[num] + '3').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + characterList[num] + '.png';
-			document.getElementById(characterList[num] + '4').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + characterList[num] + '.png';
+	for (let num = 0; num < charList.all.length; num++) {
+		if (getElem(charList.all[num] + '1').parentNode.style.display != 'none') {
+			getElem(charList.all[num] + '1').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
+			getElem(charList.all[num] + '2').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
+			getElem(charList.all[num] + '3').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
+			getElem(charList.all[num] + '4').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
 		}
 	}
 }
 
 /*
 * Changes com status of a character.
-* 
+*
 * @param {number} player Which player should be updated.
 * @param {boolean} noAnimation Skips animation if true.
 */
 function changeCom (player, noAnimation) {
 	if (getValue('com' + player) == true) {
 		if (getValue('enableAnimation') == true && noAnimation != true) {
-			document.getElementById('p' + player + 'ComDisplay').classList.add('visibleAnimation');
-			document.getElementById('p' + player + 'ComDisplay').classList.remove('hiddenAnimation');
+			getElem('p' + player + 'ComDisplay').classList.add('visibleAnimation');
+			getElem('p' + player + 'ComDisplay').classList.remove('hiddenAnimation');
 		} else {
-			document.getElementById('p' + player + 'ComDisplay').style.opacity = '1';
+			getElem('p' + player + 'ComDisplay').style.opacity = '1';
 		}
 	} else {
 		if (getValue('enableAnimation') == true && noAnimation != true) {
-			document.getElementById('p' + player + 'ComDisplay').classList.remove('visibleAnimation');
-			document.getElementById('p' + player + 'ComDisplay').classList.add('hiddenAnimation');
+			getElem('p' + player + 'ComDisplay').classList.remove('visibleAnimation');
+			getElem('p' + player + 'ComDisplay').classList.add('hiddenAnimation');
 		} else {
-			document.getElementById('p' + player + 'ComDisplay').style.opacity = '0';
+			getElem('p' + player + 'ComDisplay').style.opacity = '0';
 		}
 	}
+	updateNavbar(player);
 }
 
 /*
 * Show/Hide characters based on the selected game.
-* 
+*
 * @param {string} game What game is currently used.
 */
 function changeGame (game) {
@@ -217,29 +234,9 @@ function changeGame (game) {
 	var showCounters = [];
 	var hideCounters = [];
 
-	hideChars.push(document.querySelectorAll('.warioSpan'));
-	hideChars.push(document.querySelectorAll('.daisySpan'));
-	hideChars.push(document.querySelectorAll('.rosalinaSpan'));
-	hideChars.push(document.querySelectorAll('.toadSpan'));
-	hideChars.push(document.querySelectorAll('.toadetteSpan'));
-	hideChars.push(document.querySelectorAll('.waluigiSpan'));
-	hideChars.push(document.querySelectorAll('.dkSpan'));
-	hideChars.push(document.querySelectorAll('.diddySpan'));
-	hideChars.push(document.querySelectorAll('.birdoSpan'));
-	hideChars.push(document.querySelectorAll('.bowserSpan'));
-	hideChars.push(document.querySelectorAll('.bowserjrSpan'));
-	hideChars.push(document.querySelectorAll('.koopakidSpan'));
-	hideChars.push(document.querySelectorAll('.pompomSpan'));
-	hideChars.push(document.querySelectorAll('.goombaSpan'));
-	hideChars.push(document.querySelectorAll('.koopaSpan'));
-	hideChars.push(document.querySelectorAll('.drybonesSpan'));
-	hideChars.push(document.querySelectorAll('.montySpan'));
-	hideChars.push(document.querySelectorAll('.booSpan'));
-	hideChars.push(document.querySelectorAll('.spikeSpan'));
-	hideChars.push(document.querySelectorAll('.blooperSpan'));
-	hideChars.push(document.querySelectorAll('.shyguySpan'));
-	hideChars.push(document.querySelectorAll('.hammerbroSpan'));
-	hideChars.push(document.querySelectorAll('.kamekSpan'));
+	for (let num = 0; num < charList.all.length; num++) {
+		hideChars.push(document.querySelectorAll('.' + charList.all[num] + 'Span'));
+	}
 
 	hideCounters.push(document.querySelectorAll('.mp6C'));
 	hideCounters.push(document.querySelectorAll('.mp7C'));
@@ -250,133 +247,105 @@ function changeGame (game) {
 	hideCounters.push(document.querySelectorAll('.mptt100C'));
 	hideCounters.push(document.querySelectorAll('.smpC'));
 
-	showChars.push(document.querySelectorAll('.marioSpan'));
-	showChars.push(document.querySelectorAll('.luigiSpan'));
-	showChars.push(document.querySelectorAll('.peachSpan'));
-	showChars.push(document.querySelectorAll('.yoshiSpan'));
-	if (game != 'mpa') {
-		showChars.push(document.querySelectorAll('.warioSpan'));
+	for (let num = 0; num < charList[game].length; num++) {
+		showChars.push(document.querySelectorAll('.' + charList[game][num] + 'Span'));
 	}
 
-	if (game === 'mp1' || game === 'mp2' || game === 'mp3' || game === 'mp4' || game === 'mp4' || game === 'mp10' || game === 'mpsr' || game === 'smp' || game === 'all') {
-		showChars.push(document.querySelectorAll('.dkSpan'));
-	}
-	if (game === 'mp3' || game === 'mp4' || game === 'mp5' || game === 'mp6' || game === 'mp7' || game === 'mp8' || game === 'mp9' || game === 'mp10' || game === 'mpds' || game === 'mpit' || game === 'mpsr' || game === 'mptt100' || game === 'smp' || game === 'all') {
-		showChars.push(document.querySelectorAll('.waluigiSpan'));
-		showChars.push(document.querySelectorAll('.daisySpan'));
-	}
-	if (game === 'mp6' || game === 'all') {
-		showChars.push(document.querySelectorAll('.koopakidSpan'));
-		showCounters.push(document.querySelectorAll('.mp6C'));
-	}
-	if (game === 'mp6' || game === 'mp7' || game === 'mp8') {
-		showChars.push(document.querySelectorAll('.booSpan'));
-		showChars.push(document.querySelectorAll('.toadetteSpan'));
-	}
-	if (game === 'mp6' || game === 'mp7' || game === 'mp8' || game === 'mp9' || game === 'mp10' || game === 'mpds' || game === 'mpit' || game === 'mpsr' || game === 'all')  {
-		showChars.push(document.querySelectorAll('.toadSpan'));
-	}
-	if (game === 'mp7' || game === 'mp8' || game === 'all') {
-		showChars.push(document.querySelectorAll('.birdoSpan'));
-		showChars.push(document.querySelectorAll('.drybonesSpan'));
-	}
-	if (game === 'mp7' || game === 'all') {
-		showCounters.push(document.querySelectorAll('.mp7C'))
-	}
-	if (game === 'mp8') {
-		showChars.push(document.querySelectorAll('.blooperSpan'))
-		showChars.push(document.querySelectorAll('.hammerbroSpan'))
-		showCounters.push(document.querySelectorAll('.mp8C'))
-	}
-	if (game === 'mp9') {
-		showChars.push(document.querySelectorAll('.koopaSpan'));
-		showChars.push(document.querySelectorAll('.shyguySpan'));
-		showChars.push(document.querySelectorAll('.kamekSpan'));
-		showChars.push(document.querySelectorAll('.birdoSpan'));
-		showCounters.push(document.querySelectorAll('.mp9C'));
-	}
-	if (game === 'mp9' || game === 'mp10') {
-		hideCounters.push(document.querySelectorAll('.coinC'));
-	} else {
-		showCounters.push(document.querySelectorAll('.coinC'));
-	}
-	if (game === 'mp9' || game === 'mp10' || game === 'mpsr' || game === 'mptt100') {
-		hideCounters.push(document.querySelectorAll('.happeningC'));
-	} else {
-		showCounters.push(document.querySelectorAll('.happeningC'));
-	}
-	if (game === 'mp6' || game === 'mp7' || game === 'mp8' || game === 'mp9' || game === 'mp10' || game === 'mpds' || game === 'mpsr' || game === 'mptt100') {
-		hideCounters.push(document.querySelectorAll('.coinStarC'));
-	} else {
-		showCounters.push(document.querySelectorAll('.coinStarC'));
-	}
-	if (game === 'smp' || game === 'all') {
-		showChars.push(document.querySelectorAll('.koopaSpan'));
-		showChars.push(document.querySelectorAll('.shyguySpan'));
-	}
-	if (game === 'mp10' || game === 'all') {
-		showChars.push(document.querySelectorAll('.rosalinaSpan'));
-		showChars.push(document.querySelectorAll('.spikeSpan'));
-		showChars.push(document.querySelectorAll('.toadetteSpan'));
-	}
-	if (game === 'mp10' || game === 'all') {
-		showChars.push(document.querySelectorAll('.rosalinaSpan'));
-		showChars.push(document.querySelectorAll('.spikeSpan'));
-		showChars.push(document.querySelectorAll('.toadetteSpan'));
-		showCounters.push(document.querySelectorAll('.mp10C'));
-	}
-	if (game === 'mpds' || game === 'all') {
-		showCounters.push(document.querySelectorAll('.mpDSC'));
-	}
-	if (game === 'mpsr' || game === 'mptt100' || game === 'smp') {
-		showChars.push(document.querySelectorAll('.rosalinaSpan'));
-	}
-	if (game === 'mpit') {
-		showChars.push(document.querySelectorAll('.booSpan'));
-		showChars.push(document.querySelectorAll('.bowserjrSpan'));
-	}
-	if (game === 'mpsr') {
-		showChars.push(document.querySelectorAll('.toadetteSpan'));
-		showChars.push(document.querySelectorAll('.diddySpan'));
-		showCounters.push(document.querySelectorAll('.mpsrC'));
-	}
-	if (game === 'mptt100') {
-		showCounters.push(document.querySelectorAll('.mptt100C'));
-		showCounters.push(document.querySelectorAll('.coinStarC'));
-	}
-	if (game === 'smp' || game === 'all') {
-		showChars.push(document.querySelectorAll('.bowserSpan'));
-		showChars.push(document.querySelectorAll('.goombaSpan'));
-		showChars.push(document.querySelectorAll('.montySpan'));
-		showChars.push(document.querySelectorAll('.diddySpan'));
-		showChars.push(document.querySelectorAll('.bowserjrSpan'));
-		showChars.push(document.querySelectorAll('.booSpan'));
-		showChars.push(document.querySelectorAll('.hammerbroSpan'));
-		showChars.push(document.querySelectorAll('.drybonesSpan'));
-		showChars.push(document.querySelectorAll('.pompomSpan'));
-		showCounters.push(document.querySelectorAll('.smpC'));
-	}
-	if (game === 'all') {
-		showChars.push(document.querySelectorAll('.blooperSpan'));
-		showChars.push(document.querySelectorAll('.kamekSpan'));
-		showCounters.push(document.querySelectorAll('.mp8C'));
-		showCounters.push(document.querySelectorAll('.mp9C'));
-		showCounters.push(document.querySelectorAll('.mpsrC'));
-	}
+	switch (game) {
+		case 'mp6':
+			showCounters.push(document.querySelectorAll('.mp6C'));
 
+			hideCounters.push(document.querySelectorAll('.coinStarC'));
+
+			showCounters.push(document.querySelectorAll('.happeningC'));
+			showCounters.push(document.querySelectorAll('.coinC'));
+			break;
+		case 'mp7':
+			showCounters.push(document.querySelectorAll('.mp7C'));
+
+			hideCounters.push(document.querySelectorAll('.coinStarC'));
+
+			showCounters.push(document.querySelectorAll('.happeningC'));
+			showCounters.push(document.querySelectorAll('.coinC'));
+			break;
+		case 'mp8':
+			showCounters.push(document.querySelectorAll('.mp8C'));
+
+			hideCounters.push(document.querySelectorAll('.coinStarC'));
+
+			showCounters.push(document.querySelectorAll('.happeningC'));
+			showCounters.push(document.querySelectorAll('.coinC'));
+			break;
+		case 'mp9':
+			showCounters.push(document.querySelectorAll('.mp9C'));
+
+			hideCounters.push(document.querySelectorAll('.coinStarC'));
+			hideCounters.push(document.querySelectorAll('.happeningC'));
+			hideCounters.push(document.querySelectorAll('.coinC'));
+			break;
+		case 'mp10':
+			showCounters.push(document.querySelectorAll('.mp10C'));
+
+			hideCounters.push(document.querySelectorAll('.coinStarC'));
+			hideCounters.push(document.querySelectorAll('.happeningC'));
+			hideCounters.push(document.querySelectorAll('.coinC'));
+			break;
+		case 'mpds':
+			showCounters.push(document.querySelectorAll('.mpDSC'));
+
+			hideCounters.push(document.querySelectorAll('.coinStarC'));
+
+			showCounters.push(document.querySelectorAll('.happeningC'));
+			showCounters.push(document.querySelectorAll('.coinC'));
+			break;
+		case 'mpsr':
+			showCounters.push(document.querySelectorAll('.mpsrC'));
+
+			hideCounters.push(document.querySelectorAll('.coinStarC'));
+			hideCounters.push(document.querySelectorAll('.happeningC'));
+
+			showCounters.push(document.querySelectorAll('.coinC'));
+			break;
+		case 'mptt100':
+			showCounters.push(document.querySelectorAll('.mptt100C'));
+
+			hideCounters.push(document.querySelectorAll('.coinStarC'));
+			hideCounters.push(document.querySelectorAll('.happeningC'));
+
+			showCounters.push(document.querySelectorAll('.coinC'));
+			break;
+		case 'smp':
+			showCounters.push(document.querySelectorAll('.smpC'));
+
+			showCounters.push(document.querySelectorAll('.coinStarC'));
+			showCounters.push(document.querySelectorAll('.happeningC'));
+			showCounters.push(document.querySelectorAll('.coinC'));
+			break;
+		case 'mpa':
+		case 'mpit':
+		case 'all':
+			showCounters.push(document.querySelectorAll('.mp6C'));
+			showCounters.push(document.querySelectorAll('.mp7C'));
+			showCounters.push(document.querySelectorAll('.mp8C'));
+			showCounters.push(document.querySelectorAll('.mp9C'));
+			showCounters.push(document.querySelectorAll('.mp10C'));
+			showCounters.push(document.querySelectorAll('.mpDSC'));
+			showCounters.push(document.querySelectorAll('.mpsrC'));
+			showCounters.push(document.querySelectorAll('.smpC'));
+
+			showCounters.push(document.querySelectorAll('.coinStarC'));
+			showCounters.push(document.querySelectorAll('.happeningC'));
+			showCounters.push(document.querySelectorAll('.coinC'));
+			break;
+		default:
+			showCounters.push(document.querySelectorAll('.coinStarC'));
+			showCounters.push(document.querySelectorAll('.happeningC'));
+			showCounters.push(document.querySelectorAll('.coinC'));
+	}
 	if (game === 'mpa' || game === 'mpit') {
-		showCounters.push(document.querySelectorAll('.mp6C'));
-		showCounters.push(document.querySelectorAll('.mp7C'));
-		showCounters.push(document.querySelectorAll('.mp8C'));
-		showCounters.push(document.querySelectorAll('.mp9C'));
-		showCounters.push(document.querySelectorAll('.mp10C'));
-		showCounters.push(document.querySelectorAll('.mpDSC'));
-		showCounters.push(document.querySelectorAll('.mpsrC'));
-		showCounters.push(document.querySelectorAll('.smpC'));
-
-		document.getElementById('counterError').style = '';
+		getElem('counterError').style = '';
 	} else {
-		document.getElementById('counterError').style = 'display: none;';
+		getElem('counterError').style = 'display: none;';
 	}
 
 	for (var num = 0; num < hideChars.length; num++) {
@@ -408,8 +377,29 @@ function changeGame (game) {
 	changeCounterIcons();
 	changeCharacters();
 	changeComImg();
-	if (getValue('deactivateUnused') == true) {
+
+	updateNvGame();
+	updateNvChar();
+	updateNavbar(1);
+	updateNavbar(2);
+	updateNavbar(3);
+	updateNavbar(4);
+
+	if (getValue('deactivateUnused') === true) {
 		deactivateUnused();
+
+		var ms = getElem('miniStarsOnOff');
+		if (game === 'mp9' || game === 'mp10') {
+			ms.checked = true;
+			editValueOnBoth(ms.id, true);
+			changeSettings('changeStars', ['miniStars']);
+			changeSettings('updateStars');
+		} else {
+			ms.checked = false;
+			editValueOnBoth(ms.id, false);
+			changeSettings('changeStars', ['miniStars']);
+			changeSettings('updateStars');
+		}
 	}
 
 	switch (curGame) {
@@ -542,7 +532,7 @@ function updateCounterList () {
 	var cStatsHidden = [];
 
 	for (var num = 0; num < counters.length; num++) {
-		document.getElementById(counters[num] + 'OnOffText').style.color = 'unset';
+		getElem(counters[num] + 'OnOffText').style.color = 'unset';
 	}
 
 	for (var num = 0; num < counters.length; num++) {
@@ -569,19 +559,19 @@ function updateCounterList () {
 		}
 	}
 	for (var num = 0; num < cStats.length; num++) {
-		document.getElementById(cStats[num] + 'OnOffText').style.color = '#009f00';
-		if (getComputedStyle(document.getElementById(cStats[num] + 'OnOffText'), null).visibility != 'visible') {
+		getElem(cStats[num] + 'OnOffText').style.color = '#0B6B13';
+		if (getComputedStyle(getElem(cStats[num] + 'OnOffText'), null).visibility != 'visible') {
 			cStatsHidden.push(cStats[num]);
 		}
 	}
 	if (parseInt(getInner('coinStarText')) != 10) {
-		if (getComputedStyle(document.getElementById('coinStarOnOffText'), null).visibility != 'visible') {
+		if (getComputedStyle(getElem('coinStarOnOffText'), null).visibility != 'visible') {
 			cStatsHidden.push('coinStar');
 		} else {
-			document.getElementById('coinStarOnOffText').style.color = '#009f00';
+			getElem('coinStarOnOffText').style.color = '#0B6B13';
 		}
 	} else {
-		document.getElementById('coinStarOnOffText').style.color = 'unset';
+		getElem('coinStarOnOffText').style.color = 'unset';
 	}
 
 	if (cStatsHidden.length > 0) {
@@ -591,7 +581,7 @@ function updateCounterList () {
 			str = str.charAt(0).toUpperCase() + str.slice(1);
 			cStatsHidden[num] = str;
 		}
-		editInner('hiddenCountersText', 'Counters from other games with stats: <span  style="color: #009f00;">' + cStatsHidden.join(', ') + '</span>');
+		editInner('hiddenCountersText', 'Counters from other games with stats: <span  style="color: #0B6B13;">' + cStatsHidden.join(', ') + '</span>');
 	} else {
 		editInner('hiddenCountersText', '');
 	}
@@ -650,8 +640,8 @@ function deactivateUnused () {
 }
 
 /*
-* Gets a random number in a specified range and checks if it's a duplicate.
-* 
+* Gets a random number in a specified range and checks if it's a duplicate in pastResults.
+*
 * @param {number} max The max number.
 */
 function randomCharFor (max, min) {
@@ -665,7 +655,7 @@ function randomCharFor (max, min) {
 	for (var num = 0; num < pastResults.length; num++) {
 		if (result == pastResults[num]) {
 			result = Math.floor(Math.random() * max) + 0;
-			num = -1;
+			num--;
 		}
 	}
 	pastResults.push(result);
@@ -674,111 +664,41 @@ function randomCharFor (max, min) {
 
 /*
 * Randomly selects characters based on games.
+*
+* @param {number} player Only randomizes the specified player.
 */
-function randomChar () {
-	var result = '';
+function randomChar (player) {
 	pastResults = [];
 	var chars = [''];
-	var rdmChars = [];
+	var rdmChars = charList[curGame];
 
-	if (curGame == 'mp1' || curGame == 'mp2') {
+	if (player) {
 		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(6);
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'wario', 'dk'];
-			chars.push(rdmChars[result]);
-		}
-	} else if (curGame == 'mp3' || curGame == 'mp4') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(8);
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'wario', 'waluigi', 'dk'];
-			chars.push(rdmChars[result]);
-		}
-	} else if (curGame == 'mp5') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(7);
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'wario', 'waluigi'];
-			chars.push(rdmChars[result]);
-		}
-	} else if (curGame == 'mp6') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(11);
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'toad', 'toadette', 'wario', 'waluigi', 'koopakid', 'boo'];
-			chars.push(rdmChars[result]);
-		}
-	} else if (curGame == 'mp7') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(12);
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'toad', 'toadette', 'wario', 'waluigi', 'birdo', 'drybones', 'boo'];
-			chars.push(rdmChars[result]);
-		}
-	} else if (curGame == 'mp8') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(14);
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'toad', 'toadette', 'wario', 'waluigi', 'birdo', 'drybones', 'boo', 'blooper', 'hammerbro'];
-			chars.push(rdmChars[result]);
-		}
-	} else if (curGame == 'mp9') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(12);
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'toad', 'wario', 'waluigi', 'birdo', 'koopa', 'shyguy', 'kamek'];
-			chars.push(rdmChars[result]);
-		}
-	} else if (curGame == 'mp10') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(12);
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'toad', 'toadette', 'wario', 'waluigi', 'dk', 'spike'];
-			chars.push(rdmChars[result]);
-		}
-	} else if (curGame == 'mpa') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(4);
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach'];
-			chars.push(rdmChars[result]);
-		}
-	} else if (curGame == 'mpds') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(8);
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'toad', 'wario', 'waluigi'];
-			chars.push(rdmChars[result]);
-		}
-	} else if (curGame == 'mpit') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(10);
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'toad', 'wario', 'waluigi', 'boo', 'bowserjr'];
-			chars.push(rdmChars[result]);
-		}
-	} else if (curGame == 'mpsr') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(12);
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'toad', 'toadette', 'wario', 'waluigi', 'dk', 'diddy'];
-			chars.push(rdmChars[result]);
-		}
-	} else if (curGame == 'mptt100') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(8);
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'wario', 'waluigi'];
-			chars.push(rdmChars[result]);
-		}
-	} else if (curGame == 'smp') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(20);
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'wario', 'waluigi', 'dk', 'diddy', 'bowser', 'bowserjr', 'pompom', 'goomba', 'koopa', 'drybones', 'monty', 'boo', 'shyguy', 'hammerbro'];
-			chars.push(rdmChars[result]);
-		}
-	} else if (curGame == 'all') {
-		for (var num = 1; num < 5; num++) {
-			result = randomCharFor(27);
-			rdmChars = ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'toad', 'toadette', 'wario', 'waluigi', 'dk', 'diddy', 'birdo', 'bowser', 'bowserjr', 'koopakid', 'pompom', 'goomba', 'koopa', 'drybones', 'monty', 'boo', 'spike', 'blooper', 'shyguy', 'hammerbro', 'kamek'];
-			chars.push(rdmChars[result]);
+			if (num === player)
+				num++;
+
+			pastResults.push(rdmChars.indexOf(characters[num]));
 		}
 	}
+
 	for (var num = 1; num < 5; num++) {
-		//console.log(chars + num);
-		//editValue(chars[num] + num, true);
-		document.getElementById(chars[num] + num).scrollIntoView(true);
-		changeCharacters(num, chars[num]);
+		if (player)
+			num = player;
+
+		chars.push(rdmChars[randomCharFor(rdmChars.length)]);
+
+		var num2 = num;
+		if (player)
+			num2 = 1;
+
+		getElem(chars[num2] + num).scrollIntoView(true);
+		changeCharacters(num, chars[num2]);
+
 		if (popout === true) {
 			changeSettings('changeCharacters', [num, chars[num]]);
 		}
+
+		if (player)
+			return;
 	}
 }

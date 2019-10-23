@@ -1,16 +1,16 @@
 var activeSpace;
 /*
 * Activates spaces.
-* 
+*
 * @param {string} space Space landed on.
 */
 function turnSpace (space) {
-	removeSelected(document.getElementById('turnSpaces').children);
-	
+	removeSelected(getElem('turnSpaces').children);
+
 	space = space.substring(5);
 
 	if (activeSpace != '' && activeSpace != undefined) { //undo space if it's already selected or changed into a different one
-		document.getElementById('turnPlayerName').style.color = '';
+		getElem('turnPlayerName').style.color = '';
 		if (getValue('shortcutSimpleMode') != true) {
 			undoSpace(space);
 		} else {
@@ -22,7 +22,7 @@ function turnSpace (space) {
 	}
 
 	if (activeSpace == space) { //stop function if the exact same space is selected
-		document.getElementById('spaceEventImg').src = '';
+		getElem('spaceEventImg').src = '';
 		editInner('spaceEventsSpan', '');
 		activeSpace = '';
 		return;
@@ -31,26 +31,26 @@ function turnSpace (space) {
 	switch (space) {
 		case 'Blue':
 			minigameSpaces[orderCurPlayer] = 'blue';
-			document.getElementById('turnPlayerName').style.color = '#1859f4';
+			getElem('turnPlayerName').style.color = '#1859f4';
 			break;
 		case 'Red':
 		case 'Bowser':
 		case 'BadLuck':
 		case 'ExtraBadLuck':
 			minigameSpaces[orderCurPlayer] = 'red';
-			document.getElementById('turnPlayerName').style.color = '#f43629';
+			getElem('turnPlayerName').style.color = '#f43629';
 			break;
 		default:
 			minigameSpaces[orderCurPlayer] = 'green';
-			document.getElementById('turnPlayerName').style.color = '#1dc632';
+			getElem('turnPlayerName').style.color = '#1dc632';
 			break;
 	}
 	if (getValue('shortcutSimpleMode') === true) {
 		if (space === 'Friend') {
 			execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'friendSpace']);
 		}
-		document.getElementById('space' + space).classList.add('selected');
-		document.getElementById('spaceEventImg').src = 'img/shortcut/' + shortcutGame + '/' + space.toLowerCase() + 'space.png';
+		getElem('space' + space).classList.add('selected');
+		getElem('spaceEventImg').src = 'img/shortcut/' + shortcutGame + '/' + space.toLowerCase() + 'space.png';
 		activeSpace = space;
 		return;
 	}
@@ -109,19 +109,19 @@ function turnSpace (space) {
 			execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'friendSpace']);
 			shortcutNotif(getCharName(orderCurPlayer) + ' landed on a friend space, select a friend to give them 5 coins.');
 
-			editInner('spaceEventsSpan', '<span class="settingsText"> Who should get 5 coins? </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="spaceEvent(\'friend\', [1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="spaceEvent(\'friend\', [2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="spaceEvent(\'friend\', [3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="spaceEvent(\'friend\', [4])">');
-			document.getElementById('spaceEventsSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
+			editInner('spaceEventsSpan', '<span> Who should get 5 coins? </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="spaceEvent(\'friend\', [1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="spaceEvent(\'friend\', [2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="spaceEvent(\'friend\', [3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="spaceEvent(\'friend\', [4])">');
+			getElem('spaceEventsSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
 			break;
 		case 'Duel':
 			shortcutNotif(getCharName(orderCurPlayer) + ' landed on a duel space, select a rival to fight.');
 
-			editInner('spaceEventsSpan', '<span class="settingsText"> Select opponent and reward </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="spaceEvent(\'duel\', [1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="spaceEvent(\'duel\', [2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="spaceEvent(\'duel\', [3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="spaceEvent(\'duel\', [4])"> <br> <select id="duelReward"> <option value="10coins">10 Coins</option> <option value="20coins">20 Coins</option> <option value="halfcoins">Half your coins</option> <option value="allcoins">All your coins</option> <option value="1star">1 Star</option> <option value="2stars">2 Stars</option> </select> <button style="margin-left: 13px;" onclick="spaceEvent(\'duel\', [\'start\'])">Start Duel</button>');
-			document.getElementById('spaceEventsSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
+			editInner('spaceEventsSpan', '<span> Select opponent and reward </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="spaceEvent(\'duel\', [1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="spaceEvent(\'duel\', [2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="spaceEvent(\'duel\', [3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="spaceEvent(\'duel\', [4])"> <br> <select id="duelReward"> <option value="10coins">10 Coins</option> <option value="20coins">20 Coins</option> <option value="halfcoins">Half your coins</option> <option value="allcoins">All your coins</option> <option value="1star">1 Star</option> <option value="2stars">2 Stars</option> </select> <button style="margin-left: 13px;" onclick="spaceEvent(\'duel\', [\'start\'])">Start Duel</button>');
+			getElem('spaceEventsSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
 			break;
 		case 'Bowser':
 			shortcutNotif(getCharName(orderCurPlayer) + ' landed on a bowser space, select the event.');
 
-			editInner('spaceEventsSpan', '<span class="settingsText"> Select the Bowser event: </span> <br> <select id="bowserEvent"> <option value="coins">Gimme Coins!</option> <option value="stars">Gimme Stars!</option> <option value="charity">Gimme Charity!</option> <option value="equality">Gimme Equality!</option> </select> <button onclick="spaceEvent(\'bowser\')">Start event!</button>');
+			editInner('spaceEventsSpan', '<span> Select the Bowser event: </span> <br> <select id="bowserEvent"> <option value="coins">Gimme Coins!</option> <option value="stars">Gimme Stars!</option> <option value="charity">Gimme Charity!</option> <option value="equality">Gimme Equality!</option> </select> <button onclick="spaceEvent(\'bowser\')">Start event!</button>');
 			break;
 		case 'Ally':
 			if (getValue('shortcutAutoEnd') === true) {
@@ -138,32 +138,32 @@ function turnSpace (space) {
 		case 'Lucky':
 			shortcutNotif(getCharName(orderCurPlayer) + ' landed on a lucky space, select the event.');
 
-			editInner('spaceEventsSpan', '<span class="settingsText"> Select the event: </span> <br> <select id="luckyEvent"> <option value="stealally">Steal one ally from a rival.</option> <option value="3coins">Receive 3 coins.</option> <option value="5coins">Receive 5 coins.</option> <option value="5coinsrival">Make a rival lose 5 coins.</option> <option value="10coinsrival">Make a rival lose 10 coins.</option> <option value="items">Receive item(s).</option> </select> <button onclick="spaceEvent(\'lucky\')">Start event!</button>');
+			editInner('spaceEventsSpan', '<span> Select the event: </span> <br> <select id="luckyEvent"> <option value="stealally">Steal one ally from a rival.</option> <option value="3coins">Receive 3 coins.</option> <option value="5coins">Receive 5 coins.</option> <option value="5coinsrival">Make a rival lose 5 coins.</option> <option value="10coinsrival">Make a rival lose 10 coins.</option> <option value="items">Receive item(s).</option> </select> <button onclick="spaceEvent(\'lucky\')">Start event!</button>');
 			break;
 		case 'BadLuck':
 			execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'redSpace']);
 			shortcutNotif(getCharName(orderCurPlayer) + ' landed on a bad luck space, select the event.');
 
-			editInner('spaceEventsSpan', '<span class="settingsText"> Select the event: </span> <br> <select id="badluckEvent"> <option value="5coins">Lose 5 coins.</option> <option value="10coins">Lose 10 coins.</option> <option value="3coinsothers">Give 3 coins to all other players.</option> <option value="5coinsothers">Give 5 coins to all other players.</option> <option value="5coinslast">Give 5 coins to the last-place player.</option> <option value="10coinslast">Give 10 coins to the last-place player.</option> <option value="5coinsrandom">Give 5 coins to a random player.</option> <option value="movestar">The Star moves.</option> <option value="raisestarcost">Raise the coin cost for a Star.</option> </select> <button onclick="spaceEvent(\'badluck\')">Start event!</button>');
+			editInner('spaceEventsSpan', '<span> Select the event: </span> <br> <select id="badluckEvent"> <option value="5coins">Lose 5 coins.</option> <option value="10coins">Lose 10 coins.</option> <option value="3coinsothers">Give 3 coins to all other players.</option> <option value="5coinsothers">Give 5 coins to all other players.</option> <option value="5coinslast">Give 5 coins to the last-place player.</option> <option value="10coinslast">Give 10 coins to the last-place player.</option> <option value="5coinsrandom">Give 5 coins to a random player.</option> <option value="movestar">The Star moves.</option> <option value="raisestarcost">Raise the coin cost for a Star.</option> </select> <button onclick="spaceEvent(\'badluck\')">Start event!</button>');
 			break;
 		case 'ExtraBadLuck':
 			execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'redSpace']);
 			shortcutNotif(getCharName(orderCurPlayer) + ' landed on a extra bad luck space, select the event.');
 
-			editInner('spaceEventsSpan', '<span class="settingsText"> Select the event: </span> <br> <select id="badluckEvent"> <option value="1star">Lose one Star.</option> <option value="5coins">Lose 5 coins.</option> <option value="10coins">Lose 10 coins.</option> <option value="20coins">Lose 20 coins.</option> <option value="halfcoins">Lose half your coins.</option> <option value="5coinsothers">Give 5 coins to all other players.</option> <option value="10coinsothers">Give 10 coins to all other players.</option> <option value="10coinslast">Give 10 coins to the last-place player.</option> </select> <button onclick="spaceEvent(\'badluck\')">Start event!</button>');
+			editInner('spaceEventsSpan', '<span> Select the event: </span> <br> <select id="badluckEvent"> <option value="1star">Lose one Star.</option> <option value="5coins">Lose 5 coins.</option> <option value="10coins">Lose 10 coins.</option> <option value="20coins">Lose 20 coins.</option> <option value="halfcoins">Lose half your coins.</option> <option value="5coinsothers">Give 5 coins to all other players.</option> <option value="10coinsothers">Give 10 coins to all other players.</option> <option value="10coinslast">Give 10 coins to the last-place player.</option> </select> <button onclick="spaceEvent(\'badluck\')">Start event!</button>');
 			break;
 		case 'VS':
 			shortcutNotif(getCharName(orderCurPlayer) + ' landed on a VS space, select the event.');
 
-			editInner('spaceEventsSpan', '<span class="settingsText"> Start VS Minigame for <select id="vsspaceSelect"> <option value="5">5 Coins</option> <option value="7">7 Coins</option> <option value="10" selected>10 Coins</option> <option value="15">15 Coins</option> <option value="20">20 Coins</option> <option value="25">25 Coins</option> <option value="30">30 Coins</option> </select> coins. </span> <br> <button onclick="spaceEvent(\'vsspace\')"> Start! </button>')
+			editInner('spaceEventsSpan', '<span> Start VS Minigame for <select id="vsspaceSelect"> <option value="5">5 Coins</option> <option value="7">7 Coins</option> <option value="10" selected>10 Coins</option> <option value="15">15 Coins</option> <option value="20">20 Coins</option> <option value="25">25 Coins</option> <option value="30">30 Coins</option> </select> coins. </span> <br> <button onclick="spaceEvent(\'vsspace\')"> Start! </button>')
 			break;
 		default:
-			document.getElementById('spaceEventImg').src = '';
+			getElem('spaceEventImg').src = '';
 			editInner('spaceEventsSpan', '');
 			return;
 	}
-	document.getElementById('space' + space).classList.add('selected');
-	document.getElementById('spaceEventImg').src = 'img/shortcut/' + shortcutGame + '/' + space.toLowerCase() + 'space.png';
+	getElem('space' + space).classList.add('selected');
+	getElem('spaceEventImg').src = 'img/shortcut/' + shortcutGame + '/' + space.toLowerCase() + 'space.png';
 	activeSpace = space;
 }
 
@@ -341,7 +341,7 @@ var starCost = '';
 var spaceEventState = [];
 /*
 * Events for space (like duel or bowser).
-* 
+*
 * @param {string} space What space.
 * @param {array} attr Required attributes to calculate stuff.
 */
@@ -363,7 +363,7 @@ function spaceEvent (space, attr) {
 				shortcutNotif('Undid the friend space.');
 				return;
 			}
-			document.getElementById('spaceEventsSpan').children[attr[0] + 1].classList.add('selected');
+			getElem('spaceEventsSpan').children[attr[0] + 1].classList.add('selected');
 
 			if (spaceEventState[1] != attr[0] && spaceEventState[1] != 0 && spaceEventState[1] != undefined) {
 				execOnMain('counterButtons', [spaceEventState[1], 'M', 5, 'coins']);
@@ -506,7 +506,7 @@ function spaceEvent (space, attr) {
 						shortcutNotif(getCharName(orderCurPlayer) + ' started a 2 Star duel with ' + getCharName(spaceEventState[1]) + ', select the winner.');
 						break;
 				}
-				editInner('spaceEventsSpan', '<span class="settingsText"> Select the winner </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[orderCurPlayer] + '.png" class="chooseImg" onclick="spaceEvent(\'duel\', [\'win\', ' + orderCurPlayer + '])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[spaceEventState[1]] + '.png" class="chooseImg" onclick="spaceEvent(\'duel\', [\'win\', ' + spaceEventState[1] + '])"> <span class="shortcutText chooseImg" style="font-size: 30px;" onclick="spaceEvent(\'duel\', [\'tie\'])"> Tie </span>');
+				editInner('spaceEventsSpan', '<span> Select the winner </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[orderCurPlayer] + '.png" class="chooseImg" onclick="spaceEvent(\'duel\', [\'win\', ' + orderCurPlayer + '])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[spaceEventState[1]] + '.png" class="chooseImg" onclick="spaceEvent(\'duel\', [\'win\', ' + spaceEventState[1] + '])"> <span class="shortcutText chooseImg" style="font-size: 30px;" onclick="spaceEvent(\'duel\', [\'tie\'])"> Tie </span>');
 				return;
 			}
 
@@ -518,7 +518,7 @@ function spaceEvent (space, attr) {
 				spaceEventState[1] = 0;
 				return;
 			}
-			document.getElementById('spaceEventsSpan').children[attr[0] + 1].classList.add('selected');
+			getElem('spaceEventsSpan').children[attr[0] + 1].classList.add('selected');
 			spaceEventState[1] = attr[0];
 			break;
 
@@ -617,8 +617,8 @@ function spaceEvent (space, attr) {
 					if (attr && isNaN(attr[1]) == false) {
 						var random = attr[1];
 					} else {
-						editInner('spaceEventsSpan', '<span class="settingsText"> Select your rival: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="spaceEvent(\'lucky\', [\'5coinsrival\', 1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="spaceEvent(\'lucky\', [\'5coinsrival\', 2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="spaceEvent(\'lucky\', [\'5coinsrival\', 3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="spaceEvent(\'lucky\', [\'5coinsrival\', 4])"> <br> <br>');
-						document.getElementById('spaceEventsSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
+						editInner('spaceEventsSpan', '<span> Select your rival: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="spaceEvent(\'lucky\', [\'5coinsrival\', 1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="spaceEvent(\'lucky\', [\'5coinsrival\', 2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="spaceEvent(\'lucky\', [\'5coinsrival\', 3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="spaceEvent(\'lucky\', [\'5coinsrival\', 4])"> <br> <br>');
+						getElem('spaceEventsSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
 						return;
 					}
 
@@ -640,8 +640,8 @@ function spaceEvent (space, attr) {
 					if (attr && isNaN(attr[1]) == false) {
 						var random = attr[1];
 					} else {
-						editInner('spaceEventsSpan', '<span class="settingsText"> Select your rival: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="spaceEvent(\'lucky\', [\'5coinsrival\', 1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="spaceEvent(\'lucky\', [\'5coinsrival\', 2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="spaceEvent(\'lucky\', [\'5coinsrival\', 3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="spaceEvent(\'lucky\', [\'5coinsrival\', 4])"> <br> <br>');
-						document.getElementById('spaceEventsSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
+						editInner('spaceEventsSpan', '<span> Select your rival: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="spaceEvent(\'lucky\', [\'5coinsrival\', 1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="spaceEvent(\'lucky\', [\'5coinsrival\', 2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="spaceEvent(\'lucky\', [\'5coinsrival\', 3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="spaceEvent(\'lucky\', [\'5coinsrival\', 4])"> <br> <br>');
+						getElem('spaceEventsSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
 						return;
 					}
 
@@ -773,8 +773,8 @@ function spaceEvent (space, attr) {
 
 					if (lastPlace.length > 1 || lastPlace == orderCurPlayer) {
 						lastPlace[0] = 0;
-						editInner('spaceEventsSpan', '<span class="settingsText"> Select the last player: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'5coinslast\', 1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'5coinslast\', 2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'5coinslast\', 3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'5coinslast\', 4])"> <br> <br>');
-						document.getElementById('spaceEventsSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
+						editInner('spaceEventsSpan', '<span> Select the last player: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'5coinslast\', 1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'5coinslast\', 2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'5coinslast\', 3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'5coinslast\', 4])"> <br> <br>');
+						getElem('spaceEventsSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
 						return;
 					} else {
 						var coins
@@ -801,8 +801,8 @@ function spaceEvent (space, attr) {
 
 					if (lastPlace.length > 1 || lastPlace == orderCurPlayer) {
 						lastPlace[0] = 0;
-						editInner('spaceEventsSpan', '<span class="settingsText"> Select the last player: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'10coinslast\', 1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'10coinslast\', 2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'10coinslast\', 3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'10coinslast\', 4])"> <br> <br>');
-						document.getElementById('spaceEventsSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
+						editInner('spaceEventsSpan', '<span> Select the last player: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'10coinslast\', 1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'10coinslast\', 2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'10coinslast\', 3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'10coinslast\', 4])"> <br> <br>');
+						getElem('spaceEventsSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
 						return;
 					} else {
 						var coins
@@ -824,8 +824,8 @@ function spaceEvent (space, attr) {
 					if (attr && isNaN(attr[1]) == false) {
 						var random = attr[1];
 					} else {
-						editInner('spaceEventsSpan', '<span class="settingsText"> Select the player: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'5coinsrandom\', 1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'5coinsrandom\', 2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'5coinsrandom\', 3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'5coinsrandom\', 4])"> <br> <br>');
-						document.getElementById('spaceEventsSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
+						editInner('spaceEventsSpan', '<span> Select the player: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'5coinsrandom\', 1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'5coinsrandom\', 2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'5coinsrandom\', 3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="spaceEvent(\'badluck\', [\'5coinsrandom\', 4])"> <br> <br>');
+						getElem('spaceEventsSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
 						return;
 					}
 
@@ -943,7 +943,7 @@ function spaceEvent (space, attr) {
 						execOnMain('counterButtons', [num, 'M', coinNum, 'coins']);
 					}
 				}
-				editInner('spaceEventsSpan', '<span class="settingsNote"> Reminder: If there are two 1st-places, the next player is 3rd, not 2nd; same applies to all ties. </span> <br> <span class="settingsText"> Fighting for ' + spaceEventState[2] + ' coins. - </span> <span id="vsspaceText" class="settingsText"> Select place for Player 1 "' + getCharName(1) + '": </span> <br> <span> <img src="img/1st.png" class="battleImg" onclick="spaceEvent(\'vsspace\', [\'first\'])"> <img src="img/2nd.png" class="battleImg" onclick="spaceEvent(\'vsspace\', [\'second\'])"> <img src="img/3rd.png" class="battleImg" onclick="spaceEvent(\'vsspace\', [\'third\'])"> <img src="img/4th.png" class="battleImg" onclick="spaceEvent(\'vsspace\', [\'fourth\'])"> </span>');
+				editInner('spaceEventsSpan', '<span class="note"> Reminder: If there are two 1st-places, the next player is 3rd, not 2nd; same applies to all ties. </span> <br> <span> Fighting for ' + spaceEventState[2] + ' coins. - </span> <span id="vsspaceText"> Select place for Player 1 "' + getCharName(1) + '": </span> <br> <span> <img src="img/1st.png" class="battleImg" onclick="spaceEvent(\'vsspace\', [\'first\'])"> <img src="img/2nd.png" class="battleImg" onclick="spaceEvent(\'vsspace\', [\'second\'])"> <img src="img/3rd.png" class="battleImg" onclick="spaceEvent(\'vsspace\', [\'third\'])"> <img src="img/4th.png" class="battleImg" onclick="spaceEvent(\'vsspace\', [\'fourth\'])"> </span>');
 
 				battleCurPlayer = 1;
 				battleRanks.first = [];

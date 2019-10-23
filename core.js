@@ -1,9 +1,16 @@
+var ga = { //global actions
+	action: 'p',
+	amount: 1,
+	ogAction: 'p',
+	ogAmount: 1
+};
+
 /*
 * Updates the counters.
 *
 * @param {number} player Which player should be updated.
 * @param {string} action What should be done.
-* @param {string} amount The amount that should be changed
+* @param {string} amount The amount that should be changed.
 * @param {string} counter Which counter should be updated.
 */
 function counterButtons (player, action, amount, counter) {
@@ -14,13 +21,6 @@ function counterButtons (player, action, amount, counter) {
 	if (amount === '') {
 		amount = 1;
 	}
-	/*if (parseInt(getInner('p' + player + counter + 'Text')).isNaN == true) {
-		editInner('p' + player + counter + 'Text', 0);
-		console.warn('[MPO] Counter was NaN, player: ' + player + ', counter: ' + counter);
-		if (shortcutLoaded === true) {
-			shortcutNotif('Error: ' + counter + ' for player ' + player + ' was NaN', true);
-		}
-	}*/
 
 	if (counter != 'curTurn' && counter != 'maxTurn' && counter != 'coinStar') {
 		counter = counter.charAt(0).toUpperCase() + counter.slice(1);
@@ -42,7 +42,7 @@ function counterButtons (player, action, amount, counter) {
 		} else if (action == 'S') {
 			result = amount;
 		}
-		
+
 		if (result >= 999) {
 			result = 999;
 		} else if (result <= 0) {
@@ -86,7 +86,7 @@ function counterButtons (player, action, amount, counter) {
 
 /*
 * Updates the counters and creates a small animation.
-* 
+*
 * @param {string} id The ID that should be changed.
 * @param {string} change What the element should be changed to.
 * @param {boolean} noAnimation If the animation should be skipped.
@@ -100,9 +100,9 @@ function updateCounter (id, change, noAnimation) {
 		return;
 	}
 
-	document.getElementById(id).classList.add('counterAnimation');
+	getElem(id).classList.add('counterAnimation');
 
-	var element = document.getElementById(id)
+	var element = getElem(id)
 	element.addEventListener('webkitAnimationEnd', function(){
 		this.classList.remove('counterAnimation');
 		this.removeEventListener('webkitAnimationEnd', arguments.callee, false);
@@ -111,7 +111,7 @@ function updateCounter (id, change, noAnimation) {
 
 /*
 * Calls counterButtons().
-* 
+*
 * @param {string} counter Which counter should be updated.
 * @param {player} player Which player should be updated.
 */
@@ -120,22 +120,8 @@ function mobileButtons (counter, player) {
 		return;
 	}
 
-	var action = '';
-	var amount = 0;
-
-	if (getValue('mobileTypeMinus') == true) {
-		action = 'M';
-	} else {
-		action = 'P';
-	}
-
-	if (getValue('type5') == true) {
-		amount = 5;
-	} else if (getValue('type10') == true) {
-		amount = 10;
-	} else {
-		amount = 1;
-	}
+	var action = ga.action.toUpperCase();
+	var amount = ga.amount;
 
 	if (counter == 'Stars') {
 		updateStars(player, action, amount);
@@ -178,11 +164,11 @@ function updateStars (player, action, amount) {
 		result[num] = resArr.join('');
 	}
 
-	if (action == 'P') {
+	if (action === 'P') {
 		for (let num = 0; num < amount; num++) {
 			result[player]++;
 		}
-	} else if (action == 'M') {
+	} else if (action === 'M') {
 		for (let num = 0; num < amount; num++) {
 			result[player]--;
 		}
@@ -192,17 +178,19 @@ function updateStars (player, action, amount) {
 	bonusStars = ['', 0, 0, 0, 0];
 	callHighlight(false, false, true);
 
-	for (let num = 1; num < 5; num++) {
-		if (getValue('p' + num + 'CoinStarTie') == true) {
-			bonusStars[num]++
+	if (getValue('coinStarOnOff') === true) {
+		for (let num = 1; num < 5; num++) {
+			if (getValue('p' + num + 'CoinStarTie') === true) {
+				bonusStars[num]++;
+			}
 		}
 	}
 
-	if (getValue('miniStarsOnOff') == true) {
+	if (getValue('miniStarsOnOff') === true) {
 		for (let num = 1; num < 5; num++) {
 			bonusStars[num] = bonusStars[num] * 5;
 		}
-	} else if (getValue('bananasOnOff') == true) {
+	} else if (getValue('bananasOnOff') === true) {
 		for (let num = 1; num < 5; num++) {
 			bonusStars[num] = bonusStars[num] * 10;
 		}
@@ -235,6 +223,12 @@ function updateCoins (player) {
 		if (result == coinStar) {
 			if (getValue('p' + player + 'CoinStarTie') == true) {} else {
 				editValue('p' + player + 'CoinStarTie', true);
+				if (getValue('noTie') === true) {
+					editValue('p1CoinStarTie', false);
+					editValue('p2CoinStarTie', false);
+					editValue('p3CoinStarTie', false);
+					editValue('p4CoinStarTie', false);
+				}
 			}
 		} else if (result > coinStar) {
 			editValue('p1CoinStarTie', false);
@@ -245,14 +239,14 @@ function updateCoins (player) {
 
 			updateCounter('coinStarText', result);
 		}
-		coinStarTie();
+		coinStarTie(player);
 	}
 }
 
 /*
 * Changes turns displays and input.
 * Gets fired after updating turns. Checks if the number is 1 or more and that the current turn does not exceed the max turn, after that it updates the display.
-* 
+*
 * @param {string} counter If current or max Turn should be changed.
 * @param {number} amount The amount that should be changed.
 * @param {string} action If it should be added, subtracted or set to the amount.
@@ -306,9 +300,9 @@ function turns (counter, amount, action) {
 	}
 
 	if (parseInt(getInner(counter + 'Text')) != eval(counter + 'Var')) {
-		document.getElementById(counter + 'Text').classList.add('counterAnimation');
+		getElem(counter + 'Text').classList.add('counterAnimation');
 		setTimeout(function () {
-			document.getElementById(counter + 'Text').classList.remove('counterAnimation');
+			getElem(counter + 'Text').classList.remove('counterAnimation');
 		}, 190);
 	}
 
@@ -320,7 +314,7 @@ function turns (counter, amount, action) {
 /*
 * Updates the coin star display.
 * Gets fired from displayChange() which gets fired after updating the coin star. Checks if the number is 0 or more, after that it updates the display.
-* 
+*
 * @param {number} coinStarVar The new Coin Star value.
 */
 function coinStar (coinStarVar) {
@@ -335,58 +329,52 @@ function coinStar (coinStarVar) {
 
 /*
 * Updates the coin star characters.
-* 
+*
 * @param {number} player Updates the coin star for that specific player
+* @param {boolean} direct If the function has been called directly from an onclick attribute
 */
-function coinStarTie (player) {
+function coinStarTie (player, direct) {
 	var icons = document.querySelector('input[name="icons"]:checked').value;
 
-	if (player && getValue('p' + player + 'CoinStarTie') == true) {
-		editValue('p' + player + 'CoinStarTie', false);
-	} else if (player) {
-		editValue('p' + player + 'CoinStarTie', true);
+	if (direct === true) {
+		if (ctrlKeyVar === true) {
+			editValue('p1CoinStarTie', false);
+			editValue('p2CoinStarTie', false);
+			editValue('p3CoinStarTie', false);
+			editValue('p4CoinStarTie', false);
+		}
+
+		if (player && getValue('p' + player + 'CoinStarTie') == true) {
+			editValue('p' + player + 'CoinStarTie', false);
+		} else if (player) {
+			editValue('p' + player + 'CoinStarTie', true);
+		}
 	}
 
 	if (getValue('noTie') == true && player && getValue('p' + player + 'CoinStarTie') == true) {
-		switch (player) {
-			case 1:
-			editValue('p2CoinStarTie', false);
-			editValue('p3CoinStarTie', false);
-			editValue('p4CoinStarTie', false);
-				break;
-			case 2:
-			editValue('p1CoinStarTie', false);
-			editValue('p3CoinStarTie', false);
-			editValue('p4CoinStarTie', false);
-				break;
-			case 3:
-			editValue('p1CoinStarTie', false);
-			editValue('p2CoinStarTie', false);
-			editValue('p4CoinStarTie', false);
-				break;
-			case 4:
-			editValue('p1CoinStarTie', false);
-			editValue('p2CoinStarTie', false);
-			editValue('p3CoinStarTie', false);
-				break;
-		}
-	} else if (getValue('noTie') == true) {
+		editValue('p1CoinStarTie', false);
+		editValue('p2CoinStarTie', false);
+		editValue('p3CoinStarTie', false);
+		editValue('p4CoinStarTie', false);
+
+		editValue('p' + player + 'CoinStarTie', true);
+	} else if (getValue('noTie') == true && direct === true) {
 		editValue('p1CoinStarTie', false);
 		editValue('p2CoinStarTie', false);
 		editValue('p3CoinStarTie', false);
 		editValue('p4CoinStarTie', false);
 	}
 
-	document.getElementById('coinStarTie1').style.height = '';
-	document.getElementById('coinStarTie1').style.top = '';
-	document.getElementById('coinStarTie1').style.left = '';
+	getElem('coinStarTie1').style.height = '';
+	getElem('coinStarTie1').style.top = '';
+	getElem('coinStarTie1').style.left = '';
 
-	document.getElementById('coinStarTie4').style.height = '';
-	document.getElementById('coinStarTie4').style.top = '';
-	document.getElementById('coinStarTie4').style.left = '';
+	getElem('coinStarTie4').style.height = '';
+	getElem('coinStarTie4').style.top = '';
+	getElem('coinStarTie4').style.left = '';
 
-	document.getElementById('coinStarDiv').style.marginLeft = '5px';
-	document.getElementById('coinStarText').style.left = '10px';
+	getElem('coinStarDiv').style.marginLeft = '5px';
+	getElem('coinStarText').style.left = '10px';
 
 	var player1 = getValue('p1CoinStarTie');
 	var player2 = getValue('p2CoinStarTie');
@@ -410,43 +398,43 @@ function coinStarTie (player) {
 	}
 
 	for (let num = 1; num < 6; num++) {
-		document.getElementById('coinStarTie' + num).src = 'img/tie.png';
+		getElem('coinStarTie' + num).src = 'img/tie.png';
 	}
-	document.getElementById('coinStarCharacter').src = 'img/tie.png';
+	getElem('coinStarCharacter').src = 'img/tie.png';
 
 	if (getValue('noTie') == true && tied.length != 1 || tied.length == 0) {
-		document.getElementById('coinStarCharacter').src = 'img/question.png';
+		getElem('coinStarCharacter').src = 'img/question.png';
 
 	} else if (tied.length == 1) {
-		document.getElementById('coinStarCharacter').src = 'img/' + icons + '/' + tied[0] + '.png';
+		getElem('coinStarCharacter').src = 'img/' + icons + '/' + tied[0] + '.png';
 
 		if (icons == 'mpsrIcons') {
-			document.getElementById('coinStarText').style.left = '10px';
+			getElem('coinStarText').style.left = '10px';
 		}
 	} else if (tied.length == 2) {
-		document.getElementById('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png';
-		document.getElementById('coinStarTie4').src = 'img/' + icons + '/' + tied[1] + '.png';
+		getElem('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png';
+		getElem('coinStarTie4').src = 'img/' + icons + '/' + tied[1] + '.png';
 
-		document.getElementById('coinStarTie1').style.height = '34px';
-		document.getElementById('coinStarTie1').style.top = '-35px';
-		document.getElementById('coinStarTie1').style.left = '-98px';
+		getElem('coinStarTie1').style.height = '34px';
+		getElem('coinStarTie1').style.top = '-35px';
+		getElem('coinStarTie1').style.left = '-98px';
 
-		document.getElementById('coinStarTie4').style.height = '34px';
-		document.getElementById('coinStarTie4').style.top = '-14px';
-		document.getElementById('coinStarTie4').style.left = '-69px';
+		getElem('coinStarTie4').style.height = '34px';
+		getElem('coinStarTie4').style.top = '-14px';
+		getElem('coinStarTie4').style.left = '-69px';
 
 		if (icons == 'mpsrIcons') {
-			document.getElementById('coinStarText').style.left = '10px';
+			getElem('coinStarText').style.left = '10px';
 		}
 	} else if (tied.length == 3) {
-		document.getElementById('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png';
-		document.getElementById('coinStarTie2').src = 'img/' + icons + '/' + tied[1] + '.png';
-		document.getElementById('coinStarTie5').src = 'img/' + icons + '/' + tied[2] + '.png';
+		getElem('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png';
+		getElem('coinStarTie2').src = 'img/' + icons + '/' + tied[1] + '.png';
+		getElem('coinStarTie5').src = 'img/' + icons + '/' + tied[2] + '.png';
 	} else if (tied.length == 4) {
-		document.getElementById('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png';
-		document.getElementById('coinStarTie2').src = 'img/' + icons + '/' + tied[1] + '.png';
-		document.getElementById('coinStarTie3').src = 'img/' + icons + '/' + tied[2] + '.png';
-		document.getElementById('coinStarTie4').src = 'img/' + icons + '/' + tied[3] + '.png';
+		getElem('coinStarTie1').src = 'img/' + icons + '/' + tied[0] + '.png';
+		getElem('coinStarTie2').src = 'img/' + icons + '/' + tied[1] + '.png';
+		getElem('coinStarTie3').src = 'img/' + icons + '/' + tied[2] + '.png';
+		getElem('coinStarTie4').src = 'img/' + icons + '/' + tied[3] + '.png';
 	}
 	updateStars();
 }

@@ -9,14 +9,14 @@ var minigameRanks = {
 var minigamePlayers = [];
 /*
 * Starts a normal minigame.
-* 
+*
 * @param {number} player Which player should win.
 */
 function startMinigame (player) {
 	var high5 = false;
 	if (player === '4p') {
 		minigameMode = '4p';
-		editInner('normalMinigame', '<button onclick="startMinigame(\'back\')">Select minigame mode</button> <br> <span class="settingsNote"> Reminder: If there are two 1st-places, the next player is 3rd, not 2nd; same applies to all ties. </span> <br> <span id="4pMinigame" class="settingsText"> Select place for Player 1 "' + getCharName(1) + '": </span> <br> <span> <img src="img/1st.png" class="battleImg" onclick="startMinigame(\'first\')"> <img src="img/2nd.png" class="battleImg" onclick="startMinigame(\'second\')"> <img src="img/3rd.png" class="battleImg" onclick="startMinigame(\'third\')"> <img src="img/4th.png" class="battleImg" onclick="startMinigame(\'fourth\')"> </span>');
+		editInner('normalMinigame', '<button onclick="startMinigame(\'back\')">Select minigame mode</button> <br> <span class="note"> Reminder: If there are two 1st-places, the next player is 3rd, not 2nd; same applies to all ties. </span> <br> <span id="4pMinigame"> Select place for Player 1 "' + getCharName(1) + '": </span> <br> <span> <img src="img/1st.png" class="battleImg" onclick="startMinigame(\'first\')"> <img src="img/2nd.png" class="battleImg" onclick="startMinigame(\'second\')"> <img src="img/3rd.png" class="battleImg" onclick="startMinigame(\'third\')"> <img src="img/4th.png" class="battleImg" onclick="startMinigame(\'fourth\')"> </span>');
 		minigameRanks = {
 			first: [],
 			second: [],
@@ -27,14 +27,14 @@ function startMinigame (player) {
 		return;
 	} else if (player === '2v2') {
 		minigameMode = '2v2';
-		editInner('normalMinigame', '<button onclick="startMinigame(\'back\')">Select minigame mode</button> <br> <span class="settingsText"> Who won? </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="p1Minigame" onclick="startMinigame(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="p2Minigame" onclick="startMinigame(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="p3Minigame" onclick="startMinigame(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="p4Minigame" onclick="startMinigame(4)"> <br> <button onClick="startMinigame()">Done</button> <button onClick="startMinigame(\'high5\')">High five</button> <span class="settingsNote"> High five gives the 1st-place team 2 additional coins. </span> <br> <button onclick="startMinigame(\'tie\')" style="margin-top: 5px;">Tie</button>');
+		editInner('normalMinigame', '<button onclick="startMinigame(\'back\')">Select minigame mode</button> <br> <span> Who won? </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="p1Minigame" onclick="startMinigame(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="p2Minigame" onclick="startMinigame(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="p3Minigame" onclick="startMinigame(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="p4Minigame" onclick="startMinigame(4)"> <br> <button onClick="startMinigame()">Done</button> <button onClick="startMinigame(\'high5\')">High five</button> <span class="note"> High five gives the 1st-place team 2 additional coins. </span> <br> <button onclick="startMinigame(\'tie\')" style="margin-top: 5px;">Tie</button>');
 		return;
 	} else if (player === '1v3') {
 		minigameMode = '1v3';
-		editInner('normalMinigame', '<button onclick="startMinigame(\'back\')">Select minigame mode</button> <br> <span class="settingsText"> Who won? </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="p1Minigame" onclick="startMinigame(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="p2Minigame" onclick="startMinigame(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="p3Minigame" onclick="startMinigame(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="p4Minigame" onclick="startMinigame(4)"> <br> <button onClick="startMinigame()">Done</button> <button onClick="startMinigame(\'high5\')">High five</button> <span class="settingsNote"> High five gives the 1st-place team 2 additional coins. </span> <br> <button onclick="startMinigame(\'tie\')" style="margin-top: 5px;">Tie</button>');
+		editInner('normalMinigame', '<button onclick="startMinigame(\'back\')">Select minigame mode</button> <br> <span> Who won? </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" id="p1Minigame" onclick="startMinigame(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" id="p2Minigame" onclick="startMinigame(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" id="p3Minigame" onclick="startMinigame(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" id="p4Minigame" onclick="startMinigame(4)"> <br> <button onClick="startMinigame()">Done</button> <button onClick="startMinigame(\'high5\')">High five</button> <span class="note"> High five gives the 1st-place team 2 additional coins. </span> <br> <button onclick="startMinigame(\'tie\')" style="margin-top: 5px;">Tie</button>');
 		return;
 	} else if (player === 'back') {
-		editInner('normalMinigame', '<span class="settingsText"> Select minigame type: </span> <br> <span class="shortcutText spanSelection"> <span onclick="startMinigame(\'4p\')"> 4-Player </span> <span onclick="startMinigame(\'2v2\')"> 2vs2 </span> <span onclick="startMinigame(\'1v3\')"> 1vs3 </span> </span>');
+		editInner('normalMinigame', '<span> Select minigame type: </span> <br> <span class="shortcutText spanSelection"> <span onclick="startMinigame(\'4p\')"> 4-Player </span> <span onclick="startMinigame(\'2v2\')"> 2vs2 </span> <span onclick="startMinigame(\'1v3\')"> 1vs3 </span> </span>');
 		minigamePlayers = [];
 		return;
 	} else if (player === 'high5') {
@@ -51,12 +51,12 @@ function startMinigame (player) {
 		} else if (isNaN(player) === false) {
 			for (var num = 0; num < minigamePlayers.length; num++) {
 				if (minigamePlayers[num] == player) {
-					document.getElementById('p' + minigamePlayers[num] + 'Minigame').classList.remove('selected');
+					getElem('p' + minigamePlayers[num] + 'Minigame').classList.remove('selected');
 					minigamePlayers.splice(num, 1);
 					return;
 				}
 			}
-			document.getElementById('p' + player + 'Minigame').classList.add('selected');
+			getElem('p' + player + 'Minigame').classList.add('selected');
 			minigamePlayers.push(player);
 			return;
 		}
@@ -155,7 +155,7 @@ function startMinigame (player) {
 
 /*
 * Starts a coin minigame.
-* 
+*
 * @param {number/string} player The player coins should be added to - if 'done', it ends the minigame instead
 * @param {number} amount The amount of coins that should be added
 * @param {string} action If it should be added or subtracted
@@ -211,16 +211,16 @@ function startBattle () {
 	battleRanks.fourth = [];
 	editInner('battleTextCoins', 'Fighting for ' + battleCoins + ' coins.');
 	editInner('battleText', 'Select place for Player 1 "' + getCharName(characters[1]) + '".');
-	document.getElementById('battleStart').style.display = 'none';
-	document.getElementById('battlePlayers').style.display = 'block';
-	document.getElementById('battleReset').style.display = '';
+	getElem('battleStart').style.display = 'none';
+	getElem('battlePlayers').style.display = 'block';
+	getElem('battleReset').style.display = '';
 	shortcutNotif('Started a Battle Minigame for ' + coinReq + ' coins.');
 }
 
 var battleResult = [];
 /*
 * Calculates the battle result.
-* 
+*
 * @param {number} What place the said character is.
 */
 function calcBattle (place) {
@@ -313,8 +313,8 @@ function calcBattle (place) {
 				console.log('[MPO Shortcut] End Battle Minigame - First: ' + battleRanks.first + ' - Second: ' + battleRanks.second + ' - Third: ' + battleRanks.third + ' - Fourth: ' + battleRanks.fourth + ' - Coins: ' + getInner('p1CoinsText') + ' - ' + getInner('p2CoinsText') + ' - ' + getInner('p3CoinsText') + ' - ' + getInner('p4CoinsText'));
 				editInner('battleText', '');
 				editInner('battleTextCoins', '');
-				document.getElementById('battleStart').style.display = 'block';
-				document.getElementById('battlePlayers').style.display = 'none';
+				getElem('battleStart').style.display = 'block';
+				getElem('battlePlayers').style.display = 'none';
 				break;
 			case 'mp6':
 			case 'mp7':
@@ -374,8 +374,8 @@ function calcBattle (place) {
 					console.log('[MPO Shortcut] End Battle Minigame - First: ' + battleRanks.first + ' - Second: ' + battleRanks.second + ' - Third: ' + battleRanks.third + ' - Fourth: ' + battleRanks.fourth + ' - Coins: ' + getInner('p1CoinsText') + ' - ' + getInner('p2CoinsText') + ' - ' + getInner('p3CoinsText') + ' - ' + getInner('p4CoinsText'));
 					editInner('battleText', '');
 					editInner('battleTextCoins', '');
-					document.getElementById('battleStart').style.display = 'block';
-					document.getElementById('battlePlayers').style.display = 'none';
+					getElem('battleStart').style.display = 'block';
+					getElem('battlePlayers').style.display = 'none';
 				}
 				break;
 			case 'mp9':
@@ -447,8 +447,8 @@ function calcBattle (place) {
 				console.log('[MPO Shortcut] End Battle Minigame - First: ' + battleRanks.first + ' - Second: ' + battleRanks.second + ' - Third: ' + battleRanks.third + ' - Fourth: ' + battleRanks.fourth + ' - Coins: ' + getInner('p1CoinsText') + ' - ' + getInner('p2CoinsText') + ' - ' + getInner('p3CoinsText') + ' - ' + getInner('p4CoinsText'));
 				editInner('battleText', '');
 				editInner('battleTextCoins', '');
-				document.getElementById('battleStart').style.display = 'block';
-				document.getElementById('battlePlayers').style.display = 'none';
+				getElem('battleStart').style.display = 'block';
+				getElem('battlePlayers').style.display = 'none';
 				break;
 			case 'mpit':
 			case 'mpsr':

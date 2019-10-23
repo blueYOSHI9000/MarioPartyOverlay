@@ -1,11 +1,11 @@
 /*
 * Buys a star.
-* 
+*
 * @param {string} star What kind of star, empty if normal one.
 */
 function buyStar (star) {
 	if (getValue('shortcutSimpleMode') === true) {
-		if (getValue('mobileTypeMinus') === true) {
+		if (ctrlKeyVar === true) {
 			execOnMain('counterButtons', [orderCurPlayer, 'M', 1, 'stars']);
 			shortcutNotif(getCharName(orderCurPlayer) + ' lost a star.');
 		} else {
@@ -21,7 +21,7 @@ function buyStar (star) {
 				var coinNum = 10;
 				break;
 			case 'jarcoins':
-				if (getValue('mobileTypeMinus') === true) {
+				if (ctrlKeyVar === true) {
 					execOnMain('counterButtons', [orderCurPlayer, 'P', 5, 'coins']);
 					shortcutNotif('Undid opening a magic jar, gained 5 coins.');
 				} else if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= 10) {
@@ -32,7 +32,7 @@ function buyStar (star) {
 				}
 				return;
 			case 'jarfail':
-				if (getValue('mobileTypeMinus') === true) {
+				if (ctrlKeyVar === true) {
 					execOnMain('counterButtons', [orderCurPlayer, 'P', 10, 'coins']);
 					shortcutNotif('Undid opening a magic jar, gained 10 coins.');
 				} else if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= 10) {
@@ -74,11 +74,11 @@ function buyStar (star) {
 			}
 		}
 	}
-	if (starCost === 'double' && getValue('mobileTypeMinus') != true) {
+	if (starCost === 'double' && ctrlKeyVar != true) {
 		coinNum = (coinNum * 2);
 	}
 
-	if (getValue('mobileTypeMinus') === true) {
+	if (ctrlKeyVar === true) {
 		if (parseInt(getInner('p' + orderCurPlayer + 'StarsText')) >= 1) {
 			execOnMain('counterButtons', [orderCurPlayer, 'P', coinNum, 'coins']);
 			execOnMain('counterButtons', [orderCurPlayer, 'M', 1, 'stars']);
@@ -99,12 +99,12 @@ function buyStar (star) {
 var stealOpen = false;
 var stealFrom;
 /*
-* 
+* Shows & hides steal interface. Steals coins & stars from others.
 */
 function steal (attr) {
 	if (attr) {
 		if (isNaN(attr) === false) {
-			var elems = document.getElementById('stealSpan').children;
+			var elems = getElem('stealSpan').children;
 			removeSelected(elems);
 			elems[attr + 1].classList.add('selected');
 			stealFrom = attr;
@@ -129,7 +129,7 @@ function steal (attr) {
 					shortcutNotif(getCharName(orderCurPlayer) + ' stole ' + coinNum + ' coins from ' + getCharName(stealFrom) + '.');
 				}
 				editInner('stealSpan', '');
-				document.getElementById('starPricesContainer').style.display = 'unset';
+				getElem('starPricesContainer').style.display = 'unset';
 				stealOpen = false;
 			} else {
 				shortcutNotif('Select a character to steal from.', true);
@@ -138,13 +138,15 @@ function steal (attr) {
 	} else {
 		if (stealOpen === true) {
 			editInner('stealSpan', '');
-			document.getElementById('starPricesContainer').style.display = 'unset';
+			getElem('starPricesContainer').style.display = 'unset';
+			getElem('stealImg').classList.remove('fullOpacity');
 			stealOpen = false;
 		} else {
-			editInner('stealSpan', '<span class="settingsText"> <input type="radio" name="stealInput" id="stealStars"> <label for="stealStars"> Stars </label> - <input type="radio" name="stealInput" id="stealCoins" checked> <label for="stealCoins"> <input type="number" onclick="editValue(\'stealCoins\', true)" style="width: 33px;" id="stealCoinsInput" min="1" max="99" value="7"> Coins </label> from: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="steal(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="steal(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="steal(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="steal(4)"> <button onclick="steal(\'done\')" style="position: relative; top: -15px;"> Steal! </button>');
-			document.getElementById('starPricesContainer').style.display = 'none';
+			editInner('stealSpan', '<span> <input type="radio" name="stealInput" id="stealStars"> <label for="stealStars"> Stars </label> - <input type="radio" name="stealInput" id="stealCoins" checked> <label for="stealCoins"> <input type="number" onclick="editValue(\'stealCoins\', true)" style="width: 33px;" id="stealCoinsInput" min="1" max="99" value="7"> Coins </label> from: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="steal(1)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="steal(2)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="steal(3)"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="steal(4)"> <button onclick="steal(\'done\')" style="position: relative; top: -15px;"> Steal! </button>');
+			getElem('starPricesContainer').style.display = 'none';
+			getElem('stealImg').classList.add('fullOpacity');
 			stealFrom = 0;
-			document.getElementById('stealSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
+			getElem('stealSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
 			stealOpen = true;
 		}
 	}
@@ -153,15 +155,15 @@ function steal (attr) {
 var starPrice = 0;
 /*
 * Changes the star price for Kameks board in SMP.
-* 
+*
 * @param {number} amount What the price should be changed to.
 */
 function starPrices (amount) {
-	removeSelected(document.getElementById('starPricesSpan').children);
+	removeSelected(getElem('starPricesSpan').children);
 	if (starPrice === amount) {
 		starPrice = 0;
 	} else {
-		document.getElementById('kamek' + amount).classList.add('selected');
+		getElem('kamek' + amount).classList.add('selected');
 		starPrice = amount;
 	}
 }
@@ -171,7 +173,7 @@ var diceRolls = [];
 var selColor = '#f10000';
 /*
 * Uses a dice.
-* 
+*
 * @param {number} num The number gotten.
 */
 function turnDice (num) {
@@ -361,17 +363,19 @@ var bobombAlly = ['', 0, 0, 0, 0];
 var closeAlly = false;
 /*
 * Adds an ally to the current player.
-* 
+*
 * @param {string} ally The Ally that should be added.
 * @param {boolean} nobobomb If the bobombAlly array should be updated.
 */
 function getAlly (ally, nobobomb) {
 	if (ally) {
 		if (ally === 'close') {
-			document.getElementById('settingsMain').style = '';
-			document.getElementById('shortcutSettings').style = '';
-			document.getElementById('settingsMain').onclick = '';
-			document.getElementById('allySelection').style.display = 'none';
+			getElem('settingsMain').style = '';
+			getElem('shortcutSettings').style = '';
+			getElem('settingsMain').onclick = '';
+			getElem('allySelection').style.pointerEvents = 'none';
+			getElem('allySelection').style.visibility = 'hidden';
+			getElem('allySelection').style.opacity = 0;
 			if (closeAlly === true) {
 				closeAlly = false;
 				turnEnd();
@@ -382,7 +386,7 @@ function getAlly (ally, nobobomb) {
 		if (ally === 'bobomb') {
 			if (nobobomb != true) {
 				if (allies['p' + orderCurPlayer].length > 3) {
-					document.getElementById(allies['p' + orderCurPlayer][3] + 'Ally').classList.remove('allySelected');
+					getElem(allies['p' + orderCurPlayer][3] + 'Ally').classList.remove('allySelected');
 					removeAlly(orderCurPlayer, 4);
 				} else {
 					execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'ally']);
@@ -393,9 +397,9 @@ function getAlly (ally, nobobomb) {
 			if (allies['p' + orderCurPlayer].length > 3) {
 				allies['p' + orderCurPlayer] = allies['p' + orderCurPlayer].slice(0, 3);
 			}
-			document.getElementById('allyDice4').style.visibility = 'visible';
-			document.getElementById('removeAllySelection').children[3].src = 'img/smp/bobomb.png';
-			document.getElementById('removeAllySelection').children[3].style.visibility = 'visible';
+			getElem('allyDice4').style.visibility = 'visible';
+			getElem('removeAllySelection').children[3].src = 'img/smp/bobomb.png';
+			getElem('removeAllySelection').children[3].style.visibility = 'visible';
 
 			if (closeAlly === true) {
 				closeAlly = false;
@@ -412,25 +416,25 @@ function getAlly (ally, nobobomb) {
 			for (var num2 = 0; num2 < allies['p' + num].length; num2++) { //check if someone else already uses this ally - if true, remove it
 				if (ally == allies['p' + num][num2]) {
 					for (var num3 = 1; num3 < 4; num3++) {
-						if (document.getElementById('removeAllyChar' + num3).getAttribute('player') == num) {
+						if (getElem('removeAllyChar' + num3).getAttribute('player') == num) {
 							removeAlly(num3 + 1, num2 + 1);
 							break loop1;
 						}
 					}
 				}
 			}
-		}	
+		}
 		if (allies['p' + orderCurPlayer].length > 2 && bobombAlly[orderCurPlayer] != 0) {
 			bobombAlly[orderCurPlayer] = 0;
 		}
 		if (allies['p' + orderCurPlayer].length > 3) {
-			document.getElementById(allies['p' + orderCurPlayer][3] + 'Ally').classList.remove('allySelected');
+			getElem(allies['p' + orderCurPlayer][3] + 'Ally').classList.remove('allySelected');
 			allies['p' + orderCurPlayer] = [allies['p' + orderCurPlayer][0], allies['p' + orderCurPlayer][1], allies['p' + orderCurPlayer][2], ally];
 			execOnMain('counterButtons', [orderCurPlayer, 'M', 1, 'ally']);
 		} else {
 			allies['p' + orderCurPlayer].push(ally);
 		}
-		var elems = document.getElementById('allyDiceSelection').children;
+		var elems = getElem('allyDiceSelection').children;
 
 		for (var num = 2; num < allies['p' + orderCurPlayer].length + 2; num++) {
 			elems[num].style.display = 'initial';
@@ -439,19 +443,19 @@ function getAlly (ally, nobobomb) {
 				break;
 			}
 		}
-		elems = document.getElementById('removeAllySelection').children;
+		elems = getElem('removeAllySelection').children;
 		for (var num = 0; num < allies['p' + orderCurPlayer].length; num++) {
 			elems[num].src = 'img/smp/' + allies['p' + orderCurPlayer][num] + '.png';
 			elems[num].style.visibility = 'visible';
-			document.getElementById('allyDice' + (num + 1)).style.visibility = 'visible';
+			getElem('allyDice' + (num + 1)).style.visibility = 'visible';
 			if ((num + 1) === 4) {
 				editInner('allyDice' + (num + 1), '<img src="img/smp/' + allies['p' + orderCurPlayer][num] + '.png" style="width: 30px;"> <span onclick="allyDice(4, 1)"> 1 </span> <span onclick="allyDice(4, 2)"> 2 </span>');
 			} else {
-				document.getElementById('allyDice' + (num + 1)).children[0].src = 'img/smp/' + allies['p' + orderCurPlayer][num] + '.png';
+				getElem('allyDice' + (num + 1)).children[0].src = 'img/smp/' + allies['p' + orderCurPlayer][num] + '.png';
 			}
 		}
 
-		document.getElementById(ally + 'Ally').classList.add('allySelected');
+		getElem(ally + 'Ally').classList.add('allySelected');
 		execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'ally']);
 		shortcutNotif(getCharName(orderCurPlayer) + ' got ' + getCharName(ally) + ' as an ally.');
 		if (closeAlly === true) {
@@ -461,23 +465,25 @@ function getAlly (ally, nobobomb) {
 		getAlly('close');
 		return;
 	} else {
-		document.getElementById('settingsMain').style = '-webkit-filter: blur(5px); filter: blur(5px);';
-		document.getElementById('shortcutSettings').style = 'pointer-events: none;'; //filter and pointer event need to be different as blur wouldn't be smooth with 'shortcutSettings' and pointer-event would remove onClick
-		document.getElementById('allySelection').style.display = 'initial';
-		setTimeout(function () {document.getElementById('settingsMain').setAttribute('onclick','getAlly(\'close\')');}, 10); //required because chrome would immediately execute the function if it was changed directly
+		getElem('settingsMain').style = '-webkit-filter: blur(5px); filter: blur(5px);';
+		getElem('shortcutSettings').style = 'pointer-events: none;'; //filter and pointer event need to be different as blur wouldn't be smooth with 'shortcutSettings' and pointer-event would remove onClick
+		getElem('allySelection').style.pointerEvents = 'unset';
+		getElem('allySelection').style.visibility = 'visible';
+		getElem('allySelection').style.opacity = 1;
+		setTimeout(function () {getElem('settingsMain').setAttribute('onclick','getAlly(\'close\')');}, 10); //required because chrome would immediately execute the function if it was changed directly
 	}
 }
 
 /*
 * Removes an ally from a player.
-* 
+*
 * @param {number} player The player thats affected.
 * @param {number} ally The ally that should be removed.
 */
 function removeAlly (player, ally) {
 	if (ally === 4 && bobombAlly[player] != 0) {
-		document.getElementById('allyDice4').style.visibility = 'hidden';
-		document.getElementById('removeAllySelection').children[3].style.visibility = 'hidden';
+		getElem('allyDice4').style.visibility = 'hidden';
+		getElem('removeAllySelection').children[3].style.visibility = 'hidden';
 		bobombAlly[player] = 0;
 		//getAlly('close');
 		return;
@@ -486,12 +492,12 @@ function removeAlly (player, ally) {
 		if (diceUsed[orderCurPlayer] === allies['p' + orderCurPlayer][ally - 1]) {
 			changeAllyDice(0);
 		}
-		var elems = document.getElementById('removeAllySelection').children;
-		var elems2 = [document.getElementById('allyDice1'), document.getElementById('allyDice2'), document.getElementById('allyDice3'), document.getElementById('allyDice4')];
+		var elems = getElem('removeAllySelection').children;
+		var elems2 = [getElem('allyDice1'), getElem('allyDice2'), getElem('allyDice3'), getElem('allyDice4')];
 		elems[allies['p' + orderCurPlayer].length - 1].style.visibility = 'hidden';
 		elems2[allies['p' + orderCurPlayer].length - 1].style.visibility = 'hidden';
 
-		document.getElementById(allies['p' + orderCurPlayer][ally - 1] + 'Ally').classList.remove('allySelected');
+		getElem(allies['p' + orderCurPlayer][ally - 1] + 'Ally').classList.remove('allySelected');
 		execOnMain('counterButtons', [orderCurPlayer, 'M', 1, 'ally']);
 		shortcutNotif(getCharName(orderCurPlayer) + ' lost ' + getCharName(allies['p' + orderCurPlayer][ally - 1]) + ' as an ally.');
 
@@ -501,7 +507,7 @@ function removeAlly (player, ally) {
 			elems2[num].children[0].src = 'img/smp/' + allies['p' + orderCurPlayer][num] + '.png';
 		}
 
-		elems = document.getElementById('allyDiceSelection').children;
+		elems = getElem('allyDiceSelection').children;
 
 		for (var num = 2; num < elems.length; num++) {
 			if ((allies['p' + orderCurPlayer].length + 1) < num) {
@@ -514,14 +520,14 @@ function removeAlly (player, ally) {
 		}
 
 	} else {
-		var char = parseInt(document.getElementById('removeAllyChar' + (player - 1)).getAttribute('player'));
-		var elems = document.getElementById('removeAllyChar' + (player - 1)).children;
+		var char = parseInt(getElem('removeAllyChar' + (player - 1)).getAttribute('player'));
+		var elems = getElem('removeAllyChar' + (player - 1)).children;
 		elems[allies['p' + char].length].style.visibility = 'hidden';
 
 		execOnMain('counterButtons', [char, 'M', 1, 'ally']);
 		shortcutNotif(getCharName(char) + ' lost ' + getCharName(allies['p' + char][ally - 1]) + ' as an ally.');
 
-		document.getElementById(allies['p' + char][ally - 1] + 'Ally').classList.remove('allySelected');
+		getElem(allies['p' + char][ally - 1] + 'Ally').classList.remove('allySelected');
 		allies['p' + char].splice(ally - 1, 1);
 		for (var num = 0; num < allies['p' + char].length; num++) {
 			elems[num + 1].src = 'img/smp/' + allies['p' + char][num] + '.png';
@@ -533,11 +539,11 @@ function removeAlly (player, ally) {
 var diceUsed = ['', 0, 0, 0, 0];
 /*
 * Changes the dice numbers based on ally selected.
-* 
+*
 * @param {number} ally Which dice it should be changed to.
 */
 function changeAllyDice (ally) {
-	var elems = document.getElementById('allyDiceSelection').children;
+	var elems = getElem('allyDiceSelection').children;
 	removeSelected(elems);
 	elems[ally].classList.add('selected');
 	diceUsed[orderCurPlayer] = elems[ally].src.replace(/^.*[\\\/]/, '').slice(0, -4);
@@ -623,12 +629,12 @@ function changeAllyDice (ally) {
 var allyDiceRolls = ['', 0, 0, 0, 0];
 /*
 * Rolls the small dice for allies.
-* 
+*
 * @param {number} ally The ally.
 * @param {number} dice The number that got rolled.
 */
 function allyDice (ally, dice) {
-	var elems = document.getElementById('allyDice' + ally).children;
+	var elems = getElem('allyDice' + ally).children;
 	elems[1].classList.remove('selected');
 	elems[2].classList.remove('selected');
 	if (allyDiceRolls[ally] === dice) {
@@ -675,11 +681,11 @@ function allyDice (ally, dice) {
 
 /*
 * Buys items.
-* 
+*
 * @param {number} amount Amount of coins spent.
 */
 function shopping (amount) {
-	if (getValue('mobileTypeMinus') === true) {
+	if (ctrlKeyVar === true) {
 		if (parseInt(getInner('p' + orderCurPlayer + 'ShoppingText')) >= amount) {
 			execOnMain('counterButtons', [orderCurPlayer, 'P', amount, 'coins']);
 			execOnMain('counterButtons', [orderCurPlayer, 'M', amount, 'shopping']);
@@ -700,15 +706,15 @@ var poisonSub = 0; //how much has been subtracted thanks to the poison mushroom
 var activeItem;
 /*
 * Activates an item.
-* 
+*
 * @param {string} item The item should be used.
 */
 function turnItem (item) {
-	removeSelected(document.getElementById('turnItems').children);
+	removeSelected(getElem('turnItems').children);
 
 	if (shortcutGame == 'mpds') {
 		for (var num = 6; num < 11; num++) {
-			document.getElementById('dice' + num).style.display = '';
+			getElem('dice' + num).style.display = '';
 		}
 	}
 	item = item.substring(4);
@@ -738,7 +744,7 @@ function turnItem (item) {
 					}
 					statusEffects['p' + orderCurPlayer] = removeArrayItem(statusEffects['p' + orderCurPlayer], 'poison');
 
-					var elems = document.getElementById('statusEffects').children;
+					var elems = getElem('statusEffects').children;
 					for (var num2 = 0; num2 < elems.length; num2++) {
 						if (elems[num2].getAttribute('src') === 'img/shortcut/smp/poisonmushroom.png') {
 							elems[num2].parentElement.removeChild(elems[num2]);
@@ -756,10 +762,10 @@ function turnItem (item) {
 	}
 
 	if (activeItem == item) { // undo the item if it's already selected
-		document.getElementById('itemImg').src = 'img/tie.png';
+		getElem('itemImg').src = 'img/tie.png';
 		editInner('itemEventSpan', '');
 		activeItem = '';
-		document.getElementById('turnCurDice').src = 'img/shortcut/mpds/diceblock.png';
+		getElem('turnCurDice').src = 'img/shortcut/mpds/diceblock.png';
 
 		if (diceRolls.length != 0) {
 			editInner('turnCurDiceText', diceRolls[0]);
@@ -789,8 +795,8 @@ function turnItem (item) {
 
 	switch (item) {
 		case 'Double':
-			document.getElementById('turnCurDice').src = 'img/shortcut/mpds/double.png';
-			document.getElementById('itemImg').src = 'img/shortcut/mpds/double.png';
+			getElem('turnCurDice').src = 'img/shortcut/mpds/double.png';
+			getElem('itemImg').src = 'img/shortcut/mpds/double.png';
 
 			switch (diceRolls.length) {
 				case 1:
@@ -810,8 +816,8 @@ function turnItem (item) {
 			break;
 
 		case 'Triple':
-			document.getElementById('turnCurDice').src = 'img/shortcut/mpds/triple.png';
-			document.getElementById('itemImg').src = 'img/shortcut/mpds/triple.png';
+			getElem('turnCurDice').src = 'img/shortcut/mpds/triple.png';
+			getElem('itemImg').src = 'img/shortcut/mpds/triple.png';
 
 			switch (diceRolls.length) {
 				case 1:
@@ -834,10 +840,10 @@ function turnItem (item) {
 			break;
 
 		case 'Half':
-			document.getElementById('turnCurDice').src = 'img/shortcut/mpds/half.png';
-			document.getElementById('itemImg').src = 'img/shortcut/mpds/half.png';
+			getElem('turnCurDice').src = 'img/shortcut/mpds/half.png';
+			getElem('itemImg').src = 'img/shortcut/mpds/half.png';
 			for (var num = 6; num < 11; num++) {
-				document.getElementById('dice' + num).style.display = 'none';
+				getElem('dice' + num).style.display = 'none';
 			}
 			if (diceRolls.length != 0) {
 				editInner('turnCurDiceText', diceRolls[0]);
@@ -849,53 +855,55 @@ function turnItem (item) {
 			break;
 
 		case 'Hex':
-			document.getElementById('turnCurDice').src = 'img/shortcut/mpds/diceblock.png';
-			document.getElementById('itemImg').src = 'img/hex.png';
+			getElem('turnCurDice').src = 'img/shortcut/mpds/diceblock.png';
+			getElem('itemImg').src = 'img/hex.png';
 			shortcutNotif(getCharName(orderCurPlayer) + ' placed a hex.');
 			break;
 
 		case 'Mushroom':
-			document.getElementById('itemImg').src = 'img/shortcut/smp/mushroom.png';
+			getElem('itemImg').src = 'img/shortcut/smp/mushroom.png';
 			execOnMain('counterButtons', [orderCurPlayer, 'P', 3, 'running']);
+			shortcutNotif(getCharName(orderCurPlayer) + ' used a mushroom.');
 			break;
 
 		case 'GoldMushroom':
-			document.getElementById('itemImg').src = 'img/shortcut/smp/goldmushroom.png';
+			getElem('itemImg').src = 'img/shortcut/smp/goldmushroom.png';
 			execOnMain('counterButtons', [orderCurPlayer, 'P', 5, 'running']);
+			shortcutNotif(getCharName(orderCurPlayer) + ' used a golden mushroom.');
 			break;
 
 		case 'PoisonMushroom':
-			document.getElementById('itemImg').src = 'img/shortcut/smp/poisonmushroom.png';
-			editInner('itemEventSpan', '<span class="settingsText"> Who should get the poison mushroom? </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="itemEvent(\'poison\', [1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="itemEvent(\'poison\', [2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="itemEvent(\'poison\', [3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="itemEvent(\'poison\', [4])">');
+			getElem('itemImg').src = 'img/shortcut/smp/poisonmushroom.png';
+			editInner('itemEventSpan', '<span> Who should get the poison mushroom? </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="itemEvent(\'poison\', [1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="itemEvent(\'poison\', [2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="itemEvent(\'poison\', [3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="itemEvent(\'poison\', [4])">');
 			break;
 
 		case 'GoldDrink':
-			document.getElementById('itemImg').src = 'img/shortcut/smp/golddrink.png';
+			getElem('itemImg').src = 'img/shortcut/smp/golddrink.png';
 			break;
 
 		case 'PeepaBell':
-			document.getElementById('itemImg').src = 'img/shortcut/smp/peepabell.png';
+			getElem('itemImg').src = 'img/shortcut/smp/peepabell.png';
 			break;
 
 		case 'Coinado':
-			document.getElementById('itemImg').src = 'img/shortcut/smp/coinado.png';
-			editInner('itemEventSpan', '<span class="settingsText"> Select the amount of coins: <select id="coinadoSelect"> <option value="5">5</option> <option value="6">6</option> <option value="7">7</option> <option value="8">8</option> <option value="9">9</option> <option value="10">10</option> </select> and your rival: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="itemEvent(\'coinado\', [1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="itemEvent(\'coinado\', [2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="itemEvent(\'coinado\', [3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="itemEvent(\'coinado\', [4])"> <button style="position: relative; top: -22px;" onclick="itemEvent(\'coinado\', [\'start\'])"> Start! </button>');
-				document.getElementById('itemEventSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
+			getElem('itemImg').src = 'img/shortcut/smp/coinado.png';
+			editInner('itemEventSpan', '<span> Select the amount of coins: <select id="coinadoSelect"> <option value="5">5</option> <option value="6">6</option> <option value="7">7</option> <option value="8">8</option> <option value="9">9</option> <option value="10">10</option> </select> and your rival: </span> <br> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[1] + '.png" class="chooseImg" onclick="itemEvent(\'coinado\', [1])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[2] + '.png" class="chooseImg" onclick="itemEvent(\'coinado\', [2])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[3] + '.png" class="chooseImg" onclick="itemEvent(\'coinado\', [3])"> <img src="img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[4] + '.png" class="chooseImg" onclick="itemEvent(\'coinado\', [4])"> <button style="position: relative; top: -22px;" onclick="itemEvent(\'coinado\', [\'start\'])"> Start! </button>');
+				getElem('itemEventSpan').children[orderCurPlayer + 1].style.visibility = 'hidden';
 			break;
 
 		case 'DuelGlove':
-			document.getElementById('itemImg').src = 'img/shortcut/smp/duelglove.png';
+			getElem('itemImg').src = 'img/shortcut/smp/duelglove.png';
 			break;
 
 		case 'AllyPhone':
-			document.getElementById('itemImg').src = 'img/shortcut/smp/allyphone.png';
+			getElem('itemImg').src = 'img/shortcut/smp/allyphone.png';
 			getAlly();
 			break;
 
 		default:
-			document.getElementById('turnCurDice').src = 'img/shortcut/mpds/diceblock.png';
-			document.getElementById('itemImg').src = 'img/question.png';
-			document.getElementById('item' + item).classList.add('selected');
+			getElem('turnCurDice').src = 'img/shortcut/mpds/diceblock.png';
+			getElem('itemImg').src = 'img/question.png';
+			getElem('item' + item).classList.add('selected');
 			shortcutNotif(getCharName(orderCurPlayer) + ' used a misc item.');
 
 			if (diceRolls.length != 0) {
@@ -905,7 +913,7 @@ function turnItem (item) {
 			}
 			diceCursor = 0;
 	}
-		document.getElementById('item' + item).classList.add('selected');
+		getElem('item' + item).classList.add('selected');
 
 	if (activeItem == '' || activeItem == undefined) {
 		if (item == 'Hex') {
@@ -926,7 +934,7 @@ var statusEffects = {
 var itemEventState = [];
 /*
 * Events for items.
-* 
+*
 * @param {string} item What item.
 * @param {array} attr Required attributes to calculate stuff.
 */
@@ -958,7 +966,7 @@ function itemEvent (item, attr) {
 			break;
 		case 'coinado':
 			if (isNaN(attr[0]) === false) {
-				var elems = document.getElementById('itemEventSpan').children;
+				var elems = getElem('itemEventSpan').children;
 				removeSelected(elems);
 				elems[attr[0] + 1].classList.add('selected');
 				itemEventState = ['coinado', attr[0]];
@@ -986,7 +994,7 @@ var activeHexChar;
 var hexCoins;
 /*
 * Activate hex.
-* 
+*
 * @param {string/number} hex Number if player should be changed - string if hex should be executed.
 */
 function turnHex (hex) {
@@ -1045,13 +1053,13 @@ function turnHex (hex) {
 	}
 
 	if (activeHex == hex) { //stop function if the same hex is selected
-		document.getElementById(hex).classList.remove('selected');
+		getElem(hex).classList.remove('selected');
 		activeHex = undefined;
 		return;
 	}
 
 	if (isNaN(hex) == false) {
-		var elems = document.getElementById('turnHexCharSelection').children;
+		var elems = getElem('turnHexCharSelection').children;
 		for (var num = 2; num < elems.length; num++) {
 			elems[num].setAttribute('onclick', 'turnHex(' + (num - 1) + ')');
 			elems[num].classList.remove('selected');
@@ -1060,11 +1068,11 @@ function turnHex (hex) {
 		elems[hex + 1].classList.add('selected');
 		activeHexChar = hex;
 	} else {
-		elems = document.getElementById('turnHexSelection').children;
+		elems = getElem('turnHexSelection').children;
 		for (var num = 0; num < elems.length; num++) {
 			elems[num].classList.remove('selected');
 		}
-		document.getElementById(hex).classList.add('selected');
+		getElem(hex).classList.add('selected');
 		activeHex = hex;
 	}
 

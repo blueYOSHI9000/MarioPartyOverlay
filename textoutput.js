@@ -1,6 +1,6 @@
 /*
 * Returns the correct name of a character.
-* 
+*
 * @param {string} character The shortened name of the character.
 */
 function getCharName (character) {
@@ -55,7 +55,7 @@ function textOutput () {
 
 	var joinString = getValue('toSeperation');
 
-	if (getValue('toUseActive') == false) {
+	if (getValue('toUseActive') === false) {
 		var toCounters = getValue('toCounters').split(', ');
 		var counterNames = getValue('toOutput').split(', ');
 	} else {
@@ -65,28 +65,37 @@ function textOutput () {
 		toCounters.push('turns');
 		counterNames.push('Turns');
 
-		if (getValue('coinStarOnOff') == true) {
+		if (getValue('coinStarOnOff') === true) {
 			toCounters.push('coinstar');
 			counterNames.push('Coin Star');
 		}
 
+		var str;
 		for (let num = 0; num < counters.length; num++) {
-			if (getValue(counters[num] + 'OnOff') == true) {
+			if (getValue(counters[num] + 'OnOff') === true) {
+
+				str = undefined;
 				toCounters.push(countersUp[num]);
 
-				switch (countersUp[num]) {
-					case 'RedSpace':
-						counterNames.push('Red Space');
-						break;
-					case 'FriendSpace':
-						counterNames.push('Friendship');
-						break;
-					case 'SpinSpace':
-						counterNames.push('Spin');
-						break;
-					default:
-						counterNames.push(countersUp[num]);
+				if (curGame != 'all')
+					str = counterNameList[curGame][counters[num]];
+
+				if (str === undefined) {
+					switch (countersUp[num]) {
+						case 'RedSpace':
+							str = 'Red Space';
+							break;
+						case 'FriendSpace':
+							str = 'Friendship';
+							break;
+						case 'SpinSpace':
+							str = 'Spin';
+							break;
+						default:
+							str = countersUp[num];
+					}
 				}
+				counterNames.push(str);
 			}
 		}
 	}
@@ -150,7 +159,7 @@ function textOutput () {
 					toCounters[num] = 'FriendSpace';
 				}
 
-				if (getValue('toBonusOnly') == true) {
+				if (getValue('toBonusOnly') === true) {
 					var result = [];
 					var resultNum = [];
 
@@ -206,7 +215,7 @@ function textOutput () {
 								forResult.push(counterNames[num] + ': ' + result[0] + ' & ' + result[1] + ' & ' + result[2] + ' & ' + result[3] + ' ' + resultNum[0].replace(/ /g,''));
 								break;
 						}
-						
+
 
 						output[num] = forResult.join('');
 						forResult = [];
@@ -220,11 +229,12 @@ function textOutput () {
 
 	var outputString = output.join(joinString);
 
-	var outputElement = document.getElementById('textOutput');
+	var outputElement = getElem('textOutput');
 	outputElement.value = outputString;
 	outputElement.select();
 	outputElement.focus();
 	document.execCommand("copy");
+	saveReloadAnimation('copy');
 
 	console.log('[MPO Text Output] ' + outputString);
 
@@ -232,7 +242,7 @@ function textOutput () {
 
 /*
 * Checks if the counters inserted in the settings for the text output feature are correct, if not it removes them.
-* 
+*
 * @param {boolean} nameonly If true it won't check if everything inside the counters textarea is correct.
 */
 function textOutputTest (nameonly) {
@@ -255,28 +265,28 @@ function textOutputTest (nameonly) {
 					if (toCounters[num] == 'Friendship') {
 						toCounters[num] = 'FriendSpace';
 					}
-					if (document.getElementById('p1' + toCounters[num] + 'Text')) {} else {
+					if (getElem('p1' + toCounters[num] + 'Text')) {} else {
 						error.push(toCounters[num]);
 					}
 					break;
-			} 
+			}
 		}
 	}
 
 	if (error.length == 1) {
 		editInner('textOutputWarning', '"' + error.join(', ') + '" isn\'t a valid counter.');
-		document.getElementById('textOutputWarning').style = 'visibility: visible;';
+		getElem('textOutputWarning').style = 'visibility: visible;';
 	} else if (error.length > 1) {
 		editInner('textOutputWarning', '"' + error.join(', ') + '" aren\'t valid counters.');
-		document.getElementById('textOutputWarning').style = 'visibility: visible;';
+		getElem('textOutputWarning').style = 'visibility: visible;';
 	} else if (toCounters.length > counterNames.length) {
 		editInner('textOutputWarning', 'Counter name(s) missing.');
-		document.getElementById('textOutputWarning').style = 'visibility: visible;';
+		getElem('textOutputWarning').style = 'visibility: visible;';
 	} else if (toCounters.length < counterNames.length) {
 		editInner('textOutputWarning', 'Too many counter counterNames.');
-		document.getElementById('textOutputWarning').style = 'visibility: visible;';
+		getElem('textOutputWarning').style = 'visibility: visible;';
 	} else {
-		document.getElementById('textOutputWarning').style = 'visibility: hidden;';
+		getElem('textOutputWarning').style = 'visibility: hidden;';
 	}
 }
 
@@ -285,9 +295,9 @@ function textOutputTest (nameonly) {
 */
 function updateCounterInput () {
 	if (getValue('toUseActive') == false) {
-		document.getElementById('customTOCounters').style.display = 'block';
+		getElem('customTOCounters').style.display = 'block';
 	} else {
-		document.getElementById('customTOCounters').style.display = 'none';
+		getElem('customTOCounters').style.display = 'none';
 		editValue('toUseActive', true);
 	}
 }
