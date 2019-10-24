@@ -460,8 +460,7 @@
 					<span class="settingsTitle"> Features </span> <br>
 					<label for="autoPopout"> <span> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="editValueOnBoth(this.id, this.checked)"> </label> <br> <br>
 
-					<!-- Doesnt work -->
-					<span style="display: none;"> <label for="useSW"> Allow this site to run offline: </label> <input type="checkbox" id="useSW" onchange="//editValueOnBoth(this.id, this.checked);changeSettings('runSW')" checked> <span class="note"> This allows you to install this site and run it offline, uses about 4MB to do so. <br> New updates to this site might not immediately load with this activated. <br> Deactivating this will remove those 4MB but also removes the ability to run it offline (even when installed). </span> <br> <br> </span>
+					<span class="advanced"> <label for="useSW"> Allow this site to run offline: </label> <input type="checkbox" id="useSW" onchange="editValueOnBoth(this.id, this.checked);changeSettings('runSW')" checked> <span class="note"> This allows you to install this site and run it offline, uses about 4MB to do so. <br> New updates to this site might not immediately load with this activated. <br> Deactivating this will remove those 4MB but also removes the ability to run it offline (even when installed). </span> <br> <br> </span>
 
 					<span class="advanced"> <label for="enableHighlight"> <span> Enable counter highlighting: </span> </label> <input type="checkbox" id="enableHighlight" onchange="editValueOnBoth(this.id, + this.checked);changeSettings('resetHighlights')" checked> <input type="color" onchange="editValueOnBoth(this.id, this.value);changeSettings('callHighlight', [false, true])" value="#FF0000" id="highlightColor"> <br> <br> </span>
 
