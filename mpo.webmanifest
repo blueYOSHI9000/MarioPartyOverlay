@@ -3,7 +3,7 @@
   "short_name": "MPO",
   "description": "An extensive and easy to use 'Bonus Star' tracker for all Mario Party games! With included greenscreen for livestreams!",
   "display": "fullscreen",
-  "start_url": "/",
+  "start_url": "/MarioPartyOverlay/",
   "theme_color": "#4598fd",
   "background_color": "#0060d7",
   "icons": [

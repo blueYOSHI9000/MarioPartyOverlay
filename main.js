@@ -1256,7 +1256,7 @@ function startSW () {
 		console.warn('[MPO] Offline can\'t be used with localhost or from a local file.');
 		return;
 	}
-	navigator.serviceWorker && navigator.serviceWorker.register('./sw.js', {scope: '/MarioPartyOverlay'}).then(function(registration) {
+	navigator.serviceWorker && navigator.serviceWorker.register('./sw.js').then(function(registration) {
 		console.log('[MPO] Service Worker added.');
 	});
 }
