@@ -10,7 +10,6 @@ self.addEventListener('install', function(e) {
   e.waitUntil(
     caches.open('mpo-cache').then(function(cache) {
       return cache.addAll([
-        '/',
         '/assist-core.js',
         '/assist-minigame.js',
         '/assist-misc.js',
