@@ -1273,6 +1273,7 @@ function unloadSW () {
 * Starts or unloads service workers depending on if the option is on or not.
 */
 function runSW () {
+	return;
 	if (popout === true) {
 		return;
 	}
