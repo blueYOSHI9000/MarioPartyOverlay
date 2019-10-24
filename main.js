@@ -1252,6 +1252,10 @@ function mpoSettingsPopout () {
 * Loads Service Worker for offline use.
 */
 function startSW () {
+	if (location.hostname === 'localhost' || location.origin === 'file://') {
+		console.warn('[MPO] Offline can\'t be used with localhost or from a local file.');
+		return;
+	}
 	navigator.serviceWorker && navigator.serviceWorker.register('./sw.js').then(function(registration) {
 		console.log('[MPO] Service Worker added.');
 	});
