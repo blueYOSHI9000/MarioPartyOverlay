@@ -452,13 +452,13 @@ noscript > span {
 	width: 100%;
 	height: 50px;
     margin: 5px 0px;
+	display: none;
 }
 #nvGameAll {
 	font-family: 'Mario';
 	font-size: 23px;
 	position: relative;
 	top: 4px;
-	display: none;
 }
 #nvGamesContainer {
 	margin: 5px;

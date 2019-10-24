@@ -194,6 +194,10 @@ function changeCharSelectionIcons () {
 			getElem(charList.all[num] + '4').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
 		}
 	}
+	updateNavbar(1);
+	updateNavbar(2);
+	updateNavbar(3);
+	updateNavbar(4);
 }
 
 /*

@@ -396,6 +396,16 @@ function prepareMPOBackup () {
 		} else {
 			getElem('siteError').style.display = 'block';
 		}
+		updateNvGame();
+		updateNvChar();
+		updateNavbar(1);
+		updateNavbar(2);
+		updateNavbar(3);
+		updateNavbar(4);
+
+		var sheet = window.document.styleSheets[0];
+		sheet.insertRule('#settings {-webkit-transition: visibility .3s, opacity .3s; -moz-transition: visibility .3s, opacity .3s; transition: visibility .3s, opacity .3s;}', sheet.cssRules.length);
+
 		if (popout != true) {
 			callDisplayOnOff();
 		}
