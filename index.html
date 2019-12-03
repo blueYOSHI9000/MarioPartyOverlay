@@ -339,7 +339,7 @@
 
 					<span style="margin-left: 10px;">
 						<input type="radio" name="gameSelector" id="all" value="all" onchange="changeSettings('changeGame', ['all'])" checked>
-						<label class="charSelectorLabel all gameLabel" for="all">All </label>
+						<label class="charSelectorLabel all gameLabel" for="all">      </label>
 					</span>
 					<span class="flexAuto"></span>
 
@@ -390,53 +390,6 @@
 						<label class="charSelectorLabel mp8 gameLabel" for="mp8"> </label>
 					</span>
 					<span class="flexAuto"></span>
-
-					<span class="nowrap">
-						<input type="radio" name="gameSelector" id="mp9" value="mp9" onchange="changeSettings('changeGame', ['mp9'])">
-						<label class="charSelectorLabel mp9 gameLabel" for="mp9"> </label>
-					</span>
-					<span class="flexAuto"></span>
-
-					<span class="nowrap">
-						<input type="radio" name="gameSelector" id="mp10" value="mp10" onchange="changeSettings('changeGame', ['mp10'])">
-						<label class="charSelectorLabel mp10 gameLabel" for="mp10"> </label>
-					</span>
-					<span class="flexAuto"></span>
-
-					<span class="nowrap">
-						<input type="radio" name="gameSelector" id="mpa" value="mpa" onchange="changeSettings('changeGame', ['mpa'])">
-						<label class="charSelectorLabel mpa gameLabel" for="mpa"> </label>
-					</span>
-					<span class="flexAuto"></span>
-
-					<span class="nowrap">
-						<input type="radio" name="gameSelector" id="mpds" value="mpds" onchange="changeSettings('changeGame', ['mpds'])">
-						<label class="charSelectorLabel mpds gameLabel" for="mpds"> </label>
-					</span>
-					<span class="flexAuto"></span>
-
-					<span class="nowrap">
-						<input type="radio" name="gameSelector" id="mpit" value="mpit" onchange="changeSettings('changeGame', ['mpit'])">
-						<label class="charSelectorLabel mpit gameLabel" for="mpit"> </label>
-					</span>
-					<span class="flexAuto"></span>
-
-					<span class="nowrap">
-						<input type="radio" name="gameSelector" id="mpsr" value="mpsr" onchange="changeSettings('changeGame', ['mpsr'])">
-						<label class="charSelectorLabel mpsr gameLabel" for="mpsr"> </label>
-					</span>
-					<span class="flexAuto"></span>
-
-					<span class="nowrap">
-						<input type="radio" name="gameSelector" id="mptt100" value="mptt100" onchange="changeSettings('changeGame', ['mptt100'])">
-						<label class="charSelectorLabel mptt100 gameLabel" for="mptt100"> </label>
-					</span>
-					<span class="flexAuto"></span>
-
-					<span class="nowrap">
-						<input type="radio" name="gameSelector" id="smp" value="smp" onchange="changeSettings('changeGame', ['smp'])">
-						<label class="charSelectorLabel smp gameLabel" for="smp"> </label>
-					</span>
 				</div>
 			</div>
 			<div id="settingsHeaderBorder" class="border"></div>
@@ -499,6 +452,7 @@
 
 					<span class="settingsTitle"> Interface </span> <br>
 					<span> Background: </span> <button id="themeDefault" class="themeButtons" onclick="changeSettings('changeTheme', ['default'])"></button> <button id="themeCastle" class="themeButtons" onclick="changeSettings('changeTheme', ['castle'])"></button> <button id="themeNsmbw" class="themeButtons" onclick="changeSettings('changeTheme', ['nsmbw'])"></button> <button id="themeToadroad" class="themeButtons" onclick="changeSettings('changeTheme', ['toadroad'])"></button> <br>
+					<label for="greenscreen"> <span> Enable greenscreen: </span> </label> <input type="checkbox" onchange="editValueOnBoth(this.id, this.checked);changeSettings('changeTheme')" id="greenscreen"> <input type="color" onchange="editValueOnBoth(this.id, this.value);changeSettings('changeBGColor', ['bgColor'])" value="#0000ff" id="bgColor"><br>
 
 					<span style="position: relative; top: -13px;"> Default icon style: </span>
 						<span class="charSelector" id="iconSelector">
@@ -528,7 +482,6 @@
 					</span>
 
 					<span class="advanced">
-						<label for="greenscreen"> <span> Enable greenscreen: </span> </label> <input type="checkbox" onchange="editValueOnBoth(this.id, this.checked);changeSettings('changeTheme')" id="greenscreen"> <input type="color" onchange="editValueOnBoth(this.id, this.value);changeSettings('changeBGColor', ['bgColor'])" value="#0000ff" id="bgColor"><br>
 						<span> Change text color: </span> <input type="color" id="textColor" value="#ffffff" onchange="editValueOnBoth(this.id, this.value);changeSettings('changeTextColor', [this.id])"> <br> <br>
 
 						<label for="enableAnimation"> <span> Enable counter animation: </span> </label> <input type="checkbox" id="enableAnimation" onchange="editValueOnBoth(this.id, this.checked)" checked> <br> <br>
@@ -682,7 +635,7 @@
 					</div>
 					<span id="hiddenCountersText"></span> <br> <br>
 
-					<span class="settingsTitle">In-game counters</span> <br>
+					<span class="settingsTitle">Important</span> <br>
 					<span class="note" style="white-space: nowrap;"> (Useful to completely replace the in-game display - Highlighting does not affect these counters) </span> <br>
 					<div class="counterSelection">
 						<span class="relative"> <label for="starsOnOff" id="starsOnOffText" class="counterOnOffText">Stars:</label> <input type="checkbox" id="starsOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['stars'])"> <label for="starsOnOff" class="charSelectorLabel counterOnOff starsOnOff"></label> </span>
