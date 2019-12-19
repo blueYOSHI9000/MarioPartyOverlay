@@ -313,9 +313,6 @@ function updateNvChar () { //actually use this now
 			addNvChar('yoshi');
 			addNvChar('wario');
 			cElem('br', 'nvCharList');
-			var brElem = cElem('span', 'nvCharList'); //to move the bottom row to the center
-			brElem.style.display = 'inline-block';
-			brElem.style.width = '39.5px';
 			addNvChar('daisy');
 			addNvChar('waluigi');
 			addNvChar('toad');
