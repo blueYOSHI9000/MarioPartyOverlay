@@ -336,7 +336,6 @@ function updateNvChar () { //actually use this now
 			addNvChar('boo');
 			addNvChar('koopakid');
 			addNvChar('toadette');
-
 			break;
 		case 'mp7':
 			addNvChar('mario');
