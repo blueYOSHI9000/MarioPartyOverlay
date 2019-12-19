@@ -309,15 +309,18 @@ function updateNvChar () { //actually use this now
 		case 'mp5':
 			addNvChar('mario');
 			addNvChar('luigi');
-			addNvChar('yoshi');
 			addNvChar('peach');
+			addNvChar('yoshi');
+			addNvChar('wario');
 			cElem('br', 'nvCharList');
 			var brElem = cElem('span', 'nvCharList'); //to move the bottom row to the center
 			brElem.style.display = 'inline-block';
 			brElem.style.width = '39.5px';
-			addNvChar('wario');
 			addNvChar('daisy');
 			addNvChar('waluigi');
+			addNvChar('toad');
+			addNvChar('boo');
+			addNvChar('koopakid');
 			break;
 		case 'mp6':
 			addNvChar('mario');
@@ -376,12 +379,14 @@ function updateNvChar () { //actually use this now
 			addNvChar('peach');
 			addNvChar('daisy');
 			addNvChar('wario');
-			cElem('br', 'nvCharList');
 			addNvChar('waluigi');
+			cElem('br', 'nvCharList');
 			addNvChar('yoshi');
 			addNvChar('birdo');
 			addNvChar('toad');
 			addNvChar('koopa');
+			addNvChar('shyguy');
+			addNvChae('kamek');
 			break;
 		case 'mp10':
 			addNvChar('mario');
@@ -390,13 +395,13 @@ function updateNvChar () { //actually use this now
 			addNvChar('toad');
 			addNvChar('yoshi');
 			addNvChar('toadette');
-			addNvChar('spike');
 			cElem('br', 'nvCharList');
 			addNvChar('wario');
 			addNvChar('waluigi');
 			addNvChar('daisy');
 			addNvChar('rosalina');
 			addNvChar('dk');
+			addNvChar('spike');
 			break;
 		case 'mpa':
 			addNvChar('mario');
