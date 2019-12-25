@@ -708,6 +708,7 @@ noscript > span {
 	max-height: 100%;
 	top: 50%;
 	left: 50%;
+-webkit-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
 	background: linear-gradient(#ccccccc4, #138bd2eb);
 	padding: 20px;
@@ -880,6 +881,11 @@ noscript > span {
 	width: 100%;
 	height: 100%;
 	background-color: rgba(0, 0, 0, 0.35);
+
+-webkit-font-smoothing: subpixel-antialiased;
+		font-smoothing: subpixel-antialiased;
+-webkit-transform: scale(2) zoom: 0.5;
+		transform: scale(2) zoom: 0.5;
 
 	visibility: hidden;
 	opacity: 0;
@@ -1704,9 +1710,6 @@ noscript > span {
 }
 
 /* == mobile version == */
-button {
-	font-size: 17px;
-}
 #textOutput {
 	position: absolute;
 	left: -9999px;

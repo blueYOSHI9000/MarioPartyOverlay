@@ -67,18 +67,19 @@ function showNavBar (elem) {
 			updateAmount();
 			break;
 		case 'nvSettings':
+			if (shiftKeyVar === true) {
+				elem.classList.remove('nvSelected');
+				activeNv = null;
+				textOutput(true);
+			} //dont return in case both shift an ctrl are held
 			if (ctrlKeyVar === true) {
 				elem.classList.remove('nvSelected');
 				activeNv = null;
 				openSettings();
 				return;
 			}
-			if (shiftKeyVar === true) {
-				elem.classList.remove('nvSelected');
-				activeNv = null;
-				textOutput(true);
+			if (shiftKeyVar === true)
 				return;
-			}
 
 			if (activeNv != 'navbarSettings') {
 				activeNv = 'navbarSettings';
@@ -95,13 +96,13 @@ function showNavBar (elem) {
 	nvElem.style.overflow = '';
 
 	var offWidth = nvElem.offsetWidth; //get width of squished element
-	nvElem.style.width = 'fit-content'; //use fit-content so it expands to its supposed size
+	nvElem.style.width = 'max-content'; //use max-content so it expands to its supposed size
 
-	var rect = nvElem.getBoundingClientRect();
+	var rect = nvElem.getBoundingClientRect(); //get height/width and position of element
 	var finalWidth = nvElem.offsetWidth + 1; //get new width of its full size
 	var winWidth = window.innerWidth;
 
-	if (rect.right > winWidth) { //check if parts of the element is offscreen
+	if (rect.right + 1 > winWidth) { //check if parts of the element is offscreen
 		if (finalWidth > winWidth) { //when element is bigger than screen
 			nvElem.style.left = 0;
 			nvElem.style.overflow = 'auto hidden';
@@ -110,6 +111,11 @@ function showNavBar (elem) {
 
 			nvElem.style.height = nvElem.children[0].offsetHeight + 12 + 'px';
 		} else { //when element is just offscreen
+			//following line is somehow fucked in firefox
+			//one line in showNvChar() also has something to do with this (getElem('navbarChars').style.left = elem.getBoundingClientRect().left + 'px';)
+			//firefox produces different results if either of those lines are stepped through
+			//without stepping through character navbar dropdowns won't move to other players
+			//chrome gives same results regardless if debugger or not
 			nvElem.style.left = winWidth - finalWidth + 'px';
 			nvElem.style.height = nvElem.children[0].offsetHeight + 'px';
 		}
@@ -178,6 +184,7 @@ function closeNavbar () {
 	getElem('navbarGames').style.height = 0;
 	getElem('navbarSettings').style.height = 0;
 	getElem('navbarChars').style.width = '';
+	getElem('navbarChars').children[0].style.width = '';
 	getElem('navbarGames').style.width = '';
 	getElem('navbarSettings').style.width = '';
 
@@ -252,7 +259,7 @@ function showNvChar (elem) {
 		getElem('navbarChars').classList.add('nvContentLeftTransition');
 	}
 
-	getElem('navbarChars').style.left = elem.getBoundingClientRect().left + 'px';
+	getElem('navbarChars').style.left = elem.getBoundingClientRect().left + 'px'; //view comment at the end of showNavBar()
 
 	var player = elem.id[elem.id.length - 1];
 	getElem('navbarChars').setAttribute('player', player);
@@ -335,7 +342,6 @@ function updateNvChar () { //actually use this now
 			addNvChar('toad');
 			addNvChar('boo');
 			addNvChar('koopakid');
-			addNvChar('toadette');
 			break;
 		case 'mp7':
 			addNvChar('mario');

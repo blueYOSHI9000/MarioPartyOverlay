@@ -198,6 +198,7 @@ function changeCharSelectionIcons () {
 	updateNavbar(2);
 	updateNavbar(3);
 	updateNavbar(4);
+	updateNvChar();
 }
 
 /*
@@ -383,7 +384,7 @@ function changeGame (game) {
 	changeComImg();
 
 	updateNvGame();
-	updateNvChar();
+	//updateNvChar(); //already called in changeCharSelectionIcons()
 	updateNavbar(1);
 	updateNavbar(2);
 	updateNavbar(3);

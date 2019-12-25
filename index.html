@@ -35,6 +35,7 @@
 	<meta name="msapplication-TileColor" content="#2d89ef">
 	<meta name="theme-color" content="#4598fd">
 
+	<link rel="stylesheet" href="buttons.css">
 	<link rel="stylesheet" href="style.css">
 </head>
 
@@ -123,7 +124,7 @@
 				<span onclick="getElem('nvSettingsConfirm').style.display = 'none';getElem('nvSettingsReset').style.display = 'block';" style="-webkit-text-stroke: unset; text-stroke: unset;"> Cancel </span>
 			</div>
 			<div class="nvSettingsItem" onclick="textOutput(true);closeNavbar()"> Copy Text Output </div>
-			<div class="nvSettingsItem" onclick="openSettings();changeSettings('showHideSettings', ['tutorial']);closeNavbar()"> Credits </div>
+			<div class="nvSettingsItem" onclick="openSettings();changeSettings('showHideSettings', ['tutorial']);getElem('creditsBorder').scrollIntoView({block: 'start'});closeNavbar()"> Credits </div>
 			<div class="nvSettingsItem" onclick="openSettings();closeNavbar()" style="color: #dedede;"> Open Settings </div>
 		</div>
 	</div>
@@ -460,7 +461,7 @@
 					<span class="settingsTitle"> Features </span> <br>
 					<label for="autoPopout"> <span> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="editValueOnBoth(this.id, this.checked)"> </label> <br> <br>
 
-					<span class="advanced"> <label for="useSW"> Allow this site to run offline: </label> <input type="checkbox" id="useSW" onchange="editValueOnBoth(this.id, this.checked);changeSettings('runSW')" checked> <br> <span class="note"> This allows the site to be installed which allows it to be run completely offline, uses about 5MB. <span id="noOffline" style="display: none;" class="error"> <br> This can't be used when run from a local file or through localhost. </span> </span> <br> <br> </span>
+					<span class="advanced"> <label for="useSW"> Allow this site to run offline: </label> <input type="checkbox" id="useSW" onchange="editValueOnBoth(this.id, this.checked);changeSettings('runSW')" checked> <br> <span class="note"> This allows the site to be installed which allows it to be run completely offline, uses about 5MB. <span id="noOffline" style="display: none;" class="error"> <br> This can't be used when ran from a local file or through localhost. </span> </span> <br> <br> </span>
 					<script type="text/javascript">
 						if (location.hostname === 'localhost' || location.origin === 'file://') {
 							document.getElementById('noOffline').style.display = 'unset';
@@ -499,6 +500,9 @@
 
 					<span class="settingsTitle"> Interface </span> <br>
 					<span> Background: </span> <button id="themeDefault" class="themeButtons" onclick="changeSettings('changeTheme', ['default'])"></button> <button id="themeCastle" class="themeButtons" onclick="changeSettings('changeTheme', ['castle'])"></button> <button id="themeNsmbw" class="themeButtons" onclick="changeSettings('changeTheme', ['nsmbw'])"></button> <button id="themeToadroad" class="themeButtons" onclick="changeSettings('changeTheme', ['toadroad'])"></button> <br>
+						<label for="greenscreen"> <span> Enable greenscreen: </span> </label> <input type="checkbox" onchange="editValueOnBoth(this.id, this.checked);changeSettings('changeTheme')" id="greenscreen"> <input type="color" onchange="editValueOnBoth(this.id, this.value);changeSettings('changeBGColor', ['bgColor'])" value="#0000ff" id="bgColor"> <br> <br>
+
+						<span class="advanced"> <span> Change text color: </span> <input type="color" id="textColor" value="#ffffff" onchange="editValueOnBoth(this.id, this.value);changeSettings('changeTextColor', [this.id])"> <br> <br> </span>
 
 					<span style="position: relative; top: -13px;"> Default icon style: </span>
 						<span class="charSelector" id="iconSelector">
@@ -528,8 +532,6 @@
 					</span>
 
 					<span class="advanced">
-						<label for="greenscreen"> <span> Enable greenscreen: </span> </label> <input type="checkbox" onchange="editValueOnBoth(this.id, this.checked);changeSettings('changeTheme')" id="greenscreen"> <input type="color" onchange="editValueOnBoth(this.id, this.value);changeSettings('changeBGColor', ['bgColor'])" value="#0000ff" id="bgColor"><br>
-						<span> Change text color: </span> <input type="color" id="textColor" value="#ffffff" onchange="editValueOnBoth(this.id, this.value);changeSettings('changeTextColor', [this.id])"> <br> <br>
 
 						<label for="enableAnimation"> <span> Enable counter animation: </span> </label> <input type="checkbox" id="enableAnimation" onchange="editValueOnBoth(this.id, this.checked)" checked> <br> <br>
 
@@ -860,14 +862,17 @@
 
 					<b>All characters, products and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them. <br> Mario Party is a registered trademark of Nintendo. </b> <br> <br>
 
-					<span style="line-height: 27px;"> Created by <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI</a> <br>
+					<span style="line-height: 27px;"> Created by <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI</a> with contributions from <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors" class="settingsLink" rel="noopener" target="_blank">others</a> <br>
+
 					All Mario Party related icons were created or inspired from officially published media by Nintendo. <br>
 					Mario Party related icons (re)created, edited or ripped by <a href="https://www.spriters-resource.com/submitter/Anonymous/" class="settingsLink" rel="noopener" target="_blank">Anonymous</a>, <a href="https://www.mariowiki.com/User:Arend" class="settingsLink" rel="noopener" target="_blank">Arend</a>, <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI</a>, <a href="https://www.spriters-resource.com/submitter/xX-CamTro-Xx/" class="settingsLink" rel="noopener" target="_blank">CamTro</a>, <a href="https://www.spriters-resource.com/submitter/FieryExplosion/" class="settingsLink" rel="noopener" target="_blank">FieryExplosion</a>, <a href="https://www.spriters-resource.com/submitter/Kimimaru/" class="settingsLink" rel="noopener" target="_blank">Kimimaru</a>, <a href="https://www.spriters-resource.com/submitter/larsenv/" class="settingsLink" rel="noopener" target="_blank">larsenv</a>, <a href="https://www.spriters-resource.com/submitter/Mario+Gamer/" class="settingsLink" rel="noopener" target="_blank">Mario Gamer</a>, <a href="https://mariopartylegacy.com/" class="settingsLink" rel="noopener" target="_blank">Mario Party Legacy</a>,  <a href="https://www.spriters-resource.com/submitter/Random+Talking+Bush/" class="settingsLink" rel="noopener" target="_blank">Random Talking Bush</a>, <a href="https://twitter.com/Der_RicoDexter" class="settingsLink" rel="noopener" target="_blank">RicoDexter</a>. <br>
 
 					<a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="settingsLink" rel="noopener" target="_blank">Mario Party 9 Font</a> <br>
 					<a href="https://icons8.com/icon/2969/settings" class="settingsLink" rel="noopener" target="_blank">Settings Icon by Icons8</a> <br>
+					<a href="https://codepen.io/ben_jammin/pen/syaCq" class="settingsLink" rel="noopener" target="_blank">Button designs by Benjamin</a> <br>
 					<a href="https://github.com/SortableJS/Sortable" class="settingsLink" rel="noopener" target="_blank"> Sortable.js</a> (enables savefile re-ordering) <br>
-					<a href="https://interactjs.io/" class="settingsLink" rel="noopener" target="_blank"> Interact.js</a> (enables drag 'n' drop) </span>
+					<a href="https://interactjs.io/" class="settingsLink" rel="noopener" target="_blank"> Interact.js</a> (enables drag 'n' drop) </span> <br> <br>
+					<span style="padding-bottom: 3px;"> Mario Party Overlay is licensed under the MIT License. </span>
 				</div>
 			</div>
 
