@@ -1,6 +1,7 @@
 @font-face {
 	font-family: "Mario";
-	src: url("font.ttf");
+	src: url(font.otf) format("opentype"),
+		 url(font.ttf) format("truetype");
 }
 
 
@@ -145,6 +146,9 @@ noscript > span {
 	position: relative;
 	top: -4px;
 }
+.counterBelow100::before {
+	content: 'x';
+}
 .counterDisplay {
 	height: 35px;
 	margin-left: 15px;
@@ -204,14 +208,16 @@ noscript > span {
 	margin-top: 60px;
 	font-size: 30px;
 }
-#curTurnText {
+#curTurnText, #maxTurnText {
 	font-size: 30px;
+	position: relative;
+}
+#curTurnTextContainer {
 	width: 60px;
 	text-align: right;
-	position: absolute;
 }
-#maxTurnText {
-	font-size: 30px;
+.turnTextContainer {
+	position: absolute;
 }
 
 #coinStar {
@@ -897,6 +903,10 @@ noscript > span {
 	position: absolute;
 	border: none;
 	background-color: #F3F3F3;
+
+	width: calc(100% - 40px) !important;
+	height: calc(100% - 40px) !important;
+	min-width: unset !important;
 }
 #settingsContent {
     width: 51%;

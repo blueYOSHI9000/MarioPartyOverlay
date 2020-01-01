@@ -6,6 +6,25 @@ var ga = { //global actions
 };
 
 /*
+* Gets current stats for a specific counter.
+*
+* @param {string} counter The counter.
+* @param {number} player The player - optional for coin star/turns.
+* @param {boolean} returnElem Return element instead of stat.
+*/
+function getStat (counter, player, returnElem) {
+	if (typeof player === 'undefined') {
+		if (returnElem === true)
+			return getElem(capStr(counter, true) + 'Text');
+		return parseInt(getInner(capStr(counter, true) + 'Text'));
+	}
+
+	if (returnElem === true)
+		return getElem('p' + player + capStr(counter) + 'Text');
+	return parseInt(getInner('p' + player + capStr(counter) + 'Text')); //capStr() to make sure it's capitalized - reverse for first two uses
+}
+
+/*
 * Updates the counters.
 *
 * @param {number} player Which player should be updated.
@@ -18,22 +37,23 @@ function counterButtons (player, action, amount, counter) {
 	var result = 0;
 
 	amount = parseInt(amount);
-	if (amount === '') {
+	if (typeof amount != 'number') {
 		amount = 1;
 	}
 
-	if (counter != 'curTurn' && counter != 'maxTurn' && counter != 'coinStar') {
-		counter = counter.charAt(0).toUpperCase() + counter.slice(1);
-		if (isNaN(amount) == true) {
-			result = 0;
-			amount = 0;
-			console.warn('[MPO] Counter was NaN, player: ' + player + ', counter: ' + counter);
-			if (shortcutLoaded === true) {
-				shortcutNotif('Error: ' + counter + ' for player ' + player + ' was NaN', true);
-			}
-		} else {
-			result = parseInt(getInner('p' + player + counter + 'Text'));
+
+	if (isNaN(getStat(counter, player)) === true) { //check if counter is NaN and set it to 0
+		getStat(counter, player, true).innerHTML = 0;
+		console.warn('[MPO] Counter was NaN, player: ' + player + ', counter: ' + counter);
+		if (shortcutLoaded === true) {
+			shortcutNotif('Error: ' + counter + ' for player ' + player + ' was NaN', true);
 		}
+	}
+
+	if (counter != 'curTurn' && counter != 'maxTurn' && counter != 'coinStar') { //regular counters only
+		counter = capStr(counter);
+
+		result = getStat(counter, player);
 
 		if (action == 'P') {
 			result = result + amount;
@@ -48,11 +68,17 @@ function counterButtons (player, action, amount, counter) {
 		} else if (result <= 0) {
 			result = 0;
 		}
+		if (result < 100 && getValue('xBelow100') === true) {
+			getStat(counter, player, true).classList.add('counterBelow100');
+		} else {
+			getStat(counter, player, true).classList.remove('counterBelow100');
+		}
+
 		updateCounter('p' + player + counter + 'Text', result);
 	}
 
-	if (counter == 'coinStar') {
-		result = parseInt(getInner('coinStarText'));
+	if (counter === 'coinStar') {
+		result = getStat('coinStar');
 
 		if (action == 'P') {
 			result = result + amount;
@@ -63,10 +89,10 @@ function counterButtons (player, action, amount, counter) {
 		}
 		coinStar(result);
 
-	} else if (counter == 'curTurn' || counter == 'maxTurn') {
+	} else if (counter === 'curTurn' || counter === 'maxTurn') {
 		turns(counter, amount, action);
 
-	} else if (getValue('enableHighlight') == true && counter != 'coins') {
+	} else if (getValue('enableHighlight') === true && counter != 'coins') { //part of else if because coin star and turns don't need highlighting
 		highlight(counter);
 	}
 
@@ -216,8 +242,8 @@ function updateStars (player, action, amount) {
 * @param {number} player Which player should be updated.
 */
 function updateCoins (player) {
-	var result = parseInt(getInner('p' + player + 'CoinsText'));
-	var coinStar = parseInt(getInner('coinStarText'));
+	var result = getStat('coins', player);
+	var coinStar = getStat('coinStar');
 
 	if (getValue('coinStarOnOff') == true) {
 		if (result == coinStar) {
@@ -252,8 +278,8 @@ function updateCoins (player) {
 * @param {string} action If it should be added, subtracted or set to the amount.
 */
 function turns (counter, amount, action) {
-	var curTurnVar = parseInt(getInner('curTurnText'));
-	var maxTurnVar = parseInt(getInner('maxTurnText'));
+	var curTurnVar = getStat('curTurn');
+	var maxTurnVar = getStat('maxTurn');
 
 	if (action === 'P' && getValue('autoSave') === true && counter === 'curTurn') {
 		backup();
@@ -299,7 +325,7 @@ function turns (counter, amount, action) {
 		maxTurnVar = 95;
 	}
 
-	if (parseInt(getInner(counter + 'Text')) != eval(counter + 'Var')) {
+	if (getStat(counter) != eval(counter + 'Var')) {
 		getElem(counter + 'Text').classList.add('counterAnimation');
 		setTimeout(function () {
 			getElem(counter + 'Text').classList.remove('counterAnimation');

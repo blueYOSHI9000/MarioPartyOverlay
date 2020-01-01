@@ -196,8 +196,8 @@ function startBattle () {
 	console.log('[MPO Shortcut] Start Battle Minigame - Requirement: ' + coinReq + ' - Coins: ' + getInner('p1CoinsText') + ' - ' + getInner('p2CoinsText') + ' - ' + getInner('p3CoinsText') + ' - ' + getInner('p4CoinsText'));
 	battleCoins = 0;
 	for (var num = 1; num < 5; num++) {
-		if (parseInt(getInner('p' + num + 'CoinsText')) < coinReq) {
-			battleCoins = battleCoins + parseInt(getInner('p' + num + 'CoinsText'));
+		if (getStat('coins', num) < coinReq) {
+			battleCoins = battleCoins + getStat('coins', num);
 			execOnMain('counterButtons', [num, 'M', coinReq, 'coins']);
 		} else {
 			battleCoins = battleCoins + coinReq;

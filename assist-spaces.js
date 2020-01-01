@@ -424,13 +424,13 @@ function spaceEvent (space, attr) {
 				spaceEventState[2] = getValue('duelReward');
 				switch (getValue('duelReward')) {
 					case '10coins':
-						if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) < 10) {
-							spaceEventState[4] = parseInt(getInner('p' + orderCurPlayer + 'CoinsText'));
+						if (getStat('coins', orderCurPlayer) < 10) {
+							spaceEventState[4] = getStat('coins', orderCurPlayer);
 						} else {
 							spaceEventState[4] = 10;
 						}
-						if (parseInt(getInner('p' + spaceEventState[1] + 'CoinsText')) < 10) {
-							spaceEventState[5] = parseInt(getInner('p' + spaceEventState[1] + 'CoinsText'));
+						if (getStat('coins', spaceEventState[1]) < 10) {
+							spaceEventState[5] = getStat('coins', spaceEventState[1]);
 						} else {
 							spaceEventState[5] = 10;
 						}
@@ -440,13 +440,13 @@ function spaceEvent (space, attr) {
 						shortcutNotif(getCharName(orderCurPlayer) + ' started a 10 Coin duel with ' + getCharName(spaceEventState[1]) + ', select the winner.');
 						break;
 					case '20coins':
-						if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) < 20) {
-							spaceEventState[4] = parseInt(getInner('p' + orderCurPlayer + 'CoinsText'));
+						if (getStat('coins', orderCurPlayer) < 20) {
+							spaceEventState[4] = getStat('coins', orderCurPlayer);
 						} else {
 							spaceEventState[4] = 20;
 						}
-						if (parseInt(getInner('p' + spaceEventState[1] + 'CoinsText')) < 20) {
-							spaceEventState[5] = parseInt(getInner('p' + spaceEventState[1] + 'CoinsText'));
+						if (getStat('coins', spaceEventState[1]) < 20) {
+							spaceEventState[5] = getStat('coins', spaceEventState[1]);
 						} else {
 							spaceEventState[5] = 20;
 						}
@@ -456,8 +456,8 @@ function spaceEvent (space, attr) {
 						shortcutNotif(getCharName(orderCurPlayer) + ' started a 20 Coin duel with ' + getCharName(spaceEventState[1]) + ', select the winner.');
 						break;
 					case 'halfcoins':
-						spaceEventState[4] = Math.floor(parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) / 2);
-						spaceEventState[5] = Math.floor(parseInt(getInner('p' + spaceEventState[1] + 'CoinsText')) / 2);
+						spaceEventState[4] = Math.floor(getStat('coins', orderCurPlayer) / 2);
+						spaceEventState[5] = Math.floor(getStat('coins', spaceEventState[1]) / 2);
 						spaceEventState[3] = spaceEventState[4] + spaceEventState[5];
 
 						execOnMain('counterButtons', [orderCurPlayer, 'M', spaceEventState[4], 'coins']);
@@ -465,8 +465,8 @@ function spaceEvent (space, attr) {
 						shortcutNotif(getCharName(orderCurPlayer) + ' started a duel for half coins with ' + getCharName(spaceEventState[1]) + ', select the winner.');
 						break;
 					case 'allcoins':
-						spaceEventState[4] = parseInt(getInner('p' + orderCurPlayer + 'CoinsText'));
-						spaceEventState[5] = parseInt(getInner('p' + spaceEventState[1] + 'CoinsText'));
+						spaceEventState[4] = getStat('coins', orderCurPlayer);
+						spaceEventState[5] = getStat('coins', spaceEventState[1]);
 						spaceEventState[3] = spaceEventState[4] + spaceEventState[5];
 
 						execOnMain('counterButtons', [orderCurPlayer, 'S', 0, 'coins']);
@@ -474,13 +474,13 @@ function spaceEvent (space, attr) {
 						shortcutNotif(getCharName(orderCurPlayer) + ' started a duel for all coins with ' + getCharName(spaceEventState[1]) + ', select the winner.');
 						break;
 					case '1star':
-						if (parseInt(getInner('p' + orderCurPlayer + 'StarsText')) < 1) {
-							spaceEventState[4] = parseInt(getInner('p' + orderCurPlayer + 'StarsText'));
+						if (getStat('stars', orderCurPlayer) < 1) {
+							spaceEventState[4] = getStat('stars', orderCurPlayer);
 						} else {
 							spaceEventState[4] = 1;
 						}
-						if (parseInt(getInner('p' + spaceEventState[1] + 'StarsText')) < 1) {
-							spaceEventState[5] = parseInt(getInner('p' + spaceEventState[1] + 'StarsText'));
+						if (getStat('stars', spaceEventState[1]) < 1) {
+							spaceEventState[5] = getStat('stars', spaceEventState[1]);
 						} else {
 							spaceEventState[5] = 1;
 						}
@@ -490,13 +490,13 @@ function spaceEvent (space, attr) {
 						shortcutNotif(getCharName(orderCurPlayer) + ' started a 1 Star duel with ' + getCharName(spaceEventState[1]) + ', select the winner.');
 						break;
 					case '2stars':
-						if (parseInt(getInner('p' + orderCurPlayer + 'StarsText')) < 2) {
-							spaceEventState[4] = parseInt(getInner('p' + orderCurPlayer + 'StarsText'));
+						if (getStat('stars', orderCurPlayer) < 2) {
+							spaceEventState[4] = getStat('stars', orderCurPlayer);
 						} else {
 							spaceEventState[4] = 2;
 						}
-						if (parseInt(getInner('p' + spaceEventState[1] + 'StarsText')) < 2) {
-							spaceEventState[5] = parseInt(getInner('p' + spaceEventState[1] + 'StarsText'));
+						if (getStat('stars', spaceEventState[1]) < 2) {
+							spaceEventState[5] = getStat('stars', spaceEventState[1]);
 						} else {
 							spaceEventState[5] = 2;
 						}
@@ -525,9 +525,9 @@ function spaceEvent (space, attr) {
 		case 'bowser':
 			switch (getValue('bowserEvent')) {
 				case 'coins':
-					if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) < 20) {
-						if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) < 10) {
-							spaceEventState = ['bowser', 'done', getValue('bowserEvent'), parseInt(getInner('p' + orderCurPlayer + 'CoinsText'))];
+					if (getStat('coins', orderCurPlayer) < 20) {
+						if (getStat('coins', orderCurPlayer) < 10) {
+							spaceEventState = ['bowser', 'done', getValue('bowserEvent'), getStat('coins', orderCurPlayer)];
 						} else {
 							spaceEventState = ['bowser', 'done', getValue('bowserEvent'), 10];
 						}
@@ -546,8 +546,8 @@ function spaceEvent (space, attr) {
 					break;
 				case 'charity':
 					spaceEventState = ['bowser', 'done', getValue('bowserEvent'), getInner('p1CoinsText'), getInner('p2CoinsText'), getInner('p3CoinsText'), getInner('p4CoinsText')];
-					if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) < 30) {
-						var num2 = parseInt(getInner('p' + orderCurPlayer + 'CoinsText'));
+					if (getStat('coins', orderCurPlayer) < 30) {
+						var num2 = getStat('coins', orderCurPlayer);
 						for (var num = 0; num < 5; num++) {
 							if (num2 % 3 == 0) {
 								break;
@@ -572,7 +572,7 @@ function spaceEvent (space, attr) {
 					break;
 				case 'equality':
 					spaceEventState = ['bowser', 'done', getValue('bowserEvent'), getInner('p1CoinsText'), getInner('p2CoinsText'), getInner('p3CoinsText'), getInner('p4CoinsText')];
-					var coinNum = parseInt(getInner('p' + 1 + 'CoinsText')) + parseInt(getInner('p' + 2 + 'CoinsText'))+ parseInt(getInner('p' + 3 + 'CoinsText')) + parseInt(getInner('p' + 4 + 'CoinsText'));
+					var coinNum = getStat('coins', 1) + getStat('coins', 2) + getStat('coins', 3) + getStat('coins', 4);
 					coinNum = Math.floor(coinNum / 4);
 					execOnMain('counterButtons', [1, 'S', coinNum, 'coins']);
 					execOnMain('counterButtons', [2, 'S', coinNum, 'coins']);
@@ -623,8 +623,8 @@ function spaceEvent (space, attr) {
 					}
 
 					var coins
-					if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) < 5) {
-						coins = parseInt(getInner('p' + orderCurPlayer + 'CoinsText'));
+					if (getStat('coins', orderCurPlayer) < 5) {
+						coins = getStat('coins', orderCurPlayer);
 					} else {
 						coins = 5;
 					}
@@ -646,8 +646,8 @@ function spaceEvent (space, attr) {
 					}
 
 					var coins
-					if (parseInt(getInner('p' + random + 'CoinsText')) < 10) {
-						coins = parseInt(getInner('p' + random + 'CoinsText'));
+					if (getStat('coins', random) < 10) {
+						coins = getStat('coins', random);
 					} else {
 						coins = 10;
 					}
@@ -677,8 +677,8 @@ function spaceEvent (space, attr) {
 			}
 			switch (switchVar) {
 				case '5coins':
-					if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) < 5) {
-						spaceEventState = ['badluck', 'done', 'coins', parseInt(getInner('p' + orderCurPlayer + 'CoinsText'))];
+					if (getStat('coins', orderCurPlayer) < 5) {
+						spaceEventState = ['badluck', 'done', 'coins', getStat('coins', orderCurPlayer)];
 					} else {
 						spaceEventState = ['badluck', 'done', 'coins', 5];
 					}
@@ -689,8 +689,8 @@ function spaceEvent (space, attr) {
 					shortcutNotif('Bad Luck Event: Took 5 coins from ' + getCharName(orderCurPlayer) + '.');
 					break;
 				case '10coins':
-					if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) < 10) {
-						spaceEventState = ['badluck', 'done', 'coins', parseInt(getInner('p' + orderCurPlayer + 'CoinsText'))];
+					if (getStat('coins', orderCurPlayer) < 10) {
+						spaceEventState = ['badluck', 'done', 'coins', getStat('coins', orderCurPlayer)];
 					} else {
 						spaceEventState = ['badluck', 'done', 'coins', 10];
 					}
@@ -701,8 +701,8 @@ function spaceEvent (space, attr) {
 					shortcutNotif('Bad Luck Event: Took 10 coins from ' + getCharName(orderCurPlayer) + '.');
 					break;
 				case '20coins':
-					if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) < 20) {
-						spaceEventState = ['badluck', 'done', 'coins', parseInt(getInner('p' + orderCurPlayer + 'CoinsText'))];
+					if (getStat('coins', orderCurPlayer) < 20) {
+						spaceEventState = ['badluck', 'done', 'coins', getStat('coins', orderCurPlayer)];
 					} else {
 						spaceEventState = ['badluck', 'done', 'coins', 20];
 					}
@@ -713,7 +713,7 @@ function spaceEvent (space, attr) {
 					shortcutNotif('Bad Luck Event: Took 20 coins from ' + getCharName(orderCurPlayer) + '.');
 					break;
 				case 'halfcoins':
-					var coinNum = Math.floor(parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) / 2);
+					var coinNum = Math.floor(getStat('coins', orderCurPlayer) / 2);
 					execOnMain('counterButtons', [orderCurPlayer, 'M', coinNum, 'coins']);
 					spaceEventState = ['badluck', 'done', 'coins', coinNum];
 					if (getValue('shortcutAutoEnd') === true) {
@@ -737,8 +737,8 @@ function spaceEvent (space, attr) {
 							break;
 					}
 
-					if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) < (coinNum * 3)) {
-						var num2 = parseInt(getInner('p' + orderCurPlayer + 'CoinsText'));
+					if (getStat('coins', orderCurPlayer) < (coinNum * 3)) {
+						var num2 = getStat('coins', orderCurPlayer);
 						for (var num = 0; num < 5; num++) {
 							if (num2 % 3 == 0) {
 								break;
@@ -778,8 +778,8 @@ function spaceEvent (space, attr) {
 						return;
 					} else {
 						var coins
-						if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) < 5) {
-							coins = parseInt(getInner('p' + orderCurPlayer + 'CoinsText'));
+						if (getStat('coins', orderCurPlayer) < 5) {
+							coins = getStat('coins', orderCurPlayer);
 						} else {
 							coins = 5;
 						}
@@ -806,8 +806,8 @@ function spaceEvent (space, attr) {
 						return;
 					} else {
 						var coins
-						if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) < 10) {
-							coins = parseInt(getInner('p' + orderCurPlayer + 'CoinsText'));
+						if (getStat('coins', orderCurPlayer) < 10) {
+							coins = getStat('coins', orderCurPlayer);
 						} else {
 							coins = 10;
 						}
@@ -830,8 +830,8 @@ function spaceEvent (space, attr) {
 					}
 
 					var coins
-					if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) < 5) {
-						coins = parseInt(getInner('p' + orderCurPlayer + 'CoinsText'));
+					if (getStat('coins', orderCurPlayer) < 5) {
+						coins = getStat('coins', orderCurPlayer);
 					} else {
 						coins = 5;
 					}
@@ -935,8 +935,8 @@ function spaceEvent (space, attr) {
 				spaceEventState = ['vsspace', 'done', 0, getInner('p1CoinsText'), getInner('p2CoinsText'), getInner('p3CoinsText'), getInner('p4CoinsText')];
 
 				for (var num = 1; num < 5; num++) {
-					if (parseInt(getInner('p' + num + 'CoinsText')) < coinNum) {
-						spaceEventState[2] = spaceEventState[2] + parseInt(getInner('p' + num + 'CoinsText'));
+					if (getStat('coins', num) < coinNum) {
+						spaceEventState[2] = spaceEventState[2] + getStat('cois', num);
 						execOnMain('counterButtons', [num, 'M', coinNum, 'coins']);
 					} else {
 						spaceEventState[2] = spaceEventState[2] + coinNum;

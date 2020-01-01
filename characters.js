@@ -546,7 +546,7 @@ function updateCounterList () {
 			if (counters[num] === 'coins') {
 				break;
 			}
-			if (parseInt(getInner('p' + num2 + countersUp[num] + 'Text')) === 0) {
+			if (getStat(countersUp[num], num2) === 0) {
 				arr.push(0);
 			}
 			if (num2 === 4 && arr.length != 4) {
@@ -556,7 +556,7 @@ function updateCounterList () {
 	}
 	arr = [];
 	for (var num2 = 1; num2 < 5; num2++) {
-		if (parseInt(getInner('p' + num2 + 'CoinsText')) === 5 || parseInt(getInner('p' + num2 + 'CoinsText')) === 10) {
+		if (getStat('coins', num2) === 5 || getStat('coins', num2) === 10) {
 			arr.push(0);
 		}
 		if (num2 === 4 && arr.length != 4) {
@@ -569,7 +569,7 @@ function updateCounterList () {
 			cStatsHidden.push(cStats[num]);
 		}
 	}
-	if (parseInt(getInner('coinStarText')) != 10) {
+	if (getStat('coinStar') != 10) {
 		if (getComputedStyle(getElem('coinStarOnOffText'), null).visibility != 'visible') {
 			cStatsHidden.push('coinStar');
 		} else {

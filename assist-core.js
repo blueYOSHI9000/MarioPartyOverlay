@@ -137,7 +137,7 @@ function startShortcut () {
 				shortcutState = 1;
 				execOnMain('counterButtons', [1, 'P', 1, 'curTurn']);
 				// Final 5 turns
-				if ((getInner('curTurnText') == parseInt(getInner('maxTurnText')) - 4 && shortcutGame != 'smp') || (getInner('curTurnText') == parseInt(getInner('maxTurnText')) - 2 && shortcutGame === 'smp')) {
+				if ((getInner('curTurnText') == getStat('maxTurn') - 4 && shortcutGame != 'smp') || (getInner('curTurnText') == getStat('maxTurn') - 2 && shortcutGame === 'smp')) {
 					startFinalFive();
 				}
 				startShortcut();
@@ -324,8 +324,8 @@ function finalFive (player) {
 		case 'charity':
 			var charity = 0;
 			for (var num = 1; num < 5; num++) {
-				if (parseInt(getInner('p' + num + 'CoinsText')) < 10) {
-					charity = charity + parseInt(getInner('p' + num + 'CoinsText'));
+				if (getStat('coins', num) < 10) {
+					charity = charity + getStat('coins', num);
 				} else {
 					charity = charity + 10;
 				}
@@ -551,7 +551,7 @@ function turnEnd () {
 					num3++;
 				}
 			}
-			if (bobombAlly[orderCurPlayer] != 0 && parseInt(getInner('curTurnText')) < (bobombAlly[orderCurPlayer] + 3)) {
+			if (bobombAlly[orderCurPlayer] != 0 && getStat('curTurn') < (bobombAlly[orderCurPlayer] + 3)) {
 				getAlly('bobomb', true);
 			} else if (bobombAlly[orderCurPlayer] != 0) {
 				removeAlly(orderCurPlayer, 4);

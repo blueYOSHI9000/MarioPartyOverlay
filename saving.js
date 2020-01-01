@@ -334,40 +334,16 @@ function resetPlayers (noLS) {
 * @param {boolean} ret Returns a object with all settings instead of saving it.
 */
 function saveSettings (ret) {
-	var settings = {
-		hideAdvanced: getValue('hideAdvanced'),
-		autoPopout: getValue('autoPopout'),
-		enableHighlight: getValue('enableHighlight'),
-		highlightColor: getValue('highlightColor'),
-		deactivateUnused: getValue('deactivateUnused'),
-		bonusStarAdd: document.querySelector('input[name="bonusStarAdd"]:checked').id,
-		noTie: getValue('noTie'),
-		autoSave: getValue('autoSave'),
-		useHotkeys: getValue('useHotkeys'),
-		enableInteract: getValue('enableInteract'),
-		useSW: getValue('useSW'),
-		theme: curTheme,
-		icons: document.querySelector('input[name="icons"]:checked').id,
-		customGameIcons: getValue('customGameIcons'),
-		layoutType: document.querySelector('input[name="layoutType"]:checked').id,
-		greenscreen: getValue('greenscreen'),
-		bgColor: getValue('bgColor'),
-		textColor: getValue('textColor'),
-		enableAnimation: getValue('enableAnimation'),
-		toBonusOnly: getValue('toBonusOnly'),
-		toShowNum: getValue('toShowNum'),
-		toListAllCoin: getValue('toListAllCoin'),
-		toP1Name: getValue('toP1Name'),
-		toP2Name: getValue('toP2Name'),
-		toP3Name: getValue('toP3Name'),
-		toP4Name: getValue('toP4Name'),
-		toSeperation: getValue('toSeperation'),
-		toUseActive: getValue('toUseActive'),
-		toCounters: getValue('toCounters'),
-		toOutput: getValue('toOutput'),
-		shortcutSimpleMode: getValue('shortcutSimpleMode'),
-		shortcutAutoEnd: getValue('shortcutAutoEnd'),
+	var settings = copyVar(defSettings);
+
+	for (var num = 0; num < replaceOnly.length; num++) {
+		settings[replaceOnly[num]] = getValue(replaceOnly[num]);
 	}
+
+	settings.bonusStarAdd = document.querySelector('input[name="bonusStarAdd"]:checked').id;
+	settings.theme = curTheme;
+	settings.icons = document.querySelector('input[name="icons"]:checked').id;
+	settings.layoutType = document.querySelector('input[name="layoutType"]:checked').id;
 
 	if (ret === true)
 		return settings;

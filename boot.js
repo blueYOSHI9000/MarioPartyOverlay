@@ -142,10 +142,10 @@ function loadHTML () {
 		var arr = [];
 
 		arr.push('<div class="draggable characterDiv"> <div onclick="coinStarTie(' + num + ', true)"> <img src="img/com.png" class="comImg" id="p' + num + 'ComDisplay" onerror="comImgError()"> <img src="img/mpsrIcons/' + charList.all[num] + '.png" class="characterImg" id="p' + num + 'Img" onerror="changeCharactersBackup(this)"> </div> </div>');
-		arr.push('<div style="position: relative;"> <div class="draggable stars starsBonus"> <span class="starsHitbox" onclick="mobileButtons(\'stars\', ' + num + ')"></span> <img class="counterDisplay" src="img/stars.png" id="p' + num + 'StarsDisplay" onerror="changeStarsError(this)"> <span class="counterText" id="p' + num + 'StarsBonusText">0</span> </div> <div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/stars.png"> <span class="counterText" id="p' + num + 'StarsText">0</span> </div> </div>');
+		arr.push('<div style="position: relative;"> <div class="draggable stars starsBonus"> <span class="starsHitbox" onclick="mobileButtons(\'stars\', ' + num + ')"></span> <img class="counterDisplay" src="img/stars.png" id="p' + num + 'StarsDisplay" onerror="changeStarsError(this)"> <span class="counterText counterBelow100" id="p' + num + 'StarsBonusText">0</span> </div> <div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/stars.png"> <span class="counterText counterBelow100" id="p' + num + 'StarsText">0</span> </div> </div>');
 
 		for (let num2 = 1; num2 < counters.length; num2++) {
-			arr.push('<div class="draggable ' + counters[num2] + '" onclick="mobileButtons(\'' + counters[num2] + '\', ' + num + ')"> <img class="counterDisplay" src="img/' + counters[num2] + '.png" id="p' + num + countersUp[num2] + 'Display" onerror="counterImgError(this)"> <span class="counterText" id="p' + num + countersUp[num2] + 'Text"> 0 </span> </div>');
+			arr.push('<div class="draggable ' + counters[num2] + '" onclick="mobileButtons(\'' + counters[num2] + '\', ' + num + ')"> <img class="counterDisplay" src="img/' + counters[num2] + '.png" id="p' + num + countersUp[num2] + 'Display" onerror="counterImgError(this)"> <span class="counterText counterBelow100" id="p' + num + countersUp[num2] + 'Text"> 0 </span> </div>');
 		}
 		elem.innerHTML = arr.join(' ');
 
@@ -169,6 +169,8 @@ function loadHTML () {
 
 var defSettings = {
 	hideAdvanced: true,
+	settingsFullscreen: false,
+
 	autoPopout: false,
 	enableHighlight: true,
 	highlightColor: '#ff0000',
@@ -179,14 +181,17 @@ var defSettings = {
 	useHotkeys: true,
 	enableInteract: false,
 	useSW: true,
+
 	theme: 'default',
 	icons: 'mpsrIcons',
 	customGameIcons: true,
+	xBelow100: true,
 	layoutType: 'layoutVertical',
 	greenscreen: false,
 	bgColor: '#0000FF',
 	textColor: '#ffffff',
 	enableAnimation: true,
+
 	toBonusOnly: false,
 	toShowNum: true,
 	toListAllCoin: false,
@@ -198,11 +203,17 @@ var defSettings = {
 	toUseActive: true,
 	toCounters: 'Turns, Happening, Minigame, Red Space, Coin Star',
 	toOutput: 'Turns, ?, MG, Red, Coin Star',
+
 	shortcutSimpleMode: false,
 	shortcutAutoEnd: false,
 }
+console.log(defSettings)
 
-var replaceOnly = ['hideAdvanced', 'autoPopout', 'enableHighlight', 'highlightColor', 'deactivateUnused', 'noTie', 'autoSave', 'useHotkeys', 'enableInteract', 'useSW', 'customGameIcons', 'greenscreen', 'bgColor', 'textColor', 'enableAnimation', 'toBonusOnly', 'toShowNum', 'toListAllCoin', 'toP1Name', 'toP2Name', 'toP3Name', 'toP4Name', 'toSeperation', 'toUseActive', 'toCounters', 'toOutput', 'shortcutSimpleMode', 'shortcutAutoEnd'];
+var replaceOnly = [	'hideAdvanced', 'settingsFullscreen',
+					'autoPopout', 'enableHighlight','highlightColor', 'deactivateUnused', 'noTie', 'autoSave', 'useHotkeys', 'enableInteract', 'useSW',
+					'customGameIcons', 'xBelow100', 'greenscreen', 'bgColor', 'textColor', 'enableAnimation',
+					'toBonusOnly', 'toShowNum', 'toListAllCoin', 'toP1Name', 'toP2Name', 'toP3Name', 'toP4Name', 'toSeperation', 'toUseActive', 'toCounters', 'toOutput',
+					'shortcutSimpleMode', 'shortcutAutoEnd'];
 /*
 * Loads settings from an object.
 *
@@ -212,15 +223,19 @@ function loadSettings (obj) {
 	if (typeof obj === 'string')
 		obj = JSON.parse(obj);
 
+
 	for (var num = 0; num < replaceOnly.length; num++) {
 		editValue(replaceOnly[num], obj[replaceOnly[num]]);
 	}
+
 	editValue(obj.bonusStarAdd, true);
 	changeTheme(obj.theme);
 	editValue(obj.icons, true);
 	editValue(obj.layoutType, true);
 
 	hideAdvancedSettings();
+	settingsFullscreen();
+	displayXBelow100();
 	changeLayout();
 	changeCharacters();
 	updateCounterInput();
@@ -245,12 +260,6 @@ function prepareMPO () {
 		document.querySelector('body').style.overflow = 'hidden';
 		getElem('popoutButton').innerText = 'Normal Settings';
 		getElem('popoutButton').setAttribute('onclick', 'sendMessage(\'openSettings+true\');window.close();');
-		getElem('settingsContent').classList.add('settingsContentPopout');
-		getElem('settingsContent').classList.remove('popupContent');
-		getElem('settingsContent').classList.remove('settingsPopup');
-		getElem('settingsContent').style.width = 'calc(100% - 40px)';
-		getElem('settingsContent').style.height = 'calc(100% - 40px)'; //-40px is required as otherwise there would be 40px offscreen which would destroy the whole layout
-		getElem('settingsContent').style.minWidth = 'unset';
 		getElem('noSettings').style.display = 'none';
 
 		getElem('savefileCookieError').style.display = 'none';

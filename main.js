@@ -833,6 +833,39 @@ function changeLayout () {
 	}
 }
 
+/*
+* Adds or removes the x before counters depending on the setting.
+*/
+function displayXBelow100 () {
+	var activated = getValue('xBelow100');
+
+	var elems = document.querySelectorAll('.counterText');
+	for (var num = 0; num < elems.length; num++) {
+		if (parseInt(elems[num].innerText) < 100 && activated === true) {
+			elems[num].classList.add('counterBelow100');
+		} else {
+			elems[num].classList.remove('counterBelow100');
+		}
+	}
+}
+
+/*
+* Displays settings in fullscreen if enabled.
+*/
+function settingsFullscreen () {
+	if (popout === true)
+		return;
+	
+	if (getValue('settingsFullscreen') === true) {
+		getElem('settingsContent').classList.add('settingsContentPopout');
+		getElem('settingsContent').classList.remove('popupContent');
+		getElem('settingsContent').classList.remove('settingsPopup');
+	} else {
+		getElem('settingsContent').classList.remove('settingsContentPopout');
+		getElem('settingsContent').classList.add('popupContent');
+		getElem('settingsContent').classList.add('settingsPopup');
+	}
+}
 
 /*
 * Opens shortcut settings before shortcut is actually opened. This function gets overwritten by the one in assist-misc.js.
@@ -865,8 +898,11 @@ function shortcutSettings (close) {
 * Capitalize a string.
 *
 * @param {string} str The string to capitalize.
+* @param {boolean} reverse Convert first letter to lowercase instead.
 */
-function capStr (str) {
+function capStr (str, reverse) {
+	if (reverse)
+		return str.charAt(0).toLowerCase() + str.slice(1);
 	return str.charAt(0).toUpperCase() + str.slice(1);
 }
 

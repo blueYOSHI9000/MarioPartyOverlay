@@ -77,42 +77,6 @@ slots.s0 = copyVar(defS);
 slots.c0 = copyVar(defC);
 slots.a0 = copyVar(defA);
 
-
-var defSettings = {
-	hideAdvanced: true,
-	autoPopout: false,
-	enableHighlight: true,
-	highlightColor: '#ff0000',
-	deactivateUnused: true,
-	bonusStarAdd: 'bonusDont',
-	noTie: false,
-	autoSave: false,
-	useHotkeys: true,
-	enableInteract: false,
-	useSW: true,
-	theme: 'default',
-	icons: 'mpsrIcons',
-	customGameIcons: true,
-	layoutType: 'layoutVertical',
-	greenscreen: false,
-	bgColor: '#0000FF',
-	textColor: '#ffffff',
-	enableAnimation: true,
-	toBonusOnly: false,
-	toShowNum: true,
-	toListAllCoin: false,
-	toP1Name: '',
-	toP2Name: '',
-	toP3Name: '',
-	toP4Name: '',
-	toSeperation: ' | ',
-	toUseActive: true,
-	toCounters: 'Turns, Happening, Minigame, Red Space, Coin Star',
-	toOutput: 'Turns, ?, MG, Red, Coin Star',
-	shortcutSimpleMode: false,
-	shortcutAutoEnd: false,
-}
-
 /*
 * Copies variables without a reference.
 *
