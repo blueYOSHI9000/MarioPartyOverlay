@@ -262,6 +262,11 @@ function prepareMPO () {
 		getElem('popoutButton').setAttribute('onclick', 'sendMessage(\'openSettings+true\');window.close();');
 		getElem('noSettings').style.display = 'none';
 
+		settingsFullscreen();
+
+		getElem('settingsFullscreenPopoutReminder').style.display = 'block';
+		getElem('settingsFullscreenBlurReminder').style.display = 'none';
+		
 		getElem('savefileCookieError').style.display = 'none';
 
 		sendMessage('syncPopout');

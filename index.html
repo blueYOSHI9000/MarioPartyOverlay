@@ -324,7 +324,7 @@
 					<b id="counterSelector" class="settingsSelection settingsSelectionImportant" onclick="showHideSettings('counter')">Counters</b> <span class="flexAuto"></span>
 					<b id="slotsSelector" class="settingsSelection nowrap" onclick="showHideSettings('slots')">Savefiles</b> <span class="flexAuto"></span>
 					<b id="shortcutSelector" class="settingsSelection nowrap" onclick="showHideSettings('shortcut')">Assist</b> <span class="flexAuto"></span>
-					<b id="tutorialSelector" class="settingsSelection" style="margin: 0px;" onclick="showHideSettings('tutorial')">Credits</b>
+					<b id="tutorialSelector" class="settingsSelection" onclick="showHideSettings('tutorial')">Credits</b>
 				</span>
 
 				<span id="settingsSelectionSpanBreak">
@@ -336,7 +336,7 @@
 					<span style="display: flex;">
 						<b id="slotsSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('slots')">Savefiles</b> <span class="flexAuto"></span>
 						<b id="shortcutSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('shortcut')">Assist</b> <span class="flexAuto"></span>
-						<b id="tutorialSelectorBreak" class="settingsSelection" style="margin: 0px;" onclick="showHideSettings('tutorial')">Credits</b>
+						<b id="tutorialSelectorBreak" class="settingsSelection" onclick="showHideSettings('tutorial')">Credits</b>
 					</span>
 				</span>
 
@@ -446,12 +446,13 @@
 			</div>
 			<div id="settingsHeaderBorder" class="border"></div>
 
-			<span id="shortcutHeader" class="border">
+			<span id="shortcutHeader">
 				<button id="shortcutSettingsButton" onclick="shortcutSettings()" style="float: left;">Settings</button>
 				<button id="skipButton" onclick="shortcutSkip()" style="float: right;" disabled="true">Skip</button>
 				<button id="backButton" onclick="shortcutBack()" style="float: right; margin-right: 5px;" disabled="true">Back</button>
 				<div id="shortcutNotif">Start the game.</div>
 			</span>
+			<div id="shortcutHeaderBorder" class="border"></div>
 			<div id="settingsMain">
 
 				<!-- General Settings -->
@@ -465,7 +466,9 @@
 					<span class="settingsTitle"> Features </span> <br>
 					<label for="autoPopout"> <span> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="editValueOnBoth(this.id, this.checked)"> </label> <br>
 
-					<label for="settingsFullscreen"> <span> Always use fullscreen settings: </span> <input type="checkbox" id="settingsFullscreen" onchange="editValueOnBoth(this.id, this.checked);changeSettings('settingsFullscreen')"> </label> <br> <span class="note"> Text is blurry in Chrome without this. There's nothing I can do about it as it's an issue in Chrome. </span> <br> <br>
+					<label for="settingsFullscreen"> <span> Always use fullscreen settings: </span> <input type="checkbox" id="settingsFullscreen" onchange="editValueOnBoth(this.id, this.checked);changeSettings('settingsFullscreen')"> </label> <br>
+					<span id="settingsFullscreenPopoutReminder" style="display: none;"> <span class="note"> Popout is always fullscreen regardless of this. </span> <br> </span>
+					<span id="settingsFullscreenBlurReminder"> <span class="note"> Text is blurry in Chrome without this. There's nothing I can do about it as it's an issue in Chrome. </span> <br> </span> <br>
 
 					<span class="advanced"> <label for="useSW"> Allow this site to run offline: </label> <input type="checkbox" id="useSW" onchange="editValueOnBoth(this.id, this.checked);changeSettings('runSW')" checked> <br> <span class="note"> This allows the site to be installed which allows it to be run completely offline, uses about 5MB. <span id="noOffline" style="display: none;" class="error"> <br> This can't be used when ran from a local file or through localhost. </span> </span> <br> <br> </span>
 					<script type="text/javascript">
@@ -634,7 +637,7 @@
 							</div>
 						</span>
 					</span>
-					<button onclick="randomChar()">Randomize characters</button>
+					<button id="charRandoButton" onclick="randomChar()">Randomize characters</button>
 				</div>
 
 				<!-- Counter Settings -->
@@ -727,7 +730,7 @@
 							<span style="position: relative;"> <span class="slotTurnText"> <span class="slotTurn"> 1/20 </span> Turn </span> <span class="slotAllText" id="slotAll0">All</span> <img src="img/smp.png" class="slotImg" id="slotImg0" style="visibility: hidden;"> </span> <br>
 							<img src="img/mpsrIcons/mario.png"> <img src="img/mpsrIcons/luigi.png"> <img src="img/mpsrIcons/yoshi.png"> <img src="img/mpsrIcons/peach.png"> <br>
 						</div>
-					</span>
+					</span> <br>
 					<div class="slotDiv emptySlot" onclick="execOnMain('createSlot', ['empty'])">
 						Create new file
 					</div>
@@ -875,7 +878,7 @@
 					All Mario Party related icons were created or inspired from officially published media by Nintendo. <br>
 					Mario Party related icons (re)created, edited or ripped by <a href="https://www.spriters-resource.com/submitter/Anonymous/" class="settingsLink" rel="noopener" target="_blank">Anonymous</a>, <a href="https://www.mariowiki.com/User:Arend" class="settingsLink" rel="noopener" target="_blank">Arend</a>, <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI</a>, <a href="https://www.spriters-resource.com/submitter/xX-CamTro-Xx/" class="settingsLink" rel="noopener" target="_blank">CamTro</a>, <a href="https://www.spriters-resource.com/submitter/FieryExplosion/" class="settingsLink" rel="noopener" target="_blank">FieryExplosion</a>, <a href="https://www.spriters-resource.com/submitter/Kimimaru/" class="settingsLink" rel="noopener" target="_blank">Kimimaru</a>, <a href="https://www.spriters-resource.com/submitter/larsenv/" class="settingsLink" rel="noopener" target="_blank">larsenv</a>, <a href="https://www.spriters-resource.com/submitter/Mario+Gamer/" class="settingsLink" rel="noopener" target="_blank">Mario Gamer</a>, <a href="https://mariopartylegacy.com/" class="settingsLink" rel="noopener" target="_blank">Mario Party Legacy</a>,  <a href="https://www.spriters-resource.com/submitter/Random+Talking+Bush/" class="settingsLink" rel="noopener" target="_blank">Random Talking Bush</a>, <a href="https://twitter.com/Der_RicoDexter" class="settingsLink" rel="noopener" target="_blank">RicoDexter</a>. <br>
 
-					<a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="settingsLink" rel="noopener" target="_blank">Mario Party 9 Font</a> <br>
+					<a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="settingsLink" rel="noopener" target="_blank">Mario Party 9 Font</a> (edited by blueYOSHI)<br>
 					<a href="https://icons8.com/icon/2969/settings" class="settingsLink" rel="noopener" target="_blank">Settings Icon by Icons8</a> <br>
 					<a href="https://codepen.io/ben_jammin/pen/syaCq" class="settingsLink" rel="noopener" target="_blank">Button designs by Benjamin</a> <br>
 					<a href="https://github.com/SortableJS/Sortable" class="settingsLink" rel="noopener" target="_blank"> Sortable.js</a> (enables savefile re-ordering) <br>
@@ -887,12 +890,14 @@
 			<!-- Reset/save Settings -->
 			<div id="settingsFooter">
 				<div id="settingsFooterBorder" class="border"></div>
+				<div style="max-width: 1044px;">
 					<button id="popoutButton" onclick="saveAssist();mpoSettingsPopout()" style="flex: auto;"> Popout Settings </button>
 					<span id="settingsHintsContainer" onclick="newSettingsHint()" style="display: none;"> <b>Tip: </b> <span id="settingsHints">Click on the gear while holding Ctrl to open settings directly.</span> </span>
-				<span id="settingsClose">
-					<button onclick="saveSettings(); savePlayers(); saveAssist();" id="saveButton"> Save </button>
-					<button onclick="if (popout == true) {window.close();} else {closeSettings();}" id="settingsCloseButton"> Close </button>
-				</span>
+					<span id="settingsClose">
+						<button onclick="saveSettings(); savePlayers(); saveAssist();" id="saveButton"> Save </button>
+						<button onclick="if (popout == true) {window.close();} else {closeSettings();}" id="settingsCloseButton"> Close </button>
+					</span>
+				</div>
 			</div>
 		</div>
 	</div>

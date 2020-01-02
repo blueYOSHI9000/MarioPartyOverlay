@@ -745,6 +745,8 @@ noscript > span {
 	padding-top: 10px;
 	padding-bottom: 10px;
 	height: 100%;
+	max-width: 1039px;
+	padding-right: 5px;
 }
 #settingsClose {
 	float: right;
@@ -754,9 +756,15 @@ noscript > span {
 .border {
 	border-bottom: #0e25c17a 3px solid;
 }
+.settingsContentPopout .border {
+	position: relative;
+    left: calc(-25% + 15px); /* 20% from padding - 5% additional % as it doesn't take 20% from the screen size but instead from it's parent that already had 20% subtracted */
+    width: calc(125% - 15px); /* no idea about 15px but it's required */
+}
 #shortcutHeader {
 	display: none;
 	width: 100%;
+	max-width: 1044px;
 	padding-top: 5px;
 	padding-bottom: 5px;
 }
@@ -823,6 +831,9 @@ noscript > span {
 	color: #2121ec;
 	border-bottom: #2121ec77 2px solid;
 	cursor: pointer;
+}
+.settingsSelection:last-child {
+	margin-right: 0;
 }
 .settingsSelection:hover {
 	color: #e64940;
@@ -904,9 +915,11 @@ noscript > span {
 	border: none;
 	background-color: #F3F3F3;
 
-	width: calc(100% - 40px) !important;
+	width: calc(80% - 20px) !important; /* 80% instead of 100% due to 20% padding, also 20px instead of 40px because idk */
 	height: calc(100% - 40px) !important;
 	min-width: unset !important;
+
+	padding-left: 20%;
 }
 #settingsContent {
     width: 51%;
@@ -917,6 +930,11 @@ noscript > span {
 	flex-direction: column;
 	white-space: nowrap;
 	backdrop-filter: blur(4px);
+}
+@supports not (backdrop-filter: blur(4px);) {
+	#settingsContent {
+		background: no-repeat url(img/settingsbg-light.png), linear-gradient(#d6d6d6eb, #70b0fff2);
+	}
 }
 #tutorialSettings {
 	white-space: normal;
@@ -950,11 +968,30 @@ noscript > span {
 	#settingsCloseSpan { position: fixed; }
 	#settingsCloseSave { display: block !important; }
 }
+@media screen and (max-width: 1280px) {
+	#settingsContent {
+		width: calc(100% - 40px) !important;
+		height: calc(100% - 40px) !important;
+		padding-left: 20px;
+	}
+	.border {
+		left: unset !important;
+		width: unset !important;
+	}
+}
 
 /* == Slots == */
+#slotsSettings {
+	text-align: center;
+	white-space: normal;
+}
 #slotList {
-	-webkit-user-select: none;
-			user-select: none;
+-webkit-user-select: none;
+		user-select: none;
+}
+#slotList, .emptySlot {
+	display: inline-block;
+	width: fit-content;
 }
 #slotList .slotDiv:hover {
 	background-color: rgba(0, 190, 0, 0.2);
@@ -982,6 +1019,7 @@ noscript > span {
 	width: 295px;
 	margin-bottom: 15px;
 	cursor: pointer;
+	text-align: initial;
 }
 .emptySlot {
 	border-color: #0B0B0B91;
@@ -1396,7 +1434,7 @@ noscript > span {
 	padding-top: 6px;
 }
 .charSelectorFullWrapper {
-	height: calc(100% - 104px);
+	height: calc(100% - 114px);
 }
 .charSelector input {
 	margin: 0;
@@ -1529,6 +1567,11 @@ noscript > span {
 	background-image:url(img/com.png);
 	width: 100px;
 	height: 45px;
+}
+
+#charRandoButton {
+	position: relative;
+	top: -10px;
 }
 
 

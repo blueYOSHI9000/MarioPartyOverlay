@@ -442,9 +442,11 @@ function showHideSettings (id) {
 
 	if (id == 'shortcut') {
 		getElem('shortcutHeader').style.display = 'block';
+		getElem('shortcutHeaderBorder').style.display = 'block';
 		getElem('settingsMain').classList.add('scroll');
 	} else {
 		getElem('shortcutHeader').style.display = 'none';
+		getElem('shortcutHeaderBorder').style.display = 'none';
 		getElem('settingsMain').classList.remove('scroll');
 	}
 
@@ -619,7 +621,14 @@ function openSettings (force) {
 	}
 }
 
-var settingsHints = ['Click on the gear while holding Ctrl to open settings directly.', 'Click on the gear while holding Shift to copy text output directly.', 'Click on a character while holding Ctrl to make them the only coin star holder.', 'Hover over this to read the full tip.', 'Click on this text to get another tip.', 'Press 1, 5 or 10 to set the amount to add/subtract to that number.', 'Everything is automatically saved when closing settings, even without hitting the save button.'];
+//hint system is not actually visible currently due to lack of worthwile hints and issues with small screens not being able to fully display it.
+var settingsHints = [	'Hover over this to read the full tip.',
+						'Click on this text to get another tip.',
+						'Click on the gear while holding Ctrl to open settings directly.',
+						'Click on the gear while holding Shift to copy text output directly.',
+						'Click on a character while holding Ctrl to make them the only coin star holder.',
+						'Press the 1, 5 or 0 key to set the amount to add/subtract to that number.',
+						'Everything is automatically saved when closing settings, even without hitting the save button.'];
 /*
 * Gets a new hint and displays it in settings.
 */
@@ -853,10 +862,7 @@ function displayXBelow100 () {
 * Displays settings in fullscreen if enabled.
 */
 function settingsFullscreen () {
-	if (popout === true)
-		return;
-	
-	if (getValue('settingsFullscreen') === true) {
+	if (getValue('settingsFullscreen') === true || popout === true) {
 		getElem('settingsContent').classList.add('settingsContentPopout');
 		getElem('settingsContent').classList.remove('popupContent');
 		getElem('settingsContent').classList.remove('settingsPopup');
