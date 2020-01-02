@@ -529,12 +529,13 @@ function changeGame (game) {
 var curGame = 'all';
 var pastResults = [];
 
+var cStatsHidden = [];
 /*
 * Checks what counters are empty, displays used counters in settings.
 */
 function updateCounterList () {
 	var cStats = [];
-	var cStatsHidden = [];
+	cStatsHidden = [];
 
 	for (var num = 0; num < counters.length; num++) {
 		getElem(counters[num] + 'OnOffText').style.color = 'unset';
@@ -578,15 +579,30 @@ function updateCounterList () {
 	} else {
 		getElem('coinStarOnOffText').style.color = 'unset';
 	}
+	showHiddenStats();
+}
+
+/*
+* Lists unused counters with stats in the Counters tab in settings.
+* 
+* @param {string} show A counter which should be made visible.
+*/
+function showHiddenStats (show) {
+	console.log(cStatsHidden)
+	var arr = [];
+	if (show) {
+		cStatsHidden.splice(cStatsHidden.indexOf(show), 1);
+
+	}
 
 	if (cStatsHidden.length > 0) {
 		for (var num = 0; num < cStatsHidden.length; num++) {
 			var str = cStatsHidden[num];
 			str = str.replace(/([A-Z])/g, ' $1');
 			str = str.charAt(0).toUpperCase() + str.slice(1);
-			cStatsHidden[num] = str;
+			arr.push('<span  style="color: #0B6B13;" onclick="//showHiddenStats(\'' + cStatsHidden[num] + '\')">' + str + '</span>');
 		}
-		editInner('hiddenCountersText', 'Counters from other games with stats: <span  style="color: #0B6B13;">' + cStatsHidden.join(', ') + '</span>');
+		editInner('hiddenCountersText', 'Counters from other games with stats: ' + arr.join(', '));
 	} else {
 		editInner('hiddenCountersText', '');
 	}
@@ -650,18 +666,21 @@ function deactivateUnused () {
 * @param {number} max The max number.
 */
 function randomCharFor (max, min) {
-	if (min) {} else {
-		var min = 0;
-	}
+	if (typeof min === 'undefined')
+		min = 0;
 
 	var result = '';
 	result = Math.floor(Math.random() * max) + min;
+	var failsafe = 0;
 
 	for (var num = 0; num < pastResults.length; num++) {
-		if (result == pastResults[num]) {
+		if (result === pastResults[num]) {
 			result = Math.floor(Math.random() * max) + 0;
-			num--;
+			num = -1;
+			failsafe++;
 		}
+		if (failsafe > 30)
+			break;
 	}
 	pastResults.push(result);
 	return result;
@@ -669,6 +688,7 @@ function randomCharFor (max, min) {
 
 /*
 * Randomly selects characters based on games.
+* I have absolutely no idea how this works. Apparently only made for the Randomize button in the Characters tab and nothing else. - check nvRando() in navbar.js for a better version
 *
 * @param {number} player Only randomizes the specified player.
 */

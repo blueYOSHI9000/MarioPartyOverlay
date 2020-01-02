@@ -563,6 +563,7 @@ noscript > span {
 	height: 100%;
 }
 
+
 .navbarContent {
 	position: absolute;
 	background: #2885d4c2;
@@ -617,6 +618,13 @@ noscript > span {
 }
 #nvRandoImg:active {
 	opacity: 1;
+}
+
+.nvCharPlayerDisplay {
+	height: 18px !important;
+	position: relative;
+	top: -3px;
+	left: -4px;
 }
 
 #nvCharList {
@@ -776,15 +784,20 @@ noscript > span {
 }
 #settingsHintsContainer {
 	position: absolute;
-	width: calc(100% - 301px);
+	width: calc(100% - 342px);
+	max-width: 742px;
 	padding-left: 5px;
-	margin-top: 2px;
+	margin-top: 6px;
 	overflow: hidden;
 	text-align: center;
 	cursor: default;
+	font-size: 16px;
 }
 #settingsHints {
 	z-index: -1;
+}
+#tutorialHints {
+	cursor: default;
 }
 
 .counterSelection {
@@ -977,6 +990,11 @@ noscript > span {
 	.border {
 		left: unset !important;
 		width: unset !important;
+	}
+}
+@media screen and (max-width: 1080px) {
+	#settingsHintsContainer {
+		display: none;
 	}
 }
 

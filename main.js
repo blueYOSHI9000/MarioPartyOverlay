@@ -622,12 +622,14 @@ function openSettings (force) {
 }
 
 //hint system is not actually visible currently due to lack of worthwile hints and issues with small screens not being able to fully display it.
-var settingsHints = [	'Hover over this to read the full tip.',
+var settingsHints = [	//'Hover over this to read the full tip.', //not implemented on tutorial version
 						'Click on this text to get another tip.',
-						'Click on the gear while holding Ctrl to open settings directly.',
-						'Click on the gear while holding Shift to copy text output directly.',
-						'Click on a character while holding Ctrl to make them the only coin star holder.',
-						'Press the 1, 5 or 0 key to set the amount to add/subtract to that number.',
+						'Click on the gear while holding <i>Ctrl</i> to open settings directly.',
+						'Click on the gear while holding <i>Shift</i> to copy text output directly.',
+						'Hold <i>Ctrl</i> to select a character that\'s already been selected.',
+						'Hold <i>Ctrl</i> when randomizing to randomize all characters instead of just the current one.',
+						'Click on a character while holding <i>Ctrl</i> to make them the only coin star holder.',
+						'Press the <i>1</i>, <i>5</i> or <i>0</i> key to set the amount to add/subtract to that number.',
 						'Everything is automatically saved when closing settings, even without hitting the save button.'];
 /*
 * Gets a new hint and displays it in settings.
@@ -635,6 +637,7 @@ var settingsHints = [	'Hover over this to read the full tip.',
 function newSettingsHint () {
 	var str = settingsHints[randomCharFor(settingsHints.length)];
 	editInner('settingsHints', str);
+	editInner('tutorialHints', str);
 	getElem('settingsHintsContainer').title = str;
 }
 

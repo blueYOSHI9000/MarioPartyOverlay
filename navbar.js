@@ -209,7 +209,7 @@ function updateNavbar (player) {
 		return;
 
 	var elem = getElem('nvChar' + player);
-	elem.children[0].src = 'img/' + curGame + '/' + characters[player] + '.png';
+	elem.children[1].src = 'img/' + curGame + '/' + characters[player] + '.png';
 
 	if (getValue('com' + player) != true) {
 		getElem('nvCom' + player).style.opacity = 0;
@@ -583,7 +583,7 @@ function addNvChar (char) {
 function nvChangeChar (elem) {
 	var char = elem.getAttribute('character');
 	for (let num = 1; num < 5; num++) {
-		if (char === characters[num])
+		if (char === characters[num] && ctrlKeyVar != true)
 			return;
 	}
 	changeSettings('changeCharacters', [parseInt(getElem('navbarChars').getAttribute('player')), char]);
@@ -611,10 +611,16 @@ function nvChangeCom (player) {
 * @param {number} player The player, not needed when activated through the dropdown.
 */
 function nvRando (player) {
-	if (player) {} else {
-		player = parseInt(getElem('navbarChars').getAttribute('player'));
+	if (ctrlKeyVar === true) {
+		randomChar();
+		return;
 	}
-	randomChar(player);
+	if (typeof player === 'undefined')
+		player = parseInt(getElem('navbarChars').getAttribute('player'));
+	
+	//fills pastResults with the current characters position from charList[curGame] and then draws a random character from that same list
+	pastResults = [charList[curGame].indexOf(characters[1]), charList[curGame].indexOf(characters[2]), charList[curGame].indexOf(characters[3]), charList[curGame].indexOf(characters[4])];
+	changeCharacters(player, charList[curGame][randomCharFor(charList[curGame].length)]);
 
 	var elems = document.querySelectorAll('.nvCharSelected');
 	for (let num = 0; num < elems.length; num++) {

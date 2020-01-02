@@ -87,6 +87,11 @@ function counterButtons (player, action, amount, counter) {
 		} else if (action == 'S') {
 			result = amount;
 		}
+		if (result >= 100 && getValue('xBelow100') === true) {
+			getElem('coinStarText').classList.remove('counterBelow100');
+		} else {
+			getElem('coinStarText').classList.add('counterBelow100');
+		}
 		coinStar(result);
 
 	} else if (counter === 'curTurn' || counter === 'maxTurn') {
@@ -170,7 +175,14 @@ var bonusStars = ['', 0, 0, 0, 0];
 function updateStars (player, action, amount) {
 	if (document.querySelector('input[name="bonusStarAdd"]:checked').id === 'bonusDont') {
 		for (let num = 1; num < 5; num++) {
-			updateCounter('p' + num + 'StarsBonusText', getInner('p' + num + 'StarsText'));
+			var result = getStat('stars', num);
+			updateCounter('p' + num + 'StarsBonusText', result);
+
+			if (result >= 100 && getValue('xBelow100') === true) {
+				getElem('p' + num + 'StarsBonusText').classList.remove('counterBelow100');
+			} else {
+				getElem('p' + num + 'StarsBonusText').classList.add('counterBelow100');
+			}
 		}
 		return;
 	}
@@ -223,11 +235,19 @@ function updateStars (player, action, amount) {
 	}
 
 	for (let num = 1; num < 5; num++) {
+		result[num] = parseInt(result[num]);
 		if (result[num] >= 999) {
 			result[num] = 999;
 		} else if (result[num] <= 0) {
 			result[num] = 0;
 		}
+
+		if (result[num] >= 100 && getValue('xBelow100') === true) {
+			getElem('p' + num + 'StarsBonusText').classList.remove('counterBelow100');
+		} else {
+			getElem('p' + num + 'StarsBonusText').classList.add('counterBelow100');
+		}
+
 		if (document.querySelector('input[name="bonusStarAdd"]:checked').id === 'bonusSeperately') {
 			updateCounter('p' + num + 'StarsBonusText', result[num] + ' + ' + bonusStars[num]);
 		} else {

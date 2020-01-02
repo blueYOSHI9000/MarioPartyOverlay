@@ -47,10 +47,10 @@
 	<!-- === NAVBAR === -->
 
 	<div id="navbar">
-		<span id="nvChar1" class="nvChar" onclick="showNavBar(this)"> <img src="img/mpsrIcons/mario.png" onerror="imgError(this)"> <img src="img/com.png" id="nvCom1" class="nvCom" onerror="comImgError(this)"> </span>
-		<span id="nvChar2" class="nvChar" onclick="showNavBar(this)"> <img src="img/mpsrIcons/luigi.png" onerror="imgError(this)"> <img src="img/com.png" id="nvCom2" class="nvCom" onerror="comImgError(this)"> </span>
-		<span id="nvChar3" class="nvChar" onclick="showNavBar(this)"> <img src="img/mpsrIcons/yoshi.png" onerror="imgError(this)"> <img src="img/com.png" id="nvCom3" class="nvCom" onerror="comImgError(this)"> </span>
-		<span id="nvChar4" class="nvChar" onclick="showNavBar(this)"> <img src="img/mpsrIcons/peach.png" onerror="imgError(this)"> <img src="img/com.png" id="nvCom4" class="nvCom" onerror="comImgError(this)"> </span>
+		<span id="nvChar1" class="nvChar" onclick="showNavBar(this)"> <span style="position: absolute;"> <img src="img/p1.png" class="nvCharPlayerDisplay"> </span> <img src="img/mpsrIcons/mario.png" onerror="imgError(this)"> <img src="img/com.png" id="nvCom1" class="nvCom" onerror="comImgError(this)"> </span>
+		<span id="nvChar2" class="nvChar" onclick="showNavBar(this)"> <span style="position: absolute;"> <img src="img/p2.png" class="nvCharPlayerDisplay"> </span> <img src="img/mpsrIcons/luigi.png" onerror="imgError(this)"> <img src="img/com.png" id="nvCom2" class="nvCom" onerror="comImgError(this)"> </span>
+		<span id="nvChar3" class="nvChar" onclick="showNavBar(this)"> <span style="position: absolute;"> <img src="img/p3.png" class="nvCharPlayerDisplay"> </span> <img src="img/mpsrIcons/yoshi.png" onerror="imgError(this)"> <img src="img/com.png" id="nvCom3" class="nvCom" onerror="comImgError(this)"> </span>
+		<span id="nvChar4" class="nvChar" onclick="showNavBar(this)"> <span style="position: absolute;"> <img src="img/p4.png" class="nvCharPlayerDisplay"> </span> <img src="img/mpsrIcons/peach.png" onerror="imgError(this)"> <img src="img/com.png" id="nvCom4" class="nvCom" onerror="comImgError(this)"> </span>
 		<span id="nvGame" class="nvGames" onclick="showNavBar(this)"> <span id="nvGameImg"></span> <span id="nvGameAll">All</span> </span>
 		<span id="nvCounters" class="nvCounters" onclick="showNavBar(this)"> <img src="img/counters.png"></span>
 		<span id="nvAction" class="nvAction" onclick="showNavBar(this)"> <span class="relative"> <span id="nvActionText">Add</span> <span id="nvCtrlHeld">Ctrl</span> </span> <span id="nvActionIcon">+</span> </span>
@@ -847,21 +847,23 @@
 				<div id="tutorialSettings" class="hidden"> <span style="line-height: 27px;">
 					<a onclick="getElem('creditsBorder').scrollIntoView({behavior: 'smooth', block: 'start'})">Credits & Contact can be found at the bottom.</a> <br> <br>
 					Welcome to Mario Party Overlay (MPO)! MPO helps track all kinds of stats and bonus stars from the entire Mario Party series, supporting every game in it! <br> This quick tutorial should tell you how everything works with some tips that might come in handy! <br> <br>
-					You can access this dialog at any point by clicking on the gear at the top and then selecting "Credits". The navbar can only be used once this dialog is closed. <br> <br>
+					You can access this dialog at any point by clicking on the gear at the top and then selecting "Credits". The navigation bar can only be used once this dialog is closed. <br> <br>
 
-					Once settings are closed you can select your game at the top (it's the fifth entry in the navbar). Then select your characters for all four players by clicking on the character entries. Counters can be changed in the sixth entry in the navbar. <br> <br>
+					Once settings are closed you can select your game at the top (it's the fifth entry in the navigation bar). Then select your characters for all four players by clicking on the character entries. Counters can be changed in the sixth entry in the navigation bar. <br> <br>
 					To start tracking, just click on the counters/numbers to increase them. <br>
 					Coin stars can be tracked by clicking on a character. To avoid ties you can hold <i>Ctrl</i> to only give that character a coin star. Click on the coin star itself to change the amount. <br> <br>
 
-					To make tracking easier you can hold <i>Ctrl</i> to subtract them and hold <i>Shift</i> to increase/decrease by 5 instead of one. Both of them can also be manually changed in the navbar. <br>
+					To make tracking easier you can hold <i>Ctrl</i> to subtract them and hold <i>Shift</i> to increase/decrease by 5 instead of one. Both of them can also be manually changed in the navigation bar. <br>
 					By clicking on the gear you can access some more options like saving all stats which you should probably do every now and then! If you ever accidentally reset all stats, you can still reload them there. <br> <br>
 
-					The "Generate & Copy" button next to it allows you to output all stats as text, this is useful in case you track stats for a streamer so you can post them in the chat. Don't forget to customize it under the <a onclick="showHideSettings('generalMPO')">General</a> tab with advanced options shown! <br> <br>
+					The "Generate & Copy" button next to it allows you to output all stats as text, this is useful in case you track stats for a streamer so you can post them in the chat. Don't forget to customize it under the <a onclick="showHideSettings('generalMPO')">General</a> tab with advanced options shown! You can also hold <i>Shift</i> while clicking on the gear to copy it immediately. <br> <br>
 
 					Alternatively, you can also select the characters and counters you want in the <a onclick="showHideSettings('player')">Characters</a> and <a onclick="showHideSettings('counter')">Counters</a> tab in here. <br>
 					In <a onclick="showHideSettings('slots')">Savefiles</a> you can use various savefiles to track multiple games at the same time or backup everything locally as a file. <br> <br>
 
-					<a onclick="showHideSettings('shortcut')">Assist</a> mode makes tracking a lot easier as you only have to select the numbers rolled, items used, space landed on etc; MPO then automatically adds everything to the counters accordingly. <i>Note that Assist mode is still in Beta.</i>
+					<a onclick="showHideSettings('shortcut')">Assist</a> mode makes tracking a lot easier as you only have to select the numbers rolled, items used, space landed on etc; MPO then automatically adds everything to the counters accordingly. <i>Note that Assist mode is still in Beta.</i> <br> <br>
+
+					<span style="display: none;"> <b>Tip: </b> <span id="tutorialHints"></span> </span>
 				</span>
 
 					<br> <br> <div id="creditsBorder"></div> <br>
@@ -892,7 +894,7 @@
 				<div id="settingsFooterBorder" class="border"></div>
 				<div style="max-width: 1044px;">
 					<button id="popoutButton" onclick="saveAssist();mpoSettingsPopout()" style="flex: auto;"> Popout Settings </button>
-					<span id="settingsHintsContainer" onclick="newSettingsHint()" style="display: none;"> <b>Tip: </b> <span id="settingsHints">Click on the gear while holding Ctrl to open settings directly.</span> </span>
+					<span id="settingsHintsContainer" onclick="newSettingsHint()"> <b>Tip: </b> <span id="settingsHints">Click on the gear while holding Ctrl to open settings directly.</span> </span>
 					<span id="settingsClose">
 						<button onclick="saveSettings(); savePlayers(); saveAssist();" id="saveButton"> Save </button>
 						<button onclick="if (popout == true) {window.close();} else {closeSettings();}" id="settingsCloseButton"> Close </button>
