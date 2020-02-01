@@ -10,7 +10,9 @@ To give/take the coin-star you just click on the character.
 
 Characters and counters can both be changed at the top.
 
-Settings can be found by clicking on the gear and then "Open Settings" (or by clicking on the gear while holding Ctrl). A more extensive (and likely up-to-date) introduction can by found by clicking on the gear and then "Credits".
+Settings can be found by clicking on the gear and then "Open Settings" (or by clicking on the gear while holding Ctrl).
+
+A more extensive (and likely up-to-date) introduction can by found by clicking on the gear and then "Credits".
 
 # Credits
 **All characters, products and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them. Mario Party is a registered trademark of Nintendo.**
