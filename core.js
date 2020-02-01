@@ -13,7 +13,7 @@ var ga = { //global actions
 * @param {boolean} returnElem Return element instead of stat.
 */
 function getStat (counter, player, returnElem) {
-	if (typeof player === 'undefined') {
+	if (typeof player === 'undefined' || counter === 'curTurn' || counter === 'maxTurn' || counter === 'coinStar') {
 		if (returnElem === true)
 			return getElem(capStr(counter, true) + 'Text');
 		return parseInt(getInner(capStr(counter, true) + 'Text'));
@@ -21,7 +21,7 @@ function getStat (counter, player, returnElem) {
 
 	if (returnElem === true)
 		return getElem('p' + player + capStr(counter) + 'Text');
-	return parseInt(getInner('p' + player + capStr(counter) + 'Text')); //capStr() to make sure it's capitalized - reverse for first two uses
+	return parseInt(getInner('p' + player + capStr(counter) + 'Text')); //capStr() to make sure it's capitalized - reversed for first two uses
 }
 
 /*

@@ -188,10 +188,10 @@ function changeCharSelectionIcons () {
 	}
 	for (let num = 0; num < charList.all.length; num++) {
 		if (getElem(charList.all[num] + '1').parentNode.style.display != 'none') {
-			getElem(charList.all[num] + '1').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
-			getElem(charList.all[num] + '2').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
-			getElem(charList.all[num] + '3').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
-			getElem(charList.all[num] + '4').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
+			getElem(charList.all[num] + '1').parentNode.parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
+			getElem(charList.all[num] + '2').parentNode.parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
+			getElem(charList.all[num] + '3').parentNode.parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
+			getElem(charList.all[num] + '4').parentNode.parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
 		}
 	}
 	updateNavbar(1);
@@ -588,7 +588,6 @@ function updateCounterList () {
 * @param {string} show A counter which should be made visible.
 */
 function showHiddenStats (show) {
-	console.log(cStatsHidden)
 	var arr = [];
 	if (show) {
 		cStatsHidden.splice(cStatsHidden.indexOf(show), 1);

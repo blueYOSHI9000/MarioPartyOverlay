@@ -27,6 +27,7 @@ self.addEventListener('install', function(e) {
         '/MarioPartyOverlay/saving.js',
         '/MarioPartyOverlay/navbar.js',
         '/MarioPartyOverlay/sortable.min.js',
+        '/MarioPartyOverlay/labels.css',
         '/MarioPartyOverlay/buttons.css',
         '/MarioPartyOverlay/style.css',
         '/MarioPartyOverlay/sw.js',

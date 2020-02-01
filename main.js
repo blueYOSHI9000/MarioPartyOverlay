@@ -921,7 +921,12 @@ function capStr (str, reverse) {
 * @param {string} id The ID of the element that should be changed.
 */
 function getInner (id) {
-	return getElem(id).innerHTML;
+	try {
+		return getElem(id).innerHTML;
+	} catch (e) {
+		console.error(e);
+		console.error('[MPO] getInner() error, could not find: ' + id);
+	}
 }
 /*
 * Edits the InnerHTML of an element.
@@ -931,7 +936,12 @@ function getInner (id) {
 */
 function editInner (id, value) {
 	//console.log('id: ' + id + ', value: ' + value);
-	getElem(id).innerHTML = value;
+	try {
+		getElem(id).innerHTML = value;
+	} catch (e) {
+		console.error(e);
+		console.error('[MPO] editInner() error, could not find: ' + id);
+	}
 }
 
 

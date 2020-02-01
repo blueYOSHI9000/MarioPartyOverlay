@@ -5,7 +5,7 @@
 * @param {boolean} error If true it prints it as a error.
 */
 function shortcutNotif (text, error) {
-	console.log('[MPO Shortcut] ' + text);
+	console.log('[MPO Notif] ' + text);
 	editInner('shortcutNotif', text);
 	if (error) {
 		getElem('shortcutNotif').classList.add('errorAni');

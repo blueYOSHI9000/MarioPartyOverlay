@@ -1454,22 +1454,29 @@ noscript > span {
 .charSelectorFullWrapper {
 	height: calc(100% - 114px);
 }
-.charSelector input {
+.charSelector .inputContainer { /* Game Checkboxes at top of settings */
 	margin: 0;
+	margin-top: -12px;
 	padding: 0;
 	position: absolute;
 	z-index: 99;
 }
-#iconSelector input {
-	top: -24px;
+.charSelectorFullWrapper .inputContainer { /* COM Checkboxes */
+	margin-top: -6px;
+}
+.characterSelector .inputContainer { /* Character checkboxes in Characters tab */
+	margin: 0;
+}
+#iconSelector .inputContainer { /* Icon type checkboxes under general - you know, seperate classes would definitely help here but unfortunately I'm too lazy for that... */
+	top: -18px;
 }
 .charSelector input:active +.charSelectorLabel, .charSelector input:active +.drinkcard-cc {
 	opacity: .9;
 }
 .charSelector input:checked +.charSelectorLabel, .charSelector input:checked +.drinkcard-cc {
-	-webkit-filter: none;
-	   -moz-filter: none;
-			filter: none;
+	-webkit-filter: drop-shadow(0px 0px 6px #fff82b);
+	   -moz-filter: drop-shadow(0px 0px 6px #fff82b);
+			filter: drop-shadow(0px 0px 6px #fff82b);
 }
 
 .charSelectorLabel {
@@ -1745,7 +1752,7 @@ noscript > span {
 	#settingsSelectionSpan { display: none; }
 	#settingsSelectionSpanBreak { display: block; }
 	#gameSelectorDiv { font-size: 2.3vw; }
-	#gameSelectorDiv input { visibility: hidden; /*height: 1.7vw; width: 1.7vw;*/ }
+	#gameSelectorDiv .inputContainer { visibility: hidden; /*height: 1.7vw; width: 1.7vw;*/ }
 	/*.settingsSelection { font-size: 3.4vw; }*/
 	.gameLabel { font-size: 2.3vw; height: 3.2vw; width: 3.2vw }
 	#mp1 { margin-left: 3vw; }

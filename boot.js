@@ -156,7 +156,7 @@ function loadHTML () {
 	var arr = [];
 	for (let num = 1; num < 5; num++) {
 		for (let num2 = 0; num2 < charList.all.length; num2++) {
-			arr.push('<span class="' + charList.all[num2] + 'Span"> <input type="radio" name="charSelectorInput' + num + '" id="' + charList.all[num2] + num + '" value="' + charList.all[num2] + '" onchange="changeSettings(\'changeCharacters\', [' + num + ', \'' + charList.all[num2] + '\'])"> <label class="charSelectorLabel" for="' + charList.all[num2] + num + '"> <img class="charSelectorLabelImg" src="img/mpsrIcons/' + charList.all[num2] + '.png" onerror="imgError(this)"> </label> <br> </span>');
+			arr.push('<span class="' + charList.all[num2] + 'Span"> <input type="radio" name="charSelectorInput' + num + '" id="' + charList.all[num2] + num + '" value="' + charList.all[num2] + '" newdesign="false" onchange="changeSettings(\'changeCharacters\', [' + num + ', \'' + charList.all[num2] + '\'])"> <label class="charSelectorLabel" for="' + charList.all[num2] + num + '"> <img class="charSelectorLabelImg" src="img/mpsrIcons/' + charList.all[num2] + '.png" onerror="imgError(this)"> </label> <br> </span>');
 		}
 		editInner('charSelector' + num, arr.join(''));
 		arr = [];
@@ -165,6 +165,35 @@ function loadHTML () {
 	editValue('luigi2', true);
 	editValue('yoshi3', true);
 	editValue('peach4', true);
+
+	//replace checkboxes with better design which uses labels
+	var elems = document.querySelectorAll('input[type="checkbox"], input[type="radio"]');
+	for (let num = 0; num < elems.length; num++) {
+		if (elems[num].getAttribute('newdesign') != 'false' && !elems[num].classList.contains('counterOnOffInput')) {
+			var elem = document.createElement("span");
+			elem.classList.add('inputContainer');
+
+			var arr = [];
+			var attr = elems[num].attributes;
+			for (let num2 = 0; num2 < attr.length; num2++) {
+				switch (attr[num2].name) {
+					case 'type':
+					case 'name':
+					case 'id':
+					case 'value':
+					case 'onchange':
+						arr.push(attr[num2].name + '=\"' + attr[num2].value + '\"');
+						break;
+					default:
+						elem.setAttribute(attr[num2].name, attr[num2].value);
+				}
+			}
+
+			elem.innerHTML = '<input ' + arr.join(' ') + '> <label class="newdesign" for="' + attr.id.value + '"></label>';
+
+			elems[num].parentNode.replaceChild(elem, elems[num]);
+		}
+	}
 }
 
 var defSettings = {
@@ -207,7 +236,6 @@ var defSettings = {
 	shortcutSimpleMode: false,
 	shortcutAutoEnd: false,
 }
-console.log(defSettings)
 
 var replaceOnly = [	'hideAdvanced', 'settingsFullscreen',
 					'autoPopout', 'enableHighlight','highlightColor', 'deactivateUnused', 'noTie', 'autoSave', 'useHotkeys', 'enableInteract', 'useSW',
