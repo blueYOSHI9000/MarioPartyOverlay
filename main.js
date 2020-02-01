@@ -700,6 +700,9 @@ function callOnBoth (functionName, attributes) {
 }
 
 /*
+* Changes browser settings. Called everytime an option gets changed.
+*
+* @param {string} id The id of the option.
 */
 function changeSettings (id) {
 	editValueOnBoth(id, getValue(id));
@@ -719,7 +722,7 @@ function changeSettings (id) {
 		case 'enableHighlight':
 			callOnBoth('resetHighlights');
 			break;
-		case 'color':
+		case 'highlightColor':
 			callOnBoth('callHighlight', [false, true]);
 			break;
 		case 'deactivateUnused':
@@ -741,14 +744,14 @@ function changeSettings (id) {
 			break;
 
 		// INTERFACE
-		case 'color':
+		case 'bgColor':
 			callOnBoth('changeBGColor', ['bgColor']);
 			break;
 		case 'greenscreen':
 			callOnBoth('changeTheme');
 			break;
 		case 'textColor':
-			callOnBoth('changeTextColor', [this.id]);
+			callOnBoth('changeTextColor', ['textColor']);
 			break;
 		case 'mpsrIcons':
 		case 'mk8Icons':
@@ -804,6 +807,10 @@ function changeTheme (theme) {
 	} else {
 		getElem('bodyElement').style.backgroundImage = 'url("img/bgs/' + theme + '.jpg"), url("img/bgs/default.jpg")';
 		getElem('bodyElement').style.backgroundColor = 'unset';
+	}
+
+	if (popout != true && startup === false) {
+		saveSettings();
 	}
 }
 
@@ -1055,20 +1062,25 @@ function editInner (id, value) {
 */
 function editValue (id, value) {
 	//console.log('id: ' + id + ', value: ' + value);
-	if (getElem(id).type == 'checkbox' || getElem(id).type == 'radio') {
-		if (typeof value === 'undefined') {
-			if (getValue(id) === false){
-				getElem(id).checked = true;
+	try {
+		if (getElem(id).type == 'checkbox' || getElem(id).type == 'radio') {
+			if (typeof value === 'undefined') {
+				if (getValue(id) === false){
+					getElem(id).checked = true;
+				} else {
+					getElem(id).checked = false;
+				}
 			} else {
-				getElem(id).checked = false;
+				if (typeof value === 'string')
+					value = stringToBoolean(value);
+				getElem(id).checked = value;
 			}
 		} else {
-			if (typeof value === 'string')
-				value = stringToBoolean(value);
-			getElem(id).checked = value;
+			getElem(id).value = value;
 		}
-	} else {
-		getElem(id).value = value;
+	} catch (e) {
+		console.error(e);
+		console.error('[MPO] editValue() error, could not find: ' + id);
 	}
 }
 
@@ -1078,10 +1090,15 @@ function editValue (id, value) {
 * @param {string} id The ID of the element that should be changed.
 */
 function getValue (id) {
-	if (getElem(id).type == 'checkbox' || getElem(id).type == 'radio') {
-		return getElem(id).checked;
-	} else {
-		return getElem(id).value;
+	try {
+		if (getElem(id).type == 'checkbox' || getElem(id).type == 'radio') {
+			return getElem(id).checked;
+		} else {
+			return getElem(id).value;
+		}
+	} catch (e) {
+		console.error(e);
+		console.error('[MPO] getValue() error, could not find: ' + id);
 	}
 }
 
@@ -1091,7 +1108,12 @@ function getValue (id) {
 * @param {string} id The ID of the element
 */
 function getElem (id) {
-	return document.getElementById(id);
+	try {
+		return document.getElementById(id);
+	} catch (e) {
+		console.error(e);
+		console.error('[MPO] getElem() error, could not find: ' + id);
+	}
 }
 
 /*

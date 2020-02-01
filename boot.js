@@ -273,6 +273,7 @@ function loadSettings (obj) {
 	hideAdvancedSettings();
 	settingsFullscreen();
 	displayXBelow100();
+	changeTextColor('textColor');
 	changeLayout();
 	changeCharacters();
 	updateCounterInput();
