@@ -37,10 +37,11 @@ a {
 	color: #0B00FF;
 	cursor: pointer;
 	text-decoration: none;
+	transition: color .15s;
 }
 a:hover {
-	color: #5000C9;
-	text-decoration: underline;
+	color: inherit;
+	text-decoration: none;
 }
 
 html, body, #bodyContainer {
@@ -841,35 +842,38 @@ noscript > span {
 .settingsSelection {
 	font-size: 26px;
 	margin-right: 10px;
+	margin-bottom: 2px;
 	color: #2121ec;
-	border-bottom: #2121ec77 2px solid;
+	border-color: #2121ec77;
 	cursor: pointer;
+	transition: color .15s;
 }
 .settingsSelection:last-child {
 	margin-right: 0;
 }
 .settingsSelection:hover {
 	color: #e64940;
-	border-bottom: #e64940 2px solid;
+	border-color: #e64940;
 }
 .settingsSelection:active {
 	color: #e41105;
-	border-bottom: #e41105 2px solid;
+	border-color: #e41105;
 }
 .settingsSelected {
 	color: #d00000 !important;
-	border-bottom: #d00000 2px solid !important;
+	border-color: #d00000 !important;
 	cursor: default;
 }
 .settingsSelected:hover {
 	color: #d00000 !important;
-	border-bottom: #d00000 2px solid !important;
+	border-color: #d00000 !important;
 }
 .flexAuto {
 	flex: auto;
 }
 #settingsSelectionSpan {
 	display: flex;
+	position: relative;
 	width: 100%;
 	max-width: 1044px;
 	margin-bottom: 10px;
@@ -880,11 +884,23 @@ noscript > span {
 }
 .settingsSelectionImportant:hover {
 	color: #e64940;
-	border-bottom: #e64940 2px solid;
+	border-color: #e64940;
 }
 .settingsSelectionImportant:active {
 	color: #e41105;
-	border-bottom: #e41105 2px solid;
+	border-color: #e41105;
+}
+
+#settingsSelectionUnderline {
+	position: absolute;
+	background-color: #d00000;
+	margin-top: 31px;
+	height: 2px;
+
+	transition: width .4s, left .4s;
+	
+	width: 96.828125px;
+	left: 384px;
 }
 
 .assistButton {
@@ -964,6 +980,11 @@ noscript > span {
 }
 
 @media screen and (max-width: 1040px), screen and (max-height: 860px) { /* Will be used when screen is small enough - reminder to change it in popout too */
+	#settingsContent {
+		width: calc(100% - 40px) !important;
+		height: calc(100% - 40px) !important;
+		padding-left: 20px;
+	}
 	.settingsPopup {
 		padding: 20px;
 		position: absolute;
@@ -981,20 +1002,19 @@ noscript > span {
 	#settingsCloseSpan { position: fixed; }
 	#settingsCloseSave { display: block !important; }
 }
-@media screen and (max-width: 1280px) {
-	#settingsContent {
-		width: calc(100% - 40px) !important;
-		height: calc(100% - 40px) !important;
-		padding-left: 20px;
-	}
+@media screen and (max-width: 1330px) {
 	.border {
 		left: unset !important;
 		width: unset !important;
 	}
 }
-@media screen and (max-width: 1080px) {
-	#settingsHintsContainer {
-		display: none;
+@media screen and (max-width: 1090px) {
+	#settingsHintsContainer { display: none; }
+	#settingsSelectionUnderline { display: none; }
+	.settingsSelected {
+		border-bottom-width: 2px;
+		border-bottom-style: solid;
+		margin-bottom: 0px;
 	}
 }
 
@@ -1489,6 +1509,7 @@ noscript > span {
 	-webkit-filter: grayscale(.6) opacity(.5);
 	   -moz-filter: grayscale(.6) opacity(.5);
 			filter: grayscale(.6) opacity(.5);
+	transition: filter .3s;
 }
 .charSelectorLabelImg {
 	height: 70px;

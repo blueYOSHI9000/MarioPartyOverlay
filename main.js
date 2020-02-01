@@ -368,6 +368,10 @@ function displayOnOff (counter, start, force) {
 		updateStars();
 		changeStars();
 	}
+	if (popout != true && startup === false) {
+		slots['c' + slots.sel][counter + 'OnOff'] = getValue(counter + 'OnOff');
+		localStorage.setItem('c' + slots.sel, JSON.stringify(slots['c' + slots.sel]));
+	}
 }
 
 /*
@@ -459,8 +463,24 @@ function showHideSettings (id) {
 		updateCounterList();
 	}
 
+	updateUnderline(id + 'Selector');
+
 	getElem('settingsMain').scrollTop = scrollPos[openedSettings];
 }
+
+/*
+* Updates the underline position that's below the settings tabs.
+*
+* @param {string} id The id of the tab.
+*/
+function updateUnderline (id) {
+	var rect = getElem(id).getBoundingClientRect();
+	var containerRect = getElem('settingsSelectionSpan').getBoundingClientRect();
+	getElem('settingsSelectionUnderline').style.width = rect.width + 'px';
+	getElem('settingsSelectionUnderline').style.left = rect.left - containerRect.left + 'px';
+	//getElem('settingsSelectionUnderline').style.left = getElem(id).offsetLeft + 'px';
+}
+
 var test;
 /*
 * Closes the settings & navbar dropdown if the user doesn't click on the settings or navbar dropdown while they are opened.
@@ -629,8 +649,7 @@ var settingsHints = [	//'Hover over this to read the full tip.', //not implement
 						'Hold <i>Ctrl</i> to select a character that\'s already been selected.',
 						'Hold <i>Ctrl</i> when randomizing to randomize all characters instead of just the current one.',
 						'Click on a character while holding <i>Ctrl</i> to make them the only coin star holder.',
-						'Press the <i>1</i>, <i>5</i> or <i>0</i> key to set the amount to add/subtract to that number.',
-						'Everything is automatically saved when closing settings, even without hitting the save button.'];
+						'Press the <i>1</i>, <i>5</i> or <i>0</i> key to set the amount to add/subtract to that number.'];
 /*
 * Gets a new hint and displays it in settings.
 */
@@ -668,7 +687,7 @@ function closeSettings () {
 * @param {string} functionName The function that shoudl be called (without the '()').
 * @param {array} attributes The attributes that the function should use.
 */
-function changeSettings (functionName, attributes) {
+function callOnBoth (functionName, attributes) {
 	//console.log('functionName: '  + functionName + ', attributes: ' + attributes);
 	if (popout === true || popoutActivated === true) {
 		if (attributes) {
@@ -678,6 +697,88 @@ function changeSettings (functionName, attributes) {
 		}
 	}
 	executeFunctionByName(functionName, attributes);
+}
+
+/*
+*/
+function changeSettings (id) {
+	editValueOnBoth(id, getValue(id));
+
+	switch (id) {
+		case 'hideAdvanced':
+			callOnBoth('hideAdvancedSettings', [id]);
+			break;
+
+		// FEATURES
+		case 'settingsFullscreen':
+			callOnBoth('settingsFullscreen');
+			break;
+		case 'useSW':
+			callOnBoth('runSW');
+			break;
+		case 'enableHighlight':
+			callOnBoth('resetHighlights');
+			break;
+		case 'color':
+			callOnBoth('callHighlight', [false, true]);
+			break;
+		case 'deactivateUnused':
+			callOnBoth('deactivateUnused');
+			break;
+		case 'bonusDont':
+		case 'bonusCombine':
+		case 'bonusSeperately':
+			updateStars();
+			break;
+		case 'noTie':
+			callOnBoth('coinStarTie');
+			break;
+		case 'useHotkeys':
+			if (getValue('useHotkeys').checked === false) {
+				ctrlReleased(null, 'Control', true);
+				ctrlReleased(null, 'Shift', true);
+			}
+			break;
+
+		// INTERFACE
+		case 'color':
+			callOnBoth('changeBGColor', ['bgColor']);
+			break;
+		case 'greenscreen':
+			callOnBoth('changeTheme');
+			break;
+		case 'textColor':
+			callOnBoth('changeTextColor', [this.id]);
+			break;
+		case 'mpsrIcons':
+		case 'mk8Icons':
+			callOnBoth('changeCharacters');
+			callOnBoth('changeCharSelectionIcons');
+			break;
+		case 'customGameIcons':
+			callOnBoth('changeCharacters');
+			callOnBoth('changeCounterIcons');
+			break;
+		case 'xBelow100':
+			callOnBoth('displayXBelow100');
+			break;
+		case 'layoutHorizontal':
+		case 'layoutVertical':
+			callOnBoth('changeLayout');
+			break;
+
+		// TEXT OUTPUT
+		case 'toUseActive':
+			callOnBoth('updateCounterInput');
+			break;
+		case 'toOutput':
+			textOutputTest(true);
+			break;
+		case 'toCounters':
+			textOutputTest();
+			break;
+	}
+	saveSettings();
 }
 
 /*
@@ -874,6 +975,7 @@ function settingsFullscreen () {
 		getElem('settingsContent').classList.add('popupContent');
 		getElem('settingsContent').classList.add('settingsPopup');
 	}
+	updateUnderline(document.querySelector('.settingsSelected').id);
 }
 
 /*
@@ -1308,7 +1410,7 @@ function mpoSettingsPopout () {
 */
 function startSW () {
 	if (location.hostname === 'localhost' || location.origin === 'file://') {
-		console.warn('[MPO] Offline can\'t be used with localhost or from a local file.');
+		console.warn('[MPO] Service Workers can\'t be used with localhost or from a local file.');
 		return;
 	}
 	navigator.serviceWorker && navigator.serviceWorker.register('./sw.js').then(function(registration) {

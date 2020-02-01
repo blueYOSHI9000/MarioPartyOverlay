@@ -36,6 +36,10 @@ function changeCharacters (player, character) {
 	}
 	coinStarTie();
 	updateNavbar(player);
+	if (popout != true && startup === false) {
+		slots['c' + slots.sel]['char' + player] = character;
+		localStorage.setItem('c' + slots.sel, JSON.stringify(slots['c' + slots.sel]));
+	}
 }
 
 /*
@@ -224,6 +228,11 @@ function changeCom (player, noAnimation) {
 		}
 	}
 	updateNavbar(player);
+
+	if (popout != true && startup === false) {
+		slots['c' + slots.sel]['com' + player] = getValue('com' + player);
+		localStorage.setItem('c' + slots.sel, JSON.stringify(slots['c' + slots.sel]));
+	}
 }
 
 /*
@@ -397,13 +406,13 @@ function changeGame (game) {
 		if (game === 'mp9' || game === 'mp10') {
 			ms.checked = true;
 			editValueOnBoth(ms.id, true);
-			changeSettings('changeStars', ['miniStars']);
-			changeSettings('updateStars');
+			callOnBoth('changeStars', ['miniStars']);
+			callOnBoth('updateStars');
 		} else {
 			ms.checked = false;
 			editValueOnBoth(ms.id, false);
-			changeSettings('changeStars', ['miniStars']);
-			changeSettings('updateStars');
+			callOnBoth('changeStars', ['miniStars']);
+			callOnBoth('updateStars');
 		}
 	}
 
@@ -525,6 +534,10 @@ function changeGame (game) {
 			editInner('coinsOnOffText', 'Coins:');
 	}
 	updateCounterList();
+	if (popout != true && startup === false) {
+		slots['c' + slots.sel].curGame = game;
+		localStorage.setItem('c' + slots.sel, JSON.stringify(slots['c' + slots.sel]));
+	}
 }
 var curGame = 'all';
 var pastResults = [];
@@ -719,7 +732,7 @@ function randomChar (player) {
 		changeCharacters(num, chars[num2]);
 
 		if (popout === true) {
-			changeSettings('changeCharacters', [num, chars[num]]);
+			callOnBoth('changeCharacters', [num, chars[num]]);
 		}
 
 		if (player)

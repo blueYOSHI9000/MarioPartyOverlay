@@ -47,7 +47,7 @@ function showNavBar (elem) {
 			break;
 		case 'nvCounters':
 			openSettings();
-			changeSettings('showHideSettings', ['counter']);
+			callOnBoth('showHideSettings', ['counter']);
 			break;
 		case 'nvAction':
 			switchAction();
@@ -194,7 +194,7 @@ function closeNavbar () {
 	if (document.querySelector('.nvSelected') != null)
 		document.querySelector('.nvSelected').classList.remove('nvSelected');
 
-	savePlayers();
+	//savePlayers(); //not needed anymore, everything auto-saves now
 
 	activeNv = null;
 }
@@ -586,7 +586,7 @@ function nvChangeChar (elem) {
 		if (char === characters[num] && ctrlKeyVar != true)
 			return;
 	}
-	changeSettings('changeCharacters', [parseInt(getElem('navbarChars').getAttribute('player')), char]);
+	callOnBoth('changeCharacters', [parseInt(getElem('navbarChars').getAttribute('player')), char]);
 	closeNavbar();
 }
 
@@ -599,8 +599,8 @@ function nvChangeCom (player) {
 	if (player) {} else {
 		player = getElem('navbarChars').getAttribute('player');
 	}
-	changeSettings('editValue', ['com' + player]);
-	changeSettings('changeCom', [player]);
+	callOnBoth('editValue', ['com' + player]);
+	callOnBoth('changeCom', [player]);
 
 	getElem('nvComImg').classList.toggle('nvComSelected');
 }
@@ -642,6 +642,6 @@ function nvChangeGame (game) {
 	if (game === curGame)
 		return;
 
-	changeSettings('changeGame', [game])
+	callOnBoth('changeGame', [game]);
 	closeNavbar();
 }

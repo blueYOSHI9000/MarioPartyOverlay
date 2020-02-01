@@ -130,6 +130,8 @@ for (let num = 0; num < counters.length; num++) {
 	countersUp.push(counters[num].charAt(0).toUpperCase() + counters[num].slice(1));
 }
 
+var startup = true; //gets changed to false after MPO fully booted up
+
 /*
 * Loads various parts of the page.
 */
@@ -156,7 +158,7 @@ function loadHTML () {
 	var arr = [];
 	for (let num = 1; num < 5; num++) {
 		for (let num2 = 0; num2 < charList.all.length; num2++) {
-			arr.push('<span class="' + charList.all[num2] + 'Span"> <input type="radio" name="charSelectorInput' + num + '" id="' + charList.all[num2] + num + '" value="' + charList.all[num2] + '" newdesign="false" onchange="changeSettings(\'changeCharacters\', [' + num + ', \'' + charList.all[num2] + '\'])"> <label class="charSelectorLabel" for="' + charList.all[num2] + num + '"> <img class="charSelectorLabelImg" src="img/mpsrIcons/' + charList.all[num2] + '.png" onerror="imgError(this)"> </label> <br> </span>');
+			arr.push('<span class="' + charList.all[num2] + 'Span"> <input type="radio" name="charSelectorInput' + num + '" id="' + charList.all[num2] + num + '" value="' + charList.all[num2] + '" newdesign="false" onchange="callOnBoth(\'changeCharacters\', [' + num + ', \'' + charList.all[num2] + '\'])"> <label class="charSelectorLabel" for="' + charList.all[num2] + num + '"> <img class="charSelectorLabelImg" src="img/mpsrIcons/' + charList.all[num2] + '.png" onerror="imgError(this)"> </label> <br> </span>');
 		}
 		editInner('charSelector' + num, arr.join(''));
 		arr = [];
@@ -193,6 +195,14 @@ function loadHTML () {
 
 			elems[num].parentNode.replaceChild(elem, elems[num]);
 		}
+	}
+
+	//add attributes to link (a) elements that incl. an href attr.
+	elems = document.querySelectorAll('a[href^="http"]');
+	for (let num = 0; num < elems.length; num++) {
+		elems[num].classList.add('settingsLink');
+		elems[num].setAttribute('rel', 'noopener');
+		elems[num].setAttribute('target', '_blank');
 	}
 }
 
@@ -250,7 +260,6 @@ var replaceOnly = [	'hideAdvanced', 'settingsFullscreen',
 function loadSettings (obj) {
 	if (typeof obj === 'string')
 		obj = JSON.parse(obj);
-
 
 	for (var num = 0; num < replaceOnly.length; num++) {
 		editValue(replaceOnly[num], obj[replaceOnly[num]]);
@@ -425,6 +434,7 @@ function prepareMPO () {
 	localStorage.setItem('lsVer', 10); //localStorage version, used to check how everything is stored
 
 	prepared = true;
+	startup = false;
 }
 
 /*
@@ -452,4 +462,5 @@ function prepareMPOBackup () {
 			callDisplayOnOff();
 		}
 	}
+	startup = false;
 }
