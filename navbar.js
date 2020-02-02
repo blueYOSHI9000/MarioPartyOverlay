@@ -620,7 +620,10 @@ function nvRando (player) {
 	
 	//fills pastResults with the current characters position from charList[curGame] and then draws a random character from that same list
 	pastResults = [charList[curGame].indexOf(characters[1]), charList[curGame].indexOf(characters[2]), charList[curGame].indexOf(characters[3]), charList[curGame].indexOf(characters[4])];
-	changeCharacters(player, charList[curGame][randomCharFor(charList[curGame].length)]);
+	var character = charList[curGame][randomCharFor(charList[curGame].length)];
+	changeCharacters(player, character);
+
+	getElem(character + player).scrollIntoView({block: 'center'});
 
 	var elems = document.querySelectorAll('.nvCharSelected');
 	for (let num = 0; num < elems.length; num++) {

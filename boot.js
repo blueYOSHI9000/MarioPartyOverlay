@@ -390,10 +390,10 @@ function prepareMPO () {
 		}
 	}
 
-	openSettings(true);
+	openSettings(true); // Scrollintoview doesn't work when the element is hidden so we have to show it first and then hide it again
 	showHideSettings('player');
 	for (var num = 1; num < 5; num++) {
-		getElem(characters[num] + num).scrollIntoView(true); // Scrollintoview doesn't work when the element is hidden so we have to show it first and then hide it again
+		getElem(characters[num] + num).scrollIntoView({block: 'center'});
 	}
 	showHideSettings('generalMPO');
 	closeSettings();
