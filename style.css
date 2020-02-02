@@ -967,16 +967,11 @@ noscript > span {
     width: 51%;
     height: 85%;
 	min-width: 800px;
-	background: no-repeat url(img/settingsbg-light.png), linear-gradient(#d6d6d6cc, #70b0ffe0);
+	background: no-repeat url(img/settingsbg-light.png), linear-gradient(#d6d6d6eb, #70b0fff2);
 	display: flex;
 	flex-direction: column;
 	white-space: nowrap;
 	backdrop-filter: blur(4px);
-}
-@supports not (backdrop-filter: blur(4px);) {
-	#settingsContent {
-		background: no-repeat url(img/settingsbg-light.png), linear-gradient(#d6d6d6eb, #70b0fff2);
-	}
 }
 #tutorialSettings {
 	white-space: normal;
