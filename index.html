@@ -7,8 +7,6 @@
 	<title>Mario Party Overlay</title>
 	<meta name="description" content="An extensive and easy to use 'Bonus Star' tracker for all Mario Party games! With included greenscreen for livestreams!">
 	<meta name="author" content="blueYOSHI">
-	<meta name="robots" content="noodp,noydir" />
-
 
 	<meta property="og:type" content="website">
 	<meta property="og:title" content="Mario Party Overlay">
@@ -719,7 +717,7 @@
 						<span class="relative"> <label for="coinsOnOff" id="coinsOnOffText" class="counterOnOffText">Coins:</label> <input type="checkbox" id="coinsOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['coins'])"> <label for="coinsOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </span>
 					</div> <br> <br>
 
-					<span style="font-size: 21px;"><a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Mario-Party-Bonus-Star-List">Bonus Star List</a></span>
+					<span style="font-size: 21px;"><a href="bonus.html" id="bonusStarListLink" class="settingsLink" rel="noopener" target="_blank">Bonus Star List</a></span>
 				</div>
 
 				<!-- Savefile/slot Settings -->
@@ -882,10 +880,12 @@
 
 					<b>All characters, products and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them. <br> Mario Party is a registered trademark of Nintendo. </b> <br> <br>
 
-					<span style="line-height: 27px;"> Created by <a href="https://www.twitter.com/yoshisrc">blueYOSHI</a> with contributions from <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors">others</a> <br>
+					<span style="line-height: 27px;"> Created by <a href="https://www.twitter.com/yoshisrc">blueYOSHI</a> with contributions from <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors">others</a>. <br> <br>
 
-					All Mario Party related icons were created or inspired from officially published media by Nintendo. <br>
-					Mario Party related icons (re)created, edited or ripped by <a href="https://www.spriters-resource.com/submitter/Anonymous/">Anonymous</a>, <a href="https://www.mariowiki.com/User:Arend">Arend</a>, <a href="https://www.twitter.com/yoshisrc">blueYOSHI</a>, <a href="https://www.spriters-resource.com/submitter/xX-CamTro-Xx/">CamTro</a>, <a href="https://www.spriters-resource.com/submitter/FieryExplosion/">FieryExplosion</a>, <a href="https://www.spriters-resource.com/submitter/Kimimaru/">Kimimaru</a>, <a href="https://www.spriters-resource.com/submitter/larsenv/">larsenv</a>, <a href="https://www.spriters-resource.com/submitter/Mario+Gamer/">Mario Gamer</a>, <a href="https://mariopartylegacy.com/">Mario Party Legacy</a>,  <a href="https://www.spriters-resource.com/submitter/Random+Talking+Bush/">Random Talking Bush</a>, <a href="https://twitter.com/Der_RicoDexter">RicoDexter</a>. <br>
+					All Mario Party related icons were created by or inspired from officially published media by Nintendo. <br>
+					Mario Party related icons (re)created, edited or ripped by <a href="https://www.spriters-resource.com/submitter/Anonymous/">Anonymous</a>, <a href="https://www.mariowiki.com/User:Arend">Arend</a>, <a href="https://www.twitter.com/yoshisrc">blueYOSHI</a>, <a href="https://www.spriters-resource.com/submitter/xX-CamTro-Xx/">CamTro</a>, <a href="https://www.spriters-resource.com/submitter/FieryExplosion/">FieryExplosion</a>, <a href="https://www.spriters-resource.com/submitter/Kimimaru/">Kimimaru</a>, <a href="https://www.spriters-resource.com/submitter/larsenv/">larsenv</a>, <a href="https://www.spriters-resource.com/submitter/Mario+Gamer/">Mario Gamer</a>, <a href="https://mariopartylegacy.com/">Mario Party Legacy</a>,  <a href="https://www.spriters-resource.com/submitter/Random+Talking+Bush/">Random Talking Bush</a>, <a href="https://twitter.com/Der_RicoDexter">RicoDexter</a>. <br> <br>
+
+					Bonus Star information found by <a href="https://www.twitter.com/yoshisrc">blueYOSHI</a>, <a href="https://www.giantbomb.com/bonus-stars/3015-3011/">Giant Bomb</a>, <a href="https://www.mariowiki.com/">Super Mario Wiki</a>, <a href="https://mario.fandom.com/wiki/Bonus_Stars">Super Mario Wiki (wikia/fandom)</a>. <br> <br>
 
 					<a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx">Mario Party 9 Font</a> (<a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/commits/master/font.ttf">modified</a>) <br>
 					<a href="https://icons8.com/icon/2969/settings">Settings Icon by Icons8</a> <br>
@@ -916,6 +916,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/interact.js/1.2.6/interact.min.js"></script>
 	<script src="sortable.min.js"></script>
 
+	<script src="helpers.js"></script>
 	<script src="boot.js"></script>
 	<script src="saving.js"></script>
 	<script src="slots.js"></script>

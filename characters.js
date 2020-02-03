@@ -398,6 +398,7 @@ function changeGame (game) {
 	updateNavbar(2);
 	updateNavbar(3);
 	updateNavbar(4);
+	getElem('bonusStarListLink').setAttribute('href', 'bonus.html?game=' + game);
 
 	if (getValue('deactivateUnused') === true) {
 		deactivateUnused();
@@ -429,7 +430,7 @@ function changeGame (game) {
 		case 'mp6':
 			editInner('happeningOnOffText', 'Event:');
 			editInner('minigameOnOffText', 'Minigame:');
-			editInner('itemOnOffText', 'Orbs used:');
+			editInner('itemOnOffText', 'Orb:');
 			break;
 		case 'mp7':
 			editInner('happeningOnOffText', 'Action:');
