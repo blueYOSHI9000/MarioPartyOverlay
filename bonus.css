@@ -69,14 +69,14 @@ body {
 	box-sizing: border-box;
 	text-align: center;
 }
-#container > div {
+#container > main {
 	display: inline-block;
 	max-width: 50%;
 	text-align: justify;
 }
 
 @media screen and (max-width: 1240px) {
-	#container > div { max-width: initial; }
+	#container > main { max-width: initial; }
 }
 
 a {
@@ -268,7 +268,7 @@ input {
 	transition: filter .3s;
 }
 
-.charSelectorLabel:hover {
+.charSelectorLabel:hover, .charSelectorLabel:focus {
 -webkit-filter: grayscale(.3) opacity(.7);
    -moz-filter: grayscale(.3) opacity(.7);
 		filter: grayscale(.3) opacity(.7);

@@ -132,6 +132,22 @@ function changeTheme (theme, color, greenscreen) {
 }
 
 /*
+* Checks if Ctrl & Shift is pressed.
+*/
+function keyPressed (e) {
+	if (e.key === 'Enter') {
+		var focused = document.activeElement;
+		if (focused.tagName === 'LABEL') {
+			var elem = getElem(focused.getAttribute('for'));
+			editValue(elem.id, true);
+			eval(elem.getAttribute('onchange'));
+		}
+	}
+}
+
+window.onkeydown = keyPressed;
+
+/*
 * Checks if the URL specifies a specific game or if a theme should be used.
 */
 function startup () {
