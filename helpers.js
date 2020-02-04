@@ -1,3 +1,5 @@
+//helpers.js consists of several independent functions that can be shared between projects - functions specific for this project should be in another file
+
 /*
 * Capitalize a string.
 *
@@ -5,8 +7,9 @@
 * @param {boolean} reverse Convert first letter to lowercase instead.
 */
 function capStr (str, reverse) {
-	if (reverse)
+	if (reverse) {
 		return str.charAt(0).toLowerCase() + str.slice(1);
+	}
 	return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
@@ -134,44 +137,17 @@ function getUrl(variable) {
 
 /*
 * Converts a string into a boolean.
+* Returns null if it's not a boolean.
 *
 * @param {string} boolean The string that should get coverted.
 */
 function stringToBoolean (boolean) {
-	if (boolean == 'true') {
+	if (boolean === 'true') {
 		return true;
-	} else if (boolean == 'false') {
+	} else if (boolean === 'false') {
 		return false;
 	} else {
-		return boolean;
-	}
-}
-
-/*
-* Checks if it's executed in the popout and calls sendMessage() if it is.
-*
-* @param {string} id The first attribute.
-* @param {string} attribute Other attributes.
-* @param {boolean} force Forces it to send the message if true.
-*/
-function editValueOnBoth (id, attribute, force) {
-	if (popout == true || force == true) {
-		sendMessage('editValue+' + id + '+' + attribute);
-	}
-}
-
-/*
-* Checks if it's executed in the popout and calls sendMessage() if it is.
-*
-* @param {string} id The first attribute.
-* @param {array} attribute Other attributes.
-*/
-function execOnMain (func, attribute) {
-	if (popout == true) {
-		sendMessage(func + '+' + attribute.join('+'));
-		executeFunctionByName(func, attribute);
-	} else {
-		executeFunctionByName(func, attribute);
+		return null;
 	}
 }
 

@@ -2,7 +2,7 @@
 * Resets or starts the highlighting feature by calling callHighlight().
 */
 function resetHighlights () {
-	if (getValue('enableHighlight') == false) {
+	if (getValue('enableHighlight') === false) {
 		callHighlight(true);
 	} else {
 		callHighlight();
@@ -530,15 +530,15 @@ function ctrlPressed (e, ctrl, shift, key) {
 	} else {
 		switch (key) {
 			case '1':
-				ga.ogAmount = 1;
+				globalActions.ogAmount = 1;
 				updateAmount();
 				break;
 			case '5':
-				ga.ogAmount = 5;
+				globalActions.ogAmount = 5;
 				updateAmount();
 				break;
 			case '0':
-				ga.ogAmount = 10;
+				globalActions.ogAmount = 10;
 				updateAmount();
 				break;
 			case 'Escape':
@@ -574,8 +574,8 @@ function ctrlReleased (e, key, force) {
 	} else if (key === 'Shift' && shiftKeyVar === true) {
 		shiftKeyVar = false;
 		getElem('nvShiftHeld').style.display = 'none';
-		ga.amount = ga.ogAmount;
-		editInner('nvAmountText', ga.amount);
+		globalActions.amount = globalActions.ogAmount;
+		editInner('nvAmountText', globalActions.amount);
 	}
 }
 
@@ -1010,6 +1010,34 @@ function shortcutSettings (close) {
 	getElem('shortcutSettingsPopup').style.visibility = 'visible';
 	getElem('shortcutSettingsPopup').style.opacity = 1;
 	setTimeout(function () {getElem('settingsMain').setAttribute('onclick','shortcutSettings(true)');}, 10); //required because chrome would immediately execute the function if it was changed directly
+}
+
+/*
+* Checks if it's executed in the popout and calls sendMessage() if it is.
+*
+* @param {string} id The first attribute.
+* @param {string} attribute Other attributes.
+* @param {boolean} force Forces it to send the message if true.
+*/
+function editValueOnBoth (id, attribute, force) {
+	if (popout == true || force == true) {
+		sendMessage('editValue+' + id + '+' + attribute);
+	}
+}
+
+/*
+* Checks if it's executed in the popout and calls sendMessage() if it is.
+*
+* @param {string} id The first attribute.
+* @param {array} attribute Other attributes.
+*/
+function execOnMain (func, attribute) {
+	if (popout == true) {
+		sendMessage(func + '+' + attribute.join('+'));
+		executeFunctionByName(func, attribute);
+	} else {
+		executeFunctionByName(func, attribute);
+	}
 }
 
 /*

@@ -1,4 +1,4 @@
-var ga = { //global actions
+var globalActions = { //global actions
 	action: 'p',
 	amount: 1,
 	ogAction: 'p',
@@ -14,13 +14,15 @@ var ga = { //global actions
 */
 function getStat (counter, player, returnElem) {
 	if (typeof player === 'undefined' || counter === 'curTurn' || counter === 'maxTurn' || counter === 'coinStar') {
-		if (returnElem === true)
+		if (returnElem === true) {
 			return getElem(capStr(counter, true) + 'Text');
+		}
 		return parseInt(getInner(capStr(counter, true) + 'Text'));
 	}
 
-	if (returnElem === true)
+	if (returnElem === true) {
 		return getElem('p' + player + capStr(counter) + 'Text');
+	}
 	return parseInt(getInner('p' + player + capStr(counter) + 'Text')); //capStr() to make sure it's capitalized - reversed for first two uses
 }
 
@@ -44,6 +46,7 @@ function counterButtons (player, action, amount, counter) {
 
 	if (isNaN(getStat(counter, player)) === true) { //check if counter is NaN and set it to 0
 		getStat(counter, player, true).innerHTML = 0;
+
 		console.warn('[MPO] Counter was NaN, player: ' + player + ', counter: ' + counter);
 		if (shortcutLoaded === true) {
 			shortcutNotif('Error: ' + counter + ' for player ' + player + ' was NaN', true);
@@ -55,11 +58,11 @@ function counterButtons (player, action, amount, counter) {
 
 		result = getStat(counter, player);
 
-		if (action == 'P') {
-			result = result + amount;
-		} else if (action == 'M') {
-			result = result - amount;
-		} else if (action == 'S') {
+		if (action === 'P') {
+			result += amount;
+		} else if (action === 'M') {
+			result -= amount;
+		} else if (action === 'S') {
 			result = amount;
 		}
 
@@ -68,6 +71,7 @@ function counterButtons (player, action, amount, counter) {
 		} else if (result <= 0) {
 			result = 0;
 		}
+
 		if (result < 100 && getValue('xBelow100') === true) {
 			getStat(counter, player, true).classList.add('counterBelow100');
 		} else {
@@ -80,11 +84,11 @@ function counterButtons (player, action, amount, counter) {
 	if (counter === 'coinStar') {
 		result = getStat('coinStar');
 
-		if (action == 'P') {
-			result = result + amount;
-		} else if (action == 'M') {
-			result = result - amount;
-		} else if (action == 'S') {
+		if (action === 'P') {
+			result += amount;
+		} else if (action === 'M') {
+			result -= amount;
+		} else if (action === 'S') {
 			result = amount;
 		}
 		if (result >= 100 && getValue('xBelow100') === true) {
@@ -97,20 +101,20 @@ function counterButtons (player, action, amount, counter) {
 	} else if (counter === 'curTurn' || counter === 'maxTurn') {
 		turns(counter, amount, action);
 
-	} else if (getValue('enableHighlight') === true && counter != 'coins') { //part of else if because coin star and turns don't need highlighting
+	} else if (getValue('enableHighlight') === true && counter != 'coins') { //part of 'else if' because coin star and turns don't need highlighting
 		highlight(counter);
 	}
 
 	if (counter === 'Running' && getValue('slowOnOff') === true) {
 		slowHighlight();
-	}
-	if (counter === 'Item' && getValue('unusedOnOff') === true) {
+
+	} else if (counter === 'Item' && getValue('unusedOnOff') === true) {
 		slowHighlight(false, 'unused');
-	}
-	if (counter === 'Stars' || document.querySelector('input[name="bonusStarAdd"]:checked').id != 'bonusDont') {
+
+	} else if (counter === 'Stars' || document.querySelector('input[name="bonusStarAdd"]:checked').id != 'bonusDont') {
 		updateStars();
 	}
-	if (getValue('coinsOnOff') == true && counter == 'Coins') {
+	if (counter === 'Coins' && getValue('coinsOnOff') === true) {
 		updateCoins(player);
 	}
 }
@@ -118,23 +122,23 @@ function counterButtons (player, action, amount, counter) {
 /*
 * Updates the counters and creates a small animation.
 *
-* @param {string} id The ID that should be changed.
+* @param {string} id The ID of the element that should be updated.
 * @param {string} change What the element should be changed to.
 * @param {boolean} noAnimation If the animation should be skipped.
 */
 function updateCounter (id, change, noAnimation) {
-	if (getInner(id) == change) {
+	if (getInner(id) === change) {
 		return;
 	}
 	editInner(id, change);
-	if (getValue('enableAnimation') == false && noAnimation != true) {
+	if (getValue('enableAnimation') === false && noAnimation != true) {
 		return;
 	}
 
 	getElem(id).classList.add('counterAnimation');
 
 	var element = getElem(id)
-	element.addEventListener('webkitAnimationEnd', function(){
+	element.addEventListener('webkitAnimationEnd', function(){ //removes the animation class after the animation ended so it can be used again next time
 		this.classList.remove('counterAnimation');
 		this.removeEventListener('webkitAnimationEnd', arguments.callee, false);
 	}, false);
@@ -144,20 +148,20 @@ function updateCounter (id, change, noAnimation) {
 * Calls counterButtons().
 *
 * @param {string} counter Which counter should be updated.
-* @param {player} player Which player should be updated.
+* @param {number} player Which player should be updated.
 */
 function mobileButtons (counter, player) {
-	if (getValue('enableInteract') == true) {
+	if (getValue('enableInteract') === true) { //counters shouldn't be updated while drag'n'drop is on
 		return;
 	}
 
-	var action = ga.action.toUpperCase();
-	var amount = ga.amount;
+	var action = globalActions.action.toUpperCase();
+	var amount = globalActions.amount;
 
-	if (counter == 'Stars') {
+	if (counter === 'Stars') {
 		updateStars(player, action, amount);
 	} else {
-		if (popoutActivated == true && statSynced == true) {
+		if (popoutActivated === true && statSynced === true) {
 			sendMessage('counterButtons+' + player + '+' + action + '+' + amount + '+' + counter);
 		}
 		counterButtons(player, action, amount, counter);
@@ -165,7 +169,7 @@ function mobileButtons (counter, player) {
 }
 
 /*
-* Updates the Star counter.
+* Updates the Star counter, with bonus stars if needed.
 *
 * @param {number} player Which player should be updated.
 * @param {string} action What should be done.
@@ -173,7 +177,7 @@ function mobileButtons (counter, player) {
 */
 var bonusStars = ['', 0, 0, 0, 0];
 function updateStars (player, action, amount) {
-	if (document.querySelector('input[name="bonusStarAdd"]:checked').id === 'bonusDont') {
+	if (document.querySelector('input[name="bonusStarAdd"]:checked').id === 'bonusDont') { //no bonus stars
 		for (let num = 1; num < 5; num++) {
 			var result = getStat('stars', num);
 			updateCounter('p' + num + 'StarsBonusText', result);

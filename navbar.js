@@ -54,15 +54,15 @@ function showNavBar (elem) {
 			switchAction(true);
 			break;
 		case 'nvAmount':
-			switch (ga.ogAmount) {
+			switch (globalActions.ogAmount) {
 				case 1:
-					ga.ogAmount = 5;
+					globalActions.ogAmount = 5;
 					break;
 				case 5:
-					ga.ogAmount = 10;
+					globalActions.ogAmount = 10;
 					break;
 				default:
-					ga.ogAmount = 1;
+					globalActions.ogAmount = 1;
 			}
 			updateAmount();
 			break;
@@ -134,14 +134,14 @@ function switchAction (og) {
 		og = 'action';
 	}
 
-	if (ga[og] === 'p') {
-		ga[og] = 'm';
+	if (globalActions[og] === 'p') {
+		globalActions[og] = 'm';
 	} else {
-		ga[og] = 'p';
+		globalActions[og] = 'p';
 	}
 
 	if (og != true) {
-		if (ga.action === 'm') {
+		if (globalActions.action === 'm') {
 			editInner('nvActionIcon', '-');
 			editInner('nvActionText', 'Sub.');
 		} else {
@@ -156,21 +156,21 @@ function switchAction (og) {
 */
 function updateAmount () {
 	if (shiftKeyVar === true) {
-		switch (ga.ogAmount) {
+		switch (globalActions.ogAmount) {
 			case 1:
-				ga.amount = 5;
+				globalActions.amount = 5;
 				break;
 			case 5:
-				ga.amount = 1;
+				globalActions.amount = 1;
 				break;
 			case 10:
-				ga.amount = 1;
+				globalActions.amount = 1;
 				break;
 		}
 	} else {
-		ga.amount = ga.ogAmount;
+		globalActions.amount = globalActions.ogAmount;
 	}
-	editInner('nvAmountText', ga.amount);
+	editInner('nvAmountText', globalActions.amount);
 }
 
 /*
