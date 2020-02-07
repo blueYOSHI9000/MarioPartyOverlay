@@ -464,6 +464,8 @@
 
 					<label for="hideAdvanced" style="font-weight: bold;"> Hide advanced settings: </label> <input type="checkbox" id="hideAdvanced" onchange="changeSettings(this.id)" style="position: relative; top: 1px;"> <br> <br>
 
+					<!-- FEATURES -->
+
 					<span class="settingsTitle"> Features </span> <br>
 					<label for="autoPopout"> <span> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="changeSettings(this.id)"> </label> <br>
 
@@ -481,6 +483,8 @@
 					<span class="advanced"> <label for="enableHighlight"> <span> Enable counter highlighting: </span> </label> <input type="checkbox" id="enableHighlight" onchange="changeSettings(this.id)" checked> <input type="color" onchange="changeSettings(this.id)" value="#FF0000" id="highlightColor"> <br> <br> </span>
 
 					<label for="deactivateUnused"> <span> Automatically deactivate all counters not supported by the current game: </span> </label> <input type="checkbox" id="deactivateUnused" style="top: 5px;" onchange="changeSettings(this.id)" checked> <br> <br>
+
+					<span class="advanced"> <label for="xBelow100"> <span> Display x before numbers below 100: </span> </label> <input type="checkbox" id="xBelow100" onchange="changeSettings(this.id)" checked> <br> <br> </span>
 
 					<span> Add bonus-stars to star counter:
 						<span id="bonusStarSelector">
@@ -500,13 +504,16 @@
 					</span> <br>
 					<span class="note"> "Seperately" should not be used with horizontal layout. </span> <br>
 
-					<span class="advanced"> <label for="noTie"> <span> Only allow one player to get the coin star: </span> </label> <input type="checkbox" id="noTie" onchange="changeSettings(this.id)"> <br> </span>
+					<span class="advanced"> <label for="noTie"> <span> Only allow one player to get the coin star: </span> </label> <input type="checkbox" id="noTie" onchange="changeSettings(this.id)"> <br> </span> <br>
+
 					<label for="autoSave"> <span> Automatically save/reload when updating turns: </span> </label> <input type="checkbox" id="autoSave" onchange="changeSettings(this.id)"> <br> <br>
 
 					<span class="advanced"> <label for="useHotkeys"> Use Hotkeys: </label> <input type="checkbox" id="useHotkeys" onchange="changeSettings(this.id)" checked> <br> <br> </span>
 					<span class="advanced"> <label for="enableInteract"> <span> Enable Drag 'n' Drop: </span> </label> <input type="checkbox" id="enableInteract" onchange="changeSettings(this.id)"> <button onclick="callOnBoth('interactSave')">Save Positions</button> <button onclick="callOnBoth('interactReset')">Reset Positions</button> <br> </span>
 
 					<span style="display: none;"> <label for="permSave"> <span> Save counters permanently (not getting deleted on site reload): </span> </label> <input type="checkbox" id="permSave" onchange="changeSettings(this.id)" checked> <br> </span> <br class="advanced">
+
+					<!-- INTERFACE -->
 
 					<span class="settingsTitle"> Interface </span> <br>
 					<span> Background: </span>
@@ -533,8 +540,6 @@
 
 					<label for="customGameIcons"> <span> Use game-based icons if available: </span> </label> <input type="checkbox" id="customGameIcons" onchange="changeSettings(this.id)" checked> <br> <br>
 
-					<span class="advanced"> <label for="xBelow100"> <span> Display x before numbers below 100: </span> </label> <input type="checkbox" id="xBelow100" onchange="changeSettings(this.id)" checked> <br> <br> </span>
-
 					<span> Layout type:
 						<span id="layoutSelector">
 							<span class="relative">
@@ -550,6 +555,8 @@
 
 					<span class="advanced">
 						<label for="enableAnimation"> <span> Enable counter animation: </span> </label> <input type="checkbox" id="enableAnimation" onchange="changeSettings(this.id)" checked> <br> <br>
+
+						<!-- TEXT OUTPUT -->
 
 						<span class="settingsTitle"> Text Output </span> <br>
 							<label for="toBonusOnly"> <span> Only show who got the bonus star: </span> </label> <input type="checkbox" id="toBonusOnly" onchange="changeSettings(this.id)"> <br>
@@ -579,6 +586,8 @@
 							<b class="error" id="textOutputWarning" style="visibility: hidden;"> Hi if you see this </b>
 						</span>
 					</span> <br>
+
+					<!-- RESET -->
 
 					<span class="settingsTitle"> Reset </span> <br>
 					<button style="margin-bottom: 5px;" onclick="if (window.confirm('Are you sure you want to reset all settings to default?')) {callOnBoth('resetSettings');}" id="resetSettingsButton"> Reset Settings </button> <br>

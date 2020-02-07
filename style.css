@@ -1079,6 +1079,10 @@ noscript > span {
 	margin-bottom: 15px;
 	cursor: pointer;
 	text-align: initial;
+
+-webkit-transition: background-color .2s;
+   -moz-transition: background-color .2s;
+		transition: background-color .2s;
 }
 .emptySlot {
 	border-color: #0B0B0B91;
@@ -1130,8 +1134,12 @@ noscript > span {
 	color: #000000;
 	margin-right: 20px;
 	cursor: pointer;
-	-webkit-text-stroke: 1px #c4c4c4;
-			text-stroke: 1px #c4c4c4;
+-webkit-text-stroke: 1px #c4c4c4;
+		text-stroke: 1px #c4c4c4;
+
+-webkit-transition: color .3s;
+   -moz-transition: color .3s;
+		transition: color .3s;
 }
 .slotButtons:hover {
 	color: #ff1b1b;
