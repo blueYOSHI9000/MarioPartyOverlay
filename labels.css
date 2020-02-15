@@ -68,6 +68,9 @@ input[type="checkbox"]:checked ~ label.newdesign:after, input[type="radio"]:chec
 	opacity: 1;
 	transform: rotate(45deg) scale(1);
 }
+input[type="checkbox"][disabled] ~ label.newdesign, input[type="radio"][disabled] ~ label.newdesign {
+	cursor: default !important;
+}
 
 @keyframes jelly {
 	from {

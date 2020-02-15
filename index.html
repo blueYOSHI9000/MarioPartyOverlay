@@ -509,7 +509,11 @@
 					<label for="autoSave"> <span> Automatically save/reload when updating turns: </span> </label> <input type="checkbox" id="autoSave" onchange="changeSettings(this.id)"> <br> <br>
 
 					<span class="advanced"> <label for="useHotkeys"> Use Hotkeys: </label> <input type="checkbox" id="useHotkeys" onchange="changeSettings(this.id)" checked> <br> <br> </span>
-					<span class="advanced"> <label for="enableInteract"> <span> Enable Drag 'n' Drop: </span> </label> <input type="checkbox" id="enableInteract" onchange="changeSettings(this.id)"> <button onclick="callOnBoth('interactSave')">Save Positions</button> <button onclick="callOnBoth('interactReset')">Reset Positions</button> <br> </span>
+
+					<span class="advanced"> <label for="enableInteract"> <span> Enable Drag 'n' Drop: </span> </label> <input type="checkbox" id="enableInteract" onchange="changeSettings(this.id)">
+					<button id="saveInteract" onclick="callOnBoth('interactSave')">Save Positions</button>
+					<button id="resetInteract" onclick="callOnBoth('interactReset')">Reset Positions</button> <br>
+					<span id="noInteractError" class="error" style="display: none;"> Drag 'n' Drop couldn't be loaded. Check your connection and reload the site. <br> </span></span>
 
 					<span style="display: none;"> <label for="permSave"> <span> Save counters permanently (not getting deleted on site reload): </span> </label> <input type="checkbox" id="permSave" onchange="changeSettings(this.id)" checked> <br> </span> <br class="advanced">
 

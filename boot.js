@@ -284,9 +284,10 @@ function loadSettings (obj) {
 /*
 * Prepares all settings that were saved in local storage when the site gets loaded.
 */
-var prepared = false;
-var cookiesOn = false;
-var popout = false;
+var prepared = false; //if prepareMPO() could be finished (no errors)
+var cookiesOn = false; //if cookies are on
+var noInteract = false; //if Interact failed to load (true = interact.js failed to load - and likely other third parties too)
+var popout = false; //if this is a settings popout
 function prepareMPO () {
 	loadHTML();
 
@@ -304,7 +305,7 @@ function prepareMPO () {
 
 		getElem('settingsFullscreenPopoutReminder').style.display = 'block';
 		getElem('settingsFullscreenBlurReminder').style.display = 'none';
-		
+
 		getElem('savefileCookieError').style.display = 'none';
 
 		sendMessage('syncPopout');
@@ -419,6 +420,14 @@ function prepareMPO () {
 		openSettings();
 		showHideSettings('tutorial');
 		localStorage.setItem('new', '1');
+	}
+
+	if (noInteract === true) {
+		editValue('enableInteract', false);
+		getElem('enableInteract').setAttribute('disabled', true);
+		getElem('saveInteract').setAttribute('disabled', true);
+		getElem('resetInteract').setAttribute('disabled', true);
+		getElem('noInteractError').style.display = 'unset';
 	}
 
 	runSW();
