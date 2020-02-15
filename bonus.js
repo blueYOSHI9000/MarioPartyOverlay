@@ -93,6 +93,8 @@ function changeGame (game) {
 			}
 	}
 
+	history.replaceState(null, document.title, '?game=' + game);
+
 	for (let num = 0; num < showGames.length; num++) {
 		getElem(showGames[num]).style.display = 'block';
 
