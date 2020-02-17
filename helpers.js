@@ -168,3 +168,10 @@ function executeFunctionByName (functionName, args) {
 	//console.log('executeFunctionByName: ' + func + ' - ' + args)
 	return context[func].apply(context, args);
 }
+
+/*
+* Reloads the site.
+*/
+function reload () {
+	location = location;
+}

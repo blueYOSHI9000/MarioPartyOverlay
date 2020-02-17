@@ -112,6 +112,7 @@ function counterButtons (player, action, amount, counter) {
 		slowHighlight(false, 'unused');
 
 	} else if (counter === 'Stars' || document.querySelector('input[name="bonusStarAdd"]:checked').id != 'bonusDont') {
+		updateCounter('p' + player + 'StarsBonusText', getStat('stars', player)); //for the animation because updateStars() is somehow incapable of doing it
 		updateStars();
 	}
 	if (counter === 'Coins' && getValue('coinsOnOff') === true) {
@@ -131,7 +132,7 @@ function updateCounter (id, change, noAnimation) {
 		return;
 	}
 	editInner(id, change);
-	if (getValue('enableAnimation') === false && noAnimation != true) {
+	if (getValue('enableAnimation') === false || noAnimation === true) {
 		return;
 	}
 
@@ -170,6 +171,7 @@ function mobileButtons (counter, player) {
 
 /*
 * Updates the Star counter, with bonus stars if needed.
+* Apparently attributes are never used when calling this for some reason.
 *
 * @param {number} player Which player should be updated.
 * @param {string} action What should be done.
@@ -180,7 +182,7 @@ function updateStars (player, action, amount) {
 	if (document.querySelector('input[name="bonusStarAdd"]:checked').id === 'bonusDont') { //no bonus stars
 		for (let num = 1; num < 5; num++) {
 			var result = getStat('stars', num);
-			updateCounter('p' + num + 'StarsBonusText', result);
+			updateCounter('p' + num + 'StarsBonusText', result, true);
 
 			if (result >= 100 && getValue('xBelow100') === true) {
 				getElem('p' + num + 'StarsBonusText').classList.remove('counterBelow100');
@@ -253,9 +255,9 @@ function updateStars (player, action, amount) {
 		}
 
 		if (document.querySelector('input[name="bonusStarAdd"]:checked').id === 'bonusSeperately') {
-			updateCounter('p' + num + 'StarsBonusText', result[num] + ' + ' + bonusStars[num]);
+			updateCounter('p' + num + 'StarsBonusText', result[num] + ' + ' + bonusStars[num], true);
 		} else {
-			updateCounter('p' + num + 'StarsBonusText', parseInt(result[num]) + parseInt(bonusStars[num]));
+			updateCounter('p' + num + 'StarsBonusText', parseInt(result[num]) + parseInt(bonusStars[num]), true);
 		}
 	}
 }

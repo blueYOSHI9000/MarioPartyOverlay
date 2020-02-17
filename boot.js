@@ -147,7 +147,7 @@ function loadHTML () {
 		arr.push('<div style="position: relative;"> <div class="draggable stars starsBonus"> <span class="starsHitbox" onclick="mobileButtons(\'stars\', ' + num + ')"></span> <img class="counterDisplay" src="img/stars.png" id="p' + num + 'StarsDisplay" onerror="changeStarsError(this)"> <span class="counterText counterBelow100" id="p' + num + 'StarsBonusText">0</span> </div> <div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/stars.png"> <span class="counterText counterBelow100" id="p' + num + 'StarsText">0</span> </div> </div>');
 
 		for (let num2 = 1; num2 < counters.length; num2++) {
-			arr.push('<div class="draggable ' + counters[num2] + '" onclick="mobileButtons(\'' + counters[num2] + '\', ' + num + ')"> <img class="counterDisplay" src="img/' + counters[num2] + '.png" id="p' + num + countersUp[num2] + 'Display" onerror="counterImgError(this)"> <span class="counterText counterBelow100" id="p' + num + countersUp[num2] + 'Text"> 0 </span> </div>');
+			arr.push('<div class="draggable ' + counters[num2] + '" onclick="mobileButtons(\'' + counters[num2] + '\', ' + num + ')"> <img class="counterDisplay" src="img/' + counters[num2] + '.png" id="p' + num + countersUp[num2] + 'Display" onerror="counterImgError(this)"> <span class="counterText counterBelow100" id="p' + num + countersUp[num2] + 'Text">0</span> </div>');
 		}
 		elem.innerHTML = arr.join(' ');
 
@@ -416,6 +416,8 @@ function prepareMPO () {
 			elems[num].setAttribute('data-y', arrY[num]);
 		}
 	}
+
+	//only gets executed on first visit when cookies are allowed
 	if (localStorage.getItem('new') != '1') {
 		openSettings();
 		showHideSettings('tutorial');

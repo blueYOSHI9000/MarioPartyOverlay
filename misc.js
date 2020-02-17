@@ -1152,6 +1152,19 @@ function parseJSON (str) {
 }
 
 /*
+* Updates localStorage with new data.
+*
+* @param {object} o The data - don't ask me what data, I forgot.
+*/
+function writeLocalStorage(o) {
+	for (var property in o) {
+		if (o.hasOwnProperty(property)) {
+			localStorage.setItem(property, o[property]);
+		}
+	}
+}
+
+/*
 * Sends a message to the settings-popout/main window with a funcion in it.
 *
 * @param {string} text String with a funtion pointer in it that will be executed when received.
