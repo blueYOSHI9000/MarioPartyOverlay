@@ -372,6 +372,8 @@ function resetSettings (noLS) {
 */
 function syncPopout () {
 	if (popout == false && popoutActivated == true) {
+		sendMessage('loadSettings+' + JSON.stringify(saveSettings(true)));
+
 		sendMessage('setSlots+' + JSON.stringify(slots));
 
 		sendMessage('changeTheme+' + curTheme);
@@ -380,8 +382,6 @@ function syncPopout () {
 		sendMessage('changeCharacters+' + 2 + '+' + characters[2]);
 		sendMessage('changeCharacters+' + 3 + '+' + characters[3]);
 		sendMessage('changeCharacters+' + 4 + '+' + characters[4]);
-
-		sendMessage('loadSettings+' + saveSettings(true));
 
 		sendMessage('changeCom+' + 1);
 		sendMessage('changeCom+' + 2);
