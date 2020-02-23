@@ -434,6 +434,10 @@ noscript > span {
 	width: 70px;
 	padding: 5px;
 	box-sizing: border-box;
+
+-webkit-transition: background-color .3s;
+   -moz-transition: background-color .3s;
+		transition: background-color .3s;
 }
 #navbar > span img {
 	height: 60px;
@@ -461,6 +465,10 @@ noscript > span {
 #nvSettings > svg {
 	height: 50px !important;
 	padding: 5px 0 0 5px;
+}
+#navbar img, #navbarChars img, #navbarGames img {
+-webkit-user-drag: none;
+		user-drag: none;
 }
 
 #nvGameImg {
@@ -504,12 +512,16 @@ noscript > span {
 	padding: 5px;
 	border-radius: 10px;
 	margin: 2px;
+
+-webkit-transition: background-color .3s;
+   -moz-transition: background-color .3s;
+		transition: background-color .3s;
 }
 #nvall:hover, #nvGamesContainer img:hover {
 	background-color: #c0dfffb5;
 }
 #nvall:active, #nvGamesContainer img:active {
-	background-color: #a4aee2b5;
+	background-color: #f8fcffc2;
 }
 
 #nvActionText {
@@ -612,6 +624,10 @@ noscript > span {
 	height: 30px;
 	opacity: .7;
 	cursor: pointer;
+
+-webkit-transition: opacity .3s;
+   -moz-transition: opacity .3s;
+		transition: opacity .3s;
 }
 #nvComImg:hover {
 	opacity: .85;
@@ -626,6 +642,10 @@ noscript > span {
 	height: 30px;
 	opacity: .85;
 	cursor: pointer;
+
+-webkit-transition: opacity .3s;
+   -moz-transition: opacity .3s;
+		transition: opacity .3s;
 }
 #nvRandoImg:hover {
 	opacity: .95;
@@ -649,6 +669,10 @@ noscript > span {
 	height: 70px;
 	margin: 5px;
 	opacity: .85;
+
+-webkit-transition: opacity .3s;
+   -moz-transition: opacity .3s;
+		transition: opacity .3s;
 }
 #nvCharList img:hover {
 	cursor: pointer;
@@ -677,6 +701,10 @@ noscript > span {
 	height: 40px;
 	line-height: 40px;
 	text-align: center;
+
+-webkit-transition: background-color .3s;
+   -moz-transition: background-color .3s;
+		transition: background-color .3s;
 }
 .nvSettingsSave {
 	display: block;
@@ -693,6 +721,10 @@ noscript > span {
 	text-align: center;
 		text-stroke: 1px #000;
 -webkit-text-stroke: 1px #000;
+
+-webkit-transition: background-color .3s;
+   -moz-transition: background-color .3s;
+		transition: background-color .3s;
 }
 .nvSettingsItem:hover, .nvSettingsSave span:hover {
 	cursor: pointer;
