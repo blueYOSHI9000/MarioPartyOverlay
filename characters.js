@@ -5,40 +5,77 @@
 * @param {string} character Which character should be used (only used when changing characters).
 */
 function changeCharacters (player, character) {
-	if (getValue('customGameIcons') == true) {
-		for (let num = 1; num < 5; num++) {
-			if (player) {
-				characters[player] = character;
-				editValue(character + player, true);
-				num = player;
-			}
-			if (curGame != 'all') {
-				getElem('p' + num + 'Img').src = 'img/' + curGame + '/' + characters[num].toLowerCase() + '.png';
-			} else {
-				getElem('p' + num + 'Img').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[num].toLowerCase() + '.png';
-			}
-			if (player) {
-				break;
-			}
+	for (let num = 1; num < 5; num++) {
+		if (player) {
+			characters[player] = character;
+			editValue(character + player, true);
+			num = player;
 		}
-	} else {
-		for (let num = 1; num < 5; num++) {
-			if (player) {
-				characters[player] = character;
-				editValue(character + player, true);
-				num = player;
-			}
-			getElem('p' + num + 'Img').src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + characters[num].toLowerCase() + '.png';
-			if (player) {
-				break;
-			}
+		changeCharacterIcon('p' + num + 'Img', characters[num]);
+		if (player) {
+			break;
 		}
 	}
+
 	coinStarTie();
 	updateNavbar(player);
 	if (popout != true && startup === false) {
 		slots['c' + slots.sel]['char' + player] = character;
 		localStorage.setItem('c' + slots.sel, JSON.stringify(slots['c' + slots.sel]));
+	}
+}
+
+/*
+* Changes a character icon based on the currently selected game.
+*
+* @param {DOM Element/String} elem The element that should be changed or the ID for it.
+* @param {string} character The character it should be changed to.
+* @param {boolean} assist If true it uses the assist game instead of the normal one.
+*/
+function changeCharacterIcon (elem, character, assist) {
+	if (assist === true) {
+		var game = assistInfo.curGame;
+	} else {
+		var game = curGame;
+	}
+
+	if (typeof elem === 'string') {
+		elem = getElem(elem);
+	}
+
+	if (game != 'all' && getValue('customGameIcons') === true) {
+		elem.src = 'img/' + game + '/' + character.toLowerCase() + '.png';
+	} else {
+		elem.src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/' + character.toLowerCase() + '.png';
+	}
+}
+
+/*
+* Changes character icon back in case there's no custom icon.
+*/
+function changeCharacterIconError (elem) {
+	var id = elem.id;
+
+	var player = getNumberFromString(id);
+	var src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/'  + characters[player].toLowerCase() + '.png';
+
+	if (elem.getAttribute('src') != src) { //prevents an infinite loop when image doesn't exist
+		elem.src = src;
+	}
+}
+
+/*
+* Loads a default image if a custom one doesn't exist. Called from onerror.
+*
+* @param {object} elem The element which couldn't load a image.
+*/
+function imgError (elem) {
+	var v = elem.getAttribute('src').split('/');
+	v[1] = document.querySelector('input[name="icons"]:checked').id;
+	var src = v.join('/');
+
+	if (elem.getAttribute('src') != src) { //prevents an infinite loop when image doesn't exist
+		elem.src = src;
 	}
 }
 
@@ -59,23 +96,9 @@ function changeComImg () {
 * Changes COM image back in case there's no custom one.
 */
 function comImgError (elem) {
-	if (elem) {
+	if (elem && elem.getAttribute('src') != 'img/com.png') {
 		elem.src = 'img/com.png';
 	}
-	for (let num = 1; num < 5; num++) {
-		getElem('p' + num + 'ComDisplay').src = 'img/com.png';
-	}
-	getElem('nvComImg').src = 'img/com.png';
-}
-
-/*
-* Changes character icon back in case there's no custom icon.
-*/
-function changeCharactersBackup (elem) {
-	var id = elem.id;
-
-	var player = id.split('');
-	getElem(id).src = 'img/' + document.querySelector('input[name="icons"]:checked').id + '/'  + characters[player[1]].toLowerCase() + '.png';
 }
 
 /*
@@ -146,8 +169,13 @@ function changeCounterIcons () {
 function counterImgError (elem) {
 	var id = elem.id;
 	elem = elem.parentNode;
-	elem = elem.className.split(' ');
-	getElem(id).src = 'img/' + elem[1].toLowerCase()  + '.png';
+	elem = elem.className.split(' '); //dont ask me why I didnt create a new variable, no idea and I'm too lazy to change it now
+	var src = 'img/' + elem[1].toLowerCase()  + '.png';
+
+	if (getElem(id).getAttribute('src') === src) { //prevents an infinite loop when image doesn't exist
+		return;
+	}
+	getElem(id).src = src;
 
 	var elem2 = getElem(elem[1] + 'OnOff');
 	elem2 = elem2.parentNode;
@@ -169,17 +197,6 @@ function counterImgError (elem) {
 
 		elem2.children[2].style = 'background-image: url(img/item.png);';
 	}
-}
-
-/*
-* Loads a default image if a custom one doesn't exist. Called from onerror.
-*
-* @param {object} elem The element which couldn't load a image.
-*/
-function imgError (elem) {
-	var v = elem.getAttribute('src').split('/');
-	v[1] = document.querySelector('input[name="icons"]:checked').id;
-	elem.src = v.join('/');
 }
 
 /*
@@ -598,7 +615,7 @@ function updateCounterList () {
 
 /*
 * Lists unused counters with stats in the Counters tab in settings.
-* 
+*
 * @param {string} show A counter which should be made visible.
 */
 function showHiddenStats (show) {

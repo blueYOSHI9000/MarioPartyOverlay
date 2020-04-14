@@ -5,7 +5,7 @@ var backuped = false;
 */
 function saveAssist () {
 	var sel = 'a' + slots.sel;
-	if (shortcutLoaded === false) {
+	if (assistLoaded === false) {
 		return;
 	} else if (slots[sel].assistOn != true) {
 		slots[sel] = copyVar(defA);
@@ -110,7 +110,7 @@ function resetBackup () {
 	if (popout === false && popoutActivated === true) {
 		sendMessage('resetBackup');
 	}
-	if (popout === true && shortcutLoaded != true) {
+	if (popout === true && assistLoaded != true) {
 		return;
 	}
 	if (curGame === 'smp') {

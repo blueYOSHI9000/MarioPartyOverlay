@@ -48,8 +48,8 @@ function counterButtons (player, action, amount, counter) {
 		getStat(counter, player, true).innerHTML = 0;
 
 		console.warn('[MPO] Counter was NaN, player: ' + player + ', counter: ' + counter);
-		if (shortcutLoaded === true) {
-			shortcutNotif('Error: ' + counter + ' for player ' + player + ' was NaN', true);
+		if (assistLoaded === true) {
+			assistNotif('Error: ' + counter + ' for player ' + player + ' was NaN', true);
 		}
 	}
 

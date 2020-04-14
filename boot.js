@@ -143,7 +143,7 @@ function loadHTML () {
 
 		var arr = [];
 
-		arr.push('<div class="draggable characterDiv"> <div onclick="coinStarTie(' + num + ', true)"> <img src="img/com.png" class="comImg" id="p' + num + 'ComDisplay" onerror="comImgError()"> <img src="img/mpsrIcons/' + charList.all[num] + '.png" class="characterImg" id="p' + num + 'Img" onerror="changeCharactersBackup(this)"> </div> </div>');
+		arr.push('<div class="draggable characterDiv"> <div onclick="coinStarTie(' + num + ', true)"> <img src="img/com.png" class="comImg" id="p' + num + 'ComDisplay" onerror="comImgError(this)"> <img src="img/mpsrIcons/' + charList.all[num] + '.png" class="characterImg" id="p' + num + 'Img" onerror="changeCharacterIconError(this)"> </div> </div>');
 		arr.push('<div style="position: relative;"> <div class="draggable stars starsBonus"> <span class="starsHitbox" onclick="mobileButtons(\'stars\', ' + num + ')"></span> <img class="counterDisplay" src="img/stars.png" id="p' + num + 'StarsDisplay" onerror="changeStarsError(this)"> <span class="counterText counterBelow100" id="p' + num + 'StarsBonusText">0</span> </div> <div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/stars.png"> <span class="counterText counterBelow100" id="p' + num + 'StarsText">0</span> </div> </div>');
 
 		for (let num2 = 1; num2 < counters.length; num2++) {
@@ -243,15 +243,15 @@ var defSettings = {
 	toCounters: 'Turns, Happening, Minigame, Red Space, Coin Star',
 	toOutput: 'Turns, ?, MG, Red, Coin Star',
 
-	shortcutSimpleMode: false,
-	shortcutAutoEnd: false,
+	//shortcutSimpleMode: false,
+	//shortcutAutoEnd: false,
 }
 
 var replaceOnly = [	'hideAdvanced', 'settingsFullscreen',
 					'autoPopout', 'enableHighlight','highlightColor', 'deactivateUnused', 'noTie', 'autoSave', 'useHotkeys', 'enableInteract', 'useSW',
 					'customGameIcons', 'xBelow100', 'greenscreen', 'bgColor', 'textColor', 'enableAnimation',
-					'toBonusOnly', 'toShowNum', 'toListAllCoin', 'toP1Name', 'toP2Name', 'toP3Name', 'toP4Name', 'toSeperation', 'toUseActive', 'toCounters', 'toOutput',
-					'shortcutSimpleMode', 'shortcutAutoEnd'];
+					'toBonusOnly', 'toShowNum', 'toListAllCoin', 'toP1Name', 'toP2Name', 'toP3Name', 'toP4Name', 'toSeperation', 'toUseActive', 'toCounters', 'toOutput'/*,
+					'shortcutSimpleMode', 'shortcutAutoEnd'*/];
 /*
 * Loads settings from an object.
 *

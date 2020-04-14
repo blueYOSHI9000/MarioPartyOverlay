@@ -223,8 +223,8 @@ function loadSlot (slot) {
 	callDisplayOnOff();
 	//backup();
 
-	if (shortcutLoaded === true) {
-		loadAssistSlot();
+	if (assistLoaded === true) {
+		//loadAssistSlot();
 	}
 
 	if (cookiesOn === false)

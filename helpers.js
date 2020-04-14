@@ -175,3 +175,12 @@ function executeFunctionByName (functionName, args) {
 function reload () {
 	location = location;
 }
+
+/*
+* Returns the first number found in a string.
+*
+* @param {string} str The string.
+*/
+function getNumberFromString (str) {
+	return str.match(/\d+/)[0];
+}

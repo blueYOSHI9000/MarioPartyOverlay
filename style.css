@@ -5,12 +5,26 @@
 }
 
 
-.hidden {
-	display: none;
+.displayNone {
+	display: none !important;
 }
+.displayInit {
+}
+
 .visible {
-	display: block;
+	visibility: visible !important;
+	opacity: 1 !important;
 }
+.hidden {
+	visibility: hidden !important;
+	opacity: 0 !important;
+}
+.visibilityTransition {
+-webkit-transition: visibility .25s, opacity .25s;
+   -moz-transition: visibility .25s, opacity .25s;
+		transition: visibility .25s, opacity .25s;
+}
+
 
 body {
 	font-family: Helvetica, Segoe UI, Arial, sans-serif;
@@ -99,10 +113,16 @@ noscript > span {
 	opacity: 1 !important;
 }
 .fullOpacity:hover {
-	opacity: .9 !important;
+	opacity: .9 !important; /* I have absolutely no idea if this is supposed to be .9 or if it was a mistake */
 }
 .fullOpacity:active {
 	opacity: 1 !important;
+}
+
+.titleText {
+	font-family: 'Mario';
+	font-size: 20px;
+	color: #1F1F1F;
 }
 
 /* == Scrollbar == */
@@ -599,7 +619,7 @@ noscript > span {
 	border-radius: 15px;
 	overflow: hidden;
 	backdrop-filter: blur(3px);
-	z-index: 999;
+	z-index: 99;
 	cursor: default; /* Somehow needed */
 
 	-webkit-transition: height .3s;
@@ -782,7 +802,7 @@ noscript > span {
 #settingsSelectionSpanBreak {
 	display: none;
 }
-#shortcutSelectorBreak {
+#assistSelectorBreak {
 	margin-right: 0px;
 }
 
@@ -815,14 +835,14 @@ noscript > span {
     left: calc(-25% + 15px); /* 20% from padding - 5% additional % as it doesn't take 20% from the screen size but instead from it's parent that already had 20% subtracted */
     width: calc(125% - 15px); /* no idea about 15px but it's required */
 }
-#shortcutHeader {
+#assistHeader {
 	display: none;
 	width: 100%;
 	max-width: 1044px;
 	padding-top: 5px;
 	padding-bottom: 5px;
 }
-#shortcutNotif {
+#assistNotif {
 	text-align: center;
 }
 #settingsFooterBorder {
@@ -942,8 +962,10 @@ noscript > span {
 	margin-top: 31px;
 	height: 2px;
 
-	transition: width .4s, left .4s;
-	
+-webkit-transition: width .4s, left .4s;
+   -moz-transition: width .4s, left .4s;
+		transition: width .4s, left .4s;
+
 	width: 96.828125px;
 	left: 384px;
 }
@@ -967,6 +989,7 @@ noscript > span {
 
 #settings {
 	position: fixed;
+	z-index: 999;
 	left: 0;
 	top: 0;
 	width: 100%;
@@ -1075,6 +1098,7 @@ noscript > span {
 #slotsSettings {
 	text-align: center;
 	white-space: normal;
+	display: block;
 }
 #slotList {
 -webkit-user-select: none;
@@ -1240,262 +1264,6 @@ noscript > span {
 }
 #loadButton:active {
 	color: #038a28;
-}
-
-/* == Shortcuts == */
-.turnBreak {
-	display: none;
-}
-.column {
-	float: left;
-	width: 50%;
-}
-@media screen and (max-width: 800px) { /* Will be used when shortcut turn columns would overlap each other */
-	.turnBreak { display: inline-block; }
-	.column {
-		float: none;
-		width: auto;
-	}
-}
-
-.shortcutText {
-	font-family: 'Mario';
-	font-size: 20px;
-	color: #1F1F1F;
-}
-.spanSelection span {
-	opacity: .5;
-	cursor: pointer;
-}
-.spanSelection span:hover {
-	opacity: .9;
-}
-.spanSelection span:active {
-	opacity: 1;
-}
-.selected {
-	opacity: 1 !important;
-}
-.selected:hover {
-	opacity: 1 !important;
-}
-.selected:active {
-	opacity: 1 !important;
-}
-
-
-#shortcutSettingsPopup {
-	position: absolute;
-	overflow-y: auto;
-	max-height: 67%;
-	width: 500px;
-	padding: 1rem;
-	z-index: 999;
-	border-radius: 20px 12px 12px 20px;
-	opacity: 0;
-	visibility: hidden;
-	pointer-events: none;
-	top: 65%;
-	left: 50%;
-	transform: translate(-50%, calc(-65% - 0.5px)); /* The calc part is required because it would be blurry otherwise. */
-}
-#shortcutOrder img {
-	width: 50px;
-}
-#shortcutOrder img:nth-child(even) {
-	padding-right: 10px;
-	width: 50px;
-}
-#shortcutDebug {
-	line-height: 25px;
-}
-
-#turnPlayerIcon {
-	width: 45px;
-}
-#statusEffectsContainer {
-	margin-left: 55px;
-}
-#statusEffects {
-	top: -15px;
-	position: absolute;
-}
-#statusEffects img {
-	width: 40px;
-	margin-right: 5px;
-}
-#turnDiceSelection {
-	-webkit-user-select: none;
-			user-select: none;
-
-}
-#turnCurDice {
-	width: 30px;
-	margin-right: 10px;
-}
-#turnCurDiceText {
-	opacity: 1 !important;
-	cursor: default;
-}
-#turnItems {
-	position: relative;
-}
-#turnItems img {
-	width: 40px;
-	margin-right: 15px;
-}
-#turnSpaces img {
-	width: 40px;
-}
-.imgSelection img {
-	opacity: .6;
-	cursor: pointer;
-}
-.imgSelection img:hover {
-	opacity: .9;
-}
-.imgSelection img:active {
-	opacity: 1;
-}
-#itemOther {
-	position: relative;
-	top: -5px;
-}
-#itemImg {
-	width: 40px;
-	margin-right: 10px;
-}
-#spaceEventImg {
-	width: 40px;
-	margin-right: 10px;
-}
-#turnHexSelection img {
-	width: 40px;
-}
-#turnHexCharSelection img {
-	width: 60px;
-}
-
-#allySelection {
-	width: 680px;
-	padding: 1rem;
-	z-index: 999;
-	pointer-events: none;
-	opacity: 0;
-	visibility: hidden;
-}
-#allySelection img {
-	width: 60px;
-	margin-left: 5px;
-	margin-bottom: 5px;
-}
-#allyDiceSelection img {
-	width: 30px;
-	padding-right: 5px;
-}
-.allySelected {
-	-webkit-filter: grayscale(100%) !important;
-			filter: grayscale(100%) !important;
-	opacity: .4 !important;
-}
-.allySelected:hover {
-	-webkit-filter: grayscale(100%) !important;
-			filter: grayscale(100%) !important;
-	opacity: .4 !important;
-}
-.allySelected:active {
-	-webkit-filter: grayscale(100%) !important;
-			filter: grayscale(100%) !important;
-	opacity: .4 !important;
-}
-.allySelectedChar {
-	cursor: default !important;
-}
-.removeAllyChar {
-	opacity: 1 !important;
-	cursor: default !important;
-}
-.removeAllyCharSpan img {
-	width: 50px !important;
-}
-#allyDice1 {
-	float: right;
-	visibility: hidden;
-}
-#allyDice2 {
-	float: right;
-	visibility: hidden;
-	position: relative;
-	top: -15px;
-}
-#allyDice3 {
-	float: right;
-	visibility: hidden;
-	position: relative;
-	top: -30px;
-}
-#allyDice4 {
-	float: right;
-	visibility: hidden;
-	position: relative;
-	top: -45px;
-}
-
-.chooseImg {
-	width: 60px;
-	opacity: .5;
-	cursor: pointer;
-}
-.chooseImg:hover {
-	opacity: .9;
-}
-.chooseImg:active {
-	opacity: 1;
-}
-.chooseImgSelected {
-	width: 60px;
-	-webkit-filter: grayscale(70%);
-			filter: grayscale(70%);
-}
-.chooseImgOrder img {
-	width: 50px;
-}
-.smallImg {
-	width: 45px;
-}
-
-#turnStarsSelection img {
-	width: 45px;
-}
-#shoppingSpan span {
-	display: inline-block;
-	width: 40px;
-	text-align: center;
-	background: url(img/coins.png) no-repeat;
-	background-size: 40px;
-}
-#coinMinigameSpan img {
-	width: 50px;
-	position: relative;
-	top: 16px;
-}
-
-.battleImg {
-	width: 40px;
-	opacity: .5;
-	cursor: pointer;
-}
-.battleImg:hover {
-	opacity: .9;
-}
-.battleImg:active {
-	opacity: 1;
-}
-#battleCoins {
-	width: 35px;
-}
-#battleResult img {
-	width: 50px;
 }
 
 /* == Choose Character == */
@@ -1928,4 +1696,205 @@ noscript > span {
 	z-index: 98;
 	opacity: 0;
 	font-size: 25px;
+}
+
+/* === ASSIST === */
+#assistColumnWrapper {
+	column-count: 2;
+	column-fill: balance;
+}
+
+.assistModule {
+	margin-bottom: 10px;
+	border-radius: 20px;
+	background: linear-gradient(#f0f8ff6b, #f0f8ff21);
+}
+.assistModule > div {
+	display: inline-block;
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+.assistModule > div > div:first-child {
+	position: relative;
+	font-size: 27px;
+	color: #111;
+
+	padding-left: 20px;
+	border-radius: 20px 20px 0px 0px;
+	background: linear-gradient(#0000003b, #00000026);
+
+-webkit-transition: border-radius .2s;
+   -moz-transition: border-radius .2s;
+		transition: border-radius .2s;
+}
+.assistModule > div[customhidden="true"] > div:first-child { /* change border radius when hidden */
+	border-radius: 20px;
+}
+
+.assistModule > div > div:first-child > .assistArrowIcon { /* arrow icon */
+	display: inline-block;
+	position: absolute;
+	cursor: pointer;
+
+	width: 25px;
+	height: 25px;
+	top: 3px;
+	right: 13px;
+
+	background: url(img/next.svg);
+	transform: rotate(90deg);
+
+-webkit-transition: transform .2s;
+   -moz-transition: transform .2s;
+		transition: transform .2s;
+}
+.assistModule > div[customhidden="true"] > div:first-child > .assistArrowIcon { /* flip arrow icon when hidden */
+	transform: rotate(90deg) rotateY(180deg);
+}
+
+.assistModule > div > div:first-child > .assistDragIcon { /* drag icon */
+	display: inline-block;
+	position: absolute;
+	cursor: move;
+
+	width: 25px;
+	height: 25px;
+	top: 3px;
+	right: 45px;
+
+	background: url(img/drag.png);
+	background-size: cover;
+}
+
+/*.assistModule > div > div:first-child:before { /* hover color since linear-gradient can't be transitioned normally *
+	content: '';
+	display: block;
+	position: absolute;
+	user-select: none;
+	opacity: 0;
+
+	width: 100%;
+	height: 100%;
+	left: 0px;
+	border-radius: 20px 20px 0px 0px;
+	background: linear-gradient(#2dff3838, #2dff380f);
+
+-webkit-transition: opacity .2s, border-radius .2s;
+   -moz-transition: opacity .2s, border-radius .2s;
+		transition: opacity .2s, border-radius .2s;
+}
+.assistModule > div[customhidden="true"] > div:first-child:before { /* change border radius when hidden *
+	border-radius: 20px;
+}
+.assistModule > div > div:first-child:hover:before { /* on hover *
+	opacity: 1;
+}
+.assistModule > div > div:first-child:active:before { /* on click - no animation because screw this *
+	background: linear-gradient(#2dff384a, #2dff3815);
+}*/
+
+.assistModuleWrapper {
+-webkit-transition: height .2s;
+   -moz-transition: height .2s;
+		transition: height .2s;
+}
+
+.assistModuleWrapper > span {
+	height: 300px;
+	display: block;
+}
+
+
+#assistPlayerList {
+	text-align: center;
+	margin-bottom: 10px;
+}
+.assistCurrentPlayerText {
+	position: relative;
+	font-family: 'Mario';
+	font-size: 25px;
+}
+.assistCurrentPlayerImg {
+	height: 65px;
+}
+#assistPlayerList > span {
+	display: inline-block;
+	position: relative;
+	height: 65px;
+	padding: 6px;
+	border-radius: 30px;
+}
+
+.counterAnimation {
+	animation: bounce .19s ease-out 0s 1 both;
+}
+#assistPlayerList > span> span:first-child {
+	display: inline-block;
+	position: absolute;
+
+	height: calc(65px + 14px); /* recreate padding but without using padding so width: 0px; can be used for animations - padding-right is supposed to be 0px for some reason */
+	width: calc(100% + 7px);
+	top: 0px;
+	left: 0px;
+
+	z-index: -1;
+	border-radius: 30px;
+	background: #00a6b7;
+
+-webkit-transition: width .5s;
+   -moz-transition: width .5s;
+		transition: width .5s;
+}
+.assistCurrentPlayerTextWrapper {
+	display: inline-block;
+	overflow: hidden;
+
+-webkit-transition: width .5s;
+   -moz-transition: width .5s;
+		transition: width .5s;
+}
+
+.chooseImg {
+	cursor: pointer;
+
+-webkit-filter: grayscale(.6) opacity(.5);
+   -moz-filter: grayscale(.6) opacity(.5);
+		filter: grayscale(.6) opacity(.5);
+
+-webkit-transition: filter .25s;
+   -moz-transition: filter .25s;
+		transition: filter .25s;
+}
+.chooseImg:hover {
+-webkit-filter: grayscale(.3) opacity(.7);
+   -moz-filter: grayscale(.3) opacity(.7);
+		filter: grayscale(.3) opacity(.7);
+}
+.chooseImg:active {
+-webkit-filter: grayscale(.1) opacity(.9);
+   -moz-filter: grayscale(.1) opacity(.9);
+		filter: grayscale(.1) opacity(.9);
+}
+
+.chooseImgSelected {
+	cursor: default;
+-webkit-filter: grayscale(.7) opacity(1) !important;
+   -moz-filter: grayscale(.7) opacity(1) !important;
+		filter: grayscale(.7) opacity(1) !important;
+}
+
+/* Choose Order */
+#assistChooseOrder img {
+	width: 60px;
+}
+
+#choose1 {
+	margin-top: 15px;
+}
+
+#choose1, #choose2, #choose3, #choose4 {
+	/*visibility: hidden;
+	opacity: 0;*/
+
 }

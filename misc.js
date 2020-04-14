@@ -385,27 +385,36 @@ function callDisplayOnOff () {
 }
 
 /*
-* Show/Hide a certain element.
+* Show/Hide a certain element via visibility: hidden/visible.
 * Adds or removes the classes "hidden" and "visible" which respectively hides and shows a element based on a id given.
 *
-* @param {array} ids Which elements should be hidden or shown.
+* @param {String/DOM Element (Array)} ids Which elements should be hidden or shown.
+* @param {string} force Force hidden by using 'hide' or force visible by using 'show'.
+* @para, {boolean} display Use display properties instead of visibility (uses display: none; and display: initial;).
 */
-function showHideDiv (ids) {
-	for (let num = 0; num < ids.length; num++) {
-		var div = getElem(ids[num]).classList;
-		for (let num2 = 0; num2 < div.length; num2++) {
-			if (div[num2] == 'hidden') {
-				var cont = true;
-				break;
-			}
+function updateVisibility (elems, force, display) {
+	if (typeof elems != 'object') {
+		var elems = [elems];
+	}
+	if (display === true) {
+		var show = 'displayInit';
+		var hide = 'displayNone';
+	} else {
+		var show = 'visible';
+		var hide = 'hidden';
+	}
+
+	for (let num = 0; num < elems.length; num++) {
+		if (typeof elems[num] === 'string') {
+			elems[num] = getElem(elems[num]); //get DOM Element in case it wasn't one already
 		}
 
-		if (cont === true) {
-			getElem(ids[num]).classList.add('visible');
-			getElem(ids[num]).classList.remove('hidden');
+		if ((elems[num].classList.contains(hide) || force === 'show') && force != 'hide') {
+			elems[num].classList.remove(hide);
+			elems[num].classList.add(show);
 		} else {
-			getElem(ids[num]).classList.remove('visible');
-			getElem(ids[num]).classList.add('hidden');
+			elems[num].classList.add(hide);
+			elems[num].classList.remove(show);
 		}
 	}
 }
@@ -414,7 +423,7 @@ var openedSettings = 'generalMPO';
 var scrollPos = {
 	generalMPO: 0,
 	slots: 0,
-	shortcut: 0, // === assist settings arent closing when changing tabs before assist loaded
+	assist: 0, // === assist settings arent closing when changing tabs before assist loaded
 	player: 0,
 	counter: 0,
 	tutorial: 0
@@ -432,32 +441,32 @@ function showHideSettings (id) {
 	scrollPos[openedSettings] = getElem('settingsMain').scrollTop;
 	openedSettings = id;
 
-	var ids = ['generalMPO', 'slots', 'shortcut', 'player', 'counter', 'tutorial'];
+	var ids = ['generalMPO', 'slots', 'assist', 'player', 'counter', 'tutorial'];
 	for (let num = 0; num < ids.length; num++) {
-		getElem(ids[num] + 'Settings').classList.add('hidden');
-		getElem(ids[num] + 'Settings').classList.remove('visible');
+		getElem(ids[num] + 'Settings').classList.add('displayNone');
+		getElem(ids[num] + 'Settings').classList.remove('displayInit');
 		getElem(ids[num] + 'Selector').classList.remove('settingsSelected');
 		getElem(ids[num] + 'SelectorBreak').classList.remove('settingsSelected');
 	}
-	getElem(id + 'Settings').classList.add('visible');
-	getElem(id + 'Settings').classList.remove('hidden');
+	getElem(id + 'Settings').classList.add('displayInit');
+	getElem(id + 'Settings').classList.remove('displayNone');
 	getElem(id + 'Selector').classList.add('settingsSelected');
 	getElem(id + 'SelectorBreak').classList.add('settingsSelected');
 
-	if (id == 'shortcut') {
-		getElem('shortcutHeader').style.display = 'block';
-		getElem('shortcutHeaderBorder').style.display = 'block';
+	if (id == 'assist') {
+		getElem('assistHeader').style.display = 'block';
+		getElem('assistHeaderBorder').style.display = 'block';
 		getElem('settingsMain').classList.add('scroll');
 	} else {
-		getElem('shortcutHeader').style.display = 'none';
-		getElem('shortcutHeaderBorder').style.display = 'none';
+		getElem('assistHeader').style.display = 'none';
+		getElem('assistHeaderBorder').style.display = 'none';
 		getElem('settingsMain').classList.remove('scroll');
 	}
 
-	if (shortcutLoaded === true) {
-		getAlly('close');
+	if (assistLoaded === true) {
+		//getAlly('close');
 	}
-	shortcutSettings(true); //can be still be opened despite shortcuts not being loaded
+	//shortcutSettings(true); //can be still be opened despite shortcuts not being loaded
 
 	if (id === 'counter') {
 		updateCounterList();
@@ -490,9 +499,9 @@ var test;
 function windowOnClick (event) {
 	if (event.target === getElem('settings')) {
 		closeSettings();
-		if (shortcutLoaded == true) {
-			getAlly('close');
-			shortcutSettings(true);
+		if (assistLoaded == true) {
+			//getAlly('close');
+			//shortcutSettings(true);
 		}
 	}
 	test = event.target;
@@ -584,13 +593,13 @@ var shiftKeyVar = false;
 window.onkeydown = ctrlPressed;
 window.onkeyup = ctrlReleased;
 
-var shortcutLoaded = false;
-var shortcutLoadType = 0; //0 = continue/setup game | 1 = force setup start | 2 = quick start
+var assistLoaded = false;
+var shortcutLoadType = 0; //0 = continue/setup game | 1 = force setup start | 2 = quick start ---- wat
 /*
-* Loads the assist files to start the shortcut feature.
+* Loads the assist files to start the assist feature.
 *
 * @param {number} type How it should be started, see shortcutLoadType var.
-*/
+*
 function prepareShortcut (type) {
 	if (shortcutLoaded === true) {
 		startShortcut();
@@ -671,9 +680,9 @@ function closeSettings () {
 	getElem('settings').style.opacity = 0;
 	getElem('settings').style.pointerEvents = 'none';
 
-	if (shortcutLoaded == true) {
-		getAlly('close');
-		shortcutSettings(true);
+	if (assistLoaded == true) {
+		//getAlly('close');
+		//shortcutSettings(true);
 	}
 
 	saveSettings();
@@ -989,7 +998,7 @@ function settingsFullscreen () {
 * Opens shortcut settings before shortcut is actually opened. This function gets overwritten by the one in assist-misc.js.
 *
 * @param {boolean} close If it should be closed or not.
-*/
+*
 function shortcutSettings (close) {
 	if (close === true) {
 		getElem('settingsMain').style = '';
@@ -1183,7 +1192,9 @@ function sendMessage (text) {
 */
 function receiveMessage (e) {
 	console.log('[MPO] Message received: ' + e.data);
-	popoutActivated = true;
+	//console.log(e);
+
+	//popoutActivated = true; //this would be useful if some broken part of Brave didn't constantly call this function and break MPO in the process
 	var args = e.data.split('+');
 
 	for (let num = 0; num < args.length; num++) {
@@ -1209,9 +1220,9 @@ function popoutClosed () {
 	popoutActivated = false;
 	console.log('[MPO] Popout deactivated.');
 
-	if (shortcutLoaded === true) {
-		slots['a' + slots.sel] = JSON.parse(localStorage.getItem('a' + slots.sel));
-		loadAssistSlot();
+	if (assistLoaded === true) {
+		//slots['a' + slots.sel] = JSON.parse(localStorage.getItem('a' + slots.sel));
+		//loadAssistSlot();
 	}
 }
 
@@ -1244,9 +1255,9 @@ function mpoSettingsPopout () {
 		} else {
 			mpoSettings = window.open('index.html?p=1', 'mpoSettings', 'height=830px,width=1002px');
 			console.log('[MPO] Popout activated.');
-			if (shortcutLoaded == true) {
-				getAlly('close');
-				shortcutSettings(true);
+			if (assistLoaded == true) {
+				//getAlly('close');
+				//shortcutSettings(true);
 			}
 		}
 		popoutActivated = true;
@@ -1393,6 +1404,14 @@ try {
 		animation: 150,
 		onUpdate: function (evt) {
 			updateSlotOrder();
+		}
+	});
+
+	new Sortable(getElem('assistColumnWrapper'), {
+		animation: 150,
+		handle: '.assistDragIcon',
+		onUpdate: function (evt) {
+			//updateSlotOrder();
 		}
 	});
 } catch (e) {
