@@ -73,7 +73,7 @@ function showNavBar (elem) {
 			}
 			getElem('navbarAssist').style.left = elem.getBoundingClientRect().left + 'px';
 
-			var nvElem = getElem('navbarSettings');
+			var nvElem = getElem('navbarAssist');
 			break;
 		case 'nvSettings':
 			if (shiftKeyVar === true) {
@@ -129,6 +129,7 @@ function showNavBar (elem) {
 			nvElem.style.height = nvElem.children[0].offsetHeight + 'px';
 		}
 	}
+	setTimeout(function () {nvElem.style.height = 'auto';}, 500);
 }
 
 /*
@@ -189,6 +190,15 @@ function closeNavbar () {
 	if (activeNv === null)
 		return;
 
+	//set height so it's not 'auto' anymore to use transitions
+	getElem('navbarChars').style.height = getElem('navbarChars').children[0].offsetHeight + 'px';
+	getElem('navbarGames').style.height = getElem('navbarGames').children[0].offsetHeight + 'px';
+	getElem('navbarAssist').style.height = getElem('navbarAssist').children[0].offsetHeight + 'px';
+	getElem('navbarSettings').style.height = getElem('navbarSettings').children[0].offsetHeight + 'px';
+
+	//browsers are really weird and settings navbar wont close with a transition if this isn't here
+	window.getComputedStyle(getElem('navbarSettings')).getPropertyValue('height');
+
 	getElem('navbarChars').style.height = 0;
 	getElem('navbarGames').style.height = 0;
 	getElem('navbarAssist').style.height = 0;
@@ -197,6 +207,7 @@ function closeNavbar () {
 	getElem('navbarChars').style.width = '';
 	getElem('navbarChars').children[0].style.width = '';
 	getElem('navbarGames').style.width = '';
+	getElem('navbarAssist').style.width = '';
 	getElem('navbarSettings').style.width = '';
 
 	getElem('nvSettingsConfirm').style.display = 'none';

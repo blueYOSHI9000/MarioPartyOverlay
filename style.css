@@ -777,6 +777,9 @@ noscript > span {
 	font-size: 18px;
 	font-style: italic;
 }
+#navbarAssist .note {
+	color: #f7f7f7bf;
+}
 .resizableInput {
 	resize: both;
 	max-width: 500px;
@@ -882,6 +885,10 @@ noscript > span {
 	color: #111111;
 	margin-bottom: 10px;
 	display: inline-block;
+}
+#navbarAssist .settingsTitle {
+	border-bottom: 2px #f7f7f7 solid;
+	color: #f7f7f7;
 }
 #siteError {
 	display: none;
@@ -1903,7 +1910,7 @@ noscript > span {
 
 /* Assist Navbar */
 #navbarAssist {
-	width: 300px;
+	width: 300px !important;
 }
 
 /* Titlebar */
@@ -1936,16 +1943,21 @@ noscript > span {
 		transition: background-color .3s;
 }
 .nvAssistTitlebarIconsButtons:hover {
-	background-color: #001ad869;
+	background-color: #aff4ff4a;
 }
 .nvAssistTitlebarIconsButtons:active {
-	background-color: #0000526e;
+	background-color: #aff4ff7a;
 }
 
 /* State indicator */
 #nvAssistStateIndicator {
 	overflow: hidden;
 	height: 45px;
+	height: 5px;
+
+-webkit-transition: height .3s;
+   -moz-transition: height .3s;
+		transition: height .3s;
 }
 #nvAssistStateIndicator > div {
 	display: flex;
@@ -1992,6 +2004,11 @@ noscript > span {
 #nvAssistTurnIndicator {
 	overflow: hidden;
 	height: 35px;
+	height: 5px;
+
+-webkit-transition: height .3s;
+   -moz-transition: height .3s;
+		transition: height .3s;
 }
 #nvAssistTurnIndicator > div {
 	display: flex;
@@ -2003,12 +2020,30 @@ noscript > span {
 	width: 25px;
 }
 
-#nvAssistTurn {
+#nvAssistMain {
 	padding: 10px;
 }
 #nvAssistTurn_Misc {
 	display: flex;
 	justify-content: space-around;
+}
+#nv_chooseWrapper {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+#nv_chooseWrapper > span {
+	position: relative;
+}
+#nv_assistChooseOrder img {
+	height: 65px;
+}
+
+#nv_choose2 > img:nth-of-type(2), #nv_choose3 > img:nth-of-type(2), #nv_choose4 > img:nth-of-type(2) { /* arrows */
+	position: absolute;
+	height: 35px;
+	left: -20px;
+	top: -30px;
+	z-index: 980;
 }
 
 /* Choose Order */

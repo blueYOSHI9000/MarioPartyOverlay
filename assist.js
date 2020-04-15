@@ -36,7 +36,11 @@ function loadAssistState (state) {
 	var elems = document.querySelectorAll('#assistSettings > div');
 	updateVisibility(elems, 'hide', true); //hide all divs
 
-	updateVisibility('assist' + capStr(state), null, true); //only show div for current state
+	var elems = document.querySelectorAll('#nvAssistMain > div');
+	updateVisibility(elems, 'hide', true); //hide all navbar divs
+
+	updateVisibility(   'assist' + capStr(state), null, true); //only show div for current state
+	updateVisibility('nv_assist' + capStr(state), null, true);
 
 	switch (state) {
 		case 'chooseOrder':
@@ -55,14 +59,16 @@ function loadChooseOrder () {
 	resetChooseOrder();
 
 	for (let num = 1; num < 5; num++) {
-		changeCharacterIcon('assistChooseP' + num, characters[num]);
+		changeCharacterIcon(   'assistChooseP' + num, characters[num]);
+		changeCharacterIcon('nv_assistChooseP' + num, characters[num]);
 	}
 
 	var boards = copyVar(assist_getBoardList());
 	for (let num = 0; num < boards.length; num++) {
 		boards[num] = '<option value=' + boards[num] + '>' + boards[num] + '</option>';
 	}
-	editInner('assistStageSelect', boards.join());
+	editInner(   'assistStageSelect', boards.join());
+	editInner('nv_assistStageSelect', boards.join());
 }
 
 var currentChoosePlayerPosition = 1;
@@ -78,15 +84,21 @@ function chooseOrder (player) {
 
 	assistInfo.order.push(player);
 
-	changeCharacterIcon(getElem('choose' + currentChoosePlayerPosition).children[1], characters[player], true);
-	updateVisibility('choose' + currentChoosePlayerPosition, 'show');
+	changeCharacterIcon(getElem(   'choose' + currentChoosePlayerPosition).children[1], characters[player], true);
+	changeCharacterIcon(getElem('nv_choose' + currentChoosePlayerPosition).children[0], characters[player], true);
+
+	updateVisibility(   'choose' + currentChoosePlayerPosition, 'show');
+	updateVisibility('nv_choose' + currentChoosePlayerPosition, 'show');
+
 	currentChoosePlayerPosition++;
 
-	getElem('assistChooseP' + player).classList.add('chooseImgSelected');
+	getElem(   'assistChooseP' + player).classList.add('chooseImgSelected');
+	getElem('nv_assistChooseP' + player).classList.add('chooseImgSelected');
 
 	if (currentChoosePlayerPosition >= 5) {
 		currentChoosePlayerPosition = 4;
-		updateVisibility('chooseContinue', 'show');
+		updateVisibility(   'chooseContinue', 'show');
+		updateVisibility('nv_chooseContinue', 'show');
 		return;
 	}
 
@@ -106,11 +118,15 @@ function chooseOrder (player) {
 function resetChooseOrder () {
 	assistInfo.order = [''];
 	currentChoosePlayerPosition = 1;
-	updateVisibility('chooseContinue', 'hide');
+	updateVisibility(   'chooseContinue', 'hide');
+	updateVisibility('nv_chooseContinue', 'hide');
 
 	for (let num = 1; num < 5; num++) {
-		getElem('assistChooseP' + num).classList.remove('chooseImgSelected');
-		updateVisibility('choose' + num, 'hide');
+		getElem(   'assistChooseP' + num).classList.remove('chooseImgSelected');
+		getElem('nv_assistChooseP' + num).classList.remove('chooseImgSelected');
+
+		updateVisibility(   'choose' + num, 'hide');
+		updateVisibility('nv_choose' + num, 'hide');
 	}
 }
 
@@ -143,6 +159,9 @@ function updateOrder () {
 * Prepares/loads the 'turn' screen.
 */
 function loadTurn () {
+	getElem('nvAssistStateIndicator').style.height = '45px';
+	getElem('nvAssistTurnIndicator').style.height = '35px';
+
 	loadTurn_Misc();
 }
 
@@ -152,8 +171,8 @@ function loadTurn () {
 function loadTurn_Misc () {
 	var stars = assist_getStarList();
 	for (var num = 0; num < stars.length; num++) {
-		var elem = createAssistButton(stars[num].src, 'assistMisc', stars[num].name, 'assist_buyStar("' + stars[num].name + '")', 50);
-		var elem = createAssistButton(stars[num].src, 'nvAssistTurn_Misc', stars[num].name, 'assist_buyStar("' + stars[num].name + '")', 45); //navbar
+		var elem = createAssistButton(stars[num].src,    'assistMisc', stars[num].name, 'assist_buyStar("' + stars[num].name + '")', 50);
+		var elem = createAssistButton(stars[num].src, 'nv_assistMisc', stars[num].name, 'assist_buyStar("' + stars[num].name + '")', 45); //navbar
 	}
 }
 
