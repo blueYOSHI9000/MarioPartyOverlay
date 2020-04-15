@@ -747,7 +747,6 @@ function randomChar (player) {
 			num2 = 1;
 
 		getElem(chars[num2] + num).scrollIntoView({block: 'center'}); //behavious: 'smooth' only works on one column at a time, all others won't even try to scroll in chrome so it's better without
-		console.log('x')
 		changeCharacters(num, chars[num2]);
 
 		if (popout === true) {

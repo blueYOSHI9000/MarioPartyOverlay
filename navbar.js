@@ -66,6 +66,15 @@ function showNavBar (elem) {
 			}
 			updateAmount();
 			break;
+		case 'nvAssist':
+			if (activeNv != 'navbarAssist') {
+				activeNv = 'navbarAssist';
+				getElem('navbarAssist').style.height = getElem('navbarAssist').scrollHeight + 'px';
+			}
+			getElem('navbarAssist').style.left = elem.getBoundingClientRect().left + 'px';
+
+			var nvElem = getElem('navbarSettings');
+			break;
 		case 'nvSettings':
 			if (shiftKeyVar === true) {
 				elem.classList.remove('nvSelected');
@@ -182,7 +191,9 @@ function closeNavbar () {
 
 	getElem('navbarChars').style.height = 0;
 	getElem('navbarGames').style.height = 0;
+	getElem('navbarAssist').style.height = 0;
 	getElem('navbarSettings').style.height = 0;
+
 	getElem('navbarChars').style.width = '';
 	getElem('navbarChars').children[0].style.width = '';
 	getElem('navbarGames').style.width = '';
@@ -617,7 +628,7 @@ function nvRando (player) {
 	}
 	if (typeof player === 'undefined')
 		player = parseInt(getElem('navbarChars').getAttribute('player'));
-	
+
 	//fills pastResults with the current characters position from charList[curGame] and then draws a random character from that same list
 	pastResults = [charList[curGame].indexOf(characters[1]), charList[curGame].indexOf(characters[2]), charList[curGame].indexOf(characters[3]), charList[curGame].indexOf(characters[4])];
 	var character = charList[curGame][randomCharFor(charList[curGame].length)];

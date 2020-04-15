@@ -2,18 +2,21 @@ var assistInfo = {
 	state: 'intro',
 	turn: 1,
 	curGame: 'smp',
+	board: '',
 	order: ['']
 }
 
 /*
-* Updates the assist state. Calls loadAssistState().
+* Loads the next assist state. Calls loadAssistState().
 */
 function updateAssistState () {
 	switch (assistInfo.state) {
 		case 'intro':
+			assistInfo.curGame = curGame; //temporary
 			loadAssistState('chooseOrder');
 			break;
 		case 'chooseOrder':
+			assistInfo.board = getValue('assistStageSelect');
 			loadAssistState('turn');
 			break;
 		case 'turn':
@@ -39,6 +42,9 @@ function loadAssistState (state) {
 		case 'chooseOrder':
 			loadChooseOrder();
 			break;
+		case 'turn':
+			loadTurn();
+			break;
 	}
 }
 
@@ -51,6 +57,12 @@ function loadChooseOrder () {
 	for (let num = 1; num < 5; num++) {
 		changeCharacterIcon('assistChooseP' + num, characters[num]);
 	}
+
+	var boards = copyVar(assist_getBoardList());
+	for (let num = 0; num < boards.length; num++) {
+		boards[num] = '<option value=' + boards[num] + '>' + boards[num] + '</option>';
+	}
+	editInner('assistStageSelect', boards.join());
 }
 
 var currentChoosePlayerPosition = 1;
@@ -125,6 +137,45 @@ function updateOrder () {
 
 	playerOrder = ['', 1, 2, 3, 4];
 	orderCurPlayer = playerOrder[1];
+}
+
+/*
+* Prepares/loads the 'turn' screen.
+*/
+function loadTurn () {
+	loadTurn_Misc();
+}
+
+/*
+* Loads the star/misc module on the turn screen.
+*/
+function loadTurn_Misc () {
+	var stars = assist_getStarList();
+	for (var num = 0; num < stars.length; num++) {
+		var elem = createAssistButton(stars[num].src, 'assistMisc', stars[num].name, 'assist_buyStar("' + stars[num].name + '")', 50);
+		var elem = createAssistButton(stars[num].src, 'nvAssistTurn_Misc', stars[num].name, 'assist_buyStar("' + stars[num].name + '")', 45); //navbar
+	}
+}
+
+/*
+* Creates a assist button with the .chooseImg class.
+*
+* @param {string} src The image source.
+* @param {string} parent The parentnode id that should append it.
+* @param {string} id The id of the new element.
+* @param {string} onclick What the onclick attribute should be.
+* @param {number} size The size of the image (will be set to width as px) - optional.
+*/
+function createAssistButton (src, parent, id, onclick, size) {
+		var elem = document.createElement('img');
+		getElem(parent).appendChild(elem);
+		elem.classList.add('chooseImg');
+		elem.src = src;
+		elem.id = id;
+		elem.setAttribute('onclick', onclick);
+		if (typeof size === 'number') {
+			elem.style.width = size + 'px';
+		}
 }
 
 

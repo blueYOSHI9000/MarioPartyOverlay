@@ -37,15 +37,200 @@
 	- 'vs' - VS space in SMP
 	- 'poisonmushroom' - SMP item
 	- 'coinado' - SMP item
+
+
+
+
+
+dont forget the star price change on smp kamek
+
+assist.js - general stuff
+assist_core.js - actually doing all the things when a button gets pressed
+assist_data.js - data
+assist_load_data - loads data
 */
 
 var assistData = {
+	mp7: {
+		misc: {
+			boardList: ['grandCanal', 'pagodaPeak', 'pyramidPark', 'neonHeights', 'windmillville', 'bowsersEnchantedInferno'],
+			starsIcon: 'img/stars.png',
+			stars: [
+				{
+					src: 'img/stars.png',
+					name: 'defaultStar',
+					stages: ['grandCanal', 'bowsersEnchantedInferno'],
+					price: 20,
+					event: {
+						type: 'addStar',
+						value: 1
+					}
+				},
+				{
+					src: 'img/stars.png',
+					name: 'pagodaPeakStar',
+					stages: ['pagodaPeak'],
+					price: [10, 20, 30, 40],
+					priceLoop: true,
+					event: {
+						type: 'addStar',
+						value: 1
+					}
+				},
+				{
+					src: 'img/stars.png',
+					name: 'pyramidParkStar',
+					stages: ['pyramidPark'],
+					price: 0,
+					event: {
+						type: 'addStar',
+						value: 1
+					}
+				},
+				/*{
+					src: 'img/stars.png',
+					name: 'windmillvilleStar',
+					stages: ['windmillville'],
+					monopoly: true
+				},*/
+
+				{ //Treasure chests (neon heights)
+					src: 'img/stars.png',
+					name: 'treasureChestStar',
+					stages: ['pyramidPark'],
+					price: 10,
+					event: {
+						type: 'addStar',
+						value: 1
+					}
+				},
+				{
+					src: 'img/stars.png',
+					name: 'treasureChestCoins',
+					stages: ['pyramidPark'],
+					price: 10,
+					event: {
+						type: 'addCoins',
+						value: 20
+					}
+				},
+				{
+					src: 'img/stars.png',
+					name: 'treasureChestFail',
+					stages: ['pyramidPark'],
+					price: 10,
+					/*event: {
+						type: 'sendToStart'
+					}*/
+				}
+			],
+			secondaryDices: [ //Chain Chomps (pyramid stage)
+				{
+					src: 'img/stars.png',
+					name: 'singleChomp',
+					stages: ['pyramidPark'],
+					event: {
+						type: 'secondaryDice',
+						value: {
+							price: 10
+						}
+					}
+				},
+				{
+					src: 'img/stars.png',
+					name: 'doubleChomp',
+					stages: ['pyramidPark'],
+					event: {
+						type: 'secondaryDice',
+						value: {
+							diceAmount: 2,
+							price: 20
+						}
+					}
+				},
+				{
+					src: 'img/stars.png',
+					name: 'redChomp',
+					stages: ['pyramidPark'],
+					event: {
+						type: 'secondaryDice',
+						value: {
+							diceAmount: 3,
+							price: 10
+						}
+					}
+				}
+			],
+			starStartAmount: {
+				pyramidPark: 3
+			}
+		}
+	},
+	mp8: {
+		misc: {
+			boardList: ['dksTreetopTemple', 'goombasBootyBoardwalk', 'kingBoosHauntedHideaway', 'shyguysPerplexExpress', 'koopasTycoonTown', 'bowsersWarpedOrbit'],
+			starsIcon: 'img/stars.png',
+			stars: [
+				{
+					src: 'img/stars.png',
+					name: 'defaultStar',
+					stages: ['dksTreetopTemple', 'shyguysPerplexExpress'],
+					price: 20,
+					event: {
+						type: 'addStar',
+						value: 1
+					}
+				},
+				{
+					src: 'img/stars.png',
+					name: 'goombaStar',
+					stages: ['goombasBootyBoardwalk'],
+					price: 0,
+					event: {
+						type: 'addStar',
+						value: 1
+					}
+				},
+				{ //dk space will give replace one star with a free one - done manually
+					src: 'img/stars.png',
+					name: 'kingBooStar',
+					stages: ['kingBoosHauntedHideaway'],
+					price: 10,
+					event: {
+						type: 'addStar',
+						value: 1
+					}
+				}/*,
+				{
+					stages: ['koopasTycoonTown'],
+					monopoly: true
+				}*/
+			],
+			coinStartAmount: {
+				default: 10
+			},
+			starStartAmount: {
+				bowsersWarpedOrbit: 5
+			}
+		}
+	},
 	mpds: {
 		misc: {
-			starPrice: 20,
-			starNotAvailableOn: ['toadettesMusicRoom', 'kameksLibrary'],
-			alternateStars: [
-				{
+			boardList: ['wigglersGarden', 'toadettesMusicRoom', 'dksStoneStatue', 'kameksLibrary', 'bowsersPinballMachine'],
+			starsIcon: 'img/stars.png',
+			stars: [
+				{ // Default star
+					src: 'img/stars.png',
+					name: 'defaultStar',
+					stages: ['wigglersGarden', 'dksStoneStatue', 'bowsersPinballMachine'],
+					buyMultiple: ['dksStoneStatue'],
+					price: 20,
+					event: {
+						type: 'addStar',
+						value: 1
+					}
+				},
+				{ // Music Notes (toadette stage)
 					src: 'img/assist/mpds/bluenote.png',
 					name: 'blueNote',
 					stages: ['toadettesMusicRoom'],
@@ -96,7 +281,7 @@ var assistData = {
 					}
 				},
 
-				{
+				{ // Magic Jars (kamek stage)
 					src: 'img/assist/mpds/magicjarstar.png',
 					name: 'magicJarStar',
 					stages: ['kameksLibrary'],
@@ -125,7 +310,10 @@ var assistData = {
 						type: 'sendToStart'
 					}*/
 				}
-			]
+			],
+			coinStartAmount: {
+				default: 10
+			}
 		},
 		dice: {
 			default: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -304,10 +492,24 @@ var assistData = {
 		},
 		minigame: {
 		}
-	}
+	},
 	smp: {
 		misc: {
-			starPrice: 10,
+			boardList: ['whompsDominoRuins', 'kingBobOmbsPowderkegMine', 'megafruitParadise', 'kameksTantalizingTower'],
+			starsIcon: 'img/stars.png',
+			stars: {
+				src: 'img/stars.png',
+				name: 'defaultStar',
+				//stages: ['wigglersGarden', 'dksStoneStatue', 'bowsersPinballMachine'],
+				price: 20,
+				event: {
+					type: 'addStar',
+					value: 1
+				}
+			},
+			coinStartAmount: {
+				default: 10
+			},
 			steal: {
 				available: true,
 				canStealStars: true,
@@ -317,11 +519,6 @@ var assistData = {
 			},
 			allies: {
 				available: true
-			},
-			differentStarPrice: {
-				available: ['kameksTantalizingTowers'],
-				alwaysOn: false, //if true, one has to be selected - if false, none have to be
-				prices: [5, 10, 15]
 			}
 		},
 		dice: {
@@ -373,14 +570,14 @@ var assistData = {
 					type: 'specialEvent',
 					value: 'poisonmushroom'
 				}
-			}
+			},
 			coinado: {
 				src: 'img/assist/smp/coinado.png',
 				event: {
 					type: 'specialEvent',
 					value: 'boobell'
 				}
-			}
+			},
 			allyphone: {
 				src: 'img/assist/smp/allyphone.png',
 				event: {
@@ -414,10 +611,10 @@ var assistData = {
 				event: {
 					type: 'addAlly'
 				}
-			}
+			},
 			item: {
 				src: 'img/assist/smp/itemspace.png'
-			}
+			},
 			lucky: {
 				src: 'img/assist/smp/luckyspace.png',
 				event: {

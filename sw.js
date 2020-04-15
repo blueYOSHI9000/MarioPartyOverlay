@@ -37,10 +37,9 @@ self.addEventListener('install', function(e) {
         '/MarioPartyOverlay/img/bonus/stompy.png',
         '/MarioPartyOverlay/img/bonus/wanderer.png', //bonus end
         '/MarioPartyOverlay/assist-core.js',
-        '/MarioPartyOverlay/assist-minigame.js',
-        '/MarioPartyOverlay/assist-misc.js',
-        '/MarioPartyOverlay/assist-spaces.js',
-        '/MarioPartyOverlay/assist-turn.js',
+        '/MarioPartyOverlay/assist-load_data.js',
+        '/MarioPartyOverlay/assist-data.js',
+        '/MarioPartyOverlay/assist.js',
         '/MarioPartyOverlay/characters.js',
         '/MarioPartyOverlay/helpers.js',
         '/MarioPartyOverlay/core.js',

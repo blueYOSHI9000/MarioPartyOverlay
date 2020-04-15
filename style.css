@@ -1714,6 +1714,9 @@ noscript > span {
 	position: relative;
 	width: 100%;
 	height: 100%;
+
+	overflow: hidden;
+    vertical-align: top;
 }
 .assistModule > div > div:first-child {
 	position: relative;
@@ -1795,6 +1798,7 @@ noscript > span {
 }*/
 
 .assistModuleWrapper {
+	overflow: hidden;
 -webkit-transition: height .2s;
    -moz-transition: height .2s;
 		transition: height .2s;
@@ -1802,7 +1806,14 @@ noscript > span {
 
 .assistModuleWrapper > span {
 	height: 300px;
+	padding: 10px;
 	display: block;
+}
+
+#assistMisc {
+	height: initial; /* temporary */
+	display: flex;
+	justify-content: space-evenly;
 }
 
 
@@ -1858,23 +1869,23 @@ noscript > span {
 .chooseImg {
 	cursor: pointer;
 
--webkit-filter: grayscale(.6) opacity(.5);
-   -moz-filter: grayscale(.6) opacity(.5);
-		filter: grayscale(.6) opacity(.5);
+-webkit-filter: grayscale(.4) opacity(.7);
+   -moz-filter: grayscale(.4) opacity(.7);
+		filter: grayscale(.4) opacity(.7);
 
--webkit-transition: filter .25s;
-   -moz-transition: filter .25s;
-		transition: filter .25s;
+-webkit-transition: filter .15s;
+   -moz-transition: filter .15s;
+		transition: filter .15s;
 }
 .chooseImg:hover {
--webkit-filter: grayscale(.3) opacity(.7);
-   -moz-filter: grayscale(.3) opacity(.7);
-		filter: grayscale(.3) opacity(.7);
+-webkit-filter: grayscale(.2) opacity(.9);
+   -moz-filter: grayscale(.2) opacity(.9);
+		filter: grayscale(.2) opacity(.9);
 }
 .chooseImg:active {
--webkit-filter: grayscale(.1) opacity(.9);
-   -moz-filter: grayscale(.1) opacity(.9);
-		filter: grayscale(.1) opacity(.9);
+-webkit-filter: grayscale(0) opacity(1);
+   -moz-filter: grayscale(0) opacity(1);
+		filter: grayscale(0) opacity(1);
 }
 
 .chooseImgSelected {
@@ -1882,6 +1893,122 @@ noscript > span {
 -webkit-filter: grayscale(.7) opacity(1) !important;
    -moz-filter: grayscale(.7) opacity(1) !important;
 		filter: grayscale(.7) opacity(1) !important;
+}
+.chooseImgNoOpacity {
+	cursor: default;
+-webkit-filter: opacity(1) !important;
+   -moz-filter: opacity(1) !important;
+		filter: opacity(1) !important;
+}
+
+/* Assist Navbar */
+#navbarAssist {
+	width: 300px;
+}
+
+/* Titlebar */
+#nvAssistTitlebar {
+	height: 25px;
+	background-color: #00005221;
+}
+#nvAssistTitlebarIcons {
+	float: right;
+	position: relative;
+}
+#nvAssistTitlebarIcons img, #nvAssistTitlebarIcons svg {
+	position: relative;
+	user-select: none;
+	top: 3px;
+	left: 2px;
+
+	width: 20px;
+	height: 20px;
+}
+#nvAssistTitlebarIcons > span {
+	display: inline-block;
+	cursor: pointer;
+	height: 25px;
+	width: 25px;
+	margin-left: -5px;
+
+-webkit-transition: background-color .3s;
+   -moz-transition: background-color .3s;
+		transition: background-color .3s;
+}
+.nvAssistTitlebarIconsButtons:hover {
+	background-color: #001ad869;
+}
+.nvAssistTitlebarIconsButtons:active {
+	background-color: #0000526e;
+}
+
+/* State indicator */
+#nvAssistStateIndicator {
+	overflow: hidden;
+	height: 45px;
+}
+#nvAssistStateIndicator > div {
+	display: flex;
+	justify-content: space-evenly;
+	background-color: #0000526e;
+	padding: 5px 10px;
+}
+
+#nvAssistStateIndicator img:first-child {
+	transform: scaleX(-1);
+
+	margin: 0;
+	margin-right: 7px;
+}
+#nvAssistStateIndicator img:last-child {
+	margin: 0;
+	margin-left: 7px;
+}
+#nvAssistStateIndicator img:first-child, #nvAssistStateIndicator img:last-child {
+	width: 35px;
+	height: 35px;
+
+	cursor: pointer;
+	filter: opacity(0.7);
+
+-webkit-transition: filter .15s;
+   -moz-transition: filter .15s;
+		transition: filter .15s;
+}
+#nvAssistStateIndicator img:first-child:hover, #nvAssistStateIndicator img:last-child:hover {
+	filter: opacity(0.9);
+}
+#nvAssistStateIndicator img:first-child:active, #nvAssistStateIndicator img:last-child:active {
+	filter: opacity(1);
+}
+
+#nvAssistStateIndicator img {
+	width: 30px;
+	height: 30px;
+	margin-top: 2px;
+}
+
+/* Turn indicator */
+#nvAssistTurnIndicator {
+	overflow: hidden;
+	height: 35px;
+}
+#nvAssistTurnIndicator > div {
+	display: flex;
+	justify-content: space-evenly;
+	background-color: #00005221;
+	padding: 5px 20px;
+}
+#nvAssistTurnIndicator img {
+	width: 25px;
+}
+
+#nvAssistTurn {
+	padding: 10px;
+}
+#nvAssistTurn_Misc {
+	display: flex;
+	justify-content: space-around;
 }
 
 /* Choose Order */
