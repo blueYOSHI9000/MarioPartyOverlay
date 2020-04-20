@@ -8,20 +8,30 @@ function showNavBar (elem) {
 	if (elem.classList.contains('nvSelected')) {
 		elem.classList.remove('nvSelected');
 
-		closeNavbar();
+		if (elem.id === 'nvAssist') {
+			getElem('nvAssistPin').classList.remove('nvAssistTitlebarIcons_selected');
+		}
+
+		closeNavbar(true);
 
 		activeNv = null;
 		return;
 	}
 
-	if (activeNv != null && activeNv != undefined) {
+	//if (activeNv != null && activeNv != undefined) {
 		if (activeNv === 'navbarChars' && elem.classList[0] === 'nvChar') {} else {
-			closeNavbar();
+			closeNavbar(true);
+		}
+	//}
+
+	var elems = document.querySelectorAll('.nvSelected');
+	for (let num = 0; num < elems.length; num++) {
+		if (elems[num] != null) {
+			if (elems[num].id != 'nvAssist' || (elems[num].id === 'nvAssist' && getElem('nvAssistPin').classList.contains('nvAssistTitlebarIcons_selected') != true)) {
+				elems[num].classList.remove('nvSelected');
+			}
 		}
 	}
-
-	if (document.querySelector('.nvSelected') != null)
-		document.querySelector('.nvSelected').classList.remove('nvSelected');
 
 	getElem('navbarChars').classList.remove('nvContentLeftTransition');
 	if (elem.id != 'nvAction' && elem.id != 'nvAmount' && elem.id != 'nvCounters')
@@ -185,10 +195,15 @@ function updateAmount () {
 
 /*
 * Closes the currently opened navbar dropdown.
+*
+* @param {boolean} force Runs the function regardless if theres an active navbar or not.
 */
-function closeNavbar () {
-	if (activeNv === null)
+function closeNavbar (force) {
+	if (activeNv === null && force != true)
 		return;
+
+	var assistPin = getElem('nvAssistPin').classList.contains('nvAssistTitlebarIcons_selected'); //if true assist navbar is pinned
+	console.log(assistPin)
 
 	//set height so it's not 'auto' anymore to use transitions
 	getElem('navbarChars').style.height = getElem('navbarChars').children[0].offsetHeight + 'px';
@@ -201,20 +216,42 @@ function closeNavbar () {
 
 	getElem('navbarChars').style.height = 0;
 	getElem('navbarGames').style.height = 0;
-	getElem('navbarAssist').style.height = 0;
 	getElem('navbarSettings').style.height = 0;
 
 	getElem('navbarChars').style.width = '';
 	getElem('navbarChars').children[0].style.width = '';
 	getElem('navbarGames').style.width = '';
-	getElem('navbarAssist').style.width = '';
 	getElem('navbarSettings').style.width = '';
+
+	//dont close assist if pinned
+	if (assistPin != true) {
+		getElem('navbarAssist').style.height = 0;
+		getElem('navbarAssist').style.width = '';
+	}
 
 	getElem('nvSettingsConfirm').style.display = 'none';
 	getElem('nvSettingsReset').style.display = 'block';
 
-	if (document.querySelector('.nvSelected') != null)
-		document.querySelector('.nvSelected').classList.remove('nvSelected');
+	var elems = document.querySelectorAll('.nvSelected');
+	for (let num = 0; num < elems.length; num++) {
+		if (elems[num] != null) {
+			if (elems[num].id != 'nvAssist' || (elems[num].id === 'nvAssist' && getElem('nvAssistPin').classList.contains('nvAssistTitlebarIcons_selected') != true)) {
+				elems[num].classList.remove('nvSelected');
+			}
+		}
+	}
+
+	//reset drag n drop position
+	if (assistPin != true) {
+		setTimeout(function () {
+			var elems = document.querySelectorAll('.navbarDraggable');
+			for (let num = 0; num < elems.length; num++) {
+				elems[num].removeAttribute('data-x');
+				elems[num].removeAttribute('data-y');
+				elems[num].style.transform = 'unset';
+			}
+		}, 350);
+	}
 
 	//savePlayers(); //not needed anymore, everything auto-saves now
 
@@ -261,8 +298,9 @@ function updateNvGame () {
 */
 function showNvChar (elem) {
 	var elems = document.querySelectorAll('.nvCharSelected');
-	for (let num = 0; num < elems.length; num++)
+	for (let num = 0; num < elems.length; num++) {
 		elems[num].classList.remove('nvCharSelected');
+	}
 
 	getElem('nvCharPlayer1').style.display = 'none';
 	getElem('nvCharPlayer2').style.display = 'none';
@@ -669,4 +707,13 @@ function nvChangeGame (game) {
 
 	callOnBoth('changeGame', [game]);
 	closeNavbar();
+}
+
+/*
+* Toggles the .nvAssistTitlebarIcons_selected class of an element.
+*
+* @param {DOM Element} elem The element.
+*/
+function nvAssistPin (elem) {
+	elem.classList.toggle('nvAssistTitlebarIcons_selected');
 }

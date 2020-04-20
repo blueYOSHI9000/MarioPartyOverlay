@@ -1917,6 +1917,7 @@ noscript > span {
 #nvAssistTitlebar {
 	height: 25px;
 	background-color: #00005221;
+	user-select: none;
 }
 #nvAssistTitlebarIcons {
 	float: right;
@@ -1941,6 +1942,9 @@ noscript > span {
 -webkit-transition: background-color .3s;
    -moz-transition: background-color .3s;
 		transition: background-color .3s;
+}
+.nvAssistTitlebarIcons_selected {
+	background-color: #aff4ff7a;
 }
 .nvAssistTitlebarIconsButtons:hover {
 	background-color: #aff4ff4a;
