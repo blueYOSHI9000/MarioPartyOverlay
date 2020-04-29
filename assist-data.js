@@ -48,6 +48,8 @@ assist.js - general stuff
 assist_core.js - actually doing all the things when a button gets pressed
 assist_data.js - data
 assist_load_data - loads data
+
+assistInfo.starPriceMultiplier used in: assist_buyStar
 */
 
 var assistData = {
@@ -222,8 +224,7 @@ var assistData = {
 				{ // Default star
 					src: 'img/stars.png',
 					name: 'defaultStar',
-					stages: ['wigglersGarden', 'dksStoneStatue', 'bowsersPinballMachine'],
-					buyMultiple: ['dksStoneStatue'],
+					stages: ['wigglersGarden', 'bowsersPinballMachine'],
 					price: 20,
 					event: {
 						type: 'addStar',
@@ -275,6 +276,18 @@ var assistData = {
 					name: 'redNote',
 					stages: ['toadettesMusicRoom'],
 					price: 30,
+					event: {
+						type: 'addStar',
+						value: 1
+					}
+				},
+
+				{ // DK star - buy multiple
+					src: 'img/stars.png',
+					name: 'defaultStar',
+					stages: ['dksStoneStatue'],
+					buyMultiple: true,
+					price: 20,
 					event: {
 						type: 'addStar',
 						value: 1
@@ -733,6 +746,17 @@ var assistData = {
 			}
 		},
 		minigame: {
+		}
+	},
+	default: {
+		star: { // Default star
+			src: 'img/stars.png',
+			//name: 'defaultStar',
+			price: 20,
+			event: {
+				type: 'addStar',
+				value: 1
+			}
 		}
 	}
 }

@@ -37,3 +37,27 @@ function assist_getStarList (game, board) {
 	}
 	return stars;
 }
+
+/*
+* Returns a specific star based on the name given.
+*
+* @param {string} starname The name of the star.
+* @param {string} game Which game, uses the current assist game if empty.
+* @param {string} board Which board, uses the current assist board if empty.
+*/
+function assist_getStar (starName, game, board) {
+	if (typeof game === 'undefined') {
+		game = assistInfo.curGame;
+	}
+	if (typeof board === 'undefined') {
+		board = assistInfo.board;
+	}
+
+	var starList = assist_getStarList(game, board);
+
+	for (var num = 0; num < starList.length; num++) {
+		if (starList[num].name === starName) {
+			return starList[num];
+		}
+	}
+}

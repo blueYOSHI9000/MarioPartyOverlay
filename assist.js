@@ -1,9 +1,14 @@
 var assistInfo = {
 	state: 'intro',
-	turn: 1,
 	curGame: 'smp',
 	board: '',
-	order: ['']
+	order: [''],
+	curPlayer: 1, //which players turn it is
+
+	simpleMode: false,
+	noCoins: false,
+
+	starPriceMultiplier: 1
 }
 
 /*
@@ -171,8 +176,38 @@ function loadTurn () {
 function loadTurn_Misc () {
 	var stars = assist_getStarList();
 	for (var num = 0; num < stars.length; num++) {
-		var elem = createAssistButton(stars[num].src,    'assistMisc', stars[num].name, 'assist_buyStar("' + stars[num].name + '")', 50);
-		var elem = createAssistButton(stars[num].src, 'nv_assistMisc', stars[num].name, 'assist_buyStar("' + stars[num].name + '")', 45); //navbar
+		if (stars[num].buyMultiple === true) {
+			for (var num2 = 0; num2 < 2; num2++) {
+				if (num2 === 0) {
+					var elemWrapper = cElem('span',    'assistMisc');
+				} else {
+					var elemWrapper = cElem('span', 'nv_assistMisc');
+				}
+				elemWrapper.classList.add('assistMultipleStarWrapper');
+
+				var mainImg = createAssistButton(stars[num].src, elemWrapper, stars[num].name, 'assist_buyStar("' + stars[num].name + '")', 50);
+
+				var secondWrapper = cElem('span', elemWrapper);
+				secondWrapper.classList.add('assistMultipleStarSelectionWrapper');
+
+				var elem = cElem('img', secondWrapper);
+				elem.src = 'img/arrow.png';
+				elem.classList.add('chooseImg');
+				elem.setAttribute('onclick', 'assist_changeBuyMultipleStarAmount(\'' + stars[num].name + '\', \'M\', 1)');
+
+				var textWrapper = cElem('span', secondWrapper);
+				var elem = cElem('span', textWrapper);
+				editInner(elem, '1');
+
+				var elem = cElem('img', secondWrapper);
+				elem.src = 'img/arrow.png';
+				elem.classList.add('chooseImg');
+				elem.setAttribute('onclick', 'assist_changeBuyMultipleStarAmount(\'' + stars[num].name + '\', \'P\', 1)');
+			}
+		} else {
+			var elem = createAssistButton(stars[num].src,    'assistMisc', stars[num].name, 'assist_buyStar("' + stars[num].name + '")', 50);
+			var elem = createAssistButton(stars[num].src, 'nv_assistMisc', stars[num].name, 'assist_buyStar("' + stars[num].name + '")', 50); //navbar
+		}
 	}
 }
 
@@ -186,15 +221,20 @@ function loadTurn_Misc () {
 * @param {number} size The size of the image (will be set to width as px) - optional.
 */
 function createAssistButton (src, parent, id, onclick, size) {
-		var elem = document.createElement('img');
-		getElem(parent).appendChild(elem);
-		elem.classList.add('chooseImg');
-		elem.src = src;
-		elem.id = id;
-		elem.setAttribute('onclick', onclick);
-		if (typeof size === 'number') {
-			elem.style.width = size + 'px';
-		}
+	if (typeof parent === 'string') {
+		parent = getElem(parent);
+	}
+
+	var elem = document.createElement('img');
+	parent.appendChild(elem);
+
+	elem.classList.add('chooseImg');
+	elem.src = src;
+	elem.setAttribute('assistName', id);
+	elem.setAttribute('onclick', onclick);
+	if (typeof size === 'number') {
+		elem.style.width = size + 'px';
+	}
 }
 
 
@@ -233,4 +273,18 @@ function chromesucks () {
 	var contents = document.querySelectorAll('.assistCurrentPlayerTextWrapper')[1];
 	contents.style.width = 'auto';
 	elem.children[0].style.width = contents.clientWidth + 65 + 21 + "px"; //text width + img width + padding (7 on both sides and seemingly 7 between image and text)
+}
+
+/*
+* Returns Array of all elements with a certain assistName.
+*
+* @param {string} id The name of the element
+*/
+function getAssistElem (id) {
+	try {
+		return document.querySelectorAll('[assistName="' + id + '"]');
+	} catch (e) {
+		console.error(e);
+		console.error('[MPO] getAssistElem() error, could not find: ' + id);
+	}
 }

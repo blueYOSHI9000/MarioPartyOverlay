@@ -1908,9 +1908,41 @@ noscript > span {
 		filter: opacity(1) !important;
 }
 
+/* Buy multiple stars */
+.assistMultipleStarWrapper {
+	position: relative;
+}
+.assistMultipleStarSelectionWrapper {
+	position: absolute;
+	left: -9px;
+	bottom: -4px;
+}
+.assistMultipleStarSelectionWrapper > img {
+	height: 20px;
+}
+.assistMultipleStarSelectionWrapper > img:first-child {
+	transform: rotate(180deg);
+}
+.assistMultipleStarSelectionWrapper > span {
+	display: inline-block;
+	position: relative;
+
+	font-family: 'Mario';
+	font-size: 17px;
+
+	width: 30px;
+	left: -5px;
+}
+.assistMultipleStarSelectionWrapper > span > span {
+	display: inline-block;
+	text-align: center;
+	width: 37px;
+}
+
 /* Assist Navbar */
 #navbarAssist {
 	width: 300px !important;
+	white-space: nowrap;
 }
 
 /* Titlebar */

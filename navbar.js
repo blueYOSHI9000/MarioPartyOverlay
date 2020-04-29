@@ -203,7 +203,6 @@ function closeNavbar (force) {
 		return;
 
 	var assistPin = getElem('nvAssistPin').classList.contains('nvAssistTitlebarIcons_selected'); //if true assist navbar is pinned
-	console.log(assistPin)
 
 	//set height so it's not 'auto' anymore to use transitions
 	getElem('navbarChars').style.height = getElem('navbarChars').children[0].offsetHeight + 'px';
