@@ -428,12 +428,12 @@ function changeGame (game) {
 			editInner('coinStarOnOffText', 'Coin Star:');
 			break;
 		case 'mp6':
-			editInner('happeningOnOffText', 'Event:');
+			editInner('happeningOnOffText', 'Happening:');
 			editInner('minigameOnOffText', 'Minigame:');
 			editInner('itemOnOffText', 'Orb:');
 			break;
 		case 'mp7':
-			editInner('happeningOnOffText', 'Action:');
+			editInner('happeningOnOffText', 'Happening:');
 			editInner('minigameOnOffText', 'Minigame:');
 			editInner('redSpaceOnOffText', 'Red:');
 			editInner('runningOnOffText', 'Running:');
@@ -441,7 +441,7 @@ function changeGame (game) {
 			editInner('itemOnOffText', 'Orb:');
 			break;
 		case 'mp8':
-			editInner('happeningOnOffText', 'Green:');
+			editInner('happeningOnOffText', 'Happening:');
 			editInner('minigameOnOffText', 'Minigame:');
 			editInner('runningOnOffText', 'Running:');
 			editInner('redSpaceOnOffText', 'Red:');

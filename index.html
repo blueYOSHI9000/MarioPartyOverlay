@@ -486,7 +486,7 @@
 
 					<span class="advanced"> <label for="xBelow100"> <span> Display x before numbers below 100: </span> </label> <input type="checkbox" id="xBelow100" onchange="changeSettings(this.id)" checked> <br> <br> </span>
 
-					<span> Add bonus-stars to star counter:
+					<span class="advanced"> Add bonus-stars to star counter:
 						<span id="bonusStarSelector">
 							<span class="relative">
 								<input type="radio" name="bonusStarAdd" id="bonusDont" onchange="changeSettings(this.id)" checked>
@@ -502,7 +502,7 @@
 							</span>
 						</span>
 					</span> <br>
-					<span class="note"> "Seperately" should not be used with horizontal layout. </span> <br>
+					<span class="advanced" class="note"> "Seperately" should not be used with horizontal layout. </span> <br>
 
 					<span class="advanced"> <label for="noTie"> <span> Only allow one player to get the coin star: </span> </label> <input type="checkbox" id="noTie" onchange="changeSettings(this.id)"> <br> </span> <br>
 
@@ -555,6 +555,7 @@
 								<label for="layoutHorizontal"> Horizontal </label>
 							</span>
 						</span> <br> <br class="advanced">
+						<span> Change text color: </span> <input type="color" id="textColor" value="#ffffff" onchange="editValueOnBoth(this.id, this.value);changeSettings('changeTextColor', [this.id])"> <br> <br>
 					</span>
 
 					<span class="advanced">
@@ -661,6 +662,7 @@
 				<!-- Counter Settings -->
 				<div id="counterSettings" class="charSelector hidden">
 					<span id="counterError" class="error" style="display: none;">The selected game doesn't have bonus stars.</span> <br>
+					<span><h3>Bonus Stars</span></h3>
 
 					<div class="counterSelection">
 						<span class="happeningC relative"> <label for="happeningOnOff" id="happeningOnOffText" class="counterOnOffText">Happening (1-8, DS, SMP):</label> <input type="checkbox" id="happeningOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['happening'])" checked> <label for="happeningOnOff" class="charSelectorLabel counterOnOff happeningOnOff"></label> </span>
@@ -713,12 +715,15 @@
 					</div>
 					<span id="hiddenCountersText"></span> <br> <br>
 
-					<span class="settingsTitle">In-game counters</span> <br>
-					<span class="note" style="white-space: nowrap;"> (Useful to completely replace the in-game display - Highlighting does not affect these counters) </span> <br>
+					<span><h3>Others</span></h3>
+					<span class="note" style="white-space: nowrap;"> </span> <br>
 					<div class="counterSelection">
 						<span class="relative"> <label for="starsOnOff" id="starsOnOffText" class="counterOnOffText">Stars:</label> <input type="checkbox" id="starsOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['stars'])"> <label for="starsOnOff" class="charSelectorLabel counterOnOff starsOnOff"></label> </span>
 						<span class="flexAuto"></span><span></span>
 						<span class="flexAuto"></span><span></span>
+					</div>
+					<div class="counterSelection coinC">
+						<span class="relative"> <label for="coinsOnOff" id="coinsOnOffText" class="counterOnOffText">Coins:</label> <input type="checkbox" id="coinsOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['coins'])"> <label for="coinsOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </span>
 					</div>
 					<div class="counterSelection mp9C mp10C">
 						<span class="relative"> <label for="miniStarsOnOff" id="miniStarsOnOffText" class="counterOnOffText">Mini-stars (9 & 10):</label> <input type="checkbox" id="miniStarsOnOff" class="counterOnOffInput" onchange="editValueOnBoth(this.id, this.checked);callOnBoth('changeStars', ['miniStars']);callOnBoth('updateStars')"> <label for="miniStarsOnOff" class="charSelectorLabel counterOnOff miniStarsOnOff"></label> </span>
@@ -773,35 +778,8 @@
 				<div id="shortcutSettings" class="hidden">
 					<span id="shortcutSpan">
 						<span style="width: 100%; white-space: normal; line-height: 30px;">
-							<span style="font-family: 'Mario'; font-size: 17px;"> Assist mode is as broken as it gets! </span> <br>
-							<span>Seriously, don't try it. Everything just breaks. I'll rewrite it once I'm not lazy, until then it's probably better to avoid this as much as possible. <br> I'll just leave this here in case someone <i>really</i> wants to try it out <span class="note">(why?)</span>. </span> <br> <br> <br>
-
-							<span style="font-family: 'Mario'; font-size: 17px;"> Games currently supported: </span> <span style="position: relative; top: 4px;"> <img src="img/mpds.png" style="height: 28px;"> <img src="img/smp.png" style="height: 28px;"> </span> <br>
-							Only 4 players are currently supported. Teams or Partner Party are not supported yet. <br> <br>
-
-							A lot of features depend on the coin counter, it's recommended to show it and keep it up to date. <br>
-							This is currently in heavy development and some features might not work as intended. <br> <br>
-							<span onclick="prepareShortcut(0)" class="assistButton">Start game</span> <br> <br>
-							<!--button onclick="prepareShortcut(1)" style="margin: 20px 25px 0px 15px;">Start over</button> <button onclick="prepareShortcut(2)">Quick start</button> <br-->
-
-
-							<span class="settingsTitle"> What's Assist mode? </span> <br>
-							Assist mode is an optional feature which makes tracking all bonus stars a lot easier. Only select the numbers gotten, items used, space landed on etc and it automatically calculates the result and adds it to the counters. <br> It is recommended to use Settings Popout (bottom left) for this. <br> <span class="note">When switching from popout back to normal settings it might not display the correct state, just load the save from inside the assist settings (top left) when that happens.</span> <br> <br>
-
-
-							<span class="settingsTitle"> Report Bugs </span> <br>
-							In case something breaks or doesn't provide the expected output, please click on "Generate & Copy" and <a href="https://www.twitter.com/yoshisrc">contact me</a> or <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new?template=bug_report.md">open a Github issue</a> with a screenshot or copy-paste of your browsers console (Ctrl + Shift + I > "Console"). It shows the last actions done and potential errors. Thank you! <br> <br>
-
-							<span class="settingsTitle"> Potential broken features </span> <br>
-							Mario Party is hugely RNG based so some events are rare and as such hard to figure out how they work. <br>
-							Be sure to check your coin count after some of these as it might not be correct anymore:
-							<ul>
-								<li>SMP tied Minigame rewards</li>
-								<li>Battle Minigames (especially ties)</li>
-								<li>Lucky/ Extra- Bad Luck Events (some might even be missing)</li>
-								<li>VS space in SMP</li>
-								<li>MPDS Duel space</li>
-							</ul>
+							<span style="font-family: 'Mario'; font-size: 17px;"> Dummy page: </span> <span style="position: relative; top: 4px;"> </span> <br>
+							</span>
 						</span>
 					</span>
 
@@ -866,6 +844,7 @@
 				<!-- Credits/Tutorial -->
 
 				<div id="tutorialSettings" class="hidden"> <span style="line-height: 27px;">
+					<span><h3>RNO Mario Party Overlay (v1.10)</span></h3>
 					<a onclick="getElem('creditsBorder').scrollIntoView({behavior: 'smooth', block: 'start'})">Credits & Contact can be found at the bottom.</a> <br> <br>
 					Welcome to Mario Party Overlay (MPO)! MPO helps track all kinds of stats and bonus stars from the entire Mario Party series, supporting every game in it! <br> This quick tutorial should tell you how everything works with some tips that might come in handy! <br> <br>
 					You can access this dialog at any point by clicking on the gear at the top and then selecting "Credits". The navigation bar can only be used once this dialog is closed. <br> <br>
@@ -882,24 +861,16 @@
 					Alternatively, you can also select the characters and counters you want in the <a onclick="showHideSettings('player')">Characters</a> and <a onclick="showHideSettings('counter')">Counters</a> tab in here. <br>
 					In <a onclick="showHideSettings('slots')">Savefiles</a> you can use various savefiles to track multiple games at the same time or backup everything locally as a file. <br> <br>
 
-					<a onclick="showHideSettings('shortcut')">Assist</a> mode makes tracking a lot easier as you only have to select the numbers rolled, items used, space landed on etc; MPO then automatically adds everything to the counters accordingly. <i>Note that Assist mode is still in Beta.</i>
-
-					<span style="display: none;"> <br> <br> <b>Tip: </b> <span id="tutorialHints"></span> </span>
 				</span>
 
 					<br> <br> <div id="creditsBorder"></div> <br>
-					<!--span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki">More in-depth Tutorial (Outdated)</a> </span> <br-->
-					<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Using-MPO-inside-OBS">How to record MPO with greenscreen</a> </span> <br>
-					<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/projects/6">Planned features</a> </span> <br>
-
-					<span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new/choose">Got an issue or want to request a feature?</a> </span> <span class="note"> (You can also @ me on <a href="https://www.twitter.com/yoshisrc" style="font-size: 18px;">Twitter</a>)</span> <br> <br>
+					<!--span> <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki" class="settingsLink" rel="noopener" target="_blank">More in-depth Tutorial (Outdated)</a> </span> <br-->
 
 					<b>All characters, products and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them. <br> Mario Party is a registered trademark of Nintendo. </b> <br> <br>
 
-					<span style="line-height: 27px;"> Created by <a href="https://www.twitter.com/yoshisrc">blueYOSHI</a> with contributions from <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors">others</a>. <br> <br>
-
-					All Mario Party related icons were created by or inspired from officially published media by Nintendo. <br>
-					Mario Party related icons (re)created, edited or ripped by <a href="https://www.spriters-resource.com/submitter/Anonymous/">Anonymous</a>, <a href="https://www.mariowiki.com/User:Arend">Arend</a>, <a href="https://www.twitter.com/yoshisrc">blueYOSHI</a>, <a href="https://www.spriters-resource.com/submitter/xX-CamTro-Xx/">CamTro</a>, <a href="https://www.spriters-resource.com/submitter/FieryExplosion/">FieryExplosion</a>, <a href="https://www.spriters-resource.com/submitter/Kimimaru/">Kimimaru</a>, <a href="https://www.spriters-resource.com/submitter/larsenv/">larsenv</a>, <a href="https://www.spriters-resource.com/submitter/Mario+Gamer/">Mario Gamer</a>, <a href="https://mariopartylegacy.com/">Mario Party Legacy</a>,  <a href="https://www.spriters-resource.com/submitter/Random+Talking+Bush/">Random Talking Bush</a>, <a href="https://twitter.com/Der_RicoDexter">RicoDexter</a>. <br> <br>
+					<span style="line-height: 27px;"> Created by <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI</a> forked for <a href="https://www.retronintendoonline.ml" class="settingsLink" rel="noopener" target="_blank">RNO</a> by <a href="https://www.retronintendoonline.ml" class="settingsLink" rel="noopener" target="_blank">Cranky Supertoon</a> <br>
+					All Mario Party related icons were created or inspired from officially published media by Nintendo. <br>
+					Mario Party related icons (re)created, edited or ripped by <a href="https://www.spriters-resource.com/submitter/Anonymous/" class="settingsLink" rel="noopener" target="_blank">Anonymous</a>, <a href="https://www.mariowiki.com/User:Arend" class="settingsLink" rel="noopener" target="_blank">Arend</a>, <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI</a>, <a href="https://www.spriters-resource.com/submitter/xX-CamTro-Xx/" class="settingsLink" rel="noopener" target="_blank">CamTro</a>, <a href="https://www.spriters-resource.com/submitter/FieryExplosion/" class="settingsLink" rel="noopener" target="_blank">FieryExplosion</a>, <a href="https://www.spriters-resource.com/submitter/Kimimaru/" class="settingsLink" rel="noopener" target="_blank">Kimimaru</a>, <a href="https://www.spriters-resource.com/submitter/larsenv/" class="settingsLink" rel="noopener" target="_blank">larsenv</a>, <a href="https://www.spriters-resource.com/submitter/Mario+Gamer/" class="settingsLink" rel="noopener" target="_blank">Mario Gamer</a>, <a href="https://mariopartylegacy.com/" class="settingsLink" rel="noopener" target="_blank">Mario Party Legacy</a>,  <a href="https://www.spriters-resource.com/submitter/Random+Talking+Bush/" class="settingsLink" rel="noopener" target="_blank">Random Talking Bush</a>, <a href="https://twitter.com/Der_RicoDexter" class="settingsLink" rel="noopener" target="_blank">RicoDexter</a>. <br>
 
 					Bonus Star information found by <a href="https://www.twitter.com/yoshisrc">blueYOSHI</a>, <a href="https://www.giantbomb.com/bonus-stars/3015-3011/">Giant Bomb</a>, <a href="https://www.mariowiki.com/">Super Mario Wiki</a>, <a href="https://mario.fandom.com/wiki/Bonus_Stars">Super Mario Wiki (wikia/fandom)</a>. <br> <br>
 
