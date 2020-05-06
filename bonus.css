@@ -1,0 +1,351 @@
+@font-face {
+	font-family: "Mario";
+	src: url(font.otf) format("opentype"),
+		 url(font.ttf) format("truetype");
+}
+
+html, body {
+	height: 100%;
+	overflow: hidden;
+}
+
+html {
+	font-family: Helvetica, Segoe UI, Arial, sans-serif;
+	background-image: url(img/bgs/default.jpg);
+	background-color: #0060d7;
+	background-position-x: center;
+	background-position-y: center;
+	background-repeat-x: no-repeat;
+	background-repeat-y: no-repeat;
+	background-attachment: fixed;
+-webkit-background-size: cover;
+   -moz-background-size: cover;
+		background-size: cover;
+
+	color: #111111;
+	font-size: 20px;
+	margin: 0;
+}
+
+body {
+	background: no-repeat url(img/settingsbg-light.png), linear-gradient(#d6d6d6eb, #70b0fff2);
+	margin: 0;
+	overflow: auto;
+}
+
+/* == Scrollbar == */
+::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+
+::-webkit-scrollbar-track {
+	border-radius: 10px;
+	margin: 8px 0;
+	background-color: #dadada8a;
+	box-shadow: inset 2px 2px 2px #00000036;
+}
+
+::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background-color: #70c9e0;
+	box-shadow: inset -2px -2px 2px #00000036;
+}
+::-webkit-scrollbar-thumb:hover {
+	background-color: #6abfd5;
+}
+::-webkit-scrollbar-thumb:active {
+	background-color: #5da5b8;
+	box-shadow: inset 2px 2px 2px #00000036;
+}
+::-webkit-scrollbar-corner {
+	display: none;
+}
+
+#container {
+	margin: 0;
+	padding: 20px;
+	height: 100%;
+	box-sizing: border-box;
+	text-align: center;
+}
+#container > main {
+	display: inline-block;
+	max-width: 50%;
+	text-align: justify;
+}
+
+@media screen and (max-width: 1240px) {
+	#container > main { max-width: initial; }
+}
+
+a {
+	font-size: 20px;
+	white-space: nowrap;
+	color: #0B00FF;
+	cursor: pointer;
+	text-decoration: none;
+
+-webkit-transition: color .15s;
+   -moz-transition: color .15s;
+		transition: color .15s;
+}
+a:hover {
+	color: inherit;
+	text-decoration: none;
+}
+
+.note {
+	color: #252525c7;
+	font-size: 18px;
+	font-style: italic;
+}
+.note a {
+	font-size: 18px; /* Yes, this is required somehow. */
+}
+
+.error {
+	color: #b10000;
+	font-weight: bold;
+}
+
+h2 a, h3 a {
+	visibility: hidden;
+	opacity: 0;
+	position: relative;
+	top: -1px;
+	margin-left: 5px;
+	font-size: 20px;
+	vertical-align: middle;
+
+-webkit-transition: visibility .3s, opacity .3s, color .15s;
+   -moz-transition: visibility .3s, opacity .3s, color .15s;
+		transition: visibility .3s, opacity .3s, color .15s;
+}
+h2:hover a, h3:hover a {
+	visibility: visible;
+	opacity: 1;
+}
+
+span[title], img[title] {
+	cursor: help;
+}
+
+.bonusstarContainer {
+	display: block;
+	position: relative;
+	margin-left: 85px;
+	margin-bottom: 50px;
+	min-height: 70px;
+}
+.bonusstarContainer:before {
+	content: '';
+	display: block;
+	position: absolute;
+	width: 70px;
+	height: 70px;
+	left: -85px;
+	background-size: cover;
+}
+.bonusstarContainer h3 {
+	/*display: inline-block;*/
+	position: relative;
+	margin: 0;
+	margin-right: 25px;
+	top: -3px;
+}
+.bonusstarContainer img {
+	margin-right: 5px;
+	height: 23px;
+}
+.bonusstarContainer p {
+	margin: 0;
+}
+
+
+#happening:before {
+	background-image: url(img/bonus/happening.png);
+}
+#minigame:before {
+	background-image: url(img/bonus/minigame.png);
+}
+#coin:before {
+	background-image: url(img/bonus/coins.png);
+}
+#red:before {
+	background-image: url(img/bonus/redspace.png);
+}
+#running:before {
+	background-image: url(img/bonus/running.png);
+}
+#slow:before {
+	background-image: url(img/bonus/running.png);
+}
+#shopping:before {
+	background-image: url(img/bonus/shopping.png);
+}
+#item:before {
+	background-image: url(img/bonus/item.png);
+}
+#unused:before {
+	background-image: url(img/bonus/item.png);
+}
+#friendship:before {
+	background-image: url(img/bonus/friendspace.png);
+}
+#hex:before {
+	background-image: url(img/bonus/hex.png);
+}
+#spin:before {
+	background-image: url(img/bonus/spinspace.png);
+}
+#minus:before {
+	background-image: url(img/bonus/minus.png);
+}
+#balloon:before {
+	background-image: url(img/bonus/balloon.png);
+}
+#almost:before {
+	background-image: url(img/bonus/almost.png);
+}
+#loner:before {
+	background-image: url(img/bonus/loner.png);
+}
+#duel:before {
+	background-image: url(img/bonus/duel.png);
+}
+#wanderer:before {
+	background-image: url(img/bonus/wanderer.png);
+}
+#buddy:before {
+	background-image: url(img/bonus/buddy.png);
+}
+#ally:before {
+	background-image: url(img/bonus/ally.png);
+}
+#stompy:before {
+	background-image: url(img/bonus/stompy.png);
+}
+#doormat:before {
+	background-image: url(img/bonus/doormat.png);
+}
+
+.sub-all {
+	display: none;
+}
+
+
+#gameSelectorDiv {
+	font-family: 'Mario';
+	font-size: 18px;
+	color: #111;
+	max-width: 1044px;
+	margin-bottom: 50px;
+	user-select: none;
+
+	display: flex;
+	justify-content: space-around;
+}
+
+input {
+	display: none;
+}
+
+.gameSelector {
+	white-space: nowrap;
+}
+
+.charSelectorLabel {
+	cursor: pointer;
+	background-size: contain;
+	background-repeat: no-repeat;
+	display: inline-block;
+	height: 70px;
+	width: 70px;
+	-webkit-filter: grayscale(.6) opacity(.5);
+	   -moz-filter: grayscale(.6) opacity(.5);
+			filter: grayscale(.6) opacity(.5);
+	transition: filter .3s;
+}
+
+.charSelectorLabel:hover, .charSelectorLabel:focus {
+-webkit-filter: grayscale(.3) opacity(.7);
+   -moz-filter: grayscale(.3) opacity(.7);
+		filter: grayscale(.3) opacity(.7);
+}
+.charSelectorLabel:active {
+-webkit-filter: grayscale(.1) opacity(.9);
+   -moz-filter: grayscale(.1) opacity(.9);
+		filter: grayscale(.1) opacity(.9);
+}
+
+.charSelector input:checked +.charSelectorLabel, .charSelector input:checked +.drinkcard-cc {
+-webkit-filter: drop-shadow(0px 0px 6px #fff82b);
+   -moz-filter: drop-shadow(0px 0px 6px #fff82b);
+		filter: drop-shadow(0px 0px 6px #fff82b);
+}
+
+.gameLabel {
+	height: 25px;
+	width: 25px;
+}
+
+.all {
+	width: 50px;
+}
+.mp1 {
+	background-image:url(img/mp1.png);
+	width: 20px;
+}
+.mp2 {
+	background-image:url(img/mp2.png);
+}
+.mp3 {
+	background-image:url(img/mp3.png);
+}
+.mp4 {
+	background-image:url(img/mp4.png);
+}
+.mp5 {
+	background-image:url(img/mp5.png);
+}
+.mp6 {
+	background-image:url(img/mp6.png);
+}
+.mp7 {
+	background-image:url(img/mp7.png);
+}
+.mp8 {
+	background-image:url(img/mp8.png);
+}
+.mp9 {
+	background-image:url(img/mp9.png);
+}
+.mp10 {
+	background-image:url(img/mp10.png);
+	width: 40px;
+}
+.mpa {
+	background-image:url(img/mpa.png);
+	width: 63px;
+}
+.mpds {
+	background-image:url(img/mpds.png);
+	width: 50px;
+}
+.mpit {
+	background-image:url(img/mpit.png);
+	width: 35px;
+}
+.mpsr {
+	background-image:url(img/mpsr.png);
+	width: 46px;
+}
+.mptt100 {
+	background-image:url(img/mptt100.png);
+	width: 47px;
+}
+.smp {
+	background-image:url(img/smp.png);
+	width: 51px;
+}

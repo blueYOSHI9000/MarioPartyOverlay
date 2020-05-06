@@ -2,7 +2,7 @@
 * Resets or starts the highlighting feature by calling callHighlight().
 */
 function resetHighlights () {
-	if (getValue('enableHighlight') == false) {
+	if (getValue('enableHighlight') === false) {
 		callHighlight(true);
 	} else {
 		callHighlight();
@@ -368,6 +368,10 @@ function displayOnOff (counter, start, force) {
 		updateStars();
 		changeStars();
 	}
+	if (popout != true && startup === false) {
+		slots['c' + slots.sel][counter + 'OnOff'] = getValue(counter + 'OnOff');
+		localStorage.setItem('c' + slots.sel, JSON.stringify(slots['c' + slots.sel]));
+	}
 }
 
 /*
@@ -442,9 +446,11 @@ function showHideSettings (id) {
 
 	if (id == 'shortcut') {
 		getElem('shortcutHeader').style.display = 'block';
+		getElem('shortcutHeaderBorder').style.display = 'block';
 		getElem('settingsMain').classList.add('scroll');
 	} else {
 		getElem('shortcutHeader').style.display = 'none';
+		getElem('shortcutHeaderBorder').style.display = 'none';
 		getElem('settingsMain').classList.remove('scroll');
 	}
 
@@ -457,8 +463,24 @@ function showHideSettings (id) {
 		updateCounterList();
 	}
 
+	updateUnderline(id + 'Selector');
+
 	getElem('settingsMain').scrollTop = scrollPos[openedSettings];
 }
+
+/*
+* Updates the underline position that's below the settings tabs.
+*
+* @param {string} id The id of the tab.
+*/
+function updateUnderline (id) {
+	var rect = getElem(id).getBoundingClientRect();
+	var containerRect = getElem('settingsSelectionSpan').getBoundingClientRect();
+	getElem('settingsSelectionUnderline').style.width = rect.width + 'px';
+	getElem('settingsSelectionUnderline').style.left = rect.left - containerRect.left + 'px';
+	//getElem('settingsSelectionUnderline').style.left = getElem(id).offsetLeft + 'px';
+}
+
 var test;
 /*
 * Closes the settings & navbar dropdown if the user doesn't click on the settings or navbar dropdown while they are opened.
@@ -508,15 +530,15 @@ function ctrlPressed (e, ctrl, shift, key) {
 	} else {
 		switch (key) {
 			case '1':
-				ga.ogAmount = 1;
+				globalActions.ogAmount = 1;
 				updateAmount();
 				break;
 			case '5':
-				ga.ogAmount = 5;
+				globalActions.ogAmount = 5;
 				updateAmount();
 				break;
 			case '0':
-				ga.ogAmount = 10;
+				globalActions.ogAmount = 10;
 				updateAmount();
 				break;
 			case 'Escape':
@@ -552,8 +574,8 @@ function ctrlReleased (e, key, force) {
 	} else if (key === 'Shift' && shiftKeyVar === true) {
 		shiftKeyVar = false;
 		getElem('nvShiftHeld').style.display = 'none';
-		ga.amount = ga.ogAmount;
-		editInner('nvAmountText', ga.amount);
+		globalActions.amount = globalActions.ogAmount;
+		editInner('nvAmountText', globalActions.amount);
 	}
 }
 
@@ -619,13 +641,22 @@ function openSettings (force) {
 	}
 }
 
-var settingsHints = ['Click on the gear while holding Ctrl to open settings directly.', 'Click on the gear while holding Shift to copy text output directly.', 'Click on a character while holding Ctrl to make them the only coin star holder.', 'Hover over this to read the full tip.', 'Click on this text to get another tip.', 'Press 1, 5 or 10 to set the amount to add/subtract to that number.', 'Everything is automatically saved when closing settings, even without hitting the save button.'];
+//hint system is not actually visible currently due to lack of worthwile hints and issues with small screens not being able to fully display it.
+var settingsHints = [	//'Hover over this to read the full tip.', //not implemented on tutorial version
+						'Click on this text to get another tip.',
+						'Click on the gear while holding <i>Ctrl</i> to open settings directly.',
+						'Click on the gear while holding <i>Shift</i> to copy text output directly.',
+						'Hold <i>Ctrl</i> to select a character that\'s already been selected.',
+						'Hold <i>Ctrl</i> when randomizing to randomize all characters instead of just the current one.',
+						'Click on a character while holding <i>Ctrl</i> to make them the only coin star holder.',
+						'Press the <i>1</i>, <i>5</i> or <i>0</i> key to set the amount to add/subtract to that number.'];
 /*
 * Gets a new hint and displays it in settings.
 */
 function newSettingsHint () {
 	var str = settingsHints[randomCharFor(settingsHints.length)];
 	editInner('settingsHints', str);
+	editInner('tutorialHints', str);
 	getElem('settingsHintsContainer').title = str;
 }
 
@@ -656,7 +687,7 @@ function closeSettings () {
 * @param {string} functionName The function that shoudl be called (without the '()').
 * @param {array} attributes The attributes that the function should use.
 */
-function changeSettings (functionName, attributes) {
+function callOnBoth (functionName, attributes) {
 	//console.log('functionName: '  + functionName + ', attributes: ' + attributes);
 	if (popout === true || popoutActivated === true) {
 		if (attributes) {
@@ -669,9 +700,94 @@ function changeSettings (functionName, attributes) {
 }
 
 /*
+* Changes browser settings. Called everytime an option gets changed.
+*
+* @param {string} id The id of the option.
+*/
+function changeSettings (id) {
+	editValueOnBoth(id, getValue(id));
+
+	switch (id) {
+		case 'hideAdvanced':
+			callOnBoth('hideAdvancedSettings', [id]);
+			break;
+
+		// FEATURES
+		case 'settingsFullscreen':
+			callOnBoth('settingsFullscreen');
+			break;
+		case 'useSW':
+			callOnBoth('runSW');
+			break;
+		case 'enableHighlight':
+			callOnBoth('resetHighlights');
+			break;
+		case 'highlightColor':
+			callOnBoth('callHighlight', [false, true]);
+			break;
+		case 'deactivateUnused':
+			callOnBoth('deactivateUnused');
+			break;
+		case 'bonusDont':
+		case 'bonusCombine':
+		case 'bonusSeperately':
+			updateStars();
+			break;
+		case 'noTie':
+			callOnBoth('coinStarTie');
+			break;
+		case 'useHotkeys':
+			if (getValue('useHotkeys').checked === false) {
+				ctrlReleased(null, 'Control', true);
+				ctrlReleased(null, 'Shift', true);
+			}
+			break;
+
+		// INTERFACE
+		case 'bgColor':
+			callOnBoth('changeBGColor', ['bgColor']);
+			break;
+		case 'greenscreen':
+			callOnBoth('changeTheme');
+			break;
+		case 'textColor':
+			callOnBoth('changeTextColor', ['textColor']);
+			break;
+		case 'mpsrIcons':
+		case 'mk8Icons':
+			callOnBoth('changeCharacters');
+			callOnBoth('changeCharSelectionIcons');
+			break;
+		case 'customGameIcons':
+			callOnBoth('changeCharacters');
+			callOnBoth('changeCounterIcons');
+			break;
+		case 'xBelow100':
+			callOnBoth('displayXBelow100');
+			break;
+		case 'layoutHorizontal':
+		case 'layoutVertical':
+			callOnBoth('changeLayout');
+			break;
+
+		// TEXT OUTPUT
+		case 'toUseActive':
+			callOnBoth('updateCounterInput');
+			break;
+		case 'toOutput':
+			textOutputTest(true);
+			break;
+		case 'toCounters':
+			textOutputTest();
+			break;
+	}
+	saveSettings();
+}
+
+/*
 * Changes Themes incl. greenscreen.
 *
-* @param {number} theme Which theme should be used.
+* @param {string} theme Which theme should be used.
 */
 var bgColor = '#0000ff';
 var curTheme = 'default';
@@ -691,6 +807,10 @@ function changeTheme (theme) {
 	} else {
 		getElem('bodyElement').style.backgroundImage = 'url("img/bgs/' + theme + '.jpg"), url("img/bgs/default.jpg")';
 		getElem('bodyElement').style.backgroundColor = 'unset';
+	}
+
+	if (popout != true && startup === false) {
+		saveSettings();
 	}
 }
 
@@ -833,6 +953,37 @@ function changeLayout () {
 	}
 }
 
+/*
+* Adds or removes the x before counters depending on the setting.
+*/
+function displayXBelow100 () {
+	var activated = getValue('xBelow100');
+
+	var elems = document.querySelectorAll('.counterText');
+	for (var num = 0; num < elems.length; num++) {
+		if (parseInt(elems[num].innerText) < 100 && activated === true) {
+			elems[num].classList.add('counterBelow100');
+		} else {
+			elems[num].classList.remove('counterBelow100');
+		}
+	}
+}
+
+/*
+* Displays settings in fullscreen if enabled.
+*/
+function settingsFullscreen () {
+	if (getValue('settingsFullscreen') === true || popout === true) {
+		getElem('settingsContent').classList.add('settingsContentPopout');
+		getElem('settingsContent').classList.remove('popupContent');
+		getElem('settingsContent').classList.remove('settingsPopup');
+	} else {
+		getElem('settingsContent').classList.remove('settingsContentPopout');
+		getElem('settingsContent').classList.add('popupContent');
+		getElem('settingsContent').classList.add('settingsPopup');
+	}
+	updateUnderline(document.querySelector('.settingsSelected').id);
+}
 
 /*
 * Opens shortcut settings before shortcut is actually opened. This function gets overwritten by the one in assist-misc.js.
@@ -862,123 +1013,30 @@ function shortcutSettings (close) {
 }
 
 /*
-* Capitalize a string.
+* Checks if it's executed in the popout and calls sendMessage() if it is.
 *
-* @param {string} str The string to capitalize.
+* @param {string} id The first attribute.
+* @param {string} attribute Other attributes.
+* @param {boolean} force Forces it to send the message if true.
 */
-function capStr (str) {
-	return str.charAt(0).toUpperCase() + str.slice(1);
+function editValueOnBoth (id, attribute, force) {
+	if (popout == true || force == true) {
+		sendMessage('editValue+' + id + '+' + attribute);
+	}
 }
 
 /*
-* Gets the InnerHTML of an element
+* Checks if it's executed in the popout and calls sendMessage() if it is.
 *
-* @param {string} id The ID of the element that should be changed.
+* @param {string} id The first attribute.
+* @param {array} attribute Other attributes.
 */
-function getInner (id) {
-	return getElem(id).innerHTML;
-}
-/*
-* Edits the InnerHTML of an element.
-*
-* @param {string} id The ID of the element that should be changed.
-* @param {string/boolean} value The text that it should be changed to
-*/
-function editInner (id, value) {
-	//console.log('id: ' + id + ', value: ' + value);
-	getElem(id).innerHTML = value;
-}
-
-
-/*
-* Edits the value of an input element. If element is a checkbox and no value is given it changes it to the opposite instead.
-*
-* @param {string} id The ID of the element that should be changed.
-* @param {string/boolean} value The value that it should be changed to
-*/
-function editValue (id, value) {
-	//console.log('id: ' + id + ', value: ' + value);
-	if (getElem(id).type == 'checkbox' || getElem(id).type == 'radio') {
-		if (typeof value === 'undefined') {
-			if (getValue(id) === false){
-				getElem(id).checked = true;
-			} else {
-				getElem(id).checked = false;
-			}
-		} else {
-			if (typeof value === 'string')
-				value = stringToBoolean(value);
-			getElem(id).checked = value;
-		}
+function execOnMain (func, attribute) {
+	if (popout == true) {
+		sendMessage(func + '+' + attribute.join('+'));
+		executeFunctionByName(func, attribute);
 	} else {
-		getElem(id).value = value;
-	}
-}
-
-/*
-* Gets the value of an input element
-*
-* @param {string} id The ID of the element that should be changed.
-*/
-function getValue (id) {
-	if (getElem(id).type == 'checkbox' || getElem(id).type == 'radio') {
-		return getElem(id).checked;
-	} else {
-		return getElem(id).value;
-	}
-}
-
-/*
-* Returns DOM element.
-*
-* @param {string} id The ID of the element
-*/
-function getElem (id) {
-	return document.getElementById(id);
-}
-
-/*
-* Creates an element and returns it.
-*
-* @param {string} type The element type it should be.
-* @param {string/DOM Element} parent The parent element, if an id is given it gets the DOM Element of it
-*/
-function cElem (type, parent) {
-	if (typeof parent === 'string') {
-		parent = getElem(parent);
-	}
-	var elem = document.createElement(type);
-	parent.appendChild(elem);
-	return elem;
-}
-
-/*
-* Gets variable from URL and returns it.
-*
-* @param {string} variable The variable it should get.
-*/
-function getUrl(variable) {
-	var query = window.location.search.substring(1);
-	var vars = query.split("&");
-	for (var i=0;i<vars.length;i++) {
-		var pair = vars[i].split("=");
-		if(pair[0] == variable){return pair[1];}
-	}
- 	return(false);
-}
-
-/*
-* Converts a string into a boolean.
-*
-* @param {string} boolean The string that should get coverted.
-*/
-function stringToBoolean (boolean) {
-	if (boolean == 'true') {
-		return true;
-	} else if (boolean == 'false') {
-		return false;
-	} else {
-		return boolean;
+		executeFunctionByName(func, attribute);
 	}
 }
 
@@ -1080,13 +1138,6 @@ function parseFile (str) {
 }
 
 /*
-* Reloads the site.
-*/
-function reload () {
-	location = location;
-}
-
-/*
 * Parses JSON, returns false if it's not JSON.
 *
 * @param {string} str The JSON stringified string.
@@ -1103,41 +1154,13 @@ function parseJSON (str) {
 /*
 * Updates localStorage with new data.
 *
-* @param {object} o The data.
+* @param {object} o The data - don't ask me what data, I forgot.
 */
 function writeLocalStorage(o) {
 	for (var property in o) {
 		if (o.hasOwnProperty(property)) {
 			localStorage.setItem(property, o[property]);
 		}
-	}
-}
-
-/*
-* Checks if it's executed in the popout and calls sendMessage() if it is.
-*
-* @param {string} id The first attribute.
-* @param {string} attribute Other attributes.
-* @param {boolean} force Forces it to send the message if true.
-*/
-function editValueOnBoth (id, attribute, force) {
-	if (popout == true || force == true) {
-		sendMessage('editValue+' + id + '+' + attribute);
-	}
-}
-
-/*
-* Checks if it's executed in the popout and calls sendMessage() if it is.
-*
-* @param {string} id The first attribute.
-* @param {array} attribute Other attributes.
-*/
-function execOnMain (func, attribute) {
-	if (popout == true) {
-		sendMessage(func + '+' + attribute.join('+'));
-		executeFunctionByName(func, attribute);
-	} else {
-		executeFunctionByName(func, attribute);
 	}
 }
 
@@ -1177,24 +1200,6 @@ function receiveMessage (e) {
 	} else {
 		executeFunctionByName(functionName, args);
 	}
-}
-
-/*
-* Executes a function from a string.
-*
-* @param {string} functionName The name of the function that should be executed.
-* @param {array} args Arguments that should be used.
-*/
-function executeFunctionByName (functionName, args) {
-	var context = window;
-	//var args = Array.prototype.slice.call(arguments, 2);
-	var namespaces = functionName.split(".");
-	var func = namespaces.pop();
-	for (var i = 0; i < namespaces.length; i++) {
-		context = context[namespaces[i]];
-	}
-	//console.log('executeFunctionByName: ' + func + ' - ' + args)
-	return context[func].apply(context, args);
 }
 
 /*
@@ -1253,7 +1258,7 @@ function mpoSettingsPopout () {
 */
 function startSW () {
 	if (location.hostname === 'localhost' || location.origin === 'file://') {
-		console.warn('[MPO] Offline can\'t be used with localhost or from a local file.');
+		console.warn('[MPO] Service Workers can\'t be used with localhost or from a local file.');
 		return;
 	}
 	navigator.serviceWorker && navigator.serviceWorker.register('./sw.js').then(function(registration) {
@@ -1317,50 +1322,55 @@ function interactReset () {
 }
 
 // === INTERACT.JS ===
-// target elements with the "draggable" class
-interact('.draggable')
-	.draggable({
-		// enable inertial throwing
-		inertia: true,
-		// keep the element within the area of it's parent
-		/* restrict: {
-			restriction: "parent",
-			endOnly: true,
-			elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
-		},*/
-		// enable autoScroll
-		autoScroll: true,
+try {
+	// target elements with the "draggable" class
+	interact('.draggable')
+		.draggable({
+			// enable inertial throwing
+			inertia: true,
+			// keep the element within the area of it's parent
+			/* restrict: {
+				restriction: "parent",
+				endOnly: true,
+				elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+			},*/
+			// enable autoScroll
+			autoScroll: true,
 
-		// call this function on every dragmove event
-		onmove: dragMoveListener,
-		// call this function on every dragend event
-		onend: function (event) {
-		var textEl = event.target.querySelector('p');
+			// call this function on every dragmove event
+			onmove: dragMoveListener,
+			// call this function on every dragend event
+			onend: function (event) {
+			var textEl = event.target.querySelector('p');
 
-		textEl && (textEl.textContent =
-			'moved a distance of '
-			+ (Math.sqrt(Math.pow(event.pageX - event.x0, 2) +
-				Math.pow(event.pageY - event.y0, 2) | 0))
-				.toFixed(2) + 'px');
+			textEl && (textEl.textContent =
+				'moved a distance of '
+				+ (Math.sqrt(Math.pow(event.pageX - event.x0, 2) +
+					Math.pow(event.pageY - event.y0, 2) | 0))
+					.toFixed(2) + 'px');
+		}
+	});
+
+	function dragMoveListener (event) {
+		if (getElem('enableInteract').checked == true) {
+			var target = event.target,
+				// keep the dragged position in the data-x/data-y attributes
+				x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+				y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+			// translate the element
+			target.style.webkitTransform =
+			target.style.transform =
+				'translate(' + x + 'px, ' + y + 'px)';
+
+			// update the posiion attributes
+			target.setAttribute('data-x', x);
+			target.setAttribute('data-y', y);
+		}
 	}
-});
-
-function dragMoveListener (event) {
-	if (getElem('enableInteract').checked == true) {
-		var target = event.target,
-			// keep the dragged position in the data-x/data-y attributes
-			x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-			y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-
-		// translate the element
-		target.style.webkitTransform =
-		target.style.transform =
-			'translate(' + x + 'px, ' + y + 'px)';
-
-		// update the posiion attributes
-		target.setAttribute('data-x', x);
-		target.setAttribute('data-y', y);
-	}
+} catch (e) {
+	console.warn('[MPO] Interact.js failed to load.');
+	noInteract = true;
 }
 // === INTERACT.JS END ===
 
@@ -1377,13 +1387,17 @@ window.onbeforeunload = function(){
 		closePopout();
 	}
 }
-
-new Sortable(getElem('slotList'), {
-	animation: 150,
-	onUpdate: function (evt) {
-		updateSlotOrder();
-	}
-});
+//sortable.js
+try {
+	new Sortable(getElem('slotList'), {
+		animation: 150,
+		onUpdate: function (evt) {
+			updateSlotOrder();
+		}
+	});
+} catch (e) {
+	console.warn('[MPO] sortable.js failed to load.');
+}
 
 window.onload = prepareMPO();
 window.onload = changeBGColor('bgColor');

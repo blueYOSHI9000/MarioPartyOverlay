@@ -47,38 +47,39 @@ function showNavBar (elem) {
 			break;
 		case 'nvCounters':
 			openSettings();
-			changeSettings('showHideSettings', ['counter']);
+			callOnBoth('showHideSettings', ['counter']);
 			break;
 		case 'nvAction':
 			switchAction();
 			switchAction(true);
 			break;
 		case 'nvAmount':
-			switch (ga.ogAmount) {
+			switch (globalActions.ogAmount) {
 				case 1:
-					ga.ogAmount = 5;
+					globalActions.ogAmount = 5;
 					break;
 				case 5:
-					ga.ogAmount = 10;
+					globalActions.ogAmount = 10;
 					break;
 				default:
-					ga.ogAmount = 1;
+					globalActions.ogAmount = 1;
 			}
 			updateAmount();
 			break;
 		case 'nvSettings':
+			if (shiftKeyVar === true) {
+				elem.classList.remove('nvSelected');
+				activeNv = null;
+				textOutput(true);
+			} //dont return in case both shift an ctrl are held
 			if (ctrlKeyVar === true) {
 				elem.classList.remove('nvSelected');
 				activeNv = null;
 				openSettings();
 				return;
 			}
-			if (shiftKeyVar === true) {
-				elem.classList.remove('nvSelected');
-				activeNv = null;
-				textOutput(true);
+			if (shiftKeyVar === true)
 				return;
-			}
 
 			if (activeNv != 'navbarSettings') {
 				activeNv = 'navbarSettings';
@@ -95,13 +96,13 @@ function showNavBar (elem) {
 	nvElem.style.overflow = '';
 
 	var offWidth = nvElem.offsetWidth; //get width of squished element
-	nvElem.style.width = 'fit-content'; //use fit-content so it expands to its supposed size
+	nvElem.style.width = 'max-content'; //use max-content so it expands to its supposed size
 
-	var rect = nvElem.getBoundingClientRect();
+	var rect = nvElem.getBoundingClientRect(); //get height/width and position of element
 	var finalWidth = nvElem.offsetWidth + 1; //get new width of its full size
 	var winWidth = window.innerWidth;
 
-	if (rect.right > winWidth) { //check if parts of the element is offscreen
+	if (rect.right + 1 > winWidth) { //check if parts of the element is offscreen
 		if (finalWidth > winWidth) { //when element is bigger than screen
 			nvElem.style.left = 0;
 			nvElem.style.overflow = 'auto hidden';
@@ -110,6 +111,11 @@ function showNavBar (elem) {
 
 			nvElem.style.height = nvElem.children[0].offsetHeight + 12 + 'px';
 		} else { //when element is just offscreen
+			//following line is somehow fucked in firefox
+			//one line in showNvChar() also has something to do with this (getElem('navbarChars').style.left = elem.getBoundingClientRect().left + 'px';)
+			//firefox produces different results if either of those lines are stepped through
+			//without stepping through character navbar dropdowns won't move to other players
+			//chrome gives same results regardless if debugger or not
 			nvElem.style.left = winWidth - finalWidth + 'px';
 			nvElem.style.height = nvElem.children[0].offsetHeight + 'px';
 		}
@@ -128,14 +134,14 @@ function switchAction (og) {
 		og = 'action';
 	}
 
-	if (ga[og] === 'p') {
-		ga[og] = 'm';
+	if (globalActions[og] === 'p') {
+		globalActions[og] = 'm';
 	} else {
-		ga[og] = 'p';
+		globalActions[og] = 'p';
 	}
 
 	if (og != true) {
-		if (ga.action === 'm') {
+		if (globalActions.action === 'm') {
 			editInner('nvActionIcon', '-');
 			editInner('nvActionText', 'Sub.');
 		} else {
@@ -150,21 +156,21 @@ function switchAction (og) {
 */
 function updateAmount () {
 	if (shiftKeyVar === true) {
-		switch (ga.ogAmount) {
+		switch (globalActions.ogAmount) {
 			case 1:
-				ga.amount = 5;
+				globalActions.amount = 5;
 				break;
 			case 5:
-				ga.amount = 1;
+				globalActions.amount = 1;
 				break;
 			case 10:
-				ga.amount = 1;
+				globalActions.amount = 1;
 				break;
 		}
 	} else {
-		ga.amount = ga.ogAmount;
+		globalActions.amount = globalActions.ogAmount;
 	}
-	editInner('nvAmountText', ga.amount);
+	editInner('nvAmountText', globalActions.amount);
 }
 
 /*
@@ -178,6 +184,7 @@ function closeNavbar () {
 	getElem('navbarGames').style.height = 0;
 	getElem('navbarSettings').style.height = 0;
 	getElem('navbarChars').style.width = '';
+	getElem('navbarChars').children[0].style.width = '';
 	getElem('navbarGames').style.width = '';
 	getElem('navbarSettings').style.width = '';
 
@@ -187,7 +194,7 @@ function closeNavbar () {
 	if (document.querySelector('.nvSelected') != null)
 		document.querySelector('.nvSelected').classList.remove('nvSelected');
 
-	savePlayers();
+	//savePlayers(); //not needed anymore, everything auto-saves now
 
 	activeNv = null;
 }
@@ -202,7 +209,7 @@ function updateNavbar (player) {
 		return;
 
 	var elem = getElem('nvChar' + player);
-	elem.children[0].src = 'img/' + curGame + '/' + characters[player] + '.png';
+	elem.children[1].src = 'img/' + curGame + '/' + characters[player] + '.png';
 
 	if (getValue('com' + player) != true) {
 		getElem('nvCom' + player).style.opacity = 0;
@@ -252,7 +259,7 @@ function showNvChar (elem) {
 		getElem('navbarChars').classList.add('nvContentLeftTransition');
 	}
 
-	getElem('navbarChars').style.left = elem.getBoundingClientRect().left + 'px';
+	getElem('navbarChars').style.left = elem.getBoundingClientRect().left + 'px'; //view comment at the end of showNavBar()
 
 	var player = elem.id[elem.id.length - 1];
 	getElem('navbarChars').setAttribute('player', player);
@@ -309,15 +316,15 @@ function updateNvChar () { //actually use this now
 		case 'mp5':
 			addNvChar('mario');
 			addNvChar('luigi');
-			addNvChar('peach');
 			addNvChar('yoshi');
-			addNvChar('wario');
+			addNvChar('peach');
 			cElem('br', 'nvCharList');
+			var brElem = cElem('span', 'nvCharList'); //to move the bottom row to the center
+			brElem.style.display = 'inline-block';
+			brElem.style.width = '39.5px';
+			addNvChar('wario');
 			addNvChar('daisy');
 			addNvChar('waluigi');
-			addNvChar('toad');
-			addNvChar('boo');
-			addNvChar('koopakid');
 			break;
 		case 'mp6':
 			addNvChar('mario');
@@ -376,14 +383,12 @@ function updateNvChar () { //actually use this now
 			addNvChar('peach');
 			addNvChar('daisy');
 			addNvChar('wario');
-			addNvChar('waluigi');
 			cElem('br', 'nvCharList');
+			addNvChar('waluigi');
 			addNvChar('yoshi');
 			addNvChar('birdo');
 			addNvChar('toad');
 			addNvChar('koopa');
-			addNvChar('shyguy');
-			addNvChae('kamek');
 			break;
 		case 'mp10':
 			addNvChar('mario');
@@ -392,13 +397,13 @@ function updateNvChar () { //actually use this now
 			addNvChar('toad');
 			addNvChar('yoshi');
 			addNvChar('toadette');
+			addNvChar('spike');
 			cElem('br', 'nvCharList');
 			addNvChar('wario');
 			addNvChar('waluigi');
 			addNvChar('daisy');
 			addNvChar('rosalina');
 			addNvChar('dk');
-			addNvChar('spike');
 			break;
 		case 'mpa':
 			addNvChar('mario');
@@ -578,10 +583,10 @@ function addNvChar (char) {
 function nvChangeChar (elem) {
 	var char = elem.getAttribute('character');
 	for (let num = 1; num < 5; num++) {
-		if (char === characters[num])
+		if (char === characters[num] && ctrlKeyVar != true)
 			return;
 	}
-	changeSettings('changeCharacters', [parseInt(getElem('navbarChars').getAttribute('player')), char]);
+	callOnBoth('changeCharacters', [parseInt(getElem('navbarChars').getAttribute('player')), char]);
 	closeNavbar();
 }
 
@@ -594,8 +599,8 @@ function nvChangeCom (player) {
 	if (player) {} else {
 		player = getElem('navbarChars').getAttribute('player');
 	}
-	changeSettings('editValue', ['com' + player]);
-	changeSettings('changeCom', [player]);
+	callOnBoth('editValue', ['com' + player]);
+	callOnBoth('changeCom', [player]);
 
 	getElem('nvComImg').classList.toggle('nvComSelected');
 }
@@ -606,10 +611,19 @@ function nvChangeCom (player) {
 * @param {number} player The player, not needed when activated through the dropdown.
 */
 function nvRando (player) {
-	if (player) {} else {
-		player = parseInt(getElem('navbarChars').getAttribute('player'));
+	if (ctrlKeyVar === true) {
+		randomChar();
+		return;
 	}
-	randomChar(player);
+	if (typeof player === 'undefined')
+		player = parseInt(getElem('navbarChars').getAttribute('player'));
+	
+	//fills pastResults with the current characters position from charList[curGame] and then draws a random character from that same list
+	pastResults = [charList[curGame].indexOf(characters[1]), charList[curGame].indexOf(characters[2]), charList[curGame].indexOf(characters[3]), charList[curGame].indexOf(characters[4])];
+	var character = charList[curGame][randomCharFor(charList[curGame].length)];
+	changeCharacters(player, character);
+
+	getElem(character + player).scrollIntoView({block: 'center'});
 
 	var elems = document.querySelectorAll('.nvCharSelected');
 	for (let num = 0; num < elems.length; num++) {
@@ -631,6 +645,6 @@ function nvChangeGame (game) {
 	if (game === curGame)
 		return;
 
-	changeSettings('changeGame', [game])
+	callOnBoth('changeGame', [game]);
 	closeNavbar();
 }

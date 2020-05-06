@@ -5,7 +5,7 @@
 * @param {boolean} error If true it prints it as a error.
 */
 function shortcutNotif (text, error) {
-	console.log('[MPO Shortcut] ' + text);
+	console.log('[MPO Notif] ' + text);
 	editInner('shortcutNotif', text);
 	if (error) {
 		getElem('shortcutNotif').classList.add('errorAni');
@@ -57,7 +57,7 @@ function shortcutBack () {
 			break;
 		case 2:
 			if (turnCurPlayer === 1) {
-				if ((getInner('curTurnText') == parseInt(getInner('maxTurnText')) - 4 && shortcutGame != 'smp') || (getInner('curTurnText') == parseInt(getInner('maxTurnText')) - 2 && shortcutGame === 'smp')) { //if final 5
+				if ((getInner('curTurnText') == getStat('maxTurn') - 4 && shortcutGame != 'smp') || (getInner('curTurnText') == getStat('maxTurn') - 2 && shortcutGame === 'smp')) { //if final 5
 					execOnMain('turns', ['curTurn', 1, 'M']);
 					shortcutState = 3;
 					getElem('shortcutTurn').style.display = 'none';
@@ -159,7 +159,7 @@ function shortcutSettings (close) {
 function resetShortcut () {
 	shortcutState = 3;
 	var turn = getInner('curTurnText');
-	counterButtons(1, 'S', parseInt(getInner('maxTurnText')), 'curTurn');
+	counterButtons(1, 'S', getStat('maxTurn'), 'curTurn');
 	startShortcut();
 	counterButtons(1, 'S', turn, 'curTurn');
 	shortcutSettings(true);
@@ -212,7 +212,7 @@ function checkChars (game) {
 function getLastPlace () {
 	var stars = [];
 	for (var num = 1; num < 5; num++) {
-		stars.push(parseInt(getInner('p' + num + 'StarsText')));
+		stars.push(getStat('stars', num));
 	}
 	var last = Array.min(stars);
 	var arr = [];
@@ -226,7 +226,7 @@ function getLastPlace () {
 	if (arr.length > 1) {
 		stars = [];
 		for (var num = 0; num < arr.length; num++) {
-			stars.push(parseInt(getInner('p' + arr[num] + 'CoinsText')));
+			stars.push(getStat('coins', arr[num]));
 		}
 		last = Array.min(stars);
 		var arr2 = [];

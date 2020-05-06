@@ -1,6 +1,7 @@
 @font-face {
 	font-family: "Mario";
-	src: url("font.ttf");
+	src: url(font.otf) format("opentype"),
+		 url(font.ttf) format("truetype");
 }
 
 
@@ -36,10 +37,24 @@ a {
 	color: #0B00FF;
 	cursor: pointer;
 	text-decoration: none;
+	transition: color .15s;
 }
 a:hover {
-	color: #5000C9;
-	text-decoration: underline;
+	color: inherit;
+	text-decoration: none;
+}
+
+input:not([type]) {
+	width: 170px;
+}
+input:not([type]), textarea {
+	font-family: sans-serif;
+	font-size: 18px;
+	padding: 0px 3px;
+	border: 1px solid #c8ccd4;
+	border-radius: 3px;
+	outline: none !important;
+	background: #6871f123;
 }
 
 html, body, #bodyContainer {
@@ -145,6 +160,9 @@ noscript > span {
 	position: relative;
 	top: -4px;
 }
+.counterBelow100::before {
+	content: 'x';
+}
 .counterDisplay {
 	height: 35px;
 	margin-left: 15px;
@@ -204,14 +222,16 @@ noscript > span {
 	margin-top: 60px;
 	font-size: 30px;
 }
-#curTurnText {
+#curTurnText, #maxTurnText {
 	font-size: 30px;
+	position: relative;
+}
+#curTurnTextContainer {
 	width: 60px;
 	text-align: right;
-	position: absolute;
 }
-#maxTurnText {
-	font-size: 30px;
+.turnTextContainer {
+	position: absolute;
 }
 
 #coinStar {
@@ -557,6 +577,7 @@ noscript > span {
 	height: 100%;
 }
 
+
 .navbarContent {
 	position: absolute;
 	background: #2885d4c2;
@@ -611,6 +632,13 @@ noscript > span {
 }
 #nvRandoImg:active {
 	opacity: 1;
+}
+
+.nvCharPlayerDisplay {
+	height: 18px !important;
+	position: relative;
+	top: -3px;
+	left: -4px;
 }
 
 #nvCharList {
@@ -708,6 +736,7 @@ noscript > span {
 	max-height: 100%;
 	top: 50%;
 	left: 50%;
+-webkit-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
 	background: linear-gradient(#ccccccc4, #138bd2eb);
 	padding: 20px;
@@ -738,6 +767,8 @@ noscript > span {
 	padding-top: 10px;
 	padding-bottom: 10px;
 	height: 100%;
+	max-width: 1039px;
+	padding-right: 5px;
 }
 #settingsClose {
 	float: right;
@@ -747,9 +778,15 @@ noscript > span {
 .border {
 	border-bottom: #0e25c17a 3px solid;
 }
+.settingsContentPopout .border {
+	position: relative;
+    left: calc(-25% + 15px); /* 20% from padding - 5% additional % as it doesn't take 20% from the screen size but instead from it's parent that already had 20% subtracted */
+    width: calc(125% - 15px); /* no idea about 15px but it's required */
+}
 #shortcutHeader {
 	display: none;
 	width: 100%;
+	max-width: 1044px;
 	padding-top: 5px;
 	padding-bottom: 5px;
 }
@@ -761,15 +798,20 @@ noscript > span {
 }
 #settingsHintsContainer {
 	position: absolute;
-	width: calc(100% - 301px);
+	width: calc(100% - 342px);
+	max-width: 742px;
 	padding-left: 5px;
-	margin-top: 2px;
+	margin-top: 6px;
 	overflow: hidden;
 	text-align: center;
 	cursor: default;
+	font-size: 16px;
 }
 #settingsHints {
 	z-index: -1;
+}
+#tutorialHints {
+	cursor: default;
 }
 
 .counterSelection {
@@ -813,32 +855,38 @@ noscript > span {
 .settingsSelection {
 	font-size: 26px;
 	margin-right: 10px;
+	margin-bottom: 2px;
 	color: #2121ec;
-	border-bottom: #2121ec77 2px solid;
+	border-color: #2121ec77;
 	cursor: pointer;
+	transition: color .15s;
+}
+.settingsSelection:last-child {
+	margin-right: 0;
 }
 .settingsSelection:hover {
 	color: #e64940;
-	border-bottom: #e64940 2px solid;
+	border-color: #e64940;
 }
 .settingsSelection:active {
 	color: #e41105;
-	border-bottom: #e41105 2px solid;
+	border-color: #e41105;
 }
 .settingsSelected {
 	color: #d00000 !important;
-	border-bottom: #d00000 2px solid !important;
+	border-color: #d00000 !important;
 	cursor: default;
 }
 .settingsSelected:hover {
 	color: #d00000 !important;
-	border-bottom: #d00000 2px solid !important;
+	border-color: #d00000 !important;
 }
 .flexAuto {
 	flex: auto;
 }
 #settingsSelectionSpan {
 	display: flex;
+	position: relative;
 	width: 100%;
 	max-width: 1044px;
 	margin-bottom: 10px;
@@ -849,11 +897,23 @@ noscript > span {
 }
 .settingsSelectionImportant:hover {
 	color: #e64940;
-	border-bottom: #e64940 2px solid;
+	border-color: #e64940;
 }
 .settingsSelectionImportant:active {
 	color: #e41105;
-	border-bottom: #e41105 2px solid;
+	border-color: #e41105;
+}
+
+#settingsSelectionUnderline {
+	position: absolute;
+	background-color: #d00000;
+	margin-top: 31px;
+	height: 2px;
+
+	transition: width .4s, left .4s;
+	
+	width: 96.828125px;
+	left: 384px;
 }
 
 .assistButton {
@@ -881,6 +941,11 @@ noscript > span {
 	height: 100%;
 	background-color: rgba(0, 0, 0, 0.35);
 
+-webkit-font-smoothing: subpixel-antialiased;
+		font-smoothing: subpixel-antialiased;
+-webkit-transform: scale(2) zoom: 0.5;
+		transform: scale(2) zoom: 0.5;
+
 	visibility: hidden;
 	opacity: 0;
 
@@ -891,12 +956,18 @@ noscript > span {
 	position: absolute;
 	border: none;
 	background-color: #F3F3F3;
+
+	width: calc(80% - 20px) !important; /* 80% instead of 100% due to 20% padding, also 20px instead of 40px because idk */
+	height: calc(100% - 40px) !important;
+	min-width: unset !important;
+
+	padding-left: 20%;
 }
 #settingsContent {
     width: 51%;
     height: 85%;
 	min-width: 800px;
-	background: no-repeat url(img/settingsbg-light.png), linear-gradient(#d6d6d6cc, #70b0ffe0);
+	background: no-repeat url(img/settingsbg-light.png), linear-gradient(#d6d6d6eb, #70b0fff2);
 	display: flex;
 	flex-direction: column;
 	white-space: nowrap;
@@ -930,15 +1001,56 @@ noscript > span {
 		transform: none;
 		top: 0;
 		left: 0;
-	}
+	}/*popupContent settingsPopup vs settingsContentPopout*/
 	#settingsCloseSpan { position: fixed; }
 	#settingsCloseSave { display: block !important; }
 }
+@media screen and (max-width: 1329px) { /* moves settings to center - fullscreen-only */
+	.settingsContentPopout {
+		width: calc(100% - 40px) !important;
+		height: calc(100% - 40px) !important;
+		padding-left: 20px;
+	}
+	.border {
+		left: unset !important;
+		width: unset !important;
+	}
+}
+@media screen and (min-width: 1330px) and (max-height: 860px) {
+	.settingsPopup {
+		width: calc(80% - 20px) !important;
+		height: calc(100% - 40px) !important;
+		min-width: unset !important;
+		padding-left: 20%;
+	}
+	.settingsPopup .border {
+		position: relative;
+		left: calc(-25% + 15px);
+		width: calc(125% - 15px);
+	}
+}
+@media screen and (max-width: 1090px) {
+	#settingsHintsContainer { display: none; }
+	#settingsSelectionUnderline { display: none; }
+	.settingsSelected {
+		border-bottom-width: 2px;
+		border-bottom-style: solid;
+		margin-bottom: 0px;
+	}
+}
 
 /* == Slots == */
+#slotsSettings {
+	text-align: center;
+	white-space: normal;
+}
 #slotList {
-	-webkit-user-select: none;
-			user-select: none;
+-webkit-user-select: none;
+		user-select: none;
+}
+#slotList, .emptySlot {
+	display: inline-block;
+	width: fit-content;
 }
 #slotList .slotDiv:hover {
 	background-color: rgba(0, 190, 0, 0.2);
@@ -966,6 +1078,11 @@ noscript > span {
 	width: 295px;
 	margin-bottom: 15px;
 	cursor: pointer;
+	text-align: initial;
+
+-webkit-transition: background-color .2s;
+   -moz-transition: background-color .2s;
+		transition: background-color .2s;
 }
 .emptySlot {
 	border-color: #0B0B0B91;
@@ -1017,8 +1134,12 @@ noscript > span {
 	color: #000000;
 	margin-right: 20px;
 	cursor: pointer;
-	-webkit-text-stroke: 1px #c4c4c4;
-			text-stroke: 1px #c4c4c4;
+-webkit-text-stroke: 1px #c4c4c4;
+		text-stroke: 1px #c4c4c4;
+
+-webkit-transition: color .3s;
+   -moz-transition: color .3s;
+		transition: color .3s;
 }
 .slotButtons:hover {
 	color: #ff1b1b;
@@ -1367,7 +1488,7 @@ noscript > span {
 	min-height: 400px;
 }
 .characterSelector {
-	width: 100px;
+	width: 87px;
 	height: 100%;
 	min-height: 200px;
 	overflow-y: scroll;
@@ -1380,24 +1501,31 @@ noscript > span {
 	padding-top: 6px;
 }
 .charSelectorFullWrapper {
-	height: calc(100% - 104px);
+	height: calc(100% - 114px);
 }
-.charSelector input {
+.charSelector .inputContainer { /* Game Checkboxes at top of settings */
 	margin: 0;
+	margin-top: -12px;
 	padding: 0;
 	position: absolute;
 	z-index: 99;
 }
-#iconSelector input {
-	top: -24px;
+.charSelectorFullWrapper .inputContainer { /* COM Checkboxes */
+	margin-top: -6px;
+}
+.characterSelector .inputContainer { /* Character checkboxes in Characters tab */
+	margin: 0;
+}
+#iconSelector .inputContainer { /* Icon type checkboxes under general - you know, seperate classes would definitely help here but unfortunately I'm too lazy for that... */
+	top: -18px;
 }
 .charSelector input:active +.charSelectorLabel, .charSelector input:active +.drinkcard-cc {
 	opacity: .9;
 }
 .charSelector input:checked +.charSelectorLabel, .charSelector input:checked +.drinkcard-cc {
-	-webkit-filter: none;
-	   -moz-filter: none;
-			filter: none;
+	-webkit-filter: drop-shadow(0px 0px 6px #fff82b);
+	   -moz-filter: drop-shadow(0px 0px 6px #fff82b);
+			filter: drop-shadow(0px 0px 6px #fff82b);
 }
 
 .charSelectorLabel {
@@ -1410,6 +1538,7 @@ noscript > span {
 	-webkit-filter: grayscale(.6) opacity(.5);
 	   -moz-filter: grayscale(.6) opacity(.5);
 			filter: grayscale(.6) opacity(.5);
+	transition: filter .3s;
 }
 .charSelectorLabelImg {
 	height: 70px;
@@ -1513,6 +1642,11 @@ noscript > span {
 	background-image:url(img/com.png);
 	width: 100px;
 	height: 45px;
+}
+
+#charRandoButton {
+	position: relative;
+	top: -10px;
 }
 
 
@@ -1668,7 +1802,7 @@ noscript > span {
 	#settingsSelectionSpan { display: none; }
 	#settingsSelectionSpanBreak { display: block; }
 	#gameSelectorDiv { font-size: 2.3vw; }
-	#gameSelectorDiv input { visibility: hidden; /*height: 1.7vw; width: 1.7vw;*/ }
+	#gameSelectorDiv .inputContainer { visibility: hidden; /*height: 1.7vw; width: 1.7vw;*/ }
 	/*.settingsSelection { font-size: 3.4vw; }*/
 	.gameLabel { font-size: 2.3vw; height: 3.2vw; width: 3.2vw }
 	#mp1 { margin-left: 3vw; }
@@ -1687,6 +1821,7 @@ noscript > span {
 	width: 44px;
 	height: 23px;
 	background-repeat: no-repeat;
+    background-size: cover;
 	margin-right: 5px;
 }
 
@@ -1704,9 +1839,6 @@ noscript > span {
 }
 
 /* == mobile version == */
-button {
-	font-size: 17px;
-}
 #textOutput {
 	position: absolute;
 	left: -9999px;

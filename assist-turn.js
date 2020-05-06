@@ -24,7 +24,7 @@ function buyStar (star) {
 				if (ctrlKeyVar === true) {
 					execOnMain('counterButtons', [orderCurPlayer, 'P', 5, 'coins']);
 					shortcutNotif('Undid opening a magic jar, gained 5 coins.');
-				} else if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= 10) {
+				} else if (getStat('coins', orderCurPlayer) >= 10) {
 					execOnMain('counterButtons', [orderCurPlayer, 'M', 5, 'coins']);
 					shortcutNotif(getCharName(orderCurPlayer) + ' lost 5 coins thanks to a magic jar.');
 				} else {
@@ -35,7 +35,7 @@ function buyStar (star) {
 				if (ctrlKeyVar === true) {
 					execOnMain('counterButtons', [orderCurPlayer, 'P', 10, 'coins']);
 					shortcutNotif('Undid opening a magic jar, gained 10 coins.');
-				} else if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= 10) {
+				} else if (getStat('coins', orderCurPlayer) >= 10) {
 					execOnMain('counterButtons', [orderCurPlayer, 'M', 10, 'coins']);
 					shortcutNotif(getCharName(orderCurPlayer) + ' lost 10 coins thanks to a magic jar.');
 				} else {
@@ -79,14 +79,14 @@ function buyStar (star) {
 	}
 
 	if (ctrlKeyVar === true) {
-		if (parseInt(getInner('p' + orderCurPlayer + 'StarsText')) >= 1) {
+		if (getStat('stars', orderCurPlayer) >= 1) {
 			execOnMain('counterButtons', [orderCurPlayer, 'P', coinNum, 'coins']);
 			execOnMain('counterButtons', [orderCurPlayer, 'M', 1, 'stars']);
 			shortcutNotif('Undid buying a star for ' + coinNum + ' coins.');
 		} else {
 			shortcutNotif('No stars to undo, release Ctrl to buy one.', true)
 		}
-	} else if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= coinNum) {
+	} else if (getStat('coins', orderCurPlayer) >= coinNum) {
 		execOnMain('counterButtons', [orderCurPlayer, 'M', coinNum, 'coins']);
 		execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'stars']);
 		starCost = '';
@@ -111,7 +111,7 @@ function steal (attr) {
 		} else {
 			if (stealFrom) {
 				if (getValue('stealStars') === true) {
-					if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) > 29 && parseInt(getInner('p' + stealFrom + 'StarsText')) > 0) {
+					if (getStat('coins', orderCurPlayer) > 29 && getStat('stars', stealFrom) > 0) {
 						execOnMain('counterButtons', [orderCurPlayer, 'M', 30, 'coins']);
 						execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'stars']);
 						execOnMain('counterButtons', [stealFrom, 'M', 1, 'stars']);
@@ -121,8 +121,8 @@ function steal (attr) {
 					}
 				} else {
 					var coinNum = getValue('stealCoinsInput');
-					if (parseInt(getInner('p' + stealFrom + 'CoinsText')) < coinNum) {
-						coinNum = parseInt(getInner('p' + stealFrom + 'CoinsText'));
+					if (getStat('coins', stealFrom) < coinNum) {
+						coinNum = getStat('coins', stealFrom);
 					}
 					execOnMain('counterButtons', [orderCurPlayer, 'P', coinNum, 'coins']);
 					execOnMain('counterButtons', [stealFrom, 'M', coinNum, 'coins']);
@@ -338,8 +338,8 @@ function turnDice (num) {
 	for (var num2 = 0; num2 < statusEffects['p' + orderCurPlayer].length; num2++) {
 		switch (statusEffects['p' + orderCurPlayer][num2]) {
 			case 'poison':
-				if (parseInt(getInner('p' + orderCurPlayer + 'RunningText')) < 2) {
-					poisonSub = poisonSub + parseInt(getInner('p' + orderCurPlayer + 'RunningText'));
+				if (getStat('running', orderCurPlayer) < 2) {
+					poisonSub = poisonSub + getStat('running', orderCurPlayer);
 				} else {
 					poisonSub = poisonSub + 2;
 				}
@@ -391,7 +391,7 @@ function getAlly (ally, nobobomb) {
 				} else {
 					execOnMain('counterButtons', [orderCurPlayer, 'P', 1, 'ally']);
 				}
-				bobombAlly[orderCurPlayer] = parseInt(getInner('curTurnText'));
+				bobombAlly[orderCurPlayer] = getStat('curTurn');
 			}
 			editInner('allyDice4', '<img src="img/smp/bobomb.png" style="width: 30px;"> <span onclick="allyDice(4, 1)"> 0 </span> <span onclick="allyDice(4, 2)"> -1 </span>');
 			if (allies['p' + orderCurPlayer].length > 3) {
@@ -686,14 +686,14 @@ function allyDice (ally, dice) {
 */
 function shopping (amount) {
 	if (ctrlKeyVar === true) {
-		if (parseInt(getInner('p' + orderCurPlayer + 'ShoppingText')) >= amount) {
+		if (getStat('shopping', orderCurPlayer) >= amount) {
 			execOnMain('counterButtons', [orderCurPlayer, 'P', amount, 'coins']);
 			execOnMain('counterButtons', [orderCurPlayer, 'M', amount, 'shopping']);
 			shortcutNotif('Undid shopping for ' + amount + ' coins.');
 		} else {
 			shortcutNotif('There\'s nothing to undo, release Ctrl to shop.', true);
 		}
-	} else if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) >= amount) {
+	} else if (getStat('coins', orderCurPlayer) >= amount) {
 		execOnMain('counterButtons', [orderCurPlayer, 'M', amount, 'coins']);
 		execOnMain('counterButtons', [orderCurPlayer, 'P', amount, 'shopping']);
 		shortcutNotif(getCharName(orderCurPlayer) + ' bought an item for ' + amount + ' coins.');
@@ -976,8 +976,8 @@ function itemEvent (item, attr) {
 					shortcutNotif('Select a character to use Coinado.', true);
 				}
 				var coinNum = getValue('coinadoSelect');
-				if (parseInt(getInner('p' + itemEventState[1] + 'CoinsText')) < coinNum) {
-					coinNum = parseInt(getInner('p' + itemEventState[1] + 'CoinsText'));
+				if (getStat('coins', itemEventState[1]) < coinNum) {
+					coinNum = getStat('coins', itemEventState[1]);
 				}
 				execOnMain('counterButtons', [itemEventState[1], 'M', coinNum, 'coins']);
 				execOnMain('counterButtons', [orderCurPlayer, 'P', coinNum, 'coins']);
@@ -1023,8 +1023,8 @@ function turnHex (hex) {
 					shortcutNotif('Undid the -20 Coin Hex.');
 					break;
 				case 'coinswap':
-					coins = parseInt(getInner('p' + orderCurPlayer + 'CoinsText'));
-					var coinSwap = parseInt(getInner('p' + activeHexChar + 'CoinsText'));
+					coins = getStat('coins', orderCurPlayer);
+					var coinSwap = getStat('coins', activeHexChar);
 					execOnMain('counterButtons', [orderCurPlayer, 'S', coinSwap, 'coins']);
 					execOnMain('counterButtons', [activeHexChar, 'S', coins, 'coins']);
 					shortcutNotif('Undid the Coin Swap Hex.');
@@ -1097,8 +1097,8 @@ function turnHex (hex) {
 	} else {
 		switch (hex) {
 			case 'coinsm10':
-				if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) < 10) {
-					coins = parseInt(getInner('p' + orderCurPlayer + 'CoinsText'));
+				if (getStat('coins', orderCurPlayer) < 10) {
+					coins = getStat('coins', orderCurPlayer);
 				} else {
 					coins = 10;
 				}
@@ -1108,8 +1108,8 @@ function turnHex (hex) {
 				shortcutNotif('Moved ' + coins + ' Coins from ' + getCharName(orderCurPlayer) + ' to ' + getCharName(activeHexChar) + ' due to a -10 Coin Hex.');
 				break;
 			case 'coinsm20':
-				if (parseInt(getInner('p' + orderCurPlayer + 'CoinsText')) < 20) {
-					coins = parseInt(getInner('p' + orderCurPlayer + 'CoinsText'));
+				if (getStat('coins', orderCurPlayer) < 20) {
+					coins = getStat('coins', orderCurPlayer);
 				} else {
 					coins = 20;
 				}
@@ -1119,15 +1119,15 @@ function turnHex (hex) {
 				shortcutNotif('Moved ' + coins + ' Coins from ' + getCharName(orderCurPlayer) + ' to ' + getCharName(activeHexChar) + ' due to a -20 Coin Hex.');
 				break;
 			case 'coinswap':
-				coins = parseInt(getInner('p' + orderCurPlayer + 'CoinsText'));
-				var coinSwap = parseInt(getInner('p' + activeHexChar + 'CoinsText'));
+				coins = getStat('coins', orderCurPlayer);
+				var coinSwap = getStat('coins', activeHexChar);
 				execOnMain('counterButtons', [orderCurPlayer, 'S', coinSwap, 'coins']);
 				execOnMain('counterButtons', [activeHexChar, 'S', coins, 'coins']);
 				shortcutNotif('Swapped coins from ' + getCharName(orderCurPlayer) + ' and ' + getCharName(activeHexChar) + ' due to a Coin Swap Hex.');
 				break;
 			case 'starm1':
-				if (parseInt(getInner('p' + orderCurPlayer + 'StarsText')) < 1) {
-					coins = parseInt(getInner('p' + orderCurPlayer + 'StarsText'));
+				if (getStat('stars', orderCurPlayer) < 1) {
+					coins = getStat('stars', orderCurPlayer);
 				} else {
 					coins = 1;
 				}
@@ -1137,8 +1137,8 @@ function turnHex (hex) {
 				shortcutNotif('Moved ' + coins + ' Stars from ' + getCharName(orderCurPlayer) + ' to ' + getCharName(activeHexChar) + ' due to a -1 Star Hex.');
 				break;
 			case 'starm2':
-				if (parseInt(getInner('p' + orderCurPlayer + 'StarsText')) < 2) {
-					coins = parseInt(getInner('p' + orderCurPlayer + 'StarsText'));
+				if (getStat('stars', orderCurPlayer) < 2) {
+					coins = getStat('stars', orderCurPlayer);
 				} else {
 					coins = 2;
 				}

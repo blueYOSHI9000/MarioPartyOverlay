@@ -5,21 +5,27 @@ Mario Party Overlay is a highly customizable and easy to use 'Bonus Star' tracke
 
 # How to use?
 Click on the numbers to increase the counters, by holding Ctrl you can decrease them instead. The amount can be changed at the top (1, 5 or 10).  
-It's possible to switch between 1 and 5 by holding Shift, if one of the two is selected.  
+It's possible to switch between 1 and 5/10 by holding Shift.  
 To give/take the coin-star you just click on the character.
 
-The "Generate & Copy" button outputs all stats as text and copies it.  
-The Save/Reload buttons well... save and reload! It saves all stats and reloads them. If activated in the settings, they will be saved in your browser too and automatically loaded the next time you open the site.
+Characters and counters can both be changed at the top.
 
-Note: All settings are applied immediately, the save button will only save it permanently as otherwise they get reset when you refresh the site.
+Settings can be found by clicking on the gear and then "Open Settings" (or by clicking on the gear while holding Ctrl).
+
+A more extensive (and likely up-to-date) introduction can by found by clicking on the gear and then "Credits".
 
 # Credits
-Created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000)  
-Default icons created by [blueYOSHI9000](https://www.twitter.com/blueyoshi9000) using official artwork and insprired by [Mario Party Legacy](https://mariopartylegacy.com/)  
-Mario Kart 8 Deluxe icons ripped by [Random Talking Bush](https://twitter.com/RandomTBush) and edited by [RicoDexter](https://twitter.com/Der_RicoDexter) & [blueYOSHI9000](https://www.twitter.com/blueyoshi9000)  
-Super Mario Party character icons ripped by [xX-CamTro-Xx](https://www.spriters-resource.com/submitter/xX-CamTro-Xx/)  
-Mario Party 9 character icons ripped by [larsenv](https://www.spriters-resource.com/submitter/larsenv/)  
-Mario Party DS icons ripped by [FieryExplosion](https://www.spriters-resource.com/submitter/FieryExplosion/) & [Anonymous](https://www.spriters-resource.com/submitter/Anonymous/) & [Arend](https://www.mariowiki.com/User:Arend)
+**All characters, products and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them. Mario Party is a registered trademark of Nintendo.**
 
-[Font](https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx)  
-[Interact.js](http://interactjs.io/) (enables drag 'n' drop)
+Created by [blueYOSHI](https://www.twitter.com/yoshisrc) with contributions from [others](https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors)
+
+All Mario Party related icons were created or inspired from officially published media by Nintendo.  
+Mario Party related icons (re)created, edited or ripped by [Anonymous](https://www.spriters-resource.com/submitter/Anonymous/), [Arend](https://www.mariowiki.com/User:Arend), [blueYOSHI](https://www.twitter.com/yoshisrc), [CamTro](https://www.spriters-resource.com/submitter/xX-CamTro-Xx/), [FieryExplosion](https://www.spriters-resource.com/submitter/FieryExplosion/), [Kimimaru](https://www.spriters-resource.com/submitter/Kimimaru/), [larsenv](https://www.spriters-resource.com/submitter/larsenv/), [Mario Gamer](https://www.spriters-resource.com/submitter/Mario+Gamer/), [Mario Party Legacy](https://mariopartylegacy.com/), [Random Talking Bush](https://www.spriters-resource.com/submitter/Random+Talking+Bush/), [RicoDexter](https://twitter.com/Der_RicoDexter).  
+[Mario Party 9 Font](https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx) ([modified](https://github.com/blueYOSHI9000/MarioPartyOverlay/commits/master/font.ttf))  
+[Settings Icon by Icons8](https://icons8.com/icon/2969/settings)  
+[Button designs by Benjamin](https://codepen.io/ben_jammin/pen/syaCq) ([modified](https://github.com/blueYOSHI9000/MarioPartyOverlay/commits/master/buttons.css))  
+[Checkbox designs by Andreas Storm](https://codepen.io/andreasstorm/pen/dNqLBz) ([modified](https://github.com/blueYOSHI9000/MarioPartyOverlay/commits/master/labels.css))  
+[Sortable.js](https://github.com/SortableJS/Sortable) (enables savefile re-ordering)  
+[Interact.js](https://interactjs.io/) (enables drag 'n' drop)  
+
+Mario Party Overlay is licensed under the MIT License.

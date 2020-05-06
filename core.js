@@ -1,9 +1,30 @@
-var ga = { //global actions
+var globalActions = { //global actions
 	action: 'p',
 	amount: 1,
 	ogAction: 'p',
 	ogAmount: 1
 };
+
+/*
+* Gets current stats for a specific counter.
+*
+* @param {string} counter The counter.
+* @param {number} player The player - optional for coin star/turns.
+* @param {boolean} returnElem Return element instead of stat.
+*/
+function getStat (counter, player, returnElem) {
+	if (typeof player === 'undefined' || counter === 'curTurn' || counter === 'maxTurn' || counter === 'coinStar') {
+		if (returnElem === true) {
+			return getElem(capStr(counter, true) + 'Text');
+		}
+		return parseInt(getInner(capStr(counter, true) + 'Text'));
+	}
+
+	if (returnElem === true) {
+		return getElem('p' + player + capStr(counter) + 'Text');
+	}
+	return parseInt(getInner('p' + player + capStr(counter) + 'Text')); //capStr() to make sure it's capitalized - reversed for first two uses
+}
 
 /*
 * Updates the counters.
@@ -18,28 +39,30 @@ function counterButtons (player, action, amount, counter) {
 	var result = 0;
 
 	amount = parseInt(amount);
-	if (amount === '') {
+	if (typeof amount != 'number') {
 		amount = 1;
 	}
 
-	if (counter != 'curTurn' && counter != 'maxTurn' && counter != 'coinStar') {
-		counter = counter.charAt(0).toUpperCase() + counter.slice(1);
-		if (isNaN(amount) == true) {
-			result = 0;
-			amount = 0;
-			console.warn('[MPO] Counter was NaN, player: ' + player + ', counter: ' + counter);
-			if (shortcutLoaded === true) {
-				shortcutNotif('Error: ' + counter + ' for player ' + player + ' was NaN', true);
-			}
-		} else {
-			result = parseInt(getInner('p' + player + counter + 'Text'));
-		}
 
-		if (action == 'P') {
-			result = result + amount;
-		} else if (action == 'M') {
-			result = result - amount;
-		} else if (action == 'S') {
+	if (isNaN(getStat(counter, player)) === true) { //check if counter is NaN and set it to 0
+		getStat(counter, player, true).innerHTML = 0;
+
+		console.warn('[MPO] Counter was NaN, player: ' + player + ', counter: ' + counter);
+		if (shortcutLoaded === true) {
+			shortcutNotif('Error: ' + counter + ' for player ' + player + ' was NaN', true);
+		}
+	}
+
+	if (counter != 'curTurn' && counter != 'maxTurn' && counter != 'coinStar') { //regular counters only
+		counter = capStr(counter);
+
+		result = getStat(counter, player);
+
+		if (action === 'P') {
+			result += amount;
+		} else if (action === 'M') {
+			result -= amount;
+		} else if (action === 'S') {
 			result = amount;
 		}
 
@@ -48,38 +71,51 @@ function counterButtons (player, action, amount, counter) {
 		} else if (result <= 0) {
 			result = 0;
 		}
+
+		if (result < 100 && getValue('xBelow100') === true) {
+			getStat(counter, player, true).classList.add('counterBelow100');
+		} else {
+			getStat(counter, player, true).classList.remove('counterBelow100');
+		}
+
 		updateCounter('p' + player + counter + 'Text', result);
 	}
 
-	if (counter == 'coinStar') {
-		result = parseInt(getInner('coinStarText'));
+	if (counter === 'coinStar') {
+		result = getStat('coinStar');
 
-		if (action == 'P') {
-			result = result + amount;
-		} else if (action == 'M') {
-			result = result - amount;
-		} else if (action == 'S') {
+		if (action === 'P') {
+			result += amount;
+		} else if (action === 'M') {
+			result -= amount;
+		} else if (action === 'S') {
 			result = amount;
+		}
+		if (result >= 100 && getValue('xBelow100') === true) {
+			getElem('coinStarText').classList.remove('counterBelow100');
+		} else {
+			getElem('coinStarText').classList.add('counterBelow100');
 		}
 		coinStar(result);
 
-	} else if (counter == 'curTurn' || counter == 'maxTurn') {
+	} else if (counter === 'curTurn' || counter === 'maxTurn') {
 		turns(counter, amount, action);
 
-	} else if (getValue('enableHighlight') == true && counter != 'coins') {
+	} else if (getValue('enableHighlight') === true && counter != 'coins') { //part of 'else if' because coin star and turns don't need highlighting
 		highlight(counter);
 	}
 
 	if (counter === 'Running' && getValue('slowOnOff') === true) {
 		slowHighlight();
-	}
-	if (counter === 'Item' && getValue('unusedOnOff') === true) {
+
+	} else if (counter === 'Item' && getValue('unusedOnOff') === true) {
 		slowHighlight(false, 'unused');
-	}
-	if (counter === 'Stars' || document.querySelector('input[name="bonusStarAdd"]:checked').id != 'bonusDont') {
+
+	} else if (counter === 'Stars' || document.querySelector('input[name="bonusStarAdd"]:checked').id != 'bonusDont') {
+		updateCounter('p' + player + 'StarsBonusText', getStat('stars', player)); //for the animation because updateStars() is somehow incapable of doing it
 		updateStars();
 	}
-	if (getValue('coinsOnOff') == true && counter == 'Coins') {
+	if (counter === 'Coins' && getValue('coinsOnOff') === true) {
 		updateCoins(player);
 	}
 }
@@ -87,23 +123,23 @@ function counterButtons (player, action, amount, counter) {
 /*
 * Updates the counters and creates a small animation.
 *
-* @param {string} id The ID that should be changed.
+* @param {string} id The ID of the element that should be updated.
 * @param {string} change What the element should be changed to.
 * @param {boolean} noAnimation If the animation should be skipped.
 */
 function updateCounter (id, change, noAnimation) {
-	if (getInner(id) == change) {
+	if (getInner(id) === change) {
 		return;
 	}
 	editInner(id, change);
-	if (getValue('enableAnimation') == false && noAnimation != true) {
+	if (getValue('enableAnimation') === false || noAnimation === true) {
 		return;
 	}
 
 	getElem(id).classList.add('counterAnimation');
 
 	var element = getElem(id)
-	element.addEventListener('webkitAnimationEnd', function(){
+	element.addEventListener('webkitAnimationEnd', function(){ //removes the animation class after the animation ended so it can be used again next time
 		this.classList.remove('counterAnimation');
 		this.removeEventListener('webkitAnimationEnd', arguments.callee, false);
 	}, false);
@@ -113,20 +149,20 @@ function updateCounter (id, change, noAnimation) {
 * Calls counterButtons().
 *
 * @param {string} counter Which counter should be updated.
-* @param {player} player Which player should be updated.
+* @param {number} player Which player should be updated.
 */
 function mobileButtons (counter, player) {
-	if (getValue('enableInteract') == true) {
+	if (getValue('enableInteract') === true) { //counters shouldn't be updated while drag'n'drop is on
 		return;
 	}
 
-	var action = ga.action.toUpperCase();
-	var amount = ga.amount;
+	var action = globalActions.action.toUpperCase();
+	var amount = globalActions.amount;
 
-	if (counter == 'Stars') {
+	if (counter === 'Stars') {
 		updateStars(player, action, amount);
 	} else {
-		if (popoutActivated == true && statSynced == true) {
+		if (popoutActivated === true && statSynced === true) {
 			sendMessage('counterButtons+' + player + '+' + action + '+' + amount + '+' + counter);
 		}
 		counterButtons(player, action, amount, counter);
@@ -134,7 +170,8 @@ function mobileButtons (counter, player) {
 }
 
 /*
-* Updates the Star counter.
+* Updates the Star counter, with bonus stars if needed.
+* Apparently attributes are never used when calling this for some reason.
 *
 * @param {number} player Which player should be updated.
 * @param {string} action What should be done.
@@ -142,9 +179,16 @@ function mobileButtons (counter, player) {
 */
 var bonusStars = ['', 0, 0, 0, 0];
 function updateStars (player, action, amount) {
-	if (document.querySelector('input[name="bonusStarAdd"]:checked').id === 'bonusDont') {
+	if (document.querySelector('input[name="bonusStarAdd"]:checked').id === 'bonusDont') { //no bonus stars
 		for (let num = 1; num < 5; num++) {
-			updateCounter('p' + num + 'StarsBonusText', getInner('p' + num + 'StarsText'));
+			var result = getStat('stars', num);
+			updateCounter('p' + num + 'StarsBonusText', result, true);
+
+			if (result >= 100 && getValue('xBelow100') === true) {
+				getElem('p' + num + 'StarsBonusText').classList.remove('counterBelow100');
+			} else {
+				getElem('p' + num + 'StarsBonusText').classList.add('counterBelow100');
+			}
 		}
 		return;
 	}
@@ -197,15 +241,23 @@ function updateStars (player, action, amount) {
 	}
 
 	for (let num = 1; num < 5; num++) {
+		result[num] = parseInt(result[num]);
 		if (result[num] >= 999) {
 			result[num] = 999;
 		} else if (result[num] <= 0) {
 			result[num] = 0;
 		}
-		if (document.querySelector('input[name="bonusStarAdd"]:checked').id === 'bonusSeperately') {
-			updateCounter('p' + num + 'StarsBonusText', result[num] + ' + ' + bonusStars[num]);
+
+		if (result[num] >= 100 && getValue('xBelow100') === true) {
+			getElem('p' + num + 'StarsBonusText').classList.remove('counterBelow100');
 		} else {
-			updateCounter('p' + num + 'StarsBonusText', parseInt(result[num]) + parseInt(bonusStars[num]));
+			getElem('p' + num + 'StarsBonusText').classList.add('counterBelow100');
+		}
+
+		if (document.querySelector('input[name="bonusStarAdd"]:checked').id === 'bonusSeperately') {
+			updateCounter('p' + num + 'StarsBonusText', result[num] + ' + ' + bonusStars[num], true);
+		} else {
+			updateCounter('p' + num + 'StarsBonusText', parseInt(result[num]) + parseInt(bonusStars[num]), true);
 		}
 	}
 }
@@ -216,8 +268,8 @@ function updateStars (player, action, amount) {
 * @param {number} player Which player should be updated.
 */
 function updateCoins (player) {
-	var result = parseInt(getInner('p' + player + 'CoinsText'));
-	var coinStar = parseInt(getInner('coinStarText'));
+	var result = getStat('coins', player);
+	var coinStar = getStat('coinStar');
 
 	if (getValue('coinStarOnOff') == true) {
 		if (result == coinStar) {
@@ -252,8 +304,8 @@ function updateCoins (player) {
 * @param {string} action If it should be added, subtracted or set to the amount.
 */
 function turns (counter, amount, action) {
-	var curTurnVar = parseInt(getInner('curTurnText'));
-	var maxTurnVar = parseInt(getInner('maxTurnText'));
+	var curTurnVar = getStat('curTurn');
+	var maxTurnVar = getStat('maxTurn');
 
 	if (action === 'P' && getValue('autoSave') === true && counter === 'curTurn') {
 		backup();
@@ -299,7 +351,7 @@ function turns (counter, amount, action) {
 		maxTurnVar = 95;
 	}
 
-	if (parseInt(getInner(counter + 'Text')) != eval(counter + 'Var')) {
+	if (getStat(counter) != eval(counter + 'Var')) {
 		getElem(counter + 'Text').classList.add('counterAnimation');
 		setTimeout(function () {
 			getElem(counter + 'Text').classList.remove('counterAnimation');

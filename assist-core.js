@@ -12,7 +12,7 @@ var turnCurPlayer = 0;
 var orderCurPlayer = 0;
 var shortcutGame = 'smp'; //Shortcut features use this instead of curGame as otherwise the player could change the game mid-shortcut which would break everything
 var minigameSpaces = ['', '', '', '', ''];
-var defaultText = '<span style="width: 100%; white-space: normal; line-height: 30px;">		<span style="font-family: \'Mario\'; font-size: 17px;"> Games currently supported: </span> <span style="position: relative; top: 4px;"> <img src="img/mpds.png" style="height: 28px;"> <img src="img/smp.png" style="height: 28px;"> </span> <br>		Only 4 players are currently supported. Teams or Partner Party are not supported yet. <br> <br> A lot of features depend on the coin counter, it\'s recommended to show it and keep it up to date. <br>		This is currently in heavy development and some features might not work as intended. <br> <br>		<span onclick="startShortcut()" class="assistButton">Start game</span> <br> <br>		<!--button onclick="prepareShortcut(1)" style="margin: 20px 25px 0px 15px;">Start over</button> <button onclick="prepareShortcut(2)">Quick start</button> <br-->		<span class="settingsTitle"> What\'s Assist mode? </span> <br>		Assist mode is an optional feature which makes tracking all bonus stars a lot easier. Only select the numbers gotten, items used, space landed on etc and it automatically calculates the result and adds it to the counters. <br> It is recommended to use Settings Popout (bottom left) for this. <br> <span class="note">When switching from popout back to normal settings it might not display the correct state, just load the save from inside the assist settings (top left) when that happens.</span> <br> <br><span class="settingsTitle"> Report Bugs </span> <br>		In case something breaks or doesn\'t provide the expected output, please click on "Generate & Copy" and <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">contact me</a> or <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new?template=bug_report.md" class="settingsLink" rel="noopener" target="_blank">open a Github issue</a> with a screenshot or copy-paste of your browsers console (Ctrl + Shift + I > "Console"). It shows the last actions done and potential errors. Thank you! <br> <br><span class="settingsTitle"> Potential broken features </span> <br>		Mario Party is hugely RNG based so some events are rare and as such hard to figure out how they work. <br>		Be sure to check your coin count after some of these as it might not be correct anymore:		<ul>			<li>SMP tied Minigame rewards</li>			<li>Battle Minigames (especially ties)</li>			<li>Lucky/ Extra- Bad Luck Events (some might even be missing)</li>			<li>VS space in SMP</li> <li>MPDS Duel space</li> </ul> </span>'; //Don't forget to replace the start buttons onclick event with "startSHortcut()"
+var defaultText = '<span style="font-family: \'Mario\'; font-size: 17px;"> Assist mode is as broken as it gets! </span> <br> <span>Seriously, don\'t try it. Everything just breaks. I\'ll rewrite it once I\'m not lazy, until then it\'s probably better to avoid this as much as possible. <br> I\'ll just leave this here in case someone <i>really</i> wants to try it out <span class="note">(why?)</span>. </span> <br> <br> <br><span style="width: 100%; white-space: normal; line-height: 30px;">		<span style="font-family: \'Mario\'; font-size: 17px;"> Games currently supported: </span> <span style="position: relative; top: 4px;"> <img src="img/mpds.png" style="height: 28px;"> <img src="img/smp.png" style="height: 28px;"> </span> <br>		Only 4 players are currently supported. Teams or Partner Party are not supported yet. <br> <br> A lot of features depend on the coin counter, it\'s recommended to show it and keep it up to date. <br>		This is currently in heavy development and some features might not work as intended. <br> <br>		<span onclick="startShortcut()" class="assistButton">Start game</span> <br> <br>		<!--button onclick="prepareShortcut(1)" style="margin: 20px 25px 0px 15px;">Start over</button> <button onclick="prepareShortcut(2)">Quick start</button> <br-->		<span class="settingsTitle"> What\'s Assist mode? </span> <br>		Assist mode is an optional feature which makes tracking all bonus stars a lot easier. Only select the numbers gotten, items used, space landed on etc and it automatically calculates the result and adds it to the counters. <br> It is recommended to use Settings Popout (bottom left) for this. <br> <span class="note">When switching from popout back to normal settings it might not display the correct state, just load the save from inside the assist settings (top left) when that happens.</span> <br> <br><span class="settingsTitle"> Report Bugs </span> <br>		In case something breaks or doesn\'t provide the expected output, please click on "Generate & Copy" and <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">contact me</a> or <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new?template=bug_report.md" class="settingsLink" rel="noopener" target="_blank">open a Github issue</a> with a screenshot or copy-paste of your browsers console (Ctrl + Shift + I > "Console"). It shows the last actions done and potential errors. Thank you! <br> <br><span class="settingsTitle"> Potential broken features </span> <br>		Mario Party is hugely RNG based so some events are rare and as such hard to figure out how they work. <br>		Be sure to check your coin count after some of these as it might not be correct anymore:		<ul>			<li>SMP tied Minigame rewards</li>			<li>Battle Minigames (especially ties)</li>			<li>Lucky/ Extra- Bad Luck Events (some might even be missing)</li>			<li>VS space in SMP</li> <li>MPDS Duel space</li> </ul> </span>'; //Don't forget to replace the start buttons onclick event with "startSHortcut()"
 /*
 * Starts the shortcut feature or advances to the next state.
 */
@@ -137,7 +137,7 @@ function startShortcut () {
 				shortcutState = 1;
 				execOnMain('counterButtons', [1, 'P', 1, 'curTurn']);
 				// Final 5 turns
-				if ((getInner('curTurnText') == parseInt(getInner('maxTurnText')) - 4 && shortcutGame != 'smp') || (getInner('curTurnText') == parseInt(getInner('maxTurnText')) - 2 && shortcutGame === 'smp')) {
+				if ((getInner('curTurnText') == getStat('maxTurn') - 4 && shortcutGame != 'smp') || (getInner('curTurnText') == getStat('maxTurn') - 2 && shortcutGame === 'smp')) {
 					startFinalFive();
 				}
 				startShortcut();
@@ -324,8 +324,8 @@ function finalFive (player) {
 		case 'charity':
 			var charity = 0;
 			for (var num = 1; num < 5; num++) {
-				if (parseInt(getInner('p' + num + 'CoinsText')) < 10) {
-					charity = charity + parseInt(getInner('p' + num + 'CoinsText'));
+				if (getStat('coins', num) < 10) {
+					charity = charity + getStat('coins', num);
 				} else {
 					charity = charity + 10;
 				}
@@ -551,7 +551,7 @@ function turnEnd () {
 					num3++;
 				}
 			}
-			if (bobombAlly[orderCurPlayer] != 0 && parseInt(getInner('curTurnText')) < (bobombAlly[orderCurPlayer] + 3)) {
+			if (bobombAlly[orderCurPlayer] != 0 && getStat('curTurn') < (bobombAlly[orderCurPlayer] + 3)) {
 				getAlly('bobomb', true);
 			} else if (bobombAlly[orderCurPlayer] != 0) {
 				removeAlly(orderCurPlayer, 4);

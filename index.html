@@ -7,8 +7,6 @@
 	<title>Mario Party Overlay</title>
 	<meta name="description" content="An extensive and easy to use 'Bonus Star' tracker for all Mario Party games! With included greenscreen for livestreams!">
 	<meta name="author" content="blueYOSHI">
-	<meta name="robots" content="noodp,noydir" />
-
 
 	<meta property="og:type" content="website">
 	<meta property="og:title" content="Mario Party Overlay">
@@ -35,6 +33,8 @@
 	<meta name="msapplication-TileColor" content="#2d89ef">
 	<meta name="theme-color" content="#4598fd">
 
+	<link rel="stylesheet" href="labels.css">
+	<link rel="stylesheet" href="buttons.css">
 	<link rel="stylesheet" href="style.css">
 </head>
 
@@ -46,10 +46,10 @@
 	<!-- === NAVBAR === -->
 
 	<div id="navbar">
-		<span id="nvChar1" class="nvChar" onclick="showNavBar(this)"> <img src="img/mpsrIcons/mario.png" onerror="imgError(this)"> <img src="img/com.png" id="nvCom1" class="nvCom" onerror="comImgError(this)"> </span>
-		<span id="nvChar2" class="nvChar" onclick="showNavBar(this)"> <img src="img/mpsrIcons/luigi.png" onerror="imgError(this)"> <img src="img/com.png" id="nvCom2" class="nvCom" onerror="comImgError(this)"> </span>
-		<span id="nvChar3" class="nvChar" onclick="showNavBar(this)"> <img src="img/mpsrIcons/yoshi.png" onerror="imgError(this)"> <img src="img/com.png" id="nvCom3" class="nvCom" onerror="comImgError(this)"> </span>
-		<span id="nvChar4" class="nvChar" onclick="showNavBar(this)"> <img src="img/mpsrIcons/peach.png" onerror="imgError(this)"> <img src="img/com.png" id="nvCom4" class="nvCom" onerror="comImgError(this)"> </span>
+		<span id="nvChar1" class="nvChar" onclick="showNavBar(this)"> <span style="position: absolute;"> <img src="img/p1.png" class="nvCharPlayerDisplay"> </span> <img src="img/mpsrIcons/mario.png" onerror="imgError(this)"> <img src="img/com.png" id="nvCom1" class="nvCom" onerror="comImgError(this)"> </span>
+		<span id="nvChar2" class="nvChar" onclick="showNavBar(this)"> <span style="position: absolute;"> <img src="img/p2.png" class="nvCharPlayerDisplay"> </span> <img src="img/mpsrIcons/luigi.png" onerror="imgError(this)"> <img src="img/com.png" id="nvCom2" class="nvCom" onerror="comImgError(this)"> </span>
+		<span id="nvChar3" class="nvChar" onclick="showNavBar(this)"> <span style="position: absolute;"> <img src="img/p3.png" class="nvCharPlayerDisplay"> </span> <img src="img/mpsrIcons/yoshi.png" onerror="imgError(this)"> <img src="img/com.png" id="nvCom3" class="nvCom" onerror="comImgError(this)"> </span>
+		<span id="nvChar4" class="nvChar" onclick="showNavBar(this)"> <span style="position: absolute;"> <img src="img/p4.png" class="nvCharPlayerDisplay"> </span> <img src="img/mpsrIcons/peach.png" onerror="imgError(this)"> <img src="img/com.png" id="nvCom4" class="nvCom" onerror="comImgError(this)"> </span>
 		<span id="nvGame" class="nvGames" onclick="showNavBar(this)"> <span id="nvGameImg"></span> <span id="nvGameAll">All</span> </span>
 		<span id="nvCounters" class="nvCounters" onclick="showNavBar(this)"> <img src="img/counters.png"></span>
 		<span id="nvAction" class="nvAction" onclick="showNavBar(this)"> <span class="relative"> <span id="nvActionText">Add</span> <span id="nvCtrlHeld">Ctrl</span> </span> <span id="nvActionIcon">+</span> </span>
@@ -123,7 +123,7 @@
 				<span onclick="getElem('nvSettingsConfirm').style.display = 'none';getElem('nvSettingsReset').style.display = 'block';" style="-webkit-text-stroke: unset; text-stroke: unset;"> Cancel </span>
 			</div>
 			<div class="nvSettingsItem" onclick="textOutput(true);closeNavbar()"> Copy Text Output </div>
-			<div class="nvSettingsItem" onclick="openSettings();changeSettings('showHideSettings', ['tutorial']);closeNavbar()"> Credits </div>
+			<div class="nvSettingsItem" onclick="openSettings();callOnBoth('showHideSettings', ['tutorial']);getElem('creditsBorder').scrollIntoView({block: 'start'});closeNavbar()"> Credits </div>
 			<div class="nvSettingsItem" onclick="openSettings();closeNavbar()" style="color: #dedede;"> Open Settings </div>
 		</div>
 	</div>
@@ -147,7 +147,7 @@
 			</span>
 			<span style="float: right;">
 				<!--span class="slotButtons">More...</span-->
-				<span class="slotButtons" id="loadButton" onclick="if (typeof newLS === 'object') { writeLocalStorage(newLS); changeSettings('reload'); } else { getElem('sflCorrect').style.display = 'none'; getElem('sflError').style.display = 'unset'; }">Load</span>
+				<span class="slotButtons" id="loadButton" onclick="if (typeof newLS === 'object') { writeLocalStorage(newLS); callOnBoth('reload'); } else { getElem('sflCorrect').style.display = 'none'; getElem('sflError').style.display = 'unset'; }">Load</span>
 				<span class="slotButtons" onclick="newLS = undefined; getElem('savefileLoadReminder').style.display = 'none';">Cancel</span>
 			</span>
 		</span>
@@ -182,11 +182,15 @@
 		<span class="turns">
 			<b id="turnText" onclick="mobileButtons('curTurn')"> Turn </b>
 			<span style="position: relative;">
-				<b id="curTurnText" onclick="mobileButtons('curTurn')">1</b>
+				<span id="curTurnTextContainer" class="turnTextContainer">
+					<b id="curTurnText" onclick="mobileButtons('curTurn')">1</b>
+				</span>
 			</span>
 			<b style="margin-left: 60px; font-size: 30px;" onclick="mobileButtons('curTurn')">/</b>
 			<span style="position: relative;">
-				<b id="maxTurnText" style="position: absolute;" onclick="mobileButtons('maxTurn')">20</b>
+				<span class="turnTextContainer">
+					<b id="maxTurnText" onclick="mobileButtons('maxTurn')">20</b>
+				</span>
 			</span>
 		</span>
 
@@ -210,9 +214,9 @@
 		<span style="float: right; margin-right: 10px;"> <button onclick="shortcutSettings(true)">Close</button> </span>
 
 		<span class="settingsTitle"> Options </span> <br>
-		<label for="shortcutSimpleMode"> Only show important features: </label> <input type="checkbox" id="shortcutSimpleMode" onchange="editValueOnBoth(this.id, + this.checked)">
+		<label for="shortcutSimpleMode"> Only show important features: </label> <input type="checkbox" id="shortcutSimpleMode" onchange="changeSettings(this.id)">
 		<span class="note"> This only shows features related to tracking bonus-/stars, coins are ignored. <br> Activates after the turn ends. </span> <br> <br>
-		<label for="shortcutAutoEnd"> Automatically end turn after selecting a space: </label> <input type="checkbox" id="shortcutAutoEnd" onchange="editValueOnBoth(this.id, + this.checked)"> <br> <br>
+		<label for="shortcutAutoEnd"> Automatically end turn after selecting a space: </label> <input type="checkbox" id="shortcutAutoEnd" onchange="changeSettings(this.id)"> <br> <br>
 
 		<span id="resetShortcut"> <button onclick="resetShortcut()">Reset assist game</button> <button onclick="loadShortcut()">Load saved assist game</button> </span> <br> <br>
 
@@ -314,12 +318,13 @@
 		<div class="popupContent settingsPopup" id="settingsContent">
 			<div id="settingsHeader">
 				<span id="settingsSelectionSpan">
+					<span id="settingsSelectionUnderline"></span>
 					<b id="generalMPOSelector" class="settingsSelection settingsSelected" onclick="showHideSettings('generalMPO')">General</b> <span class="flexAuto"></span>
 					<b id="playerSelector" class="settingsSelection settingsSelectionImportant" onclick="showHideSettings('player')">Characters</b> <span class="flexAuto"></span>
 					<b id="counterSelector" class="settingsSelection settingsSelectionImportant" onclick="showHideSettings('counter')">Counters</b> <span class="flexAuto"></span>
 					<b id="slotsSelector" class="settingsSelection nowrap" onclick="showHideSettings('slots')">Savefiles</b> <span class="flexAuto"></span>
 					<b id="shortcutSelector" class="settingsSelection nowrap" onclick="showHideSettings('shortcut')">Assist</b> <span class="flexAuto"></span>
-					<b id="tutorialSelector" class="settingsSelection" style="margin: 0px;" onclick="showHideSettings('tutorial')">Credits</b>
+					<b id="tutorialSelector" class="settingsSelection" onclick="showHideSettings('tutorial')">Credits</b>
 				</span>
 
 				<span id="settingsSelectionSpanBreak">
@@ -331,193 +336,222 @@
 					<span style="display: flex;">
 						<b id="slotsSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('slots')">Savefiles</b> <span class="flexAuto"></span>
 						<b id="shortcutSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('shortcut')">Assist</b> <span class="flexAuto"></span>
-						<b id="tutorialSelectorBreak" class="settingsSelection" style="margin: 0px;" onclick="showHideSettings('tutorial')">Credits</b>
+						<b id="tutorialSelectorBreak" class="settingsSelection" onclick="showHideSettings('tutorial')">Credits</b>
 					</span>
 				</span>
 
 				<div id="gameSelectorDiv" class="charSelector">Games:
 
 					<span style="margin-left: 10px;">
-						<input type="radio" name="gameSelector" id="all" value="all" onchange="changeSettings('changeGame', ['all'])" checked>
-						<label class="charSelectorLabel all gameLabel" for="all">      </label>
+						<input type="radio" name="gameSelector" id="all" value="all" newdesign="false" onchange="callOnBoth('changeGame', ['all'])" checked>
+						<label class="charSelectorLabel all gameLabel" for="all">All </label>
 					</span>
 					<span class="flexAuto"></span>
 
 					<span class="nowrap">
-						<input type="radio" name="gameSelector" id="mp1" value="mp1" onchange="changeSettings('changeGame', ['mp1'])">
+						<input type="radio" name="gameSelector" id="mp1" value="mp1" newdesign="false" onchange="callOnBoth('changeGame', ['mp1'])">
 						<label class="charSelectorLabel mp1 gameLabel" for="mp1"> </label>
 					</span>
 					<span class="flexAuto"></span>
 
 					<span class="nowrap">
-						<input type="radio" name="gameSelector" id="mp2" value="mp2" onchange="changeSettings('changeGame', ['mp2'])">
+						<input type="radio" name="gameSelector" id="mp2" value="mp2" newdesign="false" onchange="callOnBoth('changeGame', ['mp2'])">
 						<label class="charSelectorLabel mp2 gameLabel" for="mp2"> </label>
 					</span>
 					<span class="flexAuto"></span>
 
 					<span class="nowrap">
-						<input type="radio" name="gameSelector" id="mp3" value="mp3" onchange="changeSettings('changeGame', ['mp3'])">
+						<input type="radio" name="gameSelector" id="mp3" value="mp3" newdesign="false" onchange="callOnBoth('changeGame', ['mp3'])">
 						<label class="charSelectorLabel mp3 gameLabel" for="mp3"> </label>
 					</span>
 					<span class="flexAuto"></span>
 
 					<span class="nowrap">
-						<input type="radio" name="gameSelector" id="mp4" value="mp4" onchange="changeSettings('changeGame', ['mp4'])">
+						<input type="radio" name="gameSelector" id="mp4" value="mp4" newdesign="false" onchange="callOnBoth('changeGame', ['mp4'])">
 						<label class="charSelectorLabel mp4 gameLabel" for="mp4"> </label>
 					</span>
 					<span class="flexAuto"></span>
 
 					<span class="nowrap">
-						<input type="radio" name="gameSelector" id="mp5" value="mp5" onchange="changeSettings('changeGame', ['mp5'])">
+						<input type="radio" name="gameSelector" id="mp5" value="mp5" newdesign="false" onchange="callOnBoth('changeGame', ['mp5'])">
 						<label class="charSelectorLabel mp5 gameLabel" for="mp5"> </label>
 					</span>
 					<span class="flexAuto"></span>
 
 					<span class="nowrap">
-						<input type="radio" name="gameSelector" id="mp6" value="mp6" onchange="changeSettings('changeGame', ['mp6'])">
+						<input type="radio" name="gameSelector" id="mp6" value="mp6" newdesign="false" onchange="callOnBoth('changeGame', ['mp6'])">
 						<label class="charSelectorLabel mp6 gameLabel" for="mp6"> </label>
 					</span>
 					<span class="flexAuto"></span>
 
 					<span class="nowrap">
-						<input type="radio" name="gameSelector" id="mp7" value="mp7" onchange="changeSettings('changeGame', ['mp7'])">
+						<input type="radio" name="gameSelector" id="mp7" value="mp7" newdesign="false" onchange="callOnBoth('changeGame', ['mp7'])">
 						<label class="charSelectorLabel mp7 gameLabel" for="mp7"> </label>
 					</span>
 					<span class="flexAuto"></span>
 
 					<span class="nowrap">
-						<input type="radio" name="gameSelector" id="mp8" value="mp8" onchange="changeSettings('changeGame', ['mp8'])">
+						<input type="radio" name="gameSelector" id="mp8" value="mp8" newdesign="false" onchange="callOnBoth('changeGame', ['mp8'])">
 						<label class="charSelectorLabel mp8 gameLabel" for="mp8"> </label>
 					</span>
 					<span class="flexAuto"></span>
-					<span class="nowrap">	
-						<input type="radio" name="gameSelector" id="mp9" value="mp9" onchange="changeSettings('changeGame', ['mp9'])">	
-						<label class="charSelectorLabel mp9 gameLabel" for="mp9"> </label>	
-					</span>	
-					<span class="flexAuto"></span>	
 
-					<span class="nowrap">	
-						<input type="radio" name="gameSelector" id="mp10" value="mp10" onchange="changeSettings('changeGame', ['mp10'])">	
-						<label class="charSelectorLabel mp10 gameLabel" for="mp10"> </label>	
-					</span>	
-					<span class="flexAuto"></span>	
+					<span class="nowrap">
+						<input type="radio" name="gameSelector" id="mp9" value="mp9" newdesign="false" onchange="callOnBoth('changeGame', ['mp9'])">
+						<label class="charSelectorLabel mp9 gameLabel" for="mp9"> </label>
+					</span>
+					<span class="flexAuto"></span>
 
-					<span class="nowrap">	
-						<input type="radio" name="gameSelector" id="mpa" value="mpa" onchange="changeSettings('changeGame', ['mpa'])">	
-						<label class="charSelectorLabel mpa gameLabel" for="mpa"> </label>	
-					</span>	
-					<span class="flexAuto"></span>	
+					<span class="nowrap">
+						<input type="radio" name="gameSelector" id="mp10" value="mp10" newdesign="false" onchange="callOnBoth('changeGame', ['mp10'])">
+						<label class="charSelectorLabel mp10 gameLabel" for="mp10"> </label>
+					</span>
+					<span class="flexAuto"></span>
 
-					<span class="nowrap">	
-						<input type="radio" name="gameSelector" id="mpds" value="mpds" onchange="changeSettings('changeGame', ['mpds'])">	
-						<label class="charSelectorLabel mpds gameLabel" for="mpds"> </label>	
-					</span>	
-					<span class="flexAuto"></span>	
+					<span class="nowrap">
+						<input type="radio" name="gameSelector" id="mpa" value="mpa" newdesign="false" onchange="callOnBoth('changeGame', ['mpa'])">
+						<label class="charSelectorLabel mpa gameLabel" for="mpa"> </label>
+					</span>
+					<span class="flexAuto"></span>
 
-					<span class="nowrap">	
-						<input type="radio" name="gameSelector" id="mpit" value="mpit" onchange="changeSettings('changeGame', ['mpit'])">	
-						<label class="charSelectorLabel mpit gameLabel" for="mpit"> </label>	
-					</span>	
-					<span class="flexAuto"></span>	
+					<span class="nowrap">
+						<input type="radio" name="gameSelector" id="mpds" value="mpds" newdesign="false" onchange="callOnBoth('changeGame', ['mpds'])">
+						<label class="charSelectorLabel mpds gameLabel" for="mpds"> </label>
+					</span>
+					<span class="flexAuto"></span>
 
-					<span class="nowrap">	
-						<input type="radio" name="gameSelector" id="mpsr" value="mpsr" onchange="changeSettings('changeGame', ['mpsr'])">	
-						<label class="charSelectorLabel mpsr gameLabel" for="mpsr"> </label>	
-					</span>	
-					<span class="flexAuto"></span>	
+					<span class="nowrap">
+						<input type="radio" name="gameSelector" id="mpit" value="mpit" newdesign="false" onchange="callOnBoth('changeGame', ['mpit'])">
+						<label class="charSelectorLabel mpit gameLabel" for="mpit"> </label>
+					</span>
+					<span class="flexAuto"></span>
 
-					<span class="nowrap">	
-						<input type="radio" name="gameSelector" id="mptt100" value="mptt100" onchange="changeSettings('changeGame', ['mptt100'])">	
-						<label class="charSelectorLabel mptt100 gameLabel" for="mptt100"> </label>	
-					</span>	
-					<span class="flexAuto"></span>	
+					<span class="nowrap">
+						<input type="radio" name="gameSelector" id="mpsr" value="mpsr" newdesign="false" onchange="callOnBoth('changeGame', ['mpsr'])">
+						<label class="charSelectorLabel mpsr gameLabel" for="mpsr"> </label>
+					</span>
+					<span class="flexAuto"></span>
 
-					<span class="nowrap">	
-						<input type="radio" name="gameSelector" id="smp" value="smp" onchange="changeSettings('changeGame', ['smp'])">	
-						<label class="charSelectorLabel smp gameLabel" for="smp"> </label>	
-					</span>					
+					<span class="nowrap">
+						<input type="radio" name="gameSelector" id="mptt100" value="mptt100" newdesign="false" onchange="callOnBoth('changeGame', ['mptt100'])">
+						<label class="charSelectorLabel mptt100 gameLabel" for="mptt100"> </label>
+					</span>
+					<span class="flexAuto"></span>
+
+					<span class="nowrap">
+						<input type="radio" name="gameSelector" id="smp" value="smp" newdesign="false" onchange="callOnBoth('changeGame', ['smp'])">
+						<label class="charSelectorLabel smp gameLabel" for="smp"> </label>
+					</span>
 				</div>
 			</div>
 			<div id="settingsHeaderBorder" class="border"></div>
 
-			<span id="shortcutHeader" class="border">
+			<span id="shortcutHeader">
+				<button id="shortcutSettingsButton" onclick="shortcutSettings()" style="float: left;">Settings</button>
+				<button onclick="saveAssist();" id="saveButton" style="float: left; margin-left: 5px;"> Save </button>
+				<button id="skipButton" onclick="shortcutSkip()" style="float: right;" disabled="true">Skip</button>
+				<button id="backButton" onclick="shortcutBack()" style="float: right; margin-right: 5px;" disabled="true">Back</button>
+				<div id="shortcutNotif">Start the game.</div>
 			</span>
+			<div id="shortcutHeaderBorder" class="border" style="display: none;"></div>
 			<div id="settingsMain">
 
 				<!-- General Settings -->
 				<div id="generalMPOSettings" class="visible">
-					<span id="siteError"> <span class="error"> MPO could not be loaded properly, try reloading or clearing local storage. </span> <br> If this warning still shows up despite activating cookies, please try and clear cache and cookies. <br> Contact <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI</a> if that didn't work either. <br> <br> </span>
-					<span id="cookieError"> <span class="error"> Cookies seem to be blocked, the site still works but nothing can be saved. </span> <br> MPO only saves stats & settings. It does <b>NOT</b> save any information related to you. <br> <br> If this warning still shows up despite activating cookies, please try and clear cache and cookies. <br> Contact <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI</a> if that didn't work either. <br> <br> </span>
+					<span id="siteError"> <span class="error"> MPO could not be loaded properly, try reloading or clearing local storage. </span> <br> If this warning still shows up despite activating cookies, please try and clear cache and cookies. <br> Contact <a href="https://www.twitter.com/yoshisrc">blueYOSHI</a> if that didn't work either. <br> <br> </span>
+					<span id="cookieError"> <span class="error"> Cookies seem to be blocked, the site still works but nothing can be saved. </span> <br> MPO only saves stats & settings. It does <b>NOT</b> save any information related to you. <br> <br> If this warning still shows up despite activating cookies, please try and clear cache and cookies. <br> Contact <a href="https://www.twitter.com/yoshisrc">blueYOSHI</a> if that didn't work either. <br> <br> </span>
 
 
-					<label for="hideAdvanced" style="font-weight: bold;"> Hide advanced settings: </label> <input type="checkbox" id="hideAdvanced" onchange="editValueOnBoth(this.id, this.checked);changeSettings('hideAdvancedSettings', [this.id])" style="position: relative; top: 1px;"> <br> <br>
+					<label for="hideAdvanced" style="font-weight: bold;"> Hide advanced settings: </label> <input type="checkbox" id="hideAdvanced" onchange="changeSettings(this.id)" style="position: relative; top: 1px;"> <br> <br>
+
+					<!-- FEATURES -->
 
 					<span class="settingsTitle"> Features </span> <br>
-					<label for="autoPopout"> <span> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="editValueOnBoth(this.id, this.checked)"> </label> <br> <br>
+					<label for="autoPopout"> <span> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="changeSettings(this.id)"> </label> <br>
 
-					<span class="advanced"> <label for="useSW"> Allow this site to run offline: </label> <input type="checkbox" id="useSW" onchange="editValueOnBoth(this.id, this.checked);changeSettings('runSW')" checked> <br> <span class="note"> This allows the site to be installed which allows it to be run completely offline, uses about 5MB. <span id="noOffline" style="display: none;" class="error"> <br> This can't be used when run from a local file or through localhost. </span> </span> <br> <br> </span>
+					<label for="settingsFullscreen"> <span> Always use fullscreen settings: </span> <input type="checkbox" id="settingsFullscreen" onchange="changeSettings(this.id)"> </label> <br>
+					<span id="settingsFullscreenPopoutReminder" style="display: none;"> <span class="note"> Popout is always fullscreen regardless of this. </span> <br> </span>
+					<span id="settingsFullscreenBlurReminder"> <span class="note"> Text is blurry in Chrome without this. There's nothing I can do about it as it's an issue in Chrome. </span> <br> </span> <br>
+
+					<span class="advanced"> <label for="useSW"> Allow this site to run offline: </label> <input type="checkbox" id="useSW" onchange="changeSettings(this.id)" checked> <br> <span class="note"> This allows the site to be installed which allows it to be run completely offline, uses about 5MB. <span id="noOffline" style="display: none;" class="error"> <br> This can't be used when ran from a local file or through localhost. </span> </span> <br> <br> </span>
 					<script type="text/javascript">
 						if (location.hostname === 'localhost' || location.origin === 'file://') {
 							document.getElementById('noOffline').style.display = 'unset';
 						}
 					</script>
 
-					<span> <label for="enableHighlight"> <span> Enable counter highlighting: </span> </label> <input type="checkbox" id="enableHighlight" onchange="editValueOnBoth(this.id, + this.checked);changeSettings('resetHighlights')" checked> <input type="color" onchange="editValueOnBoth(this.id, this.value);changeSettings('callHighlight', [false, true])" value="#FF0000" id="highlightColor"> <br> <br> </span>
+					<span class="advanced"> <label for="enableHighlight"> <span> Enable counter highlighting: </span> </label> <input type="checkbox" id="enableHighlight" onchange="changeSettings(this.id)" checked> <input type="color" onchange="changeSettings(this.id)" value="#FF0000" id="highlightColor"> <br> <br> </span>
 
-					<label for="deactivateUnused"> <span> Automatically deactivate all counters not supported by the current game: </span> </label> <input type="checkbox" id="deactivateUnused" style="top: 5px;" onchange="editValueOnBoth(this.id, this.checked);changeSettings('deactivateUnused')" checked> <br> <br>
+					<label for="deactivateUnused"> <span> Automatically deactivate all counters not supported by the current game: </span> </label> <input type="checkbox" id="deactivateUnused" style="top: 5px;" onchange="changeSettings(this.id)" checked> <br> <br>
+
+					<span class="advanced"> <label for="xBelow100"> <span> Display x before numbers below 100: </span> </label> <input type="checkbox" id="xBelow100" onchange="changeSettings(this.id)" checked> <br> <br> </span>
 
 					<span class="advanced"> Add bonus-stars to star counter:
 						<span id="bonusStarSelector">
 							<span class="relative">
-								<input type="radio" name="bonusStarAdd" id="bonusDont" onchange="editValueOnBoth(this.id, this.checked);updateStars()" checked>
+								<input type="radio" name="bonusStarAdd" id="bonusDont" onchange="changeSettings(this.id)" checked>
 								<label for="bonusDont"> Don't add </label>
 							</span> |
 							<span class="relative">
-								<input type="radio" name="bonusStarAdd" id="bonusCombine" onchange="editValueOnBoth(this.id, this.checked);updateStars()">
+								<input type="radio" name="bonusStarAdd" id="bonusCombine" onchange="changeSettings(this.id)">
 								<label for="bonusCombine"> Combine </label>
 							</span> |
 							<span class="relative">
-								<input type="radio" name="bonusStarAdd" id="bonusSeperately" onchange="editValueOnBoth(this.id, this.checked);updateStars()">
+								<input type="radio" name="bonusStarAdd" id="bonusSeperately" onchange="changeSettings(this.id)">
 								<label for="bonusSeperately"> Seperately </label>
 							</span>
 						</span>
 					</span> <br>
 					<span class="advanced" class="note"> "Seperately" should not be used with horizontal layout. </span> <br>
 
-					<span class="advanced"> <label for="noTie"> <span> Only allow one player to get the coin star: </span> </label> <input type="checkbox" id="noTie" onchange="editValueOnBoth(this.id, this.checked);changeSettings('coinStarTie')"> <br> </span>
-					<label for="autoSave"> <span> Automatically save/reload when updating turns: </span> </label> <input type="checkbox" id="autoSave" onchange="editValueOnBoth(this.id, this.checked)"> <br> <br>
+					<span class="advanced"> <label for="noTie"> <span> Only allow one player to get the coin star: </span> </label> <input type="checkbox" id="noTie" onchange="changeSettings(this.id)"> <br> </span> <br>
 
-					<span class="advanced"> <label for="useHotkeys"> Use Hotkeys: </label> <input type="checkbox" id="useHotkeys" onchange="editValueOnBoth(this.id, this.checked);if (this.checked === false) {ctrlReleased(null, 'Control', true);ctrlReleased(null, 'Shift', true);}" checked> <br> <br> </span>
-					<span class="advanced"> <label for="enableInteract"> <span> Enable Drag 'n' Drop: </span> </label> <input type="checkbox" id="enableInteract" onchange="editValueOnBoth(this.id, this.checked)"> <button onclick="changeSettings('interactSave')">Save Positions</button> <button onclick="changeSettings('interactReset')">Reset Positions</button> <br> </span>
+					<label for="autoSave"> <span> Automatically save/reload when updating turns: </span> </label> <input type="checkbox" id="autoSave" onchange="changeSettings(this.id)"> <br> <br>
 
-					<span style="display: none;"> <label for="permSave"> <span> Save counters permanently (not getting deleted on site reload): </span> </label> <input type="checkbox" id="permSave" onchange="editValueOnBoth(this.id, this.checked)" checked> <br> </span> <br class="advanced">
+					<span class="advanced"> <label for="useHotkeys"> Use Hotkeys: </label> <input type="checkbox" id="useHotkeys" onchange="changeSettings(this.id)" checked> <br> <br> </span>
+
+					<span class="advanced"> <label for="enableInteract"> <span> Enable Drag 'n' Drop: </span> </label> <input type="checkbox" id="enableInteract" onchange="changeSettings(this.id)">
+					<button id="saveInteract" onclick="callOnBoth('interactSave')">Save Positions</button>
+					<button id="resetInteract" onclick="callOnBoth('interactReset')">Reset Positions</button> <br>
+					<span id="noInteractError" class="error" style="display: none;"> Drag 'n' Drop couldn't be loaded. Check your connection and reload the site. <br> </span></span>
+
+					<span style="display: none;"> <label for="permSave"> <span> Save counters permanently (not getting deleted on site reload): </span> </label> <input type="checkbox" id="permSave" onchange="changeSettings(this.id)" checked> <br> </span> <br class="advanced">
+
+					<!-- INTERFACE -->
 
 					<span class="settingsTitle"> Interface </span> <br>
-					<span> Background: </span> <button id="themeDefault" class="themeButtons" onclick="changeSettings('changeTheme', ['default'])"></button> <button id="themeCastle" class="themeButtons" onclick="changeSettings('changeTheme', ['castle'])"></button> <button id="themeNsmbw" class="themeButtons" onclick="changeSettings('changeTheme', ['nsmbw'])"></button> <button id="themeToadroad" class="themeButtons" onclick="changeSettings('changeTheme', ['toadroad'])"></button> <br>
-					<label for="greenscreen"> <span> Enable greenscreen: </span> </label> <input type="checkbox" onchange="editValueOnBoth(this.id, this.checked);changeSettings('changeTheme')" id="greenscreen"> <input type="color" onchange="editValueOnBoth(this.id, this.value);changeSettings('changeBGColor', ['bgColor'])" value="#0000ff" id="bgColor"><br>
+					<span> Background: </span>
+						<button id="themeDefault" class="themeButtons" onclick="callOnBoth('changeTheme', ['default'])"></button>
+						<button id="themeCastle" class="themeButtons" onclick="callOnBoth('changeTheme', ['castle'])"></button>
+						<button id="themeNsmbw" class="themeButtons" onclick="callOnBoth('changeTheme', ['nsmbw'])"></button>
+						<button id="themeToadroad" class="themeButtons" onclick="callOnBoth('changeTheme', ['toadroad'])"></button> <br>
+
+					<label for="greenscreen"> <span> Enable greenscreen: </span> </label> <input type="checkbox" id="greenscreen" onchange="changeSettings(this.id)"> <input type="color" onchange="changeSettings(this.id)" value="#0000ff" id="bgColor"> <br> <br>
+
+					<span class="advanced"> <span> Change text color: </span> <input type="color" id="textColor" value="#ffffff" onchange="changeSettings(this.id)"> <br> <br> </span>
 
 					<span style="position: relative; top: -13px;"> Default icon style: </span>
 						<span class="charSelector" id="iconSelector">
 							<span class="relative">
-								<input type="radio" name="icons" id="mpsrIcons" value="mpsrIcons" onchange="editValueOnBoth(this.id, this.checked);changeSettings('changeCharacters');changeSettings('changeCharSelectionIcons')" checked>
+								<input type="radio" name="icons" id="mpsrIcons" value="mpsrIcons" newdesign="false" onchange="changeSettings(this.id)" checked>
 								<label class="charSelectorLabel mario iconLabel" for="mpsrIcons"> </label>
 							</span>
 							<span class="relative">
-								<input type="radio" name="icons" id="mk8Icons" value="mk8Icons" onchange="editValueOnBoth(this.id, this.checked);changeSettings('changeCharacters');changeSettings('changeCharSelectionIcons')">
+								<input type="radio" name="icons" id="mk8Icons" value="mk8Icons" newdesign="false" onchange="changeSettings(this.id)">
 								<label class="charSelectorLabel iconLabel" for="mk8Icons" style="background-image: url('img/mk8Icons/mario.png');"> </label>
 							</span>
 						</span> <br>
 
-					<label for="customGameIcons"> <span> Use game-based icons if available: </span> </label> <input type="checkbox" id="customGameIcons" onchange="editValueOnBoth(this.id, this.checked);changeSettings('changeCharacters');changeSettings('changeCounterIcons')" checked> <br> <br>
+					<label for="customGameIcons"> <span> Use game-based icons if available: </span> </label> <input type="checkbox" id="customGameIcons" onchange="changeSettings(this.id)" checked> <br> <br>
 
 					<span> Layout type:
 						<span id="layoutSelector">
 							<span class="relative">
-								<input type="radio" name="layoutType" id="layoutVertical" onchange="editValueOnBoth(this.id, this.checked);changeSettings('changeLayout')" checked>
+								<input type="radio" name="layoutType" id="layoutVertical" onchange="changeSettings(this.id, this.checked)" checked>
 								<label for="layoutVertical"> Vertical </label>
 							</span> |
 							<span class="relative">
-								<input type="radio" name="layoutType" id="layoutHorizontal" onchange="editValueOnBoth(this.id, this.checked);changeSettings('changeLayout')">
+								<input type="radio" name="layoutType" id="layoutHorizontal" onchange="changeSettings(this.id, this.checked)">
 								<label for="layoutHorizontal"> Horizontal </label>
 							</span>
 						</span> <br> <br class="advanced">
@@ -525,40 +559,43 @@
 					</span>
 
 					<span class="advanced">
+						<label for="enableAnimation"> <span> Enable counter animation: </span> </label> <input type="checkbox" id="enableAnimation" onchange="changeSettings(this.id)" checked> <br> <br>
 
-						<label for="enableAnimation"> <span> Enable counter animation: </span> </label> <input type="checkbox" id="enableAnimation" onchange="editValueOnBoth(this.id, this.checked)" checked> <br> <br>
+						<!-- TEXT OUTPUT -->
 
 						<span class="settingsTitle"> Text Output </span> <br>
-							<label for="toBonusOnly"> <span> Only show who got the bonus star: </span> </label> <input type="checkbox" id="toBonusOnly" onchange="editValueOnBoth(this.id, this.checked)"> <br>
-							<label for="toShowNum"> <span style="border-left: 2px rgba(120, 120, 120, 0.4) solid; margin-left: 48px; padding-left: 3px;"> Show counter next to player: </span> </label> <input type="checkbox" id="toShowNum" onchange="editValueOnBoth(this.id, this.checked)" checked> <br> <br>
-						<label for="toListAllCoin"> <span> List all players instead of "everyone" for ties: </span> </label> <input type="checkbox" id="toListAllCoin" onchange="editValueOnBoth(this.id, this.checked)"> <br> <br>
+							<label for="toBonusOnly"> <span> Only show who got the bonus star: </span> </label> <input type="checkbox" id="toBonusOnly" onchange="changeSettings(this.id)"> <br>
+							<label for="toShowNum"> <span style="border-left: 2px rgba(120, 120, 120, 0.4) solid; margin-left: 48px; padding-left: 3px;"> Show counter next to player: </span> </label> <input type="checkbox" id="toShowNum" onchange="changeSettings(this.id)" checked> <br> <br>
+						<label for="toListAllCoin"> <span> List all players instead of "everyone" for ties: </span> </label> <input type="checkbox" id="toListAllCoin" onchange="changeSettings(this.id)"> <br> <br>
 
 						<span class="note"> The characters name will be used if no player name is entered. </span> <br>
-						<span> Player 1 name: </span> <input id="toP1Name" onchange="editValueOnBoth(this.id, this.value)">
-						<span class="marginLeft"> Player 2 name: </span> <input id="toP2Name" onchange="editValueOnBoth(this.id, this.value)"> <br>
-						<span> Player 3 name: </span> <input id="toP3Name" onchange="editValueOnBoth(this.id, this.value)">
-						<span class="marginLeft"> Player 4 name: </span> <input id="toP4Name" onchange="editValueOnBoth(this.id, this.value)"> <br>
-						<span> Counter seperation: </span> <input id="toSeperation" value=" | " onchange="editValueOnBoth(this.id, this.value)"> <br> <br>
+						<span> Player 1 name: </span> <input id="toP1Name" onchange="changeSettings(this.id)">
+						<span class="marginLeft"> Player 2 name: </span> <input id="toP2Name" onchange="changeSettings(this.id)"> <br>
+						<span> Player 3 name: </span> <input id="toP3Name" onchange="changeSettings(this.id)">
+						<span class="marginLeft"> Player 4 name: </span> <input id="toP4Name" onchange="changeSettings(this.id)"> <br>
+						<span> Counter seperation: </span> <input id="toSeperation" value=" | " onchange="changeSettings(this.id)"> <br> <br>
 
-						<label for="toUseActive"> <span> Only use active counters: </span> <input type="checkbox" id="toUseActive" onchange="editValueOnBoth(this.id, this.checked);changeSettings('updateCounterInput')" checked> </label> <br>
+						<label for="toUseActive"> <span> Only use active counters: </span> <input type="checkbox" id="toUseActive" onchange="changeSettings(this.id)" checked> </label> <br>
 						<span id="customTOCounters" style="display: none;">
 							<span class="note" id="counterNote"> Seperate counters with ", ". </span>
 							<div id="counterDiv">
 								<span id="counterNames">
 									<span> Counter names: </span> <span class="note"> (Used to describe the counter) </span> <br>
-									<textarea class="resizableInput" id="toOutput" onchange="textOutputTest(true);editValueOnBoth(this.id, this.value)">Turns, ?, MG, Red, Coin Star</textarea>
+									<textarea class="resizableInput" id="toOutput" onchange="changeSettings(this.id)">Turns, ?, MG, Red, Coin Star</textarea>
 								</span>
 								<span id="counterOrder">
 									<span> Counter order: </span> <span class="note"> (Only counters listed will be used) </span> <br>
-									<textarea class="resizableInput" id="toCounters" onchange="textOutputTest();editValueOnBoth(this.id, this.value)">Turns, Happening, Minigame, Red Space, Coin Star</textarea>
+									<textarea class="resizableInput" id="toCounters" onchange="changeSettings(this.id)">Turns, Happening, Minigame, Red Space, Coin Star</textarea>
 								</span>
 							</div>
 							<b class="error" id="textOutputWarning" style="visibility: hidden;"> Hi if you see this </b>
 						</span>
 					</span> <br>
 
+					<!-- RESET -->
+
 					<span class="settingsTitle"> Reset </span> <br>
-					<button style="margin-bottom: 5px;" onclick="if (window.confirm('Are you sure you want to reset all settings to default?')) {changeSettings('resetSettings');}" id="resetSettingsButton"> Reset Settings </button> <br>
+					<button style="margin-bottom: 5px;" onclick="if (window.confirm('Are you sure you want to reset all settings to default?')) {callOnBoth('resetSettings');}" id="resetSettingsButton"> Reset Settings </button> <br>
 					<button onclick="if (window.confirm('Are you sure you want to delete absolutely everything?')) {localStorage.clear();unloadSW();alert('All data has been cleared. Please refresh or close the site now.');}">Clear everything</button> <span class="note">(This will clear all saved settings, characters, counters and stats)</span>
 				</div>
 
@@ -572,7 +609,7 @@
 							<span class="playerText">Player 1</span> <br>
 
 							<span class="charSelector relative">
-								<input type="checkbox" name="comSelector1" id="com1" onchange="editValueOnBoth(this.id, this.checked);changeSettings('changeCom', [1])">
+								<input type="checkbox" name="comSelector1" id="com1" newdesign="false" onchange="editValueOnBoth(this.id, this.checked);callOnBoth('changeCom', [1])">
 								<label class="charSelectorLabel com" for="com1"></label> <br>
 							</span>
 
@@ -585,7 +622,7 @@
 							<span class="playerText">Player 2</span> <br>
 
 							<span class="charSelector relative">
-								<input type="checkbox" name="comSelector2" id="com2" onchange="editValueOnBoth(this.id, this.checked);changeSettings('changeCom', [2])">
+								<input type="checkbox" name="comSelector2" id="com2" newdesign="false" onchange="editValueOnBoth(this.id, this.checked);callOnBoth('changeCom', [2])">
 								<label class="charSelectorLabel com" for="com2"></label> <br>
 							</span>
 
@@ -598,7 +635,7 @@
 							<span class="playerText">Player 3</span> <br>
 
 							<span class="charSelector relative">
-								<input type="checkbox" name="comSelector3" id="com3" onchange="editValueOnBoth(this.id, this.checked);changeSettings('changeCom', [3])">
+								<input type="checkbox" name="comSelector3" id="com3" newdesign="false" onchange="editValueOnBoth(this.id, this.checked);callOnBoth('changeCom', [3])">
 								<label class="charSelectorLabel com" for="com3"></label> <br>
 							</span>
 
@@ -611,7 +648,7 @@
 							<span class="playerText">Player 4</span> <br>
 
 							<span class="charSelector relative">
-								<input type="checkbox" name="comSelector4" id="com4" onchange="editValueOnBoth(this.id, this.checked);changeSettings('changeCom', [4])">
+								<input type="checkbox" name="comSelector4" id="com4" newdesign="false" onchange="editValueOnBoth(this.id, this.checked);callOnBoth('changeCom', [4])">
 								<label class="charSelectorLabel com" for="com4"></label> <br>
 							</span>
 
@@ -619,7 +656,7 @@
 							</div>
 						</span>
 					</span>
-					<button onclick="randomChar()">Randomize characters</button>
+					<button id="charRandoButton" onclick="randomChar()">Randomize characters</button>
 				</div>
 
 				<!-- Counter Settings -->
@@ -628,60 +665,60 @@
 					<span><h3>Bonus Stars</span></h3>
 
 					<div class="counterSelection">
-						<span class="happeningC relative"> <label for="happeningOnOff" id="happeningOnOffText" class="counterOnOffText">Happening (1-8, DS, SMP):</label> <input type="checkbox" id="happeningOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['happening'])" checked> <label for="happeningOnOff" class="charSelectorLabel counterOnOff happeningOnOff"></label> </span>
+						<span class="happeningC relative"> <label for="happeningOnOff" id="happeningOnOffText" class="counterOnOffText">Happening (1-8, DS, SMP):</label> <input type="checkbox" id="happeningOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['happening'])" checked> <label for="happeningOnOff" class="charSelectorLabel counterOnOff happeningOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="minigameC relative"> <label for="minigameOnOff" id="minigameOnOffText" class="counterOnOffText">Minigame (1-10, DS, SMP):</label> <input type="checkbox" name="minigame" id="minigameOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['minigame'])" checked> <label for="minigameOnOff" class="charSelectorLabel counterOnOff minigameOnOff"></label> </span>
+						<span class="minigameC relative"> <label for="minigameOnOff" id="minigameOnOffText" class="counterOnOffText">Minigame (1-10, DS, SMP):</label> <input type="checkbox" name="minigame" id="minigameOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['minigame'])" checked> <label for="minigameOnOff" class="charSelectorLabel counterOnOff minigameOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="coinStarC relative"> <label for="coinStarOnOff" id="coinStarOnOffText" class="counterOnOffText">Coin Star (1-5, SMP):</label> <input type="checkbox" id="coinStarOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['coinStar'])" checked> <label for="coinStarOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </span>
+						<span class="coinStarC relative"> <label for="coinStarOnOff" id="coinStarOnOffText" class="counterOnOffText">Coin Star (1-5, SMP):</label> <input type="checkbox" id="coinStarOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['coinStar'])" checked> <label for="coinStarOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </span>
 					</div>
 					<div class="counterSelection mp7C mp8C mp9C mp10C mpDSC mpsrC mptt100C smpC">
-						<span class="mp7C mp8C smpC relative"> <label for="redSpaceOnOff" id="redSpaceOnOffText" class="counterOnOffText">Red (7, 8, SMP):</label> <input type="checkbox" id="redSpaceOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['redSpace'])"> <label for="redSpaceOnOff" class="charSelectorLabel counterOnOff redSpaceOnOff"></label> </span>
+						<span class="mp7C mp8C smpC relative"> <label for="redSpaceOnOff" id="redSpaceOnOffText" class="counterOnOffText">Red (7, 8, SMP):</label> <input type="checkbox" id="redSpaceOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['redSpace'])"> <label for="redSpaceOnOff" class="charSelectorLabel counterOnOff redSpaceOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="mp7C mp8C mp9C mp10C mpDSC mpsrC mptt100C smpC relative"> <label for="runningOnOff" id="runningOnOffText" class="counterOnOffText">Running (7-10, DS-SMP):</label> <input type="checkbox" id="runningOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['running'])"> <label for="runningOnOff" class="charSelectorLabel counterOnOff runningOnOff"></label> </span>
+						<span class="mp7C mp8C mp9C mp10C mpDSC mpsrC mptt100C smpC relative"> <label for="runningOnOff" id="runningOnOffText" class="counterOnOffText">Running (7-10, DS-SMP):</label> <input type="checkbox" id="runningOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['running'])"> <label for="runningOnOff" class="charSelectorLabel counterOnOff runningOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="mp9C mp10C mpsrC mptt100C smpC relative"> <label for="slowOnOff" id="slowOnOffText" class="counterOnOffText">Slow (9, 10, SR-SMP):</label> <input type="checkbox" id="slowOnOff" class="counterOnOffInput" onchange="editValueOnBoth(this.id, this.checked);changeSettings('slowStar')"> <label for="slowOnOff" class="charSelectorLabel counterOnOff runningOnOff"></label> </span>
+						<span class="mp9C mp10C mpsrC mptt100C smpC relative"> <label for="slowOnOff" id="slowOnOffText" class="counterOnOffText">Slow (9, 10, SR-SMP):</label> <input type="checkbox" id="slowOnOff" class="counterOnOffInput" onchange="editValueOnBoth(this.id, this.checked);callOnBoth('slowStar')"> <label for="slowOnOff" class="charSelectorLabel counterOnOff runningOnOff"></label> </span>
 					</div>
 					<div class="counterSelection mp6C mp7C mp8C mp9C mpDSC mpsrC mptt100C smpC">
-						<span class="mp7C mp8C relative"> <label for="shoppingOnOff" id="shoppingOnOffText" class="counterOnOffText">Shopping (7, 8):</label> <input type="checkbox" id="shoppingOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['shopping'])"> <label for="shoppingOnOff" class="charSelectorLabel counterOnOff shoppingOnOff"></label> </span>
+						<span class="mp7C mp8C relative"> <label for="shoppingOnOff" id="shoppingOnOffText" class="counterOnOffText">Shopping (7, 8):</label> <input type="checkbox" id="shoppingOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['shopping'])"> <label for="shoppingOnOff" class="charSelectorLabel counterOnOff shoppingOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="relative"> <label for="itemOnOff" id="itemOnOffText" class="counterOnOffText">Item (6-8, DS-SMP):</label> <input type="checkbox" id="itemOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['item'])"> <label for="itemOnOff" class="charSelectorLabel counterOnOff itemOnOff"></label> </span>
+						<span class="relative"> <label for="itemOnOff" id="itemOnOffText" class="counterOnOffText">Item (6-8, DS-SMP):</label> <input type="checkbox" id="itemOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['item'])"> <label for="itemOnOff" class="charSelectorLabel counterOnOff itemOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="mpsrC mptt100C relative"> <label for="unusedOnOff" id="unusedOnOffText" class="counterOnOffText">Unused (SR & TT100):</label> <input type="checkbox" id="unusedOnOff" class="counterOnOffInput" onchange="editValueOnBoth(this.id, this.checked);changeSettings('unusedStar')"> <label for="unusedOnOff" class="charSelectorLabel counterOnOff itemOnOff"></label> </span>
+						<span class="mpsrC mptt100C relative"> <label for="unusedOnOff" id="unusedOnOffText" class="counterOnOffText">Unused (SR & TT100):</label> <input type="checkbox" id="unusedOnOff" class="counterOnOffInput" onchange="editValueOnBoth(this.id, this.checked);callOnBoth('unusedStar')"> <label for="unusedOnOff" class="charSelectorLabel counterOnOff itemOnOff"></label> </span>
 					</div>
 					<div class="counterSelection mpDSC">
-						<span class="mpDSC relative"> <label for="friendSpaceOnOff" id="friendSpaceOnOffText" class="counterOnOffText">Friendship (DS):</label> <input type="checkbox" id="friendSpaceOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['friendSpace'])"> <label for="friendSpaceOnOff" class="charSelectorLabel counterOnOff friendSpaceOnOff"></label> </span>
+						<span class="mpDSC relative"> <label for="friendSpaceOnOff" id="friendSpaceOnOffText" class="counterOnOffText">Friendship (DS):</label> <input type="checkbox" id="friendSpaceOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['friendSpace'])"> <label for="friendSpaceOnOff" class="charSelectorLabel counterOnOff friendSpaceOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="mpDSC relative"> <label for="hexOnOff" id="hexOnOffText" class="counterOnOffText">Hex (DS):</label> <input type="checkbox" id="hexOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['hex'])"> <label for="hexOnOff" class="charSelectorLabel counterOnOff hexOnOff"></label> </span>
+						<span class="mpDSC relative"> <label for="hexOnOff" id="hexOnOffText" class="counterOnOffText">Hex (DS):</label> <input type="checkbox" id="hexOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['hex'])"> <label for="hexOnOff" class="charSelectorLabel counterOnOff hexOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="mpsrC mptt100C relative"> <label for="balloonOnOff" id="balloonOnOffText" class="counterOnOffText">Balloon (SR, TT100):</label> <input type="checkbox" id="balloonOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['balloon'])"> <label for="balloonOnOff" class="charSelectorLabel counterOnOff balloonOnOff"></label> </span>
+						<span class="mpsrC mptt100C relative"> <label for="balloonOnOff" id="balloonOnOffText" class="counterOnOffText">Balloon (SR, TT100):</label> <input type="checkbox" id="balloonOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['balloon'])"> <label for="balloonOnOff" class="charSelectorLabel counterOnOff balloonOnOff"></label> </span>
 					</div>
 					<div class="counterSelection mp9C mp10C mpsrC mptt100C">
-						<span class="mp9C relative"> <label for="spinSpaceOnOff" id="spinSpaceOnOffText" class="counterOnOffText">Spin (9):</label> <input type="checkbox" id="spinSpaceOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['spinSpace'])"> <label for="spinSpaceOnOff" class="charSelectorLabel counterOnOff spinSpaceOnOff"></label> </span>
+						<span class="mp9C relative"> <label for="spinSpaceOnOff" id="spinSpaceOnOffText" class="counterOnOffText">Spin (9):</label> <input type="checkbox" id="spinSpaceOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['spinSpace'])"> <label for="spinSpaceOnOff" class="charSelectorLabel counterOnOff spinSpaceOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="mp9C mp10C relative"> <label for="minusOnOff" id="minusOnOffText" class="counterOnOffText">Minus (9, 10):</label> <input type="checkbox" id="minusOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['minus'])"> <label for="minusOnOff" class="charSelectorLabel counterOnOff minusOnOff"></label> </span>
+						<span class="mp9C mp10C relative"> <label for="minusOnOff" id="minusOnOffText" class="counterOnOffText">Minus (9, 10):</label> <input type="checkbox" id="minusOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['minus'])"> <label for="minusOnOff" class="charSelectorLabel counterOnOff minusOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="mpsrC mptt100C relative"> <label for="almostOnOff" id="almostOnOffText" class="counterOnOffText">Almost (SR & TT100):</label> <input type="checkbox" id="almostOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['almost'])"> <label for="almostOnOff" class="charSelectorLabel counterOnOff almostOnOff"></label> </span>
+						<span class="mpsrC mptt100C relative"> <label for="almostOnOff" id="almostOnOffText" class="counterOnOffText">Almost (SR & TT100):</label> <input type="checkbox" id="almostOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['almost'])"> <label for="almostOnOff" class="charSelectorLabel counterOnOff almostOnOff"></label> </span>
 					</div>
 					<div class="counterSelection mpsrC">
-						<span class="relative"> <label for="lonerOnOff" id="lonerOnOffText" class="counterOnOffText">Loner (SR):</label> <input type="checkbox" id="lonerOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['loner'])"> <label for="lonerOnOff" class="charSelectorLabel counterOnOff lonerOnOff"></label> </span>
+						<span class="relative"> <label for="lonerOnOff" id="lonerOnOffText" class="counterOnOffText">Loner (SR):</label> <input type="checkbox" id="lonerOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['loner'])"> <label for="lonerOnOff" class="charSelectorLabel counterOnOff lonerOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="relative"> <label for="duelOnOff" id="duelOnOffText" class="counterOnOffText">Duel (SR):</label> <input type="checkbox" id="duelOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['duel'])"> <label for="duelOnOff" class="charSelectorLabel counterOnOff duelOnOff"></label> </span>
+						<span class="relative"> <label for="duelOnOff" id="duelOnOffText" class="counterOnOffText">Duel (SR):</label> <input type="checkbox" id="duelOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['duel'])"> <label for="duelOnOff" class="charSelectorLabel counterOnOff duelOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="relative"> <label for="wandererOnOff" id="wandererOnOffText" class="counterOnOffText">Wanderer (SR):</label> <input type="checkbox" id="wandererOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['wanderer'])"> <label for="wandererOnOff" class="charSelectorLabel counterOnOff wandererOnOff"></label> </span>
+						<span class="relative"> <label for="wandererOnOff" id="wandererOnOffText" class="counterOnOffText">Wanderer (SR):</label> <input type="checkbox" id="wandererOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['wanderer'])"> <label for="wandererOnOff" class="charSelectorLabel counterOnOff wandererOnOff"></label> </span>
 					</div>
 					<div class="counterSelection smpC">
-						<span class="relative"> <label for="allyOnOff" id="allyOnOffText" class="counterOnOffText">Ally (SMP):</label> <input type="checkbox" id="allyOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['ally'])"> <label for="allyOnOff" class="charSelectorLabel counterOnOff allyOnOff"></label> </span>
+						<span class="relative"> <label for="allyOnOff" id="allyOnOffText" class="counterOnOffText">Ally (SMP):</label> <input type="checkbox" id="allyOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['ally'])"> <label for="allyOnOff" class="charSelectorLabel counterOnOff allyOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="relative"> <label for="stompyOnOff" id="stompyOnOffText" class="counterOnOffText">Stompy (SMP):</label> <input type="checkbox" id="stompyOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['stompy'])"> <label for="stompyOnOff" class="charSelectorLabel counterOnOff stompyOnOff"></label> </span>
+						<span class="relative"> <label for="stompyOnOff" id="stompyOnOffText" class="counterOnOffText">Stompy (SMP):</label> <input type="checkbox" id="stompyOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['stompy'])"> <label for="stompyOnOff" class="charSelectorLabel counterOnOff stompyOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="relative"> <label for="doormatOnOff" id="doormatOnOffText" class="counterOnOffText">Doormat (SMP):</label> <input type="checkbox" id="doormatOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['doormat'])"> <label for="doormatOnOff" class="charSelectorLabel counterOnOff doormatOnOff"></label> </span>
+						<span class="relative"> <label for="doormatOnOff" id="doormatOnOffText" class="counterOnOffText">Doormat (SMP):</label> <input type="checkbox" id="doormatOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['doormat'])"> <label for="doormatOnOff" class="charSelectorLabel counterOnOff doormatOnOff"></label> </span>
 					</div>
 					<span id="hiddenCountersText"></span> <br> <br>
 
 					<span><h3>Others</span></h3>
 					<span class="note" style="white-space: nowrap;"> </span> <br>
 					<div class="counterSelection">
-						<span class="relative"> <label for="starsOnOff" id="starsOnOffText" class="counterOnOffText">Stars:</label> <input type="checkbox" id="starsOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['stars'])"> <label for="starsOnOff" class="charSelectorLabel counterOnOff starsOnOff"></label> </span>
+						<span class="relative"> <label for="starsOnOff" id="starsOnOffText" class="counterOnOffText">Stars:</label> <input type="checkbox" id="starsOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['stars'])"> <label for="starsOnOff" class="charSelectorLabel counterOnOff starsOnOff"></label> </span>
 						<span class="flexAuto"></span><span></span>
 						<span class="flexAuto"></span><span></span>
 					</div>
@@ -689,13 +726,16 @@
 						<span class="relative"> <label for="coinsOnOff" id="coinsOnOffText" class="counterOnOffText">Coins:</label> <input type="checkbox" id="coinsOnOff" class="counterOnOffInput" onchange="changeSettings('displayOnOff', ['coins'])"> <label for="coinsOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </span>
 					</div>
 					<div class="counterSelection mp9C mp10C">
-						<span class="relative"> <label for="miniStarsOnOff" id="miniStarsOnOffText" class="counterOnOffText">Mini-stars (9 & 10):</label> <input type="checkbox" id="miniStarsOnOff" class="counterOnOffInput" onchange="editValueOnBoth(this.id, this.checked);changeSettings('changeStars', ['miniStars']);changeSettings('updateStars')"> <label for="miniStarsOnOff" class="charSelectorLabel counterOnOff miniStarsOnOff"></label> </span>
+						<span class="relative"> <label for="miniStarsOnOff" id="miniStarsOnOffText" class="counterOnOffText">Mini-stars (9 & 10):</label> <input type="checkbox" id="miniStarsOnOff" class="counterOnOffInput" onchange="editValueOnBoth(this.id, this.checked);callOnBoth('changeStars', ['miniStars']);callOnBoth('updateStars')"> <label for="miniStarsOnOff" class="charSelectorLabel counterOnOff miniStarsOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="mp9C relative"> <label for="bananasOnOff" id="bananasOnOffText" class="counterOnOffText">Bananas (9):</label> <input type="checkbox" id="bananasOnOff" class="counterOnOffInput" onclick="editValueOnBoth(this.id, this.checked);changeSettings('changeStars', ['bananas']);changeSettings('updateStars')"> <label for="bananasOnOff" class="charSelectorLabel counterOnOff bananasOnOff"></label></span>
+						<span class="mp9C relative"> <label for="bananasOnOff" id="bananasOnOffText" class="counterOnOffText">Bananas (9):</label> <input type="checkbox" id="bananasOnOff" class="counterOnOffInput" onclick="editValueOnBoth(this.id, this.checked);callOnBoth('changeStars', ['bananas']);callOnBoth('updateStars')"> <label for="bananasOnOff" class="charSelectorLabel counterOnOff bananasOnOff"></label></span>
 						<span class="flexAuto"></span><span></span>
+					</div>
+					<div class="counterSelection coinC">
+						<span class="relative"> <label for="coinsOnOff" id="coinsOnOffText" class="counterOnOffText">Coins:</label> <input type="checkbox" id="coinsOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['coins'])"> <label for="coinsOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </span>
 					</div> <br> <br>
 
-					<span style="font-size: 21px;"><a class="settingsLink" rel="noopener" target="_blank" href="https://github.com/blueYOSHI9000/MarioPartyOverlay/wiki/Mario-Party-Bonus-Star-List">Bonus Star List</a></span>
+					<span style="font-size: 21px;"><a href="bonus.html" id="bonusStarListLink" class="settingsLink" rel="noopener" target="_blank">Bonus Star List</a></span>
 				</div>
 
 				<!-- Savefile/slot Settings -->
@@ -704,16 +744,16 @@
 					<span class="error" id="savefileError" style="display: none;"> Note that MPO might start to lag a bit when there are a lot of savefiles. <br> </span>
 					<span class="error" id="savefileCookieError"> Make sure cookies are enabled, otherwise savefiles won't be able to save. <br> </span>
 
-					<input type="radio" name="slotType" id="slotLoad" checked>
-					<input type="radio" name="slotType" id="slotDuplicate"> <label class="slotButtons" onclick="slotSel('duplicate')" style="margin-left: 10px;">Duplicate</label>
-					<input type="radio" name="slotType" id="slotDelete"> <label class="slotButtons" onclick="slotSel('delete')">Delete</label> <br> <br>
+					<input type="radio" newdesign="false" name="slotType" id="slotLoad" checked>
+					<input type="radio" newdesign="false" name="slotType" id="slotDuplicate"> <label class="slotButtons" onclick="slotSel('duplicate')" style="margin-left: 10px;">Duplicate</label>
+					<input type="radio" newdesign="false" name="slotType" id="slotDelete"> <label class="slotButtons" onclick="slotSel('delete')">Delete</label> <br> <br>
 
 					<span id="slotList">
 						<div class="slotDiv slotSelected" onclick="slotSel(this)" slot="0">
 							<span style="position: relative;"> <span class="slotTurnText"> <span class="slotTurn"> 1/20 </span> Turn </span> <span class="slotAllText" id="slotAll0">All</span> <img src="img/smp.png" class="slotImg" id="slotImg0" style="visibility: hidden;"> </span> <br>
 							<img src="img/mpsrIcons/mario.png"> <img src="img/mpsrIcons/luigi.png"> <img src="img/mpsrIcons/yoshi.png"> <img src="img/mpsrIcons/peach.png"> <br>
 						</div>
-					</span>
+					</span> <br>
 					<div class="slotDiv emptySlot" onclick="execOnMain('createSlot', ['empty'])">
 						Create new file
 					</div>
@@ -807,16 +847,16 @@
 					<span><h3>RNO Mario Party Overlay (v1.10)</span></h3>
 					<a onclick="getElem('creditsBorder').scrollIntoView({behavior: 'smooth', block: 'start'})">Credits & Contact can be found at the bottom.</a> <br> <br>
 					Welcome to Mario Party Overlay (MPO)! MPO helps track all kinds of stats and bonus stars from the entire Mario Party series, supporting every game in it! <br> This quick tutorial should tell you how everything works with some tips that might come in handy! <br> <br>
-					You can access this dialog at any point by clicking on the gear at the top and then selecting "Credits". The navbar can only be used once this dialog is closed. <br> <br>
+					You can access this dialog at any point by clicking on the gear at the top and then selecting "Credits". The navigation bar can only be used once this dialog is closed. <br> <br>
 
-					Once settings are closed you can select your game at the top (it's the fifth entry in the navbar). Then select your characters for all four players by clicking on the character entries. Counters can be changed in the sixth entry in the navbar. <br> <br>
+					Once settings are closed you can select your game at the top (it's the fifth entry in the navigation bar). Then select your characters for all four players by clicking on the character entries. Counters can be changed in the sixth entry in the navigation bar. <br> <br>
 					To start tracking, just click on the counters/numbers to increase them. <br>
 					Coin stars can be tracked by clicking on a character. To avoid ties you can hold <i>Ctrl</i> to only give that character a coin star. Click on the coin star itself to change the amount. <br> <br>
 
-					To make tracking easier you can hold <i>Ctrl</i> to subtract them and hold <i>Shift</i> to increase/decrease by 5 instead of one. Both of them can also be manually changed in the navbar. <br>
+					To make tracking easier you can hold <i>Ctrl</i> to subtract them and hold <i>Shift</i> to increase/decrease by 5 instead of one. Both of them can also be manually changed in the navigation bar. <br>
 					By clicking on the gear you can access some more options like saving all stats which you should probably do every now and then! If you ever accidentally reset all stats, you can still reload them there. <br> <br>
 
-					The "Generate & Copy" button next to it allows you to output all stats as text, this is useful in case you track stats for a streamer so you can post them in the chat. Don't forget to customize it under the <a onclick="showHideSettings('generalMPO')">General</a> tab with advanced options shown! <br> <br>
+					The "Generate & Copy" button next to it allows you to output all stats as text, this is useful in case you track stats for a streamer so you can post them in the chat. Don't forget to customize it under the <a onclick="showHideSettings('generalMPO')">General</a> tab with advanced options shown! You can also hold <i>Shift</i> while clicking on the gear to copy it immediately. <br> <br>
 
 					Alternatively, you can also select the characters and counters you want in the <a onclick="showHideSettings('player')">Characters</a> and <a onclick="showHideSettings('counter')">Counters</a> tab in here. <br>
 					In <a onclick="showHideSettings('slots')">Savefiles</a> you can use various savefiles to track multiple games at the same time or backup everything locally as a file. <br> <br>
@@ -832,22 +872,29 @@
 					All Mario Party related icons were created or inspired from officially published media by Nintendo. <br>
 					Mario Party related icons (re)created, edited or ripped by <a href="https://www.spriters-resource.com/submitter/Anonymous/" class="settingsLink" rel="noopener" target="_blank">Anonymous</a>, <a href="https://www.mariowiki.com/User:Arend" class="settingsLink" rel="noopener" target="_blank">Arend</a>, <a href="https://www.twitter.com/yoshisrc" class="settingsLink" rel="noopener" target="_blank">blueYOSHI</a>, <a href="https://www.spriters-resource.com/submitter/xX-CamTro-Xx/" class="settingsLink" rel="noopener" target="_blank">CamTro</a>, <a href="https://www.spriters-resource.com/submitter/FieryExplosion/" class="settingsLink" rel="noopener" target="_blank">FieryExplosion</a>, <a href="https://www.spriters-resource.com/submitter/Kimimaru/" class="settingsLink" rel="noopener" target="_blank">Kimimaru</a>, <a href="https://www.spriters-resource.com/submitter/larsenv/" class="settingsLink" rel="noopener" target="_blank">larsenv</a>, <a href="https://www.spriters-resource.com/submitter/Mario+Gamer/" class="settingsLink" rel="noopener" target="_blank">Mario Gamer</a>, <a href="https://mariopartylegacy.com/" class="settingsLink" rel="noopener" target="_blank">Mario Party Legacy</a>,  <a href="https://www.spriters-resource.com/submitter/Random+Talking+Bush/" class="settingsLink" rel="noopener" target="_blank">Random Talking Bush</a>, <a href="https://twitter.com/Der_RicoDexter" class="settingsLink" rel="noopener" target="_blank">RicoDexter</a>. <br>
 
-					<a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" class="settingsLink" rel="noopener" target="_blank">Mario Party 9 Font</a> <br>
-					<a href="https://icons8.com/icon/2969/settings" class="settingsLink" rel="noopener" target="_blank">Settings Icon by Icons8</a> <br>
-					<a href="https://github.com/SortableJS/Sortable" class="settingsLink" rel="noopener" target="_blank"> Sortable.js</a> (enables savefile re-ordering) <br>
-					<a href="https://interactjs.io/" class="settingsLink" rel="noopener" target="_blank"> Interact.js</a> (enables drag 'n' drop) </span>
+					Bonus Star information found by <a href="https://www.twitter.com/yoshisrc">blueYOSHI</a>, <a href="https://www.giantbomb.com/bonus-stars/3015-3011/">Giant Bomb</a>, <a href="https://www.mariowiki.com/">Super Mario Wiki</a>, <a href="https://mario.fandom.com/wiki/Bonus_Stars">Super Mario Wiki (wikia/fandom)</a>. <br> <br>
+
+					<a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx">Mario Party 9 Font</a> (<a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/commits/master/font.ttf">modified</a>) <br>
+					<a href="https://icons8.com/icon/2969/settings">Settings Icon by Icons8</a> <br>
+					<a href="https://codepen.io/ben_jammin/pen/syaCq">Button designs by Benjamin</a> (<a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/commits/master/buttons.css">modified</a>) <br>
+					<a href="https://codepen.io/andreasstorm/pen/dNqLBz">Checkbox designs by Andreas Storm</a> (<a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/commits/master/labels.css">modified</a>) <br>
+					<a href="https://github.com/SortableJS/Sortable"> Sortable.js</a> (enables savefile re-ordering) <br>
+					<a href="https://interactjs.io/"> Interact.js</a> (enables drag 'n' drop) </span> <br> <br>
+					<span style="padding-bottom: 3px;"> Mario Party Overlay is licensed under the MIT License. </span>
 				</div>
 			</div>
 
 			<!-- Reset/save Settings -->
 			<div id="settingsFooter">
 				<div id="settingsFooterBorder" class="border"></div>
+				<div style="max-width: 1044px;">
 					<button id="popoutButton" onclick="saveAssist();mpoSettingsPopout()" style="flex: auto;"> Popout Settings </button>
-					<span id="settingsHintsContainer" onclick="newSettingsHint()" style="display: none;"> <b>Tip: </b> <span id="settingsHints">Click on the gear while holding Ctrl to open settings directly.</span> </span>
-				<span id="settingsClose">
-					<button onclick="saveSettings(); savePlayers(); saveAssist();" id="saveButton"> Save </button>
-					<button onclick="if (popout == true) {window.close();} else {closeSettings();}" id="settingsCloseButton"> Close </button>
-				</span>
+					<span id="settingsHintsContainer" onclick="newSettingsHint()"> <b>Tip: </b> <span id="settingsHints">Click on the gear while holding Ctrl to open settings directly.</span> </span>
+					<span id="settingsClose">
+						<!--button onclick="saveSettings(); savePlayers(); saveAssist();" id="saveButton"> Save </button-->
+						<button onclick="if (popout == true) {window.close();} else {closeSettings();}" id="settingsCloseButton"> Close </button>
+					</span>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -856,6 +903,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/interact.js/1.2.6/interact.min.js"></script>
 	<script src="sortable.min.js"></script>
 
+	<script src="helpers.js"></script>
 	<script src="boot.js"></script>
 	<script src="saving.js"></script>
 	<script src="slots.js"></script>
@@ -863,7 +911,8 @@
 	<script src="textoutput.js"></script>
 	<script src="characters.js"></script>
 	<script src="core.js"></script>
-	<script src="main.js"></script>
+	<script src="misc.js"></script>
+
 	<script type="text/javascript"> prepareMPOBackup(); </script>
 </body>
 </html>

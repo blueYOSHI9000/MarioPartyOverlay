@@ -130,6 +130,8 @@ for (let num = 0; num < counters.length; num++) {
 	countersUp.push(counters[num].charAt(0).toUpperCase() + counters[num].slice(1));
 }
 
+var startup = true; //gets changed to false after MPO fully booted up
+
 /*
 * Loads various parts of the page.
 */
@@ -142,10 +144,10 @@ function loadHTML () {
 		var arr = [];
 
 		arr.push('<div class="draggable characterDiv"> <div onclick="coinStarTie(' + num + ', true)"> <img src="img/com.png" class="comImg" id="p' + num + 'ComDisplay" onerror="comImgError()"> <img src="img/mpsrIcons/' + charList.all[num] + '.png" class="characterImg" id="p' + num + 'Img" onerror="changeCharactersBackup(this)"> </div> </div>');
-		arr.push('<div style="position: relative;"> <div class="draggable stars starsBonus"> <span class="starsHitbox" onclick="mobileButtons(\'stars\', ' + num + ')"></span> <img class="counterDisplay" src="img/stars.png" id="p' + num + 'StarsDisplay" onerror="changeStarsError(this)"> <span class="counterText" id="p' + num + 'StarsBonusText">0</span> </div> <div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/stars.png"> <span class="counterText" id="p' + num + 'StarsText">0</span> </div> </div>');
+		arr.push('<div style="position: relative;"> <div class="draggable stars starsBonus"> <span class="starsHitbox" onclick="mobileButtons(\'stars\', ' + num + ')"></span> <img class="counterDisplay" src="img/stars.png" id="p' + num + 'StarsDisplay" onerror="changeStarsError(this)"> <span class="counterText counterBelow100" id="p' + num + 'StarsBonusText">0</span> </div> <div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/stars.png"> <span class="counterText counterBelow100" id="p' + num + 'StarsText">0</span> </div> </div>');
 
 		for (let num2 = 1; num2 < counters.length; num2++) {
-			arr.push('<div class="draggable ' + counters[num2] + '" onclick="mobileButtons(\'' + counters[num2] + '\', ' + num + ')"> <img class="counterDisplay" src="img/' + counters[num2] + '.png" id="p' + num + countersUp[num2] + 'Display" onerror="counterImgError(this)"> <span class="counterText" id="p' + num + countersUp[num2] + 'Text"> 0 </span> </div>');
+			arr.push('<div class="draggable ' + counters[num2] + '" onclick="mobileButtons(\'' + counters[num2] + '\', ' + num + ')"> <img class="counterDisplay" src="img/' + counters[num2] + '.png" id="p' + num + countersUp[num2] + 'Display" onerror="counterImgError(this)"> <span class="counterText counterBelow100" id="p' + num + countersUp[num2] + 'Text">0</span> </div>');
 		}
 		elem.innerHTML = arr.join(' ');
 
@@ -156,7 +158,7 @@ function loadHTML () {
 	var arr = [];
 	for (let num = 1; num < 5; num++) {
 		for (let num2 = 0; num2 < charList.all.length; num2++) {
-			arr.push('<span class="' + charList.all[num2] + 'Span"> <input type="radio" name="charSelectorInput' + num + '" id="' + charList.all[num2] + num + '" value="' + charList.all[num2] + '" onchange="changeSettings(\'changeCharacters\', [' + num + ', \'' + charList.all[num2] + '\'])"> <label class="charSelectorLabel" for="' + charList.all[num2] + num + '"> <img class="charSelectorLabelImg" src="img/mpsrIcons/' + charList.all[num2] + '.png" onerror="imgError(this)"> </label> <br> </span>');
+			arr.push('<span class="' + charList.all[num2] + 'Span"> <input type="radio" name="charSelectorInput' + num + '" id="' + charList.all[num2] + num + '" value="' + charList.all[num2] + '" newdesign="false" onchange="callOnBoth(\'changeCharacters\', [' + num + ', \'' + charList.all[num2] + '\'])"> <label class="charSelectorLabel" for="' + charList.all[num2] + num + '"> <img class="charSelectorLabelImg" src="img/mpsrIcons/' + charList.all[num2] + '.png" onerror="imgError(this)"> </label> <br> </span>');
 		}
 		editInner('charSelector' + num, arr.join(''));
 		arr = [];
@@ -165,10 +167,49 @@ function loadHTML () {
 	editValue('luigi2', true);
 	editValue('yoshi3', true);
 	editValue('peach4', true);
+
+	//replace checkboxes with better design which uses labels
+	var elems = document.querySelectorAll('input[type="checkbox"], input[type="radio"]');
+	for (let num = 0; num < elems.length; num++) {
+		if (elems[num].getAttribute('newdesign') != 'false' && !elems[num].classList.contains('counterOnOffInput')) {
+			var elem = document.createElement("span");
+			elem.classList.add('inputContainer');
+
+			var arr = [];
+			var attr = elems[num].attributes;
+			for (let num2 = 0; num2 < attr.length; num2++) {
+				switch (attr[num2].name) {
+					case 'type':
+					case 'name':
+					case 'id':
+					case 'value':
+					case 'onchange':
+						arr.push(attr[num2].name + '=\"' + attr[num2].value + '\"');
+						break;
+					default:
+						elem.setAttribute(attr[num2].name, attr[num2].value);
+				}
+			}
+
+			elem.innerHTML = '<input ' + arr.join(' ') + '> <label class="newdesign" for="' + attr.id.value + '"></label>';
+
+			elems[num].parentNode.replaceChild(elem, elems[num]);
+		}
+	}
+
+	//add attributes to link (a) elements that incl. an href attr.
+	elems = document.querySelectorAll('a[href^="http"]');
+	for (let num = 0; num < elems.length; num++) {
+		elems[num].classList.add('settingsLink');
+		elems[num].setAttribute('rel', 'noopener');
+		elems[num].setAttribute('target', '_blank');
+	}
 }
 
 var defSettings = {
 	hideAdvanced: true,
+	settingsFullscreen: false,
+
 	autoPopout: false,
 	enableHighlight: true,
 	highlightColor: '#ff0000',
@@ -179,14 +220,17 @@ var defSettings = {
 	useHotkeys: true,
 	enableInteract: false,
 	useSW: true,
+
 	theme: 'default',
 	icons: 'mpsrIcons',
 	customGameIcons: true,
+	xBelow100: true,
 	layoutType: 'layoutVertical',
 	greenscreen: false,
 	bgColor: '#0000FF',
 	textColor: '#ffffff',
 	enableAnimation: true,
+
 	toBonusOnly: false,
 	toShowNum: true,
 	toListAllCoin: false,
@@ -198,11 +242,16 @@ var defSettings = {
 	toUseActive: true,
 	toCounters: 'Turns, Happening, Minigame, Red Space, Coin Star',
 	toOutput: 'Turns, ?, MG, Red, Coin Star',
+
 	shortcutSimpleMode: false,
 	shortcutAutoEnd: false,
 }
 
-var replaceOnly = ['hideAdvanced', 'autoPopout', 'enableHighlight', 'highlightColor', 'deactivateUnused', 'noTie', 'autoSave', 'useHotkeys', 'enableInteract', 'useSW', 'customGameIcons', 'greenscreen', 'bgColor', 'textColor', 'enableAnimation', 'toBonusOnly', 'toShowNum', 'toListAllCoin', 'toP1Name', 'toP2Name', 'toP3Name', 'toP4Name', 'toSeperation', 'toUseActive', 'toCounters', 'toOutput', 'shortcutSimpleMode', 'shortcutAutoEnd'];
+var replaceOnly = [	'hideAdvanced', 'settingsFullscreen',
+					'autoPopout', 'enableHighlight','highlightColor', 'deactivateUnused', 'noTie', 'autoSave', 'useHotkeys', 'enableInteract', 'useSW',
+					'customGameIcons', 'xBelow100', 'greenscreen', 'bgColor', 'textColor', 'enableAnimation',
+					'toBonusOnly', 'toShowNum', 'toListAllCoin', 'toP1Name', 'toP2Name', 'toP3Name', 'toP4Name', 'toSeperation', 'toUseActive', 'toCounters', 'toOutput',
+					'shortcutSimpleMode', 'shortcutAutoEnd'];
 /*
 * Loads settings from an object.
 *
@@ -215,12 +264,16 @@ function loadSettings (obj) {
 	for (var num = 0; num < replaceOnly.length; num++) {
 		editValue(replaceOnly[num], obj[replaceOnly[num]]);
 	}
+
 	editValue(obj.bonusStarAdd, true);
 	changeTheme(obj.theme);
 	editValue(obj.icons, true);
 	editValue(obj.layoutType, true);
 
 	hideAdvancedSettings();
+	settingsFullscreen();
+	displayXBelow100();
+	changeTextColor('textColor');
 	changeLayout();
 	changeCharacters();
 	updateCounterInput();
@@ -231,9 +284,10 @@ function loadSettings (obj) {
 /*
 * Prepares all settings that were saved in local storage when the site gets loaded.
 */
-var prepared = false;
-var cookiesOn = false;
-var popout = false;
+var prepared = false; //if prepareMPO() could be finished (no errors)
+var cookiesOn = false; //if cookies are on
+var noInteract = false; //if Interact failed to load (true = interact.js failed to load - and likely other third parties too)
+var popout = false; //if this is a settings popout
 function prepareMPO () {
 	loadHTML();
 
@@ -245,13 +299,12 @@ function prepareMPO () {
 		document.querySelector('body').style.overflow = 'hidden';
 		getElem('popoutButton').innerText = 'Normal Settings';
 		getElem('popoutButton').setAttribute('onclick', 'sendMessage(\'openSettings+true\');window.close();');
-		getElem('settingsContent').classList.add('settingsContentPopout');
-		getElem('settingsContent').classList.remove('popupContent');
-		getElem('settingsContent').classList.remove('settingsPopup');
-		getElem('settingsContent').style.width = 'calc(100% - 40px)';
-		getElem('settingsContent').style.height = 'calc(100% - 40px)'; //-40px is required as otherwise there would be 40px offscreen which would destroy the whole layout
-		getElem('settingsContent').style.minWidth = 'unset';
 		getElem('noSettings').style.display = 'none';
+
+		settingsFullscreen();
+
+		getElem('settingsFullscreenPopoutReminder').style.display = 'block';
+		getElem('settingsFullscreenBlurReminder').style.display = 'none';
 
 		getElem('savefileCookieError').style.display = 'none';
 
@@ -338,10 +391,10 @@ function prepareMPO () {
 		}
 	}
 
-	openSettings(true);
+	openSettings(true); // Scrollintoview doesn't work when the element is hidden so we have to show it first and then hide it again
 	showHideSettings('player');
 	for (var num = 1; num < 5; num++) {
-		getElem(characters[num] + num).scrollIntoView(true); // Scrollintoview doesn't work when the element is hidden so we have to show it first and then hide it again
+		getElem(characters[num] + num).scrollIntoView({block: 'center'});
 	}
 	showHideSettings('generalMPO');
 	closeSettings();
@@ -363,10 +416,20 @@ function prepareMPO () {
 			elems[num].setAttribute('data-y', arrY[num]);
 		}
 	}
+
+	//only gets executed on first visit when cookies are allowed
 	if (localStorage.getItem('new') != '1') {
 		openSettings();
 		showHideSettings('tutorial');
 		localStorage.setItem('new', '1');
+	}
+
+	if (noInteract === true) {
+		editValue('enableInteract', false);
+		getElem('enableInteract').setAttribute('disabled', true);
+		getElem('saveInteract').setAttribute('disabled', true);
+		getElem('resetInteract').setAttribute('disabled', true);
+		getElem('noInteractError').style.display = 'unset';
 	}
 
 	runSW();
@@ -383,6 +446,7 @@ function prepareMPO () {
 	localStorage.setItem('lsVer', 10); //localStorage version, used to check how everything is stored
 
 	prepared = true;
+	startup = false;
 }
 
 /*
@@ -410,4 +474,5 @@ function prepareMPOBackup () {
 			callDisplayOnOff();
 		}
 	}
+	startup = false;
 }

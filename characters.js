@@ -36,6 +36,10 @@ function changeCharacters (player, character) {
 	}
 	coinStarTie();
 	updateNavbar(player);
+	if (popout != true && startup === false) {
+		slots['c' + slots.sel]['char' + player] = character;
+		localStorage.setItem('c' + slots.sel, JSON.stringify(slots['c' + slots.sel]));
+	}
 }
 
 /*
@@ -188,16 +192,17 @@ function changeCharSelectionIcons () {
 	}
 	for (let num = 0; num < charList.all.length; num++) {
 		if (getElem(charList.all[num] + '1').parentNode.style.display != 'none') {
-			getElem(charList.all[num] + '1').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
-			getElem(charList.all[num] + '2').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
-			getElem(charList.all[num] + '3').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
-			getElem(charList.all[num] + '4').parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
+			getElem(charList.all[num] + '1').parentNode.parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
+			getElem(charList.all[num] + '2').parentNode.parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
+			getElem(charList.all[num] + '3').parentNode.parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
+			getElem(charList.all[num] + '4').parentNode.parentNode.children[1].children[0].src = 'img/' + imgSrc + '/' + charList.all[num] + '.png';
 		}
 	}
 	updateNavbar(1);
 	updateNavbar(2);
 	updateNavbar(3);
 	updateNavbar(4);
+	updateNvChar();
 }
 
 /*
@@ -223,6 +228,11 @@ function changeCom (player, noAnimation) {
 		}
 	}
 	updateNavbar(player);
+
+	if (popout != true && startup === false) {
+		slots['c' + slots.sel]['com' + player] = getValue('com' + player);
+		localStorage.setItem('c' + slots.sel, JSON.stringify(slots['c' + slots.sel]));
+	}
 }
 
 /*
@@ -383,11 +393,12 @@ function changeGame (game) {
 	changeComImg();
 
 	updateNvGame();
-	updateNvChar();
+	//updateNvChar(); //already called in changeCharSelectionIcons()
 	updateNavbar(1);
 	updateNavbar(2);
 	updateNavbar(3);
 	updateNavbar(4);
+	getElem('bonusStarListLink').setAttribute('href', 'bonus.html?game=' + game);
 
 	if (getValue('deactivateUnused') === true) {
 		deactivateUnused();
@@ -396,13 +407,13 @@ function changeGame (game) {
 		if (game === 'mp9' || game === 'mp10') {
 			ms.checked = true;
 			editValueOnBoth(ms.id, true);
-			changeSettings('changeStars', ['miniStars']);
-			changeSettings('updateStars');
+			callOnBoth('changeStars', ['miniStars']);
+			callOnBoth('updateStars');
 		} else {
 			ms.checked = false;
 			editValueOnBoth(ms.id, false);
-			changeSettings('changeStars', ['miniStars']);
-			changeSettings('updateStars');
+			callOnBoth('changeStars', ['miniStars']);
+			callOnBoth('updateStars');
 		}
 	}
 
@@ -524,16 +535,21 @@ function changeGame (game) {
 			editInner('coinsOnOffText', 'Coins:');
 	}
 	updateCounterList();
+	if (popout != true && startup === false) {
+		slots['c' + slots.sel].curGame = game;
+		localStorage.setItem('c' + slots.sel, JSON.stringify(slots['c' + slots.sel]));
+	}
 }
 var curGame = 'all';
 var pastResults = [];
 
+var cStatsHidden = [];
 /*
 * Checks what counters are empty, displays used counters in settings.
 */
 function updateCounterList () {
 	var cStats = [];
-	var cStatsHidden = [];
+	cStatsHidden = [];
 
 	for (var num = 0; num < counters.length; num++) {
 		getElem(counters[num] + 'OnOffText').style.color = 'unset';
@@ -545,7 +561,7 @@ function updateCounterList () {
 			if (counters[num] === 'coins') {
 				break;
 			}
-			if (parseInt(getInner('p' + num2 + countersUp[num] + 'Text')) === 0) {
+			if (getStat(countersUp[num], num2) === 0) {
 				arr.push(0);
 			}
 			if (num2 === 4 && arr.length != 4) {
@@ -555,7 +571,7 @@ function updateCounterList () {
 	}
 	arr = [];
 	for (var num2 = 1; num2 < 5; num2++) {
-		if (parseInt(getInner('p' + num2 + 'CoinsText')) === 5 || parseInt(getInner('p' + num2 + 'CoinsText')) === 10) {
+		if (getStat('coins', num2) === 5 || getStat('coins', num2) === 10) {
 			arr.push(0);
 		}
 		if (num2 === 4 && arr.length != 4) {
@@ -568,7 +584,7 @@ function updateCounterList () {
 			cStatsHidden.push(cStats[num]);
 		}
 	}
-	if (parseInt(getInner('coinStarText')) != 10) {
+	if (getStat('coinStar') != 10) {
 		if (getComputedStyle(getElem('coinStarOnOffText'), null).visibility != 'visible') {
 			cStatsHidden.push('coinStar');
 		} else {
@@ -577,15 +593,29 @@ function updateCounterList () {
 	} else {
 		getElem('coinStarOnOffText').style.color = 'unset';
 	}
+	showHiddenStats();
+}
+
+/*
+* Lists unused counters with stats in the Counters tab in settings.
+* 
+* @param {string} show A counter which should be made visible.
+*/
+function showHiddenStats (show) {
+	var arr = [];
+	if (show) {
+		cStatsHidden.splice(cStatsHidden.indexOf(show), 1);
+
+	}
 
 	if (cStatsHidden.length > 0) {
 		for (var num = 0; num < cStatsHidden.length; num++) {
 			var str = cStatsHidden[num];
 			str = str.replace(/([A-Z])/g, ' $1');
 			str = str.charAt(0).toUpperCase() + str.slice(1);
-			cStatsHidden[num] = str;
+			arr.push('<span  style="color: #0B6B13;" onclick="//showHiddenStats(\'' + cStatsHidden[num] + '\')">' + str + '</span>');
 		}
-		editInner('hiddenCountersText', 'Counters from other games with stats: <span  style="color: #0B6B13;">' + cStatsHidden.join(', ') + '</span>');
+		editInner('hiddenCountersText', 'Counters from other games with stats: ' + arr.join(', '));
 	} else {
 		editInner('hiddenCountersText', '');
 	}
@@ -649,18 +679,21 @@ function deactivateUnused () {
 * @param {number} max The max number.
 */
 function randomCharFor (max, min) {
-	if (min) {} else {
-		var min = 0;
-	}
+	if (typeof min === 'undefined')
+		min = 0;
 
 	var result = '';
 	result = Math.floor(Math.random() * max) + min;
+	var failsafe = 0;
 
 	for (var num = 0; num < pastResults.length; num++) {
-		if (result == pastResults[num]) {
+		if (result === pastResults[num]) {
 			result = Math.floor(Math.random() * max) + 0;
-			num--;
+			num = -1;
+			failsafe++;
 		}
+		if (failsafe > 30)
+			break;
 	}
 	pastResults.push(result);
 	return result;
@@ -668,6 +701,7 @@ function randomCharFor (max, min) {
 
 /*
 * Randomly selects characters based on games.
+* I have absolutely no idea how this works. Apparently only made for the Randomize button in the Characters tab and nothing else. - check nvRando() in navbar.js for a better version
 *
 * @param {number} player Only randomizes the specified player.
 */
@@ -695,14 +729,24 @@ function randomChar (player) {
 		if (player)
 			num2 = 1;
 
-		getElem(chars[num2] + num).scrollIntoView(true);
+		getElem(chars[num2] + num).scrollIntoView({block: 'center'}); //behavious: 'smooth' only works on one column at a time, all others won't even try to scroll in chrome so it's better without
+		console.log('x')
 		changeCharacters(num, chars[num2]);
 
 		if (popout === true) {
-			changeSettings('changeCharacters', [num, chars[num]]);
+			callOnBoth('changeCharacters', [num, chars[num]]);
 		}
 
 		if (player)
 			return;
 	}
+
+	var elems = document.querySelectorAll('.nvCharSelected');
+	for (let num = 0; num < elems.length; num++) {
+		elems[num].classList.remove('nvCharSelected');
+	}
+	setNvPlayer(1);
+	setNvPlayer(2);
+	setNvPlayer(3);
+	setNvPlayer(4);
 }
