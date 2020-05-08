@@ -30,7 +30,7 @@ function getStat (counter, player, returnElem) {
 * Updates the counters.
 *
 * @param {number} player Which player should be updated.
-* @param {string} action What should be done.
+* @param {string} action What should be done - can be 'P' for addition, 'M' for subtraction or 'S' to replace the existing count.
 * @param {string} amount The amount that should be changed.
 * @param {string} counter Which counter should be updated.
 */
@@ -53,16 +53,24 @@ function counterButtons (player, action, amount, counter) {
 		}
 	}
 
+	//return if there's no change to avoid unnecessary animation
+	if (action != 'S' && amount === 0) {
+		return;
+	}
+	if (action === 'S' && amount === getStat(counter, player)) {
+		return;
+	}
+
 	if (counter != 'curTurn' && counter != 'maxTurn' && counter != 'coinStar') { //regular counters only
 		counter = capStr(counter);
 
 		result = getStat(counter, player);
 
-		if (action === 'P') {
+		if (action === 'P') {        //plus
 			result += amount;
-		} else if (action === 'M') {
+		} else if (action === 'M') { //minus
 			result -= amount;
-		} else if (action === 'S') {
+		} else if (action === 'S') { //set
 			result = amount;
 		}
 

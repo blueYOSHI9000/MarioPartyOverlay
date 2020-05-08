@@ -192,7 +192,7 @@
 						<button onclick="updateOrder();updateAssistState()">Update order & continue?</button> <br> <span class="note">This updates the player order with the order chosen here.</span>
 					</div>
 
-					<select id="nv_assistStageSelect">
+					<select id="nv_assistStageSelect" onchange="editValue('assistStageSelect', getValue(this.id))">
 					</select>
 				</div>
 

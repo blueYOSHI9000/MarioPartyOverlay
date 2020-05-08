@@ -1,4 +1,104 @@
 /*
+* Calls counterButtons().
+* Should be used for anything assist related so some counters can be blocked off for potential future options.
+*
+* @param {string} counter Which counter should be updated.
+* @param {number} player Which player should be updated.
+* @param {string} amount The amount that should be changed.
+* @param {string} action What should be done - can be 'P' for addition, 'M' for subtraction or 'S' to replace the existing count.
+*/
+function assist_updateCounter (counter, player, amount, action) {
+	if (counter === 'coins' && assistInfo.noCoins === true) {
+		return false;
+	}
+
+	counterButtons(player, action, amount, counter);
+}
+
+/*
+* Updates a counter while reducing the coin counter for a certain amount.
+* If the player doesn't have enough coins it returns false without updating a counter.
+*
+* @param {string} counter Which counter should be updated.
+* @param {number} player Which player should be updated.
+* @param {string} amount The amount that should be changed.
+* @param {string} action What should be done - can be 'P' for addition, 'M' for subtraction or 'S' to replace the existing count.
+* @param {number} price The amount of coins that should be payed.
+*/
+function assist_buyStats (counter, player, amount, action, price) {
+	if (assistInfo.noCoins === true) {
+		assist_updateCounter(counter, player, amount, action);
+	}
+
+	//return false if player doesn't have enough coins
+	var coins = getStat('coins', player);
+	if (coins < price) {
+		return false;
+	}
+
+	assist_updateCounter('coins', player, price, 'M');
+	assist_updateCounter(counter, player, amount, action);
+}
+
+/*
+* Calculates the amount of items that could be bought for a certain price.
+*
+* @param {number} player Which player should be updated.
+* @param {number} price The amount of coins that should be payed.
+*/
+function assist_purchaseableItems (player, price) {
+	var coins = getStat('coins', player);
+
+	return Math.floor(coins / price);
+}
+
+/*
+* Executes events.
+* View MPO wiki or something and hope I already explained it there.
+*
+* @param {object/array} event The event to be executed or an array that contains them.
+* @param {string} game Which game, uses the current assist game if empty.
+* @param {string} board Which board, uses the current assist board if empty.
+*/
+function assist_execEvent (event, game, board) {
+	if (typeof game === 'undefined') {
+		game = assistInfo.curGame;
+	}
+	if (typeof board === 'undefined') {
+		board = assistInfo.board;
+	}
+
+	//execute all events in an array if an array was given
+	if (Array.isArray(event) === true) {
+		for (let num = 0; num < event.length; num++) {
+			assist_execEvent(event[num], game, board);
+		}
+		return;
+	}
+
+	var player = event.player;
+	if (typeof player != 'number') {
+		player = assistInfo.curPlayer;
+	}
+
+	//todo: add statistics and notification
+
+	switch (event.type) {
+		case 'addCoins':
+			assist_updateCounter('coins', player, event.value, 'P');
+			break;
+		case 'removeCoins':
+			assist_updateCounter('coins', player, event.value, 'M');
+			break;
+	}
+}
+
+/*
+* Buys a star. Only to be activated via HTML onclick.
+*
+* @param {string} starName The star name.
+* @param {string} game Which game, uses the current assist game if empty.
+* @param {string} board Which board, uses the current assist board if empty.
 */
 function assist_buyStar (starName, game, board) {
 	if (typeof game === 'undefined') {
@@ -8,21 +108,58 @@ function assist_buyStar (starName, game, board) {
 		board = assistInfo.board;
 	}
 
-	var starList = assistData[game].misc.stars;
-	var star;
-
-	for (var num = 0; num < starList.length; num++) {
-		//get first star that equals the name
-		//no board check since that happens when the star button gets added
-		if (starList[num].name === starName) {
-			star = starList[num];
-			break;
-		}
-	}
+	var star = assist_getStar(starName, game, board);
 
 	if (typeof star === 'undefined') {
 		star = assistData.default.star; //default in case no matching star was available
 	}
+
+	var starElem = document.querySelector('[assistname="' + star.name + '"]');
+
+	var starAmount = 1; //amount of stars to be bought
+	if (star.buyMultiple === true) {
+		starAmount = parseInt(starElem.parentNode.children[1].children[1].children[0].innerHTML);
+
+		if (typeof starAmount != 'number') {
+			starAmount = 1;
+		}
+
+		//reset buy multiple counter to 1
+		assist_changeBuyMultipleStarAmount(starName, 'S', 1, game, board);
+	}
+
+	var starPrice = star.price;
+
+	var starPriceMultiplier = assist.starPriceMultiplier;
+	if (starPriceMultiplier < 1) {
+		starPriceMultiplier = 1;
+	}
+
+	//check if the amount of stars can even be bought
+	var buyableAmount = assist_purchaseableItems(assistInfo.curPlayer, starAmount);
+	if (buyableAmount < starAmount) {
+		starAmount = buyableAmount;
+	}
+
+	var totalPrice = starAmount * starPrice * starPriceMultiplier;
+
+	//return if no stars are bought. //todo: add a notif or something to alert the user of this
+	if (starAmount < 1) {
+		return;
+	}
+
+	var receivedStars = star.amount; //amount of stars gotten for each purchase
+	if (typeof receivedStars != 'number') {
+		receivedStars = 1; //use 1 when amount is unspecified
+	}
+
+	assist_buyStats('stars', assistInfo.curPlayer, starAmount * receivedStars, 'P', totalPrice);
+
+	if (typeof star.event != 'undefined') {
+		assist_execEvent(star.event, game, board);
+	}
+
+	//todo: add statistics
 }
 
 /*

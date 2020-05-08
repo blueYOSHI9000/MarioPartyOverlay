@@ -1,5 +1,5 @@
 /*
-# GLOBAL EVENTS
+# GLOBAL EVENTS - no idea what this was all about
 - addAlly
 - other (I guess)
 
@@ -9,7 +9,7 @@
 - vs (maybe - customizable)
 - boobell (customizable)
 
-# x
+# x - same here
 - misc.js popoutClosed()
 - misc.js mpoSettingsPopout()
 - misc.js showHideSettings()
@@ -24,7 +24,7 @@
 
 
 
-# Types
+# Event types
 - 'addCoins'
 - 'removeCoins'
 - 'addToDice' - adds to running
@@ -32,6 +32,7 @@
 
 - 'addAlly' - opens Ally dialogue
 
+//maybe move the below to something else, non event based?
 - 'chooseEvent' - uses current game and value (type of event like lucky space) to create a simple dropdown with events to choose from
 - 'specialEvent' - Special custom made event - possibly replace with several more fitting types
 	- 'vs' - VS space in SMP
@@ -46,8 +47,9 @@ dont forget the star price change on smp kamek
 
 assist.js - general stuff
 assist_core.js - actually doing all the things when a button gets pressed
+assist_misc/helpers.js - everything that helps core out without actually being core - for later
 assist_data.js - data
-assist_load_data - loads data
+assist_load_data - loads data - maybe rename to read_data?
 
 assistInfo.starPriceMultiplier used in: assist_buyStar
 */
@@ -62,32 +64,20 @@ var assistData = {
 					src: 'img/stars.png',
 					name: 'defaultStar',
 					stages: ['grandCanal', 'bowsersEnchantedInferno'],
-					price: 20,
-					event: {
-						type: 'addStar',
-						value: 1
-					}
+					price: 20
 				},
 				{
 					src: 'img/stars.png',
 					name: 'pagodaPeakStar',
 					stages: ['pagodaPeak'],
 					price: [10, 20, 30, 40],
-					priceLoop: true,
-					event: {
-						type: 'addStar',
-						value: 1
-					}
+					priceLoop: true
 				},
 				{
 					src: 'img/stars.png',
 					name: 'pyramidParkStar',
 					stages: ['pyramidPark'],
-					price: 0,
-					event: {
-						type: 'addStar',
-						value: 1
-					}
+					price: 0
 				},
 				/*{
 					src: 'img/stars.png',
@@ -101,16 +91,14 @@ var assistData = {
 					name: 'treasureChestStar',
 					stages: ['pyramidPark'],
 					price: 10,
-					event: {
-						type: 'addStar',
-						value: 1
-					}
+					amount: 1
 				},
 				{
 					src: 'img/stars.png',
 					name: 'treasureChestCoins',
 					stages: ['pyramidPark'],
 					price: 10,
+					amount: 0,
 					event: {
 						type: 'addCoins',
 						value: 20
@@ -121,6 +109,7 @@ var assistData = {
 					name: 'treasureChestFail',
 					stages: ['pyramidPark'],
 					price: 10,
+					amount: 0
 					/*event: {
 						type: 'sendToStart'
 					}*/
@@ -177,31 +166,19 @@ var assistData = {
 					src: 'img/stars.png',
 					name: 'defaultStar',
 					stages: ['dksTreetopTemple', 'shyguysPerplexExpress'],
-					price: 20,
-					event: {
-						type: 'addStar',
-						value: 1
-					}
+					price: 20
 				},
 				{
 					src: 'img/stars.png',
 					name: 'goombaStar',
 					stages: ['goombasBootyBoardwalk'],
-					price: 0,
-					event: {
-						type: 'addStar',
-						value: 1
-					}
+					price: 0
 				},
 				{ //dk space will give replace one star with a free one - done manually
 					src: 'img/stars.png',
 					name: 'kingBooStar',
 					stages: ['kingBoosHauntedHideaway'],
-					price: 10,
-					event: {
-						type: 'addStar',
-						value: 1
-					}
+					price: 10
 				}/*,
 				{
 					stages: ['koopasTycoonTown'],
@@ -225,73 +202,45 @@ var assistData = {
 					src: 'img/stars.png',
 					name: 'defaultStar',
 					stages: ['wigglersGarden', 'bowsersPinballMachine'],
-					price: 20,
-					event: {
-						type: 'addStar',
-						value: 1
-					}
+					price: 20
 				},
 				{ // Music Notes (toadette stage)
 					src: 'img/assist/mpds/bluenote.png',
 					name: 'blueNote',
 					stages: ['toadettesMusicRoom'],
-					price: 5,
-					event: {
-						type: 'addStar',
-						value: 1
-					}
+					price: 5
 				},
 				{
 					src: 'img/assist/mpds/greennote.png',
 					name: 'greenNote',
 					stages: ['toadettesMusicRoom'],
-					price: 10,
-					event: {
-						type: 'addStar',
-						value: 1
-					}
+					price: 10
 				},
 				{
 					src: 'img/assist/mpds/yellownote.png',
 					name: 'yellowNote',
 					stages: ['toadettesMusicRoom'],
-					price: 15,
-					event: {
-						type: 'addStar',
-						value: 1
-					}
+					price: 15
 				},
 				{
 					src: 'img/assist/mpds/orangenote.png',
 					name: 'orangeNote',
 					stages: ['toadettesMusicRoom'],
-					price: 20,
-					event: {
-						type: 'addStar',
-						value: 1
-					}
+					price: 20
 				},
 				{
 					src: 'img/assist/mpds/rednote.png',
 					name: 'redNote',
 					stages: ['toadettesMusicRoom'],
-					price: 30,
-					event: {
-						type: 'addStar',
-						value: 1
-					}
+					price: 30
 				},
 
 				{ // DK star - buy multiple
 					src: 'img/stars.png',
-					name: 'defaultStar',
+					name: 'dksStoneStatueStar',
 					stages: ['dksStoneStatue'],
 					buyMultiple: true,
-					price: 20,
-					event: {
-						type: 'addStar',
-						value: 1
-					}
+					price: 20
 				},
 
 				{ // Magic Jars (kamek stage)
@@ -299,16 +248,14 @@ var assistData = {
 					name: 'magicJarStar',
 					stages: ['kameksLibrary'],
 					price: 10,
-					event: {
-						type: 'addStar',
-						value: 1
-					}
+					amount: 1
 				},
 				{
 					src: 'img/assist/mpds/magicjarcoin.png',
 					name: 'magicJarCoins',
 					stages: ['kameksLibrary'],
 					price: 10,
+					amount: 0,
 					event: {
 						type: 'addCoins',
 						value: 5
@@ -319,6 +266,7 @@ var assistData = {
 					name: 'magicJarFail',
 					stages: ['kameksLibrary'],
 					price: 10,
+					amount: 0
 					/*event: {
 						type: 'sendToStart'
 					}*/
@@ -514,11 +462,7 @@ var assistData = {
 				src: 'img/stars.png',
 				name: 'defaultStar',
 				//stages: ['wigglersGarden', 'dksStoneStatue', 'bowsersPinballMachine'],
-				price: 20,
-				event: {
-					type: 'addStar',
-					value: 1
-				}
+				price: 20
 			},
 			coinStartAmount: {
 				default: 10
@@ -753,10 +697,7 @@ var assistData = {
 			src: 'img/stars.png',
 			//name: 'defaultStar',
 			price: 20,
-			event: {
-				type: 'addStar',
-				value: 1
-			}
+			amount: 1
 		}
 	}
 }
