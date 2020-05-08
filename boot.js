@@ -308,12 +308,17 @@ function prepareMPO () {
 
 		getElem('savefileCookieError').style.display = 'none';
 
+		//clear parameters
+		window.history.replaceState(null, null, window.location.pathname + '?p=1');
+
 		sendMessage('syncPopout');
 		localStorage.getItem('enableHighlight'); //If cookies are blocked, this will break the function immediately
 		cookiesOn = true;
 		prepared = true;
+
 		return;
 	}
+
 	var str = getUrl('ls');
 	if (str != false) {
 		window.history.replaceState({}, document.title, "/" + location.host + location.pathname);
@@ -432,6 +437,16 @@ function prepareMPO () {
 		getElem('noInteractError').style.display = 'unset';
 	}
 
+	if (getUrl('credits') == 1) { //should probably be a function
+		openSettings();
+		callOnBoth('showHideSettings', ['tutorial']);
+		getElem('creditsBorder').scrollIntoView({block: 'start'});
+		closeNavbar();
+	}
+
+	//clear parameters
+	window.history.replaceState(null, null, window.location.pathname);
+
 	runSW();
 	coinStarTie();
 	callDisplayOnOff();
@@ -473,6 +488,16 @@ function prepareMPOBackup () {
 		if (popout != true) {
 			callDisplayOnOff();
 		}
+
+		if (getUrl('credits') == 1) { //should probably be a function
+			openSettings();
+			callOnBoth('showHideSettings', ['tutorial']);
+			getElem('creditsBorder').scrollIntoView({block: 'start'});
+			closeNavbar();
+		}
+
+		//clear parameters
+		window.history.replaceState(null, null, window.location.pathname + '?p=1');
 	}
 	startup = false;
 }
