@@ -131,103 +131,34 @@ span[title], img[title] {
 	cursor: help;
 }
 
-.bonusstarContainer {
+.bonusStarContainer {
 	display: block;
 	position: relative;
 	margin-left: 85px;
 	margin-bottom: 50px;
 	min-height: 70px;
 }
-.bonusstarContainer:before {
-	content: '';
+.bonusStarImg {
 	display: block;
 	position: absolute;
-	width: 70px;
-	height: 70px;
+	width: 70px !important;
+	height: 70px !important;
 	left: -85px;
 	background-size: cover;
 }
-.bonusstarContainer h3 {
+.bonusStarContainer h3 {
 	/*display: inline-block;*/
 	position: relative;
 	margin: 0;
 	margin-right: 25px;
 	top: -3px;
 }
-.bonusstarContainer img {
+.bonusStarContainer img {
 	margin-right: 5px;
 	height: 23px;
 }
-.bonusstarContainer p {
+.bonusStarContainer p {
 	margin: 0;
-}
-
-
-#happening:before {
-	background-image: url(img/bonus/happening.png);
-}
-#minigame:before {
-	background-image: url(img/bonus/minigame.png);
-}
-#coin:before {
-	background-image: url(img/bonus/coins.png);
-}
-#red:before {
-	background-image: url(img/bonus/redspace.png);
-}
-#running:before {
-	background-image: url(img/bonus/running.png);
-}
-#slow:before {
-	background-image: url(img/bonus/running.png);
-}
-#shopping:before {
-	background-image: url(img/bonus/shopping.png);
-}
-#item:before {
-	background-image: url(img/bonus/item.png);
-}
-#unused:before {
-	background-image: url(img/bonus/item.png);
-}
-#friendship:before {
-	background-image: url(img/bonus/friendspace.png);
-}
-#hex:before {
-	background-image: url(img/bonus/hex.png);
-}
-#spin:before {
-	background-image: url(img/bonus/spinspace.png);
-}
-#minus:before {
-	background-image: url(img/bonus/minus.png);
-}
-#balloon:before {
-	background-image: url(img/bonus/balloon.png);
-}
-#almost:before {
-	background-image: url(img/bonus/almost.png);
-}
-#loner:before {
-	background-image: url(img/bonus/loner.png);
-}
-#duel:before {
-	background-image: url(img/bonus/duel.png);
-}
-#wanderer:before {
-	background-image: url(img/bonus/wanderer.png);
-}
-#buddy:before {
-	background-image: url(img/bonus/buddy.png);
-}
-#ally:before {
-	background-image: url(img/bonus/ally.png);
-}
-#stompy:before {
-	background-image: url(img/bonus/stompy.png);
-}
-#doormat:before {
-	background-image: url(img/bonus/doormat.png);
 }
 
 .sub-all {
