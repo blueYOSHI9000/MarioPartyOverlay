@@ -77,6 +77,8 @@ slots.s0 = copyVar(defS);
 slots.c0 = copyVar(defC);
 slots.a0 = copyVar(defA);
 
+var currentStats = copyVar(defS);
+
 /*
 * Copies variables without a reference.
 *
@@ -178,6 +180,9 @@ function loadSlot (slot) {
 			editInner('p' + num + countersUp[num3] + 'Text', slots[sel][counters[num3]][num2]);
 		}
 	}
+
+	currentStats = slots[sel];
+	saveCurrentStats();
 
 	var sel = 'c' + slot;
 

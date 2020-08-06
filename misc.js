@@ -17,6 +17,9 @@ function resetHighlights () {
 * @param {boolean} stars If the bonus stars should be counted instead.
 */
 function callHighlight (resetHighlights, all, stars) {
+	if (getValue('enableHighlight') === false && resetHighlights != true) {
+		return
+	}
 	if (resetHighlights === true) {
 		var originalHighlightColor = getValue('highlightColor');
 		var textColor = getValue('textColor');
@@ -441,6 +444,10 @@ function showHideSettings (id) {
 	scrollPos[openedSettings] = getElem('settingsMain').scrollTop;
 	openedSettings = id;
 
+	if (prepared === true) {
+		sessionStorage.setItem('settingsTab', id);
+	}
+
 	var ids = ['generalMPO', 'slots', 'assist', 'player', 'counter', 'tutorial'];
 	for (let num = 0; num < ids.length; num++) {
 		getElem(ids[num] + 'Settings').classList.add('displayNone');
@@ -649,6 +656,10 @@ function openSettings (force) {
 	if (getElem('counterSettings').classList.contains('visible')) {
 		updateCounterList();
 	}
+
+	if (prepared === true) {
+		sessionStorage.setItem('settingsOpen', true);
+	}
 }
 
 //hint system is not actually visible currently due to lack of worthwile hints and issues with small screens not being able to fully display it.
@@ -684,6 +695,10 @@ function closeSettings () {
 	if (assistLoaded == true) {
 		//getAlly('close');
 		//shortcutSettings(true);
+	}
+
+	if (prepared === true) {
+		sessionStorage.setItem('settingsOpen', false);
 	}
 
 	saveSettings();

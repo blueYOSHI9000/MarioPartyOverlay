@@ -255,6 +255,7 @@
 			<div class="nvSettingsItem" onclick="textOutput(true);closeNavbar()"> Copy Text Output </div>
 			<div class="nvSettingsItem" onclick="openSettings();callOnBoth('showHideSettings', ['tutorial']);getElem('creditsBorder').scrollIntoView({block: 'start'});closeNavbar()"> Credits </div>
 			<div class="nvSettingsItem" onclick="openSettings();closeNavbar()" style="color: #dedede;"> Open Settings </div>
+			<div class="nvSettingsItem" onclick="closePopout();closeNavbar()" id="closePopoutButton" style="display: none;"> Close Popout </div>
 		</div>
 	</div>
 
@@ -598,9 +599,10 @@
 					<span class="settingsTitle"> Features </span> <br>
 					<label for="autoPopout"> <span> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="changeSettings(this.id)"> </label> <br>
 
-					<label for="settingsFullscreen"> <span> Always use fullscreen settings: </span> <input type="checkbox" id="settingsFullscreen" onchange="changeSettings(this.id)"> </label> <br>
-					<span id="settingsFullscreenPopoutReminder" style="display: none;"> <span class="note"> Popout is always fullscreen regardless of this. </span> <br> </span>
-					<span id="settingsFullscreenBlurReminder"> <span class="note"> Text is blurry in Chrome without this. There's nothing I can do about it as it's an issue in Chrome. </span> <br> </span> <br>
+					<span class="advanced"> <label for="settingsFullscreen"> <span> Always use fullscreen settings: </span> <input type="checkbox" id="settingsFullscreen" onchange="changeSettings(this.id)" checked> </label> <br>
+						<span id="settingsFullscreenBlurReminder"> <span class="note"> Text is blurry in Chrome without this. There's nothing I can do about it as it's an issue in Chrome. </span> <br> </span>
+						<span id="settingsFullscreenPopoutReminder" style="display: none;"> <span class="note"> Popout is always fullscreen regardless of this. </span> <br> </span>
+					</span> <br>
 
 					<span class="advanced"> <label for="useSW"> Allow this site to run offline: </label> <input type="checkbox" id="useSW" onchange="changeSettings(this.id)" checked> <br> <span class="note"> This allows the site to be installed which allows it to be run completely offline, uses about 5MB. <span id="noOffline" style="display: none;" class="error"> <br> This can't be used when ran from a local file or through localhost. </span> </span> <br> <br> </span>
 					<script type="text/javascript">

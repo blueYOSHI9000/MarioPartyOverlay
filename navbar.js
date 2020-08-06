@@ -100,6 +100,12 @@ function showNavBar (elem) {
 			if (shiftKeyVar === true)
 				return;
 
+			if (popoutActivated != false) {
+				getElem('closePopoutButton').style.display = 'block';
+			} else {
+				getElem('closePopoutButton').style.display = 'none';
+			}
+
 			if (activeNv != 'navbarSettings') {
 				activeNv = 'navbarSettings';
 				getElem('navbarSettings').style.height = getElem('navbarSettings').scrollHeight + 'px';

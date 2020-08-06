@@ -34,6 +34,14 @@ function saveAssist () {
 	localStorage.setItem(sel, JSON.stringify(slots[sel]));
 }
 
+
+function saveCurrentStats () {
+	if (cookiesOn != true || prepared != true) {
+		return;
+	}
+	localStorage.setItem('currentStats', JSON.stringify(currentStats));
+}
+
 /*
 * Backups all counters.
 */
@@ -79,7 +87,7 @@ function backup () {
 */
 function restore (forceRestore) {
 	var sel = 's' + slots.sel;
-	if (backuped == true || forceRestore == true) {
+	//if (backuped == true || forceRestore == true) { //the whole backuped variable is barely used so it's better to just not use it all until it's fixed
 		editInner('coinStarText', slots[sel].coinStar);
 		editValue('p1CoinStarTie', slots[sel].coinStarTie1);
 		editValue('p2CoinStarTie', slots[sel].coinStarTie2);
@@ -99,8 +107,11 @@ function restore (forceRestore) {
 		coinStarTie();
 		callHighlight();
 
+		currentStats = slots[sel];
+		saveCurrentStats();
+
 		saveReloadAnimation('reload');
-	}
+	//}
 }
 
 /*
@@ -365,6 +376,40 @@ function resetSettings (noLS) {
 	if (noLS != true && cookiesOn === true) {
 		localStorage.removeItem('settings');
 	}
+}
+
+var replaceOnly = [	'hideAdvanced', 'settingsFullscreen',
+					'autoPopout', 'enableHighlight','highlightColor', 'deactivateUnused', 'noTie', 'autoSave', 'useHotkeys', 'enableInteract', 'useSW',
+					'customGameIcons', 'xBelow100', 'greenscreen', 'bgColor', 'textColor', 'enableAnimation',
+					'toBonusOnly', 'toShowNum', 'toListAllCoin', 'toP1Name', 'toP2Name', 'toP3Name', 'toP4Name', 'toSeperation', 'toUseActive', 'toCounters', 'toOutput'/*,
+					'shortcutSimpleMode', 'shortcutAutoEnd'*/];
+/*
+* Loads settings from an object.
+*
+* @param {object/string} obj (Stringified) Object that incl. all settings.
+*/
+function loadSettings (obj) {
+	if (typeof obj === 'string')
+		obj = JSON.parse(obj);
+
+	for (var num = 0; num < replaceOnly.length; num++) {
+		editValue(replaceOnly[num], obj[replaceOnly[num]]);
+	}
+
+	editValue(obj.bonusStarAdd, true);
+	changeTheme(obj.theme);
+	editValue(obj.icons, true);
+	editValue(obj.layoutType, true);
+
+	hideAdvancedSettings();
+	settingsFullscreen();
+	displayXBelow100();
+	changeTextColor('textColor');
+	changeLayout();
+	changeCharacters();
+	updateCounterInput();
+	//callHighlight(false, true);
+	resetHighlights();
 }
 
 /*

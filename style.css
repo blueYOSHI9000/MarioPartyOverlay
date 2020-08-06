@@ -1,7 +1,6 @@
 @font-face {
 	font-family: "Mario";
-	src: url(font.otf) format("opentype"),
-		 url(font.ttf) format("truetype");
+	src: url(font.ttf) format("truetype");
 }
 
 
@@ -327,10 +326,10 @@ noscript > span {
 }
 
 .visibleAnimation {
-	animation: show .5s ease 0s 1 both;
+	animation: show .25s ease 0s 1 both;
 }
 .hiddenAnimation {
-	animation: hide .5s ease 0s 1 both;
+	animation: hide .25s ease 0s 1 both;
 }
 
 @keyframes error {
@@ -455,9 +454,9 @@ noscript > span {
 	padding: 5px;
 	box-sizing: border-box;
 
--webkit-transition: background-color .3s;
-   -moz-transition: background-color .3s;
-		transition: background-color .3s;
+-webkit-transition: background-color .2s;
+   -moz-transition: background-color .2s;
+		transition: background-color .2s;
 }
 #navbar > span img {
 	height: 60px;
@@ -470,7 +469,7 @@ noscript > span {
 	top: -23px;
 	pointer-events: none;
 	opacity: 0;
-	transition: opacity .5s;
+	transition: opacity .25s;
 }
 .nvSelected {
 	background-color: #09198e87; /* displayed as #4070b6(c2) with the original navbar color behind it */
