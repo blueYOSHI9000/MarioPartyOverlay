@@ -156,7 +156,7 @@
 
 			<div id="nvAssistMain">
 				<div id="nv_assistIntro">
-					<button onclick="updateAssistState()">Start</button>
+					<button onclick="nextAssistState()">Start</button>
 				</div>
 
 				<div id="nv_assistChooseOrder" class="displayNone">
@@ -188,8 +188,8 @@
 					</div>
 
 					<div id="nv_chooseContinue" class="visibilityTransition hidden">
-						<button onclick="updateAssistState()" style="margin-bottom: 10px;">Continue?</button> <br>
-						<button onclick="updateOrder();updateAssistState()">Update order & continue?</button> <br> <span class="note">This updates the player order with the order chosen here.</span>
+						<button onclick="nextAssistState()" style="margin-bottom: 10px;">Continue?</button> <br>
+						<button onclick="updateOrder();nextAssistState()">Update order & continue?</button> <br> <span class="note">This updates the player order with the order chosen here.</span>
 					</div>
 
 					<select id="nv_assistStageSelect" onchange="editValue('assistStageSelect', getValue(this.id))">
@@ -902,7 +902,7 @@
 				<div id="assistSettings" class="displayNone">
 
 					<div id="assistIntro">
-						<button onclick="updateAssistState()">Start</button>
+						<button onclick="nextAssistState()">Start</button>
 					</div>
 
 					<div id="assistChooseOrder" class="displayNone">
@@ -932,8 +932,8 @@
 							<img src="img/mk8Icons/peach.png">
 						</div>
 						<div id="chooseContinue" class="visibilityTransition hidden">
-							<button onclick="updateAssistState()" style="margin-bottom: 10px;">Continue?</button> <br>
-							<button onclick="updateOrder();updateAssistState()">Update order & continue?</button> <span class="note">This updates the player order with the order chosen here.</span>
+							<button onclick="nextAssistState()" style="margin-bottom: 10px;">Continue?</button> <br>
+							<button onclick="updateOrder();nextAssistState()">Update order & continue?</button> <span class="note">This updates the player order with the order chosen here.</span>
 						</div>
 
 						<select id="assistStageSelect">

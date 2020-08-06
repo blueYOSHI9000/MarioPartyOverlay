@@ -14,14 +14,14 @@ var assistInfo = {
 /*
 * Loads the next assist state. Calls loadAssistState().
 */
-function updateAssistState () {
+function nextAssistState () {
 	switch (assistInfo.state) {
 		case 'intro':
 			assistInfo.curGame = curGame; //temporary
 			loadAssistState('chooseOrder');
 			break;
 		case 'chooseOrder':
-			assistInfo.board = getValue('assistStageSelect');
+			assistInfo.board = getValue('assistStageSelect'); //todo: should probably also be moved
 			loadAssistState('turn');
 			break;
 		case 'turn':
@@ -30,10 +30,13 @@ function updateAssistState () {
 	}
 }
 
+// nextAssistState()/prevAssistState()/navbar onclick > loadAssistState(state, turn)
+// turn is finished in nextAssistState()/prevAssistState()
+
 /*
 * Loads the specified assist state.
 *
-* @param {string} state The state - view updateAssistState() for all available states.
+* @param {string} state The state - view nextAssistState() for all available states.
 */
 function loadAssistState (state) {
 	assistInfo.state = state;
@@ -175,9 +178,10 @@ function loadTurn () {
 */
 function loadTurn_Misc () {
 	var stars = assist_getStarList();
-	for (var num = 0; num < stars.length; num++) {
-		if (stars[num].buyMultiple === true) {
-			for (var num2 = 0; num2 < 2; num2++) {
+	for (var num = 0; num < stars.length; num++) { //loop through all stars that should be added
+
+		if (stars[num].buyMultiple === true) { //add the option to buy multiple at once if needed
+			for (var num2 = 0; num2 < 2; num2++) { //loop twice for settings and navbar versions
 				if (num2 === 0) {
 					var elemWrapper = cElem('span',    'assistMisc');
 				} else {

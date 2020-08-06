@@ -130,7 +130,7 @@ function assist_buyStar (starName, game, board) {
 
 	var starPrice = star.price;
 
-	var starPriceMultiplier = assist.starPriceMultiplier;
+	var starPriceMultiplier = assistInfo.starPriceMultiplier;
 	if (starPriceMultiplier < 1) {
 		starPriceMultiplier = 1;
 	}

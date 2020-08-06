@@ -1700,7 +1700,7 @@ noscript > span {
 	text-align: center;
 	pointer-events: none;
 	text-shadow: 1px 1px 2px #262626;
-	z-index: 98;
+	z-index: 97;
 	opacity: 0;
 	font-size: 25px;
 }
@@ -1943,6 +1943,7 @@ noscript > span {
 #navbarAssist {
 	width: 300px !important;
 	white-space: nowrap;
+	z-index: 98;
 }
 
 /* Titlebar */
@@ -2069,6 +2070,9 @@ noscript > span {
 }
 #nv_chooseWrapper > span {
 	position: relative;
+}
+#nv_assistChooseOrder {
+	white-space: normal;
 }
 #nv_assistChooseOrder img {
 	height: 65px;
