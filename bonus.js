@@ -7,7 +7,7 @@ function changeGame (game) {
 	getElem('noBonusError').style.visibility = 'hidden';
 
 	if (game != 'all') {
-		var hideGames = document.querySelectorAll('.bonusstarContainer');
+		var hideGames = document.querySelectorAll('.bonusStarContainer');
 		for (let num = 0; num < hideGames.length; num++) {
 			hideGames[num].style.display = 'none';
 		}
@@ -87,7 +87,7 @@ function changeGame (game) {
 			getElem('noBonusError').style.visibility = 'visible';
 			break;
 		default:
-			nodelist = document.querySelectorAll('.bonusstarContainer');
+			nodelist = document.querySelectorAll('.bonusStarContainer');
 			for (let num = 0; num < nodelist.length; num++) {
 				showGames.push(nodelist[num].id);
 			}
