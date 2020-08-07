@@ -57,7 +57,7 @@
 		<span id="nvAction" class="nvAction" onclick="showNavBar(this)"> <span class="relative"> <span id="nvActionText">Add</span> <span id="nvCtrlHeld">Ctrl</span> </span> <span id="nvActionIcon">+</span> </span>
 		<span id="nvAmount" class="nvAmount" onclick="showNavBar(this)"> <span class="relative"> <span id="nvShiftHeld">Shift</span> </span> <span id="nvAmountText">1</span> </span>
 
-		<span id="nvAssist" class="nvAssist" onclick="showNavBar(this)" style="display: none;"> <span>A</span> </span>
+		<span id="nvAssist" class="nvAssist" onclick="showNavBar(this)"> <span>A</span> </span>
 
 		<span id="nvSettings" class="nvSettings" onclick="showNavBar(this)"> <span class="relative"> <span id="nvSavedText">Save!</span> </span>
 			<svg id="nvSettingsImg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50" height="50" fill="#000000">
@@ -578,7 +578,7 @@
 			<div id="settingsHeaderBorder" class="border"></div>
 
 			<span id="assistHeader">
-				<button id="assistSettingsButton" onclick="//shortcutSettings()" style="float: left;" disabled="true">Settings</button>
+				<button id="assistSettingsButton" onclick="//shortcutSettings()" style="float: left;">Settings</button>
 				<button id="skipButton" onclick="//shortcutSkip()" style="float: right;" disabled="true">Skip</button>
 				<button id="backButton" onclick="//shortcutBack()" style="float: right; margin-right: 5px;" disabled="true">Back</button>
 				<div id="assistNotif">Start the game.</div>
@@ -904,8 +904,7 @@
 				<div id="assistSettings" class="displayNone">
 
 					<div id="assistIntro">
-						<!--button onclick="nextAssistState()">Start</button-->
-						<span>Assist mode is currently being rewritten as it was barely functional before.</span>
+						<button onclick="nextAssistState()">Start</button>
 					</div>
 
 					<div id="assistChooseOrder" class="displayNone">
