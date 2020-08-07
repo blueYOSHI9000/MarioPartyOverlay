@@ -201,7 +201,7 @@ noscript > span {
 }
 .characterDiv {
 	position: relative;
-	margin-bottom: 10px;
+	margin-bottom: 11px;
 	pointer-events: none;
 }
 .characterDiv div {

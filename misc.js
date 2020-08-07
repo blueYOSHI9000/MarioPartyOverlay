@@ -925,6 +925,11 @@ function changeLayout () {
 			elems[num].style.top = '-6px';
 		}
 
+		var elems = document.querySelectorAll('.player > div:nth-child(2)'); //fix star counter not being aligned correctly
+		for (var num = 0; num < elems.length; num++) {
+			elems[num].style.top = '7px';
+		}
+
 		var elems = document.querySelectorAll('.characterImg');
 		for (var num = 0; num < elems.length; num++) {
 			elems[num].style.marginRight = '0';
@@ -952,6 +957,11 @@ function changeLayout () {
 		var elems = document.querySelectorAll('.characterDiv');
 		for (var num = 0; num < elems.length; num++) {
 			elems[num].style.position = '';
+			elems[num].style.top = '';
+		}
+
+		var elems = document.querySelectorAll('.player > div:nth-child(2)');
+		for (var num = 0; num < elems.length; num++) {
 			elems[num].style.top = '';
 		}
 
