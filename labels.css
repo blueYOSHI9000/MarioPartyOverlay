@@ -30,7 +30,7 @@ label.newdesign {
 		transition: background-color .3s;
 }
 
-label.newdesign:hover {
+label.newdesign:hover, label:hover label.newdesign, label:hover ~ span > label.newdesign {
 	background-color: #6871f14a;
 }
 

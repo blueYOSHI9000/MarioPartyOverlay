@@ -19,13 +19,6 @@ A more extensive (and likely up-to-date) introduction can by found by clicking o
 
 Created by [blueYOSHI](https://www.twitter.com/yoshisrc) with contributions from [others](https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors)
 
-All Mario Party related icons were created or inspired from officially published media by Nintendo.  
-Mario Party related icons (re)created, edited or ripped by [Anonymous](https://www.spriters-resource.com/submitter/Anonymous/), [Arend](https://www.mariowiki.com/User:Arend), [blueYOSHI](https://www.twitter.com/yoshisrc), [CamTro](https://www.spriters-resource.com/submitter/xX-CamTro-Xx/), [FieryExplosion](https://www.spriters-resource.com/submitter/FieryExplosion/), [Kimimaru](https://www.spriters-resource.com/submitter/Kimimaru/), [larsenv](https://www.spriters-resource.com/submitter/larsenv/), [Mario Gamer](https://www.spriters-resource.com/submitter/Mario+Gamer/), [Mario Party Legacy](https://mariopartylegacy.com/), [Random Talking Bush](https://www.spriters-resource.com/submitter/Random+Talking+Bush/), [RicoDexter](https://twitter.com/Der_RicoDexter).  
-[Mario Party 9 Font](https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx) ([modified](https://github.com/blueYOSHI9000/MarioPartyOverlay/commits/master/font.ttf))  
-[Settings Icon by Icons8](https://icons8.com/icon/2969/settings)  
-[Button designs by Benjamin](https://codepen.io/ben_jammin/pen/syaCq) ([modified](https://github.com/blueYOSHI9000/MarioPartyOverlay/commits/master/buttons.css))  
-[Checkbox designs by Andreas Storm](https://codepen.io/andreasstorm/pen/dNqLBz) ([modified](https://github.com/blueYOSHI9000/MarioPartyOverlay/commits/master/labels.css))  
-[Sortable.js](https://github.com/SortableJS/Sortable) (enables savefile re-ordering)  
-[Interact.js](https://interactjs.io/) (enables drag 'n' drop)  
+Icons, libraries and other things are done by various people, visit the website to view the full list ([direct link to credits](https://blueyoshi9000.github.io/MarioPartyOverlay/?credits=1))
 
 Mario Party Overlay is licensed under the MIT License.

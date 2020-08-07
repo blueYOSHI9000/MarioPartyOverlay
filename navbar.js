@@ -8,20 +8,30 @@ function showNavBar (elem) {
 	if (elem.classList.contains('nvSelected')) {
 		elem.classList.remove('nvSelected');
 
-		closeNavbar();
+		if (elem.id === 'nvAssist') {
+			getElem('nvAssistPin').classList.remove('nvAssistTitlebarIcons_selected');
+		}
+
+		closeNavbar(true);
 
 		activeNv = null;
 		return;
 	}
 
-	if (activeNv != null && activeNv != undefined) {
+	//if (activeNv != null && activeNv != undefined) {
 		if (activeNv === 'navbarChars' && elem.classList[0] === 'nvChar') {} else {
-			closeNavbar();
+			closeNavbar(true);
+		}
+	//}
+
+	var elems = document.querySelectorAll('.nvSelected');
+	for (let num = 0; num < elems.length; num++) {
+		if (elems[num] != null) {
+			if (elems[num].id != 'nvAssist' || (elems[num].id === 'nvAssist' && getElem('nvAssistPin').classList.contains('nvAssistTitlebarIcons_selected') != true)) {
+				elems[num].classList.remove('nvSelected');
+			}
 		}
 	}
-
-	if (document.querySelector('.nvSelected') != null)
-		document.querySelector('.nvSelected').classList.remove('nvSelected');
 
 	getElem('navbarChars').classList.remove('nvContentLeftTransition');
 	if (elem.id != 'nvAction' && elem.id != 'nvAmount' && elem.id != 'nvCounters')
@@ -66,6 +76,15 @@ function showNavBar (elem) {
 			}
 			updateAmount();
 			break;
+		case 'nvAssist':
+			if (activeNv != 'navbarAssist') {
+				activeNv = 'navbarAssist';
+				getElem('navbarAssist').style.height = getElem('navbarAssist').scrollHeight + 'px';
+			}
+			getElem('navbarAssist').style.left = elem.getBoundingClientRect().left + 'px';
+
+			var nvElem = getElem('navbarAssist');
+			break;
 		case 'nvSettings':
 			if (shiftKeyVar === true) {
 				elem.classList.remove('nvSelected');
@@ -80,6 +99,12 @@ function showNavBar (elem) {
 			}
 			if (shiftKeyVar === true)
 				return;
+
+			if (popoutActivated != false) {
+				getElem('closePopoutButton').style.display = 'block';
+			} else {
+				getElem('closePopoutButton').style.display = 'none';
+			}
 
 			if (activeNv != 'navbarSettings') {
 				activeNv = 'navbarSettings';
@@ -120,6 +145,7 @@ function showNavBar (elem) {
 			nvElem.style.height = nvElem.children[0].offsetHeight + 'px';
 		}
 	}
+	setTimeout(function () {nvElem.style.height = 'auto';}, 500);
 }
 
 /*
@@ -175,24 +201,62 @@ function updateAmount () {
 
 /*
 * Closes the currently opened navbar dropdown.
+*
+* @param {boolean} force Runs the function regardless if theres an active navbar or not.
 */
-function closeNavbar () {
-	if (activeNv === null)
+function closeNavbar (force) {
+	if (activeNv === null && force != true)
 		return;
+
+	var assistPin = getElem('nvAssistPin').classList.contains('nvAssistTitlebarIcons_selected'); //if true assist navbar is pinned
+
+	//set height so it's not 'auto' anymore to use transitions
+	getElem('navbarChars').style.height = getElem('navbarChars').children[0].offsetHeight + 'px';
+	getElem('navbarGames').style.height = getElem('navbarGames').children[0].offsetHeight + 'px';
+	getElem('navbarAssist').style.height = getElem('navbarAssist').children[0].offsetHeight + 'px';
+	getElem('navbarSettings').style.height = getElem('navbarSettings').children[0].offsetHeight + 'px';
+
+	//browsers are really weird and settings navbar wont close with a transition if this isn't here
+	window.getComputedStyle(getElem('navbarSettings')).getPropertyValue('height');
 
 	getElem('navbarChars').style.height = 0;
 	getElem('navbarGames').style.height = 0;
 	getElem('navbarSettings').style.height = 0;
+
 	getElem('navbarChars').style.width = '';
 	getElem('navbarChars').children[0].style.width = '';
 	getElem('navbarGames').style.width = '';
 	getElem('navbarSettings').style.width = '';
 
+	//dont close assist if pinned
+	if (assistPin != true) {
+		getElem('navbarAssist').style.height = 0;
+		getElem('navbarAssist').style.width = '';
+	}
+
 	getElem('nvSettingsConfirm').style.display = 'none';
 	getElem('nvSettingsReset').style.display = 'block';
 
-	if (document.querySelector('.nvSelected') != null)
-		document.querySelector('.nvSelected').classList.remove('nvSelected');
+	var elems = document.querySelectorAll('.nvSelected');
+	for (let num = 0; num < elems.length; num++) {
+		if (elems[num] != null) {
+			if (elems[num].id != 'nvAssist' || (elems[num].id === 'nvAssist' && getElem('nvAssistPin').classList.contains('nvAssistTitlebarIcons_selected') != true)) {
+				elems[num].classList.remove('nvSelected');
+			}
+		}
+	}
+
+	//reset drag n drop position
+	if (assistPin != true) {
+		setTimeout(function () {
+			var elems = document.querySelectorAll('.navbarDraggable');
+			for (let num = 0; num < elems.length; num++) {
+				elems[num].removeAttribute('data-x');
+				elems[num].removeAttribute('data-y');
+				elems[num].style.transform = 'unset';
+			}
+		}, 350);
+	}
 
 	//savePlayers(); //not needed anymore, everything auto-saves now
 
@@ -239,8 +303,9 @@ function updateNvGame () {
 */
 function showNvChar (elem) {
 	var elems = document.querySelectorAll('.nvCharSelected');
-	for (let num = 0; num < elems.length; num++)
+	for (let num = 0; num < elems.length; num++) {
 		elems[num].classList.remove('nvCharSelected');
+	}
 
 	getElem('nvCharPlayer1').style.display = 'none';
 	getElem('nvCharPlayer2').style.display = 'none';
@@ -280,6 +345,7 @@ function updateNvChar () { //actually use this now
 
 	getElem('nvComImg').src = 'img/' + curGame + '/com.png';
 
+	//this is replicating the in-game character selections
 	switch (curGame) {
 		case 'mp1':
 		case 'mp2':
@@ -316,15 +382,15 @@ function updateNvChar () { //actually use this now
 		case 'mp5':
 			addNvChar('mario');
 			addNvChar('luigi');
-			addNvChar('yoshi');
 			addNvChar('peach');
-			cElem('br', 'nvCharList');
-			var brElem = cElem('span', 'nvCharList'); //to move the bottom row to the center
-			brElem.style.display = 'inline-block';
-			brElem.style.width = '39.5px';
+			addNvChar('yoshi');
 			addNvChar('wario');
+			cElem('br', 'nvCharList');
 			addNvChar('daisy');
 			addNvChar('waluigi');
+			addNvChar('toad');
+			addNvChar('boo');
+			addNvChar('koopakid');
 			break;
 		case 'mp6':
 			addNvChar('mario');
@@ -332,7 +398,7 @@ function updateNvChar () { //actually use this now
 			addNvChar('peach');
 			addNvChar('yoshi');
 			cElem('br', 'nvCharList');
-			var brElem = cElem('span', 'nvCharList'); //to move the bottom row to the center
+			var brElem = cElem('span', 'nvCharList'); //to move this row to the center
 			brElem.style.display = 'inline-block';
 			brElem.style.width = '39.5px';
 			addNvChar('wario');
@@ -383,12 +449,14 @@ function updateNvChar () { //actually use this now
 			addNvChar('peach');
 			addNvChar('daisy');
 			addNvChar('wario');
-			cElem('br', 'nvCharList');
 			addNvChar('waluigi');
+			cElem('br', 'nvCharList');
 			addNvChar('yoshi');
 			addNvChar('birdo');
 			addNvChar('toad');
 			addNvChar('koopa');
+			addNvChar('shyguy');
+			addNvChar('kamek');
 			break;
 		case 'mp10':
 			addNvChar('mario');
@@ -617,7 +685,7 @@ function nvRando (player) {
 	}
 	if (typeof player === 'undefined')
 		player = parseInt(getElem('navbarChars').getAttribute('player'));
-	
+
 	//fills pastResults with the current characters position from charList[curGame] and then draws a random character from that same list
 	pastResults = [charList[curGame].indexOf(characters[1]), charList[curGame].indexOf(characters[2]), charList[curGame].indexOf(characters[3]), charList[curGame].indexOf(characters[4])];
 	var character = charList[curGame][randomCharFor(charList[curGame].length)];
@@ -647,4 +715,13 @@ function nvChangeGame (game) {
 
 	callOnBoth('changeGame', [game]);
 	closeNavbar();
+}
+
+/*
+* Toggles the .nvAssistTitlebarIcons_selected class of an element.
+*
+* @param {DOM Element} elem The element.
+*/
+function nvAssistPin (elem) {
+	elem.classList.toggle('nvAssistTitlebarIcons_selected');
 }

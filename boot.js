@@ -143,7 +143,7 @@ function loadHTML () {
 
 		var arr = [];
 
-		arr.push('<div class="draggable characterDiv"> <div onclick="coinStarTie(' + num + ', true)"> <img src="img/com.png" class="comImg" id="p' + num + 'ComDisplay" onerror="comImgError()"> <img src="img/mpsrIcons/' + charList.all[num] + '.png" class="characterImg" id="p' + num + 'Img" onerror="changeCharactersBackup(this)"> </div> </div>');
+		arr.push('<div class="draggable characterDiv"> <div onclick="coinStarTie(' + num + ', true)"> <img src="img/com.png" class="comImg" id="p' + num + 'ComDisplay" onerror="comImgError(this)"> <img src="img/mpsrIcons/' + charList.all[num] + '.png" class="characterImg" id="p' + num + 'Img" onerror="changeCharacterIconError(this)"> </div> </div>');
 		arr.push('<div style="position: relative;"> <div class="draggable stars starsBonus"> <span class="starsHitbox" onclick="mobileButtons(\'stars\', ' + num + ')"></span> <img class="counterDisplay" src="img/stars.png" id="p' + num + 'StarsDisplay" onerror="changeStarsError(this)"> <span class="counterText counterBelow100" id="p' + num + 'StarsBonusText">0</span> </div> <div class="draggable stars" style="position: static; visibility: hidden;"> <img class="counterDisplay" src="img/stars.png"> <span class="counterText counterBelow100" id="p' + num + 'StarsText">0</span> </div> </div>');
 
 		for (let num2 = 1; num2 < counters.length; num2++) {
@@ -206,9 +206,10 @@ function loadHTML () {
 	}
 }
 
+// default settings
 var defSettings = {
 	hideAdvanced: true,
-	settingsFullscreen: false,
+	settingsFullscreen: true,
 
 	autoPopout: false,
 	enableHighlight: true,
@@ -243,46 +244,12 @@ var defSettings = {
 	toCounters: 'Turns, Happening, Minigame, Red Space, Coin Star',
 	toOutput: 'Turns, ?, MG, Red, Coin Star',
 
-	shortcutSimpleMode: false,
-	shortcutAutoEnd: false,
-}
-
-var replaceOnly = [	'hideAdvanced', 'settingsFullscreen',
-					'autoPopout', 'enableHighlight','highlightColor', 'deactivateUnused', 'noTie', 'autoSave', 'useHotkeys', 'enableInteract', 'useSW',
-					'customGameIcons', 'xBelow100', 'greenscreen', 'bgColor', 'textColor', 'enableAnimation',
-					'toBonusOnly', 'toShowNum', 'toListAllCoin', 'toP1Name', 'toP2Name', 'toP3Name', 'toP4Name', 'toSeperation', 'toUseActive', 'toCounters', 'toOutput',
-					'shortcutSimpleMode', 'shortcutAutoEnd'];
-/*
-* Loads settings from an object.
-*
-* @param {object/string} obj (Stringified) Object that incl. all settings.
-*/
-function loadSettings (obj) {
-	if (typeof obj === 'string')
-		obj = JSON.parse(obj);
-
-	for (var num = 0; num < replaceOnly.length; num++) {
-		editValue(replaceOnly[num], obj[replaceOnly[num]]);
-	}
-
-	editValue(obj.bonusStarAdd, true);
-	changeTheme(obj.theme);
-	editValue(obj.icons, true);
-	editValue(obj.layoutType, true);
-
-	hideAdvancedSettings();
-	settingsFullscreen();
-	displayXBelow100();
-	changeTextColor('textColor');
-	changeLayout();
-	changeCharacters();
-	updateCounterInput();
-	callHighlight(false, true);
-	resetHighlights();
+	//shortcutSimpleMode: false,
+	//shortcutAutoEnd: false,
 }
 
 /*
-* Prepares all settings that were saved in local storage when the site gets loaded.
+* Prepares all settings that were saved in local storage when the site gets loaded. Should be rewritten, good luck trying to find anything in here for now.
 */
 var prepared = false; //if prepareMPO() could be finished (no errors)
 var cookiesOn = false; //if cookies are on
@@ -291,6 +258,7 @@ var popout = false; //if this is a settings popout
 function prepareMPO () {
 	loadHTML();
 
+	//check if site is launched in popout mode
 	if (getUrl('p') == 1) {
 		mpoMain = window.opener;
 		popout = true;
@@ -308,20 +276,29 @@ function prepareMPO () {
 
 		getElem('savefileCookieError').style.display = 'none';
 
+		//clear parameters
+		window.history.replaceState(null, null, window.location.pathname + '?p=1');
+
 		sendMessage('syncPopout');
 		localStorage.getItem('enableHighlight'); //If cookies are blocked, this will break the function immediately
 		cookiesOn = true;
 		prepared = true;
+
 		return;
 	}
+
+	localStorage.getItem('settings'); //If cookies are blocked, this will break the function immediately
+	cookiesOn = true;
+
+	//parse the 'ls' part of a string, it would include a savefile in it though it's currently unused due to the string being too long
+	//add a reminder in case cookies arent active since this wouldn't show up at all
 	var str = getUrl('ls');
 	if (str != false) {
 		window.history.replaceState({}, document.title, "/" + location.host + location.pathname);
 		parseFile(atob(str));
 	}
 
-	localStorage.getItem('settings'); //If cookies are blocked, this will break the function immediately
-	cookiesOn = true;
+	//load settings
 	if (localStorage.getItem('settings') != null) {
 		loadSettings(JSON.parse(localStorage.getItem('settings')));
 	} else {
@@ -329,8 +306,9 @@ function prepareMPO () {
 	}
 	editValue('slotLoad', true);
 
+	//removes outdated savefile parts (like MP9's Dice Block star which got replaced by the normal Item star)
 	var num2 = parseInt(localStorage.getItem('sMax'));
-	if (isNaN(num2) === true) {
+	if (isNaN(num2) === true) { //failsafe in case there aren't any savefiles
 		num2 = 0;
 	}
 	num2++;
@@ -339,24 +317,17 @@ function prepareMPO () {
 			break;
 
 		var lsSlot = JSON.parse(localStorage.getItem('s' + num));
-		lsSlot.almost = [0, 0, 0, 0];
-		lsSlot.loner = [0, 0, 0, 0];
-		lsSlot.duel = [0, 0, 0, 0];
-		lsSlot.wanderer = [0, 0, 0, 0];
 		delete lsSlot.specialDice;
 		localStorage.setItem('s' + num, JSON.stringify(lsSlot));
 		var lsSlot = JSON.parse(localStorage.getItem('c' + num));
-		lsSlot.almostOnOff = false;
-		lsSlot.lonerOnOff = false;
-		lsSlot.duelOnOff = false;
-		lsSlot.wandererOnOff = false;
 		delete lsSlot.specialDiceOnOff;
 		localStorage.setItem('c' + num, JSON.stringify(lsSlot));
 	}
 
+	//loads savefiles
 	if (localStorage.getItem('sMax') != null) {
 		var num2 = parseInt(localStorage.getItem('sMax'));
-		if (isNaN(num2) === true) {
+		if (isNaN(num2) === true) { //failsafe in case there aren't any savefiles
 			num2 = 0;
 		}
 		num2++;
@@ -391,7 +362,31 @@ function prepareMPO () {
 		}
 	}
 
-	openSettings(true); // Scrollintoview doesn't work when the element is hidden so we have to show it first and then hide it again
+	//load currentStats
+	if (localStorage.getItem('currentStats') != null) {
+		currentStats = JSON.parse(localStorage.getItem('currentStats'));
+
+		editInner('curTurnText', currentStats.curTurn);
+		editInner('maxTurnText', currentStats.maxTurn);
+
+		editInner('coinStarText', currentStats.coinStar);
+		editValue('p1CoinStarTie', currentStats.coinStarTie1);
+		editValue('p2CoinStarTie', currentStats.coinStarTie2);
+		editValue('p3CoinStarTie', currentStats.coinStarTie3);
+		editValue('p4CoinStarTie', currentStats.coinStarTie4);
+
+		var num = 0;
+		for (let num2 = 0; num2 < 4; num2++) {
+			num++;
+			for (let num3 = 0; num3 < counters.length; num3++) {
+				editInner('p' + num + countersUp[num3] + 'Text', currentStats[counters[num3]][num2]);
+			}
+		}
+	} else {
+		currentStats = slots['s' + slots.sel];
+	}
+
+	openSettings(true); //scrollIntoView doesn't work when the element is hidden so we have to show it first and then hide it again
 	showHideSettings('player');
 	for (var num = 1; num < 5; num++) {
 		getElem(characters[num] + num).scrollIntoView({block: 'center'});
@@ -399,13 +394,14 @@ function prepareMPO () {
 	showHideSettings('generalMPO');
 	closeSettings();
 
+	//rules are added here as otherwise the transition would play each time the site is reloaded - timeout is needed as otherwise the rules already apply
 	setTimeout(function  () {var sheet = window.document.styleSheets[0];
 		sheet.insertRule('#settings {-webkit-transition: visibility .3s, opacity .3s; -moz-transition: visibility .3s, opacity .3s; transition: visibility .3s, opacity .3s;}', sheet.cssRules.length);
 	}, 50);
-	//rules are added here as otherwise the transition would play each time the site is reloaded - timeout is needed as otherwise the rules already apply
 
 	getElem('savefileCookieError').style.display = 'none';
 
+	//load the drag'n'drop positions
 	if (localStorage.getItem('datax') != null) {
 		var arrX = localStorage.getItem('datax').split(',');
 		var arrY = localStorage.getItem('datay').split(',');
@@ -424,6 +420,7 @@ function prepareMPO () {
 		localStorage.setItem('new', '1');
 	}
 
+	//disabled drag'n'drop in case Interact.js couldn't be loaded
 	if (noInteract === true) {
 		editValue('enableInteract', false);
 		getElem('enableInteract').setAttribute('disabled', true);
@@ -431,6 +428,27 @@ function prepareMPO () {
 		getElem('resetInteract').setAttribute('disabled', true);
 		getElem('noInteractError').style.display = 'unset';
 	}
+
+	if (getUrl('credits') == 1) { //should probably be a function
+		openSettings();
+		callOnBoth('showHideSettings', ['tutorial']);
+		getElem('creditsBorder').scrollIntoView({block: 'start'});
+		closeNavbar();
+	}
+
+	//load session storage stuff
+	if (sessionStorage.getItem('settingsOpen') === 'true') {
+		openSettings();
+	}
+	if (sessionStorage.getItem('settingsTab') != null) {
+		showHideSettings(sessionStorage.getItem('settingsTab'));
+	}
+	/*if (sessionStorage.getItem('popoutActivated') === 'true') {
+		mpoSettingsPopout();
+	}*/ //cant do popups because browsers would block this immediately - only popups from buttonpresses are allowed
+
+	//clear parameters
+	window.history.replaceState(null, null, window.location.pathname);
 
 	runSW();
 	coinStarTie();
@@ -443,6 +461,8 @@ function prepareMPO () {
 	updateNavbar(3);
 	updateNavbar(4);
 
+	resetHighlights();
+
 	localStorage.setItem('lsVer', 10); //localStorage version, used to check how everything is stored
 
 	prepared = true;
@@ -450,7 +470,7 @@ function prepareMPO () {
 }
 
 /*
-* In case prepareMPO() crashes, this will run instead and prepares MPO safely.
+* In case prepareMPO() crashes, this will run instead and prepares MPO safely without using cookies/accessing localStorage.
 */
 function prepareMPOBackup () {
 	if (prepared != true) {
@@ -473,6 +493,16 @@ function prepareMPOBackup () {
 		if (popout != true) {
 			callDisplayOnOff();
 		}
+
+		if (getUrl('credits') == 1) { //should probably be a function
+			openSettings();
+			callOnBoth('showHideSettings', ['tutorial']);
+			getElem('creditsBorder').scrollIntoView({block: 'start'});
+			closeNavbar();
+		}
+
+		//clear parameters
+		window.history.replaceState(null, null, window.location.pathname + '?p=1');
 	}
 	startup = false;
 }

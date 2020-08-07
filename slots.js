@@ -77,6 +77,8 @@ slots.s0 = copyVar(defS);
 slots.c0 = copyVar(defC);
 slots.a0 = copyVar(defA);
 
+var currentStats = copyVar(defS);
+
 /*
 * Copies variables without a reference.
 *
@@ -179,6 +181,9 @@ function loadSlot (slot) {
 		}
 	}
 
+	currentStats = slots[sel];
+	saveCurrentStats();
+
 	var sel = 'c' + slot;
 
 	changeCharacters(1, slots[sel].char1);
@@ -223,8 +228,8 @@ function loadSlot (slot) {
 	callDisplayOnOff();
 	//backup();
 
-	if (shortcutLoaded === true) {
-		loadAssistSlot();
+	if (assistLoaded === true) {
+		//loadAssistSlot();
 	}
 
 	if (cookiesOn === false)

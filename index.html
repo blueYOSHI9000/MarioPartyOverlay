@@ -50,10 +50,15 @@
 		<span id="nvChar2" class="nvChar" onclick="showNavBar(this)"> <span style="position: absolute;"> <img src="img/p2.png" class="nvCharPlayerDisplay"> </span> <img src="img/mpsrIcons/luigi.png" onerror="imgError(this)"> <img src="img/com.png" id="nvCom2" class="nvCom" onerror="comImgError(this)"> </span>
 		<span id="nvChar3" class="nvChar" onclick="showNavBar(this)"> <span style="position: absolute;"> <img src="img/p3.png" class="nvCharPlayerDisplay"> </span> <img src="img/mpsrIcons/yoshi.png" onerror="imgError(this)"> <img src="img/com.png" id="nvCom3" class="nvCom" onerror="comImgError(this)"> </span>
 		<span id="nvChar4" class="nvChar" onclick="showNavBar(this)"> <span style="position: absolute;"> <img src="img/p4.png" class="nvCharPlayerDisplay"> </span> <img src="img/mpsrIcons/peach.png" onerror="imgError(this)"> <img src="img/com.png" id="nvCom4" class="nvCom" onerror="comImgError(this)"> </span>
+
 		<span id="nvGame" class="nvGames" onclick="showNavBar(this)"> <span id="nvGameImg"></span> <span id="nvGameAll">All</span> </span>
 		<span id="nvCounters" class="nvCounters" onclick="showNavBar(this)"> <img src="img/counters.png"></span>
+
 		<span id="nvAction" class="nvAction" onclick="showNavBar(this)"> <span class="relative"> <span id="nvActionText">Add</span> <span id="nvCtrlHeld">Ctrl</span> </span> <span id="nvActionIcon">+</span> </span>
 		<span id="nvAmount" class="nvAmount" onclick="showNavBar(this)"> <span class="relative"> <span id="nvShiftHeld">Shift</span> </span> <span id="nvAmountText">1</span> </span>
+
+		<span id="nvAssist" class="nvAssist" onclick="showNavBar(this)" style="display: none;"> <span>A</span> </span>
+
 		<span id="nvSettings" class="nvSettings" onclick="showNavBar(this)"> <span class="relative"> <span id="nvSavedText">Save!</span> </span>
 			<svg id="nvSettingsImg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50" height="50" fill="#000000">
 				<path id="nvSettingsImgPath" d="M47.16,21.221l-5.91-0.966c-0.346-1.186-0.819-2.326-1.411-3.405l3.45-4.917c0.279-0.397,0.231-0.938-0.112-1.282 l-3.889-3.887c-0.347-0.346-0.893-0.391-1.291-0.104l-4.843,3.481c-1.089-0.602-2.239-1.08-3.432-1.427l-1.031-5.886 C28.607,2.35,28.192,2,27.706,2h-5.5c-0.49,0-0.908,0.355-0.987,0.839l-0.956,5.854c-1.2,0.345-2.352,0.818-3.437,1.412l-4.83-3.45 c-0.399-0.285-0.942-0.239-1.289,0.106L6.82,10.648c-0.343,0.343-0.391,0.883-0.112,1.28l3.399,4.863 c-0.605,1.095-1.087,2.254-1.438,3.46l-5.831,0.971c-0.482,0.08-0.836,0.498-0.836,0.986v5.5c0,0.485,0.348,0.9,0.825,0.985 l5.831,1.034c0.349,1.203,0.831,2.362,1.438,3.46l-3.441,4.813c-0.284,0.397-0.239,0.942,0.106,1.289l3.888,3.891 c0.343,0.343,0.884,0.391,1.281,0.112l4.87-3.411c1.093,0.601,2.248,1.078,3.445,1.424l0.976,5.861C21.3,47.647,21.717,48,22.206,48 h5.5c0.485,0,0.9-0.348,0.984-0.825l1.045-5.89c1.199-0.353,2.348-0.833,3.43-1.435l4.905,3.441 c0.398,0.281,0.938,0.232,1.282-0.111l3.888-3.891c0.346-0.347,0.391-0.894,0.104-1.292l-3.498-4.857 c0.593-1.08,1.064-2.222,1.407-3.408l5.918-1.039c0.479-0.084,0.827-0.5,0.827-0.985v-5.5C47.999,21.718,47.644,21.3,47.16,21.221z M25,32c-3.866,0-7-3.134-7-7c0-3.866,3.134-7,7-7s7,3.134,7,7C32,28.866,28.866,32,25,32z" stroke="black"/>
@@ -111,6 +116,131 @@
 		</div>
 	</div>
 
+	<div id="navbarAssist" class="navbarContent navbarDraggable">
+		<div>
+			<div id="nvAssistTitlebar">
+				<span id="nvAssistTitlebarIcons">
+					<span class="nvAssistTitlebarIconsButtons" onclick="getElem('nvAssistPin').classList.remove('nvAssistTitlebarIcons_selected');closeNavbar();openSettings();callOnBoth('showHideSettings', ['assist'])"> <svg id="nvSettingsImg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50" height="50" fill="#000000">
+						<path id="nvSettingsImgPath" d="M47.16,21.221l-5.91-0.966c-0.346-1.186-0.819-2.326-1.411-3.405l3.45-4.917c0.279-0.397,0.231-0.938-0.112-1.282 l-3.889-3.887c-0.347-0.346-0.893-0.391-1.291-0.104l-4.843,3.481c-1.089-0.602-2.239-1.08-3.432-1.427l-1.031-5.886 C28.607,2.35,28.192,2,27.706,2h-5.5c-0.49,0-0.908,0.355-0.987,0.839l-0.956,5.854c-1.2,0.345-2.352,0.818-3.437,1.412l-4.83-3.45 c-0.399-0.285-0.942-0.239-1.289,0.106L6.82,10.648c-0.343,0.343-0.391,0.883-0.112,1.28l3.399,4.863 c-0.605,1.095-1.087,2.254-1.438,3.46l-5.831,0.971c-0.482,0.08-0.836,0.498-0.836,0.986v5.5c0,0.485,0.348,0.9,0.825,0.985 l5.831,1.034c0.349,1.203,0.831,2.362,1.438,3.46l-3.441,4.813c-0.284,0.397-0.239,0.942,0.106,1.289l3.888,3.891 c0.343,0.343,0.884,0.391,1.281,0.112l4.87-3.411c1.093,0.601,2.248,1.078,3.445,1.424l0.976,5.861C21.3,47.647,21.717,48,22.206,48 h5.5c0.485,0,0.9-0.348,0.984-0.825l1.045-5.89c1.199-0.353,2.348-0.833,3.43-1.435l4.905,3.441 c0.398,0.281,0.938,0.232,1.282-0.111l3.888-3.891c0.346-0.347,0.391-0.894,0.104-1.292l-3.498-4.857 c0.593-1.08,1.064-2.222,1.407-3.408l5.918-1.039c0.479-0.084,0.827-0.5,0.827-0.985v-5.5C47.999,21.718,47.644,21.3,47.16,21.221z M25,32c-3.866,0-7-3.134-7-7c0-3.866,3.134-7,7-7s7,3.134,7,7C32,28.866,28.866,32,25,32z" stroke="black"/>
+					</svg> </span>
+					<span class="nvAssistHandle" style="left: 3px; cursor: move;"> <img src="img/drag.png"> </span>
+					<span id="nvAssistPin" class="nvAssistTitlebarIconsButtons" onclick="nvAssistPin(this)"> <img src="img/pin.png"> </span>
+				</span>
+			</div>
+
+			<div id="nvAssistStateIndicator">
+				<div>
+					<img src="img/arrow.png">
+
+					<img src="img/smp/mario.png" class="chooseImg">
+					<img src="img/smp/luigi.png" class="chooseImg">
+					<img src="img/smp/yoshi.png" class="chooseImg chooseImgNoOpacity">
+					<img src="img/smp/peach.png" class="chooseImg">
+
+					<img src="img/minigame.png" class="chooseImg">
+
+					<img src="img/arrow.png">
+				</div>
+			</div>
+
+			<div id="nvAssistTurnIndicator">
+				<div>
+					<img src="img/stars.png" class="chooseImg chooseImgNoOpacity">
+					<img src="img/assist/mpds/diceblock.png" class="chooseImg">
+					<img src="img/shopping.png" class="chooseImg">
+					<img src="img/item.png" class="chooseImg">
+					<img src="img/assist/mpds/bluespace.png" class="chooseImg">
+					<img src="img/hex.png" class="chooseImg">
+				</div>
+			</div>
+
+			<div id="nvAssistMain">
+				<div id="nv_assistIntro">
+					<button onclick="nextAssistState()">Start</button>
+				</div>
+
+				<div id="nv_assistChooseOrder" class="displayNone">
+					<span class="settingsTitle">Choose Order</span> <br>
+
+					<img src="img/mk8Icons/mario.png" class="chooseImg" id="nv_assistChooseP1" onclick="chooseOrder(1)">
+					<img src="img/mk8Icons/luigi.png" class="chooseImg" id="nv_assistChooseP2" onclick="chooseOrder(2)">
+					<img src="img/mk8Icons/yoshi.png" class="chooseImg" id="nv_assistChooseP3" onclick="chooseOrder(3)">
+					<img src="img/mk8Icons/peach.png" class="chooseImg" id="nv_assistChooseP4" onclick="chooseOrder(4)"> <br>
+
+					<button onclick="resetChooseOrder()">Reset Order</button> <br>
+
+					<div id="nv_chooseWrapper">
+						<span id="nv_choose1" class="visibilityTransition hidden">
+							<img src="img/mk8Icons/mario.png">
+						</span>
+						<span id="nv_choose2" class="visibilityTransition hidden">
+							<img src="img/mk8Icons/luigi.png">
+							<img src="img/arrow.png">
+						</span>
+						<span id="nv_choose3" class="visibilityTransition hidden">
+							<img src="img/mk8Icons/yoshi.png">
+							<img src="img/arrow.png">
+						</span>
+						<span id="nv_choose4" class="visibilityTransition hidden">
+							<img src="img/mk8Icons/peach.png">
+							<img src="img/arrow.png">
+						</span>
+					</div>
+
+					<div id="nv_chooseContinue" class="visibilityTransition hidden">
+						<button onclick="nextAssistState()" style="margin-bottom: 10px;">Continue?</button> <br>
+						<button onclick="updateOrder();nextAssistState()">Update order & continue?</button> <br> <span class="note">This updates the player order with the order chosen here.</span>
+					</div>
+
+					<select id="nv_assistStageSelect" onchange="editValue('assistStageSelect', getValue(this.id))">
+					</select>
+				</div>
+
+				<div id="nv_assistTurn" class="displayNone">
+					<!--div id="nv_assistPlayerList">
+						<span class="currentPlayer">
+							<span></span>
+							<img src="img/mk8Icons/mario.png" class="assistCurrentPlayerImg">
+							<span class="assistCurrentPlayerTextWrapper">
+								<span class="assistCurrentPlayerText">Mario</span>
+							</span>
+						</span>
+						<span>
+							<span style="width: 0px;"></span>
+							<img src="img/mk8Icons/luigi.png" class="assistCurrentPlayerImg">
+							<span class="assistCurrentPlayerTextWrapper" style="width: 0px;">
+								<span class="assistCurrentPlayerText">Luigi</span>
+							</span>
+						</span>
+						<span>
+							<span style="width: 0px;"></span>
+							<img src="img/mk8Icons/yoshi.png" class="assistCurrentPlayerImg">
+							<span class="assistCurrentPlayerTextWrapper" style="width: 0px;">
+								<span class="assistCurrentPlayerText">Yoshi</span>
+							</span>
+						</span>
+						<span>
+							<span style="width: 0px;"></span>
+							<img src="img/mk8Icons/peach.png" class="assistCurrentPlayerImg">
+							<span class="assistCurrentPlayerTextWrapper" style="width: 0px;">
+								<span class="assistCurrentPlayerText">Peach</span>
+							</span>
+						</span>
+					</div-->
+
+					<!-- Yes, every single element is somehow required because CSS is really, really weird sometimes -->
+
+					<div id="nv_assistMisc"></div>
+					<div id="nv_assistDice"></div>
+					<div id="nv_assistShopping"></div>
+					<div id="nv_assistItems"></div>
+					<div id="nv_assistSpaces"></div>
+					<div id="nv_assistHex"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div id="navbarSettings" class="navbarContent">
 		<div>
 			<div class="nvSettingsSave">
@@ -125,6 +255,7 @@
 			<div class="nvSettingsItem" onclick="textOutput(true);closeNavbar()"> Copy Text Output </div>
 			<div class="nvSettingsItem" onclick="openSettings();callOnBoth('showHideSettings', ['tutorial']);getElem('creditsBorder').scrollIntoView({block: 'start'});closeNavbar()"> Credits </div>
 			<div class="nvSettingsItem" onclick="openSettings();closeNavbar()" style="color: #dedede;"> Open Settings </div>
+			<div class="nvSettingsItem" onclick="closePopout();closeNavbar()" id="closePopoutButton" style="display: none;"> Close Popout </div>
 		</div>
 	</div>
 
@@ -210,7 +341,7 @@
 		</div>
 	</span>
 
-	<div id="shortcutSettingsPopup" class="popupContent">
+	<div id="shortcutSettingsPopup" class="popupContent" style="display: none;">
 		<span style="float: right; margin-right: 10px;"> <button onclick="shortcutSettings(true)">Close</button> </span>
 
 		<span class="settingsTitle"> Options </span> <br>
@@ -245,16 +376,16 @@
 			<span>Player order:</span> <br>
 			<span id="shortcutOrder"></span> <br> <br>
 
-			<button onclick="showHideDiv(['shortcutDebug']); if (this.innerText === 'Show Debug Info') {this.innerText = 'Hide Debug Info'} else {this.innerText = 'Show Debug Info'}">Show Debug Info</button>
-			<span id="shortcutDebug" class="hidden" style="font-size: 15px;"></span>
+			<!--button onclick="showHideDiv(['shortcutDebug']); if (this.innerText === 'Show Debug Info') {this.innerText = 'Hide Debug Info'} else {this.innerText = 'Show Debug Info'}">Show Debug Info</button>
+			<span id="shortcutDebug" class="hidden" style="font-size: 15px;"></span-->
 		</span>
 	</div>
 
-	<div id="allySelection" class="popupContent imgSelection">
+	<div id="allySelection" class="popupContent imgSelection" style="display: none;">
 		<div style="text-align: center;"> <button style="position: absolute; bottom: 8px;" onclick="getAlly('close')">Close</button> </div>
 		<div>
 			<span style="float: left; padding-right: 10px; border-right: 2px solid black; margin-right: 10px; margin-bottom: 20px;">
-				<span style="position: relative;"> <span class="shortcutText" style="position: absolute; white-space: nowrap; top: -50px;"> Choose an ally </span> </span> <img src="img/smp/bobomb.png" id="bobombAlly" style="margin-left: 287px;" onclick="getAlly('bobomb')"> <br>
+				<span style="position: relative;"> <span class="titleText" style="position: absolute; white-space: nowrap; top: -50px;"> Choose an ally </span> </span> <img src="img/smp/bobomb.png" id="bobombAlly" style="margin-left: 287px;" onclick="getAlly('bobomb')"> <br>
 				<span style="position: relative;"> <span class="note" style="position: absolute; white-space: nowrap; top: -75px; left: 2px;"> Click on a used ally to steal them </span> </span>
 				<img src="img/smp/mario.png" id="marioAlly" onclick="getAlly('mario')">
 				<img src="img/smp/luigi.png" id="luigiAlly" onclick="getAlly('luigi')">
@@ -278,7 +409,7 @@
 				<img src="img/smp/pompom.png" id="pompomAlly" onclick="getAlly('pompom')">
 			</span>
 			<span style="float: right;">
-				<span class="shortcutText"> Remove an Ally </span> <br>
+				<span class="titleText"> Remove an Ally </span> <br>
 				<span id="removeAllySelection">
 					<img src="img/smp/mario.png" style="visibility: hidden;" onclick="removeAlly(1, 1)">
 					<img src="img/smp/luigi.png" style="visibility: hidden;" onclick="removeAlly(1, 2)">
@@ -314,7 +445,7 @@
 	</div>
 
 	<!-- Settings -->
-	<div id="settings" style="z-index: 99;">
+	<div id="settings">
 		<div class="popupContent settingsPopup" id="settingsContent">
 			<div id="settingsHeader">
 				<span id="settingsSelectionSpan">
@@ -323,7 +454,7 @@
 					<b id="playerSelector" class="settingsSelection settingsSelectionImportant" onclick="showHideSettings('player')">Characters</b> <span class="flexAuto"></span>
 					<b id="counterSelector" class="settingsSelection settingsSelectionImportant" onclick="showHideSettings('counter')">Counters</b> <span class="flexAuto"></span>
 					<b id="slotsSelector" class="settingsSelection nowrap" onclick="showHideSettings('slots')">Savefiles</b> <span class="flexAuto"></span>
-					<b id="shortcutSelector" class="settingsSelection nowrap" onclick="showHideSettings('shortcut')">Assist</b> <span class="flexAuto"></span>
+					<b id="assistSelector" class="settingsSelection nowrap" onclick="showHideSettings('assist')">Assist</b> <span class="flexAuto"></span>
 					<b id="tutorialSelector" class="settingsSelection" onclick="showHideSettings('tutorial')">Credits</b>
 				</span>
 
@@ -335,7 +466,7 @@
 					</span>
 					<span style="display: flex;">
 						<b id="slotsSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('slots')">Savefiles</b> <span class="flexAuto"></span>
-						<b id="shortcutSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('shortcut')">Assist</b> <span class="flexAuto"></span>
+						<b id="assistSelectorBreak" class="settingsSelection nowrap" onclick="showHideSettings('assist')">Assist</b> <span class="flexAuto"></span>
 						<b id="tutorialSelectorBreak" class="settingsSelection" onclick="showHideSettings('tutorial')">Credits</b>
 					</span>
 				</span>
@@ -446,14 +577,13 @@
 			</div>
 			<div id="settingsHeaderBorder" class="border"></div>
 
-			<span id="shortcutHeader">
-				<button id="shortcutSettingsButton" onclick="shortcutSettings()" style="float: left;">Settings</button>
-				<button onclick="saveAssist();" id="saveButton" style="float: left; margin-left: 5px;"> Save </button>
-				<button id="skipButton" onclick="shortcutSkip()" style="float: right;" disabled="true">Skip</button>
-				<button id="backButton" onclick="shortcutBack()" style="float: right; margin-right: 5px;" disabled="true">Back</button>
-				<div id="shortcutNotif">Start the game.</div>
+			<span id="assistHeader">
+				<button id="assistSettingsButton" onclick="//shortcutSettings()" style="float: left;" disabled="true">Settings</button>
+				<button id="skipButton" onclick="//shortcutSkip()" style="float: right;" disabled="true">Skip</button>
+				<button id="backButton" onclick="//shortcutBack()" style="float: right; margin-right: 5px;" disabled="true">Back</button>
+				<div id="assistNotif">Start the game.</div>
 			</span>
-			<div id="shortcutHeaderBorder" class="border" style="display: none;"></div>
+			<div id="assistHeaderBorder" class="border" style="display: none;"></div>
 			<div id="settingsMain">
 
 				<!-- General Settings -->
@@ -469,9 +599,10 @@
 					<span class="settingsTitle"> Features </span> <br>
 					<label for="autoPopout"> <span> Automatically open settings in a new window: </span> <input type="checkbox" id="autoPopout" onchange="changeSettings(this.id)"> </label> <br>
 
-					<label for="settingsFullscreen"> <span> Always use fullscreen settings: </span> <input type="checkbox" id="settingsFullscreen" onchange="changeSettings(this.id)"> </label> <br>
-					<span id="settingsFullscreenPopoutReminder" style="display: none;"> <span class="note"> Popout is always fullscreen regardless of this. </span> <br> </span>
-					<span id="settingsFullscreenBlurReminder"> <span class="note"> Text is blurry in Chrome without this. There's nothing I can do about it as it's an issue in Chrome. </span> <br> </span> <br>
+					<span class="advanced"> <label for="settingsFullscreen"> <span> Always use fullscreen settings: </span> <input type="checkbox" id="settingsFullscreen" onchange="changeSettings(this.id)" checked> </label> <br>
+						<span id="settingsFullscreenBlurReminder"> <span class="note"> Text is blurry in Chrome without this. There's nothing I can do about it as it's an issue in Chrome. </span> <br> </span>
+						<span id="settingsFullscreenPopoutReminder" style="display: none;"> <span class="note"> Popout is always fullscreen regardless of this. </span> <br> </span>
+					</span> <br>
 
 					<span class="advanced"> <label for="useSW"> Allow this site to run offline: </label> <input type="checkbox" id="useSW" onchange="changeSettings(this.id)" checked> <br> <span class="note"> This allows the site to be installed which allows it to be run completely offline, uses about 5MB. <span id="noOffline" style="display: none;" class="error"> <br> This can't be used when ran from a local file or through localhost. </span> </span> <br> <br> </span>
 					<script type="text/javascript">
@@ -601,7 +732,7 @@
 
 
 				<!-- Mario Party Player Settings -->
-				<div id="playerSettings" class="hidden" style="height: 100%;">
+				<div id="playerSettings" class="displayNone" style="height: 100%;">
 					<span id="playerSettingsWrapper">
 
 						<span class="charSelectorFullWrapper">
@@ -659,7 +790,7 @@
 				</div>
 
 				<!-- Counter Settings -->
-				<div id="counterSettings" class="charSelector hidden">
+				<div id="counterSettings" class="charSelector displayNone">
 					<span id="counterError" class="error" style="display: none;">The selected game doesn't have bonus stars.</span> <br>
 
 					<div class="counterSelection">
@@ -734,7 +865,7 @@
 				</div>
 
 				<!-- Savefile/slot Settings -->
-				<div id="slotsSettings" class="hidden">
+				<div id="slotsSettings" class="displayNone">
 					<span>Savefiles get saved automatically when loading one. <br> Backups store everything, including all savefiles and settings.</span> <br>
 					<span class="error" id="savefileError" style="display: none;"> Note that MPO might start to lag a bit when there are a lot of savefiles. <br> </span>
 					<span class="error" id="savefileCookieError"> Make sure cookies are enabled, otherwise savefiles won't be able to save. <br> </span>
@@ -769,103 +900,175 @@
 					<input type="file" id="uploadFile" name="uploadFile" style="display: none;" onchange="uploadFile()" accept="application/json">
 				</div>
 
-				<!-- Shortcuts/Assist -->
-				<div id="shortcutSettings" class="hidden">
-					<span id="shortcutSpan">
-						<span style="width: 100%; white-space: normal; line-height: 30px;">
-							<span style="font-family: 'Mario'; font-size: 17px;"> Assist mode is as broken as it gets! </span> <br>
-							<span>Seriously, don't try it. Everything just breaks. I'll rewrite it once I'm not lazy, until then it's probably better to avoid this as much as possible. <br> I'll just leave this here in case someone <i>really</i> wants to try it out <span class="note">(why?)</span>. </span> <br> <br> <br>
+				<!-- Assist -->
+				<div id="assistSettings" class="displayNone">
 
-							<span style="font-family: 'Mario'; font-size: 17px;"> Games currently supported: </span> <span style="position: relative; top: 4px;"> <img src="img/mpds.png" style="height: 28px;"> <img src="img/smp.png" style="height: 28px;"> </span> <br>
-							Only 4 players are currently supported. Teams or Partner Party are not supported yet. <br> <br>
+					<div id="assistIntro">
+						<!--button onclick="nextAssistState()">Start</button-->
+						<span>Assist mode is currently being rewritten as it was barely functional before.</span>
+					</div>
 
-							A lot of features depend on the coin counter, it's recommended to show it and keep it up to date. <br>
-							This is currently in heavy development and some features might not work as intended. <br> <br>
-							<span onclick="prepareShortcut(0)" class="assistButton">Start game</span> <br> <br>
-							<!--button onclick="prepareShortcut(1)" style="margin: 20px 25px 0px 15px;">Start over</button> <button onclick="prepareShortcut(2)">Quick start</button> <br-->
+					<div id="assistChooseOrder" class="displayNone">
+						<span class="settingsTitle">Choose Order</span> <br>
 
+						<img src="img/mk8Icons/mario.png" class="chooseImg" id="assistChooseP1" onclick="chooseOrder(1)">
+						<img src="img/mk8Icons/luigi.png" class="chooseImg" id="assistChooseP2" onclick="chooseOrder(2)">
+						<img src="img/mk8Icons/yoshi.png" class="chooseImg" id="assistChooseP3" onclick="chooseOrder(3)">
+						<img src="img/mk8Icons/peach.png" class="chooseImg" id="assistChooseP4" onclick="chooseOrder(4)"> <br>
 
-							<span class="settingsTitle"> What's Assist mode? </span> <br>
-							Assist mode is an optional feature which makes tracking all bonus stars a lot easier. Only select the numbers gotten, items used, space landed on etc and it automatically calculates the result and adds it to the counters. <br> It is recommended to use Settings Popout (bottom left) for this. <br> <span class="note">When switching from popout back to normal settings it might not display the correct state, just load the save from inside the assist settings (top left) when that happens.</span> <br> <br>
+						<button onclick="resetChooseOrder()">Reset Order</button>
 
+						<div id="choose1" class="visibilityTransition hidden">
+							<img src="img/1st.png">
+							<img src="img/mk8Icons/mario.png">
+						</div>
+						<div id="choose2" class="visibilityTransition hidden">
+							<img src="img/2nd.png">
+							<img src="img/mk8Icons/luigi.png">
+						</div>
+						<div id="choose3" class="visibilityTransition hidden">
+							<img src="img/3rd.png">
+							<img src="img/mk8Icons/yoshi.png">
+						</div>
+						<div id="choose4" class="visibilityTransition hidden">
+							<img src="img/4th.png">
+							<img src="img/mk8Icons/peach.png">
+						</div>
+						<div id="chooseContinue" class="visibilityTransition hidden">
+							<button onclick="nextAssistState()" style="margin-bottom: 10px;">Continue?</button> <br>
+							<button onclick="updateOrder();nextAssistState()">Update order & continue?</button> <span class="note">This updates the player order with the order chosen here.</span>
+						</div>
 
-							<span class="settingsTitle"> Report Bugs </span> <br>
-							In case something breaks or doesn't provide the expected output, please click on "Generate & Copy" and <a href="https://www.twitter.com/yoshisrc">contact me</a> or <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/issues/new?template=bug_report.md">open a Github issue</a> with a screenshot or copy-paste of your browsers console (Ctrl + Shift + I > "Console"). It shows the last actions done and potential errors. Thank you! <br> <br>
+						<select id="assistStageSelect">
+						</select>
+					</div>
 
-							<span class="settingsTitle"> Potential broken features </span> <br>
-							Mario Party is hugely RNG based so some events are rare and as such hard to figure out how they work. <br>
-							Be sure to check your coin count after some of these as it might not be correct anymore:
-							<ul>
-								<li>SMP tied Minigame rewards</li>
-								<li>Battle Minigames (especially ties)</li>
-								<li>Lucky/ Extra- Bad Luck Events (some might even be missing)</li>
-								<li>VS space in SMP</li>
-								<li>MPDS Duel space</li>
-							</ul>
-						</span>
-					</span>
-
-					<span id="shortcutTurn" style="display: none;">
-						<span class="shortcutText"> Current Player: </span> <span class="shortcutText" id="turnPlayerName"> Mario </span> <span style="position: relative;"> <img src="img/mpsrIcons/mario.png" style="position: absolute; top: -20px; margin-left: 3px;" id="turnPlayerIcon"> <span id="statusEffectsContainer"> <span id="statusEffects"></span> </span> </span> <br> <br>
-
-						<span id="starColumn" class="column">
-							<span id="turnStars" class="settingsTitle"> Stars </span> <br>
-							<span id="turnStarsSelection" class="imgSelection">
+					<div id="assistTurn" class="displayNone">
+						<div id="assistPlayerList">
+							<span class="currentPlayer">
+								<span></span>
+								<img src="img/mk8Icons/mario.png" class="assistCurrentPlayerImg">
+								<span class="assistCurrentPlayerTextWrapper">
+									<span class="assistCurrentPlayerText">Mario</span>
+								</span>
 							</span>
-						</span>
-						<br class="turnBreak">
-						<span class="column">
-							<span id="turnDiceTitle" class="settingsTitle"> Dice number rolled </span> <br>
-							<span id="turnDiceSelectionSpan">
+							<span>
+								<span style="width: 0px;"></span>
+								<img src="img/mk8Icons/luigi.png" class="assistCurrentPlayerImg">
+								<span class="assistCurrentPlayerTextWrapper" style="width: 0px;">
+									<span class="assistCurrentPlayerText">Luigi</span>
+								</span>
 							</span>
-						</span> <br>
-
-						<span id="shoppingColumn" class="column">
-							<span id="turnShoppingTitle" class="settingsTitle"> Shopping </span> <br>
-							<span id="turnShoppingSelection">
+							<span>
+								<span style="width: 0px;"></span>
+								<img src="img/mk8Icons/yoshi.png" class="assistCurrentPlayerImg">
+								<span class="assistCurrentPlayerTextWrapper" style="width: 0px;">
+									<span class="assistCurrentPlayerText">Yoshi</span>
+								</span>
 							</span>
-						</span>
-						<br class="turnBreak">
-						<span class="column" style="margin-bottom: 3px;">
-							<span id="turnItemsTitle" class="settingsTitle"> Items used </span> <br>
-							<span id="turnItems" class="imgSelection spanSelection"> </span> <br>
-							<img src="img/tie.png" id="itemImg"> <span style="position: relative;"><span id="itemEventSpan" style="position: absolute;"></span></span> <br> <br>
-						</span> <br>
-
-						<span class="column">
-							<span id="turnSpacesTitle" class="settingsTitle"> Space landed on </span> <br>
-							<span id="turnSpaces" class="imgSelection"> </span> <br>
-							<img src="" id="spaceEventImg"> <span id="spaceEventsSpan"></span>
-						</span>
-						<br class="turnBreak">
-						<span id="hexColumn" class="column">
-							<span id="turnHexTitle" class="settingsTitle"> Hex landed on </span> <br>
-							<span id="turnHexSelection" class="imgSelection">
-							</span> <br>
-							<span id="turnHexCharSelection" class="imgSelection">
+							<span>
+								<span style="width: 0px;"></span>
+								<img src="img/mk8Icons/peach.png" class="assistCurrentPlayerImg">
+								<span class="assistCurrentPlayerTextWrapper" style="width: 0px;">
+									<span class="assistCurrentPlayerText">Peach</span>
+								</span>
 							</span>
-						</span>
-					</span>
+						</div>
 
-					<!-- Battle -->
-					<span id="shortcutBattle" style="display: none;">
-						<span class="settingsTitle"> Battle Minigame </span> <br> <br>
-						<span id="battleStart"> Start Battle Minigame for <input type="number" id="battleCoins" min="10" max="60" value="10"> coins <br>
-						<button id="battleStartButton" onclick="startBattle()">Start Battle</button> </span> <span id="battleTextCoins"></span> <br> <span id="battleText"></span>
-						<span id="battlePlayers" style="display: none;">
-							<img src="img/1st.png" class="battleImg" onclick="calcBattle(1)">
-							<img src="img/2nd.png" class="battleImg" onclick="calcBattle(2)">
-							<img src="img/3rd.png" class="battleImg" onclick="calcBattle(3)">
-							<img src="img/4th.png" class="battleImg" onclick="calcBattle(4)">
-						</span>
-						<button id="battleReset" style="display: none;" onclick="calcBattle('undo')">Reset</button> <br>
-						<span id="battleResult"></span>
-					</span>
+						<div id="assistColumnWrapper">
+							<!-- Yes, every single element is somehow required because CSS is really, really weird sometimes -->
+
+							<div class="assistModule">
+								<div customHidden="false">
+									<div class="assistDraggable">
+										<span id="assistMiscTitle">Stars</span>
+										<span class="assistDragIcon"></span>
+										<span class="assistArrowIcon" onclick="toggleModuleVisibility(this)"></span>
+									</div>
+
+									<div class="assistModuleWrapper">
+										<span id="assistMisc"></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="assistModule">
+								<div customHidden="false">
+									<div class="assistDraggable">
+										<span id="assistDiceTitle">Dice number rolled</span>
+										<span class="assistDragIcon"></span>
+										<span class="assistArrowIcon" onclick="toggleModuleVisibility(this)"></span>
+									</div>
+
+									<div class="assistModuleWrapper">
+										<span id="assistDice"></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="assistModule">
+								<div customHidden="false">
+									<div class="assistDraggable">
+										<span id="assistShoppingTitle">Shopping</span>
+										<span class="assistDragIcon"></span>
+										<span class="assistArrowIcon" onclick="toggleModuleVisibility(this)"></span>
+									</div>
+
+									<div class="assistModuleWrapper">
+										<span id="assistShopping"></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="assistModule">
+								<div customHidden="false">
+									<div class="assistDraggable">
+										<span id="assistItemsTitle">Items used</span>
+										<span class="assistDragIcon"></span>
+										<span class="assistArrowIcon" onclick="toggleModuleVisibility(this)"></span>
+									</div>
+
+									<div class="assistModuleWrapper">
+										<span id="assistItems"></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="assistModule">
+								<div customHidden="false">
+									<div class="assistDraggable">
+										<span id="assistSpacesTitle">Space landed on</span>
+										<span class="assistDragIcon"></span>
+										<span class="assistArrowIcon" onclick="toggleModuleVisibility(this)"></span>
+									</div>
+
+									<div class="assistModuleWrapper">
+										<span id="assistSpaces"></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="assistModule">
+								<div customHidden="false">
+									<div class="assistDraggable">
+										<span id="assistHexTitle">Hex landed on</span>
+										<span class="assistDragIcon"></span>
+										<span class="assistArrowIcon" onclick="toggleModuleVisibility(this)"></span>
+									</div>
+
+									<div class="assistModuleWrapper">
+										<span id="assistHex"></span>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
 				</div>
 
 				<!-- Credits/Tutorial -->
 
-				<div id="tutorialSettings" class="hidden"> <span style="line-height: 27px;">
+				<div id="tutorialSettings" class="displayNone"> <span style="line-height: 27px;">
 					<a onclick="getElem('creditsBorder').scrollIntoView({behavior: 'smooth', block: 'start'})">Credits & Contact can be found at the bottom.</a> <br> <br>
 					Welcome to Mario Party Overlay (MPO)! MPO helps track all kinds of stats and bonus stars from the entire Mario Party series, supporting every game in it! <br> This quick tutorial should tell you how everything works with some tips that might come in handy! <br> <br>
 					You can access this dialog at any point by clicking on the gear at the top and then selecting "Credits". The navigation bar can only be used once this dialog is closed. <br> <br>
@@ -882,7 +1085,7 @@
 					Alternatively, you can also select the characters and counters you want in the <a onclick="showHideSettings('player')">Characters</a> and <a onclick="showHideSettings('counter')">Counters</a> tab in here. <br>
 					In <a onclick="showHideSettings('slots')">Savefiles</a> you can use various savefiles to track multiple games at the same time or backup everything locally as a file. <br> <br>
 
-					<a onclick="showHideSettings('shortcut')">Assist</a> mode makes tracking a lot easier as you only have to select the numbers rolled, items used, space landed on etc; MPO then automatically adds everything to the counters accordingly. <i>Note that Assist mode is still in Beta.</i>
+					<a onclick="showHideSettings('assist')">Assist</a> mode makes tracking a lot easier as you only have to select the numbers rolled, items used, space landed on etc; MPO then automatically adds everything to the counters accordingly. <i>Note that Assist mode is still in Beta.</i>
 
 					<span style="display: none;"> <br> <br> <b>Tip: </b> <span id="tutorialHints"></span> </span>
 				</span>
@@ -905,9 +1108,11 @@
 
 					<a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx">Mario Party 9 Font</a> from <a href="www.freepremiumfonts.com">www.freepremiumfonts.com</a> (<a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/commits/master/font.ttf">modified</a>) <br>
 
-					<a href="https://icons8.com/icon/2969/settings">Settings Icon by Icons8</a> from <a href="https://icons8.com/">icons8.com</a> <br>
+					<a href="https://icons8.com/icon/2969/settings">Settings Icon</a> from <a href="https://icons8.com/">icons8.com</a> <br>
 
-					<a href="https://icons8.com/icon/98069/drag">Drag Icon by Icons8</a> from <a href="https://icons8.com">icons8.com</a> <br>
+					<a href="https://icons8.com/icon/98069/drag">Drag Icon</a> from <a href="https://icons8.com">icons8.com</a> <br>
+
+					<a href="https://icons8.com/icon/102392/pin">Pin Icon</a> from <a href="https://icons8.com">icons8.com</a> <br>
 
 					<a href="https://www.flaticon.com/free-icon/next_709586">Arrow Icon by Kiranshastry</a> from <a href="https://www.flaticon.com/">www.flaticon.com</a> <br>
 
@@ -941,6 +1146,11 @@
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/interact.js/1.2.6/interact.min.js"></script>
 	<script src="sortable.min.js"></script>
+
+	<script src="assist-data.js"></script>
+	<script src="assist-load_data.js"></script>
+	<script src="assist-core.js"></script>
+	<script src="assist.js"></script>
 
 	<script src="helpers.js"></script>
 	<script src="boot.js"></script>
