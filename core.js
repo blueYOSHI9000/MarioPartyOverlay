@@ -30,7 +30,7 @@ function getStat (counter, player, returnElem) {
 * Updates the counters.
 *
 * @param {number} player Which player should be updated.
-* @param {string} action What should be done.
+* @param {string} action What should be done - can be 'P' for addition, 'M' for subtraction or 'S' to replace the existing count.
 * @param {string} amount The amount that should be changed.
 * @param {string} counter Which counter should be updated.
 */
@@ -48,9 +48,17 @@ function counterButtons (player, action, amount, counter) {
 		getStat(counter, player, true).innerHTML = 0;
 
 		console.warn('[MPO] Counter was NaN, player: ' + player + ', counter: ' + counter);
-		if (shortcutLoaded === true) {
-			shortcutNotif('Error: ' + counter + ' for player ' + player + ' was NaN', true);
+		if (assistLoaded === true) {
+			assistNotif('Error: ' + counter + ' for player ' + player + ' was NaN', true);
 		}
+	}
+
+	//return if there's no change to avoid unnecessary animation
+	if (action != 'S' && amount === 0) {
+		return;
+	}
+	if (action === 'S' && amount === getStat(counter, player)) {
+		return;
 	}
 
 	if (counter != 'curTurn' && counter != 'maxTurn' && counter != 'coinStar') { //regular counters only
@@ -58,11 +66,11 @@ function counterButtons (player, action, amount, counter) {
 
 		result = getStat(counter, player);
 
-		if (action === 'P') {
+		if (action === 'P') {        //plus
 			result += amount;
-		} else if (action === 'M') {
+		} else if (action === 'M') { //minus
 			result -= amount;
-		} else if (action === 'S') {
+		} else if (action === 'S') { //set
 			result = amount;
 		}
 
@@ -77,6 +85,9 @@ function counterButtons (player, action, amount, counter) {
 		} else {
 			getStat(counter, player, true).classList.remove('counterBelow100');
 		}
+
+		currentStats[capStr(counter, true)][player - 1] = result;
+		saveCurrentStats();
 
 		updateCounter('p' + player + counter + 'Text', result);
 	}
@@ -358,6 +369,10 @@ function turns (counter, amount, action) {
 		}, 190);
 	}
 
+	currentStats.curTurn = curTurnVar;
+	currentStats.maxTurn = maxTurnVar;
+	saveCurrentStats();
+
 	//console.log('Current:' + curTurnVar + ' Max:' + maxTurnVar)
 	editInner('curTurnText', curTurnVar);
 	editInner('maxTurnText', maxTurnVar);
@@ -367,15 +382,18 @@ function turns (counter, amount, action) {
 * Updates the coin star display.
 * Gets fired from displayChange() which gets fired after updating the coin star. Checks if the number is 0 or more, after that it updates the display.
 *
-* @param {number} coinStarVar The new Coin Star value.
+* @param {number} result The new Coin Star value.
 */
-function coinStar (coinStarVar) {
-	if (coinStarVar >= 999) {
+function coinStar (result) {
+	currentStats.coinStar = result;
+	saveCurrentStats();
+
+	if (result >= 999) {
 		updateCounter('coinStarText', 999);
-	} else if (coinStarVar <= 0) {
+	} else if (result <= 0) {
 		updateCounter('coinStarText', 0);
 	} else {
-		updateCounter('coinStarText', coinStarVar);
+		updateCounter('coinStarText', result);
 	}
 }
 
@@ -488,5 +506,12 @@ function coinStarTie (player, direct) {
 		getElem('coinStarTie3').src = 'img/' + icons + '/' + tied[2] + '.png';
 		getElem('coinStarTie4').src = 'img/' + icons + '/' + tied[3] + '.png';
 	}
+
+	currentStats.coinStarTie1 = getValue('p1CoinStarTie');
+	currentStats.coinStarTie2 = getValue('p2CoinStarTie');
+	currentStats.coinStarTie3 = getValue('p3CoinStarTie');
+	currentStats.coinStarTie4 = getValue('p4CoinStarTie');
+	saveCurrentStats();
+
 	updateStars();
 }

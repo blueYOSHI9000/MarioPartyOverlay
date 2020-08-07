@@ -5,7 +5,7 @@ var backuped = false;
 */
 function saveAssist () {
 	var sel = 'a' + slots.sel;
-	if (shortcutLoaded === false) {
+	if (assistLoaded === false) {
 		return;
 	} else if (slots[sel].assistOn != true) {
 		slots[sel] = copyVar(defA);
@@ -32,6 +32,14 @@ function saveAssist () {
 	if (cookiesOn === false)
 		return;
 	localStorage.setItem(sel, JSON.stringify(slots[sel]));
+}
+
+
+function saveCurrentStats () {
+	if (cookiesOn != true || prepared != true) {
+		return;
+	}
+	localStorage.setItem('currentStats', JSON.stringify(currentStats));
 }
 
 /*
@@ -79,7 +87,7 @@ function backup () {
 */
 function restore (forceRestore) {
 	var sel = 's' + slots.sel;
-	if (backuped == true || forceRestore == true) {
+	//if (backuped == true || forceRestore == true) { //the whole backuped variable is barely used so it's better to just not use it all until it's fixed
 		editInner('coinStarText', slots[sel].coinStar);
 		editValue('p1CoinStarTie', slots[sel].coinStarTie1);
 		editValue('p2CoinStarTie', slots[sel].coinStarTie2);
@@ -99,8 +107,11 @@ function restore (forceRestore) {
 		coinStarTie();
 		callHighlight();
 
+		currentStats = slots[sel];
+		saveCurrentStats();
+
 		saveReloadAnimation('reload');
-	}
+	//}
 }
 
 /*
@@ -110,7 +121,7 @@ function resetBackup () {
 	if (popout === false && popoutActivated === true) {
 		sendMessage('resetBackup');
 	}
-	if (popout === true && shortcutLoaded != true) {
+	if (popout === true && assistLoaded != true) {
 		return;
 	}
 	if (curGame === 'smp') {
@@ -367,11 +378,47 @@ function resetSettings (noLS) {
 	}
 }
 
+var replaceOnly = [	'hideAdvanced', 'settingsFullscreen',
+					'autoPopout', 'enableHighlight','highlightColor', 'deactivateUnused', 'noTie', 'autoSave', 'useHotkeys', 'enableInteract', 'useSW',
+					'customGameIcons', 'xBelow100', 'greenscreen', 'bgColor', 'textColor', 'enableAnimation',
+					'toBonusOnly', 'toShowNum', 'toListAllCoin', 'toP1Name', 'toP2Name', 'toP3Name', 'toP4Name', 'toSeperation', 'toUseActive', 'toCounters', 'toOutput'/*,
+					'shortcutSimpleMode', 'shortcutAutoEnd'*/];
+/*
+* Loads settings from an object.
+*
+* @param {object/string} obj (Stringified) Object that incl. all settings.
+*/
+function loadSettings (obj) {
+	if (typeof obj === 'string')
+		obj = JSON.parse(obj);
+
+	for (var num = 0; num < replaceOnly.length; num++) {
+		editValue(replaceOnly[num], obj[replaceOnly[num]]);
+	}
+
+	editValue(obj.bonusStarAdd, true);
+	changeTheme(obj.theme);
+	editValue(obj.icons, true);
+	editValue(obj.layoutType, true);
+
+	hideAdvancedSettings();
+	settingsFullscreen();
+	displayXBelow100();
+	changeTextColor('textColor');
+	changeLayout();
+	changeCharacters();
+	updateCounterInput();
+	//callHighlight(false, true);
+	resetHighlights();
+}
+
 /*
 * Gets called on the main site when a popout is opened. Sends all the required info to properly sync it.
 */
 function syncPopout () {
 	if (popout == false && popoutActivated == true) {
+		sendMessage('loadSettings+' + JSON.stringify(saveSettings(true)));
+
 		sendMessage('setSlots+' + JSON.stringify(slots));
 
 		sendMessage('changeTheme+' + curTheme);
@@ -380,8 +427,6 @@ function syncPopout () {
 		sendMessage('changeCharacters+' + 2 + '+' + characters[2]);
 		sendMessage('changeCharacters+' + 3 + '+' + characters[3]);
 		sendMessage('changeCharacters+' + 4 + '+' + characters[4]);
-
-		sendMessage('loadSettings+' + saveSettings(true));
 
 		sendMessage('changeCom+' + 1);
 		sendMessage('changeCom+' + 2);

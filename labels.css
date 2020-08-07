@@ -24,6 +24,14 @@ label.newdesign {
 	vertical-align: middle;
 	transition: background 0.1s ease;
 	cursor: pointer;
+
+-webkit-transition: background-color .3s;
+   -moz-transition: background-color .3s;
+		transition: background-color .3s;
+}
+
+label.newdesign:hover, label:hover label.newdesign, label:hover ~ span > label.newdesign {
+	background-color: #6871f14a;
 }
 
 label.newdesign:after {

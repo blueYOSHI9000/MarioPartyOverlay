@@ -16,11 +16,14 @@ function capStr (str, reverse) {
 /*
 * Gets the InnerHTML of an element
 *
-* @param {string} id The ID of the element that should be changed.
+* @param {string/DOM Element} elem The ID or node of the element that should be changed.
 */
-function getInner (id) {
+function getInner (elem) {
 	try {
-		return getElem(id).innerHTML;
+		if (typeof elem === 'string') {
+			elem = getElem(elem);
+		}
+		return elem.innerHTML;
 	} catch (e) {
 		console.error(e);
 		console.error('[MPO] getInner() error, could not find: ' + id);
@@ -29,13 +32,16 @@ function getInner (id) {
 /*
 * Edits the InnerHTML of an element.
 *
-* @param {string} id The ID of the element that should be changed.
+* @param {string/DOM Element} elem The ID or node of the element that should be changed.
 * @param {string/boolean} value The text that it should be changed to
 */
-function editInner (id, value) {
+function editInner (elem, value) {
 	//console.log('id: ' + id + ', value: ' + value);
 	try {
-		getElem(id).innerHTML = value;
+		if (typeof elem === 'string') {
+			elem = getElem(elem);
+		}
+		elem.innerHTML = value;
 	} catch (e) {
 		console.error(e);
 		console.error('[MPO] editInner() error, could not find: ' + id);
@@ -46,26 +52,30 @@ function editInner (id, value) {
 /*
 * Edits the value of an input element. If element is a checkbox and no value is given it changes it to the opposite instead.
 *
-* @param {string} id The ID of the element that should be changed.
+* @param {string/DOM Element} elem The ID or node of the element that should be changed.
 * @param {string/boolean} value The value that it should be changed to
 */
-function editValue (id, value) {
+function editValue (elem, value) {
 	//console.log('id: ' + id + ', value: ' + value);
 	try {
-		if (getElem(id).type == 'checkbox' || getElem(id).type == 'radio') {
+		if (typeof elem === 'string') {
+			elem = getElem(elem);
+		}
+
+		if (elem.type == 'checkbox' || elem.type == 'radio') {
 			if (typeof value === 'undefined') {
-				if (getValue(id) === false){
-					getElem(id).checked = true;
+				if (getValue(elem) === false){
+					elem.checked = true;
 				} else {
-					getElem(id).checked = false;
+					elem.checked = false;
 				}
 			} else {
 				if (typeof value === 'string')
 					value = stringToBoolean(value);
-				getElem(id).checked = value;
+				elem.checked = value;
 			}
 		} else {
-			getElem(id).value = value;
+			elem.value = value;
 		}
 	} catch (e) {
 		console.error(e);
@@ -76,14 +86,18 @@ function editValue (id, value) {
 /*
 * Gets the value of an input element
 *
-* @param {string} id The ID of the element that should be changed.
+* @param {string/DOM Element} elem The ID or node of the element that should be changed.
 */
-function getValue (id) {
+function getValue (elem) {
 	try {
-		if (getElem(id).type == 'checkbox' || getElem(id).type == 'radio') {
-			return getElem(id).checked;
+		if (typeof elem === 'string') {
+			elem = getElem(elem);
+		}
+
+		if (elem.type == 'checkbox' || elem.type == 'radio') {
+			return elem.checked;
 		} else {
-			return getElem(id).value;
+			return elem.value;
 		}
 	} catch (e) {
 		console.error(e);
@@ -174,4 +188,13 @@ function executeFunctionByName (functionName, args) {
 */
 function reload () {
 	location = location;
+}
+
+/*
+* Returns the first number found in a string.
+*
+* @param {string} str The string.
+*/
+function getNumberFromString (str) {
+	return str.match(/\d+/)[0];
 }
