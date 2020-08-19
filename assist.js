@@ -8,7 +8,10 @@ var assistInfo = {
 	simpleMode: false,
 	noCoins: false,
 
-	starPriceMultiplier: 1
+	starPriceMultiplier: 1,
+
+	//navbarCurPlayer: '1',
+	navbarCurModule: 'misc'
 }
 
 /*
@@ -31,7 +34,7 @@ function nextAssistState () {
 }
 
 // nextAssistState()/prevAssistState()/navbar onclick > loadAssistState(state, turn)
-// turn is finished in nextAssistState()/prevAssistState()
+// turn is finished in nextAssistState()/prevAssistState()/navbar character onclick
 
 /*
 * Loads the specified assist state.
@@ -92,7 +95,7 @@ function chooseOrder (player) {
 
 	assistInfo.order.push(player);
 
-	changeCharacterIcon(getElem(   'choose' + currentChoosePlayerPosition).children[1], characters[player], true);
+	changeCharacterIcon(getElem(   'choose' + currentChoosePlayerPosition).children[0], characters[player], true);
 	changeCharacterIcon(getElem('nv_choose' + currentChoosePlayerPosition).children[0], characters[player], true);
 
 	updateVisibility(   'choose' + currentChoosePlayerPosition, 'show');
@@ -261,7 +264,37 @@ function toggleModuleVisibility (elem) {
 		elem.parentNode.setAttribute('customHidden', 'true');
 	}
 }
-//just get it from the navbar
+//just get it from the navbar - update: get what from the navbar??
+
+/*
+* Toggles visibility of a navbar assist module (stars, dice, shopping etc)
+*
+* @elem {DOM Element} elem The name of the module that should be shown (misc, dice, shopping, items, spaces or hex)
+*/
+function toggleNavbarModuleVisibility (elem) {
+	if (assistInfo.navbarCurModule === elem) {
+		return;
+	}
+
+	//make sure that none have the selected class except the one that's actually selected
+	var selected = document.querySelectorAll('#nvAssistTurnIndicator .chooseImgNoOpacity');
+	for (var num = 0; num < selected.length; num++) {
+		selected[num].classList.remove('chooseImgNoOpacity');
+	}
+	getElem('nv_assistNavbar' + capStr(elem)).classList.add('chooseImgNoOpacity');
+
+	//hide all except the selected one
+	getElem('nv_assistMisc').style.display = 'none';
+	getElem('nv_assistDice').style.display = 'none';
+	getElem('nv_assistShopping').style.display = 'none';
+	getElem('nv_assistItems').style.display = 'none';
+	getElem('nv_assistSpaces').style.display = 'none';
+	getElem('nv_assistHex').style.display = 'none';
+
+	getElem('nv_assist' + capStr(elem)).style.display = 'block';
+
+	assistInfo.navbarCurModule = elem;
+}
 
 function chromesucks () {
 	elem = document.querySelector('.currentPlayer');

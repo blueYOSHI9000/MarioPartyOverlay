@@ -145,12 +145,12 @@
 
 			<div id="nvAssistTurnIndicator">
 				<div>
-					<img src="img/stars.png" class="chooseImg chooseImgNoOpacity">
-					<img src="img/assist/mpds/diceblock.png" class="chooseImg">
-					<img src="img/shopping.png" class="chooseImg">
-					<img src="img/item.png" class="chooseImg">
-					<img src="img/assist/mpds/bluespace.png" class="chooseImg">
-					<img src="img/hex.png" class="chooseImg">
+					<img src="img/stars.png" id="nv_assistNavbarMisc" class="chooseImg chooseImgNoOpacity" onclick="toggleNavbarModuleVisibility('misc')">
+					<img src="img/assist/mpds/diceblock.png" id="nv_assistNavbarDice" class="chooseImg" onclick="toggleNavbarModuleVisibility('dice')">
+					<img src="img/shopping.png" id="nv_assistNavbarShopping" class="chooseImg" onclick="toggleNavbarModuleVisibility('shopping')">
+					<img src="img/item.png" id="nv_assistNavbarItems" class="chooseImg" onclick="toggleNavbarModuleVisibility('items')">
+					<img src="img/assist/mpds/bluespace.png" id="nv_assistNavbarSpaces" class="chooseImg" onclick="toggleNavbarModuleVisibility('spaces')">
+					<img src="img/hex.png" id="nv_assistNavbarHex" class="chooseImg" onclick="toggleNavbarModuleVisibility('hex')">
 				</div>
 			</div>
 
@@ -175,15 +175,15 @@
 						</span>
 						<span id="nv_choose2" class="visibilityTransition hidden">
 							<img src="img/mk8Icons/luigi.png">
-							<img src="img/arrow.png">
+							<img src="img/arrow.png" class="chooseArrow">
 						</span>
 						<span id="nv_choose3" class="visibilityTransition hidden">
 							<img src="img/mk8Icons/yoshi.png">
-							<img src="img/arrow.png">
+							<img src="img/arrow.png" class="chooseArrow">
 						</span>
 						<span id="nv_choose4" class="visibilityTransition hidden">
 							<img src="img/mk8Icons/peach.png">
-							<img src="img/arrow.png">
+							<img src="img/arrow.png" class="chooseArrow">
 						</span>
 					</div>
 
@@ -917,22 +917,24 @@
 
 						<button onclick="resetChooseOrder()">Reset Order</button>
 
-						<div id="choose1" class="visibilityTransition hidden">
-							<img src="img/1st.png">
-							<img src="img/mk8Icons/mario.png">
+						<div id="chooseWrapper">
+							<span id="choose1" class="visibilityTransition hidden">
+								<img src="img/mk8Icons/mario.png">
+							</span>
+							<span id="choose2" class="visibilityTransition hidden">
+								<img src="img/mk8Icons/luigi.png">
+								<img src="img/arrow.png" class="chooseArrow">
+							</span>
+							<span id="choose3" class="visibilityTransition hidden">
+								<img src="img/mk8Icons/yoshi.png">
+								<img src="img/arrow.png" class="chooseArrow">
+							</span>
+							<span id="choose4" class="visibilityTransition hidden">
+								<img src="img/mk8Icons/peach.png">
+								<img src="img/arrow.png" class="chooseArrow">
+							</span>
 						</div>
-						<div id="choose2" class="visibilityTransition hidden">
-							<img src="img/2nd.png">
-							<img src="img/mk8Icons/luigi.png">
-						</div>
-						<div id="choose3" class="visibilityTransition hidden">
-							<img src="img/3rd.png">
-							<img src="img/mk8Icons/yoshi.png">
-						</div>
-						<div id="choose4" class="visibilityTransition hidden">
-							<img src="img/4th.png">
-							<img src="img/mk8Icons/peach.png">
-						</div>
+
 						<div id="chooseContinue" class="visibilityTransition hidden">
 							<button onclick="nextAssistState()" style="margin-bottom: 10px;">Continue?</button> <br>
 							<button onclick="updateOrder();nextAssistState()">Update order & continue?</button> <span class="note">This updates the player order with the order chosen here.</span>

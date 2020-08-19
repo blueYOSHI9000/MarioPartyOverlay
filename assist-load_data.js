@@ -45,7 +45,7 @@ function assist_getStarList (game, board) {
 * @param {string} game Which game, uses the current assist game if empty.
 * @param {string} board Which board, uses the current assist board if empty.
 */
-function assist_getStar (starName, game, board) {
+function assist_getStarInfo (starName, game, board) {
 	if (typeof game === 'undefined') {
 		game = assistInfo.curGame;
 	}

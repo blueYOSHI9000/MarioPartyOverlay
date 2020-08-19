@@ -76,7 +76,8 @@ function assist_execEvent (event, game, board) {
 		return;
 	}
 
-	var player = event.player;
+	//get player from event object - choose current player if empty (or just not a number)
+	var player = parseInt(event.player);
 	if (typeof player != 'number') {
 		player = assistInfo.curPlayer;
 	}
@@ -108,16 +109,18 @@ function assist_buyStar (starName, game, board) {
 		board = assistInfo.board;
 	}
 
-	var star = assist_getStar(starName, game, board);
+	var star = assist_getStarInfo(starName, game, board);
 
+	//get default star in case no matching star was found
 	if (typeof star === 'undefined') {
-		star = assistData.default.star; //default in case no matching star was available
+		star = assistData.default.star;
 	}
 
 	var starElem = document.querySelector('[assistname="' + star.name + '"]');
 
 	var starAmount = 1; //amount of stars to be bought
 	if (star.buyMultiple === true) {
+		//get amount of stars to be bought
 		starAmount = parseInt(starElem.parentNode.children[1].children[1].children[0].innerHTML);
 
 		if (typeof starAmount != 'number') {
@@ -210,7 +213,7 @@ function assist_changeBuyMultipleStarAmount (starName, action, amount, game, boa
 		}
 
 		var coins = getStat('coins', assistInfo.curPlayer);
-		var starPrice = assist_getStar(starName, game, board).price;
+		var starPrice = assist_getStarInfo(starName, game, board).price;
 
 		if (starPrice * result > coins) {
 			return;

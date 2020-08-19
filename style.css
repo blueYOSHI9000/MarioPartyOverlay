@@ -777,7 +777,7 @@ noscript > span {
 	font-style: italic;
 }
 #navbarAssist .note {
-	color: #f7f7f7bf;
+	color: #ffffffd9;
 }
 .resizableInput {
 	resize: both;
@@ -1879,9 +1879,9 @@ noscript > span {
    -moz-filter: grayscale(.4) opacity(.7);
 		filter: grayscale(.4) opacity(.7);
 
--webkit-transition: filter .15s;
-   -moz-transition: filter .15s;
-		transition: filter .15s;
+-webkit-transition: filter .3s;
+   -moz-transition: filter .3s;
+		transition: filter .3s;
 }
 .chooseImg:hover {
 -webkit-filter: grayscale(.2) opacity(.9);
@@ -2063,11 +2063,11 @@ noscript > span {
 	display: flex;
 	justify-content: space-around;
 }
-#nv_chooseWrapper {
+#nv_chooseWrapper, #chooseWrapper {
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
-#nv_chooseWrapper > span {
+#nv_chooseWrapper > span, #chooseWrapper > span {
 	position: relative;
 }
 #nv_assistChooseOrder {
@@ -2077,9 +2077,10 @@ noscript > span {
 	height: 65px;
 }
 
-#nv_choose2 > img:nth-of-type(2), #nv_choose3 > img:nth-of-type(2), #nv_choose4 > img:nth-of-type(2) { /* arrows */
+.chooseArrow {
 	position: absolute;
-	height: 35px;
+	height: 35px !important;
+	width: 35px !important;
 	left: -20px;
 	top: -30px;
 	z-index: 980;
