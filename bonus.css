@@ -77,6 +77,13 @@ body {
 @media screen and (max-width: 1240px) {
 	#container > main { max-width: initial; }
 }
+@media screen and (max-width: 660px) {
+	#gameSelectorDiv {
+		display: inline-block !important;
+		width: 100%;
+		text-align: center;
+	}
+}
 
 a {
 	font-size: 20px;
