@@ -2,8 +2,9 @@
 * Shows/hides relevant bonus stars depending on game,
 *
 * @param {string} game The game.
+* @param {boolean} keepHash If true the URL hash (location.hash) will not be removed. Hash will always be kept if it's not one of the bonus stars.
 */
-function changeGame (game) {
+function changeGame (game, keepHash) {
 	getElem('noBonusError').style.visibility = 'hidden';
 
 	if (game != 'all') {
@@ -93,7 +94,11 @@ function changeGame (game) {
 			}
 	}
 
-	history.replaceState(null, document.title, '?game=' + game);
+	if (keepHash === true || location.hash === '#explanation' || location.hash === '#bonusStars' || location.hash === '#credits') {
+		history.replaceState(null, document.title, '?game=' + game + location.hash);
+	} else {
+		history.replaceState(null, document.title, '?game=' + game);
+	}
 
 	for (let num = 0; num < showGames.length; num++) {
 		getElem(showGames[num]).style.display = 'block';
@@ -156,12 +161,16 @@ function startup () {
 	var game = getUrl('game');
 	if (game != false) {
 		try {
-			changeGame(game);
+			changeGame(game, true);
 			editValue(game, true);
 		} catch {
 			changeGame('all');
 			editValue('all', true);
 		}
+	}
+
+	if (location.hash != '') {
+		getElem(location.hash.substring(1)).scrollIntoView();
 	}
 
 	try {
