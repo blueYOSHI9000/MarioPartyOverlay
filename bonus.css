@@ -186,22 +186,29 @@ input {
 }
 
 .charSelectorLabel {
-	cursor: pointer;
-	background-size: contain;
-	background-repeat: no-repeat;
 	display: inline-block;
+	cursor: pointer;
+	outline: none;
+
 	height: 70px;
 	width: 70px;
+
+	background-size: contain;
+	background-repeat: no-repeat;
+
 	-webkit-filter: grayscale(.6) opacity(.5);
 	   -moz-filter: grayscale(.6) opacity(.5);
 			filter: grayscale(.6) opacity(.5);
-	transition: filter .3s;
+
+	-webkit-transition: filter .3s;
+	   -moz-transition: filter .3s;
+			transition: filter .3s;
 }
 
 .charSelectorLabel:hover, .charSelectorLabel:focus {
--webkit-filter: grayscale(.3) opacity(.7);
-   -moz-filter: grayscale(.3) opacity(.7);
-		filter: grayscale(.3) opacity(.7);
+-webkit-filter: grayscale(.3) opacity(.8) drop-shadow(0px 0px 6px #fff82bab);
+   -moz-filter: grayscale(.3) opacity(.8) drop-shadow(0px 0px 6px #fff82bab);
+		filter: grayscale(.3) opacity(.8) drop-shadow(0px 0px 6px #fff82bab);
 }
 .charSelectorLabel:active {
 -webkit-filter: grayscale(.1) opacity(.9);
