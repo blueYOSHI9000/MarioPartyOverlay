@@ -33,8 +33,9 @@ function getStat (counter, player, returnElem) {
 * @param {string} action What should be done - can be 'P' for addition, 'M' for subtraction or 'S' to replace the existing count.
 * @param {string} amount The amount that should be changed.
 * @param {string} counter Which counter should be updated.
+* @param {boolean} noAnimation If the animation should be skipped (simply gets passed into updateCounter()).
 */
-function counterButtons (player, action, amount, counter) {
+function counterButtons (player, action, amount, counter, noAnimation) {
 	//console.log('[counterButtons] Player: ' + player + ', action: ' + action + ', amount: ' + amount + ', counter: ' + counter);
 	var result = 0;
 
@@ -52,6 +53,8 @@ function counterButtons (player, action, amount, counter) {
 			assistNotif('Error: ' + counter + ' for player ' + player + ' was NaN', true);
 		}
 	}
+
+	action = action.toUpperCase();
 
 	//return if there's no change to avoid unnecessary animation
 	if (action != 'S' && amount === 0) {
@@ -89,7 +92,7 @@ function counterButtons (player, action, amount, counter) {
 		currentStats[capStr(counter, true)][player - 1] = result;
 		saveCurrentStats();
 
-		updateCounter('p' + player + counter + 'Text', result);
+		updateCounter('p' + player + counter + 'Text', result, noAnimation);
 	}
 
 	if (counter === 'coinStar') {
@@ -123,7 +126,7 @@ function counterButtons (player, action, amount, counter) {
 		slowHighlight(false, 'unused');
 
 	} else if (counter === 'Stars' || document.querySelector('input[name="bonusStarAdd"]:checked').id != 'bonusDont') {
-		updateCounter('p' + player + 'StarsBonusText', getStat('stars', player)); //for the animation because updateStars() is somehow incapable of doing it
+		updateCounter('p' + player + 'StarsBonusText', getStat('stars', player), noAnimation); //for the animation because updateStars() is somehow incapable of doing it
 		updateStars();
 	}
 	if (counter === 'Coins' && getValue('coinsOnOff') === true) {

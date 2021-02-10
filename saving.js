@@ -136,12 +136,12 @@ function resetBackup () {
 
 	for (let num = 1; num < 5; num++) {
 		for (let num2 = 0; num2 < counters.length; num2++) {
-			editInner('p' + num + countersUp[num2] + 'Text', 0);
+			counterButtons(num, 's', 0, counters[num2], true);
 		}
 		if (curGame === 'smp') {
-			editInner('p' + num + 'CoinsText', 5);
+			counterButtons(num, 's', 5, 'coins', true);
 		} else {
-			editInner('p' + num + 'CoinsText', 10);
+			counterButtons(num, 's', 10, 'coins', true);
 		}
 	}
 
