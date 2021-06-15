@@ -1,6 +1,6 @@
 # Mario Party Overlay
 ## What's Mario Party Overlay?
-Mario Party Overlay is a highly customizable and easy to use 'Bonus Star' tracker for the Mario Party series, supporting every game in it. It also includes a greenscreen so it can be used in a livestream!
+Mario Party Overlay is a highly customizable and easy to use 'Bonus Star' tracker for the Mario Party series, supporting every game in it (incl. the upcoming Mario Party Superstars once it's released -- that said, it will likely take a week or so until all the bonus stars are found and implemented). It also includes a greenscreen so it can be used in a livestream!
 
 **[Website](https://blueyoshi9000.github.io/MarioPartyOverlay/)**   
 
