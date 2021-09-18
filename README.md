@@ -1,25 +1,23 @@
-# Mario Party Overlay
-## What's Mario Party Overlay?
-Mario Party Overlay is a highly customizable and easy to use 'Bonus Star' tracker for the Mario Party series, supporting every game in it (incl. the upcoming Mario Party Superstars once it's released -- that said, it will likely take a week or so until all the bonus stars are found and implemented). It also includes a greenscreen so it can be used in a livestream!
+# Mario Party Overlay (MPO) Rewrite
+This is a in-progress rewrite of the entirety of MPO, starting from complete scratch. You can see the progress of it [here](https://github.com/blueYOSHI9000/MarioPartyOverlay/projects/7)
 
-**[Website](https://blueyoshi9000.github.io/MarioPartyOverlay/)**   
+## What even is this? What does it do?
+MPO is a stat tracker for the entire Mario Party series. It tracks all kinds of stats ranging from "who stepped on the most blue spaces" to "who used the most mushrooms". That said, it's most useful and major feature is tracking Bonus Stars, the ones awarded to the players who won the most minigames or stepped on the most happening spaces.
 
-## How to use?
-Click on the numbers to increase the counters, by holding Ctrl you can decrease them instead. The amount can be changed at the top (1, 5 or 10).  
-It's possible to switch between 1 and 5/10 by holding Shift.  
-To give/take the coin-star you just click on the character.
+## Why rewrite it?
+Because the code of the old website is trash and I don't wanna work with it anymore. It's worth adding that I learned how to code through MPO, so you can imagine the quality of a programmers first program. Even if the website itself ended up looking relatively good, the code itself is still absolute trash and a pain to work with.
 
-Characters and counters can both be changed at the top.
+## What's gonna be so much better about it?
+This time I actually planned things out in advance in order to make it as future-proof as possible. Of course, with a series as vast and filled with gimmicks it's gonna be quite difficult but I'm confident I can make it work.
 
-Settings can be found by clicking on the gear and then "Open Settings" (or by clicking on the gear while holding Ctrl).
+The website will now work entirely through a single "database" file that specifies absolutely everything about the entire Mario Party series which ranges from "a blue space gives 3 coins" to "this game uses a battle minigame every time the total of all dice rolls is dividable through 10" (which would be MPDS btw). The database structure is already mostly planned out, though it still has to be filled in (which is a lot more work than it might seem at first).
 
-A more extensive (and likely up-to-date) introduction can by found by clicking on the gear and then "Credits".
+This would mean if a new Mario Party game releases then all that has to be done is to edit the database file and nothing else. Of course, that'd be a bit much to be actually true but it's likely not too far off either. I'm sure some changes would have to be made here and there to make it work (especially if the game uses a completely new gameplay style) but overall it'd be much easier to maintain than having to rewrite half the site just to support a new game...
 
-## Credits
-**All characters, products and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them. Mario Party is a registered trademark of Nintendo.**
+## Where can I find that database file?
+The file can be found inside [database/mp-db.js](https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/rewrite/database/mp-db.js). Do note that it's barely filled out, it currently only really lists MP1 related stuff. That said, the most basic things to make the tracker function are there for all games (mainly the bonus stars and characters).
 
-Created by [blueYOSHI](https://www.twitter.com/yoshisrc) with contributions from [others](https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors)
+The documentation for it can be found inside [database/docs.js](https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/rewrite/database/docs.js), though it isn't too user-friendly yet and kind of a mess but I'll get there at some point.
 
-Icons, libraries and other things are done by various people, visit the website to view the full list ([direct link to credits](https://blueyoshi9000.github.io/MarioPartyOverlay/?credits=1))
-
-Mario Party Overlay is licensed under the MIT License.
+## Legal stuff & credits
+Legal stuff & credits is found on the website (index.html) itself inside settings which can be accessed at the top.

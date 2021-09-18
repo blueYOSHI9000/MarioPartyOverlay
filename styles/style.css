@@ -1,0 +1,99 @@
+/**
+ *	=== HTML & CSS CODE FORMATTING ===
+ *
+ *	- html "id" should be used whenever an element is supposed to only appear once
+ *	- html "class" should be used whenever it can be applied to multiple
+ *	- this is useful so whenever CSS changes are made it's immediately noticeable whether it will only affect a single element or whether it will affect multiple ones
+ *		- it's also useful if a "id" ever needs to be changed into a "class" since then you already know that all CSS declarations were made with only that single element in mind so you'll have to go through them all to see whether they still work afterwards or not
+ *
+ *	- html <div> should be avoided whenever possible. Use <span> instead.
+ *		- The only difference (to my knowledge) is <div> uses 'display: block;' while <span> uses 'display: inline;'.
+ *		- By using the 'display' CSS property you can immediately write down why 'display: block;' is needed over 'inline'.
+ *		- If not for this you'd just see a <div> without knowing whether it HAS to be a <div> or whether it was simply used out of habit. This way it's always written down.
+ *
+ *	- CSS declarations are always listed in a certain order (see below)
+ *	- different kinds of CSS declarations are seperated
+ *	- generally the order is based on the most important ones first and the less important ones later
+ *
+ *	- CSS declaration blocks should be listed in order of appearance in the html file
+ *		- exceptions can be made of course if something else makes a lot more sense
+ *	- declaration blocks like '@font-face' or ':root' should be listed at the beginning with ':root' being the first one
+ *
+ *
+ *	=== DECLARATION ORDER ===
+ *
+ *	- display
+ *	- *anything flex related*
+ *
+ *	- position
+ *
+ *	- box-sizing
+ *	- height
+ *	- width
+ *	- *any positioning*
+ *	- margin
+ *	- padding
+ *
+ *	- *anything border related*
+ *
+ *	- overflow
+ *	- overflow-y
+ *	- overflow-x
+ *
+ *	- *anything font-related*
+ *	- *any other styling like background-color*
+*/
+
+:root {
+	--navbarHeight: 70px;
+	--settingsWidth: 75vw;
+}
+
+@font-face {
+	font-family: "mp9";
+	src: url(mp9.ttf) format("truetype");
+}
+
+html, body {
+	/* Needed because apparently it doesn't work otherwise. Don't ask. No idea.
+	 */
+	height: 100%;
+	width: 100%;
+}
+
+body {
+	/* Children handle margin/padding on their own.
+	 * Needs to be 0 so children can take up the entire screen with 'width: 100%;' & 'height: 100%;'.
+	 */
+	margin: 0;
+	padding: 0;
+
+	/* Don't ask. Don't ask. Don't ask.
+	 * Overflow needs to be hidden here so the children can handle scrolling for it. Specifically '.tracker_container' and settings (when I'm done adding it).
+	 * I spent way too much time trying to figure out how the hell anything works and I still don't know but this seems to be part of the solution.
+	 */
+	overflow: hidden;
+}
+
+/* Contains the entire main site (basically anything that's neither navbar nor settings). Currently only includes all trackers but there might be more at some point.
+ */
+#mainSiteContainer {
+	/* 'display: block;' (or 'inline-block') is needed since the element has to cover the entire screen (minus navbar) and 'inline' wouldn't do that.
+	 */
+	display: block;
+
+	/* Set width to 100% to cover the entire screen.
+	 * Set height to 100% minus navbar so it covers the entire screen while the navbar is still sitting on the top of it.
+	 * This also means that 'box-sizing: border-box;' is needed because otherwise padding would push it off-screen.
+	 * And finally some padding so the elements inside it don't immediately touch the side of the screen and instead have some space to breath in.
+	 */
+    box-sizing: border-box;
+	width: 100%;
+	height: calc(100% - var(--navbarHeight));
+	padding: 8px;
+
+	/* Scrollbar have to be displayed in this element instead of the body element since browsers are fucked and a stupid problem needs an equally stupid solution.
+	 * tl;dr: Scrollbars are required here (though they only need to be visible when they're needed).
+	 */
+	overflow: auto;
+}

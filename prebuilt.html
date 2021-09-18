@@ -1,0 +1,220 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	<title>Mario Party Overlay</title>
+	<meta name="description" content="An extensive and easy to use 'Bonus Star' tracker for all Mario Party games! With included greenscreen for livestreams!">
+	<meta name="author" content="blueYOSHI">
+
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="Mario Party Overlay">
+	<meta property="og:description" content="An extensive and easy to use 'Bonus Star' tracker for all Mario Party games!">
+	<meta property="og:image" content="https://raw.githubusercontent.com/blueYOSHI9000/MarioPartyOverlay/master/img/favicon/icon-120x120.png">
+	<meta property="og:locale" content="en_US">
+	<meta property="og:url" content="https://blueyoshi9000.github.io/MarioPartyOverlay">
+
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Mario Party Overlay">
+	<meta name="twitter:description" content="An extensive and easy to use 'Bonus Star' tracker for all Mario Party games!">
+	<meta name="twitter:image" content="https://raw.githubusercontent.com/blueYOSHI9000/MarioPartyOverlay/master/img/favicon/icon-120x120.png">
+	<!--meta name="twitter:site" content="@yoshisrc"-->
+	<meta name="twitter:creator" content="@yoshisrc">
+
+	<meta name="google-site-verification" content="L7wGU_sd9ri9CM2r9zhWhwq2pLkPtuemouRzyRFudC8" />
+
+	<!--meta name="viewport" content="width=815, initial-scale=.5">
+	<link rel="manifest" href="mpo.webmanifest" /-->
+
+	<!--link rel="apple-touch-icon" sizes="152x152" href="img/favicon/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
+	<meta name="msapplication-TileColor" content="#2d89ef">
+	<meta name="theme-color" content="#4598fd">
+	<meta name="theme-color-light" content="#4598fd">
+	<meta name="theme-color-dark" content="#4598fd"-->
+
+	<script type="text/javascript">
+		//site is prebuilt
+		var prebuilt = true;
+	</script>
+
+	<link rel="stylesheet" href="styles/style.css">
+	<link rel="stylesheet" href="styles/tracker.css">
+	<link rel="stylesheet" href="styles/navbar.css">
+	<link rel="stylesheet" href="styles/settings.css">
+</head>
+
+<body>
+	<span id="navbar_base">
+		<span class="navbar_player" player="1"> <img class="navbar_icon" src="img/icons/characters/starRushIcon/mario.png"> </span>
+		<span class="navbar_player" player="2"> <img class="navbar_icon" src="img/icons/characters/starRushIcon/luigi.png"> </span>
+		<span class="navbar_player" player="3"> <img class="navbar_icon" src="img/icons/characters/starRushIcon/yoshi.png"> </span>
+		<span class="navbar_player" player="4"> <img class="navbar_icon" src="img/icons/characters/starRushIcon/peach.png"> </span>
+		<span style="color: white;cursor: pointer;" onclick="settings_toggleSettings();">Open/close settings</span>
+	</span>
+
+	<span id="settings_container">
+		<span id="settings_base">
+			<span id="settings_header">
+				<span> yo </span>
+				<span class="settings_seperator"></span>
+			</span>
+			<span id="settings_main">
+				<span class="tracker_counterList">
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+				</span>
+				<span class="tracker_counterList">
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+				</span>
+				<span class="tracker_counterList">
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+				</span>
+				<span class="tracker_counterList">
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+				</span>
+				<span class="tracker_counterList">
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+				</span>
+				<span class="tracker_counterList">
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+				</span>
+				<span class="tracker_counterList">
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+						<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+				</span>
+				<span class="tracker_counterList">
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+				</span>
+				<span> AY CARAMBA </span>
+			</span>
+			<span id="settings_footer">
+				<span class="settings_seperator"></span>
+				<span> yo2 </span>
+			</span>
+		</span>
+	</span>
+
+	<span id="mainSiteContainer">
+		<span id="tracker_playerList">
+			<span class="tracker_player" player="1">
+				<span class="tracker_characterDisplay" player="1">
+					<img class="tracker_characterIcon" src="img/icons/characters/starRushIcon/mario.png">
+				</span>
+				<span class="tracker_counterList" player="1">
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+				</span>
+			</span>
+			<span class="tracker_player" player="2">
+				<span class="tracker_characterDisplay" player="2">
+					<img class="tracker_characterIcon" src="img/icons/characters/starRushIcon/luigi.png">
+				</span>
+				<span class="tracker_counterList" player="2">
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+				</span>
+			</span>
+			<span class="tracker_player" player="3">
+				<span class="tracker_characterDisplay" player="3">
+					<img class="tracker_characterIcon" src="img/icons/characters/starRushIcon/yoshi.png">
+				</span>
+				<span class="tracker_counterList" player="3">
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+				</span>
+			</span>
+			<span class="tracker_player" player="4">
+				<span class="tracker_characterDisplay" player="4">
+					<img class="tracker_characterIcon" src="img/icons/characters/starRushIcon/peach.png">
+				</span>
+				<span class="tracker_counterList" player="4">
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+					<span class="tracker_counter"> <img class="tracker_counterImg" src="img/icons/bonusStars/old/smp/happeningStar.png"> <span class="tracker_counterText">x69</span> </span>
+				</span>
+			</span>
+		</span>
+	</span>
+	<!--script type="text/javascript" src="scripts/boot.js">boot_startup();</script-->
+</body>
+</html>

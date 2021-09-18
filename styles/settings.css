@@ -1,0 +1,92 @@
+/* Covers the entire settings window.
+ */
+#settings_container {
+	/* Mostly a copy-paste from .tracker_container from tracker.css with some modifications. */
+
+	/* 'display: none;' is so it's hidden on default. Replace with 'display: block;' to make it visible.
+	 *		* 'display: block;' (or 'inline-block') is needed since the element has to cover the entire screen (minus navbar) and 'inline' wouldn't do that.
+	 */
+	display: none;
+
+	/* 'position: absolute;' is needed so the window is on top of the tracker so it can be see-through.
+	 */
+	position: absolute;
+
+	/* Set width to 100% to cover the entire screen.
+	 * Set height to 100% minus navbar so it covers the entire screen while the navbar is still sitting on the top of it.
+	 * This also means that 'box-sizing: border-box;' is needed because otherwise padding would push it off-screen.
+	 */
+    box-sizing: border-box;
+	width: 100%;
+	height: calc(100% - var(--navbarHeight));
+
+	/* Scrollbar have to be displayed in this element instead of the body element since browsers are fucked and a stupid problem needs an equally stupid solution.
+	 * tl;dr: Scrollbars are required here (though they only need to be visible when they're needed).
+	 */
+	overflow: auto;
+
+	/* To be changed.
+	 */
+	background-color: #add8e6db;
+    backdrop-filter: blur(7px);
+}
+
+/* Makes sure the 3 main pieces (header, main & footer) stay in place.
+ */
+#settings_base {
+	/* Flex in column direction is needed so the header stays at the top and the footer at the bottom. Used alongside the 'overflow: auto;' inside '.settings_main'.
+	 */
+	display: flex;
+	flex-direction: column;
+
+	/* Relative positioning is needed so '.settings_seperator' can access this elements full width (instead of the header, main or footer width).
+	 */
+	position: relative;
+
+	/* Set height and width to 100% so it forces itself to be the exact same size as it's parent.
+	 * 100% height is needed to keep the header & footer in position.
+	 * 100% width is needed to keep it centered.
+	 */
+	height: 100%;
+	width: 100%;
+}
+
+#settings_base > span {
+	/* 'display: block;'
+	 */
+	display:  block;
+
+	/* Static positioning is required
+
+	/* Center all element completely.
+	 * Width defines the size of it.
+	 * Left and right padding set to 'auto' is what centers it since it automatically fills up the entire rest that width doesn't use.
+	 */
+	width: var(--settingsWidth);
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.settings_seperator {/* In progress, that's why nothing is documented. */
+	display: block;
+
+	/* Absolute positioning is needed to access the height of '#settings_base'.
+	 */
+	 position: relative;
+
+	 height: 0;
+	 width: calc(100vw - 16px);
+	 left: calc((-100vw + var(--settingsWidth)) / 2 + 8px);
+
+	 border: 2px solid blue;
+}
+
+#settings_main {
+	/* Forces it to take up all the height it can. Otherwise if #settings_main is empty then the header and footer would right next to each other.
+	 */
+	height: 100%;
+
+	/* Forces the scrollbar to appear in this element instead of '.settings_base'.
+	 */
+	overflow: auto;
+}

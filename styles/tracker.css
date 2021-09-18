@@ -1,0 +1,50 @@
+.tracker_player {
+	/* Flex is needed to bring them all to the same level since otherwise the character-icon and the counters would be on a seperate line.
+	 * I'm sure there's other solutions to this as well, maybe some even better but this works.
+	 */
+	display: flex;
+}
+
+.tracker_characterIcon {
+	/* Sizes taken from old site. It'd be stupid to change it now and break some streamers layout.
+	 */
+	height: 116px;
+	width: 116px;
+}
+
+.tracker_counterList {
+	/* Flex is required due to it's column direction.
+	 * The column direction and it's wrapping is used to get the horizontal look while still keeping a good order that makes sense.
+	 *		* So the second item is the one below the first instead of the one to the right.
+	 * See the notes below about the width and height for more info.
+	 */
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+
+	/* The height is the only thing that decides when to wrap to a new column so it needs to be smaller than the height of 3 rows but bigger than 2 rows.
+	 * The width on the other hand should be automatic but issue is that flex column wrapping is absolutely fucked.
+	 *		* The browser only takes the width of the widest column, not the total of all columns.
+	 *		* This means we're stuck with a width that only covers the first column.
+	 *		* The only real solution I came up with is to calculate it with JavaScript, as stupid of a solution as it is.
+	 *		* That said, the column width doesn't change when you resize the window or whatever so we only need to update the width whenever a new element is added or removed.
+	 *		* This means that calculating and updating the width with JavaScript is actually a reasonable solution.
+	 *		* More info here (see accepted answer): https://stackoverflow.com/questions/33891709/when-flexbox-items-wrap-in-column-mode-container-does-not-grow-its-width
+	 */
+	height: 116px;
+	width: 437.936px; /* WIP - remove later */
+}
+
+.tracker_counterText {
+	/* Font-size was taken from the old site. Mainly because it'd be stupid to change it and break some streamers layout.
+	 */
+	font-family: 'mp9';
+	font-size: 22px;
+}
+
+.tracker_counterImg {
+	/* Size taken from the old site. Same as above, it'd be stupid to change it now.
+	 */
+	height: 35px;
+	width: 35px;
+}
