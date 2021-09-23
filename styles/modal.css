@@ -1,0 +1,52 @@
+/**	The catch-all container that lists all windows inside it.
+ */
+#modal_catchAllContainer {
+	/**	Absolute positioning so it doesn't interfere with the actual website structure.
+	 */
+	position: absolute;
+
+	/**	Use 100 so it's always on top of everything else.
+	 */
+	z-index: 100;
+}
+
+.modal_container {
+	/**	'display: block' is needed so that it actually takes up the exact amount of space that's specified.
+	 */
+	display: block;
+
+	/**	Has to be absolute so it can be moved around (might be moved to 'drag_moveable').
+	 */
+	position: absolute;
+
+	/**	Background color so it's actually visible.
+	 * 	To be changed.
+	 */
+	background-color: #add8e6;
+}
+
+/**	The modal at the front.
+ */
+.modal_focused {}
+
+/**	All unfocused modals.
+ */
+.modal_unfocused {
+	/**	Make them half-transparent. Mainly just to test that it works.
+	 */
+	opacity: .5;
+}
+
+/* === 'modalClass' SPECIFIC RULES === */
+
+.modalClass-testo > .modal_main {
+	/**	'display: block;' so it actually takes up the exact amount of space it should.
+	 */
+	display: block;
+
+	/**	Specify height and width so it actually gets displayed.
+	 * 	Exact sizes will likely be changed later on.
+	 */
+	height: 400px;
+	width: 600px;
+}

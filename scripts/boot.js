@@ -60,15 +60,20 @@ const boot_scriptsToLoad = [
 	'database/mp-db.js',
 	'scripts/helpers.js',
 	'scripts/tracker.js',
-	'scripts/settings.js'
+	'scripts/settings.js',
+	'scripts/modal.js',
+	'scripts/listeners.js',
+	'scripts/drag.js'
 ];
 
 //all stylesheets that have to be loaded
+	//remember to update it in prebuilt.html as well
 const boot_stylesToLoad = [
 	'styles/navbar.css',
 	'styles/settings.css',
 	'styles/style.css',
-	'styles/tracker.css'
+	'styles/tracker.css',
+	'styles/modal.css'
 ];
 
 
@@ -77,14 +82,15 @@ const boot_stylesToLoad = [
 var boot_scriptsLoaded = ['helpers.js'];
 
 //tracks the total amount of script files that have to be loaded
-var boot_totalScriptFiles = 0;
+	//'boot_scriptsToLoad' + 2 for 'helpers.js' and 'boot.js'
+var boot_totalScriptFiles = boot_scriptsToLoad.length + 2;
 
 /** Keeps track of how many script files have been loaded so far.
  *
  *	Check comment at the beginning of this file for a full explanation.
  *
  * 	Args:
- * 		script (string):
+ * 		script [String]
  * 			The name of the script that's been loaded (with file extension, like 'boot.js' for this file).
  */
 function boot_scriptLoaded (script) {
@@ -122,11 +128,6 @@ function boot_startup () {
 	//TODO: Update localStorage
 
 	//Load Scripts
-
-		//scripts that have to be loaded (plus 2 so helpers.js and boot.js is included)
-	boot_totalScriptFiles = boot_scriptsToLoad.length + 2;
-
-		//actually load the scripts
 	let scriptElems = loadScripts(boot_scriptsToLoad);
 
 	//Load styles
@@ -140,11 +141,16 @@ function boot_startup () {
 function boot_buildSite () {
 	boot_setupCounterObject();
 
+	boot_buildModalCatchAll();
 	boot_buildNavbar();
 	boot_buildSettings();
 	boot_buildTracker();
 
 	//boot_applySettings();
+
+	//add all eventListeners
+		//has to be at the end so if an event listener relies on a feature built by another function in here then it works perfectly without breaking the site
+	listeners_addListeners();
 }
 
 /**	Sets up the 'tracker_counters' object completely.
@@ -348,6 +354,14 @@ function boot_setupCounterObject () {
 			}
 		}
 	}
+}
+
+/** Builds the general modal layout.
+ *
+ * This only really includes the '#modal_catchAllContainer' element, it doesn't create any actual modals.
+ */
+function boot_buildModalCatchAll () {
+	const modalCatchAll = cElem('span', document.querySelector('body'), {id: 'modal_catchAllContainer'});
 }
 
 /** Builds the navbar.

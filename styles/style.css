@@ -36,12 +36,24 @@
  *
  *	- *anything border related*
  *
+ *  - z-index
+ *
  *	- overflow
  *	- overflow-y
  *	- overflow-x
  *
  *	- *anything font-related*
  *	- *any other styling like background-color*
+ *
+ *  === RESERVED Z-INDEX ===
+ *
+ *  - First off, remember that z-index only affects other z-indexes if they're on the same level. See (note that DIV #4 is a child of DIV #3): https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/Stacking_context_example_2
+ *
+ *  - A z-index of 100 and anything above is reserved for modals.
+ *      - 100 is used for '#modal_catchAllContainer' which includes all modals inside it.
+ *          - 100 is also used inside that for unlisted modals (in an ideal world this would be unused).
+ *          - Anything above 100 starting at 101, 102, 103, etc is used for individual modals.
+ *              - This will likely never reach anything even close to 200.
 */
 
 :root {
@@ -55,45 +67,45 @@
 }
 
 html, body {
-	/* Needed because apparently it doesn't work otherwise. Don't ask. No idea.
+	/**	Needed because apparently it doesn't work otherwise. Don't ask. No idea.
 	 */
 	height: 100%;
 	width: 100%;
 }
 
 body {
-	/* Children handle margin/padding on their own.
-	 * Needs to be 0 so children can take up the entire screen with 'width: 100%;' & 'height: 100%;'.
+	/**	Children handle margin/padding on their own.
+	 * 	Needs to be 0 so children can take up the entire screen with 'width: 100%;' & 'height: 100%;'.
 	 */
 	margin: 0;
 	padding: 0;
 
-	/* Don't ask. Don't ask. Don't ask.
-	 * Overflow needs to be hidden here so the children can handle scrolling for it. Specifically '.tracker_container' and settings (when I'm done adding it).
-	 * I spent way too much time trying to figure out how the hell anything works and I still don't know but this seems to be part of the solution.
+	/**	Don't ask. Don't ask. Don't ask.
+	 * 	Overflow needs to be hidden here so the children can handle scrolling for it. Specifically '.tracker_container' and settings (when I'm done adding it).
+	 * 	I spent way too much time trying to figure out how the hell anything works and I still don't know but this seems to be part of the solution.
 	 */
 	overflow: hidden;
 }
 
-/* Contains the entire main site (basically anything that's neither navbar nor settings). Currently only includes all trackers but there might be more at some point.
+/**	Contains the entire main site (basically anything that's neither navbar nor settings). Currently only includes all trackers but there might be more at some point.
  */
 #mainSiteContainer {
-	/* 'display: block;' (or 'inline-block') is needed since the element has to cover the entire screen (minus navbar) and 'inline' wouldn't do that.
+	/**	'display: block;' (or 'inline-block') is needed since the element has to cover the entire screen (minus navbar) and 'inline' wouldn't do that.
 	 */
 	display: block;
 
-	/* Set width to 100% to cover the entire screen.
-	 * Set height to 100% minus navbar so it covers the entire screen while the navbar is still sitting on the top of it.
-	 * This also means that 'box-sizing: border-box;' is needed because otherwise padding would push it off-screen.
-	 * And finally some padding so the elements inside it don't immediately touch the side of the screen and instead have some space to breath in.
+	/**	Set width to 100% to cover the entire screen.
+	 * 	Set height to 100% minus navbar so it covers the entire screen while the navbar is still sitting on the top of it.
+	 * 	This also means that 'box-sizing: border-box;' is needed because otherwise padding would push it off-screen.
+	 * 	And finally some padding so the elements inside it don't immediately touch the side of the screen and instead have some space to breath in.
 	 */
     box-sizing: border-box;
 	width: 100%;
 	height: calc(100% - var(--navbarHeight));
 	padding: 8px;
 
-	/* Scrollbar have to be displayed in this element instead of the body element since browsers are fucked and a stupid problem needs an equally stupid solution.
-	 * tl;dr: Scrollbars are required here (though they only need to be visible when they're needed).
+	/**	Scrollbar have to be displayed in this element instead of the body element since browsers are fucked and a stupid problem needs an equally stupid solution.
+	 * 	tl;dr: Scrollbars are required here (though they only need to be visible when they're needed).
 	 */
 	overflow: auto;
 }

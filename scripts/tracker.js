@@ -140,13 +140,13 @@ var tracker_counters = {
 /**	Gets the specified counter from 'tracker_counters'.
  *
  * 	Args:
- * 		string [string]
+ * 		string [String]
  * 			The counter that should be gotten.
  * 			Is in the format of 'bonusStars.runningStar'.
  *
- * 	Returns [Object/undefined]:
+ * 	Returns [Object/Boolean]:
  * 		The object from 'tracker_counters' as a reference.
- * 		If the counter can't be found then it will simply return undefined.
+ * 		If the counter can't be found then it will simply return false.
  */
 function tracker_getCounter (string) {
 	const arr = string.split('.');
@@ -159,6 +159,6 @@ function tracker_getCounter (string) {
 		eval('var counter = tracker_counters' + arr.join(''));
 		return counter;
 	} catch (e) {
-		return undefined;
+		return false;
 	}
 }

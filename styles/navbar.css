@@ -1,36 +1,35 @@
 #navbar_base {
-	/* Flex is needed to bring them all on the same line. I'm sure there's other solutions as well but this works.
+	/**	Flex is needed to bring them all on the same line. I'm sure there's other solutions as well but this works.
 	 */
 	display:  flex;
 
-	/* Sticky is needed so the navbar is always at the top, no matter what.
+	/**	Sticky is needed so the navbar is always at the top, no matter what.
 	 */
 	position: sticky;
 
-	/* Height is 70px, taken from the old site. Mainly because it'd be stupid to change it now.
-	 * Width is 100% because it needs to cover the entire screen.
-	 * Finally it's positioned to the top left side of the screen so it always sticks there (used alongside 'position: sticky;').
+	/**	Height is 70px, taken from the old site. Mainly because it'd be stupid to change it now.
+	 * 	Width is 100% because it needs to cover the entire screen.
+	 * 	Finally it's positioned to the top left side of the screen so it always sticks there (used alongside 'position: sticky;').
 	 */
 	height: var(--navbarHeight);
 	width: 100%;
 	top: 0;
 	left: 0;
 
-	/* To be changed, likely.
+	/**	To be changed, likely.
 	 */
 	background-color: #00f;
 }
 
 #navbar_base > span {
-	/* It is worth noting that I used 'display: block;' here but it didn't change anything so I removed it. */
-	/* Height and width are set to the navbar height because they should be squares that fill the entirety of the navbar (vertically at least).
+	/**	Height and width are set to the navbar height because they should be squares that fill the entirety of the navbar (vertically at least).
 	 */
 	height: var(--navbarHeight);
 	width: var(--navbarHeight);
 }
 
 .navbar_icon {
-	/* Use 100% of height and width with a bit of padding to give it room to breath in. 'border-box' is used so padding is included in those 100%.
+	/**	Use 100% of height and width with a bit of padding to give it room to breath in. 'border-box' is used so padding is included in those 100%.
 	 */
 	box-sizing: border-box;
 	height: 100%;
