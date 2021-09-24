@@ -63,7 +63,7 @@ const boot_scriptsToLoad = [
 	'scripts/settings.js',
 	'scripts/modal.js',
 	'scripts/listeners.js',
-	'scripts/drag.js'
+	'scripts/interactie.js'
 ];
 
 //all stylesheets that have to be loaded

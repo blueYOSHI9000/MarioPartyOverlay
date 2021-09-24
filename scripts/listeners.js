@@ -32,35 +32,69 @@ function listeners_pointerDown (e) {
 	if (e.button !== 0 && e.button !== 2)
 		return;
 
-	//get the first element that got hit
-		//e.path is an array consisting of every element that got hit with the highest one first and the lowest one (<html>, #document and finally Window) last
-	const hitElem = e.path[0];
-
-	//check if element should be draggable (by checking if it has a class called 'draggable')
-	if (hitElem.classList.contains('drag_handle')) {
-		const elemToMove = drag_getDraggableElementFromHandle(hitElem);
-
-		//start the drag but only if the element to drag could be found
-		if (elemToMove !== false) {
-			drag_startDrag(elemToMove, e.clientY, e.clientX);
-		}
-	}
+	//list of all modals that have been clicked on
+	let foundModals = [];
 
 	//iterate through every element that got clicked on
-	let foundModal = false;
-	for (const item of e.path) {
-		//check if a modal has been clicked on
-			//if yes then focus that modal
-			//but only the first modal that got clicked on, that's what 'foundModal' is for to prevent focusing two modals at once
-		if (foundModal === false && item.classList.contains('modal_container')) {
-			foundModal = true;
-			modal_changeFocus(item.getAttribute('modalid'));
+	for (const key in e.path) {
+		const item = e.path[key];
+
+		//execute code only if it's the first element
+			//note that key is a string for whatever stupid ass reason
+		if (key == 0) {
+
+			//check if it's a drag handle
+			if (item.classList.contains('interactie_dragHandle')) {
+				//get the element that actually has to be moved
+				const elemToModify = interactie_getElementFromHandle(item, 'interactie_draggable');
+
+				//check if the element is valid and, if yes, start the drag
+				if (elemToModify !== false) {
+					interactie_startDrag(elemToModify, e.clientY, e.clientX);
+				}
+			}
+
+			//check if it's a resize handle
+			if (item.classList.contains('interactie_resizeHandle')) {
+
+				//get the element that actually has to be resized
+				const elemToModify = interactie_getElementFromHandle(item, 'interactie_resizeable');
+
+				//check if the element is valid
+				if (elemToModify !== false) {
+					//get 'borderSide'
+						//does not need to be validated since 'interactie_startResize()' already does that
+					const borderSide = item.getAttribute('interactie_borderside');
+
+					//and finally start the resize
+					interactie_startResize(elemToModify, e.clientY, e.clientX, borderSide);
+				}
+			}
 		}
 
-		//break if it reached the last element (#document and Window aren't needed)
+		//check if a modal has been clicked on (but only if it's the first modal)
+		if (foundModals.length === 0 && item.classList.contains('modal_container')) {
+
+			//get modalID if it exists
+			let modalID = item.getAttribute('modalid');
+			if (modalID !== null) {
+
+				//focus the modal
+				modal_changeFocus(item.getAttribute('modalid'));
+
+				//push this to the list of modals found
+				foundModals.push(modalID);
+			}
+		}
+
+		//break if it reached <html>
 		if (item.tagName === 'HTML')
 			break;
 	}
+
+	//auto-close all modals that should be auto-closed
+		//don't have to check whether there's an item in the array because it will simply pass undefined if it's an empty array
+	modal_autoCloseModals(foundModals[0]);
 }
 
 /** Gets executed each time the user moves the cursor (or on touch devices moving the finger while touching the screen).
@@ -75,7 +109,10 @@ function listeners_pointerDown (e) {
  */
 function listeners_pointerMove (e) {
 	//move all draggable elements to the new position
-	drag_moveElements(e.clientY, e.clientX);
+	interactie_moveElements(e.clientY, e.clientX);
+
+	//resize all elements to how they should be
+	interactie_resizeElements(e.clientY, e.clientX);
 }
 
 /** Gets executed each time the user releases the pointer (whether that's releasing the left mouse-button or releasing the finger that's touching the screen).
@@ -93,9 +130,13 @@ function listeners_pointerUp (e) {
 	if (e.button !== 0 && e.button !== 2)
 		return;
 
-	//move all element to the final position and then stop dragging
-	drag_moveElements(e.clientY, e.clientX);
-	drag_stopDrag();
+	//move all elements to the final position and then stop dragging
+	interactie_moveElements(e.clientY, e.clientX);
+	interactie_stopDrag();
+
+	//resize all elements to the final size and then stop resizing
+	interactie_resizeElements(e.clientY, e.clientX);
+	interactie_stopResize();
 }
 
 /** Gets executed each time the pointer is 'canceled'. See: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/pointercancel_event
@@ -107,8 +148,9 @@ function listeners_pointerUp (e) {
  * 	In addition to the above, this also gets called when the user changes the tab or similar using the 'visibilitychange' event.
  */
 function listeners_pointerCancel () {
-	//cancel dragging (resets the positions to where they were)
-	drag_cancelDrag();
+	//cancel dragging & resizing (resets the positions & sizes to where they were)
+	interactie_cancelDrag();
+	interactie_cancelResize();
 }
 
 /**	Gets executed when the user tabs out of the window, switches the current tab or similar. See: https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilitychange_event
