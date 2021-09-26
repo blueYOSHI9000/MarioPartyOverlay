@@ -377,16 +377,16 @@ function boot_buildNavbar () {
 		//pick a character icon -- TODO: replace this with something actually good
 		switch (playerNum) {
 			case 1:
-				var characterIconSrc = 'img/icons/characters/starRushIcon/mario.png';
+				var characterIconSrc = 'images/icons/characters/starRushIcon/mario.png';
 				break;
 			case 2:
-				var characterIconSrc = 'img/icons/characters/starRushIcon/luigi.png';
+				var characterIconSrc = 'images/icons/characters/starRushIcon/luigi.png';
 				break;
 			case 3:
-				var characterIconSrc = 'img/icons/characters/starRushIcon/yoshi.png';
+				var characterIconSrc = 'images/icons/characters/starRushIcon/yoshi.png';
 				break;
 			case 4:
-				var characterIconSrc = 'img/icons/characters/starRushIcon/peach.png';
+				var characterIconSrc = 'images/icons/characters/starRushIcon/peach.png';
 				break;
 		}
 
@@ -430,7 +430,7 @@ function boot_buildSettings () {
 
 		for (let num = 0; num < 9; num++) {
 			let counter = cElem('span', counterList, {class: 'tracker_counter'});
-			cElem('img', counter, {class: 'tracker_counterImg', src: 'img/icons/bonusStars/old/smp/happeningStar.png'});
+			cElem('img', counter, {class: 'tracker_counterImg', src: 'images/icons/bonusStars/old/smp/happeningStar.png'});
 			let counterText = cElem('span', counter, {class: 'tracker_counterText'});
 			counterText.innerText = 'x69';
 		}
@@ -461,16 +461,16 @@ function boot_buildTracker () {
 		//pick a character icon -- TODO: replace this with something actually good
 		switch (playerNum) {
 			case 1:
-				var characterIconSrc = 'img/icons/characters/starRushIcon/mario.png';
+				var characterIconSrc = 'images/icons/characters/starRushIcon/mario.png';
 				break;
 			case 2:
-				var characterIconSrc = 'img/icons/characters/starRushIcon/luigi.png';
+				var characterIconSrc = 'images/icons/characters/starRushIcon/luigi.png';
 				break;
 			case 3:
-				var characterIconSrc = 'img/icons/characters/starRushIcon/yoshi.png';
+				var characterIconSrc = 'images/icons/characters/starRushIcon/yoshi.png';
 				break;
 			case 4:
-				var characterIconSrc = 'img/icons/characters/starRushIcon/peach.png';
+				var characterIconSrc = 'images/icons/characters/starRushIcon/peach.png';
 				break;
 		}
 
@@ -492,7 +492,7 @@ function boot_buildTracker () {
 			let counter = cElem('span', counterList, {class: 'tracker_counter'});
 
 			//counter image
-			cElem('img', counter, {class: 'tracker_counterImg', src: 'img/' + bonusStars[item].metadata.icon[0].filePath});
+			cElem('img', counter, {class: 'tracker_counterImg', src: 'images/' + bonusStars[item].metadata.icon[0].filePath});
 			//counter text
 			let counterText = cElem('span', counter, {class: 'tracker_counterText'});
 			counterText.innerText = 0;
