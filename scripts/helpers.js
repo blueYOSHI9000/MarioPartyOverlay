@@ -66,7 +66,7 @@ function loadScripts (scripts) {
 		fileName = fileName[fileName.length - 1];
 
 		//use the 'onLoad' attribute to execute the boot_scriptLoaded() function
-		scriptElem.setAttribute('onLoad', 'boot_scriptLoaded(\'' + fileName + '\');');
+		scriptElem.setAttribute('onLoad', `boot_scriptLoaded('${fileName}');`);
 
 		//and finally, add it to 'elemList' which will then be returned
 		elemList.push(document.getElementsByTagName('head')[0].appendChild(scriptElem));
@@ -158,3 +158,64 @@ function fillInObject (obj, defaultObj, replaceNull) {
 	}
 	return obj;
 }
+
+/** Replaces every value in an object with the value from a different object.
+ *
+ * 	Iterates through all values of 'defaultObj' and replaces the values found in 'obj' with them.
+ *
+ * 	Args:
+ * 		obj [Object]
+ * 			The object that's gonna be filled in.
+ *
+ * 		defaultObj [Object]
+ * 			The object with the default values.
+ *
+ * 	Returns [Object]:
+ * 		The filled-in object.
+ */
+function forceFillInObject (obj, defaultObj) {
+	if (typeof obj !== 'object') {
+		console.warn('[helpers.js] forceFillInObject() received a non-object for \'obj\'.');
+	}
+	if (typeof defaultObj !== 'object') {
+		console.warn('[helpers.js] forceFillInObject() received a non-object for \'defaultObj\'.');
+	}
+
+	//iterate through all 'defaultObj' entries
+	for (const key in defaultObj) {
+		//apply the default value
+		obj[key] = defaultObj[key];
+	}
+	return obj;
+}
+
+/**	=== PERFORMANCE TESTING ===
+ *
+ * 	These two function automatically check performance of a piece of code.
+ * 	'measureTest()' consists of the bit of code that's being tested.
+ * 	'realMeasureTest()' is the bit that executes 'measureTest()' many times over and automatically logs the duration to the console (or rather the performance object).
+ *
+ * 	Performance is being checked by the browser itself (See: https://developer.mozilla.org/en-US/docs/Web/API/Performance)
+ * 	I think Chrome is actually better in this because it times the duration more accurately than Firefox does.
+ *
+ * 	Also, only execute the function once then reload the page. Especially if you modify the DOM tree (because the more elements there are the longer it's gonna take to do things).
+ * 	I'm pretty sure all other active programs affect the performance too. Like, I just stopped playing music in the background and suddenly it got a lot faster.
+ * 	Because of this (and just generally) it's probably best to run this function like 5x per test.
+ */
+
+/* *
+function measureTest () {
+	const elem = cElem('span', 'modal_catchAllContainer');
+	let texto = 'Hello there';
+	elem.textContent = texto + ' General Kenobi';
+}
+
+function realMeasureTest () {
+	performance.mark('begin');
+	for (let i = 0; i < 100000; i++) {
+	    measureTest();
+	}
+	performance.mark('end');
+	console.log(performance.measure('testo', 'begin', 'end'));
+}
+/* */

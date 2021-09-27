@@ -39,7 +39,7 @@
 
 /* === 'modalClass' SPECIFIC RULES === */
 
-.modalClass-testo > .modal_main {
+.modalContentType-testo > .modal_main {
 	/**	'display: block;' so it actually takes up the exact amount of space it should.
 	 */
 	display: block;
@@ -47,6 +47,6 @@
 	/**	Specify height and width so it actually gets displayed.
 	 * 	Exact sizes will likely be changed later on.
 	 */
-	height: 400px;
-	width: 600px;
+	height: 200px;
+	width: 400px;
 }

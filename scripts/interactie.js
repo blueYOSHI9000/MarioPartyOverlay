@@ -18,7 +18,7 @@ tl;dr the filename for this is really just 'interact.js' but in Dutch.
  */
 
 //Lists every element that's currently being modified.
-	//See 'interactie_createInteractieObject()' at the bottom for a documentation on what each array entry is like
+	//See 'interactie_InteractieObject()' at the bottom for a documentation on what each array entry is like
 	//.drag   lists each element getting moved
 	//.resize lists each element getting moved
 var interactie_gettingModified = {
@@ -42,7 +42,7 @@ var interactie_gettingModified = {
  */
 function interactie_startDrag (elem, cursorPosY, cursorPosX) {
 	//create the object that's gonna be added to 'interactie_gettingMoved'
-	let obj = interactie_createInteractieObject(elem, cursorPosY, cursorPosX);
+	let obj = new interactie_InteractieObject(elem, cursorPosY, cursorPosX);
 
 	//finally, push it to the gettingModified object!
 	interactie_gettingModified.drag.push(obj);
@@ -84,8 +84,8 @@ function interactie_moveElements (cursorPosY, cursorPosX) {
 		}
 
 		//apply the new position
-		item.elem.style.top  = newCursorPosY + 'px';
-		item.elem.style.left = newCursorPosX + 'px';
+		item.elem.style.top  = `${newCursorPosY}px`;
+		item.elem.style.left = `${newCursorPosX}px`;
 	}
 }
 
@@ -100,8 +100,8 @@ function interactie_stopDrag () {
 function interactie_cancelDrag () {
 	for (const item of interactie_gettingModified.drag) {
 		//reset the positions
-		item.elem.style.top  = item.initialY + 'px';
-		item.elem.style.left = item.initialX + 'px';
+		item.elem.style.top  = `${item.initialY}px`;
+		item.elem.style.left = `${item.initialX}px`;
 	}
 	interactie_stopDrag();
 }
@@ -161,12 +161,10 @@ function interactie_startResize (elem, cursorPosY, cursorPosX, borderSide) {
 	}
 
 	//create the object that's gonna be added to 'interactie_gettingMoved'
-	let obj = interactie_createInteractieObject(elem, cursorPosY, cursorPosX, borderSide);
+	let obj = new interactie_InteractieObject(elem, cursorPosY, cursorPosX, borderSide);
 
 	//finally, push it to the gettingModified object!
 	interactie_gettingModified.resize.push(obj);
-
-	console.log(interactie_gettingModified)
 }
 
 /**	Resizes all elements to the new size.
@@ -230,10 +228,10 @@ function interactie_resizeElements (cursorPosY, cursorPosX) {
 		}
 
 		//apply the new position and size
-		item.elem.style.top    = elemPosY   + 'px';
-		item.elem.style.left   = elemPosX   + 'px';
-		item.elem.style.height = elemHeight + 'px';
-		item.elem.style.width  = elemWidth  + 'px';
+		item.elem.style.top    = `${elemPosY  }px`;
+		item.elem.style.left   = `${elemPosX  }px`;
+		item.elem.style.height = `${elemHeight}px`;
+		item.elem.style.width  = `${elemWidth }px`;
 	}
 }
 
@@ -247,9 +245,9 @@ function interactie_stopResize () {
  */
 function interactie_cancelResize () {
 	for (const item of interactie_gettingModified.drag) {
-		//reset the positions
-		item.elem.style.top  = item.initialY + 'px';
-		item.elem.style.left = item.initialX + 'px';
+		//reset the positions //TODO: add size reset
+		item.elem.style.top  = `${item.initialY}px`;
+		item.elem.style.left = `${item.initialX}px`;
 	}
 	interactie_stopResize();
 }
@@ -261,6 +259,8 @@ function interactie_cancelResize () {
 
 
 /**	Creates a interactie object that's needed whenever an interaction like dragging or resizing starts.
+ *
+ * 	Should be called the following way: "new interactie_InteractieObject()" (with arguments of course).
  *
  * 	Args:
  * 		elem [DOM Element]
@@ -275,7 +275,7 @@ function interactie_cancelResize () {
  * 		borderSide [Number] <undefined>
  * 			See 'interactie_startResize()' on how this works. Defaults to undefined as it's not always applicable.
  *
- * 	Returns [Object]:
+ * 	Constructs:
  * 		An object that contains the following properties:
  * 			- elem [DOM Element]
  * 				- The original DOM element.
@@ -294,36 +294,32 @@ function interactie_cancelResize () {
  * 			- borderSide [Number] <undefined>
  * 				- See 'interactie_startResize()' on how this works. Defaults to undefined as it's not always applicable.
  */
-function interactie_createInteractieObject (elem, cursorPosY, cursorPosX, borderSide) {
-	let obj = {};
-
+function interactie_InteractieObject (elem, cursorPosY, cursorPosX, borderSide) {
 	//save the actual DOM Element
-	obj.elem = elem;
+	this.elem = elem;
 
 	//get the exact size and position of the element
 	const rect = elem.getBoundingClientRect();
 
 	//save the exact size
-	obj.width  = rect.width ;
-	obj.height = rect.height;
+	this.width  = rect.width ;
+	this.height = rect.height;
 
 	//save the initial position of the element
-	obj.initialY = rect.top ;
-	obj.initialX = rect.left;
+	this.initialY = rect.top ;
+	this.initialX = rect.left;
 
 	//save the initial cursor position
-	obj.cursorY = cursorPosY;
-	obj.cursorX = cursorPosX;
+	this.cursorY = cursorPosY;
+	this.cursorX = cursorPosX;
 
 	//calculate the difference between where the mouse is right now and where the element to move is
 		//this is later needed so the element that's gonna be moved also moves relative to where the mouse is
-	obj.cursorOffsetY = rect.top  - cursorPosY;
-	obj.cursorOffsetX = rect.left - cursorPosX;
+	this.cursorOffsetY = rect.top  - cursorPosY;
+	this.cursorOffsetX = rect.left - cursorPosX;
 
 	//set borderSide
-	obj.borderSide = borderSide;
-
-	return obj;
+	this.borderSide = borderSide;
 }
 
 /** Gets the draggable element from the handle.
@@ -347,7 +343,7 @@ function interactie_getElementFromHandle (elem, className) {
 
 		//return if it reached <html>
 		if (elem.tagName === 'HTML') {
-			console.warn('[interactie.js] Could not find the "' + className + '" element inside listeners_getElementFromHandle().');
+			console.warn(`[interactie.js] Could not find the "${className}" element inside listeners_getElementFromHandle().`);
 			return false;
 		}
 

@@ -1,37 +1,39 @@
 /**	=== THE "Modal Object" ===
  *
  * 	A "Modal Object" includes all info about the modal itself.
- * 	When creating a modal the following have to be provided: 'class', 'classVariables', 'specifics' and 'parent'.
+ * 	When creating a modal the following have to be provided: 'type', 'specifics', 'attributes' and 'group'.
  * 	The rest will be handled by the site itself and shouldn't be touched.
  * 	It consists of the following:
  *
- *		- class [String]
- *			- What the modal is about. Can be one of the following:
+ *		- type [String]
+ *			- What the modal should have inside it. Can be one of the following:
  * 				- testo: Simply creates a box. Only really used for testing.
- *				- characterSelection: Allows the user to select which character they wanna use.
- *				- playerSelection: Allows the user to select one of the current players. Likely used to determine who got hit by an item.
+ *				- characterSelection: Allows the user to select which character they wanna use. [not implemented yet]
+ *				- playerSelection: Allows the user to select one of the current players. Likely used to determine who got hit by an item. [not implemented yet]
  *
- *		- classVariables [Object]
- *			- An object consisting of variables. Which variables can be used depend on what the 'modalClass' is:
+ *		- specifics [Object]
+ * 			- An object consisting of specifics on how the content should be displayed (like when selecting a player, should they be able to select the current player as well?).
+ * 			- Depends entirely on which 'type' is used:
  * 				- testo:
  * 					- No variables are needed. 'modalVariables' can simply be an empty object.
  *
- *		- specifics [Object]
- * 			- This defines specifics about how the modal works. These can't be changed once the modal has been created.
+ *		- attributes [Object]
+ * 			- This defines how the modal itself works. These can't be changed once the modal has been created.
  *			- An object that consists of the following:
- *				- resizable [Boolean] <true>
- *					- If the modal can be resized. Defaults to true.
  *				- openOnTop [Boolean] <true>
- * 					- If the Modal should open on top, if true then it will immediately be the focus. Defaults to true.
+ * 					- If the Modal should open on top, if true then it will immediately be the focus.
  * 					- If false it will open it at the very bottom.
  * 				- autoClose [Boolean] <true>
- * 					- If the modal can be auto-closed, meaning if a user clicks outside the modal then it gets closed automatically. Using false prevents this.
+ * 					- If the modal should be auto-closed, meaning if a user clicks outside the modal then it gets closed automatically. Using false prevents this.
+ *				- resizable [Boolean] <true>
+ *					- If the modal can be resized.
  *
- *		- parent [String]
+ *		- group [String]
  *			- To what part of the site it belongs to.
- * 			- Will be used so the modals are closed whenever they're no longer needed (like when another navbar modal is opened all other navbar modals would be closed).
+ * 			- This will be used to close modals whenever they're no longer needed. This will always include pinned modals as well.
+ * 			- For example, a modal of the group 'currentAssistTurn' will be closed once the user advances to the next turn (as it's no longer needed).
  * 			- Can be one of the following:
- *				- navbar: Belongs to navbar.
+ *				- navbar: Belongs to navbar. These will never be closed (aside form auto-close of course).
  *				- currentAssistTurn: Belongs to the current assist player. Will be closed once the turn is done.
  *
  * 		- id [Number]
@@ -56,20 +58,29 @@ var modal_focusOrder = [];
 var modal_totalModalsMade = 0;
 
 //the defaults for modal specifics
-const modal_modalSpecificsDefault = {
-	resizable: true,
-	openOnTop: true,
-	autoClose: true
+function modal_Specifics (type) {
+	switch (type) {
+		case 'testo':
+			//testo doesn't anything
+			break;
+	}
+}
+
+//the defaults for modal attributes
+function modal_Attributes () {
+	this.openOnTop = true;
+	this.autoClose = true;
+	this.resizable = true;
 }
 
 //the defaults for modal status
-const modal_modalStatusDefault = {
-	pinned: false
+function modal_Status () {
+	this.pinned = false;
 }
 
 /** Creates a new modal window (or simply 'modal').
  *
- * 	Use this to create a test-window: "modal_createModal({class: 'testo', parent: 'navbar', specifics: {}, variables: {}});"
+ * 	Use this to create a test-window: "modal_createModal({type: 'testo', specifics: {}, attributes: {}, group: 'navbar'});"
  *
  * 	Args:
  * 		modalObj [Object]
@@ -82,18 +93,18 @@ function modal_createModal (modalObj) {
 	//increase the total of modals opened
 	modal_totalModalsMade++;
 
-	//get the modal ID
+	//get and set the modal ID
 	const modalID = modal_totalModalsMade;
-
-	//set the modal ID
 	modalObj.id = modalID;
 
-	//fill in the 'modalObj.specifics' object with defaults
-	modalObj.specifics = fillInObject(modalObj.specifics, modal_modalSpecificsDefault);
+	//add the specifics object
+	modalObj.specifics = forceFillInObject(new modal_Specifics(modalObj.type), modalObj.specifics);
+
+	//fill in the 'modalObj.attributes' object with defaults
+	modalObj.attributes = forceFillInObject(new modal_Attributes(), modalObj.attributes);
 
 	//add the status object
-	modalObj.status = {};
-	modalObj.status = fillInObject(modalObj.status, modal_modalStatusDefault);
+	modalObj.status = new modal_Status();
 
 	//create the 'modal_openModals' entry
 		//has to be made at the beginning of this function so it can be found via the ID in case something goes wrong because it can't be force-closed without it being accessible by ID
@@ -102,15 +113,18 @@ function modal_createModal (modalObj) {
 	//get all CSS classes
 	let cssClasses = ['modal_container', 'interactie_draggable', 'interactie_resizeable'];
 
-		//push the modalClass specific one
-	cssClasses.push('modalClass-' + modalObj.class);
+		//push the type specific one
+	cssClasses.push(`modalContentType-${modalObj.type}`);
+
+	//create a document fragment to add all elements to
+	const docFrag = new DocumentFragment();
 
 	//create the actual DOM Element
-	const container = cElem('span', 'modal_catchAllContainer', {
-		class      : cssClasses.join(' '),
-		modalID    : modalObj.id,
-		modalClass : modalObj.class,
-		modalParent: modalObj.parent
+	const container = cElem('span', docFrag, {
+		class           : cssClasses.join(' '),
+		modalid         : modalObj.id,
+		modalcontenttype: modalObj.type,
+		modalgroup      : modalObj.group
 	});
 
 	//create the menu bar
@@ -118,40 +132,39 @@ function modal_createModal (modalObj) {
 
 		//add the drag element to the menu bar
 	const dragIcon = cElem('span', menuBar, {class: 'interactie_dragHandle'});
-	dragIcon.innerText = 'MOVE ME, DUMBASS!';
+	dragIcon.textContent = 'MOVE ME, DUMBASS!';
 
 	//create the main body
 	const main = cElem('span', container, {class: 'modal_main'});
 
 	//make changes based on which modalClass it is
-	switch (modalObj.class) {
+	switch (modalObj.type) {
 		case 'testo':
-			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 7, style: 'padding-right: 9px;'}).innerText = '7';
-			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 8, style: 'padding-right: 9px;'}).innerText = '8';
-			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 9, style: 'padding-right: 9px;'}).innerText = '9';
+			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 7, style: 'padding-right: 9px;'}).textContent = '7';
+			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 8, style: 'padding-right: 9px;'}).textContent = '8';
+			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 9, style: 'padding-right: 9px;'}).textContent = '9';
 			cElem('br'  , main);
-			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 4, style: 'padding-right: 9px;'}).innerText = '4';
-			cElem('span', main, {    /* Not needed since 5 is not a valid 'borderSide' */    style: 'padding-right: 9px;'}).innerText = '5';
-			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 6, style: 'padding-right: 9px;'}).innerText = '6';
+			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 4, style: 'padding-right: 9px;'}).textContent = '4';
+			cElem('span', main, {    /* Not needed since 5 is not a valid 'borderSide' */    style: 'padding-right: 9px;'}).textContent = '5';
+			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 6, style: 'padding-right: 9px;'}).textContent = '6';
 			cElem('br'  , main);
-			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 1, style: 'padding-right: 9px;'}).innerText = '1';
-			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 2, style: 'padding-right: 9px;'}).innerText = '2';
-			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 3, style: 'padding-right: 9px;'}).innerText = '3';
+			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 1, style: 'padding-right: 9px;'}).textContent = '1';
+			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 2, style: 'padding-right: 9px;'}).textContent = '2';
+			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 3, style: 'padding-right: 9px;'}).textContent = '3';
 			break;
 	}
 
-	//get the exact width and height of the full modal
-		//my senses say this shouldn't work since I feel like this element shouldn't have an actual height-width but it does and it works this way
-		//so if it ever breaks, try creating another container within this element and use that instead
-	const rect = container.getBoundingClientRect();
+	//append the document fragment
+	document.getElementById('modal_catchAllContainer').appendChild(docFrag);
 
 	//and then set the actual modal to be that exact size
-	container.style.width  = rect.width;
-	container.style.height = rect.height;
+		//has to be 'offsetWidth' instead of 'getBoundingClientRect().width' because the latter includes modification made through the CSS 'transform' property which shouldn't happen
+	container.style.width  = container.offsetWidth;
+	container.style.height = container.offsetHeight;
 
 	//add the new modal to the focus-order list and also focus it if needed
 	modal_focusOrder.push(modalID);
-	if (modalObj.specifics.openOnTop === true) {
+	if (modalObj.attributes.openOnTop === true) {
 		modal_changeFocus(modalID);
 	}
 
@@ -226,21 +239,19 @@ function modal_updateFocusOrder () {
 	}
 }
 
-/**	Closes all modals that belong to a certain modalParent.
- *
- * 	Note that this uses the parent that's specified when a modal is created, not their DOM 'parentNode'.
+/**	Closes all modals that belong to a certain group.
  *
  * 	Args:
- * 		parent [String]
- * 			The name of the parent that should get all it's children destroyed.
+ * 		group [String]
+ * 			The name of the group that should get all it's modals destroyed.
  */
-function modal_closeAllModalsOfParent (parent) {
+function modal_closeAllModalsOfGroup (group) {
 	for (let key in modal_openModals) {
 		//convert string to number
 		key = parseInt(key);
 
-		//check if it has the parent specified, if yes then close it
-		if (modal_openModals[key].parent === parent) {
+		//check if it has the group specified, if yes then close it
+		if (modal_openModals[key].group === group) {
 			modal_closeModal(key, false);
 		}
 	}
@@ -296,7 +307,7 @@ function modal_getDOMElement (modalID) {
 	modalID = parseInt(modalID);
 
 	//get element by using the custom 'modalid' attribute
-	const elem = document.querySelector('[modalid="' + modalID + '"]');
+	const elem = document.querySelector(`[modalid="${modalID}"]`);
 
 	//return false if element doesn't exist, otherwise simply return the DOM Element
 	if (elem === null) {
@@ -335,7 +346,7 @@ function modal_autoCloseModals (exception) {
 		const item = modal_openModals[key];
 
 		//close modal if it is can be auto-closed and if it isn't pinned
-		if (item.specifics.autoClose === true && item.status.pinned === false) {
+		if (item.attributes.autoClose === true && item.status.pinned === false) {
 			modal_closeModal(key);
 		}
 	}

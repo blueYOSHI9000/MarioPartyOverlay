@@ -139,18 +139,31 @@ function boot_startup () {
  * 	For easy editing the final site can always be viewed inside 'prebuilt.html' for easy editing (be sure to update that file AND the functions in here for any changes).
  */
 function boot_buildSite () {
-	boot_setupCounterObject();
+	//performance.mark('buildSite_start'); //start performance check
 
-	boot_buildModalCatchAll();
-	boot_buildNavbar();
-	boot_buildSettings();
-	boot_buildTracker();
+	//create the document fragment
+	let docFrag = new DocumentFragment();
+
+	//setup the 'tracker_counters' object
+	//boot_setupCounterObject();
+
+	//build the actual HTML site
+	docFrag = boot_buildModalCatchAll(docFrag);
+	docFrag = boot_buildNavbar(docFrag);
+	docFrag = boot_buildSettings(docFrag);
+	docFrag = boot_buildTracker(docFrag);
+
+	//append the document fragment to <body>
+	document.querySelector('body').appendChild(docFrag);
 
 	//boot_applySettings();
 
 	//add all eventListeners
 		//has to be at the end so if an event listener relies on a feature built by another function in here then it works perfectly without breaking the site
 	listeners_addListeners();
+
+	//performance.mark('buildSite_end'); //end performance check
+	//console.log(performance.measure('buildSite', 'buildSite_start', 'buildSite_end')); //actually measure the performance and log it
 }
 
 /**	Sets up the 'tracker_counters' object completely.
@@ -188,7 +201,7 @@ function boot_setupCounterObject () {
 		'stompedOthers',
 		'getStompedOn'
 	];
-	miscCounters.forEach(item => tracker_counters['misc'][item] = JSON.parse(defaultCounterObject));
+	miscCounters.forEach(item => tracker_counters['misc'][item] = new Counter());
 
 
 	//get all bonus stars
@@ -208,9 +221,7 @@ function boot_setupCounterObject () {
 		tracker_counters['bonusStars'][name] = JSON.parse(defaultCounterObject);
 
 		//get the current counter name
-			//the actual object can be viewed with 'currentCounterObj' but I can't link it directly to a variable because it'd just be a reference and trying to update it would simply change the reference instead of the linked object
 		let currentCounter = 'bonusStars.' + name;
-		const currentCounterObj = tracker_getCounter(currentCounter);
 
 		//get details
 		const details = bonusStars[name]['details'];
@@ -321,10 +332,7 @@ function boot_setupCounterObject () {
 			//check if the counter it links to even exists -- if not then don't link
 			if (linkedCounter !== undefined) {
 				//replace the current counter with a link
-				tracker_counters['bonusStars'][name] = {
-					sameAs: combines[0],
-					active: true
-				};
+				tracker_counters['bonusStars'][name] = new Counter(combines[0]);
 
 				//add the bonus star to either 'highlightHighest' or 'highlightLowest'
 				if (invert === true) {
@@ -332,7 +340,13 @@ function boot_setupCounterObject () {
 				} else {
 					linkedCounter['relations']['highlightHighest'].push(currentCounter);
 				}
+			} else {
+				//if the linked counter can't be found then simply create a new, unique counter
+				tracker_counters['bonusStars'][name] = new Counter();
 			}
+		} else {
+			//create a new, unique counter if it shouldn't be linked
+			tracker_counters['bonusStars'][name] = new Counter();
 		}
 
 		//list every counter that 'currentCounter' combines
@@ -358,17 +372,36 @@ function boot_setupCounterObject () {
 
 /** Builds the general modal layout.
  *
- * This only really includes the '#modal_catchAllContainer' element, it doesn't create any actual modals.
+ * 	This only really includes the '#modal_catchAllContainer' element, it doesn't create any actual modals.
+ *
+ * 	Args:
+ * 		docFrag [DocumentFragment object]
+ * 			The document fragment that the elements should be created in.
+ *
+ * 	Returns [DocumentFragment object]:
+ * 		Returns the modified DocumentFragment.
  */
-function boot_buildModalCatchAll () {
-	const modalCatchAll = cElem('span', document.querySelector('body'), {id: 'modal_catchAllContainer'});
+function boot_buildModalCatchAll (docFrag) {
+	const modalCatchAll = cElem('span', docFrag, {id: 'modal_catchAllContainer'});
+
+	return docFrag;
 }
 
 /** Builds the navbar.
+ *
+ * 	Args:
+ * 		docFrag [DocumentFragment object]
+ * 			The document fragment that the elements should be created in.
+ *
+ * 	Returns [DocumentFragment object]:
+ * 		Returns the modified DocumentFragment.
+ *
+ * 	Returns [DocumentFragment object]:
+ * 		Returns the modified DocumentFragment.
  */
-function boot_buildNavbar () {
+function boot_buildNavbar (docFrag) {
 	//This is the ground piece that covers the entire navbar area.
-	const navbarBase = cElem('span', document.querySelector('body'), {id: 'navbar_base'});
+	const navbarBase = cElem('span', docFrag, {id: 'navbar_base'});
 
 	//Create the 4 player selectors
 	for (let playerNum = 1; playerNum <= 4; playerNum++) {
@@ -395,14 +428,23 @@ function boot_buildNavbar () {
 
 	//create the shitty open settings button
 	let openSettingsButton = cElem('span', navbarBase, {style: 'color: white;cursor: pointer;', onclick: 'settings_toggleSettings();'});
-	openSettingsButton.innerText = 'open/close settings &credits';
+	openSettingsButton.textContent = 'open/close settings &credits';
+
+	return docFrag;
 }
 
 /** Builds settings.
+ *
+ * 	Args:
+ * 		docFrag [DocumentFragment object]
+ * 			The document fragment that the elements should be created in.
+ *
+ * 	Returns [DocumentFragment object]:
+ * 		Returns the modified DocumentFragment.
  */
-function boot_buildSettings () {
+function boot_buildSettings (docFrag) {
 	//The ground piece that spans and covers the entire screen. This is updated to show/hide settings.
-	const container = cElem('span', document.querySelector('body'), {id: 'settings_container'});
+	const container = cElem('span', docFrag, {id: 'settings_container'});
 
 	//The base piece that moves header, main & footer into the correct place.
 	const base = cElem('span', container, {id: 'settings_base'});
@@ -413,7 +455,7 @@ function boot_buildSettings () {
 	const footer = cElem('span', base, {id: 'settings_footer'});
 
 	//Set header up
-	cElem('span', header).innerText = 'yo';
+	cElem('span', header).textContent = 'yo';
 	cElem('span', header, {class: 'settings_seperator'});
 
 	//Set main up
@@ -432,21 +474,30 @@ function boot_buildSettings () {
 			let counter = cElem('span', counterList, {class: 'tracker_counter'});
 			cElem('img', counter, {class: 'tracker_counterImg', src: 'images/icons/bonusStars/old/smp/happeningStar.png'});
 			let counterText = cElem('span', counter, {class: 'tracker_counterText'});
-			counterText.innerText = 'x69';
+			counterText.textContent = 'x69';
 		}
 	}
-	cElem('span', main).innerText = 'AY CARAMBA';
+	cElem('span', main).textContent = 'AY CARAMBA';
 
 	//Set footer up
 	cElem('span', footer, {class: 'settings_seperator'});
-	cElem('span', footer).innerText = 'yo2';
+	cElem('span', footer).textContent = 'yo2';
+
+	return docFrag;
 }
 
 /** Builds all trackers (counters & everything else related to them).
+ *
+ * 	Args:
+ * 		docFrag [DocumentFragment object]
+ * 			The document fragment that the elements should be created in.
+ *
+ * 	Returns [DocumentFragment object]:
+ * 		Returns the modified DocumentFragment.
  */
-function boot_buildTracker () {
+function boot_buildTracker (docFrag) {
 	//This contains the entire main body (basically anything that's not navbar, settings or title-screen).
-	const mainSiteContainer = cElem('span', document.querySelector('body'), {id: 'mainSiteContainer'});
+	const mainSiteContainer = cElem('span', docFrag, {id: 'mainSiteContainer'});
 
 	//This contains all players/teams (and also all counters deeper in).
 	const playerList = cElem('span', mainSiteContainer, {id: 'tracker_playerList'});
@@ -492,10 +543,12 @@ function boot_buildTracker () {
 			let counter = cElem('span', counterList, {class: 'tracker_counter'});
 
 			//counter image
-			cElem('img', counter, {class: 'tracker_counterImg', src: 'images/' + bonusStars[item].metadata.icon[0].filePath});
+			cElem('img', counter, {class: 'tracker_counterImg', src: `images/${bonusStars[item].metadata.icon[0].filePath}`});
 			//counter text
 			let counterText = cElem('span', counter, {class: 'tracker_counterText'});
-			counterText.innerText = 0;
+			counterText.textContent = 0;
 		}
 	}
+
+	return docFrag;
 }
