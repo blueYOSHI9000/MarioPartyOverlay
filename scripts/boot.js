@@ -58,22 +58,28 @@
 //all scripts that have to be loaded
 const boot_scriptsToLoad = [
 	'database/mp-db.js',
-	'scripts/helpers.js',
+
+	'scripts/dbparsing.js',
+	'scripts/ui.js',
+	'scripts/interactie.js',
+	'scripts/modal.js',
+
 	'scripts/tracker.js',
 	'scripts/settings.js',
-	'scripts/modal.js',
-	'scripts/listeners.js',
-	'scripts/interactie.js'
+
+	'scripts/listeners.js'
 ];
 
 //all stylesheets that have to be loaded
 	//remember to update it in prebuilt.html as well
 const boot_stylesToLoad = [
+	'styles/style.css',
+
+	'styles/modal.css',
+
 	'styles/navbar.css',
 	'styles/settings.css',
-	'styles/style.css',
-	'styles/tracker.css',
-	'styles/modal.css'
+	'styles/tracker.css'
 ];
 
 
@@ -145,7 +151,7 @@ function boot_buildSite () {
 	let docFrag = new DocumentFragment();
 
 	//setup the 'tracker_counters' object
-	//boot_setupCounterObject();
+	boot_setupCounterObject();
 
 	//build the actual HTML site
 	docFrag = boot_buildModalCatchAll(docFrag);
@@ -171,20 +177,6 @@ function boot_buildSite () {
  * 	See 'tracker.js' for full documentation on what the variable does.
 */
 function boot_setupCounterObject () {
-	//the default counter object that's used on all actual counters
-		//use JSON.parse(defaultCounterObject) to get it, has to be done this way so it doesn't get referenced
-	const defaultCounterObject = JSON.stringify({
-		stats: [0, 0, 0, 0],
-		active: true,
-		relations: {
-			highlightHighest: [],
-			highlightLowest:  [],
-			combinesCounters: [],
-			addToCombination: [],
-			displaysBecause: []
-		}
-	});
-
 	//create the 'misc' counters
 	const miscCounters = [
 		'highestCoinCount',
@@ -201,27 +193,20 @@ function boot_setupCounterObject () {
 		'stompedOthers',
 		'getStompedOn'
 	];
-	miscCounters.forEach(item => tracker_counters['misc'][item] = new Counter());
+	miscCounters.forEach(item => tracker_status['counters']['misc'][item] = new tracker_Counter('standAlone'));
 
 
 	//get all bonus stars
-	const bonusStars = mpdb['_all']['bonusStars'];
+	const bonusStars = dbparsing_getBonusStarList('_all');
 
 	//create the 'bonusStars' counters
 	for (const name in bonusStars) {
-		//skip '_index' since it isn't an actual bonus star
-		if (name === '_index')
-			continue;
-
-		//skip if counter cant be tracked
+		//skip if counter can't be tracked
 		if (bonusStars[name]['cantBeTracked'] === true)
 			continue;
 
-		//create the object item for the bonus star
-		tracker_counters['bonusStars'][name] = JSON.parse(defaultCounterObject);
-
 		//get the current counter name
-		let currentCounter = 'bonusStars.' + name;
+		let currentCounterName = 'bonusStars.' + name;
 
 		//get details
 		const details = bonusStars[name]['details'];
@@ -248,7 +233,8 @@ function boot_setupCounterObject () {
 				break;
 
 			case 'coin':
-				switch (details.coinStarType) {
+				//check which 'coinStarType' it is so the correct counter can be linked
+				switch (details['coinStarType']) {
 					case 'highest':
 						combines.push('misc.highestCoinCount');
 						break;
@@ -259,6 +245,7 @@ function boot_setupCounterObject () {
 				break;
 
 			case 'minigame':
+				//check which 'minigameStarType' it is so the correct counter can be linked
 				switch (details['minigameStarType']) {
 					case 'win':
 						combines.push('misc.minigameWins');
@@ -288,6 +275,7 @@ function boot_setupCounterObject () {
 				break;
 
 			case 'collect':
+				//check what should be collected so the correct counter can be linked
 				switch (details['collectWhat']) {
 					case 'miniZtar':
 						combines.push('misc.miniZtarsCollected');
@@ -302,6 +290,7 @@ function boot_setupCounterObject () {
 				break;
 
 			case 'ally':
+				//check which 'allyStarType' it is so the correct counter can be linked
 				switch (details['allyStarType']) {
 					case 'most':
 						combines.push('misc.allyAmount');
@@ -313,6 +302,7 @@ function boot_setupCounterObject () {
 				break;
 
 			case 'stomp':
+				//check which 'stompStarType' it is so the correct counter can be linked
 				switch (details['stompStarType']) {
 					case 'stompOthers':
 						combines.push('misc.stompedOthers');
@@ -324,36 +314,47 @@ function boot_setupCounterObject () {
 				break;
 		}
 
-		//if the bonus star only tracks a single thing then simply redirect it to said counter by using 'sameAs'
+		//create a stand-alone counter if it shouldn't be combined with any
+		if (combines.length <= 0) {
+			tracker_status['counters']['bonusStars'][name] = new tracker_Counter('standAlone');
+		}
+
+		//if the bonus star only tracks a single thing then simply link it to said counter by using 'linkTo'
 		if (combines.length === 1) {
 			//get the counter it's gonna be linked to
 			const linkedCounter = tracker_getCounter(combines[0]);
 
 			//check if the counter it links to even exists -- if not then don't link
 			if (linkedCounter !== undefined) {
-				//replace the current counter with a link
-				tracker_counters['bonusStars'][name] = new Counter(combines[0]);
+				//create the counter
+				tracker_status['counters']['bonusStars'][name] = new tracker_Counter('linked', combines[0]);
 
 				//add the bonus star to either 'highlightHighest' or 'highlightLowest'
 				if (invert === true) {
-					linkedCounter['relations']['highlightLowest'] .push(currentCounter);
+					linkedCounter['status']['highlightLowest'] .push(currentCounterName);
 				} else {
-					linkedCounter['relations']['highlightHighest'].push(currentCounter);
+					linkedCounter['status']['highlightHighest'].push(currentCounterName);
 				}
 			} else {
 				//if the linked counter can't be found then simply create a new, unique counter
-				tracker_counters['bonusStars'][name] = new Counter();
+				tracker_status['counters']['bonusStars'][name] = new tracker_Counter('standAlone');
 			}
 		} else {
 			//create a new, unique counter if it shouldn't be linked
-			tracker_counters['bonusStars'][name] = new Counter();
+			tracker_status['counters']['bonusStars'][name] = new tracker_Counter('standAlone');
 		}
 
-		//list every counter that 'currentCounter' combines
+		//list every counter that 'currentCounterName' combines
 		if (combines.length > 1) {
-			for (const combinesIndex in combines) {
+			//create the counter
+			tracker_status['counters']['bonusStars'][name] = new tracker_Counter('combination');
+
+			//get the counter
+			const currentCounter = tracker_getCounter(currentCounterName);
+
+			for (const key in combines) {
 				//get counter that should be combined
-				const combinedCounter = tracker_getCounter(combines[combinesIndex]);
+				const combinedCounter = tracker_getCounter(combines[key]);
 
 				//skip if the combined counter doesn't exist
 				if (combinedCounter === undefined) {
@@ -361,10 +362,10 @@ function boot_setupCounterObject () {
 				}
 
 				//add the combined counter to the current
-				tracker_getCounter(currentCounter)['relations']['combinesCounters'].push(combines[combinesIndex]);
+				currentCounter['relations']['combinesCounters'].push(combines[key]);
 
 				//add current counter to the combined one
-				combinedCounter.relations.addToCombination.push('bonusStars.' + name);
+				combinedCounter['relations']['addToCombination'].push('bonusStars.' + name);
 			}
 		}
 	}
@@ -533,21 +534,7 @@ function boot_buildTracker (docFrag) {
 		let counterList = cElem('span', tracker_player, {class: 'tracker_counterList', player: playerNum});
 
 		//Create every counter for this player.
-		const bonusStars = mpdb['_all']['bonusStars']
-		for (const item in bonusStars) {
-			//skip '_index'
-			if (item === '_index')
-				continue;
-
-			//This contains one counter.
-			let counter = cElem('span', counterList, {class: 'tracker_counter'});
-
-			//counter image
-			cElem('img', counter, {class: 'tracker_counterImg', src: `images/${bonusStars[item].metadata.icon[0].filePath}`});
-			//counter text
-			let counterText = cElem('span', counter, {class: 'tracker_counterText'});
-			counterText.textContent = 0;
-		}
+		ui_createCounterList(counterList);
 	}
 
 	return docFrag;
