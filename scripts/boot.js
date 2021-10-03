@@ -126,7 +126,8 @@ function boot_startup () {
 	//Load localStorage
 	const ls = localStorage;
 
-		//save settings to variable if present
+	//save settings to variable if present
+		//else it simply leaves the variable as is
 	if (typeof ls.settings !== 'undefined') {
 		settings_settings = JSON.parse(ls.settings);
 	}
@@ -199,30 +200,42 @@ function boot_setupCounterObject () {
 	//get all bonus stars
 	const bonusStars = dbparsing_getBonusStarList('_all');
 
+	//list of counters made
+		//this is used to identify when "duplicate" counters are made so they can be linked
+	let countersMade = [];
+
+	//the names of the counters in 'countersMade'
+	let countersMadeNames = [];
+
 	//create the 'bonusStars' counters
-	for (const name in bonusStars) {
+	for (const key in bonusStars) {
 		//skip if counter can't be tracked
-		if (bonusStars[name]['cantBeTracked'] === true)
+		if (bonusStars[key]['cantBeTracked'] === true)
 			continue;
 
 		//get the current counter name
-		let currentCounterName = 'bonusStars.' + name;
+		let currentCounterName = 'bonusStars.' + key;
 
 		//get details
-		const details = bonusStars[name]['details'];
+		const details = bonusStars[key]['details'];
 
 		//whether the counter should be inverted or not
-		if (bonusStars[name]['invert'] === true) {
+		if (bonusStars[key]['invert'] === true) {
 			var invert = true;
 		} else {
 			var invert = false;
 		}
 
+		//current bonus star type
+		const bonusStarType = bonusStars[key]['bonusStarType'];
+
+		//=== get which counters it should be combined/linked with ===
+
 		//which counters it combines
 		let combines = [];
 
-		//execute code based on which 'bonusStarType' it is to finish setting up the bonus star
-		switch (bonusStars[name]['bonusStarType']) {
+		//this gets the counters it should be combined with based on which 'bonusStarType' it is
+		switch (bonusStarType) {
 			case 'space':
 				//check if 'spacesAllowed' is set to all (which is the default value so it can either be undefined or null)
 				if (typeof details['spacesAllowed'] === 'undefined' || typeof details['spacesAllowed'] === 'null') {
@@ -314,20 +327,40 @@ function boot_setupCounterObject () {
 				break;
 		}
 
-		//create a stand-alone counter if it shouldn't be combined with any
-		if (combines.length <= 0) {
-			tracker_status['counters']['bonusStars'][name] = new tracker_Counter('standAlone');
+		//=== check if this exact counter has already been made ===
+			//if yes, then link it
+
+		//the current counter thats being made
+		const currentCounterMade = `${bonusStarType}-${combines.join('&')}`;
+
+		//check if the counter has already been made
+		const countersMadeIndex = countersMade.indexOf(currentCounterMade);
+		if (countersMadeIndex !== -1) {
+
+			//get the name of the duplicate counter so the current one can be linked to that one
+			const duplicateCounter = `bonusStars.${countersMadeNames[countersMadeIndex]}`;
+			combines = [duplicateCounter];
 		}
 
+		//=== check whether the counter should be a 'standAlone', 'linked' or 'combined' and also do that ===
+
+		//create a stand-alone counter if it shouldn't be combined with any
+		if (combines.length <= 0) {
+			tracker_status['counters']['bonusStars'][key] = new tracker_Counter('standAlone');
+
+			//push this to the list of counters made
+			countersMade.push(currentCounterMade);
+			countersMadeNames.push(key);
+
 		//if the bonus star only tracks a single thing then simply link it to said counter by using 'linkTo'
-		if (combines.length === 1) {
+		} else if (combines.length === 1) {
 			//get the counter it's gonna be linked to
 			const linkedCounter = tracker_getCounter(combines[0]);
 
 			//check if the counter it links to even exists -- if not then don't link
 			if (linkedCounter !== undefined) {
 				//create the counter
-				tracker_status['counters']['bonusStars'][name] = new tracker_Counter('linked', combines[0]);
+				tracker_status['counters']['bonusStars'][key] = new tracker_Counter('linked', combines[0]);
 
 				//add the bonus star to either 'highlightHighest' or 'highlightLowest'
 				if (invert === true) {
@@ -337,17 +370,13 @@ function boot_setupCounterObject () {
 				}
 			} else {
 				//if the linked counter can't be found then simply create a new, unique counter
-				tracker_status['counters']['bonusStars'][name] = new tracker_Counter('standAlone');
+				tracker_status['counters']['bonusStars'][key] = new tracker_Counter('standAlone');
 			}
-		} else {
-			//create a new, unique counter if it shouldn't be linked
-			tracker_status['counters']['bonusStars'][name] = new tracker_Counter('standAlone');
-		}
 
 		//list every counter that 'currentCounterName' combines
-		if (combines.length > 1) {
+		} else if (combines.length > 1) {
 			//create the counter
-			tracker_status['counters']['bonusStars'][name] = new tracker_Counter('combination');
+			tracker_status['counters']['bonusStars'][key] = new tracker_Counter('combination');
 
 			//get the counter
 			const currentCounter = tracker_getCounter(currentCounterName);
@@ -365,8 +394,12 @@ function boot_setupCounterObject () {
 				currentCounter['relations']['combinesCounters'].push(combines[key]);
 
 				//add current counter to the combined one
-				combinedCounter['relations']['addToCombination'].push('bonusStars.' + name);
+				combinedCounter['relations']['addToCombination'].push('bonusStars.' + key);
 			}
+
+			//push this to the list of counters made
+			countersMade.push(currentCounterMade);
+			countersMadeNames.push(key);
 		}
 	}
 }
@@ -534,7 +567,7 @@ function boot_buildTracker (docFrag) {
 		let counterList = cElem('span', tracker_player, {class: 'tracker_counterList', player: playerNum});
 
 		//Create every counter for this player.
-		ui_createCounterList(counterList);
+		ui_createCounterList(counterList, playerNum);
 	}
 
 	return docFrag;

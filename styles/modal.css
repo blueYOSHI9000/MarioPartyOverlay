@@ -39,7 +39,7 @@
 
 /* === 'modalClass' SPECIFIC RULES === */
 
-.modalContentType-testo > .modal_main {
+.modalType-testo > .modal_main {
 	/**	'display: block;' so it actually takes up the exact amount of space it should.
 	 */
 	display: block;
@@ -49,4 +49,15 @@
 	 */
 	height: 200px;
 	width: 400px;
+}
+
+.modalType-characterSelection > .modal_main {
+	/**	'display: block;' so it actually takes up the exact amount of space it should.
+	 */
+	display: block;
+
+	/**	Specify width so it doesn't just get displayed as a single column.
+	 * 	Exact sizes will likely be changed later on.
+	 */
+	width: 1000px;
 }

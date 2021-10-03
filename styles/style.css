@@ -45,9 +45,10 @@
  *	- *anything font-related*
  *	- *any other styling like background-color*
  *
- *  === RESERVED Z-INDEX ===
+ *  === RESERVED Z-INDEX VALUES ===
  *
- *  - First off, remember that z-index only affects other z-indexes if they're on the same level. See (note that DIV #4 is a child of DIV #3): https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/Stacking_context_example_2
+ *  - First off, remember that z-index only affects other z-indexes if they're on the same level.
+ *      - See here: (note that DIV #4 is a child of DIV #3) https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Positioning/Understanding_z_index/Stacking_context_example_2
  *
  *  - A z-index of 100 and anything above is reserved for modals.
  *      - 100 is used for '#modal_catchAllContainer' which includes all modals inside it.
@@ -108,4 +109,26 @@ body {
 	 * 	tl;dr: Scrollbars are required here (though they only need to be visible when they're needed).
 	 */
 	overflow: auto;
+}
+
+/** === GENERIC ELEMENTS ===
+ *
+ *  Below this are generic elements that don't belong to any single part of the site since they can be reused all over the place.
+ */
+.imgButton {
+    height: 80px;
+    width: 80px;
+
+    opacity: .5;
+}
+.imgButton:hover {
+    opacity: .7;
+}
+.imgButton:active {
+    opacity: .9;
+}
+
+/* debugging on fucking phones is a nightmare */
+.modal_container {
+    top: 200px;
 }

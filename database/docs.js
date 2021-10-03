@@ -23,14 +23,14 @@ Also, don't rely on this too much, it will be changed drastically whenever it's 
 +---------------------------+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
 |                      items| - |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |                       dice| X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-|                bonus stars|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+|                bonus stars| X | X | X | X | X | X | X | X | X | X | - | X | - | X | X | X |
 +---------------------------+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
 |generic events (shops, etc)| X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |           happening spaces|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   'eventCollection' events|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |      board-specific events|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 +---------------------------+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
-|        playable characters| X |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+|        playable characters| X | X | X | X | X | X | X | X | X | X | X | X | X | X | X | X |
 |       all other characters|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |          characters sorted|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 +---------------------------+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+

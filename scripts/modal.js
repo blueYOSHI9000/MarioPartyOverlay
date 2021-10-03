@@ -114,7 +114,7 @@ function modal_createModal (modalObj) {
 	let cssClasses = ['modal_container', 'interactie_draggable', 'interactie_resizeable'];
 
 		//push the type specific one
-	cssClasses.push(`modalContentType-${modalObj.type}`);
+	cssClasses.push(`modalType-${modalObj.type}`);
 
 	//create a document fragment to add all elements to
 	const docFrag = new DocumentFragment();
@@ -132,14 +132,15 @@ function modal_createModal (modalObj) {
 
 		//add the drag element to the menu bar
 	const dragIcon = cElem('span', menuBar, {class: 'interactie_dragHandle'});
-	dragIcon.textContent = 'MOVE ME, DUMBASS!';
+	dragIcon.textContent = 'MOVE ME!';
 
 	//create the main body
 	const main = cElem('span', container, {class: 'modal_main'});
 
-	//make changes based on which modalClass it is
+	//make changes based on which type it is
 	switch (modalObj.type) {
 		case 'testo':
+			//create the resizing "buttons"
 			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 7, style: 'padding-right: 9px;'}).textContent = '7';
 			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 8, style: 'padding-right: 9px;'}).textContent = '8';
 			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 9, style: 'padding-right: 9px;'}).textContent = '9';
@@ -151,6 +152,11 @@ function modal_createModal (modalObj) {
 			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 1, style: 'padding-right: 9px;'}).textContent = '1';
 			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 2, style: 'padding-right: 9px;'}).textContent = '2';
 			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 3, style: 'padding-right: 9px;'}).textContent = '3';
+			break;
+
+		case 'characterSelection':
+			//create all characters
+			ui_createCharacterList(main);
 			break;
 	}
 

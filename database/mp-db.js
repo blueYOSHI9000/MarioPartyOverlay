@@ -2227,7 +2227,7 @@ const mpdb = {
 						}
 					]
 				},
-				bonusStarType: 'space',
+				bonusStarType: 'stomp',
 				details: {
 					stompStarType: 'getStompedOn'
 				}
@@ -11783,7 +11783,7 @@ const mpdb = {
 						}
 					]
 				},
-				bonusStarType: 'space',
+				bonusStarType: 'stomp',
 				details: {
 					stompStarType: 'getStompedOn'
 				}

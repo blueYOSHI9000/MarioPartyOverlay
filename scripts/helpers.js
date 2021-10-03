@@ -205,14 +205,29 @@ function forceFillInObject (obj, defaultObj) {
 
 /* *
 function measureTest () {
-	const elem = cElem('span', 'modal_catchAllContainer');
-	let texto = 'Hello there';
-	elem.textContent = texto + ' General Kenobi';
+	//round number down
+	let newStat = parseInt(5.8);
+
+	//check to make sure the new stat is valid
+		//can't be below 0
+		//can't be above 999
+	if (newStat < 0) {
+		newStat = 0;
+	} else if (newStat > 999) {
+		newStat = 999;
+
+	//if 'newStat' is not in between 0 and 999 (inclusive) then it's invalid
+		//this could be if it's Infinity, -Infinity, NaN or somehow not even of the type 'number'
+	} else if (newStat === NaN) {
+		console.error(`[MPO] tracker_updateCounter() got an invalid 'newStat' of value "${newStat}". oldStat: "${oldStat}" | counterName: "${counterName}" | player: "${player}" | action: "${action}" | value: ${value}`);
+		newStat = 0;
+	}
+	return newStat;
 }
 
 function realMeasureTest () {
 	performance.mark('begin');
-	for (let i = 0; i < 100000; i++) {
+	for (let i = 0; i < 100000000; i++) {
 	    measureTest();
 	}
 	performance.mark('end');
