@@ -1,0 +1,18 @@
+/* === 'fieldType' SPECIFIC RULES === */
+
+.fieldType-imgButton {
+	/**	Give them a fixed size. 80px mainly because it's neither too big nor too small.
+	 */
+	height: 80px;
+	width: 80px;
+
+	/**	Give them a transparent look and a less transparent one when hovering so it feels like a button. Exact transparency level is a WIP.
+	 */
+	opacity: .5;
+}
+.fieldType-imgButton:hover {
+	opacity: .7;
+}
+.fieldType-imgButton:active {
+	opacity: .9;
+}

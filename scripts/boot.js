@@ -57,17 +57,18 @@
 
 //all scripts that have to be loaded
 const boot_scriptsToLoad = [
-	'database/mp-db.js',
+	'database/mp-db.js',//the database
 
-	'scripts/dbparsing.js',
-	'scripts/ui.js',
-	'scripts/interactie.js',
-	'scripts/modal.js',
+	'scripts/dbparsing.js',//parses the database
+	'scripts/ui.js',//handles anything related to the interface itself (preferably anything that modifies the DOM tree should be kept inside 'ui.js' and 'boot.js', though this isn't a hard rule)
+	'scripts/interactie.js',//handles everything related to dragging & resizing elements by the user (required mostly for modals)
+	'scripts/modal.js',//handles anything related to modals
+	'scripts/inputfield.js',//handles the creation of "input fields"
 
-	'scripts/tracker.js',
-	'scripts/settings.js',
+	'scripts/tracker.js',//handles the tracker itself
+	'scripts/settings.js',//handles anything related to settings like applying settings
 
-	'scripts/listeners.js'
+	'scripts/listeners.js' //handles all event listeners like keyboard inputs or mouseclicks
 ];
 
 //all stylesheets that have to be loaded
@@ -79,7 +80,8 @@ const boot_stylesToLoad = [
 
 	'styles/navbar.css',
 	'styles/settings.css',
-	'styles/tracker.css'
+	'styles/tracker.css',
+	'styles/inputfield.css'
 ];
 
 
@@ -498,20 +500,6 @@ function boot_buildSettings (docFrag) {
 		//Add the copyright bits
 	let copyrightBits = cElem('span', main);
 	copyrightBits.innerHTML = 'Project is currently maintained by <a href="https://www.twitter.com/yoshisrc" rel="noopener" target="_blank">blueYOSHI</a> with contributions from <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors" rel="noopener" target="_blank">others</a> <br> <br> Project is licensed under the GPLv3.0 and a file containing the license is included in the <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/rewrite/LICENSE" rel="noopener" target="_blank">source code</a>. <br> <br> Initial development began in 2018. Latest activity can be tracked on the <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/tree/rewrite" rel="noopener" target="_blank">github page of this project</a>. <br> <br> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" rel="noopener" target="_blank">Mario Party 9 Font</a> from <a href="www.freepremiumfonts.com" rel="noopener" target="_blank">www.freepremiumfonts.com</a> (modified) <br> <br> <b>All characters, products and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them.<br>Mario Party is a registered trademark of Nintendo.</b><br><br>'
-
-
-		//add some shitty counters to test the verticality of it or something
-	for (let num2 = 0; num2 < 9; num2++) {
-		let counterList = cElem('span', main, {class: 'tracker_counterList'});
-
-		for (let num = 0; num < 9; num++) {
-			let counter = cElem('span', counterList, {class: 'tracker_counter'});
-			cElem('img', counter, {class: 'tracker_counterImg', src: 'images/icons/bonusStars/old/smp/happeningStar.png'});
-			let counterText = cElem('span', counter, {class: 'tracker_counterText'});
-			counterText.textContent = 'x69';
-		}
-	}
-	cElem('span', main).textContent = 'AY CARAMBA';
 
 	//Set footer up
 	cElem('span', footer, {class: 'settings_seperator'});

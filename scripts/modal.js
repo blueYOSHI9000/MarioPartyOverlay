@@ -80,7 +80,7 @@ function modal_Status () {
 
 /** Creates a new modal window (or simply 'modal').
  *
- * 	Use this to create a test-window: "modal_createModal({type: 'testo', specifics: {}, attributes: {}, group: 'navbar'});"
+ * 	Use this to create a test-window: "modal_createModal({type: 'testo', specifics: {}, attributes: {autoClose: false}, group: 'navbar'});"
  *
  * 	Args:
  * 		modalObj [Object]
@@ -111,7 +111,7 @@ function modal_createModal (modalObj) {
 	modal_openModals[modalID] = modalObj;
 
 	//get all CSS classes
-	let cssClasses = ['modal_container', 'interactie_draggable', 'interactie_resizeable'];
+	let cssClasses = ['modal_container', 'interaction_draggable', 'interaction_resizeable'];
 
 		//push the type specific one
 	cssClasses.push(`modalType-${modalObj.type}`);
@@ -131,7 +131,7 @@ function modal_createModal (modalObj) {
 	const menuBar = cElem('span', container, {class: 'modal_menuBar'});
 
 		//add the drag element to the menu bar
-	const dragIcon = cElem('span', menuBar, {class: 'interactie_dragHandle'});
+	const dragIcon = cElem('span', menuBar, {class: 'interaction_dragHandle'});
 	dragIcon.textContent = 'MOVE ME!';
 
 	//create the main body
@@ -141,17 +141,17 @@ function modal_createModal (modalObj) {
 	switch (modalObj.type) {
 		case 'testo':
 			//create the resizing "buttons"
-			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 7, style: 'padding-right: 9px;'}).textContent = '7';
-			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 8, style: 'padding-right: 9px;'}).textContent = '8';
-			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 9, style: 'padding-right: 9px;'}).textContent = '9';
+			cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 7, style: 'padding-right: 9px;'}).textContent = '7';
+			cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 8, style: 'padding-right: 9px;'}).textContent = '8';
+			cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 9, style: 'padding-right: 9px;'}).textContent = '9';
 			cElem('br'  , main);
-			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 4, style: 'padding-right: 9px;'}).textContent = '4';
+			cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 4, style: 'padding-right: 9px;'}).textContent = '4';
 			cElem('span', main, {    /* Not needed since 5 is not a valid 'borderSide' */    style: 'padding-right: 9px;'}).textContent = '5';
-			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 6, style: 'padding-right: 9px;'}).textContent = '6';
+			cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 6, style: 'padding-right: 9px;'}).textContent = '6';
 			cElem('br'  , main);
-			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 1, style: 'padding-right: 9px;'}).textContent = '1';
-			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 2, style: 'padding-right: 9px;'}).textContent = '2';
-			cElem('span', main, {class: 'interactie_resizeHandle', interactie_borderside: 3, style: 'padding-right: 9px;'}).textContent = '3';
+			cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 1, style: 'padding-right: 9px;'}).textContent = '1';
+			cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 2, style: 'padding-right: 9px;'}).textContent = '2';
+			cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 3, style: 'padding-right: 9px;'}).textContent = '3';
 			break;
 
 		case 'characterSelection':

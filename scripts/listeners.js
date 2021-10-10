@@ -45,7 +45,7 @@ function listeners_addListeners () {
   //document.addEventListener('pointerup',     listeners_pointerUp    );
   //document.addEventListener('pointercancel', listeners_pointerCancel);
 
-	//Fires when the user leaves or re-opens the current browser tab or similar stuff
+	//fires when the user leaves or re-opens the current browser tab or similar stuff
 	document.addEventListener('visibilitychange', listeners_visibilitychange);
 }
 
@@ -122,31 +122,36 @@ function listeners_pointerDown (e) {
 			//note that key is a string for whatever stupid ass reason
 		if (firstLoop === true) {
 
-			//check if it's a drag handle
-			if (elem.classList.contains('interactie_dragHandle')) {
-				//get the element that actually has to be moved
-				const elemToModify = interactie_getElementFromHandle(elem, 'interactie_draggable');
+			//loop through all classes and check if something has to be executed depending on the class
+			for (const item of elem.classList) {
+				switch (item) {
 
-				//check if the element is valid and, if yes, start the drag
-				if (elemToModify !== false) {
-					interactie_startDrag(elemToModify, clientY, clientX);
-				}
-			}
+					//a drag handle
+					case 'interaction_dragHandle':
+						//get the element that actually has to be moved
+						const elemToModify = interaction_getElementFromHandle(elem, 'interaction_draggable');
 
-			//check if it's a resize handle
-			if (elem.classList.contains('interactie_resizeHandle')) {
+						//check if the element is valid and, if yes, start the drag
+						if (elemToModify !== false) {
+							interaction_startDrag(elemToModify, clientY, clientX);
+						}
+						break;
 
-				//get the element that actually has to be resized
-				const elemToModify = interactie_getElementFromHandle(elem, 'interactie_resizeable');
+					//a resize handle
+					case 'interaction_resizeHandle':
+						//get the element that actually has to be resized
+						const elemToModify = interaction_getElementFromHandle(elem, 'interaction_resizeable');
 
-				//check if the element is valid
-				if (elemToModify !== false) {
-					//get 'borderSide'
-						//does not need to be validated since 'interactie_startResize()' already does that
-					const borderSide = elem.getAttribute('interactie_borderside');
+						//check if the element is valid
+						if (elemToModify !== false) {
+							//get 'borderSide'
+								//does not need to be validated since 'interaction_startResize()' already does that
+							const borderSide = elem.getAttribute('interaction_borderside');
 
-					//and finally start the resize
-					interactie_startResize(elemToModify, clientY, clientX, borderSide);
+							//and finally start the resize
+							interaction_startResize(elemToModify, clientY, clientX, borderSide);
+						}
+						break;
 				}
 			}
 
@@ -154,30 +159,43 @@ function listeners_pointerDown (e) {
 			firstLoop = false;
 		}
 
-		//check if a modal has been clicked on (but only if it's the first modal)
-		if (foundModals.length === 0 && elem.classList.contains('modal_container')) {
+		//loop through all classes and check if something has to be executed depending on the class
+		for (const item of elem.classList) {
+			switch (item) {
 
-			//get modalID if it exists
-			let modalID = elem.getAttribute('modalid');
-			if (modalID !== null) {
+				//a modal
+				case 'modal_container':
+					//only execute this if it's the first modal found
+					if (foundModals.length === 0) {
 
-				//focus the modal
-				modal_changeFocus(elem.getAttribute('modalid'));
+						//get modalID if it exists
+						let modalID = elem.getAttribute('modalid');
+						if (modalID !== null) {
 
-				//push this to the list of modals found
-				foundModals.push(modalID);
+							//focus the modal
+							modal_changeFocus(elem.getAttribute('modalid'));
+
+							//push this to the list of modals found
+							foundModals.push(modalID);
+						}
+					}
+					break;
+
+				//a counter
+				case 'tracker_counter':
+					tracker_updateCounter(elem.getAttribute('counter'), parseInt(elem.getAttribute('player')));
+					break;
+
+				//the navbar entry for updating players
+				case 'navbar_player':
+					modalsToCreate.push({type: 'characterSelection', specifics: {}, attributes: {}, group: 'navbar'});
+					break;
+
+				//any input field element that should be updated when clicked on
+				case 'inputfield_callUpdate':
+					inputfield_onFieldClicked(elem);
+					break;
 			}
-		}
-
-		//check if a counter has been clicked on
-		if (elem.classList.contains('tracker_counter')) {
-			tracker_updateCounter(elem.getAttribute('counter'), parseInt(elem.getAttribute('player')));
-		}
-
-		//check if the player navbar has been clicked on
-		if (elem.classList.contains('navbar_player')) {
-			//create the modal
-			modalsToCreate.push({type: 'characterSelection', specifics: {}, attributes: {}, group: 'navbar'});
 		}
 
 		//continue with the parent node
@@ -223,10 +241,10 @@ function listeners_pointerMove (e) {
 	}
 
 	//move all draggable elements to the new position
-	interactie_moveElements(clientY, clientX);
+	interaction_moveElements(clientY, clientX);
 
 	//resize all elements to how they should be
-	interactie_resizeElements(clientY, clientX);
+	interaction_resizeElements(clientY, clientX);
 }
 
 /** Gets executed each time the user releases the pointer (whether that's releasing the left mouse-button or releasing the finger that's touching the screen).
@@ -266,13 +284,13 @@ function listeners_pointerUp (e) {
 
 	//drag and resize them to the final coordinates
 	if (clientY === undefined || clientX === undefined) {
-		interactie_moveElements(clientY, clientX);
-		interactie_resizeElements(clientY, clientX);
+		interaction_moveElements(clientY, clientX);
+		interaction_resizeElements(clientY, clientX);
 	}
 
 	//stop dragging & resizing
-	interactie_stopDrag();
-	interactie_stopResize();
+	interaction_stopDrag();
+	interaction_stopResize();
 }
 
 /** Gets executed each time the pointer is 'canceled'. See: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/pointercancel_event
@@ -287,8 +305,8 @@ function listeners_pointerCancel () {
 	//console.log('CANCEL');
 
 	//cancel dragging & resizing (resets the positions & sizes to where they were)
-	interactie_cancelDrag();
-	interactie_cancelResize();
+	interaction_cancelDrag();
+	interaction_cancelResize();
 
 	//set pointer as no longer active/held down
 	listeners_activePointer = false;

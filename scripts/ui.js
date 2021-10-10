@@ -126,6 +126,8 @@ function ui_createCharacterList (parent, game) {
 	//get all characters
 	const characters = dbparsing_getCharacterList(game);
 
+	let fieldOptions = [];
+
 	//loop through all characters
 	for (const key in characters) {
 		const item = characters[key];
@@ -133,7 +135,16 @@ function ui_createCharacterList (parent, game) {
 		//get image source
 		const imgSrc = dbparsing_getIcon(`characters.${key}`, game);
 
-		//create the character image
-		let charElem = ui_createImgButton(parent, imgSrc, `tracker_changeCharacter(1, '${key}');`)
+		//get character name
+		const fullName = item['metadata']['fullName'];
+
+		fieldOptions.push({
+			name: fullName,
+			value: key,
+			src: imgSrc
+		});
 	}
+
+	//create the character selection
+	inputfield_createField('radio-image', parent, {options: fieldOptions, onchange: (char) => {tracker_changeCharacter(1, char);}});
 }
