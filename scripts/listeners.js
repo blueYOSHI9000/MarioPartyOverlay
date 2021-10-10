@@ -129,7 +129,7 @@ function listeners_pointerDown (e) {
 					//a drag handle
 					case 'interaction_dragHandle':
 						//get the element that actually has to be moved
-						const elemToModify = interaction_getElementFromHandle(elem, 'interaction_draggable');
+						var elemToModify = interaction_getElementFromHandle(elem, 'interaction_draggable');
 
 						//check if the element is valid and, if yes, start the drag
 						if (elemToModify !== false) {
@@ -140,7 +140,7 @@ function listeners_pointerDown (e) {
 					//a resize handle
 					case 'interaction_resizeHandle':
 						//get the element that actually has to be resized
-						const elemToModify = interaction_getElementFromHandle(elem, 'interaction_resizeable');
+						var elemToModify = interaction_getElementFromHandle(elem, 'interaction_resizeable');
 
 						//check if the element is valid
 						if (elemToModify !== false) {

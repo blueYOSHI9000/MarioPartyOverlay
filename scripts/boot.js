@@ -61,7 +61,7 @@ const boot_scriptsToLoad = [
 
 	'scripts/dbparsing.js',//parses the database
 	'scripts/ui.js',//handles anything related to the interface itself (preferably anything that modifies the DOM tree should be kept inside 'ui.js' and 'boot.js', though this isn't a hard rule)
-	'scripts/interactie.js',//handles everything related to dragging & resizing elements by the user (required mostly for modals)
+	'scripts/interaction.js',//handles everything related to dragging & resizing elements by the user (required mostly for modals)
 	'scripts/modal.js',//handles anything related to modals
 	'scripts/inputfield.js',//handles the creation of "input fields"
 

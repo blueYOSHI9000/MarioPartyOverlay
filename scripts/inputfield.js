@@ -52,7 +52,7 @@ let inputfield_totalFieldsCreated = 0;
  * 				- color: A custom color in hex format can be selected.
  * 				- file: A file-upload with drag 'n' drop support.
  *
- * 		parentElem [DOM Element/String]
+ * 		parent [DOM Element/String]
  * 			The element that the button should be created in.
  * 			Can also be the ID of the element.
  *
