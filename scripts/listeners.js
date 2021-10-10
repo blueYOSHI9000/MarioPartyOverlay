@@ -193,7 +193,7 @@ function listeners_pointerDown (e) {
 
 				//any input field element that should be updated when clicked on
 				case 'inputfield_callUpdate':
-					inputfield_onFieldClicked(elem);
+					inputfield_onFieldChange(elem);
 					break;
 			}
 		}

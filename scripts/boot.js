@@ -501,6 +501,140 @@ function boot_buildSettings (docFrag) {
 	let copyrightBits = cElem('span', main);
 	copyrightBits.innerHTML = 'Project is currently maintained by <a href="https://www.twitter.com/yoshisrc" rel="noopener" target="_blank">blueYOSHI</a> with contributions from <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors" rel="noopener" target="_blank">others</a> <br> <br> Project is licensed under the GPLv3.0 and a file containing the license is included in the <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/rewrite/LICENSE" rel="noopener" target="_blank">source code</a>. <br> <br> Initial development began in 2018. Latest activity can be tracked on the <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/tree/rewrite" rel="noopener" target="_blank">github page of this project</a>. <br> <br> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" rel="noopener" target="_blank">Mario Party 9 Font</a> from <a href="www.freepremiumfonts.com" rel="noopener" target="_blank">www.freepremiumfonts.com</a> (modified) <br> <br> <b>All characters, products and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them.<br>Mario Party is a registered trademark of Nintendo.</b><br><br>'
 
+	//create a quick seperator
+	let seperator = cElem('span', main);
+	seperator.textContent = '====================================================';
+	cElem('br', main);
+	cElem('br', main);
+
+	//create a temporary debug output to test stuff
+	let output = cElem('span', main, {id: 'settings_debugOutput'});
+	cElem('br', main);
+
+	//the function that will be called when each input field gets updated
+		//the function simply logs the value to the element with the ID 'settings_debugOutput'
+	let logToOutput = (value) => {document.getElementById('settings_debugOutput').textContent = value;};
+
+	//create a checkbox
+	cElem('br', main);
+	let checkboxTest = cElem('span', main);
+	checkboxTest.textContent = 'Checkbox:';
+	inputfield_createField('checkbox', checkboxTest, {
+		onchange: logToOutput
+	});
+
+	//create a radio checkbox
+	cElem('br', main);
+	inputfield_createField('radio-checkbox', main, {
+		onchange: logToOutput,
+		options: [
+			{
+				name: 'Option 1',
+				value: 'one'
+			},
+			{
+				name: 'Option 2',
+				value: 'two'
+			},
+			{
+				name: 'Option 3',
+				value: 'three'
+			}
+		]
+	});
+
+	//create a input field
+	cElem('br', main);
+	inputfield_createField('radio-select', main, {
+		onchange: logToOutput,
+		options: [
+			{
+				name: 'Mario',
+				value: 'mario',
+				src: 'images/icons/characters/starRushIcon/mario.png'
+			},
+			{
+				name: 'Weegee',
+				value: 'weegee',
+				src: 'images/icons/characters/starRushIcon/luigi.png'
+			},
+			{
+				name: 'Wario',
+				value: 'wario',
+				src: 'images/icons/characters/starRushIcon/wario.png'
+			},
+			{
+				name: 'WAAAAAAAAAAAH',
+				value: 'waaaaaaaaaaah',
+				src: 'images/icons/characters/starRushIcon/waluigi.png'
+			}
+		]
+	});
+
+	//create a input field
+	cElem('br', main);
+	inputfield_createField('radio-image', main, {
+		onchange: logToOutput,
+		options: [
+			{
+				name: 'Mario',
+				value: 'mario',
+				src: 'images/icons/characters/starRushIcon/mario.png'
+			},
+			{
+				name: 'Weegee',
+				value: 'weegee',
+				src: 'images/icons/characters/starRushIcon/luigi.png'
+			},
+			{
+				name: 'Wario',
+				value: 'wario',
+				src: 'images/icons/characters/starRushIcon/wario.png'
+			},
+			{
+				name: 'WAAAAAAAAAAAH',
+				value: 'waaaaaaaaaaah',
+				src: 'images/icons/characters/starRushIcon/waluigi.png'
+			}
+		]
+	});
+
+	//create a text input
+	cElem('br', main);
+	inputfield_createField('text', main, {
+		onchange: logToOutput
+	});
+
+	//create a textarea
+	cElem('br', main);
+	inputfield_createField('textarea', main, {
+		onchange: logToOutput
+	});
+
+	//create a number-text
+	cElem('br', main);
+	inputfield_createField('number-text', main, {
+		onchange: logToOutput
+	});
+
+	//create a number range
+	cElem('br', main);
+	inputfield_createField('number-range', main, {
+		onchange: logToOutput
+	});
+
+	//create a button
+	cElem('br', main);
+	inputfield_createField('button', main, {
+		onchange: logToOutput
+	});
+
+	//create a color input
+	cElem('br', main);
+	inputfield_createField('color', main, {
+		onchange: logToOutput
+	});
+
 	//Set footer up
 	cElem('span', footer, {class: 'settings_seperator'});
 	cElem('span', footer).textContent = 'yo2';
