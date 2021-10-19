@@ -525,7 +525,8 @@ function boot_buildSettings (docFrag) {
 
 	//create a radio checkbox
 	cElem('br', main);
-	inputfield_createField('radio-checkbox', main, {
+	inputfield_createField('radio', main, {
+		variation: 'checkbox',
 		onchange: logToOutput,
 		options: [
 			{
@@ -545,7 +546,8 @@ function boot_buildSettings (docFrag) {
 
 	//create a input field
 	cElem('br', main);
-	inputfield_createField('radio-select', main, {
+	inputfield_createField('radio', main, {
+		variation: 'select',
 		onchange: logToOutput,
 		options: [
 			{
@@ -573,7 +575,8 @@ function boot_buildSettings (docFrag) {
 
 	//create a input field
 	cElem('br', main);
-	inputfield_createField('radio-image', main, {
+	inputfield_createField('radio', main, {
+		variation: 'image',
 		onchange: logToOutput,
 		options: [
 			{
@@ -607,19 +610,21 @@ function boot_buildSettings (docFrag) {
 
 	//create a textarea
 	cElem('br', main);
-	inputfield_createField('textarea', main, {
+	inputfield_createField('text', main, {
+		variation: 'area',
 		onchange: logToOutput
 	});
 
 	//create a number-text
 	cElem('br', main);
-	inputfield_createField('number-text', main, {
+	inputfield_createField('number', main, {
 		onchange: logToOutput
 	});
 
 	//create a number range
 	cElem('br', main);
-	inputfield_createField('number-range', main, {
+	inputfield_createField('number', main, {
+		variation: 'range',
 		onchange: logToOutput
 	});
 

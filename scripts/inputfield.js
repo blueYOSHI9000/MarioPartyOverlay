@@ -28,6 +28,59 @@
  * 			That's why everything is saved in the container element because that way everything is saved inside the HTML element itself, which of course gets removed when the element is deleted.
  * 			That's why there shouldn't be a JS object that saves all the input-fields because if there were one then we would have to detect when a input-field is removed.
  * 			But if we don't save them anywhere then we don't have to detect it.
+ *
+ *
+ * 	=== INPUT FIELD TYPES ===
+ *
+ * 	Each 'inputType' is listed here and each 'inputType' will list all variations it has (which can be specified with the 'variation' attribute).
+ *
+ * 	checkbox
+ * 		A simple box that can be either checked or unchecked.
+ * 		Will store the values 'checked' and 'unchecked'.
+ *		Varitions:
+ * 			- regular <default>: A regular simple checkbox.
+ *
+ * 	radio
+ * 		The user has to select one option of many. Multi-choice is not supported yet but will be.
+ * 		Will store one user-defined value which can be any string.
+ * 		Variations:
+ * 			- checkbox <default>: A set of checkboxes. Basically the same as '<input type="radio">'.
+ * 			- select: Opens a list of all options where the user can select one. Basically the same as '<select>'.
+ * 			- image: Creates a set of images that look like buttons and the user can select one of them.
+ *
+ * 	text
+ * 		A way to enter custom text.
+ * 		Will store whatever the user entered as it's value. Will always be a string.
+ * 		Variations:
+ * 			- small <default>: A small textfield intended for single-line values. Basically the same as '<input type="text">'.
+ * 			- area: A resizable text area intended for longer, multi-line values. Basically the same as '<textarea>'.
+ *
+ * 	number
+ * 		A way to enter any number (aside from Infinity and NaN). Can include negative values.
+ * 		Will store a number as a number. Note that it might be NaN if something broke.
+ * 		Variations:
+ * 			- text <default>: A text-field to enter a number manually with tiny buttons to increase/decrease. Does not allow text-input. Basically the same as '<input type="number">'
+ * 			- range: A slider that allows the user to select a number. Basically the same as '<input type="slider">'.
+ * 			- counter: A MPO-styled counter. Takes MPO's controls into account (+/- and how much). Not supported yet.
+ *
+ * 	button
+ * 		A simple button. You press it, it does things.
+ * 		Does not store a value so it will simply return undefined. Will trigger the 'onchange' function specified in attributes when clicked on.
+ * 		Variations:
+ * 			- regular <default>: A regular button. Basically the same as '<button>'.
+ * 			- image: Creates a image that looks like a button. Not supported yet.
+ *
+ * 	color
+ * 		A way to select a custom color.
+ * 		Will store the selected color in hex form ('#ffffff' being white) as a string.
+ * 		Variations:
+ * 			- regular <default>: A regular color selection. Basically the same as '<input type="color">'.
+ *
+ * 	file
+ * 		A way to upload a file. Not supported yet.
+ * 		How it's stored is still to be determined.
+ * 		Variations:
+ * 			- regular <default>: A regular file upload. Basically the same as '<input type="file">'.
  */
 
 //this is a list of 'onchange' functions to be executed
@@ -45,19 +98,7 @@ let inputfield_totalFieldsCreated = 0;
  *
  * 	Args:
  * 		fieldType [String]
- * 			The type of input field it should be. Can be one of the following:
- * 				- checkbox: A simple checkbox that can be either true (checked) and false (unchecked).
- * 				- radio-checkbox: A set of checkboxes but only one can be selected.
- * 				- radio-select: Basically a <select> element.
- * 				- radio-image: A bunch of images that all work like buttons.
- * 				- text: A small field to input text, likely just a name.
- * 				- textarea: A bigger area to enter a lot of text, like the story of your life (though 'text' would be enough for that one).
- * 				- number-text: A simple text field but you can only input numbers. Also there's two tiny buttons to increase and decrease the number.
- * 				- number-range: A simple range slider that selects a number.
- * 				- number-counter: A simple counter to select a number.
- * 				- button: A simple button. You click it, it does things.
- * 				- color: A custom color in hex format can be selected.
- * 				- file: A file-upload with drag 'n' drop support.
+ * 			The type of input field it should be. See the documentation at the top of this file for more info.
  *
  * 		parent [DOM Element/String]
  * 			The element that the button should be created in.
@@ -67,6 +108,11 @@ let inputfield_totalFieldsCreated = 0;
  *			Additional attributes that slightly change the input field.
  * 			Different attributes are available depending on which 'fieldType' is used, some are also required.
  * 			Following properties can be used:
+ *
+ * 				- variation [String] <default variation>
+ * 					What variation this should be. See the list above for more info.
+ * 					Will take the default variable of the 'fieldType' if not specified.
+ * 					If a invalid variation is given then this WILL break, it won't automatically go back to the default. This includes specifying a variation when no variations exist.
  *
  * 				- onchange [Function] <none>
  *					A function that gets executed each time the input-field is updated. The first argument is the current value of the input field.
@@ -99,6 +145,10 @@ function inputfield_createField (fieldType, parent, attributes) {
 	//get the ID of this input field
 	const fieldID = inputfield_totalFieldsCreated;
 
+	//get the variation
+		//if no variation is specified then it will get the default variation -- otherwise it will use the variation specified in 'attributes'
+	const fieldVariation = (attributes.variation === undefined) ? inputfield_getDefaultVariation(fieldType) : attributes.variation;
+
 	//this will contain the entire input field
 	const container = cElem('span', parent, {
 		class: `inputfield_container`,
@@ -106,6 +156,7 @@ function inputfield_createField (fieldType, parent, attributes) {
 		//add field-related info
 		fieldid: fieldID,
 		fieldtype: fieldType,
+		fieldvariation: fieldVariation,
 		fieldvalue: attributes.defaultValue,
 
 		//convert 'attributes' to a string
@@ -115,17 +166,20 @@ function inputfield_createField (fieldType, parent, attributes) {
 		//fieldattributes: JSON.stringify(attributes)
 	});
 
+	//set the 'fieldvariation' attribute of the container if a variation is specified
+	container.setAttribute('fieldvariation', fieldVariation);
+
 	//set the 'onchange' function
 	if (typeof attributes.onchange === 'function') {
 		inputfield_onchangeFunctions.set(container, attributes.onchange);
 	}
 
-	//This is a WIP so it's still commented for now
-	//const fieldTypeAndVariation = (attributes.variation !== undefined) ? (fieldType + attributes.variation) : (fieldType);
+	//create a string that includes both 'fieldType' and 'fieldVariation' for the switch.
+	const fieldTypeAndVariation = `${fieldType}-${fieldVariation}`;
 
 	//create the actual input fields depending on which type it is
-	switch (fieldType) {
-		case 'checkbox':
+	switch (fieldTypeAndVariation) {
+		case 'checkbox-regular':
 			cElem('input', container, {type: 'checkbox', class: 'inputfield_callUpdate fieldType-checkbox', fieldid: fieldID});
 			break;
 
@@ -139,7 +193,7 @@ function inputfield_createField (fieldType, parent, attributes) {
 			break;
 
 		case 'radio-select': {
-			let selectElem = cElem('select', container, {class: 'fieldType-radioSelect', onchange: 'inputfield_onFieldChange(this);', fieldid: fieldID});
+			let selectElem = cElem('select', container, {class: 'fieldType-radioSelect', onchange: 'inputfield_executedAfterFieldChange(this);', fieldid: fieldID});
 
 			//create a <option> inside the <select> for each option
 			for (const item of attributes.options) {
@@ -155,35 +209,39 @@ function inputfield_createField (fieldType, parent, attributes) {
 			}
 			break;
 
-		case 'text':
-			cElem('input', container, {type: 'text', class: 'fieldType-text', onchange: 'inputfield_onFieldChange(this);', fieldid: fieldID});
+		case 'text-small':
+			cElem('input', container, {type: 'text', class: 'fieldType-text', onchange: 'inputfield_executedAfterFieldChange(this);', fieldid: fieldID});
 			break;
 
-		case 'textarea':
-			cElem('textarea', container, {class: 'fieldType-textarea', onchange: 'inputfield_onFieldChange(this);', fieldid: fieldID})
+		case 'text-area':
+			cElem('textarea', container, {class: 'fieldType-textarea', onchange: 'inputfield_executedAfterFieldChange(this);', fieldid: fieldID})
 			break;
 
 		case 'number-text':
-			cElem('input', container, {type: 'number', class: 'fieldType-numberText', onchange: 'inputfield_onFieldChange(this);', fieldid: fieldID});
+			cElem('input', container, {type: 'number', class: 'fieldType-numberText', onchange: 'inputfield_executedAfterFieldChange(this);', fieldid: fieldID});
 			break;
 
 		case 'number-range':
-			cElem('input', container, {type: 'range', class: 'fieldType-numberRange', onchange: 'inputfield_onFieldChange(this);', fieldid: fieldID});
+			cElem('input', container, {type: 'range', class: 'fieldType-numberRange', onchange: 'inputfield_executedAfterFieldChange(this);', fieldid: fieldID});
 			break;
 
 		case 'number-counter':
 			console.warn('[MPO] Number-counters aint supported yet.');
 			break;
 
-		case 'button':
-			cElem('input', container, {type: 'button', class: 'fieldType-button', onchange: 'inputfield_onFieldChange(this);', fieldid: fieldID});
+		case 'button-regular':
+			cElem('input', container, {type: 'button', class: 'fieldType-button', onchange: 'inputfield_executedAfterFieldChange(this);', fieldid: fieldID});
 			break;
 
-		case 'color':
-			cElem('input', container, {type: 'color', class: 'fieldType-color', onchange: 'inputfield_onFieldChange(this);', fieldid: fieldID});
+		case 'button-image':
+			console.warn('[MPO] Image buttons aint supported yet.');
 			break;
 
-		case 'file':
+		case 'color-regular':
+			cElem('input', container, {type: 'color', class: 'fieldType-color', onchange: 'inputfield_executedAfterFieldChange(this);', fieldid: fieldID});
+			break;
+
+		case 'file-regular':
 			console.warn('[MPO] File inputs aint supported yet.');
 			break;
 
@@ -240,8 +298,9 @@ function inputfield_applyNewValue (containerElem, newValue) {
 	const onchangeFunction = inputfield_onchangeFunctions.get(containerElem);
 
 	//execute the 'onchange' function
+		//use 'setTimeout()' with a delay of 0 so it gets it's own call-stack (it basically tells the browser "Hey, execute this bit as soon as everything else is done!")
 	if (typeof onchangeFunction === 'function') {
-		onchangeFunction(newValue);
+		setTimeout(() => {onchangeFunction(newValue);}, 0);
 	}
 }
 
@@ -253,7 +312,7 @@ function inputfield_applyNewValue (containerElem, newValue) {
  * 		elem [DOM Element]
  * 			The element that got clicked on.
  */
-function inputfield_onFieldChange (elem) {
+function inputfield_executedAfterFieldChange (elem) {
 	//get field ID
 	const fieldID = elem.getAttribute('fieldid');
 
@@ -266,16 +325,23 @@ function inputfield_onFieldChange (elem) {
 		return;
 	}
 
-	//get field type from field object
+	//get field type from field element
 	const fieldType = containerElem.getAttribute('fieldtype');
 
-	//get the new value
-	let newValue;
+	//get variation from field element
+	const fieldVariation = containerElem.getAttribute('fieldvariation');
+
+	//create a string that includes both 'fieldType' and 'fieldVariation' for the switch.
+	const fieldTypeAndVariation = `${fieldType}-${fieldVariation}`;
+
 
 	//get new value based on which 'fieldType' it is
-	switch (fieldType) {
+		//note that this can't use 'inputfield_getValue()' because that function simply gets the 'fieldValue' attribute of the element
+		//but we're currently in the process of setting said attribute so that function would only return the previous value
+	let newValue;
+	switch (fieldTypeAndVariation) {
 
-		case 'checkbox':
+		case 'checkbox-regular':
 			//invert the value because checkboxes are weird and the new value will only be applied afterwards
 			newValue = !elem.checked;
 			break;
@@ -292,11 +358,11 @@ function inputfield_onFieldChange (elem) {
 			newValue = elem.getAttribute('fieldvalue');
 			break;
 
-		case 'text':
+		case 'text-small':
 			newValue = elem.value;
 			break;
 
-		case 'textarea':
+		case 'text-area':
 			newValue = elem.value;
 			break;
 
@@ -311,19 +377,19 @@ function inputfield_onFieldChange (elem) {
 		case 'number-counter':
 			break;
 
-		case 'button':
+		case 'button-regular':
 			newValue = elem.value;
 			break;
 
-		case 'color':
+		case 'color-regular':
 			newValue = elem.value;
 			break;
 
-		case 'file':
+		case 'file-regular':
 			break;
 
 		default:
-			console.warn(`[MPO] Unknown 'fieldType' in 'inputfield_onFieldChange()': "${fieldType}"`);
+			console.warn(`[MPO] Unknown 'fieldType' in 'inputfield_executedAfterFieldChange()': "${fieldType}"`);
 			break;
 	}
 
@@ -348,4 +414,43 @@ function inputfield_onFieldChange (elem) {
  */
 function inputfield_removeField (fieldID) {
 	delete inputfield_activeFields[fieldID];
+}
+
+/**	Gets the default variation for the specified 'fieldType'.
+ *
+ * 	Args:
+ * 		fieldType [String]
+ * 			The 'fieldType'. See documentation at the top of this file.
+ *
+ * 	Returns [String]:
+ * 		The variation as a string.
+ */
+function inputfield_getDefaultVariation (fieldType) {
+	//get default variation depending on which 'fieldType' it is
+	switch (fieldType) {
+		case 'checkbox':
+			return 'regular';
+
+		case 'radio':
+			return 'checkbox';
+
+		case 'text':
+			return 'small';
+
+		case 'number':
+			return 'text';
+
+		case 'button':
+			return 'regular';
+
+		case 'color':
+			return 'regular';
+
+		case 'file':
+			return 'regular';
+	}
+
+	//log error and return empty string if no variation could be found
+	console.error(`[MPO] inputfield_getDefaultVariation() could not get a default variation for 'fieldType' "${fieldType}"`);
+	return '';
 }
