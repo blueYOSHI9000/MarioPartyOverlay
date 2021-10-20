@@ -121,10 +121,10 @@ function modal_createModal (modalObj) {
 
 	//create the actual DOM Element
 	const container = cElem('span', docFrag, {
-		class           : cssClasses.join(' '),
-		modalid         : modalObj.id,
-		modalcontenttype: modalObj.type,
-		modalgroup      : modalObj.group
+		class                  : cssClasses.join(' '),
+		'data-modalid'         : modalObj.id,
+		'data-modalcontenttype': modalObj.type,
+		'data-modalgroup'      : modalObj.group
 	});
 
 	//create the menu bar
@@ -313,7 +313,7 @@ function modal_getDOMElement (modalID) {
 	modalID = parseInt(modalID);
 
 	//get element by using the custom 'modalid' attribute
-	const elem = document.querySelector(`[modalid="${modalID}"]`);
+	const elem = document.querySelector(`[data-modalid="${modalID}"]`);
 
 	//return false if element doesn't exist, otherwise simply return the DOM Element
 	if (elem === null) {

@@ -1,5 +1,7 @@
 /**	=== JS CODE FORMATTING ===
  *
+ * 	# FUNCTION COMMENTS
+ *
  * 	Each function needs a short explanation of what it does and (if it's not enough) a full explanation that also explains HOW it does it.
  * 	This is important as it helps reduce errors when you always know how exactly the function does the thing.
  *
@@ -9,10 +11,17 @@
  *
  * 	Why this one is picked over the default '@param' style JS documentation is really just personal preference on my part.
  *
- * 	Lastly, each function and global variable has to start with a prefix like 'boot_' or 'tracker_'.
- * 	This is made so it's easy to spot to which part a function/variable belongs to and so names can be easily repeated without having to worry about it already existing elsewhere (though repeating names should be avoided anyway).
+ *
+ * 	# VARIABLE & FUNCTION CREATION/NAMING
+ *
+ * 	Each global function and global variable has to start with a prefix like 'boot_' or 'tracker_' (always based on the file name).
+ * 	This is made so it's easy to spot to which part/file a function/variable belongs to and so variable names inside functions can be easily repeated without having to worry about it already existing elsewhere (though repeating names should be avoided anyway).
  * 	The prefixes are especially important for global variables so you immediately know when it's a global or local variable without having to double-check it.
- * 	The only exception to this rule is helpers functions. Functions that add little functionalities to help out that could just as well be standard JS functions.
+ * 	The only exception to this rule is 'helpers.js' functions; functions that add little functionalities to help out that could just as well be standard JS functions.
+ *
+ * 	Variables should use 'let'/'const' wherever possible. As to which one should be used depends on whether the variable should be changed or not.
+ * 	Note that this includes self-changing objects that can technically be changed even when using 'const'.
+ * 	This is so you can check whether 'let' or 'const' is used and immediately know whether the variable should be changed or not.
  *
  *
  *  === HOW THE BOOT PROCESS WORKS ===
@@ -508,12 +517,13 @@ function boot_buildSettings (docFrag) {
 	cElem('br', main);
 
 	//create a temporary debug output to test stuff
-	let output = cElem('span', main, {id: 'settings_debugOutput'});
+	let output = cElem('span', main, {id: 'settings_debugOutput'})
+		.innerText = '\n';
 	cElem('br', main);
 
 	//the function that will be called when each input field gets updated
 		//the function simply logs the value to the element with the ID 'settings_debugOutput'
-	let logToOutput = (value) => {document.getElementById('settings_debugOutput').textContent = value;};
+	let logToOutput = (value) => {document.getElementById('settings_debugOutput').innerText = `${typeof value}\n${ (typeof value === 'object') ? JSON.stringify(value) : value }`;};
 
 	//create a checkbox
 	cElem('br', main);
@@ -668,7 +678,7 @@ function boot_buildTracker (docFrag) {
 	//Create 4 players.
 	for (let playerNum = 1; playerNum <= 4; playerNum++) {
 		//This contains everything related to this player.
-		let tracker_player = cElem('span', playerList, {class: 'tracker_player', player: playerNum});
+		let tracker_player = cElem('span', playerList, {class: 'tracker_player', 'data-player': playerNum});
 
 		//pick a character icon -- TODO: replace this with something actually good
 		switch (playerNum) {
@@ -687,11 +697,11 @@ function boot_buildTracker (docFrag) {
 		}
 
 		//This contains the character icon for this player.
-		let characterDisplay = cElem('span', tracker_player, {class: 'tracker_characterDisplay', player: playerNum});
+		let characterDisplay = cElem('span', tracker_player, {class: 'tracker_characterDisplay', 'data-player': playerNum});
 		cElem('img', characterDisplay, {class: 'tracker_characterIcon', src: characterIconSrc});
 
 		//This contains all counters for this player.
-		let counterList = cElem('span', tracker_player, {class: 'tracker_counterList', player: playerNum});
+		let counterList = cElem('span', tracker_player, {class: 'tracker_counterList', 'data-player': playerNum});
 
 		//Create every counter for this player.
 		ui_createCounterList(counterList, playerNum);

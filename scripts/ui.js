@@ -44,7 +44,7 @@ function ui_updateCounter (counterName, player) {
 	const stat = tracker_getStat(counterName, player);
 
 	//get all elements of this counter and this player
-	const elems = document.querySelectorAll(`.tracker_counter[counter="${counterName}"][player="${player}"] > .tracker_counterText`);
+	const elems = document.querySelectorAll(`.tracker_counter[data-counter="${counterName}"][data-player="${player}"] > .tracker_counterText`);
 
 	//update them
 	for (const item of elems) {
@@ -92,7 +92,7 @@ function ui_createCounterList (parent, player) {
 		countersMade.push(counterName);
 
 		//This contains one counter.
-		let counterElem = cElem('span', parent, {class: 'tracker_counter', counter: counterName, player: player});
+		let counterElem = cElem('span', parent, {class: 'tracker_counter', 'data-counter': counterName, 'data-player': player});
 
 		//counter image
 			//note that this uses the bonus star icon because there's currently no icons for 'misc' counters

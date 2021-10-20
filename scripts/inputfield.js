@@ -5,29 +5,8 @@
  *
  * 	You create a input-field with 'inputfield_createField()'.
  * 	Said function then creates a <span> that contains the entire input-field. This <span> also has the 'inputfield_container' class and is called the "container".
- * 	The container has several attributes that include 'fieldid', 'fieldtype' and 'fieldvalue'.
- * 		'fieldid' is a unique ID used to identify this particular input-field.
- * 		'fieldtype' is what type of input-field it is (checkbox/button/etc).
- * 		'fieldvalue' is the value it holds.
+ * 	The container also stores the unique input-field ID inside it's 'data-inputid' attribute.
  * 	In addition the container also has a 'onchange' function associated with it that gets executed whenever the value changes. This is done manually inside this file.
- *
- * 	It should also be mentioned that input-fields can only save values as string, nothing else. If a non-string value has to be saved then 'JSON.stringify()' and 'JSON.parse()' should be used.
- *
- * 	Another thing to mention is that the input-fields are only saved in the containers HTML element and nowhere else.
- * 	There is no JS object that saves all input-fields or anything and that's done on purpose.
- * 	That's because there's no good way to detect when a input-field is removed and if they were saved in a JS object then that would create a memory leak.
- *
- * 		- Here's some more on why you can't detect when a input-field is removed (or only in a bad way at least):
- * 			Input-fields should be able to be removed at a moments notice.
- * 			Like when there's a input-field inside a modal then it should be possible to delete the entire modal without having to delete the input-field first.
- * 			And there's no way to detect when a HTML element is removed when you don't know where the tree is gonna get cut-off.
- * 			You can detect when a child of an element is added/removed through a 'MutationObserver' but that only detects decendants, it does NOT detect it if one of it's ancestors get deleted.
- * 			If you were to place a 'MutationObserver' on the input-fields parent but not the modals parent then it would only trigger when the input-field is removed, not when the entire modal is removed and that's the issue.
- * 			Of course, you could place a 'MutationObserver' on the <body> element to observe the entire document in it's entirety but at that point, is it even worth it?
- *
- * 			That's why everything is saved in the container element because that way everything is saved inside the HTML element itself, which of course gets removed when the element is deleted.
- * 			That's why there shouldn't be a JS object that saves all the input-fields because if there were one then we would have to detect when a input-field is removed.
- * 			But if we don't save them anywhere then we don't have to detect it.
  *
  *
  * 	=== INPUT FIELD TYPES ===
@@ -83,16 +62,89 @@
  * 			- regular <default>: A regular file upload. Basically the same as '<input type="file">'.
  */
 
-//this is a list of 'onchange' functions to be executed
-	//this has to be a 'WeakMap' because this way you can use a object as a variable name
-	//this means you can essentially create a variable that uses a DOM element as it's name
-	//and because it's a 'WeakMap' instead of a regular 'Map' said "variable" will be automatically removed once the DOM element is deleted
-	//it is worth adding that the Garbage Collector doesn't remove the value immediately but only whenever it's needed so the value will still show up in DevTools
-let inputfield_onchangeFunctions = new WeakMap();
-
 //the total fields created
 	//used to give each field a unique ID
 let inputfield_totalFieldsCreated = 0;
+
+/**	This saves info about every currently open input-field
+ *
+ * 	Each item in this WeakMap is created by using the DOM Element of the input-field as it's key/name.
+ * 	Each item is a 'inputfield_FieldObject()' object.
+ */
+let inputfield_fields = new WeakMap();
+	// # EXPLANATION on why this uses a 'WeakMap'
+	//
+	//note that this is a 'WeakMap' which means you can't list all open input-fields - you can only access the info by using the DOM Element
+	//that's because a 'WeakMap' uses objects as a variable name which means you can essentially assign a variable to a DOM Element
+	//and said variable can only be accessed by using said DOM Element -- if the DOM Element is removed you can no longer access it
+	//which sounds dumb but that's the entire reason why this approach is even used
+	//because the info about a input-field should be deleted once a input-field is removed
+	//and if we used a regular object we'd have to do that manually -- each time a input-field is removed we'd also have to delete the object entry
+	//which sounds easy but remember that a input-field isn't always removed directly
+	//meaning, if a modal includes a input-field then we'd likely remove the modal as a whole, not just the input-field
+	//and there's sadly no good way to detect that (no 'MutationObserver' doesn't work in a efficient way)
+	//aside from using a 'WeakMap' that is because 'WeakMap' entries are automatically removed once the associated object is gone
+	//which means, if we create a 'WeakMap' item with a DOM Element as it's name then the item will automatically be deleted once the DOM Element is deleted through the garbage collector
+	//note that this won't happen if another variable still has the DOM Element linkec in it -- that's just how the garbage collector works
+	//it is worth adding that the garbage collector doesn't remove the value immediately but only whenever it's needed so the value will likely still show up in DevTools
+
+/**	Creates a 'FieldObject' that saves all info related to the input-field.
+ *
+ * 	Args:
+ * 		options [Object]
+ * 			Includes the following properties:
+ *
+ * 				fieldID [Number]
+ * 					The unique ID of the field.
+ * 					This can also include the variation by seperating the two with a - (so 'radio-checkbox' would give a inputType of 'radio' with a variation of 'checkbox').
+ *
+ * 				value [*any*]
+ * 					The current value of the field.
+ *
+ * 				fieldType [String]
+ * 					The type of the field.
+ *
+ * 				attributes [Object]
+ * 					A list of all attributes of the field.
+ *
+ * 	Constructs:
+ * 		id [Number]
+ * 			The unique ID of the field.
+ *
+ * 		value [*any*]
+ * 			The value of the field.
+ * 			What type this is depends on the 'fieldType', see the documentation at the top of this file for more info.
+ *
+ * 		fieldType [String]
+ * 			The type of the field.
+ *
+ * 		variation [String]
+ * 			The variation of the field.
+ *
+ * 		onchange [Function/undefined]
+ * 			The 'onchange' function.
+ * 			Will simply be undefined if not used.
+ *
+ * 		attributes [Object]
+ * 			All attributes of the field.
+ */
+function inputfield_FieldObject (options) {
+	this.id = options.fieldID;
+
+	this.value = options.value;
+
+	this.fieldType = options.fieldType;
+
+	//set variation
+		//if not specified in 'attributes' then get the default variation of the 'fieldType'
+	this.variation = (options.attributes.variation === undefined) ? inputfield_getDefaultVariation(options.fieldType) : options.attributes.variation;
+
+	//set the onchange function
+		//if not specified in 'attributes' then use a empty function
+	this.onchange = (typeof options.attributes.onchange !== 'function') ? (() => {return;}) : options.attributes.onchange;
+
+	this.attributes = options.attributes;
+}
 
 /**	Creates a input field.
  *
@@ -145,6 +197,17 @@ function inputfield_createField (fieldType, parent, attributes) {
 	//get the ID of this input field
 	const fieldID = inputfield_totalFieldsCreated;
 
+	//get the actual fieldType by splitting it (so 'radio-checkbox' is split into the fieldType 'radio' and variation 'checkbox')
+	if (fieldType.indexOf('-') !== -1) {
+
+		//actually split it
+		const fieldTypeSplit = fieldType.splitOnce('-');
+
+		//apply the new strings
+		fieldType = fieldTypeSplit[0];
+		attributes.variation = fieldTypeSplit[1];
+	}
+
 	//get the variation
 		//if no variation is specified then it will get the default variation -- otherwise it will use the variation specified in 'attributes'
 	const fieldVariation = (attributes.variation === undefined) ? inputfield_getDefaultVariation(fieldType) : attributes.variation;
@@ -154,25 +217,8 @@ function inputfield_createField (fieldType, parent, attributes) {
 		class: `inputfield_container`,
 
 		//add field-related info
-		fieldid: fieldID,
-		fieldtype: fieldType,
-		fieldvariation: fieldVariation,
-		fieldvalue: attributes.defaultValue,
-
-		//convert 'attributes' to a string
-			//note that this will remove all functions inside it but that's perfect since stuff like 'onchange' will be directly linked to the element anyway using 'elem.onclick = *function*'
-			//it's currently commented out since it takes up a lot of space and is currently not needed anywhere
-			//it's suggested that if it's ever needed to instead create a seperate HTML attribute that holds the informarmation instead of saving the entire 'attributes' object
-		//fieldattributes: JSON.stringify(attributes)
+		'data-fieldid': fieldID
 	});
-
-	//set the 'fieldvariation' attribute of the container if a variation is specified
-	container.setAttribute('fieldvariation', fieldVariation);
-
-	//set the 'onchange' function
-	if (typeof attributes.onchange === 'function') {
-		inputfield_onchangeFunctions.set(container, attributes.onchange);
-	}
 
 	//create a string that includes both 'fieldType' and 'fieldVariation' for the switch.
 	const fieldTypeAndVariation = `${fieldType}-${fieldVariation}`;
@@ -180,20 +226,20 @@ function inputfield_createField (fieldType, parent, attributes) {
 	//create the actual input fields depending on which type it is
 	switch (fieldTypeAndVariation) {
 		case 'checkbox-regular':
-			cElem('input', container, {type: 'checkbox', class: 'inputfield_callUpdate fieldType-checkbox', fieldid: fieldID});
+			cElem('input', container, {type: 'checkbox', class: 'inputfield_callUpdate fieldType-checkbox', 'data-fieldid': fieldID});
 			break;
 
 		case 'radio-checkbox':
 			//create a <input> radio checkbox for each option
 			for (const item of attributes.options) {
 				cElem('span', container).textContent = `| ${item.name}: `;
-				cElem('input', container, {type: 'radio', name: `fieldID-${fieldID}`, class: 'inputfield_callUpdate fieldType-radioCheckbox', fieldid: fieldID, fieldvalue: item.value});
+				cElem('input', container, {type: 'radio', name: `fieldID-${fieldID}`, class: 'inputfield_callUpdate fieldType-radioCheckbox', 'data-fieldid': fieldID, 'data-fieldvalue': item.value});
 				cElem('span', container).textContent = '|';
 			}
 			break;
 
 		case 'radio-select': {
-			let selectElem = cElem('select', container, {class: 'fieldType-radioSelect', onchange: 'inputfield_executedAfterFieldChange(this);', fieldid: fieldID});
+			let selectElem = cElem('select', container, {class: 'fieldType-radioSelect', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
 
 			//create a <option> inside the <select> for each option
 			for (const item of attributes.options) {
@@ -205,24 +251,24 @@ function inputfield_createField (fieldType, parent, attributes) {
 		case 'radio-image':
 			//create a <img> for each option
 			for (const item of attributes.options) {
-				cElem('img', container, {class: 'inputfield_callUpdate fieldType-imgButton', src: item.src, fieldid: fieldID, fieldvalue: item.value});
+				cElem('img', container, {class: 'inputfield_callUpdate fieldType-imgButton', src: item.src, 'data-fieldid': fieldID, 'data-fieldvalue': item.value});
 			}
 			break;
 
 		case 'text-small':
-			cElem('input', container, {type: 'text', class: 'fieldType-text', onchange: 'inputfield_executedAfterFieldChange(this);', fieldid: fieldID});
+			cElem('input', container, {type: 'text', class: 'fieldType-text', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
 			break;
 
 		case 'text-area':
-			cElem('textarea', container, {class: 'fieldType-textarea', onchange: 'inputfield_executedAfterFieldChange(this);', fieldid: fieldID})
+			cElem('textarea', container, {class: 'fieldType-textarea', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID})
 			break;
 
 		case 'number-text':
-			cElem('input', container, {type: 'number', class: 'fieldType-numberText', onchange: 'inputfield_executedAfterFieldChange(this);', fieldid: fieldID});
+			cElem('input', container, {type: 'number', class: 'fieldType-numberText', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
 			break;
 
 		case 'number-range':
-			cElem('input', container, {type: 'range', class: 'fieldType-numberRange', onchange: 'inputfield_executedAfterFieldChange(this);', fieldid: fieldID});
+			cElem('input', container, {type: 'range', class: 'fieldType-numberRange', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
 			break;
 
 		case 'number-counter':
@@ -230,7 +276,7 @@ function inputfield_createField (fieldType, parent, attributes) {
 			break;
 
 		case 'button-regular':
-			cElem('input', container, {type: 'button', class: 'fieldType-button', onchange: 'inputfield_executedAfterFieldChange(this);', fieldid: fieldID});
+			cElem('input', container, {type: 'button', class: 'fieldType-button', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
 			break;
 
 		case 'button-image':
@@ -238,7 +284,7 @@ function inputfield_createField (fieldType, parent, attributes) {
 			break;
 
 		case 'color-regular':
-			cElem('input', container, {type: 'color', class: 'fieldType-color', onchange: 'inputfield_executedAfterFieldChange(this);', fieldid: fieldID});
+			cElem('input', container, {type: 'color', class: 'fieldType-color', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
 			break;
 
 		case 'file-regular':
@@ -249,6 +295,14 @@ function inputfield_createField (fieldType, parent, attributes) {
 			console.warn(`[MPO] Unknown 'fieldType' in 'inputfield_createField()': "${fieldType}"`);
 			break;
 	}
+
+	//create the field object and add it to the list
+	inputfield_fields.set(container, new inputfield_FieldObject({
+		fieldID:    fieldID,
+		value:      undefined,
+		fieldType:  fieldType,
+		attributes: attributes
+	}));
 }
 
 /**	Gets the value of a input-field.
@@ -264,7 +318,7 @@ function inputfield_createField (fieldType, parent, attributes) {
  */
 function inputfield_getValue (fieldID) {
 	//get the element
-	const elem = document.querySelector(`.inputfield_container[fieldid="${fieldID}"]`);
+	const elem = document.querySelector(`.inputfield_container[data-fieldid="${fieldID}"]`);
 
 	//return null if element doesn't exist
 	if (elem === null) {
@@ -272,30 +326,29 @@ function inputfield_getValue (fieldID) {
 	}
 
 	//return the value
-	return elem.getAttribute('fieldvalue');
+	return inputfield_fields.get(elem)['value'];
 }
 
-/**	Applies the new value to the input-field.
+/**	Applies the new value to the input-field and executes the 'onchange' function of the field.
  *
- * 	Updates the 'fieldvalue' attribute of the container, marks the new value as selected in case of radio fields and executes the 'onchange' function of the input field.
+ * 	Updates the 'value' property inside 'inputfield_fields', marks the new value as selected in case of radio fields and executes the 'onchange' function of the input field.
  *
  * 	Args:
  * 		containerElem [DOM Element]
  *			The element that contains the entire input field. Should have the class 'inputfield_container'.
  *
- * 		newValue [String / *any*]
+ * 		newValue [*any*]
  * 			The new value it should be updated to.
- * 			Note that the function doesn't check what type this is so it can technically be anything but HTML attributes will only save it as a string.
- * 			Another note that this function doesn't check whether the value is even valid. So a checkbox field could get a value of 'waluigi' if that's what you want.
+ * 			Note that this function doesn't check whether the value is even valid. So a checkbox field could get a value of 'waluigi' if that's what you want.
  */
 function inputfield_applyNewValue (containerElem, newValue) {
 	//set the new value
-	containerElem.setAttribute('fieldvalue', newValue);
+	inputfield_fields.get(containerElem)['value'] = newValue;
 
 	//TODO: mark radio fields as selected
 
 	//get the 'onchange' function
-	const onchangeFunction = inputfield_onchangeFunctions.get(containerElem);
+	const onchangeFunction = inputfield_fields.get(containerElem)['onchange'];
 
 	//execute the 'onchange' function
 		//use 'setTimeout()' with a delay of 0 so it gets it's own call-stack (it basically tells the browser "Hey, execute this bit as soon as everything else is done!")
@@ -310,14 +363,14 @@ function inputfield_applyNewValue (containerElem, newValue) {
  *
  * 	Args:
  * 		elem [DOM Element]
- * 			The element that got clicked on.
+ * 			The element that got updated or in case of buttons, the element that got clicked on.
  */
 function inputfield_executedAfterFieldChange (elem) {
 	//get field ID
-	const fieldID = elem.getAttribute('fieldid');
+	const fieldID = elem.getAttribute('data-fieldid');
 
 	//get the container element
-	const containerElem = document.querySelector(`.inputfield_container[fieldid="${fieldID}"]`);
+	const containerElem = document.querySelector(`.inputfield_container[data-fieldid="${fieldID}"]`);
 
 	//return if container can't be found
 	if (containerElem === null) {
@@ -326,10 +379,10 @@ function inputfield_executedAfterFieldChange (elem) {
 	}
 
 	//get field type from field element
-	const fieldType = containerElem.getAttribute('fieldtype');
+	const fieldType = inputfield_fields.get(containerElem)['fieldType'];
 
 	//get variation from field element
-	const fieldVariation = containerElem.getAttribute('fieldvariation');
+	const fieldVariation = inputfield_fields.get(containerElem)['variation'];
 
 	//create a string that includes both 'fieldType' and 'fieldVariation' for the switch.
 	const fieldTypeAndVariation = `${fieldType}-${fieldVariation}`;
@@ -347,7 +400,7 @@ function inputfield_executedAfterFieldChange (elem) {
 			break;
 
 		case 'radio-checkbox':
-			newValue = elem.getAttribute('fieldvalue');
+			newValue = elem.getAttribute('data-fieldvalue');
 			break;
 
 		case 'radio-select':
@@ -355,7 +408,7 @@ function inputfield_executedAfterFieldChange (elem) {
 			break;
 
 		case 'radio-image':
-			newValue = elem.getAttribute('fieldvalue');
+			newValue = elem.getAttribute('data-fieldvalue');
 			break;
 
 		case 'text-small':
@@ -367,11 +420,11 @@ function inputfield_executedAfterFieldChange (elem) {
 			break;
 
 		case 'number-text':
-			newValue = elem.value;
+			newValue = elem.valueAsNumber;
 			break;
 
 		case 'number-range':
-			newValue = elem.value;
+			newValue = elem.valueAsNumber;
 			break;
 
 		case 'number-counter':
@@ -393,27 +446,8 @@ function inputfield_executedAfterFieldChange (elem) {
 			break;
 	}
 
-	//convert boolean to string so it's either 'checked' or 'unchecked'
-		//this is done because values can only be strings and 'true' and 'false' would be confusing
-	if (newValue === true) {
-		newValue = 'checked';
-	} else if (newValue === false) {
-		newValue = 'unchecked';
-	}
-
 	//update the field with the new value
 	inputfield_applyNewValue(containerElem, newValue);
-}
-
-/**	Deletes a input field. Does NOT remove the DOM Elements associated to it.
- *
- * 	Args:
- * 		fieldID [Number/String]
- * 			The unique ID of the input field.
- * 			Can be in string form (so 6 and '6' are both fine).
- */
-function inputfield_removeField (fieldID) {
-	delete inputfield_activeFields[fieldID];
 }
 
 /**	Gets the default variation for the specified 'fieldType'.

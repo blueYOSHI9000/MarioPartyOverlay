@@ -118,6 +118,7 @@ function listeners_pointerDown (e) {
 		if (elem.tagName === 'HTML')
 			break;
 
+		/*
 		//execute code only if it's the first element
 			//note that key is a string for whatever stupid ass reason
 		if (firstLoop === true) {
@@ -126,42 +127,44 @@ function listeners_pointerDown (e) {
 			for (const item of elem.classList) {
 				switch (item) {
 
-					//a drag handle
-					case 'interaction_dragHandle':
-						//get the element that actually has to be moved
-						var elemToModify = interaction_getElementFromHandle(elem, 'interaction_draggable');
-
-						//check if the element is valid and, if yes, start the drag
-						if (elemToModify !== false) {
-							interaction_startDrag(elemToModify, clientY, clientX);
-						}
-						break;
-
-					//a resize handle
-					case 'interaction_resizeHandle':
-						//get the element that actually has to be resized
-						var elemToModify = interaction_getElementFromHandle(elem, 'interaction_resizeable');
-
-						//check if the element is valid
-						if (elemToModify !== false) {
-							//get 'borderSide'
-								//does not need to be validated since 'interaction_startResize()' already does that
-							const borderSide = elem.getAttribute('interaction_borderside');
-
-							//and finally start the resize
-							interaction_startResize(elemToModify, clientY, clientX, borderSide);
-						}
-						break;
 				}
 			}
 
 			//it's no longer the first time
 			firstLoop = false;
 		}
+		*/
 
 		//loop through all classes and check if something has to be executed depending on the class
 		for (const item of elem.classList) {
 			switch (item) {
+
+				//a drag handle
+				case 'interaction_dragHandle':
+					//get the element that actually has to be moved
+					var elemToModify = interaction_getElementFromHandle(elem, 'interaction_draggable');
+
+					//check if the element is valid and, if yes, start the drag
+					if (elemToModify !== false) {
+						interaction_startDrag(elemToModify, clientY, clientX);
+					}
+					break;
+
+				//a resize handle
+				case 'interaction_resizeHandle':
+					//get the element that actually has to be resized
+					var elemToModify = interaction_getElementFromHandle(elem, 'interaction_resizeable');
+
+					//check if the element is valid
+					if (elemToModify !== false) {
+						//get 'borderSide'
+							//does not need to be validated since 'interaction_startResize()' already does that
+						const borderSide = elem.getAttribute('interaction_borderside');
+
+						//and finally start the resize
+						interaction_startResize(elemToModify, clientY, clientX, borderSide);
+					}
+					break;
 
 				//a modal
 				case 'modal_container':
@@ -169,11 +172,11 @@ function listeners_pointerDown (e) {
 					if (foundModals.length === 0) {
 
 						//get modalID if it exists
-						let modalID = elem.getAttribute('modalid');
+						let modalID = elem.getAttribute('data-modalid');
 						if (modalID !== null) {
 
 							//focus the modal
-							modal_changeFocus(elem.getAttribute('modalid'));
+							modal_changeFocus(elem.getAttribute('data-modalid'));
 
 							//push this to the list of modals found
 							foundModals.push(modalID);
@@ -183,7 +186,7 @@ function listeners_pointerDown (e) {
 
 				//a counter
 				case 'tracker_counter':
-					tracker_updateCounter(elem.getAttribute('counter'), parseInt(elem.getAttribute('player')));
+					tracker_updateCounter(elem.getAttribute('data-counter'), parseInt(elem.getAttribute('data-player')));
 					break;
 
 				//the navbar entry for updating players

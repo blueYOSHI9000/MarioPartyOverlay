@@ -189,6 +189,34 @@ function forceFillInObject (obj, defaultObj) {
 	return obj;
 }
 
+/**	Splits a string into two pieces.
+ *
+ * 	Essentially the same as '.split()' except this only splits on the first instance and then returns the rest.
+ * 	This might sound similar to '.split("...", 2)' but said would only return two array items that have been fully split while this returns the first split and then *the entire rest*.
+ *
+ * 	Args:
+ * 		seperator [String]
+ * 			The seperator that's used to split the string.
+ * 			Note that the variable is automatically converted to a string.
+ *
+ * 	Returns [Array]:
+ * 		The string split inside two array items. Note: If no match was found then it will simply return the string as-is inside the first array item.
+ */
+String.prototype.splitOnce = function (seperator) {
+	//get the index of the seperator
+		//note that this automatically converts the 'seperator' to a string
+	var index = this.indexOf(seperator);
+
+	//if the seperator is present then slice the string into two pieces
+	if (index !== -1) {
+		return [this.slice(0, index), this.slice(index + 1)]
+	}
+
+	//'.slice()' has to be used because otherwise it returns the string as a prototype or something (could likely also use another way to convert it)
+		//also return it in an array to match regular '.split()' behaviour
+	return [this.slice()];
+}
+
 /**	=== PERFORMANCE TESTING ===
  *
  * 	These two function automatically check performance of a piece of code.
@@ -205,29 +233,14 @@ function forceFillInObject (obj, defaultObj) {
 
 /* *
 function measureTest () {
-	//round number down
-	let newStat = parseInt(5.8);
-
-	//check to make sure the new stat is valid
-		//can't be below 0
-		//can't be above 999
-	if (newStat < 0) {
-		newStat = 0;
-	} else if (newStat > 999) {
-		newStat = 999;
-
-	//if 'newStat' is not in between 0 and 999 (inclusive) then it's invalid
-		//this could be if it's Infinity, -Infinity, NaN or somehow not even of the type 'number'
-	} else if (newStat === NaN) {
-		console.error(`[MPO] tracker_updateCounter() got an invalid 'newStat' of value "${newStat}". oldStat: "${oldStat}" | counterName: "${counterName}" | player: "${player}" | action: "${action}" | value: ${value}`);
-		newStat = 0;
-	}
-	return newStat;
+	//insert code to test here
+	//don't forget to change the amount of loops inside 'realMeasureTest()' since having too many loops will essentially freeze your computer for time-intensive tests
+	return undefined;
 }
 
 function realMeasureTest () {
 	performance.mark('begin');
-	for (let i = 0; i < 100000000; i++) {
+	for (let i = 0; i < 1000000; i++) {
 	    measureTest();
 	}
 	performance.mark('end');

@@ -474,7 +474,7 @@ function tracker_updateCounter (counterName, player, action, value) {
  */
 function tracker_changeCharacter(player, charName) {
 	//get all character icons of this player
-	const characterIcons = document.querySelectorAll(`.tracker_characterDisplay[player="${player}"] .tracker_characterIcon`);
+	const characterIcons = document.querySelectorAll(`.tracker_characterDisplay[data-player="${player}"] .tracker_characterIcon`);
 
 	//get icon source for this character
 	const src = dbparsing_getIcon(`characters.${charName}`, tracker_status['game']);
