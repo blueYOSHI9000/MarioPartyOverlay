@@ -16,12 +16,7 @@
  * 	Returns [DOM Element]:
  * 		Returns the <img> element created.
  */
-function ui_createImgButton (parent, src, onclick) {
-	//use a empty 'onclick' attribute if nothing is provided
-	if (onclick === undefined) {
-		onclick = '';
-	}
-
+function ui_createImgButton (parent, src, onclick='') {
 	//create the element
 	let button = cElem('img', parent, {class: 'imgButton', src: src, onclick: onclick});
 
@@ -117,12 +112,7 @@ function ui_createCounterList (parent, player) {
  * 			The name of the game. Can also be '_all'.
  * 			Defaults to using the currently selected game.
  */
-function ui_createCharacterList (parent, game) {
-	//set game to the current game if it's not specified
-	if (game === undefined) {
-		game = tracker_status['game'];
-	}
-
+function ui_createCharacterList (parent, game=tracker_status['game']) {
 	//get all characters
 	const characters = dbparsing_getCharacterList(game);
 

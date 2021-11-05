@@ -139,7 +139,7 @@ function interaction_moveElements (cursorPosY, cursorPosX) {
 		//if neither are off-screen but still set as such then mark them as no longer off-screen
 			//this has a edge-case, see above comment
 		} else if (item.offScreenLeft || item.offScreenRight) {
-			item.offScreenLeft    = false;
+			item.offScreenLeft  = false;
 			item.offScreenRight = false;
 		}
 
@@ -151,11 +151,9 @@ function interaction_moveElements (cursorPosY, cursorPosX) {
 		item.previousY = newPosY;
 		item.previousX = newPosX;
 
-		//check if element is still off-screen
-			//but only do it if it already is off-screen to keep performance at least somewhat decent
-		if (item.currentlyOffScreen === true) {
-			item.currentlyOffScreen = interaction_isElemOffScreen(item.elem);
-		}
+		//if element is off-screen ('&&=') then check if it is still off-screen ('interaction_isElemOffScreen')
+			//this only checks if the element is off-screen if it already is off-screen but that's intentional because we don't wanna spam the check when it's on-screen
+		item.currentlyOffScreen &&= interaction_isElemOffScreen(item.elem);
 	}
 }
 

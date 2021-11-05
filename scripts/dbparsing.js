@@ -67,7 +67,7 @@ function dbparsing_getCharacterList (game) {
  * 	Returns [String]:
  * 		The full file-path to the image so it can be used as a 'src' attribute on an image.
  */
-function dbparsing_getIcon (path, game, check_all) {
+function dbparsing_getIcon (path, game, check_all=true) {
 	//split 'path' into an array
 	path = path.split('.');
 

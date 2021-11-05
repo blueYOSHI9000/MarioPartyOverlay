@@ -202,7 +202,7 @@ function forceFillInObject (obj, defaultObj) {
  * 	Returns [Array]:
  * 		The string split inside two array items. Note: If no match was found then it will simply return the string as-is inside the first array item.
  */
-String.prototype.splitOnce = function (seperator) {
+Object.defineProperty(String.prototype, 'splitOnce', {value: function (seperator) {
 	//get the index of the seperator
 		//note that this automatically converts the 'seperator' to a string
 	var index = this.indexOf(seperator);
@@ -215,7 +215,28 @@ String.prototype.splitOnce = function (seperator) {
 	//'.slice()' has to be used because otherwise it returns the string as a prototype or something (could likely also use another way to convert it)
 		//also return it in an array to match regular '.split()' behaviour
 	return [this.slice()];
-}
+}});
+
+/**	Checks if a object is a DOM Element.
+ *
+ * 	Stack-overflow copy: https://stackoverflow.com/questions/384286/how-do-you-check-if-a-javascript-object-is-a-dom-object
+ * 	Note that this has to be defined using 'Object.defineProperty()' so the function isn't enumerable.
+ *
+ * 	Returns [Boolean]:
+ * 		true if DOM Element, false if not.
+ */
+Object.defineProperty(Object.prototype, 'isDOMElement', {value: function () {
+	try {
+		//Using W3 DOM2 (works for FF, Opera and Chrome)
+		return this instanceof HTMLElement;
+	}
+	catch (e) {
+		//Browsers not supporting W3 DOM2 don't have HTMLElement and
+		//an exception is thrown and we end up here. Testing some
+		//properties that all elements have (works on IE7)
+		return (typeof this === 'object') && (this.nodeType === 1) && (typeof this.style === 'object') && (typeof this.ownerDocument === 'object');
+	}
+}});
 
 /**	=== PERFORMANCE TESTING ===
  *

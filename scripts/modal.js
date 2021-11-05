@@ -316,10 +316,7 @@ function modal_getDOMElement (modalID) {
 	const elem = document.querySelector(`[data-modalid="${modalID}"]`);
 
 	//return false if element doesn't exist, otherwise simply return the DOM Element
-	if (elem === null) {
-		return false;
-	}
-	return elem;
+	return elem ?? false;
 }
 
 /**	Auto-close all modals that didn't get clicked on.

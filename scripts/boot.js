@@ -23,6 +23,11 @@
  * 	Note that this includes self-changing objects that can technically be changed even when using 'const'.
  * 	This is so you can check whether 'let' or 'const' is used and immediately know whether the variable should be changed or not.
  *
+ * 		## PROTOTYPE FUNCTIONS
+ *
+ * 		Any function defined on a prototype (like 'Object.prototype') has to be defined with 'Object.defineProperty()' or any other way to make sure that the function is NOT enumerable.
+ * 		That's because the prototype functions should not show up in 'for ... in' loops.
+ *
  *
  *  === HOW THE BOOT PROCESS WORKS ===
  *
@@ -533,6 +538,15 @@ function boot_buildSettings (docFrag) {
 		onchange: logToOutput
 	});
 
+	//create a checkbox but with a 'checkboxValue'
+	cElem('br', main);
+	let checkboxTest2 = cElem('span', main);
+	checkboxTest2.textContent = 'Checkbox with checkboxValue:';
+	inputfield_createField('checkbox', checkboxTest2, {
+		onchange: logToOutput,
+		checkboxValue: 'this is true'
+	});
+
 	//create a radio checkbox
 	cElem('br', main);
 	inputfield_createField('radio', main, {
@@ -649,6 +663,59 @@ function boot_buildSettings (docFrag) {
 	inputfield_createField('color', main, {
 		onchange: logToOutput
 	});
+
+	//create a couple checkboxes with a host
+	cElem('br', main);
+	cElem('span', main)
+		.textContent = '=== HOST ===';
+	cElem('br', main);
+
+	let testHost = cElem('span', main);
+
+	cElem('span', testHost)
+		.textContent = 'Mario: ';
+	inputfield_createField('checkbox', testHost, {
+		host: testHost,
+		checkboxValue: 'mario',
+		onchange: logToOutput
+	});
+	cElem('br', testHost);
+
+	cElem('span', testHost)
+		.textContent = 'Weegee: ';
+	inputfield_createField('checkbox', testHost, {
+		host: testHost,
+		checkboxValue: 'weegee',
+		onchange: logToOutput
+	});
+	cElem('br', testHost);
+
+	cElem('span', testHost)
+		.textContent = 'Wario: ';
+	inputfield_createField('checkbox', testHost, {
+		host: testHost,
+		checkboxValue: 'wario',
+		onchange: logToOutput
+	});
+	cElem('br', testHost);
+
+	cElem('span', testHost)
+		.textContent = 'WAAAAAAAAAAAH: ';
+	inputfield_createField('checkbox', testHost, {
+		host: testHost,
+		checkboxValue: 'waaaaaaaaaaah',
+		onchange: logToOutput
+	});
+	cElem('br', testHost);
+
+	cElem('span', testHost)
+		.textContent = 'Mario: ';
+	inputfield_createField('checkbox', testHost, {
+		host: testHost,
+		checkboxValue: 'mario',
+		onchange: logToOutput
+	});
+	cElem('br', testHost);
 
 	//Set footer up
 	cElem('span', footer, {class: 'settings_seperator'});

@@ -254,10 +254,8 @@ function tracker_getStat (counterName, player) {
 	//get the actual stat
 	let stat = tracker_getCounterFromNameInObj(counterName, tracker_status['players'][player - 1]['stats']);
 
-	//if stat doesn't exist yet then it's 0
-	if (stat === undefined) {
-		stat = 0;
-	}
+	//if stat doesn't exist yet then set it to 0
+	stat ??= 0;
 
 	//use a failsafe in case the stat isn't valid
 	if (typeof stat !== 'number' && stat !== false) {
@@ -397,24 +395,10 @@ function tracker_setCounterFromNameInObj (counterName, obj, value) {
  * 			The amount that should be added/subtracted or set to.
  * 			Uses the default value specified in tracker_status['controls'].
  */
-function tracker_updateCounter (counterName, player, action, value) {
-	//set action to current action if not specified
-	if (action === undefined) {
-		action = tracker_status['controls']['action'];
-	}
-
-	//set value to current value if not specified
-	if (value === undefined) {
-		value = tracker_status['controls']['value'];
-	}
-
+function tracker_updateCounter (counterName, player, action=tracker_status['controls']['action'], value=tracker_status['controls']['value']) {
 	//get current/old stat
-	let oldStat = tracker_getStat(counterName, player);
-
-	//failsafe if the stat doesn't exist
-	if (oldStat === false) {
-		oldStat = 0;
-	}
+		//if the 'tracker_getStat' is falsy then simply set it to 0 instead (note that 0 is also considered "falsy" but that doesn't matter here since we set it to 0 anyway)
+	const oldStat = tracker_getStat(counterName, player) || 0;
 
 	//set new stat to 0 as a default
 	let newStat = 0;
