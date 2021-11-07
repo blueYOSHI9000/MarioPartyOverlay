@@ -1087,7 +1087,7 @@ function inputfield_executedAfterFieldChange (elem) {
 	const containerElem = inputfield_getElement(fieldID);
 
 	//return if container can't be found
-	if (containerElem === null) {
+	if (containerElem === false) {
 		console.error(`[MPO] Could not find container element with a 'fieldID' of "${fieldID}"`);
 		return;
 	}
