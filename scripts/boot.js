@@ -717,6 +717,119 @@ function boot_buildSettings (docFrag) {
 	});
 	cElem('br', testHost);
 
+
+
+
+	//create a form
+	cElem('br', main);
+	cElem('span', main)
+		.textContent = '=== FORM ===';
+	cElem('br', main);
+
+	//create a temporary debug output to test stuff
+	let formOutput = cElem('span', main, {id: 'settings_debugFormOutput'})
+		.innerText = '\n';
+	cElem('br', main);
+
+	//the function that will be called when each input field gets updated
+		//the function simply logs the value to the element with the ID 'settings_debugFormOutput'
+	let logToFormOutput = (value) => {document.getElementById('settings_debugFormOutput').innerText = `${typeof value}\n${ (typeof value === 'object') ? JSON.stringify(value) : value }`;};
+
+	let formTest = inputfield_createField('form', main, {
+		checkboxValue: 'mario',
+		onchange: logToFormOutput
+	});
+
+	//create a input field
+	cElem('br', formTest);
+	inputfield_createField('radio', formTest, {
+		variation: 'checkbox',
+		onchange: logToOutput,
+		addToForm: formTest,
+		name: 'radio',
+		options: [
+			{
+				name: 'Mario',
+				value: 'mario',
+				src: 'images/icons/characters/starRushIcon/mario.png'
+			},
+			{
+				name: 'Weegee',
+				value: 'weegee',
+				src: 'images/icons/characters/starRushIcon/luigi.png'
+			},
+			{
+				name: 'Wario',
+				value: 'wario',
+				src: 'images/icons/characters/starRushIcon/wario.png'
+			},
+			{
+				name: 'WAAAAAAAAAAAH',
+				value: 'waaaaaaaaaaah',
+				src: 'images/icons/characters/starRushIcon/waluigi.png'
+			}
+		]
+	});
+
+	//create a text input
+	cElem('br', formTest);
+	inputfield_createField('text', formTest, {
+		onchange: logToOutput,
+		addToForm: formTest,
+		name: 'text',
+	});
+
+	//create a host
+	cElem('br', formTest);
+	let testFormHost = cElem('span', formTest);
+
+	cElem('span', testFormHost)
+		.textContent = 'Mario: ';
+	inputfield_createField('checkbox', testFormHost, {
+		host: testFormHost,
+		checkboxValue: 'mario',
+		onchange: logToOutput,
+		addToForm: formTest,
+		name: 'host'
+	});
+	cElem('br', testFormHost);
+
+	cElem('span', testFormHost)
+		.textContent = 'Weegee: ';
+	inputfield_createField('checkbox', testFormHost, {
+		host: testFormHost,
+		checkboxValue: 'weegee',
+		onchange: logToOutput
+	});
+	cElem('br', testFormHost);
+
+	cElem('span', testFormHost)
+		.textContent = 'Wario: ';
+	inputfield_createField('checkbox', testFormHost, {
+		host: testFormHost,
+		checkboxValue: 'wario',
+		onchange: logToOutput
+	});
+	cElem('br', testFormHost);
+
+	cElem('span', testFormHost)
+		.textContent = 'WAAAAAAAAAAAH: ';
+	inputfield_createField('checkbox', testFormHost, {
+		host: testFormHost,
+		checkboxValue: 'waaaaaaaaaaah',
+		onchange: logToOutput
+	});
+	cElem('br', testFormHost);
+
+	cElem('span', testFormHost)
+		.textContent = 'Mario: ';
+	inputfield_createField('checkbox', testFormHost, {
+		host: testFormHost,
+		checkboxValue: 'mario',
+		onchange: logToOutput
+	});
+	cElem('br', testFormHost);
+
 	//Set footer up
 	cElem('span', footer, {class: 'settings_seperator'});
 	cElem('span', footer).textContent = 'yo2';
