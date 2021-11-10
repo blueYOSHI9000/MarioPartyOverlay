@@ -17,7 +17,7 @@
  * 		This is a special type as it doesn't really create an actual input-field (aside from an empty '<span>'), instead it can be used to combine several input-fields into a single form.
  * 		When creating a new form you can use it's ID to add other input-fields to it. To add a input-field to a form you can use the ID of the form inside the 'addToForm' attribute.
  * 		The form will have an object as it's value containing an item for each input-field that's part of it.
- * 		Each item has the 'name' attribute as it's name (or the field ID if a 'name' wasn't specified).
+ * 		Each item has the 'tag' attribute as it's name that can be used to access the value inside the object.
  *
  * 		Variations:
  * 			- regular <default>: A regular form.
@@ -142,10 +142,11 @@
  *
  * 	# form related attributes (available for all types but only needed if used inside a form):
  *
- * 		name [String] <ID>
- * 			The name of the input-field. Used to access the value inside a form.
- * 			Has to be a unique name inside the form. If the same name is used multiple times then some values might get overwritten with another value.
- * 			If not specified then it will use it's ID as a name. This is also why the name should not be a number to avoid duplicate names.
+ * 		tag [String] <ID>
+ * 			A tag-name is used to access the value inside a form.
+ * 			It's suggested that a tag should be unique within a form, but it's not required.
+ * 			If the same tag exists multiple times then the most recently updated input-field will overwrite the value with the same tag.
+ * 			If not specified then it will use it's ID as the tag. Due to this, it should be avoided to create tags that are only a number and nothing else.
  *
  * 		addToForm [DOM Element/Number/String] <none>
  * 			The form element it should be added to. Can be either the DOM element of the form or it's ID (can be in string-form, so 6 and '6' are both fine).
@@ -204,7 +205,7 @@ let inputfield_hosts = new WeakMap();
  * 	This updates the host and all forms if needed.
  *
  * 	Args:
- * 		options [Object]
+ * 		specifics [Object]
  * 			Includes the following properties:
  *
  * 				elem [DOM Element]
@@ -256,8 +257,8 @@ let inputfield_hosts = new WeakMap();
  * 			This defines whether this input-field belongs to a host or not.
  * 			Will be the DOM element of the host it belongs to or simple false if it doesn't belong to any host.
  *
- * 		name [String]
- * 			The name of the input-field. Only needed for input-fields that are part of a form.
+ * 		tag [String]
+ * 			The tag of the input-field. Only needed for input-fields that are part of a form.
  *
  * 		belongsToForm [Array]
  * 			A list of all forms this belongs to. Is an array consisting of DOM elements.
@@ -266,7 +267,7 @@ let inputfield_hosts = new WeakMap();
  * 			An array that lists all input-fields that are part of the form. Consists of DOM elements.
  * 			Will be null if this isn't a form.
  */
-function inputfield_FieldObject (options) {
+function inputfield_FieldObject (specifics) {
 	// === GET AND SET THE ID ===
 
 	//set ID
@@ -274,8 +275,8 @@ function inputfield_FieldObject (options) {
 	this.id = ++inputfield_totalFieldsCreated;
 
 	//add the ID to the element
-	if (options.elem.isDOMElement() === true) {
-		options.elem.setAttribute('data-fieldid', this.id);
+	if (specifics.elem.isDOMElement() === true) {
+		specifics.elem.setAttribute('data-fieldid', this.id);
 	}
 
 
@@ -283,30 +284,30 @@ function inputfield_FieldObject (options) {
 	// === MODIFYING ATTRIBUTES ===
 
 	//for quick access
-	let attributes = options.attributes;
+	let attributes = specifics.attributes;
 
 	//if no variation has been specified then try getting it from 'fieldType' (so 'radio-checkbox' is split into the fieldType 'radio' and variation 'checkbox')
 	if (attributes.variation === undefined) {
 
 		//check if it even has a dash in it
-		if (options.fieldType.indexOf('-') !== -1) {
+		if (specifics.fieldType.indexOf('-') !== -1) {
 
 			//actually split it
 			const fieldTypeSplit = fieldType.splitOnce('-');
 
 			//apply the new strings
-			options.fieldType = fieldTypeSplit[0];
+			specifics.fieldType = fieldTypeSplit[0];
 			attributes.variation = fieldTypeSplit[1];
 		}
 	}
 
 	//get default variation if no variation has been specified
-	attributes.variation ??= inputfield_getDefaultVariation(options.fieldType);
+	attributes.variation ??= inputfield_getDefaultVariation(specifics.fieldType);
 
 	//check if 'defaultValue' is valid and if not, replace it with a default value
 		//note that we pass 'attributes' here despite those still getting verified in here but that doesn't matter here since it only needs attribute properties that we don't modify here
-	if (inputfield_validateValue(attributes.defaultValue, options.fieldType, attributes) !== true) {
-		attributes.defaultValue = inputfield_getDefaultValue(options.fieldType, attributes);
+	if (inputfield_validateValue(attributes.defaultValue, specifics.fieldType, attributes) !== true) {
+		attributes.defaultValue = inputfield_getDefaultValue(specifics.fieldType, attributes);
 	}
 
 	//set 'checkboxValue' to true if it hasn't been specified
@@ -342,7 +343,7 @@ function inputfield_FieldObject (options) {
 		if (inputfield_hosts.get(attributes.host) === undefined) {
 			inputfield_setupHost({
 				hostElem: attributes.host,
-				onchange: attributes.onchange
+				onchange: (typeof attributes.onchange !== 'function') ? (() => {return;}) : attributes.onchange
 			});
 		}
 
@@ -350,11 +351,11 @@ function inputfield_FieldObject (options) {
 		hostObj = inputfield_hosts.get(attributes.host);
 
 		//add the newly created input-field to the hosts children
-		hostObj.childList.push(options.elem);
+		hostObj.childList.push(specifics.elem);
 
-		//overwrite the name if one is specified
-		if (attributes.name !== undefined) {
-			hostObj.name = attributes.name;
+		//overwrite the tag if one is specified
+		if (attributes.tag !== undefined) {
+			hostObj.tag = attributes.tag;
 		}
 
 		//overwrite the 'onchange' function if one is specified
@@ -383,8 +384,8 @@ function inputfield_FieldObject (options) {
 
 			//check if the element has already been added, if no then add it
 				//note that we have to use the host element if it exists instead of this input-field
-			if (formChildren.indexOf(attributes.host ?? options.elem) === -1) {
-				formChildren.push(attributes.host ?? options.elem);
+			if (formChildren.indexOf(attributes.host ?? specifics.elem) === -1) {
+				formChildren.push(attributes.host ?? specifics.elem);
 			}
 
 			//push the forms to the host if there is a host
@@ -399,13 +400,13 @@ function inputfield_FieldObject (options) {
 		attributes.addToForm = [];
 	}
 
-	//get default name if no name has been specified
-		//note that this has to be done after the previous stuff because one bit relies on whether a name has been specified or not
-	attributes.name ??= this.id;
+	//get default tag if no tag has been specified
+		//note that this has to be done after the previous stuff because one bit relies on whether a tag has been specified or not
+	attributes.tag ??= this.id;
 
 	//set the 'onchange' to a empty function if nothing is specified
-		//note that this has to be done after the previous stuff because one bit relies on whether a name has been specified or not
-	attributes.onchange = (typeof attributes.onchange !== 'function' || attributes.host !== undefined) ? (() => {return;}) : options.attributes.onchange;
+		//note that this has to be done after the previous stuff because one bit relies on whether a onchange function has been specified or not
+	attributes.onchange = (typeof attributes.onchange !== 'function' || attributes.host !== undefined) ? (() => {return;}) : attributes.onchange;
 
 
 
@@ -413,44 +414,44 @@ function inputfield_FieldObject (options) {
 
 	//set value
 		//if it's a form then set it to an empty object - otherwise set it to the value specified
-	this.value = (options.fieldType === 'form') ? {} : options.value;
+	this.value = (specifics.fieldType === 'form') ? {} : specifics.value;
 
 	//set type
-	this.fieldType = options.fieldType;
+	this.fieldType = specifics.fieldType;
 
 	//set variation
 		//if no variation has been specified then get the default one
-	this.variation = options.attributes.variation;
+	this.variation = specifics.attributes.variation;
 
 	//create a string that combines fieldType and it's variation for use on switches
 	this.fieldTypeAndVariation = `${this.fieldType}-${this.variation}`;
 
 	//set attributes
-	this.attributes = options.attributes;
+	this.attributes = specifics.attributes;
 
 	//set the onchange function
-	this.onchange = options.attributes.onchange;
+	this.onchange = specifics.attributes.onchange;
 
 	//set the actual input element
-	this.actualInputElement = options.actualInputElement ?? null;
+	this.actualInputElement = specifics.actualInputElement ?? null;
 
 	//set whether this belongs to a host (and which one)
-	this.belongsToHost = options.attributes.host ?? false;
+	this.belongsToHost = specifics.attributes.host ?? false;
 
-	//set name
-	this.name = options.attributes.name;
+	//set tag
+	this.tag = specifics.attributes.tag;
 
 	//set belongsToForm
-	this.belongsToForm = options.attributes.addToForm;
+	this.belongsToForm = specifics.attributes.addToForm;
 
 	//create a list of all input-fields this form contains (but only if it is a form)
-	this.formChildren = (options.fieldType === 'form') ? [] : null;
+	this.formChildren = (specifics.fieldType === 'form') ? [] : null;
 }
 
 /**	Creates a 'HostObject' that saves all info related to a host.
  *
  * 	Args:
- * 		options [Object]
+ * 		specifics [Object]
  * 			Includes the following properties:
  *
  * 				childList [Array] <optional>
@@ -459,10 +460,9 @@ function inputfield_FieldObject (options) {
  * 				defaultValue [*any*] <undefined>
  * 					The default value it should have.
  *
- * 				name [String] <ID>
- * 					The name of the host. Used to access the property inside a form.
- * 					Will be the ID of the first child if not specified, if no child is specified then the name will simply be 'host'.
- * 					Note that individual input-fields will receive it's ID as a name if no name is specified, this will NOT overwrite the name here.
+ * 				tag [String] <'host'>
+ * 					The tag of the host. See the 'tag' attribute for more info.
+ * 					Uses the tag of the first child and then simply 'host' if no tag is specified.
  *
  * 				onchange [Function] <optional>
  * 					The function that gets executed when the value changes. Will default to not doing anything.
@@ -477,33 +477,33 @@ function inputfield_FieldObject (options) {
  * 		onchange [Function]
  * 			The function that gets executed when the value changes.
  *
- * 		name [String]
- * 			The name of the input-field. Only needed for input-fields that are part of a form.
+ * 		tag [String]
+ * 			The tag of the input-field. Only needed for input-fields that are part of a form.
  *
  * 		belongsToForm [Array]
  * 			A list of all forms this belongs to. Is an array consisting of DOM elements.
  */
-function inputfield_HostObject (options={}) {
+function inputfield_HostObject (specifics={}) {
 	//set the 'childList' to an empty array if it hasn't been defined yet
-	options.childList ??= [];
+	specifics.childList ??= [];
 
 	//set the list of children
 		//use an empty array if no child has been defined
 		//if it's not an array then wrap it in one first, otherwise use it as-is
-	this.childList = (options.childList === undefined)           ? []
-	               : (Array.isArray(options.childList) !== true) ? [options.childList]
-	               : options.childList;
+	this.childList = (specifics.childList === undefined)           ? []
+	               : (Array.isArray(specifics.childList) !== true) ? [specifics.childList]
+	               : specifics.childList;
 
 	//set the defaultValue
 		//note that if it hasn't been specified then it'll be undefined which is what we need then anyway
-	this.value = options.defaultValue;
+	this.value = specifics.defaultValue;
 
 	//set the 'onchange' function
 		//use a empty function if it hasn't been defined
-	this.onchange = (typeof options.onchange !== 'function') ? (() => {return;}) : options.onchange;
+	this.onchange = (typeof specifics.onchange !== 'function') ? (() => {return;}) : specifics.onchange;
 
-	//set name
-	this.name = options.name ?? inputfield_fields.get(this.childList[0])?.name ?? 'host';
+	//set tag
+	this.tag = specifics.tag ?? inputfield_fields.get(this.childList[0])?.tag ?? 'host';
 
 	//set belongsToForm
 	this.belongsToForm = [];
@@ -563,7 +563,7 @@ function inputfield_createField (fieldType, parent, attributes) {
 			break;
 
 		case 'checkbox-regular':
-			actualInputElement = cElem('input', container, {type: 'checkbox', class: 'fieldType-checkbox', onchange: 'inputfield_executedAfterFieldChange(this)', 'data-fieldid': fieldID});
+			actualInputElement = cElem('input', container, {type: 'checkbox', class: 'fieldType-checkbox', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this)', 'data-fieldid': fieldID});
 			break;
 
 		case 'radio-checkbox':
@@ -573,14 +573,14 @@ function inputfield_createField (fieldType, parent, attributes) {
 			for (const item of attributes.options) {
 				cElem('span', container).textContent = `| ${item.name}: `;
 
-				actualInputElement.push(cElem('input', container, {type: 'radio', name: `fieldID-${fieldID}`, class: 'fieldType-radioCheckbox', onchange: 'inputfield_executedAfterFieldChange(this)', 'data-fieldid': fieldID, 'data-fieldvalue': item.value}));
+				actualInputElement.push(cElem('input', container, {type: 'radio', name: `fieldID-${fieldID}`, class: 'fieldType-radioCheckbox', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this)', 'data-fieldid': fieldID, 'data-fieldvalue': item.value}));
 
 				cElem('span', container).textContent = '|';
 			}
 			break;
 
 		case 'radio-select': {
-			actualInputElement = cElem('select', container, {class: 'fieldType-radioSelect', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
+			actualInputElement = cElem('select', container, {class: 'fieldType-radioSelect', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
 
 			//create a <option> inside the <select> for each option
 			for (const item of attributes.options) {
@@ -594,24 +594,24 @@ function inputfield_createField (fieldType, parent, attributes) {
 
 			//create a <img> for each option
 			for (const item of attributes.options) {
-				actualInputElement.push(cElem('img', container, {class: 'fieldType-imgButton', onclick: 'inputfield_executedAfterFieldChange(this)', src: item.src, 'data-fieldid': fieldID, 'data-fieldvalue': item.value}));
+				actualInputElement.push(cElem('img', container, {class: 'fieldType-imgButton', autocomplete: 'off', onclick: 'inputfield_executedAfterFieldChange(this)', src: item.src, 'data-fieldid': fieldID, 'data-fieldvalue': item.value}));
 			}
 			break;
 
 		case 'text-small':
-			actualInputElement = cElem('input', container, {type: 'text', class: 'fieldType-text', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
+			actualInputElement = cElem('input', container, {type: 'text', class: 'fieldType-text', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
 			break;
 
 		case 'text-area':
-			actualInputElement = cElem('textarea', container, {class: 'fieldType-textarea', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID})
+			actualInputElement = cElem('textarea', container, {class: 'fieldType-textarea', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID})
 			break;
 
 		case 'number-text':
-			actualInputElement = cElem('input', container, {type: 'number', class: 'fieldType-numberText', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
+			actualInputElement = cElem('input', container, {type: 'number', class: 'fieldType-numberText', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
 			break;
 
 		case 'number-range':
-			actualInputElement = cElem('input', container, {type: 'range', class: 'fieldType-numberRange', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
+			actualInputElement = cElem('input', container, {type: 'range', class: 'fieldType-numberRange', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
 			break;
 
 		case 'number-counter':
@@ -619,7 +619,7 @@ function inputfield_createField (fieldType, parent, attributes) {
 			break;
 
 		case 'button-regular':
-			actualInputElement = cElem('input', container, {type: 'button', class: 'fieldType-button', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
+			actualInputElement = cElem('input', container, {type: 'button', class: 'fieldType-button', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
 			break;
 
 		case 'button-image':
@@ -627,7 +627,7 @@ function inputfield_createField (fieldType, parent, attributes) {
 			break;
 
 		case 'color-regular':
-			actualInputElement = cElem('input', container, {type: 'color', class: 'fieldType-color', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
+			actualInputElement = cElem('input', container, {type: 'color', class: 'fieldType-color', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
 			break;
 
 		case 'file-regular':
@@ -654,7 +654,7 @@ function inputfield_createField (fieldType, parent, attributes) {
  * 	Only really creates the WeakMap entry but that's all that's needed.
  *
  * 	Args:
- * 		options [Object]
+ * 		specifics [Object]
  * 			Includes the following properties:
  *
  * 				hostElem [DOM Element]
@@ -663,15 +663,15 @@ function inputfield_createField (fieldType, parent, attributes) {
  * 				onchange [Function] <optional>
  * 					The function that should be executed when the value changes. Defaults to doing nothing.
  */
-function inputfield_setupHost (options) {
+function inputfield_setupHost (specifics) {
 	//return if the object is not a DOM Element
-	if (options.hostElem.isDOMElement() !== true) {
+	if (specifics.hostElem.isDOMElement() !== true) {
 		console.warn('[MPO] inputfield_setupHost() received a non-element.');
 		return;
 	}
 
 	//create the WeakMap entry
-	inputfield_hosts.set(options.hostElem, new inputfield_HostObject({onchange: options.onchange}));
+	inputfield_hosts.set(specifics.hostElem, new inputfield_HostObject({onchange: specifics.onchange}));
 }
 
 /**	Gets the value of a input-field.
@@ -741,8 +741,8 @@ function inputfield_getValue (fieldID) {
  * 			The value the input-field should be set to.
  * 			Note that this will check whether it's valid or not. If not then it will simply not set it.
  *
- * 		options [Object] <optional>
- * 			A object of optional options. Contains the following properties:
+ * 		specifics [Object] <optional>
+ * 			Contains the following properties:
  *
  * 				skipOnchange [Boolean] <false>
  * 					If true it will skip calling the 'onchange' function of the input-field.
@@ -755,7 +755,7 @@ function inputfield_getValue (fieldID) {
  * 		Returns true if succesfully updated and false if it couldn't be updated.
  * 		This will also return true if the value specified is already set.
  */
-function inputfield_setValue (field, value, options={}) {
+function inputfield_setValue (field, value, specifics={}) {
 	//get the container
 		//we don't have to check if this is valid because the field object will simply not be found if this doesn't exist
 	const containerElem = inputfield_getElement(field);
@@ -773,7 +773,7 @@ function inputfield_setValue (field, value, options={}) {
 	const hostObj = inputfield_hosts.get(fieldObj.belongsToHost);
 
 	//check if the host should be updated and also check if the host even exists
-	if (options.ignoreHost !== true && hostObj !== undefined) {
+	if (specifics.ignoreHost !== true && hostObj !== undefined) {
 
 		//return if it's already set to the correct value
 		if (hostObj.value === value) {
@@ -1174,7 +1174,7 @@ function inputfield_executedAfterFieldChange (elem) {
  * 			The new value it should be updated to.
  * 			Note that this function doesn't check whether the value is even valid. So a number field could get a value of 'waluigi' if that's what you want.
  *
- * 		options [Object] <optional>
+ * 		specifics [Object] <optional>
  * 			Includes the following optional properties:
  *
  * 			skipOnChange [Boolean] <false>
@@ -1184,7 +1184,7 @@ function inputfield_executedAfterFieldChange (elem) {
  * 				In case a form is being updated it will only update the property with this name instead of the whole object.
  * 				If this is not specified the form value will be completely replaced with 'newValue'.
  */
-function inputfield_applyNewValue (containerElem, newValue, options={}) {
+function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 	//get the field object
 	const fieldObj = inputfield_fields.get(containerElem);
 
@@ -1200,8 +1200,8 @@ function inputfield_applyNewValue (containerElem, newValue, options={}) {
 
 	//set the new value
 		//check if 'formProperty' is defined, if yes then only set the property
-	if (options.formProperty !== undefined) {
-		fieldObj['value'][options.formProperty] = newValue;
+	if (specifics.formProperty !== undefined) {
+		fieldObj['value'][specifics.formProperty] = newValue;
 	} else {
 		fieldObj['value'] = newValue;
 	}
@@ -1213,7 +1213,7 @@ function inputfield_applyNewValue (containerElem, newValue, options={}) {
 		inputfield_updateHostsChildren(fieldObj.belongsToHost, newValue);
 	}
 
-	if (options.skipOnchange !== true) {
+	if (specifics.skipOnchange !== true) {
 
 		//get the 'onchange' function
 			//if a host is used then get the 'onchange' function from that
@@ -1233,9 +1233,9 @@ function inputfield_applyNewValue (containerElem, newValue, options={}) {
 	//apply the new value to all forms (if it even belongs to a form)
 		//note that this HAS to be done after the 'onchange' bit because the 'onchange' function for the individual field should be executed before the 'onchange' function of the form
 	if (belongsToForm.length > 0) {
-		const formName = (hostObj !== undefined) ? hostObj.name : fieldObj.name;
+		const formTag = (hostObj !== undefined) ? hostObj.tag : fieldObj.tag;
 		for (const item of belongsToForm) {
-			inputfield_applyNewValue(item, newValue, {skipOnchange: options.skipOnchange, formProperty: formName});
+			inputfield_applyNewValue(item, newValue, {skipOnchange: specifics.skipOnchange, formProperty: formTag});
 		}
 	}
 }

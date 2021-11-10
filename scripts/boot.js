@@ -28,6 +28,11 @@
  * 		Any function defined on a prototype (like 'Object.prototype') has to be defined with 'Object.defineProperty()' or any other way to make sure that the function is NOT enumerable.
  * 		That's because the prototype functions should not show up in 'for ... in' loops.
  *
+ * 		## THE 'specififcs' ARGUMENT
+ *
+ * 		Whenever a function takes a single object as a rgument instead of scattering them over many arguments then that object has to be named 'specifics'.
+ * 		"Why not 'options'?" Good question, 'options' would be better but that name is reserved for stuff like "a list of options", like a <select> element with a list of options in it.
+ *
  *
  *  === HOW THE BOOT PROCESS WORKS ===
  *
@@ -746,7 +751,7 @@ function boot_buildSettings (docFrag) {
 		variation: 'checkbox',
 		onchange: logToOutput,
 		addToForm: formTest,
-		name: 'radio',
+		tag: 'radio',
 		options: [
 			{
 				name: 'Mario',
@@ -776,7 +781,7 @@ function boot_buildSettings (docFrag) {
 	inputfield_createField('text', formTest, {
 		onchange: logToOutput,
 		addToForm: formTest,
-		name: 'text',
+		tag: 'text',
 	});
 
 	//create a host
@@ -790,7 +795,7 @@ function boot_buildSettings (docFrag) {
 		checkboxValue: 'mario',
 		onchange: logToOutput,
 		addToForm: formTest,
-		name: 'host'
+		tag: 'hostTag'
 	});
 	cElem('br', testFormHost);
 
