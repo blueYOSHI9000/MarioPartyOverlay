@@ -150,7 +150,7 @@
  *
  * 		addToForm [Array/DOM Element/Number/String] <none>
  * 			The form element it should be added to. Can be either the DOM element of the form or it's ID (can be in string-form, so 6 and '6' are both fine).
- * 			Can also be an array consisting of DOM elements. The array can NOT be a number or a string (currently), it also doesn't check whether the array items are valid.
+ * 			Can also be an array consisting of multiple DOM elements/field-IDs.
  * 			Leave empty if it should not be added to a form.
  *
  * 	=== IMPORTANT FUNCTIONS ===
