@@ -148,8 +148,9 @@
  * 			If the same tag exists multiple times then the most recently updated input-field will overwrite the value with the same tag.
  * 			If not specified then it will use it's ID as the tag. Due to this, it should be avoided to create tags that are only a number and nothing else.
  *
- * 		addToForm [DOM Element/Number/String] <none>
+ * 		addToForm [Array/DOM Element/Number/String] <none>
  * 			The form element it should be added to. Can be either the DOM element of the form or it's ID (can be in string-form, so 6 and '6' are both fine).
+ * 			Can also be an array consisting of DOM elements. The array can NOT be a number or a string (currently), it also doesn't check whether the array items are valid.
  * 			Leave empty if it should not be added to a form.
  *
  * 	=== IMPORTANT FUNCTIONS ===
@@ -314,22 +315,40 @@ function inputfield_FieldObject (specifics) {
 		//note that this is unnecessary
 	attributes.checkboxValue ??= true;
 
-	//convert the 'addToForm' attribute to a DOM element if it only specified the fieldID
-	if (typeof attributes.addToForm === 'number' || typeof attributes.addToForm === 'string') {
-		attributes.addToForm = inputfield_getElement(attributes.addToForm);
+	//turn 'addToForm' into an empty array if nullish
+	if (attributes.addToForm === undefined || attributes.addToForm === null) {
+		attributes.addToForm = [];
 
-		//get the DOM element of the form
-		const addToFormElem = inputfield_getElement(attributes.addToForm);
-	}
-
-	//if 'addToForm' is a DOM element then add it to a array
-	if (attributes.addToForm?.isDOMElement() === true) {
+	//add 'addToForm' to an empty array if it's not an array already
+	} else if (Array.isArray(attributes.addToForm) !== true) {
 		attributes.addToForm = [attributes.addToForm];
 	}
 
-	//if 'addToForm' isn't an array then replace it with a empty array
-	if (Array.isArray(attributes.addToForm) !== true) {
-		attributes.addToForm = [];
+	//loop through all 'addToForm' items specified
+	for (let i = attributes.addToForm.length - 1; i >= 0; i--) {
+		//get the actual item itself
+		const item = attributes.addToForm[i];
+
+		//remove item and continue if it's nullish
+		if (item === undefined || item === null) {
+			attributes.addToForm.splice(i, 1);
+
+			//complain
+			console.warn(`[MPO] The input-field attribute 'addToForm' was invalid (array item #${i} - or the value as a whole if no array was given). Input-field: ${this.id}`);
+			continue;
+
+		//convert it to a DOM element if it only specified the fieldID
+		} else if (typeof item === 'number' || typeof item === 'string') {
+			attributes.addToForm[i] = inputfield_getElement(attributes.addToForm);
+		}
+
+		//delete the item if it's not a DOM element (even after converting)
+		if (item.isDOMElement() !== true) {
+			attributes.addToForm.splice(i, 1);
+
+			//complain
+			console.warn(`[MPO] The input-field attribute 'addToForm' was invalid (array item #${i} - or the value as a whole if no array was given). Input-field: ${this.id}`);
+		}
 	}
 
 	//set the host object as undefined
@@ -526,8 +545,11 @@ function inputfield_HostObject (specifics={}) {
  * 		The input-field DOM element.
  */
 function inputfield_createField (fieldType, parent, attributes) {
+	//create the document fragment
+	let docFrag = new DocumentFragment();
+
 	//this will contain the entire input field
-	const container = cElem('span', parent, {
+	const container = cElem('span', docFrag, {
 		class: 'inputfield_container'
 	});
 
@@ -646,6 +668,10 @@ function inputfield_createField (fieldType, parent, attributes) {
 		//and also ignore the host because this should apply to the individual input-field only
 	inputfield_setValue(container, attributes.defaultValue, {skipOnchange: true, ignoreHost: true});
 
+	//append the document fragment to the actual parent
+	parent.appendChild(docFrag);
+
+	//return the input-field DOM element
 	return container;
 }
 
@@ -1233,9 +1259,15 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 	//apply the new value to all forms (if it even belongs to a form)
 		//note that this HAS to be done after the 'onchange' bit because the 'onchange' function for the individual field should be executed before the 'onchange' function of the form
 	if (belongsToForm.length > 0) {
+
+		//get the tag that should be used inside the form (if host is present then take it from there)
 		const formTag = (hostObj !== undefined) ? hostObj.tag : fieldObj.tag;
+
+		//call 'inputfield_applyNewValue()' for each form
+			//note that this HAS to use 'fieldObj.value' instead of 'newValue' so it takes the actual value itself
+			//if this belongs to a form that also belongs to a form then the second form has to take the value of the first form, that's why we use 'fieldObj.value' for this
 		for (const item of belongsToForm) {
-			inputfield_applyNewValue(item, newValue, {skipOnchange: specifics.skipOnchange, formProperty: formTag});
+			inputfield_applyNewValue(item, fieldObj.value, {skipOnchange: specifics.skipOnchange, formProperty: formTag});
 		}
 	}
 }
@@ -1338,7 +1370,8 @@ function inputfield_getDefaultVariation (fieldType) {
  * 			It can also be a DOM element in which case it will simply return that.
  *
  * 	Returns [DOM Element/Boolean]:
- * 		The DOM Element of the input-field if found. Returns false if no field can be found.
+ * 		The DOM Element of the input-field if found.
+ * 		Returns false if no field can be found.
  */
 function inputfield_getElement (fieldID) {
 	if (typeof fieldID === 'string' || typeof fieldID === 'number') {

@@ -741,7 +741,6 @@ function boot_buildSettings (docFrag) {
 	let logToFormOutput = (value) => {document.getElementById('settings_debugFormOutput').innerText = `${typeof value}\n${ (typeof value === 'object') ? JSON.stringify(value) : value }`;};
 
 	let formTest = inputfield_createField('form', main, {
-		checkboxValue: 'mario',
 		onchange: logToFormOutput
 	});
 
@@ -834,6 +833,21 @@ function boot_buildSettings (docFrag) {
 		onchange: logToOutput
 	});
 	cElem('br', testFormHost);
+
+	//create a form in a form
+	cElem('span', formTest);
+	let formInFormTest = inputfield_createField('form', formTest, {
+		addToForm: formTest,
+		onchange: logToOutput
+	});
+
+	//create a text input inside the new form
+	cElem('br', formInFormTest);
+	inputfield_createField('text', formInFormTest, {
+		onchange: logToOutput,
+		addToForm: [formInFormTest, formTest],
+		tag: 'texto',
+	});
 
 	//Set footer up
 	cElem('span', footer, {class: 'settings_seperator'});
