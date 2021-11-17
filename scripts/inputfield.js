@@ -1442,7 +1442,6 @@ function inputfield_getElement (fieldID, specifics={}) {
 		if (typeof specifics.DOMTree?.querySelector !== 'function') {
 			//complain if a DOM tree was specifed
 			if (specifics.DOMTree !== undefined) {
-				debugger;
 				console.warn(`[MPO] The 'DOMTree' argument in 'inputfield_getElement()' is invalid. fieldID used: "${fieldID}" - DOMTree: "${specifics.DOMTree}"`);
 			}
 
