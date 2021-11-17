@@ -222,19 +222,30 @@ Object.defineProperty(String.prototype, 'splitOnce', {value: function (seperator
  * 	Stack-overflow copy: https://stackoverflow.com/questions/384286/how-do-you-check-if-a-javascript-object-is-a-dom-object
  * 	Note that this has to be defined using 'Object.defineProperty()' so the function isn't enumerable.
  *
+ * 	Args:
+ * 		element [*any*] <optional>
+ * 			The variable it should check for.
+ * 			Useful for calling this variable via 'Object.isDOMElement(*variable*)'.
+ * 			If not present it will simply use the variable this got called on.
+ *
  * 	Returns [Boolean]:
  * 		true if DOM Element, false if not.
  */
-Object.defineProperty(Object.prototype, 'isDOMElement', {value: function () {
+Object.defineProperty(Object.prototype, 'isDOMElement', {value: function (element) {
+	//if 'element' hasn't been specified then use the variable this has been called on (that being 'this')
+	if (element === undefined) {
+		element = this;
+	}
+
 	try {
 		//Using W3 DOM2 (works for FF, Opera and Chrome)
-		return this instanceof HTMLElement;
+		return element instanceof HTMLElement;
 	}
 	catch (e) {
 		//Browsers not supporting W3 DOM2 don't have HTMLElement and
 		//an exception is thrown and we end up here. Testing some
 		//properties that all elements have (works on IE7)
-		return (typeof this === 'object') && (this.nodeType === 1) && (typeof this.style === 'object') && (typeof this.ownerDocument === 'object');
+		return (typeof element === 'object') && (element.nodeType === 1) && (typeof element.style === 'object') && (typeof element.ownerDocument === 'object');
 	}
 }});
 

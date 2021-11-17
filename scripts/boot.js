@@ -834,11 +834,25 @@ function boot_buildSettings (docFrag) {
 	});
 	cElem('br', testFormHost);
 
+	//create a checkbox with the same tag as the form below
+	cElem('br', formTest);
+	cElem('span', formTest)
+		.textContent = 'Checkbox with same tag as below form: ';
+	inputfield_createField('checkbox', formTest, {
+		onchange: logToOutput,
+		addToForm: formTest,
+		tag: 'formOrCheck',
+		checkboxValue: 'This should overwrite the form'
+	});
+
 	//create a form in a form
-	cElem('span', formTest);
+	cElem('br', formTest);
+	cElem('span', formTest)
+		.textContent = '=== FORM IN FORM ===';
 	let formInFormTest = inputfield_createField('form', formTest, {
 		addToForm: formTest,
-		onchange: logToOutput
+		onchange: logToOutput,
+		tag: 'formOrCheck'
 	});
 
 	//create a text input inside the new form

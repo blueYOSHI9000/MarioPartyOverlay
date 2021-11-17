@@ -5,13 +5,23 @@
  *
  * 	You create a input-field with 'inputfield_createField()'.
  * 	Said function then creates a <span> that contains the entire input-field. This <span> also has the 'inputfield_container' class and is called the "container".
- * 	The container also stores the unique input-field ID inside it's 'data-inputid' attribute.
- * 	In addition the container also has a 'onchange' function associated with it that gets executed whenever the value changes. This is done manually inside this file.
+ * 	The container also stores the unique 'fieldID' inside it's 'data-fieldid' attribute.
+ *
+ * 	Input-fields entirely work through the container element and fieldIDs, if you want to do anything with a already-created input-field you need one of the two.
+ *
+ * 	In order to create a input-field you need to specify a type and variation (though variations are automatically set to a default if not specified).
+ * 	Types specify what kind of input the field should take. Each type has a different purpose.
+ * 	Variations on the other hand simply change the appearance of the input-field, they don't change the actual functionality. Any variation can be replaced with any other and it still works.
+ * 		(though variations are unique to each type)
+ *
+ *
+ * 	One important thing: The DOM elements that input-fields create should NOT be messed with. If any changes are made to the DOM element they might break. It's best to completely leave them alone.
+ * 	It should also be mentioned that input-fields rarely report errors, chances are they silently break with no one realizing.
  *
  *
  * 	=== INPUT FIELD TYPES & VARIATIONS ===
  *
- * 	Each 'inputType' is listed here and each 'inputType' will list all variations it has (which can be specified with the 'variation' attribute).
+ * 	Each type is listed here and each type will list all variations it has (which can be specified with the 'variation' attribute).
  *
  * 	form
  * 		This is a special type as it doesn't really create an actual input-field (aside from an empty '<span>'), instead it can be used to combine several input-fields into a single form.
@@ -115,6 +125,7 @@
  *
  * 			The 'onchange' attribute will only be set on the host element (which will be triggered when the value changes) and not on the individual checkboxes.
  * 			Setting a 'onchange' attribute when one has already been set then it will replace the existing one.
+ * 			It is not possible to set a 'onchange' function on a individual checkbox without it applying to the host as a whole.
  *
  * 	# 'radio' type attributes:
  *
@@ -145,11 +156,14 @@
  * 		tag [String] <ID>
  * 			A tag-name is used to access the value inside a form.
  * 			It's suggested that a tag should be unique within a form, but it's not required.
- * 			If the same tag exists multiple times then the most recently updated input-field will overwrite the value with the same tag.
- * 			If not specified then it will use it's ID as the tag. Due to this, it should be avoided to create tags that are only a number and nothing else.
+ * 			If not specified then it will use it's ID as the tag (or simply 'host' for a host). Due to this, it should be avoided to create tags that are only a number and nothing else.
+ *
+ * 			If multiple input-fields have the same tag then when a input-field is updated it will simply overwrite the value that's already there.
+ * 			This essentially allows you to have a form value that's simply the value of the most recently updated input-field.
  *
  * 		addToForm [Array/DOM Element/Number/String] <none>
  * 			The form element it should be added to. Can be either the DOM element of the form or it's ID (can be in string-form, so 6 and '6' are both fine).
+ * 				If you use DocumentFragments then don't use the field-ID if the input-field is inside a DocumentFragment as it won't be able to find it.
  * 			Can also be an array consisting of multiple DOM elements/field-IDs.
  * 			Leave empty if it should not be added to a form.
  *
@@ -200,7 +214,7 @@ let inputfield_hosts = new WeakMap();
 
 /**	Creates and sets up the 'FieldObject' that saves all info related to the input-field.
  *
- * 	This generates the unique ID and immediately applies it to the object and to the linked DOM element.
+ * 	This generates the unique ID and immediately applies it to the constructed object and to the linked DOM element.
  * 	This verifies and updates all attributes to be correct.
  * 	This sets up the host if needed.
  * 	This updates the host and all forms if needed.
@@ -334,20 +348,25 @@ function inputfield_FieldObject (specifics) {
 			attributes.addToForm.splice(i, 1);
 
 			//complain
-			console.warn(`[MPO] The input-field attribute 'addToForm' was invalid (array item #${i} - or the value as a whole if no array was given). Input-field: ${this.id}`);
+			console.warn(`[MPO] The input-field attribute 'addToForm' was either undefined or null (array item #${i} - or the value as a whole if no array was given). Input-field: ${this.id}`);
 			continue;
 
 		//convert it to a DOM element if it only specified the fieldID
 		} else if (typeof item === 'number' || typeof item === 'string') {
-			attributes.addToForm[i] = inputfield_getElement(attributes.addToForm);
+			attributes.addToForm[i] = inputfield_getElement(item, {referenceElem: specifics.elem});
+
+			if (attributes.addToForm[i] === false) {
+				console.warn(`[MPO] Could not find the input-field with the ID "${item}" while trying to scan the 'addToForm' attribute during the creation of input-field "${this.id}". This could be a cause of using DocumentFragments.`);
+			}
 		}
 
 		//delete the item if it's not a DOM element (even after converting)
-		if (item.isDOMElement() !== true) {
+			//note that we have to access the variable directly without using 'item' as the original variable might've been updated above
+		if (attributes.addToForm[i].isDOMElement() !== true) {
 			attributes.addToForm.splice(i, 1);
 
 			//complain
-			console.warn(`[MPO] The input-field attribute 'addToForm' was invalid (array item #${i} - or the value as a whole if no array was given). Input-field: ${this.id}`);
+			console.warn(`[MPO] The input-field attribute 'addToForm' was either undefined or null (array item #${i} - or the value as a whole if no array was given). Input-field: ${this.id}`);
 		}
 	}
 
@@ -585,7 +604,7 @@ function inputfield_createField (fieldType, parent, attributes) {
 			break;
 
 		case 'checkbox-regular':
-			actualInputElement = cElem('input', container, {type: 'checkbox', class: 'fieldType-checkbox', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this)', 'data-fieldid': fieldID});
+			actualInputElement = cElem('input', container, {type: 'checkbox', class: 'fieldType-checkbox', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this)', 'data-linktofieldid': fieldID});
 			break;
 
 		case 'radio-checkbox':
@@ -595,14 +614,14 @@ function inputfield_createField (fieldType, parent, attributes) {
 			for (const item of attributes.options) {
 				cElem('span', container).textContent = `| ${item.name}: `;
 
-				actualInputElement.push(cElem('input', container, {type: 'radio', name: `fieldID-${fieldID}`, class: 'fieldType-radioCheckbox', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this)', 'data-fieldid': fieldID, 'data-fieldvalue': item.value}));
+				actualInputElement.push(cElem('input', container, {type: 'radio', name: `fieldID-${fieldID}`, class: 'fieldType-radioCheckbox', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this)', 'data-linktofieldid': fieldID, 'data-holdsvalue': item.value}));
 
 				cElem('span', container).textContent = '|';
 			}
 			break;
 
 		case 'radio-select': {
-			actualInputElement = cElem('select', container, {class: 'fieldType-radioSelect', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
+			actualInputElement = cElem('select', container, {class: 'fieldType-radioSelect', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-linktofieldid': fieldID});
 
 			//create a <option> inside the <select> for each option
 			for (const item of attributes.options) {
@@ -616,24 +635,24 @@ function inputfield_createField (fieldType, parent, attributes) {
 
 			//create a <img> for each option
 			for (const item of attributes.options) {
-				actualInputElement.push(cElem('img', container, {class: 'fieldType-imgButton', autocomplete: 'off', onclick: 'inputfield_executedAfterFieldChange(this)', src: item.src, 'data-fieldid': fieldID, 'data-fieldvalue': item.value}));
+				actualInputElement.push(cElem('img', container, {class: 'fieldType-imgButton', autocomplete: 'off', onclick: 'inputfield_executedAfterFieldChange(this)', src: item.src, 'data-linktofieldid': fieldID, 'data-holdsvalue': item.value}));
 			}
 			break;
 
 		case 'text-small':
-			actualInputElement = cElem('input', container, {type: 'text', class: 'fieldType-text', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
+			actualInputElement = cElem('input', container, {type: 'text', class: 'fieldType-text', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-linktofieldid': fieldID});
 			break;
 
 		case 'text-area':
-			actualInputElement = cElem('textarea', container, {class: 'fieldType-textarea', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID})
+			actualInputElement = cElem('textarea', container, {class: 'fieldType-textarea', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-linktofieldid': fieldID})
 			break;
 
 		case 'number-text':
-			actualInputElement = cElem('input', container, {type: 'number', class: 'fieldType-numberText', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
+			actualInputElement = cElem('input', container, {type: 'number', class: 'fieldType-numberText', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-linktofieldid': fieldID});
 			break;
 
 		case 'number-range':
-			actualInputElement = cElem('input', container, {type: 'range', class: 'fieldType-numberRange', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
+			actualInputElement = cElem('input', container, {type: 'range', class: 'fieldType-numberRange', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-linktofieldid': fieldID});
 			break;
 
 		case 'number-counter':
@@ -641,7 +660,7 @@ function inputfield_createField (fieldType, parent, attributes) {
 			break;
 
 		case 'button-regular':
-			actualInputElement = cElem('input', container, {type: 'button', class: 'fieldType-button', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
+			actualInputElement = cElem('input', container, {type: 'button', class: 'fieldType-button', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-linktofieldid': fieldID});
 			break;
 
 		case 'button-image':
@@ -649,7 +668,7 @@ function inputfield_createField (fieldType, parent, attributes) {
 			break;
 
 		case 'color-regular':
-			actualInputElement = cElem('input', container, {type: 'color', class: 'fieldType-color', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-fieldid': fieldID});
+			actualInputElement = cElem('input', container, {type: 'color', class: 'fieldType-color', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-linktofieldid': fieldID});
 			break;
 
 		case 'file-regular':
@@ -703,17 +722,16 @@ function inputfield_setupHost (specifics) {
 /**	Gets the value of a input-field.
  *
  * 	Args:
- * 		fieldID [Number/String]
- * 			The ID of the input-field.
- * 			Can be in string-form (so '6' and 6 are both fine).
+ * 		field [DOM Element/Number/String]
+ * 			The input-field. Can be the DOM element itself or it's input-field ID (string-form is fine, so 6 and '6' are both fine).
  *
  * 	Returns [String/null]:
  * 		The value of the input-field as a string.
  * 		Returns null if the input-field can't be found.
  */
-function inputfield_getValue (fieldID) {
+function inputfield_getValue (field) {
 	//get the element
-	const elem = inputfield_getElement(fieldID);
+	const elem = inputfield_getElement(field);
 
 	//return null if element doesn't exist
 	if (elem === null) {
@@ -865,7 +883,7 @@ function inputfield_setValue (field, value, specifics={}) {
 
 			//loop through all radio buttons and see if any of them have the value it should be changed to, if yes then check it
 			for (const item of fieldObj.actualInputElement) {
-				if (item.getAttribute('data-fieldvalue') === value) {
+				if (item.getAttribute('data-holdsvalue') === value) {
 					item.checked = true;
 					changed = true;
 				}
@@ -1106,11 +1124,11 @@ function inputfield_getDefaultValue (fieldType, attributes) {
  * 			The actual input element that got updated or in case of buttons, the element that got clicked on.
  */
 function inputfield_executedAfterFieldChange (elem) {
-	//get field ID
-	const fieldID = elem.getAttribute('data-fieldid');
+	//get the field ID of the field it belongs to
+	const fieldID = elem.getAttribute('data-linktofieldid');
 
 	//get the container element
-	const containerElem = inputfield_getElement(fieldID);
+	const containerElem = inputfield_getElement(fieldID, elem);
 
 	//return if container can't be found
 	if (containerElem === false) {
@@ -1138,7 +1156,7 @@ function inputfield_executedAfterFieldChange (elem) {
 			break;
 
 		case 'radio-checkbox':
-			newValue = elem.getAttribute('data-fieldvalue');
+			newValue = elem.getAttribute('data-holdsvalue');
 			break;
 
 		case 'radio-select':
@@ -1146,7 +1164,7 @@ function inputfield_executedAfterFieldChange (elem) {
 			break;
 
 		case 'radio-image':
-			newValue = elem.getAttribute('data-fieldvalue');
+			newValue = elem.getAttribute('data-holdsvalue');
 			break;
 
 		case 'text-small':
@@ -1369,21 +1387,74 @@ function inputfield_getDefaultVariation (fieldType) {
  * 			The field ID of the input-field, can be in string-form (6 and '6' are both fine).
  * 			It can also be a DOM element in which case it will simply return that.
  *
+ * 		specifics [Object] <optional>
+ * 			A object of optional specifics about how the input-field should be gotten.
+ *
+ * 			DOMTree [DOM Tree] <document>
+ * 				Which DOM tree it should look for the input-field.
+ * 				Chances are this is simply the document, but it can also be a 'DocumentFragment' in which case that should be passed as a whole.
+ *
+ * 			referenceElem [DOM Element] <optional>
+ * 				A optional reference element that can be used to speed-up the process of getting the element.
+ * 				If a reference element is used then this function will simply go up the DOM tree and check if the input-field can be found.
+ * 				Note that if the input-field can't be found with this reference element then it will simply fall back to the normal function.
+ * 				This also double-checks to make sure that 'referenceElem' is an actual DOM element, so you can pass a string or anything and it will simply be ignored without breaking.
+ *
  * 	Returns [DOM Element/Boolean]:
  * 		The DOM Element of the input-field if found.
  * 		Returns false if no field can be found.
  */
-function inputfield_getElement (fieldID) {
-	if (typeof fieldID === 'string' || typeof fieldID === 'number') {
+function inputfield_getElement (fieldID, specifics={}) {
+	//check if 'fieldID' is a DOM element, if yes then return that.
+	if (typeof fieldID === 'object' && fieldID.isDOMElement()) {
+		return fieldID;
+
+	//if a field ID has been specified and, if yes, find the input-field with that
+	} else if (typeof fieldID === 'string' || typeof fieldID === 'number') {
+
+		//convert to string if needed
+		if (typeof fieldID === 'number') {
+			fieldID = String(fieldID);
+		}
+
+		if (Object.isDOMElement(specifics.referenceElem) === true) {
+			let elem = specifics.referenceElem;
+			while (true) {
+				//check if it's the one
+					//check if 'data-fieldid' is correct and if it includes the 'inputfield_container' class
+				if (elem.getAttribute('data-fieldid') === fieldID && elem.classList.contains('inputfield_container')) {
+					return elem;
+				}
+
+				//if it wasn't the one then set 'elem' to the parent node and continue with the loop
+				elem = elem.parentNode;
+
+				//if the element is no longer a DOM Element then break the loop
+					//you could also simply check if it's <body> or <html> but then you'd need to make sure you don't do this for DocumentFragments -- all in all, I think simply doing this check is faster/better
+				if (Object.isDOMElement(elem) !== true) {
+					break;
+				}
+			}
+		}
+
+		//if the specified DOM Tree doesn't have the 'querySelector' function then use 'document' as the DOM tree
+			//this will also trigger if no DOM tree has been specified
+		if (typeof specifics.DOMTree?.querySelector !== 'function') {
+			//complain if a DOM tree was specifed
+			if (specifics.DOMTree !== undefined) {
+				debugger;
+				console.warn(`[MPO] The 'DOMTree' argument in 'inputfield_getElement()' is invalid. fieldID used: "${fieldID}" - DOMTree: "${specifics.DOMTree}"`);
+			}
+
+			//actually use 'document' now
+			specifics.DOMTree = document;
+		}
+
 		//get the container element
-		const containerElem = document.querySelector(`.inputfield_container[data-fieldid="${fieldID}"]`);
+		const containerElem = specifics.DOMTree.querySelector(`.inputfield_container[data-fieldid="${fieldID}"]`);
 
 		//return the element if it exists, otherwise return false
 		return containerElem ?? false;
-
-	//check if 'fieldID' is a DOM element, if yes then return that.
-	} else if (typeof fieldID === 'object' && fieldID.isDOMElement()) {
-		return fieldID;
 	}
 
 	//return false if 'fieldID' a different type
