@@ -1,3 +1,6 @@
+// Copyright 2021 MarioPartyOverlay AUTHORS
+// SPDX-License-Identifier: Apache-2.0
+
 var settings_settings = {};
 
 var settings_open = false;

@@ -1,0 +1,5 @@
+MarioPartyOverlay is licensed under the Apache 2.0 license with the exception of the database/ and images/ directories which are licensed under the CC-BY-4 license instead. Part of the source code and media distributed in this repository is derived of other works which may have stronger or weaker licensing requirements. Some media distributed in the images/ directory may be copyrighted by Nintendo.
+Per-file licensing information is provided via SPDX tags [1] whenever possible.
+All licenses used by this project are found in the LICENSES/ directory within this source repository.
+
+[1] https://spdx.dev/

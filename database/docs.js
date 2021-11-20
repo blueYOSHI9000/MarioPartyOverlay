@@ -1,3 +1,5 @@
+// Copyright 2021 MarioPartyOverlay AUTHORS
+// SPDX-License-Identifier: CC-BY-4.0
 /*
 This will be moved to github wiki and be a lot more user-friendly at some point, don't worry!
 

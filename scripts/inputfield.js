@@ -1,3 +1,6 @@
+// Copyright 2021 MarioPartyOverlay AUTHORS
+// SPDX-License-Identifier: Apache-2.0
+
 /**	=== HOW INPUT-FIELDS WORK ===
  *
  * 	Input-fields are a way to get user-input. Whether it's a button, a checkbox, a set of options to choose from or whatever.

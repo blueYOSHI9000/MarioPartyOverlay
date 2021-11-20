@@ -1,3 +1,6 @@
+// Copyright 2021 MarioPartyOverlay AUTHORS
+// SPDX-License-Identifier: Apache-2.0
+
 /**	=== NOTE ABOUT HELPERS ===
  *
  * 	All functions in this file have to be self-contained. No calls to outside this file are allowed (preferably not even to other functions in this file).

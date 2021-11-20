@@ -1,3 +1,6 @@
+// Copyright 2021 MarioPartyOverlay AUTHORS
+// SPDX-License-Identifier: Apache-2.0
+
 /**	Adds all the event listeners needed for MPO to work.
  */
 function listeners_addListeners () {

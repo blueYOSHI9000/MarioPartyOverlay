@@ -1,3 +1,6 @@
+// Copyright 2021 MarioPartyOverlay AUTHORS
+// SPDX-License-Identifier: Apache-2.0
+
 /**	Gets a list of bonus stars in object form.
  *
  * 	Simply gets the 'bonusStars' object from the database.

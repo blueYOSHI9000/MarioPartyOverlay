@@ -1,3 +1,6 @@
+// Copyright 2021 MarioPartyOverlay AUTHORS
+// SPDX-License-Identifier: Apache-2.0
+
 /**	=== THE "Modal Object" ===
  *
  * 	A "Modal Object" includes all info about the modal itself.

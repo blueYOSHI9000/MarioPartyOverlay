@@ -1,3 +1,6 @@
+// Copyright 2021 MarioPartyOverlay AUTHORS
+// SPDX-License-Identifier: Apache-2.0
+
 /**	Creates a button with a <img> element.
  *
  * 	Creates a <img> element with the 'imgButton' class, the specified 'src' and a 'onclick' Attribute with the string provided.

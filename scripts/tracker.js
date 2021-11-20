@@ -1,3 +1,6 @@
+// Copyright 2021 MarioPartyOverlay AUTHORS
+// SPDX-License-Identifier: Apache-2.0
+
 /**	=== THE TRACKER OBJECT ===
  *
  * 	The 'tracker_status' variable saves everything related to tracking. It saves the current game, a list of players and every single counter in use.

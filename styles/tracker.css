@@ -1,3 +1,6 @@
+/* Copyright 2021 MarioPartyOverlay AUTHORS */
+/* SPDX-License-Identifier: Apache-2.0 */
+
 .tracker_player {
 	/**	Flex is needed to bring them all to the same level since otherwise the character-icon and the counters would be on a seperate line.
 	 * 	I'm sure there's other solutions to this as well, maybe some even better but this works.

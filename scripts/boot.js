@@ -1,3 +1,6 @@
+// Copyright 2021 MarioPartyOverlay AUTHORS
+// SPDX-License-Identifier: Apache-2.0
+
 /**	=== JS CODE FORMATTING ===
  *
  * 	# FUNCTION COMMENTS
@@ -517,8 +520,8 @@ function boot_buildSettings (docFrag) {
 		//TODO: replace this with actual settings
 
 		//Add the copyright bits
-	let copyrightBits = cElem('span', main);
-	copyrightBits.innerHTML = 'Project is currently maintained by <a href="https://www.twitter.com/yoshisrc" rel="noopener" target="_blank">blueYOSHI</a> with contributions from <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors" rel="noopener" target="_blank">others</a> <br> <br> Project is licensed under the GPLv3.0 and a file containing the license is included in the <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/blob/rewrite/LICENSE" rel="noopener" target="_blank">source code</a>. <br> <br> Initial development began in 2018. Latest activity can be tracked on the <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/tree/rewrite" rel="noopener" target="_blank">github page of this project</a>. <br> <br> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" rel="noopener" target="_blank">Mario Party 9 Font</a> from <a href="www.freepremiumfonts.com" rel="noopener" target="_blank">www.freepremiumfonts.com</a> (modified) <br> <br> <b>All characters, products and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them.<br>Mario Party is a registered trademark of Nintendo.</b><br><br>'
+	let copyrightBits = cElem('span', main)
+		.innerHTML = `MarioPartyOverlay (MPO) is an open project and was made by <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors" rel="noopener" target="_blank">it's contributors</a>. <br> The projects current maintainer is <a href="https://www.twitter.com/yoshisrc" rel="noopener" target="_blank">blueYOSHI</a>. <br> <br> The project as a whole is licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0.html" rel="noopener" target="_blank">Apache-2.0 license</a> while the database and all images are licensed under the <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener" target="_blank">CC-BY-4.0 (Creative Commons Attribution 4.0 International) license</a>. <br> This means anyone is free to use the any part of this project for their own purposes (commercial or not, open-source or not) as long as changes are stated (and a few other small restrictions, see the full licenses for more detail). <br> <br> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" rel="noopener" target="_blank">Mario Party 9 Font</a> from <a href="http://www.freepremiumfonts.com" rel="noopener" target="_blank">www.freepremiumfonts.com</a> (modified) <br> <br> <b>All characters, products and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them.<br>Mario Party is a registered trademark of Nintendo.</b> <br> <br> Copyright 2021 MarioPartyOverlay AUTHORS <br> <br>`;
 
 	//create a quick seperator
 	let seperator = cElem('span', main);

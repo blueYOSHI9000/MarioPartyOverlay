@@ -1,0 +1,2 @@
+All files in this directory and all it's sub-directories are licensed under the CC-BY-4.0 (Creative Commons Attribution 4.0 International).
+The license can be found inside the LICENSES/ directory within this repository.
