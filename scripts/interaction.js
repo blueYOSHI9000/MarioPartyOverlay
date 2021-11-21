@@ -166,7 +166,7 @@ function interaction_stopDrag () {
 	//remove the in-progress class as it's no longer needed
 		//note that this created an edge-case that this might still be needed if only drag has been stopped but not resize
 		//that said, I currently doubt it's worth it to add an exception just for this
-	for (const item of interaction_gettingModified['resize']) {
+	for (const item of interaction_gettingModified['drag']) {
 		item.elem.classList.remove('interaction_inProgress');
 	}
 

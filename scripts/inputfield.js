@@ -170,6 +170,11 @@
  * 			Can also be an array consisting of multiple DOM elements/field-IDs.
  * 			Leave empty if it should not be added to a form.
  *
+ * 		autoAddToForm [Boolean] <false>
+ * 			If true any field that's a descendant of a form will automatically be added to the form.
+ * 			The way this works is that it will go up the DOM tree and if it finds a form then it will be added to that form.
+ * 			This only applies the moment the field is created. If the input-field is created and is afterwards appended to a form then it will NOT be added to the form.
+ *
  * 	=== IMPORTANT FUNCTIONS ===
  *
  * 	inputfield_createField()
@@ -311,7 +316,7 @@ function inputfield_FieldObject (specifics) {
 		if (specifics.fieldType.indexOf('-') !== -1) {
 
 			//actually split it
-			const fieldTypeSplit = fieldType.splitOnce('-');
+			const fieldTypeSplit = specifics.fieldType.splitOnce('-');
 
 			//apply the new strings
 			specifics.fieldType = fieldTypeSplit[0];
@@ -341,35 +346,47 @@ function inputfield_FieldObject (specifics) {
 		attributes.addToForm = [attributes.addToForm];
 	}
 
+	//if 'autoAddToForm' is true then automatically add this field to any form that can be found by going up the DOM Tree
+	if (attributes.autoAddToForm === true) {
+
+		//get the parent element of the current input-field (if available)
+		let loopedElem = specifics.elem?.parentNode;
+
+		//only loop if it is actually a DOM element
+		while (Object.isDOMElement(loopedElem) === true) {
+
+			//if it's a form then add it to the 'addToForm' array
+			if (inputfield_fields.get(loopedElem)?.fieldType === 'form') {
+				attributes.addToForm.push(loopedElem);
+			}
+
+			//get the parent element
+			loopedElem = loopedElem.parentNode;
+		}
+	}
+
 	//loop through all 'addToForm' items specified
 	for (let i = attributes.addToForm.length - 1; i >= 0; i--) {
 		//get the actual item itself
 		const item = attributes.addToForm[i];
 
-		//remove item and continue if it's nullish
-		if (item === undefined || item === null) {
-			attributes.addToForm.splice(i, 1);
-
-			//complain
-			console.warn(`[MPO] The input-field attribute 'addToForm' was either undefined or null (array item #${i} - or the value as a whole if no array was given). Input-field: ${this.id}`);
-			continue;
-
 		//convert it to a DOM element if it only specified the fieldID
-		} else if (typeof item === 'number' || typeof item === 'string') {
+		if (typeof item === 'number' || typeof item === 'string') {
 			attributes.addToForm[i] = inputfield_getElement(item, {referenceElem: specifics.elem});
 
+			//complain if the element couldn't be found
 			if (attributes.addToForm[i] === false) {
 				console.warn(`[MPO] Could not find the input-field with the ID "${item}" while trying to scan the 'addToForm' attribute during the creation of input-field "${this.id}". This could be a cause of using DocumentFragments.`);
 			}
 		}
 
-		//delete the item if it's not a DOM element (even after converting)
+		//delete the item if it's not a DOM element (even after converting) OR if it's already in the array
 			//note that we have to access the variable directly without using 'item' as the original variable might've been updated above
-		if (attributes.addToForm[i].isDOMElement() !== true) {
+		if (Object.isDOMElement(attributes.addToForm[i]) !== true || attributes.addToForm.indexOf(attributes.addToForm[i]) !== i) {
 			attributes.addToForm.splice(i, 1);
 
 			//complain
-			console.warn(`[MPO] The input-field attribute 'addToForm' was either undefined or null (array item #${i} - or the value as a whole if no array was given). Input-field: ${this.id}`);
+			console.warn(`[MPO] The input-field attribute 'addToForm' was either undefined or null (array item #${i} - or the value as a whole if no array was given - if the array index makes no sense then it's a internal issue likely caused by the 'autoAddToForm' attribute). Input-field: ${this.id}`);
 		}
 	}
 
