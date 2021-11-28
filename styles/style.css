@@ -39,7 +39,7 @@
  *
  *	- *anything border related*
  *
- *  - z-index
+ * 	- z-index
  *
  *	- overflow
  *	- overflow-y
@@ -48,9 +48,9 @@
  *	- *anything font-related*
  *	- *any other styling like background-color*
  *
- *  === RESERVED !IMPORTANT CASES ===
+ * 	=== RESERVED !IMPORTANT CASES ===
  *
- *  - 'user-select' uses '!important' to stop the user from accidentally selecting stuff while dragging/resizing
+ * 	- 'user-select' uses '!important' to stop the user from accidentally selecting stuff while dragging/resizing
  *
  * 	=== RESERVED Z-INDEX VALUES ===
  *
@@ -98,9 +98,9 @@ body {
 /** This is applied to <body> during a drag/resize.
  */
 .interaction_inProgress {
-    /** This disabled user-selection to prevent the user from selecting something while dragging/resizing elements.
-     */
-    user-select: none !important;
+	/** This disabled user-selection to prevent the user from selecting something while dragging/resizing elements.
+	 */
+	user-select: none !important;
 }
 
 /**	Contains the entire main site (basically anything that's neither navbar nor settings). Currently only includes all trackers but there might be more at some point.
@@ -131,7 +131,15 @@ body {
  * 	Below this are generic elements that don't belong to any single part of the site since they can be reused all over the place.
  */
 
-/* this will simply stay here until I got modal positioning figured out */
+/** this will simply stay here until I got modal positioning figured out */
 .modal_container {
 	top: 200px;
+}
+
+/** This targets the individual player-selection buttons created with 'commonInterface_createPlayerSelection()'.
+ */
+.commonInterface_playerSelection > .fieldType-imgButton {
+	/** Input-fields set height and width automatically to make sure they're both the same so we unset the height here because it looks ugly otherwise.
+     */
+    height: unset !important;
 }

@@ -135,8 +135,8 @@ const boot_scriptsToLoad = [
 			'scripts/core/applySettings.js',
 
 		//the tracker itself
-			//this handled the actual tracker itself
-			'scripts/core/tracker.js',
+			'scripts/core/tracker.js', //the core tracker, this handles all the stats and generally the system itself
+			'scripts/core/handleTracker.js' //this handles the core tracker, meaning this changes the character and other similar stuff
 ];
 
 //all stylesheets that have to be loaded

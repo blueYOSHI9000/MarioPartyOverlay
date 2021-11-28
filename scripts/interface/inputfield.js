@@ -99,8 +99,9 @@
  * 			If a invalid variation is given then this WILL break, it won't automatically go back to the default. This includes specifying a variation when no variations exist.
  *
  * 		onchange [Function] <none>
- * 			A function that gets executed each time the input-field is updated. The first argument will be the current value of the input field.
- * 			Available for all input types.
+ * 			A function that gets executed each time the input-field is updated. Available for all input types.
+ * 			The first argument will be the current value of the input field.
+ * 			The second argument will be the field object inside 'inputfield_fields' (see the 'inputfield_FieldObject()' function for a documentation of this object).
  *
  * 		defaultValue [*any*] <optional>
  * 			This defines the value the input-field will have after it's been created.
@@ -114,6 +115,9 @@
  * 				button:   *N/A*
  * 				color:    '#000000'
  * 				file:     *N/A*
+ *
+ * 		cssClass [String/Array] <optional>
+ * 			Regular CSS classes that will be added to the container.
  *
  * 	# 'checkbox' type attributes:
  *
@@ -236,6 +240,10 @@ let inputfield_hosts = new WeakMap();
  * 				elem [DOM Element]
  * 					The input-field element.
  *
+ * 				parent [DOM Element]
+ * 					The parent of the newly created input-field.
+ * 					Only needed for the 'autoAddToForm' attribute.
+ *
  * 				fieldID [Number]
  * 					The unique ID of the field.
  * 					This can also include the variation by seperating the two with a - (so 'radio-checkbox' would give a inputType of 'radio' with a variation of 'checkbox').
@@ -284,6 +292,11 @@ let inputfield_hosts = new WeakMap();
  *
  * 		tag [String]
  * 			The tag of the input-field. Only needed for input-fields that are part of a form.
+ *
+ * 		propertyChanged [String]
+ * 			The name of the property that has been updated.
+ * 			Only needed for a form.
+ * 			Will be an empty string if it doesn't apply.
  *
  * 		belongsToForm [Array]
  * 			A list of all forms this belongs to. Is an array consisting of DOM elements.
@@ -340,6 +353,26 @@ function inputfield_FieldObject (specifics) {
 		attributes.defaultValue = inputfield_getDefaultValue(specifics.fieldType, attributes);
 	}
 
+	//if 'cssClass' is a string then add it to an empty array
+	if (typeof attributes.cssClass === 'string') {
+		attributes.cssClass = [attributes.cssClass];
+	}
+
+	//if 'cssClass' is an array then iterate through all of them
+	if (Array.isArray(attributes.cssClass) === true) {
+		for (const item of attributes.cssClass) {
+
+			//if the array item is a string then add it to the element
+			if (typeof item === 'string') {
+				specifics.elem.classList.add(item);
+			}
+		}
+
+	//if it's not an array then replace it with an empty array as a failsafe
+	} else {
+		attributes.cssClass = [];
+	}
+
 	//set 'checkboxValue' to true if it hasn't been specified
 		//note that this is unnecessary
 	attributes.checkboxValue ??= true;
@@ -357,7 +390,11 @@ function inputfield_FieldObject (specifics) {
 	if (attributes.autoAddToForm === true) {
 
 		//get the parent element of the current input-field (if available)
-		let loopedElem = specifics.elem?.parentNode;
+		let loopedElem = specifics.parent;
+
+		if (Object.isDOMElement(loopedElem) !== true) {
+			console.warn(`[MPO] Could not apply 'autoAddToForm' during the creation of a input-field (ID: ${this.id}) as the provided parent in 'inputfield_FieldObject()' is not a DOM Element (this is likely a internal error).`);
+		}
 
 		//only loop if it is actually a DOM element
 		while (Object.isDOMElement(loopedElem) === true) {
@@ -506,6 +543,10 @@ function inputfield_FieldObject (specifics) {
 	//set tag
 	this.tag = specifics.attributes.tag;
 
+	//set propertyChanged
+		//always defaults to an empty string
+	this.propertyChanged = '';
+
 	//set belongsToForm
 	this.belongsToForm = specifics.attributes.addToForm;
 
@@ -602,10 +643,14 @@ function inputfield_createField (fieldType, parent, attributes) {
 	//create the field object
 	const fieldObj = new inputfield_FieldObject({
 		elem:       container,
+		parent:     parent,
 		value:      undefined,
 		fieldType:  fieldType,
 		attributes: attributes
 	});
+
+	container.classList.add('fieldType-' + fieldObj.fieldType);
+	container.classList.add('fieldVariation-' + fieldObj.variation);
 
 	//add the field object to the list
 	inputfield_fields.set(container, fieldObj);
@@ -822,6 +867,12 @@ function inputfield_getValue (field) {
  * 					If true it ignores the specified host and simply applies the value to the actual input-field itself.
  * 					If false it applies the value to the host instead.
  *
+ * 				formProperty [String/Boolean] <false>
+ * 					Which form property it should update.
+ * 					This will automatically search for the input-field with this tag and update all that match.
+ * 					If this is set to false it will simply overwrite the form as a whole.
+ * 					Will be ignored for anything that's not a form.
+ *
  * 	Return [Boolean]:
  * 		Returns true if succesfully updated and false if it couldn't be updated.
  * 		This will also return true if the value specified is already set.
@@ -877,8 +928,33 @@ function inputfield_setValue (field, value, specifics={}) {
 
 	switch (fieldTypeAndVariation) {
 		case 'form-regular':
-			//there's no actual form element that has to be updated so all it needs to do is update the field object which it does at the end of this function
-			changed = true;
+			//if a form property is provided then apply the value to the specified input-field
+			if (typeof specifics.formProperty === 'string') {
+
+				//loop through all form-children
+				for (const item of fieldObj.formChildren) {
+
+					//check if the tag of the field matches the 'formProperty'
+					if (inputfield_fields.get(item).tag == specifics.formProperty) {
+
+						//update the input-field with the matching tag instead
+						inputfield_setValue(item, value, {skipOnchange: specifics.skipOnchange});
+
+						//if the 'onchange' function should be executed then it's already been executed anyway by calling 'inputfield_setValue()' above
+						specifics.skipOnchange = true;
+
+						//just fucking return it
+							//can't change 'changed' to true because that would overwrite the form but can't not do that either since it'll complain about it
+							//the rest of the function isn't needed anyway
+						return true;
+					}
+				}
+
+			//else simply overwrite the form
+			} else {
+				//there's no actual form element that has to be updated so all it needs to do is update the field object which it does at the end of this function
+				changed = true;
+			}
 			break;
 
 		case 'checkbox-regular':
@@ -1006,6 +1082,8 @@ function inputfield_setValue (field, value, specifics={}) {
 			console.warn(`[MPO] Unknown 'fieldType' in 'inputfield_createField()': "${fieldType}"`);
 			break;
 	}
+
+	//WARNING: When editing anything here, make sure it still works properly when updating forms with the 'formProperty' specific since that returns immediately without even getting here
 
 	//complain about it
 	if (complain === true) {
@@ -1273,11 +1351,27 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 		//check if 'formProperty' is defined, if yes then only set the property
 	if (specifics.formProperty !== undefined) {
 		fieldObj['value'][specifics.formProperty] = newValue;
+
+		//also set the 'propertyChanged' property
+		fieldObj['propertyChanged'] = specifics.formProperty;
 	} else {
 		fieldObj['value'] = newValue;
 	}
 
-	//TODO: mark radio fields as selected
+	//if this is a radio field then loop through all actual input elements to mark the correct ones as selected
+	if (fieldObj.fieldType === 'radio') {
+		for (const item of fieldObj.actualInputElement) {
+
+			//if this element holds the same value as the new one then mark it as selected
+			if (item.getAttribute('data-holdsvalue') === newValue) {
+				item.classList.add('inputfield_selected');
+
+			//if not then make sure it's not marked as selected
+			} else {
+				item.classList.remove('inputfield_selected');
+			}
+		}
+	}
 
 	//check if it belongs to a host and if it does then update all other fields that belong to the host
 	if (hostObj !== undefined) {
@@ -1293,7 +1387,7 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 		//execute the 'onchange' function
 			//use 'setTimeout()' with a delay of 0 so it gets it's own call-stack (it basically tells the browser "Hey, execute this bit as soon as everything else is done!")
 		if (typeof onchangeFunction === 'function') {
-			setTimeout(() => {onchangeFunction(fieldObj.value);}, 0);
+			setTimeout(() => {onchangeFunction(fieldObj.value, fieldObj);}, 0);
 		}
 	}
 

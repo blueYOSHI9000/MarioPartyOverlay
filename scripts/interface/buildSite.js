@@ -86,7 +86,7 @@ function buildSite_buildNavbar (docFrag) {
 	}
 
 	//create the shitty open settings button
-	let openSettingsButton = cElem('span', navbarBase, {style: 'color: white;cursor: pointer;', onclick: 'settings_toggleSettings();'});
+	let openSettingsButton = cElem('span', navbarBase, {style: 'color: white;cursor: pointer;', onclick: 'handleSettings_toggleSettings();'});
 	openSettingsButton.textContent = 'open/close settings &credits';
 
 	return docFrag;
@@ -521,7 +521,7 @@ function buildSite_buildTracker (docFrag) {
 		let counterList = cElem('span', tracker_player, {class: 'tracker_counterList', 'data-player': playerNum});
 
 		//Create every counter for this player.
-		ui_createCounterList(counterList, playerNum);
+		commonInterface_createCounterList(counterList, playerNum);
 	}
 
 	return docFrag;

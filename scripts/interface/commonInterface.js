@@ -19,7 +19,7 @@
  * 	Returns [DOM Element]:
  * 		Returns the <img> element created.
  */
-function ui_createImgButton (parent, src, onclick='') {
+function commonInterface_createImgButton (parent, src, onclick='') {
 	//create the element
 	let button = cElem('img', parent, {class: 'imgButton', src: src, onclick: onclick});
 
@@ -37,7 +37,7 @@ function ui_createImgButton (parent, src, onclick='') {
  * 		player [Number]
  * 			The player. Starts at 1.
  */
-function ui_updateCounter (counterName, player) {
+function commonInterface_updateCounter (counterName, player) {
 	//get the stat
 	const stat = tracker_getStat(counterName, player);
 
@@ -62,7 +62,7 @@ function ui_updateCounter (counterName, player) {
  * 		player [Number]
  * 			The player that the counter belongs to.
  */
-function ui_createCounterList (parent, player) {
+function commonInterface_createCounterList (parent, player) {
 	//get all bonus stars
 	const bonusStars = tracker_status['counters']['bonusStars'];
 
@@ -119,7 +119,7 @@ function ui_createCounterList (parent, player) {
  * 		The DOM element of the input-field.
  * 		Use 'inputfield_getValue(elem)' with this element as it's argument to get the character selected.
  */
-function ui_createCharacterList (parent, game=tracker_status['game']) {
+function commonInterface_createCharacterSelection (parent, game=tracker_status['game']) {
 	//get all characters
 	const characters = dbparsing_getCharacterList(game);
 
@@ -143,7 +143,12 @@ function ui_createCharacterList (parent, game=tracker_status['game']) {
 	}
 
 	//create the character selection
-	return inputfield_createField('radio-image', parent, {options: fieldOptions, autoAddToForm: true});
+	return inputfield_createField('radio-image', parent, {
+		options: fieldOptions,
+		cssClass: 'commonInterface_characterSelection',
+		tag: 'character',
+		autoAddToForm: true
+	});
 }
 
 /**	Creates a player selection.
@@ -159,7 +164,7 @@ function ui_createCharacterList (parent, game=tracker_status['game']) {
  * 		The DOM element of the input-field.
  * 		Use 'inputfield_getValue(elem)' with this element as it's argument to get the player selected.
  */
-function ui_createPlayerSelection (parent) {
+function commonInterface_createPlayerSelection (parent) {
 	return inputfield_createField('radio-image', parent, {
 		options: [
 			{
@@ -183,6 +188,8 @@ function ui_createPlayerSelection (parent) {
 				src: 'images/icons/misc/old/mp9/p4.png'
 			}
 		],
+		cssClass: 'commonInterface_playerSelection',
+		tag: 'player',
 		autoAddToForm: true
 	});
 }

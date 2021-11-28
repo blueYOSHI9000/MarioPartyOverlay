@@ -449,28 +449,3 @@ function tracker_updateCounter (counterName, player, action=tracker_status['cont
 	//update the UI
 	ui_updateCounter(counterName, player);
 }
-
-/**	Change the character of a single player.
- *
- * 	Args:
- * 		player [Number]
- * 			The player that should be updated.
- *
- * 		charName [String]
- * 			The name of the character as listed in the database.
- */
-function tracker_changeCharacter(player, charName) {
-	//get all character icons of this player
-	const characterIcons = document.querySelectorAll(`.tracker_characterDisplay[data-player="${player}"] .tracker_characterIcon`);
-
-	//get icon source for this character
-	const src = dbparsing_getIcon(`characters.${charName}`, tracker_status['game']);
-
-	for (const item of characterIcons) {
-		//replace the image source
-		item.src = src;
-	}
-
-	//update 'tracker_status'
-	tracker_status['players'][player - 1]['character'] = charName;
-}
