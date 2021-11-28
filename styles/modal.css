@@ -42,7 +42,7 @@
 
 /* === 'modalClass' SPECIFIC RULES === */
 
-.modalType-testo > .modal_main {
+.modalClass_testo > .modal_main {
 	/**	'display: block;' so it actually takes up the exact amount of space it should.
 	 */
 	display: block;
@@ -54,7 +54,7 @@
 	width: 400px;
 }
 
-.modalType-characterSelection > .modal_main {
+.modalClass_characterSelection > .modal_main {
 	/**	'display: block;' so it actually takes up the exact amount of space it should.
 	 */
 	display: block;

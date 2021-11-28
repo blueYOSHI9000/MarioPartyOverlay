@@ -1,5 +1,10 @@
 # Mario Party Overlay (MPO) Rewrite
-This is a in-progress rewrite of the entirety of MPO, starting from complete scratch. You can see the progress of it [here](https://github.com/blueYOSHI9000/MarioPartyOverlay/projects/7)
+This is a in-progress rewrite of the entirety of MPO, starting from complete scratch. You can see the progress of it [here](https://github.com/blueYOSHI9000/MarioPartyOverlay/projects/7).
+
+## I wanna contribute!
+Be sure to read the coding guidelines in 'styles/style.css' and 'scripts/core/boot.js'. They're at the top of the two files. This will be moved to an easier to find spot at some point but for now it's what it is.
+
+
 
 ## What even is this? What does it do?
 MPO is a stat tracker for the entire Mario Party series. It tracks all kinds of stats ranging from "who stepped on the most blue spaces" to "who used the most mushrooms". That said, it's most useful and major feature is tracking Bonus Stars, the ones awarded to the players who won the most minigames or stepped on the most happening spaces.

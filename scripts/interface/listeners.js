@@ -108,19 +108,20 @@ function listeners_pointerDown (e) {
 	//if it's the first loop
 	let firstLoop = true;
 
-	//list of modals to create after the auto-close (array holds the objects that 'modal_createModal()' requires)
-		//this is because at the end of this function the modals will have to be auto-closed
-		//and if a modal is created before that then it will be immediately closed
-		//this array on the other hand will be used so all modals inside this will be created after the auto-close
-	let modalsToCreate = [];
+	//list of functions to execute
+		//these will all be executed at the very end
+		//this can be useful if you have to create a modal since any modals created normally would immediately be closed due to them being auto-closed
+	let functionsToExecute = [];
 
 	//iterate through every element that got clicked on
 	while (true) {
 		//break if it reached <html>
 			//I know this makes it so it never loops through <html> but it doesn't need to (hell, it doesn't even need to go through <body>)
-		if (elem.tagName === 'HTML')
+		if (elem.tagName === 'HTML') {
 			break;
+		}
 
+		//commented since there's nothing in there currently
 		/*
 		//execute code only if it's the first element
 			//note that key is a string for whatever stupid ass reason
@@ -194,7 +195,7 @@ function listeners_pointerDown (e) {
 
 				//the navbar entry for updating players
 				case 'navbar_player':
-					modalsToCreate.push({type: 'characterSelection', specifics: {}, attributes: {}, group: 'navbar'});
+					functionsToExecute.push(handleNavbar_createCharacterModal);
 					break;
 
 				//any input field element that should be updated when clicked on
@@ -212,9 +213,15 @@ function listeners_pointerDown (e) {
 		//don't have to check whether there's an item in the array because it will simply pass undefined if it's an empty array
 	modal_autoCloseModals(foundModals[0]);
 
-	//go through the list of modals and create them all
-	for (const item of modalsToCreate) {
-		modal_createModal(item);
+	//go through the list of function to execute and execute them all
+	for (const item of functionsToExecute) {
+
+		//check if it's actually a function, if not complain
+		if (typeof item === 'function') {
+			item();
+		} else {
+			console.warn(`[MPO] A non-function has been added to the 'functionsToExecute' array inside 'listeners_pointerDown()': "${item}".`);
+		}
 	}
 }
 

@@ -182,8 +182,7 @@ function ui_createPlayerSelection (parent) {
 				value: '4',
 				src: 'images/icons/misc/old/mp9/p4.png'
 			}
-		]
-	},
-	autoAddToForm: true
-	);
+		],
+		autoAddToForm: true
+	});
 }

@@ -222,6 +222,8 @@ let inputfield_hosts = new WeakMap();
 
 /**	Creates and sets up the 'FieldObject' that saves all info related to the input-field.
  *
+ * 	NOTE: To create a input-field, use 'inputfield_createField()' instead of this!
+ *
  * 	This generates the unique ID and immediately applies it to the constructed object and to the linked DOM element.
  * 	This verifies and updates all attributes to be correct.
  * 	This sets up the host if needed.
@@ -305,6 +307,11 @@ function inputfield_FieldObject (specifics) {
 
 
 	// === MODIFYING ATTRIBUTES ===
+
+	//replace 'attributes' with a empty object if it isn't already an object
+	if (typeof specifics.attributes !== 'object') {
+		specifics.attributes = {};
+	}
 
 	//for quick access
 	let attributes = specifics.attributes;

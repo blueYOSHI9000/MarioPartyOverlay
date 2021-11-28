@@ -1,52 +1,61 @@
 // Copyright 2021 MarioPartyOverlay AUTHORS
 // SPDX-License-Identifier: Apache-2.0
 
-/**	=== THE "Modal Object" ===
+/**	=== HOW MODALS WORK ===
  *
- * 	A "Modal Object" includes all info about the modal itself.
- * 	When creating a modal the following have to be provided: 'type', 'specifics', 'attributes' and 'group'.
- * 	The rest will be handled by the site itself and shouldn't be touched.
- * 	It consists of the following:
+ * 	Modals are small windows created with plain HTML that "float" above the rest of the site.
+ * 	Most regular programs would open a new smaller window to change settings, we have to use modals for that. Whenever a regular program would create a new window, we create a modal instead.
+ * 	Modals can be moved around and resized just like regular windows. Modals can contain anything that's possible with HTML (and CSS/JS).
  *
- *		- type [String]
- *			- What the modal should have inside it. Can be one of the following:
- * 				- testo: Simply creates a box. Only really used for testing.
- *				- characterSelection: Allows the user to select which character they wanna use. [not implemented yet]
- *				- playerSelection: Allows the user to select one of the current players. Likely used to determine who got hit by an item. [not implemented yet]
+ * 	To create a modal, simply call 'modal_createModal()' (see the documentation on the function for more details).
  *
- *		- specifics [Object]
- * 			- An object consisting of specifics on how the content should be displayed (like when selecting a player, should they be able to select the current player as well?).
- * 			- Depends entirely on which 'type' is used:
- * 				- testo:
- * 					- No variables are needed. 'modalVariables' can simply be an empty object.
  *
- *		- attributes [Object]
- * 			- This defines how the modal itself works. These can't be changed once the modal has been created.
- *			- An object that consists of the following:
- *				- openOnTop [Boolean] <true>
- * 					- If the Modal should open on top, if true then it will immediately be the focus.
- * 					- If false it will open it at the very bottom.
- * 				- autoClose [Boolean] <true>
- * 					- If the modal should be auto-closed, meaning if a user clicks outside the modal then it gets closed automatically. Using false prevents this.
- *				- resizable [Boolean] <true>
- *					- If the modal can be resized.
+ * 	=== MODAL ATTRIBUTES ===
  *
- *		- group [String]
- *			- To what part of the site it belongs to.
- * 			- This will be used to close modals whenever they're no longer needed. This will always include pinned modals as well.
- * 			- For example, a modal of the group 'currentAssistTurn' will be closed once the user advances to the next turn (as it's no longer needed).
- * 			- Can be one of the following:
- *				- navbar: Belongs to navbar. These will never be closed (aside form auto-close of course).
- *				- currentAssistTurn: Belongs to the current assist player. Will be closed once the turn is done.
+ * 	When creating a modal you can provide it with some attributes to change how it functions. Here's a list of them:
  *
- * 		- id [Number]
- * 			- The ID of the modal. Will be added by the site automatically when a modal is being created.
+ * 	# Classification
  *
- * 		- status [Object]
- * 			- The status of the modal which includes info that's always changing like whether the modal is pinned or not. Will be added by the site automatically.
- * 			- Includes the following items:
- * 				- pinned [Boolean]
- * 					- Whether it's pinned or not.
+ * 		cssClass [String/Array] <none>
+ * 			The CSS class the container should receive.
+ * 			Note that the container receives the CSS class, not the main body itself. Use '.cssClass > .modal_main' to target the main body (replace 'cssClass' with your own).
+ * 			Note that it will have other classes as well, not just the ones specified here.
+ *
+ * 		group [String] <'modal'>
+ * 			The group the modal belongs to. Used to close all modals of a group (like, when settings are closed all modals in the group 'settings' will be closed).
+ * 			Uses 'modal' as a default, though you should always provide a group yourself whenever possible.
+ *
+ * 	# Testing
+ *
+ * 		testModal [Boolean] <false>
+ * 			If true it will automatically create a test modal.
+ * 			If true the 'constructModal' function WILL be ignored.
+ * 			If true it will automatically add the CSS class 'modalClass_testo'.
+ *
+ * 	# Fine-tuning
+ *
+ * 		openOnTop [Boolean] <true>
+ * 			If true the modal will open on top of all others.
+ * 			If false it opens at the very bottom.
+ *
+ * 		autoPin [Boolean] <false>
+ * 			If true the modal will be pinned automatically.
+ * 			If false the modal won't be pinned automatically.
+ * 			See 'pinned' in the 'status' section below.
+ *
+ * 		resizeable [Boolean] <true>
+ * 			If true the modal can be resized by the user.
+ * 			Note that the modal can always be resized manually, this only affects whether the user can resize it by themselves.
+ *
+ * 	=== MODAL STATUS ===
+ *
+ * 	The 'status' object of a modal lists some info about the current status of the modal like whether the modal is pinned or not.
+ * 	This is all updated by the site itself and it's best not to modify the object manually.
+ *	The following properties are found inside the 'status' object:
+ *
+ * 		pinned [Boolean]
+ * 			Whether the modal is pinned or not.
+ * 			On default a modal is always closed whenever the user clicks outside of the modal. However, if a modal is pinned then it won't be closed.
  */
 
 //lists all open Modals, each modal has the ID as it's name (so the modal with the ID 4 can be accessed via 'modal_openModals[4]')
@@ -60,64 +69,169 @@ var modal_focusOrder = [];
 //the total of modals opened (not current modals, just total since the site loaded)
 var modal_totalModalsMade = 0;
 
-//the defaults for modal specifics
-function modal_Specifics (type) {
-	switch (type) {
-		case 'testo':
-			//testo doesn't anything
-			break;
+//the default attributes of modals that are used whenever no attributes were provided
+const modal_defaultAttributes = {
+	cssClass: [],
+	group: 'modal',
+	testModal:  false,
+	openOnTop:  true,
+	autoPin:    false,
+	resizeable: true
+};
+
+/**	Creates and sets up the 'ModalObject' that saves all info related to the modal.
+ *
+ * 	NOTE: To create a modal, use 'modal_createModal()' instead of this!
+ *
+ * 	This automatically creates and applies the unique ID.
+ * 	This will NOT check whether attributes are even the correct type. If a string is provided for a attribute that requires a boolean then it WILL fail.
+ * 	This will verify and update all attributes to be correct (with the above exception).
+ *	This sets up the 'status' object according to the attributes used.
+ *
+ * 	Args:
+ * 		specifics [Object]
+ * 			Includes the following properties:
+ *
+ * 				attributes [Object] <default>
+ * 					The attributes for the modal. See explanation at the beginning of the file for a list of attributes.
+ * 					This will automatically use default values for any attribute that's not specified.
+ *
+ * 	Constructs:
+ * 		id [Number]
+ * 			The unique ID of the modal.
+ *
+ * 		group [String]
+ * 			The group the modal belongs to.
+ *
+ * 		attributes [Object]
+ * 			The attributes of this modal. See explanation at the beginning of the file for a list of attributes.
+ *
+ * 		status [Object]
+ * 			The current status of the modal. See explanation at the beginning of the file for a list of all status properties.
+ */
+function modal_ModalObject (specifics) {
+	// === GET AND SET THE ID ===
+
+	//increase the total amount of modals made and use the new value as the ID
+	this.id = ++modal_totalModalsMade;
+
+	// === MODIFYING ATTRIBUTES ===
+
+	//for quick access, use this instead of the 'specifics' one
+	let attributes = specifics.attributes;
+
+	//replace 'attributes' with a empty object if it isn't already an object
+	if (typeof attributes !== 'object') {
+		attributes = {};
 	}
-}
 
-//the defaults for modal attributes
-function modal_Attributes () {
-	this.openOnTop = true;
-	this.autoClose = true;
-	this.resizable = true;
-}
+	//if the 'group' attribute isn't a string then delete it
+		//this is done so the default gets re-added below
+	if (attributes.group !== 'string') {
+		delete attributes.group;
+	}
 
-//the defaults for modal status
-function modal_Status () {
-	this.pinned = false;
+	//set the default values for anything that isn't specified
+		//this includes the previously deleted attributes
+		//which were deleted so the defaults are all found in a single place (the 'modal_defaultAttributes' variable)
+	attributes = fillInObject(attributes, modal_defaultAttributes);
+
+	//if 'cssClass' is a string then add it to an empty array
+	if (typeof attributes.cssClass === 'string') {
+		attributes.cssClass = [attributes.cssClass];
+
+	//if it's not a string and also not an array then replace it with an empty array
+	} else if (Array.isArray(attributes.cssClass) !== true) {
+		attributes.cssClass = [];
+	}
+
+	//go through all 'cssClass' items in reverse and remove any items that aren't a string
+	for (let i = attributes.cssClass.length - 1; i >= 0; i--) {
+		if (typeof attributes.cssClass[i] !== 'string') {
+			console.warn(`[MPO] A 'cssClass' item in the modal is not a string. Array item ${i}: "${attributes.cssClass[i]}".`);
+			attributes.addToForm.splice(i, 1);
+		}
+	}
+
+	//convert all values to boolean values whenever needed (even if the output is somewhat unwanted then)
+		//I could do a ternary operator to only convert to Boolean when necessary but it's just *barely* faster than this but looks SO much worse
+		//so we just always convert to boolean, even when it already is a boolean
+
+		//now, one might ask "but why not simply delete them like we did with 'group'?"
+		//well, there's a simple answer to that: I'm lazy as fuck. And the code would also look ugly as hell.
+	attributes.testModal  = Boolean(attributes.testModal );
+	attributes.openOnTop  = Boolean(attributes.openOnTop );
+	attributes.autoPin    = Boolean(attributes.autoPin   );
+	attributes.resizeable = Boolean(attributes.resizeable);
+
+	//if it's a test-modal then add the class 'modalClass_testo'
+	if (attributes.testModal === true) {
+		attributes.cssClass.push('modalClass_testo');
+	}
+
+	//actually set the attributes
+	this.attributes = attributes;
+
+	//=== CREATING THE STATUS OBJECT ===
+
+	//create the status object
+	this.status = {};
+
+	//for quick access
+	let status = this.status;
+
+	//create the 'pinned' status
+		//but convert it to a boolean first just to be sure
+	status.pinned = Boolean(attributes.autoPin);
 }
 
 /** Creates a new modal window (or simply 'modal').
  *
- * 	Use this to create a test-window: "modal_createModal({type: 'testo', specifics: {}, attributes: {autoClose: false}, group: 'navbar'});"
+ * 	Use this to create a test-modal: "modal_createModal({attributes: {testModal: true, autoPin: true}, group: 'navbar'});"
+ *
+ * 	Note that this will NOT check whether attributes are the correct type. If a string is provided for a attribute that requires a boolean then it WILL fail.
  *
  * 	Args:
- * 		modalObj [Object]
- * 			A "Modal Object" that contains all info about the modal. See the top of this file for more info.
+ * 		specifics [Object]
+ * 			Includes the following properties:
+ *
+ * 				constructModal [Function]
+ * 					A function that gets called in order to construct the modal. The DOM element of the modal is given as an argument.
+ * 					It's suggested to avoid modifying the element provided aside from creating new elements inside of it as it might mess up the modal.
+ *
+ * 				attributes [Object] <default>
+ * 					The attributes for the modal. See explanation at the beginning of the file for a list of attributes.
+ * 					This will automatically use default values for any attribute that's not specified.
  *
  * 	Returns [Number]:
  * 		Returns the ID of the modal created.
  */
-function modal_createModal (modalObj) {
-	//increase the total of modals opened
-	modal_totalModalsMade++;
+function modal_createModal (specifics) {
+	// === PREPARE THE MODAL === (create the 'ModalObject' and all that)
 
-	//get and set the modal ID
-	const modalID = modal_totalModalsMade;
-	modalObj.id = modalID;
-
-	//add the specifics object
-	modalObj.specifics = forceFillInObject(new modal_Specifics(modalObj.type), modalObj.specifics);
-
-	//fill in the 'modalObj.attributes' object with defaults
-	modalObj.attributes = forceFillInObject(new modal_Attributes(), modalObj.attributes);
-
-	//add the status object
-	modalObj.status = new modal_Status();
+	//create the 'ModalObject'
+		//simply pass 'specifics' as everything is already in there
+	modalObj = new modal_ModalObject(specifics);
 
 	//create the 'modal_openModals' entry
 		//has to be made at the beginning of this function so it can be found via the ID in case something goes wrong because it can't be force-closed without it being accessible by ID
-	modal_openModals[modalID] = modalObj;
+	modal_openModals[modalObj.id] = modalObj;
+
+	//get the modalID
+	const modalID = modalObj.id;
+
+	//get the attributes object
+	const attributes = modalObj.attributes;
+
+
+
+	// === BUILD THE ACTUAL MODAL ===
 
 	//get all CSS classes
-	let cssClasses = ['modal_container', 'interaction_draggable', 'interaction_resizeable'];
+	let cssClasses = ['modal_container', 'interaction_draggable', 'interaction_resizeable', ...attributes.cssClass];
 
 		//push the type specific one
-	cssClasses.push(`modalType-${modalObj.type}`);
+	//cssClasses.push(`modalType-${modalObj.type}`);
 
 	//create a document fragment to add all elements to
 	const docFrag = new DocumentFragment();
@@ -126,7 +240,6 @@ function modal_createModal (modalObj) {
 	const container = cElem('span', docFrag, {
 		class                  : cssClasses.join(' '),
 		'data-modalid'         : modalObj.id,
-		'data-modalcontenttype': modalObj.type,
 		'data-modalgroup'      : modalObj.group
 	});
 
@@ -140,32 +253,45 @@ function modal_createModal (modalObj) {
 	//create the main body
 	const main = cElem('span', container, {class: 'modal_main'});
 
-	//make changes based on which type it is
-	switch (modalObj.type) {
-		case 'testo':
-			//create the resizing "buttons"
-			cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 7, style: 'padding-right: 9px;'}).textContent = '7';
-			cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 8, style: 'padding-right: 9px;'}).textContent = '8';
-			cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 9, style: 'padding-right: 9px;'}).textContent = '9';
-			cElem('br'  , main);
-			cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 4, style: 'padding-right: 9px;'}).textContent = '4';
-			cElem('span', main, {    /* Not needed since 5 is not a valid 'borderSide' */    style: 'padding-right: 9px;'}).textContent = '5';
-			cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 6, style: 'padding-right: 9px;'}).textContent = '6';
-			cElem('br'  , main);
-			cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 1, style: 'padding-right: 9px;'}).textContent = '1';
-			cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 2, style: 'padding-right: 9px;'}).textContent = '2';
-			cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 3, style: 'padding-right: 9px;'}).textContent = '3';
-			break;
-
-		case 'characterSelection':
-			//create a form
-			var form = inputfield_createField('form', main)
 
 
-			//create all characters
-			ui_createCharacterList(main);
-			break;
+	// === CONSTRUCT THE MAIN BODY ===
+
+	//if the 'testModal' attribute is true then create a test-modal
+	if (attributes.testModal === true) {
+		//create the resizing "buttons"
+		cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 7, style: 'padding-right: 9px;'}).textContent = '7';
+		cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 8, style: 'padding-right: 9px;'}).textContent = '8';
+		cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 9, style: 'padding-right: 9px;'}).textContent = '9';
+		cElem('br'  , main);
+		cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 4, style: 'padding-right: 9px;'}).textContent = '4';
+		cElem('span', main, {     /* Not needed since 5 is not a valid 'borderSide' */     style: 'padding-right: 9px;'}).textContent = '5';
+		cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 6, style: 'padding-right: 9px;'}).textContent = '6';
+		cElem('br'  , main);
+		cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 1, style: 'padding-right: 9px;'}).textContent = '1';
+		cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 2, style: 'padding-right: 9px;'}).textContent = '2';
+		cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 3, style: 'padding-right: 9px;'}).textContent = '3';
+
+		//complain if 'constructModal' was specified despite creating a test-modal
+		if (typeof specifics.constructModal === 'function') {
+			console.warn(`[MPO] A 'constructModal' function has been specified despite 'testModal' being set to true. As such 'constructModal' will be ignored.`);
+		}
+
+	//otherwise create the actual modal
+	} else {
+		//construct the main body of the site by executing 'constructModal()'
+			//but only if it is actually a function, otherwise complain
+		if (typeof specifics.constructModal === 'function') {
+			specifics.constructModal(main);
+		} else {
+			//complain but don't return, an empty modal is still a modal that works
+			console.warn(`[MPO] modal_createModal() received a 'constructModal' argument that's not a function: "${specifics.constructModal}".`);
+		}
 	}
+
+
+
+	// === FINISHING TOUCHES === (calculate size, focus it and all that)
 
 	//append the document fragment
 	document.getElementById('modal_catchAllContainer').appendChild(docFrag);
@@ -294,8 +420,13 @@ function modal_closeModal (modalID, updateFocus) {
 		modal_focusOrder.splice(index, 1);
 	}
 
-	//remove the HTML Element
-	modal_getDOMElement(modalID).remove();
+	//get the DOM element
+	const elem = modal_getDOMElement(modalID);
+
+	//...and delete it (if it can even be found)
+	if (elem.isDOMElement() === true) {
+		elem.remove();
+	}
 
 	//and finally remove the 'modal_openModals' entry
 	delete modal_openModals[modalID];
@@ -355,8 +486,8 @@ function modal_autoCloseModals (exception) {
 		//get current modal
 		const item = modal_openModals[key];
 
-		//close modal if it is can be auto-closed and if it isn't pinned
-		if (item.attributes.autoClose === true && item.status.pinned === false) {
+		//close modal if it isn't pinned
+		if (item.status.pinned === false) {
 			modal_closeModal(key);
 		}
 	}
