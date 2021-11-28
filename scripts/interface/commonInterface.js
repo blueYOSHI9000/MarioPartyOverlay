@@ -102,18 +102,22 @@ function ui_createCounterList (parent, player) {
 	}
 }
 
-/**	Creates a list of characters.
+/**	Creates a list of all characters for the user to select.
  *
- * 	This will create one image for each character of the specified game.
+ * 	This will create a 'radio' input-field which creates one image for each character.
+ * 	The 'autoAddToForm' attribute for the input-field is set to true.
  *
  * 	Args:
- * 		parent [DOM Element/String]
- * 			The element that the character list should be created in.
- * 			Can also be the ID of the element.
+ * 		parent [DOM Element]
+ * 			The element that this should be created in.
  *
  * 		game [String] <current game>
  * 			The name of the game. Can also be '_all'.
  * 			Defaults to using the currently selected game.
+ *
+ * 	Returns [DOM Element]:
+ * 		The DOM element of the input-field.
+ * 		Use 'inputfield_getValue(elem)' with this element as it's argument to get the character selected.
  */
 function ui_createCharacterList (parent, game=tracker_status['game']) {
 	//get all characters
@@ -139,5 +143,47 @@ function ui_createCharacterList (parent, game=tracker_status['game']) {
 	}
 
 	//create the character selection
-	inputfield_createField('radio-image', parent, {options: fieldOptions, onchange: (char) => {tracker_changeCharacter(1, char);}});
+	return inputfield_createField('radio-image', parent, {options: fieldOptions, autoAddToForm: true});
+}
+
+/**	Creates a player selection.
+ *
+ * 	This creates a 'radio' input-field with 4 images, one for each player.
+ * 	The 'autoAddToForm' attribute for the input-field is set to true.
+ *
+ * 	Args:
+ * 		parent [DOM Element]
+ * 			The element that this should be created in.
+ *
+ * 	Returns [DOM Element]:
+ * 		The DOM element of the input-field.
+ * 		Use 'inputfield_getValue(elem)' with this element as it's argument to get the player selected.
+ */
+function ui_createPlayerSelection (parent) {
+	return inputfield_createField('radio-image', parent, {
+		options: [
+			{
+				name: 'Player 1',
+				value: '1',
+				src: 'images/icons/misc/old/mp9/p1.png'
+			},
+			{
+				name: 'Player 2',
+				value: '2',
+				src: 'images/icons/misc/old/mp9/p2.png'
+			},
+			{
+				name: 'Player 3',
+				value: '3',
+				src: 'images/icons/misc/old/mp9/p3.png'
+			},
+			{
+				name: 'Player 4',
+				value: '4',
+				src: 'images/icons/misc/old/mp9/p4.png'
+			}
+		]
+	},
+	autoAddToForm: true
+	);
 }

@@ -158,6 +158,10 @@ function modal_createModal (modalObj) {
 			break;
 
 		case 'characterSelection':
+			//create a form
+			var form = inputfield_createField('form', main)
+
+
 			//create all characters
 			ui_createCharacterList(main);
 			break;
