@@ -49,10 +49,14 @@ function loadStyles (styles) {
  *			An array of all script files to be loaded.
  *			Each item is a string consisting of a relative path to the script file (like 'scripts/boot.js').
  *
+ * 		onload [Function/String] <none>
+ * 			The function that should be applied to the 'onload' attribute.
+ * 			If a function is provided it will be called with the file-name as it's first argument. If a string is provided it will simply be used as the 'onload' attribute as-is.
+ *
  *	Returns [Array]:
  *		An array of all <script> elements created.
  */
-function loadScripts (scripts) {
+function loadScripts (scripts, onload) {
 	if (scripts.length === 0) {
 		console.warn('[helpers.js] loadScripts() received an empty array.');
 		return [];
@@ -68,8 +72,14 @@ function loadScripts (scripts) {
 		let fileName = element.split('/');
 		fileName = fileName[fileName.length - 1];
 
-		//use the 'onLoad' attribute to execute the boot_scriptLoaded() function
-		scriptElem.setAttribute('onLoad', `boot_scriptLoaded('${fileName}');`);
+		//set the 'onload' attribute as a simple string
+		if (typeof onload === 'string') {
+			scriptElem.setAttribute('onload', onload);
+
+		//use a arrow-function so the argument can be passed
+		} else if (typeof onload === 'function') {
+			scriptElem.onload = () => {onload(fileName)};
+		}
 
 		//and finally, add it to 'elemList' which will then be returned
 		elemList.push(document.getElementsByTagName('head')[0].appendChild(scriptElem));
@@ -123,74 +133,99 @@ function cElem (type, parent, attributes) {
 	return elem;
 }
 
-/** Fills in a object with default values if a variable isn't present. Note: undefined is the same as a variable that isn't present.
+/**	Fills an object in with default values.
  *
- * 	Iterates through all values of 'defaultObj' and checks if they're present inside 'obj'.
- * 	If a value isn't present in 'obj' then it's filled in with the value from 'defaultObj'.
- * 	If the value is present in 'obj' then it's skipped.
+ * 	This will replace any undefined property with a property from 'defaultObj'.
+ *
+ * 	This can be called on an object like 'obj.fillInObject()' where 'obj' is a variable.
+ * 	Any value with undefined will be overwritten (even if it was set to undefined on purpose).
+ * 	This will only take values from 'defaultObj' that are enumerable.
  *
  * 	Args:
- * 		obj [Object]
- * 			The object that's gonna be filled in.
- *
  * 		defaultObj [Object]
- * 			The object with the default values.
+ * 			The object with the default values. These will be used to overwrite the other object.
  *
- * 		replaceNull [Boolean] <false>
- * 			If true then null (not 'null', just null) will be replaced with a value from 'defaultObj' as well.
+ * 		specifics [Object] <optional>
+ * 			Includes the following properties:
+ *
+ * 				force [Boolean] <false>
+ *					If true all values from 'defaultObj' will be applied, regardless of whether a value already exists.
+ * 					If false it will only take the values from 'defaultObj' that don't exist yet.
+ *
+ * 				replaceNull [Boolean] <false>
+ * 					If true it will also overwrite values that are null.
+ * 					Will be ignored if 'force' is set to true.
+ *
+ * 				objToOverwrite [Object] <optional>
+ * 					If this is present it will take this over the object it has been called on.
+ * 					Use this if you want to call this function via 'Object.defineProperty()'.
  *
  * 	Returns [Object]:
- * 		The filled-in object.
+ * 		The modified object.
+ * 		This will be the original object that the function was called on/the object specified in 'objToOverwrite'.
  */
-function fillInObject (obj, defaultObj, replaceNull) {
+Object.defineProperty(Object.prototype, 'fillIn', {value: function (defaultObj, specifics={}) {
+	//get 'objToOverwrite' if it's an object, otherwise use 'this'
+	let obj = (typeof specifics.objToOverwrite === 'object') ? specifics.objToOverwrite : this;
+
+	//complain and return if it's not a object
 	if (typeof obj !== 'object') {
-		console.warn('[helpers.js] fillInObject() received a non-object for \'obj\'.');
-	}
-	if (typeof defaultObj !== 'object') {
-		console.warn('[helpers.js] fillInObject() received a non-object for \'defaultObj\'.');
+		//complain differently depending on whether 'objToOverwrite' was used or not
+		console.warn(`[MPO] Object.fillIn() ${(specifics.objToOverwrite !== undefined) ? "received a non-object as the 'objToOverwrite' argument:" : "was called on a non-object without a valid 'objToOverwrite' argument:"} "${obj}".`);
+		return;
 	}
 
-	//iterate through all 'defaultObj' entries
+	//complain and return if 'defaultObj' is not a object
+	if (typeof defaultObj !== 'object') {
+		console.warn(`[MPO] Object.fillIn() received a non-object as the 'defaultObj': "${defaultObj}".`);
+		return;
+	}
+
+	//=== ACTUAL FUNCTION ===
+
+	//loop through 'defaultObj'
 	for (const key in defaultObj) {
-		//check if type is either undefined
-			//or alternatively if 'replaceNull' is true and the type is null (note: don't use 'typeof null' because that would return 'object', not 'null')
-		if (typeof obj[key] === 'undefined' || (replaceNull === true && obj[key] === null)) {
-			//apply the default value
+		//check whether the value should be replaced or not
+			//replace if 'force' is true
+			//replace if the property is undefined in 'obj'
+			//replace if 'replaceNull' is true and the property in 'obj' is null
+		if ((specifics.force === true) || (obj[key] === undefined || (specifics.replaceNull === true && obj[key] === null))) {
 			obj[key] = defaultObj[key];
 		}
 	}
-	return obj;
-}
 
-/** Replaces every value in an object with the value from a different object.
- *
- * 	Iterates through all values of 'defaultObj' and replaces the values found in 'obj' with them.
+	return obj;
+}});
+
+
+/**	Removes array items that matches a expression.
  *
  * 	Args:
- * 		obj [Object]
- * 			The object that's gonna be filled in.
+ * 		expr [Function]
+ * 			The function that gets called for each array item. The array item is passed as the first argument.
+ * 			If the function returns true then the array item will be removed.
  *
- * 		defaultObj [Object]
- * 			The object with the default values.
- *
- * 	Returns [Object]:
- * 		The filled-in object.
+ * 	Returns [Array]:
+ * 		The array with all matching items removed from it.
  */
-function forceFillInObject (obj, defaultObj) {
-	if (typeof obj !== 'object') {
-		console.warn('[helpers.js] forceFillInObject() received a non-object for \'obj\'.');
-	}
-	if (typeof defaultObj !== 'object') {
-		console.warn('[helpers.js] forceFillInObject() received a non-object for \'defaultObj\'.');
+Object.defineProperty(Array.prototype, 'removeEachIf', {value: function (expr) {
+	//return and complain if 'expr' isn't a function
+	if (typeof expr !== 'function') {
+		console.warn(`[MPO] Array.removeItemIf() received a non-function for 'expr': "${expr}".`);
+		return;
 	}
 
-	//iterate through all 'defaultObj' entries
-	for (const key in defaultObj) {
-		//apply the default value
-		obj[key] = defaultObj[key];
+	//loop through the array backward
+	for (let i = this.length - 1; i >= 0; i--) {
+
+		//call 'expr' with the current array item and if it returns true then remove the array item
+		if (expr(this[i], i) === true) {
+			this.splice(i, 1);
+		}
 	}
-	return obj;
-}
+
+	return this;
+}});
 
 /**	Splits a string into two pieces.
  *

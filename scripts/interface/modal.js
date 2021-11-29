@@ -134,7 +134,7 @@ function modal_ModalObject (specifics) {
 	//set the default values for anything that isn't specified
 		//this includes the previously deleted attributes
 		//which were deleted so the defaults are all found in a single place (the 'modal_defaultAttributes' variable)
-	attributes = fillInObject(attributes, modal_defaultAttributes);
+	attributes = attributes.fillIn(modal_defaultAttributes);
 
 	//if 'cssClass' is a string then add it to an empty array
 	if (typeof attributes.cssClass === 'string') {
@@ -146,12 +146,14 @@ function modal_ModalObject (specifics) {
 	}
 
 	//go through all 'cssClass' items in reverse and remove any items that aren't a string
-	for (let i = attributes.cssClass.length - 1; i >= 0; i--) {
-		if (typeof attributes.cssClass[i] !== 'string') {
-			console.warn(`[MPO] A 'cssClass' item in the modal is not a string. Array item ${i}: "${attributes.cssClass[i]}".`);
-			attributes.addToForm.splice(i, 1);
+	attributes.cssClass.removeEachIf((item, index) => {
+		if (typeof item !== 'string') {
+			console.warn(`[MPO] A 'cssClass' item in the modal is not a string. Array item ${index}: "${item}".`);
+
+			//returning true means that the item will be removed
+			return true;
 		}
-	}
+	});
 
 	//convert all values to boolean values whenever needed (even if the output is somewhat unwanted then)
 		//I could do a ternary operator to only convert to Boolean when necessary but it's just *barely* faster than this but looks SO much worse

@@ -48,11 +48,11 @@
 /** === HOW THE BOOT PROCESS WORKS ===
  *
  *	The goal of the boot process is to reduce the initial load as much as possible (this is also why 'index.html' only includes the bare minimum).
- *	'index.html' is loaded first, inside it is a bit of JS that adds a new <script> with a 'onLoad' attribute.
- *	The <script> element loads 'helpers.js', once it finished loading it executes the 'onLoad' attribute which loads 'boot.js' through the 'loadScripts()' function (that's why 'helpers.js' is loaded first, because that function is needed).
- *	Once 'boot.js' finished loading it executes the 'window.onload' function (which is right below this comment block) which executes 'boot_scriptLoaded()' which then finally executes 'boot_startup()'.
- *	 'boot_startup()' then loads all other JS and CSS files. Each JS file is loaded with a <script> element that has a 'onLoad' attribute that increases 'boot_currentScriptFiles'.
- *	Once all script files are loaded it executes 'boot_buildSite()'.
+ *	'index.html' is loaded first, inside it is a bit of JS that adds a new <script> with a 'onload' attribute.
+ *	The <script> element loads 'helpers.js', once it finished loading it executes the 'onload' attribute which loads 'boot.js' through the 'loadScripts()' function (that's why 'helpers.js' is loaded first, because that function is needed).
+ *	Once 'boot.js' finished loading it executes the 'onload' attribute of it's <script> element which calls 'boot_scriptLoaded()' which then finally calls 'boot_startup()'.
+ *	 'boot_startup()' then loads all other JS and CSS files. Each JS file is loaded with a <script> element that has a 'onLoad' attribute that pushes the file-name to 'boot_scriptsLoaded'.
+ *	Once all script files are loaded it executes 'boot_setupCounterObject()' and 'buildSite_build()'.
  *
  *
  *	Basically, this is how it looks:
@@ -66,23 +66,22 @@
  *						- load localStorage
  *						- update localStorage
  *						- load database
- *						- load additional scripts
+ *						- load all other scripts
  *						- load all css files
  *						> 'onLoad' attributes of all new <script> elements > boot_scriptLoaded()
  *							- count the amount of script files loaded
- *							> once all are loaded (tracked inside boot_scriptLoaded() )
- *								> boot_buildSite()
- *									> boot_buildNavbar()
+ *							> once all are loaded (tracked inside 'boot_scriptsLoaded')
+ * 								- boot_setupCounterObject()
+ *								> buildSite_build()
+ *									> buildSite_buildNavbar()
  *										- build html trackers
  *										- load related images
- *									> boot_buildSettings()
+ *									> buildSite_buildSettings()
  *										- build html settings
  *										- load related images
- *									> boot_buildTrackers()
+ *									> buildSite_buildTrackers()
  *										- build html trackers
  *										- load related images
- *									> boot_applySettings()
- *										- apply localStorage/settings
  */
 
 //all scripts that have to be loaded
@@ -212,7 +211,8 @@ function boot_startup () {
 	//TODO: Update localStorage
 
 	//Load Scripts
-	let scriptElems = loadScripts(boot_scriptsToLoad);
+		//use 'boot_scriptLoaded()' as a argument so it gets called whenever a file is being loaded
+	let scriptElems = loadScripts(boot_scriptsToLoad, boot_scriptLoaded);
 
 	//Load styles
 	let styleElems = loadStyles(boot_stylesToLoad);

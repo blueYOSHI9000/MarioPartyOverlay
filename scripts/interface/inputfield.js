@@ -409,30 +409,24 @@ function inputfield_FieldObject (specifics) {
 		}
 	}
 
-	//loop through all 'addToForm' items specified
-	for (let i = attributes.addToForm.length - 1; i >= 0; i--) {
-		//get the actual item itself
-		const item = attributes.addToForm[i];
+	//'.removeEachIf()' executes this function for each array item and then removes the item if the function returns true
+	attributes.addToForm.removeEachIf((item, index) => {
 
 		//convert it to a DOM element if it only specified the fieldID
 		if (typeof item === 'number' || typeof item === 'string') {
-			attributes.addToForm[i] = inputfield_getElement(item, {referenceElem: specifics.elem});
+			item = inputfield_getElement(item, {referenceElem: specifics.elem});
 
 			//complain if the element couldn't be found
-			if (attributes.addToForm[i] === false) {
+			if (item === false) {
 				console.warn(`[MPO] Could not find the input-field with the ID "${item}" while trying to scan the 'addToForm' attribute during the creation of input-field "${this.id}". This could be a cause of using DocumentFragments.`);
 			}
 		}
 
-		//delete the item if it's not a DOM element (even after converting) OR if it's already in the array
-			//note that we have to access the variable directly without using 'item' as the original variable might've been updated above
-		if (Object.isDOMElement(attributes.addToForm[i]) !== true || attributes.addToForm.indexOf(attributes.addToForm[i]) !== i) {
-			attributes.addToForm.splice(i, 1);
-
-			//complain
-			console.warn(`[MPO] The input-field attribute 'addToForm' was either undefined or null (array item #${i} - or the value as a whole if no array was given - if the array index makes no sense then it's a internal issue likely caused by the 'autoAddToForm' attribute). Input-field: ${this.id}`);
-		}
-	}
+		//return a boolean on whether or not the array item should be deleted (true = delete)
+			//if it's not a DOM element then delete it
+			//if it's not the first instance of this exact value then delete it
+		return (Object.isDOMElement(item) !== true || attributes.addToForm.indexOf(item) !== index);
+	});
 
 	//set the host object as undefined
 		//has to be actually initialized later as the host object might not even exist yet

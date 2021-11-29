@@ -447,5 +447,5 @@ function tracker_updateCounter (counterName, player, action=tracker_status['cont
 	tracker_setStat(counterName, player, newStat);
 
 	//update the UI
-	ui_updateCounter(counterName, player);
+	commonInterface_updateCounter(counterName, player);
 }
