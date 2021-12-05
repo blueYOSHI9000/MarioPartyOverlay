@@ -1,55 +1,6 @@
 // Copyright 2021 MarioPartyOverlay AUTHORS
 // SPDX-License-Identifier: Apache-2.0
 
-/**	Creates a button with a <img> element.
- *
- * 	Creates a <img> element with the 'imgButton' class, the specified 'src' and a 'onclick' Attribute with the string provided.
- *
- * 	Args:
- * 		parent [DOM Element/String]
- * 			The element that the button should be created in.
- * 			Can also be the ID of the element.
- *
- * 		src [String]
- * 			The source of the image.
- *
- * 		onclick [String]
- * 			The 'onclick' attribute. Has to be a string and not a function.
- *
- * 	Returns [DOM Element]:
- * 		Returns the <img> element created.
- */
-function commonInterface_createImgButton (parent, src, onclick='') {
-	//create the element
-	let button = cElem('img', parent, {class: 'imgButton', src: src, onclick: onclick});
-
-	return button;
-}
-
-/**	Updates a counter on the interface.
- *
- * 	Only updates the HTML element to be the same as what's in 'tracker_status'.
- *
- * 	Args:
- * 		counterName [String]
- * 			The full counter name like 'misc.distanceWalked'.
- *
- * 		player [Number]
- * 			The player. Starts at 1.
- */
-function commonInterface_updateCounter (counterName, player) {
-	//get the stat
-	const stat = updatesTracker_getStat(counterName, player);
-
-	//get all elements of this counter and this player
-	const elems = document.querySelectorAll(`.tracker_counter[data-counter="${counterName}"][data-player="${player}"] > .tracker_counterText`);
-
-	//update them
-	for (const item of elems) {
-		item.textContent = stat;
-	}
-}
-
 /**	Creates a list of counters.
  *
  * 	This will add one counter for each bonus star in the series. [TODO: change this so it can be defined which counters should be made]
@@ -64,7 +15,7 @@ function commonInterface_updateCounter (counterName, player) {
  */
 function commonInterface_createCounterList (parent, player) {
 	//get all bonus stars
-	const bonusStars = tracker_status['counters']['bonusStars'];
+	const bonusStars = trackerCore_status['counters']['bonusStars'];
 
 	//list all counters that have been made
 	let countersMade = [];
@@ -94,7 +45,7 @@ function commonInterface_createCounterList (parent, player) {
 
 		//counter image
 			//note that this uses the bonus star icon because there's currently no icons for 'misc' counters
-		cElem('img', counterElem, {class: 'tracker_counterImg', src: dbparsing_getIcon(`bonusStars.${key}`, tracker_status['game'])});
+		cElem('img', counterElem, {class: 'tracker_counterImg', src: dbparsing_getIcon(`bonusStars.${key}`, trackerCore_status['game'])});
 
 		//counter text
 		let counterText = cElem('span', counterElem, {class: 'tracker_counterText'});
@@ -119,7 +70,7 @@ function commonInterface_createCounterList (parent, player) {
  * 		The DOM element of the input-field.
  * 		Use 'inputfield_getValue(elem)' with this element as it's argument to get the character selected.
  */
-function commonInterface_createCharacterSelection (parent, game=tracker_status['game']) {
+function commonInterface_createCharacterSelection (parent, game=trackerCore_status['game']) {
 	//get all characters
 	const characters = dbparsing_getCharacterList(game);
 

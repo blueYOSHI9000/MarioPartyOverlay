@@ -17,7 +17,7 @@
  *
  * 	# VARIABLE & FUNCTION CREATION/NAMING
  *
- * 	Each global function and global variable has to start with a prefix like 'boot_' or 'tracker_' (always based on the file name).
+ * 	Each global function and global variable has to start with a prefix like 'boot_' or 'trackerCore_' (always based on the file name).
  * 	This is made so it's easy to spot to which part/file a function/variable belongs to and so variable names inside functions can be easily repeated without having to worry about it already existing elsewhere (though repeating names should be avoided anyway).
  * 	The prefixes are especially important for global variables so you immediately know when it's a global or local variable without having to double-check it.
  * 	The only exception to this rule is 'helpers.js' functions; functions that add little functionalities to help out that could just as well be standard JS functions.
@@ -111,6 +111,7 @@ const boot_scriptsToLoad = [
 			//(like, if a user presses a button to collapse a paragraph of text then that's handled in here since it has nothing to do with the actual tracker itself)
 			'scripts/interface/handleNavbar.js', //handles anything related to the navbar interface
 			'scripts/interface/handleSettings.js', //handles anything related to the settings interface
+			'scripts/interface/trackerInterface.js', //handles anything related to the tracker interface
 
 			'scripts/interface/listeners.js', //the odd one in here, any JS Event-listeners are made in here, this includes handling each pointer-click, keyboard press, etc
 
@@ -134,8 +135,8 @@ const boot_scriptsToLoad = [
 			'scripts/core/applySettings.js',
 
 		//the tracker itself
-			'scripts/core/tracker.js', //the core tracker, this handles all the stats and generally the system itself
-			'scripts/core/handleTracker.js' //this handles the core tracker, meaning this changes the character and other similar stuff
+			'scripts/core/trackerCore.js',   //the tracker itself at its core, more low-level - 'updatesTracker.js' will likely be needed more than this
+			'scripts/core/updatesTracker.js' //this contains all functions that update the tracker - like updating a stat, changing a character, etc
 ];
 
 //all stylesheets that have to be loaded
@@ -181,7 +182,7 @@ function boot_scriptLoaded (script) {
 	//execute code once all script files have been loaded
 	if (boot_scriptsLoaded.length === boot_totalScriptFiles) {
 
-		//setup the 'tracker_counters' object
+		//setup the 'trackerCore_status' object
 		boot_setupCounterObject();
 
 		//build the actual site
@@ -218,7 +219,7 @@ function boot_startup () {
 	let styleElems = loadStyles(boot_stylesToLoad);
 }
 
-/**	Sets up the 'tracker_counters' object completely.
+/**	Sets up the 'trackerCore_status' object completely.
  *
  * 	See 'tracker.js' for full documentation on what the variable does.
 */
@@ -239,7 +240,7 @@ function boot_setupCounterObject () {
 		'stompedOthers',
 		'getStompedOn'
 	];
-	miscCounters.forEach(item => tracker_status['counters']['misc'][item] = new tracker_Counter('standAlone'));
+	miscCounters.forEach(item => trackerCore_status['counters']['misc'][item] = new trackerCore_Counter('standAlone'));
 
 
 	//get all bonus stars
@@ -391,7 +392,7 @@ function boot_setupCounterObject () {
 
 		//create a stand-alone counter if it shouldn't be combined with any
 		if (combines.length <= 0) {
-			tracker_status['counters']['bonusStars'][key] = new tracker_Counter('standAlone');
+			trackerCore_status['counters']['bonusStars'][key] = new trackerCore_Counter('standAlone');
 
 			//push this to the list of counters made
 			countersMade.push(currentCounterMade);
@@ -400,12 +401,12 @@ function boot_setupCounterObject () {
 		//if the bonus star only tracks a single thing then simply link it to said counter by using 'linkTo'
 		} else if (combines.length === 1) {
 			//get the counter it's gonna be linked to
-			const linkedCounter = tracker_getCounter(combines[0]);
+			const linkedCounter = trackerCore_getCounter(combines[0]);
 
 			//check if the counter it links to even exists -- if not then don't link
 			if (linkedCounter !== undefined) {
 				//create the counter
-				tracker_status['counters']['bonusStars'][key] = new tracker_Counter('linked', combines[0]);
+				trackerCore_status['counters']['bonusStars'][key] = new trackerCore_Counter('linked', combines[0]);
 
 				//add the bonus star to either 'highlightHighest' or 'highlightLowest'
 				if (invert === true) {
@@ -415,20 +416,20 @@ function boot_setupCounterObject () {
 				}
 			} else {
 				//if the linked counter can't be found then simply create a new, unique counter
-				tracker_status['counters']['bonusStars'][key] = new tracker_Counter('standAlone');
+				trackerCore_status['counters']['bonusStars'][key] = new trackerCore_Counter('standAlone');
 			}
 
 		//list every counter that 'currentCounterName' combines
 		} else if (combines.length > 1) {
 			//create the counter
-			tracker_status['counters']['bonusStars'][key] = new tracker_Counter('combination');
+			trackerCore_status['counters']['bonusStars'][key] = new trackerCore_Counter('combination');
 
 			//get the counter
-			const currentCounter = tracker_getCounter(currentCounterName);
+			const currentCounter = trackerCore_getCounter(currentCounterName);
 
 			for (const key in combines) {
 				//get counter that should be combined
-				const combinedCounter = tracker_getCounter(combines[key]);
+				const combinedCounter = trackerCore_getCounter(combines[key]);
 
 				//skip if the combined counter doesn't exist
 				if (combinedCounter === undefined) {

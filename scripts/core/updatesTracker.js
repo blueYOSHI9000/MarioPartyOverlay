@@ -12,7 +12,7 @@
  *
  * 		action [String] <current action>
  * 			The action that should be taken.
- * 			Uses the default action specified in tracker_status['controls'].
+ * 			Uses the default action specified in trackerCore_status['controls'].
  * 			Can be one of the following:
  * 				- add: Adds stats.
  * 				- sub: Removes stats.
@@ -20,9 +20,9 @@
  *
  * 		value [Number] <current value>
  * 			The amount that should be added/subtracted or set to.
- * 			Uses the default value specified in tracker_status['controls'].
+ * 			Uses the default value specified in trackerCore_status['controls'].
  */
-function updatesTracker_updateCounter (counterName, player, action=tracker_status['controls']['action'], value=tracker_status['controls']['value']) {
+function updatesTracker_updateCounter (counterName, player, action=trackerCore_status['controls']['action'], value=trackerCore_status['controls']['value']) {
 	//get current/old stat
 		//if the 'updatesTracker_getStat' is falsy then simply set it to 0 instead (note that 0 is also considered "falsy" but that doesn't matter here since we set it to 0 anyway)
 	const oldStat = updatesTracker_getStat(counterName, player) || 0;
@@ -71,7 +71,7 @@ function updatesTracker_updateCounter (counterName, player, action=tracker_statu
 	updatesTracker_setStat(counterName, player, newStat);
 
 	//update the UI
-	commonInterface_updateCounter(counterName, player);
+	trackerInterface_updateCounter(counterName, player);
 }
 
 /**	Gets the specified stat from a player.
@@ -91,7 +91,7 @@ function updatesTracker_updateCounter (counterName, player, action=tracker_statu
  */
 function updatesTracker_getStat (counterName, player) {
 	//get the actual stat
-	let stat = tracker_getCounterFromNameInObj(counterName, tracker_status['players'][player - 1]['stats']);
+	let stat = trackerCore_getCounterFromNameInObj(counterName, trackerCore_status['players'][player - 1]['stats']);
 
 	//if stat doesn't exist yet then set it to 0
 	stat ??= 0;
@@ -130,7 +130,7 @@ function updatesTracker_setStat (counterName, player, value) {
 	}
 
 	//set the stat and save the response (Boolean of whether it was successful or not)
-	let result = tracker_setCounterFromNameInObj(counterName, tracker_status['players'][player - 1]['stats'], value);
+	let result = trackerCore_setCounterFromNameInObj(counterName, trackerCore_status['players'][player - 1]['stats'], value);
 
 	return result;
 }
@@ -153,7 +153,7 @@ function updatesTracker_getCharacter (player) {
 
 	//use 'player - 1' since it's an array starting at 0
 		//if the character couldn't be found (is undefined) then it will simply return false
-	return tracker_status.players[player - 1]?.character ?? false;
+	return trackerCore_status.players[player - 1]?.character ?? false;
 }
 
 /**	Change the character of a single player.
@@ -170,13 +170,13 @@ function updatesTracker_changeCharacter(player, charName) {
 	const characterIcons = document.querySelectorAll(`.tracker_characterDisplay[data-player="${player}"] .tracker_characterIcon`);
 
 	//get icon source for this character
-	const src = dbparsing_getIcon(`characters.${charName}`, tracker_status['game']);
+	const src = dbparsing_getIcon(`characters.${charName}`, trackerCore_status['game']);
 
 	for (const item of characterIcons) {
 		//replace the image source
 		item.src = src;
 	}
 
-	//update 'tracker_status'
-	tracker_status['players'][player - 1]['character'] = charName;
+	//update 'trackerCore_status'
+	trackerCore_status['players'][player - 1]['character'] = charName;
 }

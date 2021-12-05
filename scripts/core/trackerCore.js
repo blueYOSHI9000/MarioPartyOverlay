@@ -3,12 +3,12 @@
 
 /**	=== THE TRACKER OBJECT ===
  *
- * 	The 'tracker_status' variable saves everything related to tracking. It saves the current game, a list of players and every single counter in use.
+ * 	The 'trackerCore_status' variable saves everything related to tracking. It saves the current game, a list of players and every single counter in use.
  * 	The object is updated in real-time. Whenever a character is changed this will be updated. Whenever a counter is increased this will be updated.
  *
  * 	The following is a documentation of the object with every single property in it:
  *
- * 	> tracker_status [Object]
+ * 	> trackerCore_status [Object]
  * 		Saves everything related to tracking like list of players, list of counters, etc.
  *
  * 		> controls [Object]
@@ -97,7 +97,7 @@
 //TODO: Replace this with a more dynamic approach
 	//update: how so?
 		//maybe the categories? ('bonusStars', 'spaces', etc.)
-var tracker_status = {
+var trackerCore_status = {
 	controls: {
 		action: 'add',
 		value: 1
@@ -153,9 +153,9 @@ var tracker_status = {
 	}
 };
 
-/**	This creates a 'tracker_Counter' object.
+/**	This creates a 'trackerCore_Counter' object.
  *
- * 	This should be called like this: "var testo = new tracker_Counter();"
+ * 	This should be called like this: "var testo = new trackerCore_Counter();"
  *
  * 	Args:
  * 		counterRelation [String]
@@ -167,9 +167,9 @@ var tracker_status = {
  * 			If 'counterRelation' is something else then this can be ignored.
  *
  * 	Constructs:
- * 		Constructs a 'tracker_Counter' object.
+ * 		Constructs a 'trackerCore_Counter' object.
  */
-function tracker_Counter (counterRelation, relation) {
+function trackerCore_Counter (counterRelation, relation) {
 	//check to make sure 'counterRelation' is valid
 		//>if not, log it and convert the counter to a stand-alone
 	switch (counterRelation) {
@@ -178,7 +178,7 @@ function tracker_Counter (counterRelation, relation) {
 		case 'linked':
 			break;
 		default:
-			console.error('[MPO] tracker_Counter received an invalid \'counterRelation\' argument. Converting counter to a stand-alone instead.');
+			console.error('[MPO] trackerCore_Counter received an invalid \'counterRelation\' argument. Converting counter to a stand-alone instead.');
 			counterRelation = 'standAlone';
 			break;
 	}
@@ -196,7 +196,7 @@ function tracker_Counter (counterRelation, relation) {
 			if (typeof relation === 'string') {
 				this.relations.linkTo = relation;
 			} else {
-				console.error('[MPO] tracker_Counter received an invalid \'relation\' argument. Converting counter to a stand-alone instead.');
+				console.error('[MPO] trackerCore_Counter received an invalid \'relation\' argument. Converting counter to a stand-alone instead.');
 				this.counterRelation = 'standAlone';
 			}
 			break;
@@ -207,7 +207,7 @@ function tracker_Counter (counterRelation, relation) {
 			} else if (relation === undefined) {
 				this.relations.combination = [];
 			} else {
-				console.error('[MPO] tracker_Counter received an invalid \'relation\' argument. Converting counter to a stand-alone instead.');
+				console.error('[MPO] trackerCore_Counter received an invalid \'relation\' argument. Converting counter to a stand-alone instead.');
 				this.counterRelation = 'standAlone';
 			}
 			break;
@@ -224,7 +224,7 @@ function tracker_Counter (counterRelation, relation) {
 	}
 }
 
-/**	Gets the specified counter from 'tracker_counters'.
+/**	Gets the specified counter from 'trackerCore_status'.
  *
  * 	Args:
  * 		counterName [String]
@@ -232,12 +232,12 @@ function tracker_Counter (counterRelation, relation) {
  * 			Is in the format of 'bonusStars.runningStar'.
  *
  * 	Returns [Object/Boolean]:
- * 		The object from 'tracker_counters' as a reference.
+ * 		The object from 'trackerCore_status' as a reference.
  * 		If the counter can't be found then it will simply return false.
  */
-function tracker_getCounter (counterName) {
+function trackerCore_getCounter (counterName) {
 	//get and return the counter
-	return tracker_getCounterFromNameInObj(counterName, tracker_status['counters']);
+	return trackerCore_getCounterFromNameInObj(counterName, trackerCore_status['counters']);
 }
 
 /**	Gets the correct counter inside an object by it's name.
@@ -253,7 +253,7 @@ function tracker_getCounter (counterName) {
  * 		Returns the property found, no matter what type it is.
  * 		Returns false if it couldn't be found.
  */
-function tracker_getCounterFromNameInObj (counterName, obj) {
+function trackerCore_getCounterFromNameInObj (counterName, obj) {
 	//split the string into array pieces ('misc.distanceWalked' > ['misc', 'distanceWalked'])
 	const arr = counterName.split('.');
 
@@ -266,7 +266,7 @@ function tracker_getCounterFromNameInObj (counterName, obj) {
 
 		return obj;
 	} catch (e) {
-		console.error(`[MPO] tracker_tracker_getCounterFromNameInObj() couldn\'t get the counter "${counterName}"`);
+		console.error(`[MPO] trackerCore_getCounterFromNameInObj() couldn\'t get the counter "${counterName}"`);
 		return false;
 	}
 }
@@ -287,7 +287,7 @@ function tracker_getCounterFromNameInObj (counterName, obj) {
  * 		Returns true if it succesfully set the value.
  * 		Returns false if something went wrong.
  */
-function tracker_setCounterFromNameInObj (counterName, obj, value) {
+function trackerCore_setCounterFromNameInObj (counterName, obj, value) {
 	//split the string into array pieces ('misc.distanceWalked' > ['misc', 'distanceWalked'])
 	const arr = counterName.split('.');
 
@@ -310,10 +310,10 @@ function tracker_setCounterFromNameInObj (counterName, obj, value) {
 		}
 
 		//return false since it shouldn't get here to begin with
-		console.error(`[MPO] tracker_tracker_setCounterFromNameInObj() failed in mysterious ways with the counter "${counterName}"`);
+		console.error(`[MPO] trackerCore_setCounterFromNameInObj() failed in mysterious ways with the counter "${counterName}"`);
 		return false;
 	} catch (e) {
-		console.error(`[MPO] tracker_tracker_setCounterFromNameInObj() couldn\'t get the counter "${counterName}"`);
+		console.error(`[MPO] trackerCore_setCounterFromNameInObj() couldn\'t get the counter "${counterName}"`);
 		return false;
 	}
 }
