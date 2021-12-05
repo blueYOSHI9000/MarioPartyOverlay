@@ -39,7 +39,7 @@ function commonInterface_createImgButton (parent, src, onclick='') {
  */
 function commonInterface_updateCounter (counterName, player) {
 	//get the stat
-	const stat = tracker_getStat(counterName, player);
+	const stat = updatesTracker_getStat(counterName, player);
 
 	//get all elements of this counter and this player
 	const elems = document.querySelectorAll(`.tracker_counter[data-counter="${counterName}"][data-player="${player}"] > .tracker_counterText`);

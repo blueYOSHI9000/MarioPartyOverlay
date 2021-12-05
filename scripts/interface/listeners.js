@@ -190,7 +190,7 @@ function listeners_pointerDown (e) {
 
 				//a counter
 				case 'tracker_counter':
-					tracker_updateCounter(elem.getAttribute('data-counter'), parseInt(elem.getAttribute('data-player')));
+					updatesTracker_updateCounter(elem.getAttribute('data-counter'), parseInt(elem.getAttribute('data-player')));
 					break;
 
 				//the navbar entry for updating players

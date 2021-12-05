@@ -20,7 +20,7 @@ function handleNavbar_createCharacterModal () {
 		//create a character selection
 		const charSelection = commonInterface_createCharacterSelection(form);
 
-		inputfield_setValue(charSelection, handleTracker_getCharacter(1));
+		inputfield_setValue(charSelection, updatesTracker_getCharacter(1));
 	}
 
 	//create the actual modal
@@ -48,11 +48,11 @@ function handleNavbar_changeCharacterFromModal (value, fieldObj) {
 	//return if 'player' has been updated
 	if (fieldObj.propertyChanged === 'player') {
 		//change the currently selected character to the one the player uses
-		inputfield_setValue(fieldObj.id, handleTracker_getCharacter(Number(value.player)), {formProperty: 'character', skipOnchange: true});
+		inputfield_setValue(fieldObj.id, updatesTracker_getCharacter(Number(value.player)), {formProperty: 'character', skipOnchange: true});
 		return;
 	}
 
 	//debugger;
 	//change the character
-	handleTracker_changeCharacter(value.player, value.character);
+	updatesTracker_changeCharacter(value.player, value.character);
 }
