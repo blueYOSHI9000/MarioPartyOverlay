@@ -1,6 +1,13 @@
 // Copyright 2021 MarioPartyOverlay AUTHORS
 // SPDX-License-Identifier: Apache-2.0
 
+/**	=== NOTICE ===
+ *
+ * 	This file is only for the core of the tracker itself.
+ * 	If you simply need to update a counter or change a character then view 'updatesTracker.js'.
+ * 	That file has all the functions needed to work with the tracker.
+ */
+
 /**	=== THE TRACKER OBJECT ===
  *
  * 	The 'trackerCore_status' variable saves everything related to tracking. It saves the current game, a list of players and every single counter in use.
@@ -19,7 +26,7 @@
  * 					- add: Adds the value to the counter.
  * 					- sub: Subtracts the value from the counter (can't go below 0).
  *
- * 			- value [Number]
+ * 			- amount [Number]
  * 				By how much the counter should be modified.
  *
  * 		- game [String]
@@ -100,7 +107,7 @@
 var trackerCore_status = {
 	controls: {
 		action: 'add',
-		value: 1
+		amount: 1
 	},
 	game: '_all',
 	playerAmount: 4,

@@ -198,6 +198,16 @@ function listeners_pointerDown (e) {
 					functionsToExecute.push(handleNavbar_createCharacterModal);
 					break;
 
+				//the navbar entry for changing the action
+				case 'navbar_trackerAction':
+					functionsToExecute.push(handleNavbar_changeAction);
+					break;
+
+				//the navbar entry for changing the amount
+				case 'navbar_trackerAmount':
+					functionsToExecute.push(handleNavbar_changeAmount);
+					break;
+
 				//any input field element that should be updated when clicked on
 				case 'inputfield_callUpdate':
 					inputfield_executedAfterFieldChange(elem);

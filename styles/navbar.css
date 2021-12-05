@@ -39,3 +39,9 @@
 	width: 100%;
 	padding: 5px;
 }
+
+.navbar_trackerAction, .navbar_trackerAmount {
+	font-family: 'mp9';
+	color: white;
+	font-size: 35px;
+}

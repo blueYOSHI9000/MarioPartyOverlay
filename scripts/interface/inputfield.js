@@ -134,6 +134,8 @@
  * 			Setting a 'onchange' attribute when one has already been set then it will replace the existing one.
  * 			It is not possible to set a 'onchange' function on a individual checkbox without it applying to the host as a whole.
  *
+ * 			If no 'tag' is provided then it will attempt to take the tag of the first child, if not possible it uses 'host' instead as a tag.
+ *
  * 	# 'radio' type attributes:
  *
  * 		options [Array]
@@ -163,7 +165,7 @@
  * 		tag [String] <ID>
  * 			A tag-name is used to access the value inside a form.
  * 			It's suggested that a tag should be unique within a form, but it's not required.
- * 			If not specified then it will use it's ID as the tag (or simply 'host' for a host). Due to this, it should be avoided to create tags that are only a number and nothing else.
+ * 			If not specified then it will use it's ID as the tag. Due to this, it should be avoided to create tags that are only a number and nothing else.
  *
  * 			If multiple input-fields have the same tag then when a input-field is updated it will simply overwrite the value that's already there.
  * 			This essentially allows you to have a form value that's simply the value of the most recently updated input-field.
@@ -498,7 +500,7 @@ function inputfield_FieldObject (specifics) {
 
 	//get default tag if no tag has been specified
 		//note that this has to be done after the previous stuff because one bit relies on whether a tag has been specified or not
-	attributes.tag ??= this.id;
+	attributes.tag ??= String(this.id);
 
 	//set the 'onchange' to a empty function if nothing is specified
 		//note that this has to be done after the previous stuff because one bit relies on whether a onchange function has been specified or not
@@ -619,7 +621,7 @@ function inputfield_HostObject (specifics={}) {
  * 			The element that the button should be created in.
  * 			Can also be the ID of the element.
  *
- * 		attributes [Object]
+ * 		attributes [Object] <optional>
  *			See "attributes" in the documentation at the top of this file.
  *
  * 	Returns [DOM Element]:
@@ -726,7 +728,7 @@ function inputfield_createField (fieldType, parent, attributes) {
 			break;
 
 		case 'button-regular':
-			actualInputElement = cElem('input', container, {type: 'button', class: 'fieldType-button', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-linktofieldid': fieldID});
+			actualInputElement = cElem('input', container, {type: 'button', class: 'fieldType-button', autocomplete: 'off', onclick: 'inputfield_executedAfterFieldChange(this);', 'data-linktofieldid': fieldID});
 			break;
 
 		case 'button-image':
@@ -1286,7 +1288,7 @@ function inputfield_executedAfterFieldChange (elem) {
 			break;
 
 		case 'button-regular':
-			newValue = elem.value;
+			newValue = undefined;
 			break;
 
 		case 'color-regular':

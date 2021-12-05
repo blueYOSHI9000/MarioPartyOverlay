@@ -1,6 +1,37 @@
 // Copyright 2021 MarioPartyOverlay AUTHORS
 // SPDX-License-Identifier: Apache-2.0
 
+/** === WORKING WITH THE TRACKER ===
+ *
+ * 	This file hosts all functions related to actually updating the tracker, including functions that get the current state of it.
+ * 	Here's a list of them with categories:
+ *
+ * 	# STATS
+ *
+ * 		updatesTracker_updateCounter()
+ * 			The go-to function for updating a counter.
+ *
+ * 		updatesTracker_getStat()
+ * 		updatesTracker_setStat()
+ * 			Get and set a stat of a player & counter directly.
+ *
+ * 	# PLAYERS
+ *
+ * 		updatesTracker_getCharacter()
+ * 		updatesTracker_setCharacter()
+ * 			Get and set a character of a player.
+ *
+ * 	# CONTROLS
+ *
+ * 		updatesTracker_getAction()
+ * 		updatesTracker_setAction()
+ * 			Get and set the default action (+/-/= or 'add'/'sub'/'set').
+ *
+ * 		updatesTracker_getAmount()
+ * 		updatesTracker_setAmount()
+ * 			Get and set the default amount (likely 1/5/10 but can be pretty much anything).
+ */
+
 /**	Updates a counter with new stats.
  *
  * 	Args:
@@ -12,17 +43,17 @@
  *
  * 		action [String] <current action>
  * 			The action that should be taken.
- * 			Uses the default action specified in trackerCore_status['controls'].
  * 			Can be one of the following:
  * 				- add: Adds stats.
  * 				- sub: Removes stats.
  * 				- set: Sets stats to a certain number.
+ *			If not specified it simply takes the default action that's displayed in the navbar.
  *
  * 		value [Number] <current value>
  * 			The amount that should be added/subtracted or set to.
- * 			Uses the default value specified in trackerCore_status['controls'].
+ *			If not specified it simply takes the default amount that's displayed in the navbar.
  */
-function updatesTracker_updateCounter (counterName, player, action=trackerCore_status['controls']['action'], value=trackerCore_status['controls']['value']) {
+function updatesTracker_updateCounter (counterName, player, action=updatesTracker_getAction(), value=updatesTracker_getAmount()) {
 	//get current/old stat
 		//if the 'updatesTracker_getStat' is falsy then simply set it to 0 instead (note that 0 is also considered "falsy" but that doesn't matter here since we set it to 0 anyway)
 	const oldStat = updatesTracker_getStat(counterName, player) || 0;
@@ -165,7 +196,7 @@ function updatesTracker_getCharacter (player) {
  * 		charName [String]
  * 			The name of the character as listed in the database.
  */
-function updatesTracker_changeCharacter(player, charName) {
+function updatesTracker_setCharacter (player, charName) {
 	//get all character icons of this player
 	const characterIcons = document.querySelectorAll(`.tracker_characterDisplay[data-player="${player}"] .tracker_characterIcon`);
 
@@ -179,4 +210,74 @@ function updatesTracker_changeCharacter(player, charName) {
 
 	//update 'trackerCore_status'
 	trackerCore_status['players'][player - 1]['character'] = charName;
+}
+
+/**	Gets the current default action of the tracker.
+ *
+ * 	Returns [String]:
+ * 		Simply returns the action of the tracker. Is either 'add', 'sub' (subtract) or 'set'.
+ */
+function updatesTracker_getAction () {
+	return trackerCore_status['controls']['action'];
+}
+
+/**	Set the default action for the tracker.
+ *
+ * 	Args:
+ * 		newAction [String]
+ * 			The new action.
+ * 			Can be either 'add', 'sub' (subtract) or 'set'.
+ */
+function updatesTracker_setAction (newAction) {
+	//check to make sure 'newAction' is valid and then immediately set it
+	switch (newAction) {
+		case 'add':
+			trackerCore_status['controls']['action'] = 'add';
+			break;
+
+		case 'sub':
+			trackerCore_status['controls']['action'] = 'sub';
+			break;
+
+		case 'set':
+			trackerCore_status['controls']['action'] = 'set';
+			break;
+
+		default:
+			console.warn(`[MPO] updatedTracker_changeAction() received a invalid argument: "${newAction}".`);
+			return;
+	}
+
+	//update the navbar display
+	handleNavbar_updateAction();
+}
+
+/**	Gets the current default amount of the tracker.
+ *
+ * 	Returns [Number]:
+ * 		The current default amount.
+ */
+function updatesTracker_getAmount () {
+	return trackerCore_status['controls']['amount'];
+}
+
+/**	Sets the default amount for the tracker to use.
+ *
+ * 	Args:
+ * 		newAmount [Number]
+ * 			The new amount.
+ * 			Has to be more than 0 and less than 1000 (anything from 1 to 999, including them, is good).
+ */
+function updatesTracker_setAmount (newAmount) {
+	//make sure 'newAmount' is valid
+	if (newAmount === NaN || newAmount < 0 || newAmount > 999) {
+		console.warn(`[MPO] updatedTracker_changeAmount() received a invalid argument: "${newAmount}".`);
+		return;
+	}
+
+	//set the new amount
+	trackerCore_status['controls']['amount'] = newAmount;
+
+	//update navbar display
+	handleNavbar_updateAmount();
 }

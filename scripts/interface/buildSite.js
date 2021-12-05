@@ -85,9 +85,16 @@ function buildSite_buildNavbar (docFrag) {
 		cElem('img', navbarPlayer, {class: 'navbar_icon', player: playerNum, src: characterIconSrc});
 	}
 
+	//
+	let trackerActionButton = cElem('span', navbarBase, {class: 'navbar_trackerAction'})
+		.textContent = '+';
+
+	let trackerAmountButton = cElem('span', navbarBase, {class: 'navbar_trackerAmount'})
+		.textContent = '1';
+
 	//create the shitty open settings button
-	let openSettingsButton = cElem('span', navbarBase, {style: 'color: white;cursor: pointer;', onclick: 'handleSettings_toggleSettings();'});
-	openSettingsButton.textContent = 'open/close settings &credits';
+	let openSettingsButton = cElem('span', navbarBase, {style: 'color: white;cursor: pointer;', onclick: 'handleSettings_toggleSettings();'})
+		.textContent = 'open/close settings &credits';
 
 	return docFrag;
 }
@@ -122,7 +129,7 @@ function buildSite_buildSettings (docFrag) {
 
 		//Add the copyright bits
 	let copyrightBits = cElem('span', main)
-		.innerHTML = `MarioPartyOverlay (MPO) is an open project and was made by <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors" rel="noopener" target="_blank">it's contributors</a>. <br> The projects current maintainer is <a href="https://www.twitter.com/yoshisrc" rel="noopener" target="_blank">blueYOSHI</a>. <br> <br> The project as a whole is licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0.html" rel="noopener" target="_blank">Apache-2.0 license</a> while the database and all images are licensed under the <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener" target="_blank">CC-BY-4.0 (Creative Commons Attribution 4.0 International) license</a>. <br> This means anyone is free to use the any part of this project for their own purposes (commercial or not, open-source or not) as long as changes are stated (and a few other small restrictions, see the full licenses for more detail). <br> <br> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" rel="noopener" target="_blank">Mario Party 9 Font</a> from <a href="http://www.freepremiumfonts.com" rel="noopener" target="_blank">www.freepremiumfonts.com</a> (modified) <br> <br> <b>All characters, products and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them.<br>Mario Party is a registered trademark of Nintendo.</b> <br> <br> Copyright 2021 MarioPartyOverlay AUTHORS <br> <br>`;
+		.innerHTML = `MarioPartyOverlay (MPO) is an open project and was made by <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors" rel="noopener" target="_blank">it's contributors</a>. <br> The projects current maintainer is <a href="https://www.twitter.com/yoshisrc" rel="noopener" target="_blank">blueYOSHI</a>. <br> <br> The project as a whole is licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0.html" rel="noopener" target="_blank">Apache-2.0 license</a> while the database and all images are licensed under the <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener" target="_blank">CC-BY-4.0 (Creative Commons Attribution 4.0 International) license</a>. <br> This means anyone is free to use any part of this project for their own purposes (commercial or not, open-source or not) as long as changes are stated (and a few other small restrictions, see the full licenses for more detail). <br> <br> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" rel="noopener" target="_blank">Mario Party 9 Font</a> from <a href="http://www.freepremiumfonts.com" rel="noopener" target="_blank">www.freepremiumfonts.com</a> (modified) <br> <br> <b>All characters, products and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them.<br>Mario Party is a registered trademark of Nintendo.</b> <br> <br> Copyright 2021 MarioPartyOverlay AUTHORS <br> <br>`;
 
 	//create a quick seperator
 	let seperator = cElem('span', main);

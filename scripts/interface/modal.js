@@ -194,26 +194,22 @@ function modal_ModalObject (specifics) {
  * 	Note that this will NOT check whether attributes are the correct type. If a string is provided for a attribute that requires a boolean then it WILL fail.
  *
  * 	Args:
- * 		specifics [Object]
- * 			Includes the following properties:
+ * 		constructModal [Function]
+ * 			A function that gets called in order to construct the modal. The DOM element of the modal is given as an argument.
+ * 			It's suggested to avoid modifying the element provided aside from creating new elements inside of it as it might mess up the modal.
  *
- * 				constructModal [Function]
- * 					A function that gets called in order to construct the modal. The DOM element of the modal is given as an argument.
- * 					It's suggested to avoid modifying the element provided aside from creating new elements inside of it as it might mess up the modal.
- *
- * 				attributes [Object] <default>
- * 					The attributes for the modal. See explanation at the beginning of the file for a list of attributes.
- * 					This will automatically use default values for any attribute that's not specified.
+ * 		attributes [Object] <default>
+ * 			The attributes for the modal. See explanation at the beginning of the file for a list of attributes.
+ * 			This will automatically use default values for any attribute that's not specified.
  *
  * 	Returns [Number]:
  * 		Returns the ID of the modal created.
  */
-function modal_createModal (specifics) {
+function modal_createModal (constructModal, attributes={}) {
 	// === PREPARE THE MODAL === (create the 'ModalObject' and all that)
 
 	//create the 'ModalObject'
-		//simply pass 'specifics' as everything is already in there
-	modalObj = new modal_ModalObject(specifics);
+	modalObj = new modal_ModalObject({attributes: attributes});
 
 	//create the 'modal_openModals' entry
 		//has to be made at the beginning of this function so it can be found via the ID in case something goes wrong because it can't be force-closed without it being accessible by ID
@@ -223,7 +219,7 @@ function modal_createModal (specifics) {
 	const modalID = modalObj.id;
 
 	//get the attributes object
-	const attributes = modalObj.attributes;
+	attributes = modalObj.attributes;
 
 
 
@@ -275,7 +271,7 @@ function modal_createModal (specifics) {
 		cElem('span', main, {class: 'interaction_resizeHandle', interaction_borderside: 3, style: 'padding-right: 9px;'}).textContent = '3';
 
 		//complain if 'constructModal' was specified despite creating a test-modal
-		if (typeof specifics.constructModal === 'function') {
+		if (typeof constructModal === 'function') {
 			console.warn(`[MPO] A 'constructModal' function has been specified despite 'testModal' being set to true. As such 'constructModal' will be ignored.`);
 		}
 
@@ -283,11 +279,11 @@ function modal_createModal (specifics) {
 	} else {
 		//construct the main body of the site by executing 'constructModal()'
 			//but only if it is actually a function, otherwise complain
-		if (typeof specifics.constructModal === 'function') {
-			specifics.constructModal(main);
+		if (typeof constructModal === 'function') {
+			constructModal(main);
 		} else {
 			//complain but don't return, an empty modal is still a modal that works
-			console.warn(`[MPO] modal_createModal() received a 'constructModal' argument that's not a function: "${specifics.constructModal}".`);
+			console.warn(`[MPO] modal_createModal() received a 'constructModal' argument that's not a function: "${constructModal}".`);
 		}
 	}
 
