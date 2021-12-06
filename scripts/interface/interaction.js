@@ -72,39 +72,39 @@ function interaction_moveElements (cursorPosY, cursorPosX) {
 		//calculate how it should be moved so it actually moves alongside the pointer
 			//if you just set it to the pointer position then the top-left side of the element would be set there
 			//but the user didn't start dragging it from the top-left side, they started dragging it elsewhere and as such it should move that way
-		let newPosY = cursorPosY + item.cursorOffsetY;
-		let newPosX = cursorPosX + item.cursorOffsetX;
+		let newElemPosY = cursorPosY + item.cursorOffsetY;
+		let newElemPosX = cursorPosX + item.cursorOffsetX;
 
 		//calculate the new bottom and right position
-		const newOffsetBottom = newPosY + item.height;
-		const newOffsetRight  = newPosX + item.width ;
+		const newElemPosBottom = newElemPosY + item.initialElemHeight;
+		const newElemPosRight  = newElemPosX + item.initialElemWidth ;
 
 		//calculate the previous bottom and right position
-		const previousOffsetBottom = item.previousY + item.height;
-		const previousOffsetRight  = item.previousX + item.width ;
+		const prevElemPosBottom = item.prevElemPosY + item.prevElemHeight;
+		const prevElemPosRight  = item.prevElemPosX + item.prevElemWidth ;
 
 		//check if element is off-screen on the top side
-		if (newPosY < 0) {
+		if (newElemPosY < 0) {
 
 			//if it hasn't already been off-screen then place it on the edge of the screen
 			if (item.offScreenTop === false) {
-				newPosY = 0;
+				newElemPosY = 0;
 
 			//use previous position if new position goes even further off-screen
-			} else if (newPosY < item.previousY) {
-				newPosY = item.previousY;
+			} else if (newElemPosY < item.prevElemPosY) {
+				newElemPosY = item.prevElemPosY;
 			}
 
 		//check if element is off-screen on the bottom side
-		} else if (newOffsetBottom > screenHeight) {
+		} else if (newElemPosBottom > screenHeight) {
 
 			//if it hasn't already been off-screen then place it on the edge of the screen
 			if (item.offScreenBottom === false) {
-				newPosY = screenHeight - item.height;
+				newElemPosY = screenHeight - item.initialElemHeight;
 
 			//use previous position if new position goes even further off-screen
-			} else if (newOffsetBottom > previousOffsetBottom) {
-				newPosY = item.previousY;
+			} else if (newElemPosBottom > prevElemPosBottom) {
+				newElemPosY = item.prevElemPosY;
 			}
 
 		//if neither are off-screen but still set as such then mark them as no longer off-screen
@@ -116,27 +116,27 @@ function interaction_moveElements (cursorPosY, cursorPosX) {
 		}
 
 		//check if element is off-screen on the left side
-		if (newPosX < 0) {
+		if (newElemPosX < 0) {
 
 			//if it hasn't already been off-screen then place it on the edge of the screen
 			if (item.offScreenLeft === false) {
-				newPosX = 0;
+				newElemPosX = 0;
 
 			//use previous position if new position goes even further off-screen
-			} else if (newPosX < item.previousX) {
-				newPosX = item.previousX;
+			} else if (newPosX < item.prevElemPosX) {
+				newElemPosX = item.prevElemPosX;
 			}
 
 		//check if element is off-screen on the right side
-		} else if (newOffsetRight > screenWidth) {
+		} else if (newElemPosRight > screenWidth) {
 
 			//if it hasn't already been off-screen then place it on the edge of the screen
 			if (item.offScreenRight === false) {
-				newPosX = screenWidth - item.width;
+				newElemPosX = screenWidth - item.initialElemWidth;
 
 			//use previous position if new position goes even further off-screen
-			} else if (newOffsetRight > previousOffsetRight) {
-				newPosX = item.previousX;
+			} else if (newElemPosRight > prevElemPosRight) {
+				newElemPosX = item.prevElemPosX;
 			}
 
 		//if neither are off-screen but still set as such then mark them as no longer off-screen
@@ -146,13 +146,17 @@ function interaction_moveElements (cursorPosY, cursorPosX) {
 			item.offScreenRight = false;
 		}
 
-		//apply the new position
-		item.elem.style.top  = `${newPosY}px`;
-		item.elem.style.left = `${newPosX}px`;
+		//calculate the actual offset
+		let newElemOffsetY = newElemPosY - item.initialElemOffsetY;
+		let newElemOffsetX = newElemPosX - item.initialElemOffsetX;
 
-		//save the new value as 'previous'
-		item.previousY = newPosY;
-		item.previousX = newPosX;
+		//apply the new position
+		item.elem.style.setProperty('--interaction_elemY', `${newElemPosY}px`);
+		item.elem.style.setProperty('--interaction_elemX', `${newElemPosX}px`);
+
+		//save the new value as "previous"
+		item.prevElemPosY = newElemPosY;
+		item.prevElemPosX = newElemPosX;
 
 		//if element is off-screen ('&&=') then check if it is still off-screen ('interaction_isElemOffScreen')
 			//this only checks if the element is off-screen if it already is off-screen but that's intentional because we don't wanna spam the check when it's on-screen
@@ -179,8 +183,8 @@ function interaction_stopDrag () {
 function interaction_cancelDrag () {
 	for (const item of interaction_gettingModified.drag) {
 		//reset the positions
-		item.elem.style.top  = `${item.initialY}px`;
-		item.elem.style.left = `${item.initialX}px`;
+		item.elem.style.setProperty('--interaction_elemY'     , `${item.initialElemPosY}px`);
+		item.elem.style.setProperty('--interaction_elemX'     , `${item.initialElemPosX}px`);
 	}
 	interaction_stopDrag();
 }
@@ -264,23 +268,21 @@ function interaction_resizeElements (cursorPosY, cursorPosX) {
 	const screenHeight = window.innerHeight;
 
 	for (const item of interaction_gettingModified.resize) {
-		//this is the initial cursor position
-		const initialCursorPosY = item.cursorY;
-		const initialCursorPosX = item.cursorX;
 
 		//these save the new position and size of the element
-		let newPosY = item.initialY;
-		let newPosX = item.initialX;
-		let newHeight = item.height;
-		let newWidth  = item.width ;
+		let newElemPosY = item.initialElemPosY;
+		let newElemPosX = item.initialElemPosX;
+		let newElemHeight = item.initialElemHeight;
+		let newElemWidth  = item.initialElemWidth ;
 
 		//calculate the previous bottom and right position
-		const previousOffsetBottom = item.previousY + item.previousHeight;
-		const previousOffsetRight  = item.previousX + item.previousWidth ;
+		const prevOffsetBottom = item.prevElemPosY + item.prevElemHeight;
+		const prevOffsetRight  = item.prevElemPosX + item.prevElemWidth ;
 
 		//skip cycle if no 'borderSide' is specified
-		if (item.borderSide === undefined)
+		if (item.borderSide === undefined) {
 			continue;
+		}
 
 		//calculate the new positions & sizes
 			//yes, the following needs two switch cases because you can't activate multiple cases (without fall-through that is)
@@ -290,22 +292,22 @@ function interaction_resizeElements (cursorPosY, cursorPosX) {
 			case 8:
 			case 9:
 				//calculate new position and size
-				newPosY   = newPosY   - (initialCursorPosY - cursorPosY);
-				newHeight = newHeight - (cursorPosY - initialCursorPosY);
+				newElemPosY   = newElemPosY   - (item.initialCursorPosY - cursorPosY);
+				newElemHeight = newElemHeight - (cursorPosY - item.initialCursorPosY);
 
 				//check if the new position is off-screen
 					//note that height doesn't have to be checked because if height is off-screen then it has already been off-screen before this
-				if (newPosY < 0) {
+				if (newElemPosY < 0) {
 
 					//if it hasn't already been off-screen then place it on the edge of the screen
 					if (item.offScreenTop === false) {
-						newHeight = newHeight + newPosY;
-						newPosY = 0;
+						newElemHeight = newElemHeight + newElemPosY;
+						newElemPosY = 0;
 
 					//use previous position if new position goes even further off-screen
-					} else if (newPosY < item.previousY) {
-						newHeight = newHeight + (newPosY - item.previousY);
-						newPosY = item.previousY;
+					} else if (newElemPosY < item.prevElemPosY) {
+						newElemHeight = newElemHeight + (newElemPosY - item.prevElemPosY);
+						newElemPosY = item.prevElemPosY;
 					}
 				}
 				break;
@@ -315,21 +317,21 @@ function interaction_resizeElements (cursorPosY, cursorPosX) {
 			case 2:
 			case 3:
 				//calculate new size
-				newHeight = newHeight - (initialCursorPosY - cursorPosY);
+				newElemHeight = newElemHeight - (item.initialCursorPosY - cursorPosY);
 
 				//calculate the bottom position
-				var newOffsetBottom = newPosY + newHeight;
+				var newOffsetBottom = newElemPosY + newElemHeight;
 
 				//check if the new position is off-screen
 				if (newOffsetBottom > screenHeight) {
 
 					//if it hasn't already been off-screen then place it on the edge of the screen
 					if (item.offScreenBottom === false) {
-						newHeight = screenHeight - newPosY;
+						newElemHeight = screenHeight - newElemPosY;
 
 					//use previous position if new position goes even further off-screen
-					} else if (newOffsetBottom > previousOffsetBottom) {
-						newHeight = item.previousHeight;
+					} else if (newOffsetBottom > prevOffsetBottom) {
+						newElemHeight = item.prevElemHeight;
 					}
 				}
 				break;
@@ -341,22 +343,22 @@ function interaction_resizeElements (cursorPosY, cursorPosX) {
 			case 4:
 			case 1:
 				//calculate new position and size
-				newPosX  = newPosX  - (initialCursorPosX - cursorPosX);
-				newWidth = newWidth - (cursorPosX - initialCursorPosX);
+				newElemPosX  = newElemPosX  - (item.initialCursorPosX - cursorPosX);
+				newElemWidth = newElemWidth - (cursorPosX - item.initialCursorPosX);
 
 				//check if the new position is off-screen
 					//note that height doesn't have to be checked because if height is off-screen then it has already been off-screen before this
-				if (newPosX < 0) {
+				if (newElemPosX < 0) {
 
 					//if it hasn't already been off-screen then place it on the edge of the screen
 					if (item.offScreenRight === false) {
-						newWidth = newWidth + newPosX;
-						newPosX = 0;
+						newElemWidth = newElemWidth + newElemPosX;
+						newElemPosX = 0;
 
 					//use previous position if new position goes even further off-screen
-					} else if (newPosX < item.previousX) {
-						newWidth = newWidth + (newPosX - item.previousX);
-						newPosX = item.previousX;
+					} else if (newElemPosX < item.prevElemPosX) {
+						newElemWidth = newElemWidth + (newElemPosX - item.prevElemPosX);
+						newElemPosX = item.prevElemPosX;
 					}
 				}
 				break;
@@ -366,37 +368,43 @@ function interaction_resizeElements (cursorPosY, cursorPosX) {
 			case 6:
 			case 3:
 				//calculate new size
-				newWidth = newWidth - (initialCursorPosX - cursorPosX);
+				newElemWidth = newElemWidth - (item.initialCursorPosX - cursorPosX);
 
 				//calculate the right position
-				var newOffsetRight = newPosX + newWidth;
+				var newOffsetRight = newElemPosX + newElemWidth;
 
 				//check if the new position is off-screen
 				if (newOffsetRight > screenWidth) {
 
 					//if it hasn't already been off-screen then place it on the edge of the screen
 					if (item.offScreenRight === false) {
-						newWidth = screenWidth - newPosX;
+						newElemWidth = screenWidth - newElemPosX;
 
 					//use previous position if new position goes even further off-screen
-					} else if (newOffsetRight > previousOffsetRight) {
-						newWidth = item.previousWidth;
+					} else if (newOffsetRight > prevOffsetRight) {
+						newElemWidth = item.prevElemWidth;
 					}
 				}
 				break;
 		}
 
+		//calculate the offset positions
+		let newElemOffsetY      = newElemPosY   - item.initialOffsetY     ;
+		let newElemOffsetX      = newElemPosX   - item.initialOffsetX     ;
+		let newElemOffsetHeight = newElemHeight - item.initialOffsetHeight;
+		let newElemOffsetWidth  = newElemWidth  - item.initialOffsetWidth ;
+
 		//apply the new position and size
-		item.elem.style.top    = `${newPosY  }px`;
-		item.elem.style.left   = `${newPosX  }px`;
-		item.elem.style.height = `${newHeight}px`;
-		item.elem.style.width  = `${newWidth }px`;
+		item.elem.style.setProperty('--interaction_elemY'     , `${newElemPosY  }px`);
+		item.elem.style.setProperty('--interaction_elemX'     , `${newElemPosX  }px`);
+		item.elem.style.setProperty('--interaction_elemHeight', `${newElemHeight}px`);
+		item.elem.style.setProperty('--interaction_elemWidth' , `${newElemWidth }px`);
 
 		//apply the new sizes to the interaction object
-		item.previousY = newPosY;
-		item.previousX = newPosX;
-		item.previousHeight = newHeight;
-		item.previousWidth  = newWidth ;
+		item.prevElemPosY     = newElemPosY  ;
+		item.prevElemPosX     = newElemPosX  ;
+		item.prevElemHeight   = newElemHeight;
+		item.prevElemWidth    = newElemWidth ;
 	}
 }
 
@@ -418,9 +426,13 @@ function interaction_stopResize () {
  */
 function interaction_cancelResize () {
 	for (const item of interaction_gettingModified.drag) {
-		//reset the positions //TODO: add size reset
-		item.elem.style.top  = `${item.initialY}px`;
-		item.elem.style.left = `${item.initialX}px`;
+		//reset the positions
+		item.elem.style.setProperty('--interaction_elemY'     , `${item.initialElemPosY}px`);
+		item.elem.style.setProperty('--interaction_elemX'     , `${item.initialElemPosX}px`);
+
+		//reset the size
+		item.elem.style.setProperty('--interaction_elemHeight', `${item.initialElemHeight}px`);
+		item.elem.style.setProperty('--interaction_elemWidth' , `${item.initialElemWidth }px`);
 	}
 	interaction_stopResize();
 }
@@ -454,25 +466,40 @@ function interaction_cancelResize () {
  * 			- elem [DOM Element]
  * 				The original DOM element.
  *
- * 			- height [Number]
- * 				The height of the element in px.
- * 			- width  [Number]
- * 				The width  of the element in px.
+ * 			- initialElemHeight [Number]
+ * 				The initial height of the element in px at the start of dragging/resizing.
+ * 			- initialElemWidth  [Number]
+ * 				The initial width  of the element in px at the start of dragging/resizing.
  *
- * 			- previousHeight [Number]
+ * 			- prevElemHeight [Number]
  * 				The height of the DOM element on the previous frame.
- * 			- previousWidth [Number]
+ * 			- prevElemWidth [Number]
  * 				The width  of the DOM element on the previous frame.
  *
- * 			- initialY [Number]
- * 				The initial Y position of the DOM element.
- * 			- initialX [Number]
- * 				The initial X position of the DOM element.
+ * 			- initialElemPosY [Number]
+ * 				The initial Y position of the DOM element at the start of dragging/resizing.
+ * 			- initialElemPosX [Number]
+ * 				The initial X position of the DOM element at the start of dragging/resizing.
  *
- * 			- previousY [Number]
+ * 			- prevElemPosY [Number]
  * 				The Y position of the DOM element on the previous frame.
- * 			- previousX [Number]
+ * 			- prevElemPosX [Number]
  * 				The X position of the DOM element on the previous frame.
+ *
+ * 			- initialElemOffsetY [Number]
+ * 				The initial Y position offset of the element at the start of dragging/resizing.
+ * 			- initialElemOffsetX [Number]
+ * 				The initial X position offset of the element at the start of dragging/resizing.
+ *
+ * 			- initialElemOffsetHeight [Number]
+ * 				The initial height offset of the element at the start of dragging/resizing.
+ * 			- initialElemOffsetWidth  [Number]
+ * 				The initial width  offset of the element at the start of dragging/resizing.
+ *
+ * 			- initialCursorPosY [Number]
+ * 				The initial Y position of the cursor at the start of dragging/resizing.
+ * 			- initialCursorPosX [Number]
+ * 				The initial X position of the cursor at the start of dragging/resizing.
  *
  * 			- cursorOffsetY [Number]
  * 				The vertical   difference between where the cursor is and where the top  side of the element is.
@@ -503,28 +530,61 @@ function interaction_InteractionObject (elem, cursorPosY, cursorPosX, borderSide
 	const offsetRight  = offsetLeft + offsetWidth ;
 	const offsetBottom = offsetTop  + offsetHeight;
 
+	//get the CSS variables for the current offset
+	let interaction_elemOffsetY      = elem.style.getPropertyValue('--interaction_elemOffsetY'     );
+	let interaction_elemOffsetX      = elem.style.getPropertyValue('--interaction_elemOffsetX'     );
+	let interaction_elemOffsetHeight = elem.style.getPropertyValue('--interaction_elemOffsetHeight');
+	let interaction_elemOffsetWidth  = elem.style.getPropertyValue('--interaction_elemOffsetWidth' );
+
+	//remove the 'px' from them (since they're variables they simply store a string, not a number in pixels)
+		//and then convert it to a number
+	interaction_elemOffsetY      = Number(interaction_elemOffsetY     .substring(0, interaction_elemOffsetY     .length - 2));
+	interaction_elemOffsetX      = Number(interaction_elemOffsetX     .substring(0, interaction_elemOffsetX     .length - 2));
+	interaction_elemOffsetHeight = Number(interaction_elemOffsetHeight.substring(0, interaction_elemOffsetHeight.length - 2));
+	interaction_elemOffsetWidth  = Number(interaction_elemOffsetWidth .substring(0, interaction_elemOffsetWidth .length - 2));
+
+	//set them to 0 if they're NaN
+	if (Number.isNaN(interaction_elemOffsetY     ) === true) {
+		interaction_elemOffsetY      = 0;
+	}
+	if (Number.isNaN(interaction_elemOffsetX     ) === true) {
+		interaction_elemOffsetX      = 0;
+	}
+	if (Number.isNaN(interaction_elemOffsetHeight) === true) {
+		interaction_elemOffsetHeight = 0;
+	}
+	if (Number.isNaN(interaction_elemOffsetWidth ) === true) {
+		interaction_elemOffsetWidth  = 0;
+	}
+
 	//save the actual DOM Element
 	this.elem = elem;
 
 	//save the exact size
-	this.width  = offsetWidth ;
-	this.height = offsetHeight;
+	this.initialElemHeight = offsetHeight;
+	this.initialElemWidth  = offsetWidth ;
 
 	//save the previous size of the element (which is currently the same as the initial)
-	this.previousHeight = offsetHeight;
-	this.previousWidth  = offsetWidth ;
+	this.prevElemHeight = offsetHeight;
+	this.prevElemWidth  = offsetWidth ;
 
 	//save the initial position of the element
-	this.initialY = offsetTop ;
-	this.initialX = offsetLeft;
+	this.initialElemPosY = offsetTop ;
+	this.initialElemPosX = offsetLeft;
 
 	//save the previous position of the element (which is currently the same as the initial)
-	this.previousY = offsetTop ;
-	this.previousX = offsetLeft;
+	this.prevElemPosY = offsetTop ;
+	this.prevElemPosX = offsetLeft;
+
+	//set the initial offset positions
+	this.initialElemOffsetY      = interaction_elemOffsetY     ;
+	this.initialElemOffsetX      = interaction_elemOffsetX     ;
+	this.initialElemOffsetHeight = interaction_elemOffsetHeight;
+	this.initialElemOffsetWidth  = interaction_elemOffsetWidth ;
 
 	//save the initial cursor position
-	this.cursorY = cursorPosY;
-	this.cursorX = cursorPosX;
+	this.initialCursorPosY = cursorPosY;
+	this.initialCursorPosX = cursorPosX;
 
 	//calculate the difference between where the mouse is right now and where the element to move is
 		//this is later needed so the element that's gonna be moved also moves relative to where the mouse is

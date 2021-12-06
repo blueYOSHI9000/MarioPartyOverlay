@@ -32,6 +32,17 @@
  * 			If true the 'constructModal' function WILL be ignored.
  * 			If true it will automatically add the CSS class 'modalClass_testo'.
  *
+ * 	# Embedding
+ *
+ * 		embedTo [DOM Element/null] <null>
+ * 			Leave empty or set to null if you don't need this.
+ * 			This will embed the modal into regular HTML without it being an embed at all but still having some of it's features like being collapsable.
+ * 			Simply provide the DOM Element it should be appended to.
+ *
+ * 			If embedding it used then the 'openOnTop', 'autoPin', 'draggable' and 'resizeable' attributes will all be set to false.
+ * 			Note that this is subject to change (a feature to un-embed and re-embed might be added at some point).
+ *			The "subject to change" thing is especially important for 'resizeable' since it might be possible in the future to resize embedded modals (at least the bottom right edge).
+ *
  * 	# Fine-tuning
  *
  * 		openOnTop [Boolean] <true>
@@ -42,6 +53,13 @@
  * 			If true the modal will be pinned automatically.
  * 			If false the modal won't be pinned automatically.
  * 			See 'pinned' in the 'status' section below.
+ *
+ * 		collapsable [Boolean] <true>
+ * 			If true the modal can be collapsed.
+ *
+ * 		draggable [Boolean] <true>
+ * 			If true the modal can be moved around by the user.
+ * 			Note that the modal can always be moved manually, this only affects whether the user can move it by themselves.
  *
  * 		resizeable [Boolean] <true>
  * 			If true the modal can be resized by the user.
@@ -73,10 +91,16 @@ var modal_totalModalsMade = 0;
 const modal_defaultAttributes = {
 	cssClass: [],
 	group: 'modal',
-	testModal:  false,
-	openOnTop:  true,
-	autoPin:    false,
-	resizeable: true
+
+	testModal:   false,
+
+	embedTo:     null ,
+
+	openOnTop:   true ,
+	autoPin:     false,
+	collapsable: true ,
+	draggable:   true ,
+	resizeable:  true
 };
 
 /**	Creates and sets up the 'ModalObject' that saves all info related to the modal.
@@ -155,16 +179,31 @@ function modal_ModalObject (specifics) {
 		}
 	});
 
+	//disable some attributes if the modal should be embedded
+	if (Object.isDOMElement(attributes.embedTo) === true) {
+		attributes.openOnTop  = false;
+		attributes.autoPin    = false;
+		attributes.draggable  = false;
+		attributes.resizeable = false;
+
+	//if it shouldn't be embedded then make sure it's set to null
+	} else {
+		attributes.embedTo    = null ;
+	}
+
 	//convert all values to boolean values whenever needed (even if the output is somewhat unwanted then)
 		//I could do a ternary operator to only convert to Boolean when necessary but it's just *barely* faster than this but looks SO much worse
 		//so we just always convert to boolean, even when it already is a boolean
 
 		//now, one might ask "but why not simply delete them like we did with 'group'?"
 		//well, there's a simple answer to that: I'm lazy as fuck. And the code would also look ugly as hell.
-	attributes.testModal  = Boolean(attributes.testModal );
-	attributes.openOnTop  = Boolean(attributes.openOnTop );
-	attributes.autoPin    = Boolean(attributes.autoPin   );
-	attributes.resizeable = Boolean(attributes.resizeable);
+	attributes.testModal   = Boolean(attributes.testModal  );
+
+	attributes.openOnTop   = Boolean(attributes.openOnTop  );
+	attributes.autoPin     = Boolean(attributes.autoPin    );
+	attributes.collapsable = Boolean(attributes.collapsable);
+	attributes.draggable   = Boolean(attributes.draggable  );
+	attributes.resizeable  = Boolean(attributes.resizeable );
 
 	//if it's a test-modal then add the class 'modalClass_testo'
 	if (attributes.testModal === true) {
@@ -189,7 +228,7 @@ function modal_ModalObject (specifics) {
 
 /** Creates a new modal window (or simply 'modal').
  *
- * 	Use this to create a test-modal: "modal_createModal({attributes: {testModal: true, autoPin: true}, group: 'navbar'});"
+ * 	Use this to create a test-modal: "modal_createModal(null, {testModal: true, autoPin: true, group: 'testo'});"
  *
  * 	Note that this will NOT check whether attributes are the correct type. If a string is provided for a attribute that requires a boolean then it WILL fail.
  *
@@ -228,8 +267,13 @@ function modal_createModal (constructModal, attributes={}) {
 	//get all CSS classes
 	let cssClasses = ['modal_container', 'interaction_draggable', 'interaction_resizeable', ...attributes.cssClass];
 
+	//replace the first class with 'modal_embedContainer' if it's embedded
+	if (attributes.embedTo !== null) {
+		cssClasses[0] = 'modal_embedContainer';
+	}
+
 		//push the type specific one
-	//cssClasses.push(`modalType-${modalObj.type}`);
+	//cssClasses.push(`modalType-${modalObj.type}`); //commented because types no longer exist
 
 	//create a document fragment to add all elements to
 	const docFrag = new DocumentFragment();
@@ -244,9 +288,17 @@ function modal_createModal (constructModal, attributes={}) {
 	//create the menu bar
 	const menuBar = cElem('span', container, {class: 'modal_menuBar'});
 
-		//add the drag element to the menu bar
-	const dragIcon = cElem('span', menuBar, {class: 'interaction_dragHandle'});
-	dragIcon.textContent = 'MOVE ME!';
+	//add the drag element to the menu bar if needed
+	if (attributes.draggable === true) {
+		cElem('span', menuBar, {class: 'interaction_dragHandle'})
+			.textContent = 'MOVE ME!';
+	}
+
+	//add the collapse element to the menu bar if needed
+	if (attributes.collapsable === true) {
+		cElem('span', menuBar, {class: 'modal_collapseHandle', 'data-linkedtomodal': modalObj.id})
+			.textContent = 'COLLAPSE ME!';
+	}
 
 	//create the main body
 	const main = cElem('span', container, {class: 'modal_main'});
@@ -291,13 +343,20 @@ function modal_createModal (constructModal, attributes={}) {
 
 	// === FINISHING TOUCHES === (calculate size, focus it and all that)
 
-	//append the document fragment
-	document.getElementById('modal_catchAllContainer').appendChild(docFrag);
+	//if the modal should be embedded then append it to the correct place
+	if (Object.isDOMElement(attributes.embedTo) === true) {
+		attributes.embedTo.appendChild(docFrag);
+
+	//if the modal shouldn't be embedded then append it like any regular modal
+	} else {
+		document.getElementById('modal_catchAllContainer').appendChild(docFrag);
+	}
 
 	//and then set the actual modal to be that exact size
 		//has to be 'offsetWidth' instead of 'getBoundingClientRect().width' because the latter includes modification made through the CSS 'transform' property which shouldn't happen
-	container.style.width  = container.offsetWidth;
-	container.style.height = container.offsetHeight;
+		//TODO: does this even do anything at all??
+	//container.style.width  = container.offsetWidth;
+	//container.style.height = container.offsetHeight;
 
 	//add the new modal to the focus-order list and also focus it if needed
 	modal_focusOrder.push(modalID);
@@ -431,6 +490,59 @@ function modal_closeModal (modalID, updateFocus) {
 
 	if (updateFocus !== false) {
 		modal_updateFocusOrder();
+	}
+}
+
+/**	Collapses and expands the modal.
+ *
+ * 	Args:
+ * 		modalID [Number/String]
+ * 			The ID of the modal.
+ *
+ * 		action [String] <'toggle'>
+ * 			What action should be done. Can be one of the following:
+ * 				- 'collapse': Collapses the modal.
+ * 				- 'expand': Expands the modal ('uncollapse' also works).
+ * 				- 'toggle': Toggles the state of the modal. If it was expanded then it will be collapsed, if it was collapsed then it will be expanded.
+ * 			On default or with a invalid 'action' argument it will simply pick 'toggle'.
+ */
+function modal_toggleCollapse (modalID, action='toggle') {
+	//get the modal
+	const elem = modal_getDOMElement(modalID);
+
+	//return and complain if the modal could not be found
+	if (elem.isDOMElement() !== true) {
+		console.warn(`[MPO] modal_toggleCollapse() could not get the modal with ID "${modalID}".`);
+		return;
+	}
+
+	//the collapsing and expanding is all done via pure CSS so all we have to do here is add/remove/toggle the class
+	switch (action) {
+
+		//collapse the modal
+		case 'collapse':
+			elem.classList.add('modal_collapsed');
+			return;
+
+		//expand the modal
+		case 'expand':
+		case 'uncollapse':
+			elem.classList.remove('modal_collapsed');
+			return;
+
+		//toggle (if collapsed then expand -- if expanded then collapse)
+		case 'toggle':
+			//see below comment
+			let nonDefault = true;
+		default:
+			//complain if it got in here on accident
+			if (nonDefault !== true) {
+				console.warn(`[MPO] modal_toggleCollapse() received a invalid 'action' argument: "${action}". It will default to using 'toggle'.`);
+			}
+
+			//actually toggle it
+			elem.classList.toggle('modal_collapsed');
+			return;
 	}
 }
 

@@ -13,10 +13,17 @@
 	z-index: 100;
 }
 
+/**	The container of a regular, non-embedded modal.
+ */
 .modal_container {
 	/**	'display: block' is needed so that it actually takes up the exact amount of space that's specified.
 	 */
 	display: block;
+
+	height: var(--interaction_elemHeight);
+	width:  var(--interaction_elemWidth );
+	top:    var(--interaction_elemY     );
+	left:   var(--interaction_elemX     );
 
 	/**	Has to be absolute so it can be moved around (might be moved to 'drag_moveable').
 	 */
@@ -26,6 +33,15 @@
 	 * 	To be changed.
 	 */
 	background-color: #add8e6;
+}
+
+/**	The container of a embedded modal.
+ */
+.modal_embedContainer {
+	/**	'inline' is needed so it can actually be embedded properly.
+	 *	'block' is here so it behaves the same way 'modal_container' does.
+	 */
+	display: inline-block;
 }
 
 /**	The modal at the front.
@@ -38,6 +54,24 @@
 	/**	Make them half-transparent. Mainly just to test that it works.
 	 */
 	opacity: .5;
+}
+
+.modal_collapsed {
+	height: auto !important;
+}
+
+/**	Collapse all modals that should be collapsed.
+ *
+ * 	'!important' has to be used on all declarations in here to make sure other stuff doesn't overwrite it (not on accident at least).
+ */
+.modal_collapsed > .modal_main {
+	/**	Set 'height' to 0 instead of using 'display: hidden;' to keep the width.
+	 */
+	height: 0 !important;
+
+	/**	Hide all elements to keep them from overflowing.
+	 */
+	overflow: hidden !important;
 }
 
 /* === 'modalClass' SPECIFIC RULES === */

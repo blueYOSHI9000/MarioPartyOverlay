@@ -33,7 +33,10 @@
  *	- box-sizing
  *	- height
  *	- width
- *	- *any positioning*
+ *	- top
+ * 	- right
+ * 	- bottom
+ * 	- left
  *	- margin
  *	- padding
  *
@@ -45,7 +48,11 @@
  *	- overflow-y
  *	- overflow-x
  *
- *	- *anything font-related*
+ *	- font-family
+ * 	- font-size
+ * 	- color
+ *	- *anything else font-related*
+ *
  *	- *any other styling like background-color*
  *
  * 	=== RESERVED !IMPORTANT CASES ===
@@ -93,14 +100,6 @@ body {
 	 * 	I spent way too much time trying to figure out how the hell anything works and I still don't know but this seems to be part of the solution.
 	 */
 	overflow: hidden;
-}
-
-/** This is applied to <body> during a drag/resize.
- */
-.interaction_inProgress {
-	/** This disabled user-selection to prevent the user from selecting something while dragging/resizing elements.
-	 */
-	user-select: none !important;
 }
 
 /**	Contains the entire main site (basically anything that's neither navbar nor settings). Currently only includes all trackers but there might be more at some point.

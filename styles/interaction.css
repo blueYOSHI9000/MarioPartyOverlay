@@ -1,0 +1,26 @@
+/* Copyright 2021 MarioPartyOverlay AUTHORS */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+/** This is applied to <body> during a drag/resize.
+ */
+.interaction_inProgress {
+	/** This disabled user-selection to prevent the user from selecting something while dragging/resizing elements.
+	 */
+	user-select: none !important;
+}
+
+/**	This sets the variables for all draggable elements.
+ */
+.interaction_draggable {
+	--interaction_elemY: unset;
+	--interaction_elemX: unset;
+}
+
+/**	This sets the variables for all resizeable elements.
+ */
+.interaction_resizeable {
+	--interaction_elemY     : unset;
+	--interaction_elemX     : unset;
+	--interaction_elemHeight: unset;
+	--interaction_elemWidth : unset;
+}

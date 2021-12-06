@@ -170,6 +170,11 @@ function listeners_pointerDown (e) {
 					}
 					break;
 
+				//a collapse handle
+				case 'modal_collapseHandle':
+					modal_toggleCollapse(elem.getAttribute('data-linkedtomodal'));
+					break;
+
 				//a modal
 				case 'modal_container':
 					//only execute this if it's the first modal found

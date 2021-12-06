@@ -149,7 +149,8 @@ const boot_stylesToLoad = [
 	'styles/navbar.css',
 	'styles/settings.css',
 	'styles/tracker.css',
-	'styles/inputfield.css'
+	'styles/inputfield.css',
+	'styles/interaction.css'
 ];
 
 
