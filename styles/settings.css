@@ -117,3 +117,16 @@
 	 */
 	background: linear-gradient(135deg, #51b6cdcf, #00000000 50%);
 }
+
+/**	Titles inside settings.
+ */
+.settings_title {
+	/**	Use 'block' to give them their own line.
+	 */
+	display: block;
+
+	/**	Make it bold and underlined to stand out.
+	 */
+	font-weight: bold;
+	text-decoration: underline;
+}

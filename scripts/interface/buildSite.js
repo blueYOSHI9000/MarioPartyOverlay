@@ -128,8 +128,14 @@ function buildSite_buildSettings (docFrag) {
 	cElem('span', header, {class: 'settings_seperator'});
 
 	//Set main up
+		//Note that each section is made using embedded modals.
+		//This is done so they can be collapsed.
 
 	//=== COPYRIGHT ===
+
+	//add title
+	cElem('span', main, {class: 'settings_title'})
+		.textContent = 'COPYRIGHT & LICENSE';
 
 	modal_createModal((elem) => {
 		//add a empty line between the "collapse" button and the text
@@ -148,6 +154,15 @@ function buildSite_buildSettings (docFrag) {
 	cElem('br', main);
 
 	//=== INPUT-FIELD TEST ===
+
+	//add title
+	cElem('span', main, {class: 'settings_title'})
+		.textContent = 'INPUT-FIELD TEST';
+
+	//add explanation and a <br>
+	cElem('span', main)
+		.textContent = 'This is simply to test "input-fields". There aren\'t any actual settings found here.';
+	cElem('br', main);
 
 	modal_createModal((elem) => {
 		//add a empty line between the "collapse" button and the text
