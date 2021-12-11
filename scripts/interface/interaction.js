@@ -1,13 +1,23 @@
 // Copyright 2021 MarioPartyOverlay AUTHORS
 // SPDX-License-Identifier: Apache-2.0
 
+/**	=== HOW INTERACTION WORKS ===
+ *
+ * 	Interaction will save all values in variables only. It will NOT modify the element itself.
+ *	It's best to use the following CSS declarations:
+ * 		'height: var(--interaction_elemHeight);'
+ * 		'width:  var(--interaction_elemWidth );'
+ * 		'top:    var(--interaction_elemY     );'
+ * 		'left:   var(--interaction_elemX     );'
+ */
+
 /**	=== HOW DRAGGING WORKS ===
  *
- * 	- Simply have a HTML element with the class 'interaction_draggable'.
- * 	- Then, have an element inside of it (doesn't matter how deep) with the class 'interaction_dragHandle'.
- * 	- That's it. Enjoy.
+ * 	Simply have a HTML element with the class 'interaction_draggable'.
+ * 	Then, have an element inside of it (doesn't matter how deep) with the class 'interaction_dragHandle'.
+ * 	That's it. Enjoy.
  *
- * 	- It's worth noting that dragging works by changing the 'left' and 'top' CSS properties so something like 'position: absolute;' has to be used on 'interaction_draggable'.
+ * 	It's worth noting that dragging works by changing the 'left' and 'top' CSS properties so something like 'position: absolute;' has to be used on 'interaction_draggable'.
  *
  *
  * 	=== IMPORTANT NOTICES ===
@@ -486,16 +496,6 @@ function interaction_cancelResize () {
  * 			- prevElemPosX [Number]
  * 				The X position of the DOM element on the previous frame.
  *
- * 			- initialElemOffsetY [Number]
- * 				The initial Y position offset of the element at the start of dragging/resizing.
- * 			- initialElemOffsetX [Number]
- * 				The initial X position offset of the element at the start of dragging/resizing.
- *
- * 			- initialElemOffsetHeight [Number]
- * 				The initial height offset of the element at the start of dragging/resizing.
- * 			- initialElemOffsetWidth  [Number]
- * 				The initial width  offset of the element at the start of dragging/resizing.
- *
  * 			- initialCursorPosY [Number]
  * 				The initial Y position of the cursor at the start of dragging/resizing.
  * 			- initialCursorPosX [Number]
@@ -530,33 +530,6 @@ function interaction_InteractionObject (elem, cursorPosY, cursorPosX, borderSide
 	const offsetRight  = offsetLeft + offsetWidth ;
 	const offsetBottom = offsetTop  + offsetHeight;
 
-	//get the CSS variables for the current offset
-	let interaction_elemOffsetY      = elem.style.getPropertyValue('--interaction_elemOffsetY'     );
-	let interaction_elemOffsetX      = elem.style.getPropertyValue('--interaction_elemOffsetX'     );
-	let interaction_elemOffsetHeight = elem.style.getPropertyValue('--interaction_elemOffsetHeight');
-	let interaction_elemOffsetWidth  = elem.style.getPropertyValue('--interaction_elemOffsetWidth' );
-
-	//remove the 'px' from them (since they're variables they simply store a string, not a number in pixels)
-		//and then convert it to a number
-	interaction_elemOffsetY      = Number(interaction_elemOffsetY     .substring(0, interaction_elemOffsetY     .length - 2));
-	interaction_elemOffsetX      = Number(interaction_elemOffsetX     .substring(0, interaction_elemOffsetX     .length - 2));
-	interaction_elemOffsetHeight = Number(interaction_elemOffsetHeight.substring(0, interaction_elemOffsetHeight.length - 2));
-	interaction_elemOffsetWidth  = Number(interaction_elemOffsetWidth .substring(0, interaction_elemOffsetWidth .length - 2));
-
-	//set them to 0 if they're NaN
-	if (Number.isNaN(interaction_elemOffsetY     ) === true) {
-		interaction_elemOffsetY      = 0;
-	}
-	if (Number.isNaN(interaction_elemOffsetX     ) === true) {
-		interaction_elemOffsetX      = 0;
-	}
-	if (Number.isNaN(interaction_elemOffsetHeight) === true) {
-		interaction_elemOffsetHeight = 0;
-	}
-	if (Number.isNaN(interaction_elemOffsetWidth ) === true) {
-		interaction_elemOffsetWidth  = 0;
-	}
-
 	//save the actual DOM Element
 	this.elem = elem;
 
@@ -575,12 +548,6 @@ function interaction_InteractionObject (elem, cursorPosY, cursorPosX, borderSide
 	//save the previous position of the element (which is currently the same as the initial)
 	this.prevElemPosY = offsetTop ;
 	this.prevElemPosX = offsetLeft;
-
-	//set the initial offset positions
-	this.initialElemOffsetY      = interaction_elemOffsetY     ;
-	this.initialElemOffsetX      = interaction_elemOffsetX     ;
-	this.initialElemOffsetHeight = interaction_elemOffsetHeight;
-	this.initialElemOffsetWidth  = interaction_elemOffsetWidth ;
 
 	//save the initial cursor position
 	this.initialCursorPosY = cursorPosY;

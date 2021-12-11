@@ -109,6 +109,9 @@ function buildSite_buildNavbar (docFrag) {
  * 		Returns the modified DocumentFragment.
  */
 function buildSite_buildSettings (docFrag) {
+
+	//=== PLACE THE GROUNDWORK ===
+
 	//The ground piece that spans and covers the entire screen. This is updated to show/hide settings.
 	const container = cElem('span', docFrag, {id: 'settings_container'});
 
@@ -125,11 +128,18 @@ function buildSite_buildSettings (docFrag) {
 	cElem('span', header, {class: 'settings_seperator'});
 
 	//Set main up
-		//TODO: replace this with actual settings
 
-		//Add the copyright bits
-	let copyrightBits = cElem('span', main)
-		.innerHTML = `MarioPartyOverlay (MPO) is an open project and was made by <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors" rel="noopener" target="_blank">it's contributors</a>. <br> The projects current maintainer is <a href="https://www.twitter.com/yoshisrc" rel="noopener" target="_blank">blueYOSHI</a>. <br> <br> The project as a whole is licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0.html" rel="noopener" target="_blank">Apache-2.0 license</a> while the database and all images are licensed under the <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener" target="_blank">CC-BY-4.0 (Creative Commons Attribution 4.0 International) license</a>. <br> This means anyone is free to use any part of this project for their own purposes (commercial or not, open-source or not) as long as changes are stated (and a few other small restrictions, see the full licenses for more detail). <br> <br> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" rel="noopener" target="_blank">Mario Party 9 Font</a> from <a href="http://www.freepremiumfonts.com" rel="noopener" target="_blank">www.freepremiumfonts.com</a> (modified) <br> <br> <b>All characters, products and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them.<br>Mario Party is a registered trademark of Nintendo.</b> <br> <br> Copyright 2021 MarioPartyOverlay AUTHORS <br> <br>`;
+	//=== COPYRIGHT ===
+
+	modal_createModal((elem) => {
+		//add a empty line between the "collapse" button and the text
+		cElem('br', elem);
+
+		let copyrightBits = cElem('span', elem)
+			.innerHTML = `MarioPartyOverlay (MPO) is an open project and was made by <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors" rel="noopener" target="_blank">it's contributors</a>. <br> The projects current maintainer is <a href="https://www.twitter.com/yoshisrc" rel="noopener" target="_blank">blueYOSHI</a>. <br> <br> The project as a whole is licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0.html" rel="noopener" target="_blank">Apache-2.0 license</a> while the database and all images are licensed under the <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener" target="_blank">CC-BY-4.0 (Creative Commons Attribution 4.0 International) license</a>. <br> This means anyone is free to use any part of this project for their own purposes (commercial or not, open-source or not) as long as changes are stated (and a few other small restrictions, see the full licenses for more detail). <br> <br> <a href="https://www.freepremiumfonts.com/free-font/new-super-mario-font-mario-party-9.aspx" rel="noopener" target="_blank">Mario Party 9 Font</a> from <a href="http://www.freepremiumfonts.com" rel="noopener" target="_blank">www.freepremiumfonts.com</a> (modified) <br> <br> <b>All characters, products and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them.<br>Mario Party is a registered trademark of Nintendo.</b> <br> <br> Copyright 2021 MarioPartyOverlay AUTHORS <br> <br>`;
+	}, {
+		embedTo: main
+	});
 
 	//create a quick seperator
 	let seperator = cElem('span', main);
@@ -137,342 +147,354 @@ function buildSite_buildSettings (docFrag) {
 	cElem('br', main);
 	cElem('br', main);
 
-	//create a temporary debug output to test stuff
-	let output = cElem('span', main, {id: 'settings_debugOutput'})
-		.innerText = '\n';
-	cElem('br', main);
+	//=== INPUT-FIELD TEST ===
 
-	//the function that will be called when each input field gets updated
-		//the function simply logs the value to the element with the ID 'settings_debugOutput'
-	let logToOutput = (value) => {document.getElementById('settings_debugOutput').innerText = `${typeof value}\n${ (typeof value === 'object') ? JSON.stringify(value) : value }`;};
+	modal_createModal((elem) => {
+		//add a empty line between the "collapse" button and the text
+		cElem('br', elem);
 
-	//create a checkbox
-	cElem('br', main);
-	let checkboxTest = cElem('span', main);
-	checkboxTest.textContent = 'Checkbox:';
-	inputfield_createField('checkbox', checkboxTest, {
-		onchange: logToOutput
+		//create a temporary debug output to test stuff
+		let output = cElem('span', elem, {id: 'settings_debugOutput'})
+			.innerText = '\n';
+		cElem('br', elem);
+
+		//the function that will be called when each input field gets updated
+			//the function simply logs the value to the element with the ID 'settings_debugOutput'
+		let logToOutput = (value) => {document.getElementById('settings_debugOutput').innerText = `${typeof value}\n${ (typeof value === 'object') ? JSON.stringify(value) : value }`;};
+
+		//create a checkbox
+		cElem('br', elem);
+		let checkboxTest = cElem('span', elem);
+		checkboxTest.textContent = 'Checkbox:';
+		inputfield_createField('checkbox', checkboxTest, {
+			onchange: logToOutput
+		});
+
+		//create a checkbox but with a 'checkboxValue'
+		cElem('br', elem);
+		let checkboxTest2 = cElem('span', elem);
+		checkboxTest2.textContent = 'Checkbox with checkboxValue:';
+		inputfield_createField('checkbox', checkboxTest2, {
+			onchange: logToOutput,
+			checkboxValue: 'this is true'
+		});
+
+		//create a radio checkbox
+		cElem('br', elem);
+		inputfield_createField('radio', elem, {
+			variation: 'checkbox',
+			onchange: logToOutput,
+			options: [
+				{
+					name: 'Option 1',
+					value: 'one'
+				},
+				{
+					name: 'Option 2',
+					value: 'two'
+				},
+				{
+					name: 'Option 3',
+					value: 'three'
+				}
+			]
+		});
+
+		//create a input field
+		cElem('br', elem);
+		inputfield_createField('radio', elem, {
+			variation: 'select',
+			onchange: logToOutput,
+			options: [
+				{
+					name: 'Mario',
+					value: 'mario',
+					src: 'images/icons/characters/starRushIcon/mario.png'
+				},
+				{
+					name: 'Weegee',
+					value: 'weegee',
+					src: 'images/icons/characters/starRushIcon/luigi.png'
+				},
+				{
+					name: 'Wario',
+					value: 'wario',
+					src: 'images/icons/characters/starRushIcon/wario.png'
+				},
+				{
+					name: 'WAAAAAAAAAAAH',
+					value: 'waaaaaaaaaaah',
+					src: 'images/icons/characters/starRushIcon/waluigi.png'
+				}
+			]
+		});
+
+		//create a input field
+		cElem('br', elem);
+		inputfield_createField('radio', elem, {
+			variation: 'image',
+			onchange: logToOutput,
+			options: [
+				{
+					name: 'Mario',
+					value: 'mario',
+					src: 'images/icons/characters/starRushIcon/mario.png'
+				},
+				{
+					name: 'Weegee',
+					value: 'weegee',
+					src: 'images/icons/characters/starRushIcon/luigi.png'
+				},
+				{
+					name: 'Wario',
+					value: 'wario',
+					src: 'images/icons/characters/starRushIcon/wario.png'
+				},
+				{
+					name: 'WAAAAAAAAAAAH',
+					value: 'waaaaaaaaaaah',
+					src: 'images/icons/characters/starRushIcon/waluigi.png'
+				}
+			]
+		});
+
+		//create a text input
+		cElem('br', elem);
+		inputfield_createField('text', elem, {
+			onchange: logToOutput
+		});
+
+		//create a textarea
+		cElem('br', elem);
+		inputfield_createField('text', elem, {
+			variation: 'area',
+			onchange: logToOutput
+		});
+
+		//create a number-text
+		cElem('br', elem);
+		inputfield_createField('number', elem, {
+			onchange: logToOutput
+		});
+
+		//create a number range
+		cElem('br', elem);
+		inputfield_createField('number', elem, {
+			variation: 'range',
+			onchange: logToOutput
+		});
+
+		//create a button
+		cElem('br', elem);
+		inputfield_createField('button', elem, {
+			onchange: logToOutput
+		});
+
+		//create a color input
+		cElem('br', elem);
+		inputfield_createField('color', elem, {
+			onchange: logToOutput
+		});
+
+		//create a couple checkboxes with a host
+		cElem('br', elem);
+		cElem('span', elem)
+			.textContent = '=== HOST ===';
+		cElem('br', elem);
+
+		let testHost = cElem('span', elem);
+
+		cElem('span', testHost)
+			.textContent = 'Mario: ';
+		inputfield_createField('checkbox', testHost, {
+			host: testHost,
+			checkboxValue: 'mario',
+			onchange: logToOutput
+		});
+		cElem('br', testHost);
+
+		cElem('span', testHost)
+			.textContent = 'Weegee: ';
+		inputfield_createField('checkbox', testHost, {
+			host: testHost,
+			checkboxValue: 'weegee',
+			onchange: logToOutput
+		});
+		cElem('br', testHost);
+
+		cElem('span', testHost)
+			.textContent = 'Wario: ';
+		inputfield_createField('checkbox', testHost, {
+			host: testHost,
+			checkboxValue: 'wario',
+			onchange: logToOutput
+		});
+		cElem('br', testHost);
+
+		cElem('span', testHost)
+			.textContent = 'WAAAAAAAAAAAH: ';
+		inputfield_createField('checkbox', testHost, {
+			host: testHost,
+			checkboxValue: 'waaaaaaaaaaah',
+			onchange: logToOutput
+		});
+		cElem('br', testHost);
+
+		cElem('span', testHost)
+			.textContent = 'Mario: ';
+		inputfield_createField('checkbox', testHost, {
+			host: testHost,
+			checkboxValue: 'mario',
+			onchange: logToOutput
+		});
+		cElem('br', testHost);
+
+
+
+
+		//create a form
+		cElem('br', elem);
+		cElem('span', elem)
+			.textContent = '=== FORM ===';
+		cElem('br', elem);
+
+		//create a temporary debug output to test stuff
+		let formOutput = cElem('span', elem, {id: 'settings_debugFormOutput'})
+			.innerText = '\n';
+		cElem('br', elem);
+
+		//the function that will be called when each input field gets updated
+			//the function simply logs the value to the element with the ID 'settings_debugFormOutput'
+		let logToFormOutput = (value) => {document.getElementById('settings_debugFormOutput').innerText = `${typeof value}\n${ (typeof value === 'object') ? JSON.stringify(value) : value }`;};
+
+		let formTest = inputfield_createField('form', elem, {
+			onchange: logToFormOutput
+		});
+
+		//create a input field
+		cElem('br', formTest);
+		inputfield_createField('radio', formTest, {
+			variation: 'checkbox',
+			onchange: logToOutput,
+			addToForm: formTest,
+			tag: 'radio',
+			options: [
+				{
+					name: 'Mario',
+					value: 'mario',
+					src: 'images/icons/characters/starRushIcon/mario.png'
+				},
+				{
+					name: 'Weegee',
+					value: 'weegee',
+					src: 'images/icons/characters/starRushIcon/luigi.png'
+				},
+				{
+					name: 'Wario',
+					value: 'wario',
+					src: 'images/icons/characters/starRushIcon/wario.png'
+				},
+				{
+					name: 'WAAAAAAAAAAAH',
+					value: 'waaaaaaaaaaah',
+					src: 'images/icons/characters/starRushIcon/waluigi.png'
+				}
+			]
+		});
+
+		//create a text input
+		cElem('br', formTest);
+		inputfield_createField('text', formTest, {
+			onchange: logToOutput,
+			addToForm: formTest,
+			tag: 'text',
+		});
+
+		//create a host
+		cElem('br', formTest);
+		let testFormHost = cElem('span', formTest);
+
+		cElem('span', testFormHost)
+			.textContent = 'Mario: ';
+		inputfield_createField('checkbox', testFormHost, {
+			host: testFormHost,
+			checkboxValue: 'mario',
+			onchange: logToOutput,
+			addToForm: formTest,
+			tag: 'hostTag'
+		});
+		cElem('br', testFormHost);
+
+		cElem('span', testFormHost)
+			.textContent = 'Weegee: ';
+		inputfield_createField('checkbox', testFormHost, {
+			host: testFormHost,
+			checkboxValue: 'weegee',
+			onchange: logToOutput
+		});
+		cElem('br', testFormHost);
+
+		cElem('span', testFormHost)
+			.textContent = 'Wario: ';
+		inputfield_createField('checkbox', testFormHost, {
+			host: testFormHost,
+			checkboxValue: 'wario',
+			onchange: logToOutput
+		});
+		cElem('br', testFormHost);
+
+		cElem('span', testFormHost)
+			.textContent = 'WAAAAAAAAAAAH: ';
+		inputfield_createField('checkbox', testFormHost, {
+			host: testFormHost,
+			checkboxValue: 'waaaaaaaaaaah',
+			onchange: logToOutput
+		});
+		cElem('br', testFormHost);
+
+		cElem('span', testFormHost)
+			.textContent = 'Mario: ';
+		inputfield_createField('checkbox', testFormHost, {
+			host: testFormHost,
+			checkboxValue: 'mario',
+			onchange: logToOutput
+		});
+		cElem('br', testFormHost);
+
+		//create a checkbox with the same tag as the form below
+		cElem('br', formTest);
+		cElem('span', formTest)
+			.textContent = 'Checkbox with same tag as below form: ';
+		inputfield_createField('checkbox', formTest, {
+			onchange: logToOutput,
+			addToForm: formTest,
+			tag: 'formOrCheck',
+			checkboxValue: 'This should overwrite the form'
+		});
+
+		//create a form in a form
+		cElem('br', formTest);
+		cElem('span', formTest)
+			.textContent = '=== FORM IN FORM ===';
+		let formInFormTest = inputfield_createField('form', formTest, {
+			addToForm: formTest,
+			onchange: logToOutput,
+			tag: 'formOrCheck'
+		});
+
+		//create a text input inside the new form
+		cElem('br', formInFormTest);
+		inputfield_createField('text', formInFormTest, {
+			onchange: logToOutput,
+			addToForm: [formInFormTest, formTest],
+			tag: 'texto',
+		});
+	}, {
+		startCollapsed: true,
+		embedTo: main
 	});
 
-	//create a checkbox but with a 'checkboxValue'
-	cElem('br', main);
-	let checkboxTest2 = cElem('span', main);
-	checkboxTest2.textContent = 'Checkbox with checkboxValue:';
-	inputfield_createField('checkbox', checkboxTest2, {
-		onchange: logToOutput,
-		checkboxValue: 'this is true'
-	});
-
-	//create a radio checkbox
-	cElem('br', main);
-	inputfield_createField('radio', main, {
-		variation: 'checkbox',
-		onchange: logToOutput,
-		options: [
-			{
-				name: 'Option 1',
-				value: 'one'
-			},
-			{
-				name: 'Option 2',
-				value: 'two'
-			},
-			{
-				name: 'Option 3',
-				value: 'three'
-			}
-		]
-	});
-
-	//create a input field
-	cElem('br', main);
-	inputfield_createField('radio', main, {
-		variation: 'select',
-		onchange: logToOutput,
-		options: [
-			{
-				name: 'Mario',
-				value: 'mario',
-				src: 'images/icons/characters/starRushIcon/mario.png'
-			},
-			{
-				name: 'Weegee',
-				value: 'weegee',
-				src: 'images/icons/characters/starRushIcon/luigi.png'
-			},
-			{
-				name: 'Wario',
-				value: 'wario',
-				src: 'images/icons/characters/starRushIcon/wario.png'
-			},
-			{
-				name: 'WAAAAAAAAAAAH',
-				value: 'waaaaaaaaaaah',
-				src: 'images/icons/characters/starRushIcon/waluigi.png'
-			}
-		]
-	});
-
-	//create a input field
-	cElem('br', main);
-	inputfield_createField('radio', main, {
-		variation: 'image',
-		onchange: logToOutput,
-		options: [
-			{
-				name: 'Mario',
-				value: 'mario',
-				src: 'images/icons/characters/starRushIcon/mario.png'
-			},
-			{
-				name: 'Weegee',
-				value: 'weegee',
-				src: 'images/icons/characters/starRushIcon/luigi.png'
-			},
-			{
-				name: 'Wario',
-				value: 'wario',
-				src: 'images/icons/characters/starRushIcon/wario.png'
-			},
-			{
-				name: 'WAAAAAAAAAAAH',
-				value: 'waaaaaaaaaaah',
-				src: 'images/icons/characters/starRushIcon/waluigi.png'
-			}
-		]
-	});
-
-	//create a text input
-	cElem('br', main);
-	inputfield_createField('text', main, {
-		onchange: logToOutput
-	});
-
-	//create a textarea
-	cElem('br', main);
-	inputfield_createField('text', main, {
-		variation: 'area',
-		onchange: logToOutput
-	});
-
-	//create a number-text
-	cElem('br', main);
-	inputfield_createField('number', main, {
-		onchange: logToOutput
-	});
-
-	//create a number range
-	cElem('br', main);
-	inputfield_createField('number', main, {
-		variation: 'range',
-		onchange: logToOutput
-	});
-
-	//create a button
-	cElem('br', main);
-	inputfield_createField('button', main, {
-		onchange: logToOutput
-	});
-
-	//create a color input
-	cElem('br', main);
-	inputfield_createField('color', main, {
-		onchange: logToOutput
-	});
-
-	//create a couple checkboxes with a host
-	cElem('br', main);
-	cElem('span', main)
-		.textContent = '=== HOST ===';
-	cElem('br', main);
-
-	let testHost = cElem('span', main);
-
-	cElem('span', testHost)
-		.textContent = 'Mario: ';
-	inputfield_createField('checkbox', testHost, {
-		host: testHost,
-		checkboxValue: 'mario',
-		onchange: logToOutput
-	});
-	cElem('br', testHost);
-
-	cElem('span', testHost)
-		.textContent = 'Weegee: ';
-	inputfield_createField('checkbox', testHost, {
-		host: testHost,
-		checkboxValue: 'weegee',
-		onchange: logToOutput
-	});
-	cElem('br', testHost);
-
-	cElem('span', testHost)
-		.textContent = 'Wario: ';
-	inputfield_createField('checkbox', testHost, {
-		host: testHost,
-		checkboxValue: 'wario',
-		onchange: logToOutput
-	});
-	cElem('br', testHost);
-
-	cElem('span', testHost)
-		.textContent = 'WAAAAAAAAAAAH: ';
-	inputfield_createField('checkbox', testHost, {
-		host: testHost,
-		checkboxValue: 'waaaaaaaaaaah',
-		onchange: logToOutput
-	});
-	cElem('br', testHost);
-
-	cElem('span', testHost)
-		.textContent = 'Mario: ';
-	inputfield_createField('checkbox', testHost, {
-		host: testHost,
-		checkboxValue: 'mario',
-		onchange: logToOutput
-	});
-	cElem('br', testHost);
-
-
-
-
-	//create a form
-	cElem('br', main);
-	cElem('span', main)
-		.textContent = '=== FORM ===';
-	cElem('br', main);
-
-	//create a temporary debug output to test stuff
-	let formOutput = cElem('span', main, {id: 'settings_debugFormOutput'})
-		.innerText = '\n';
-	cElem('br', main);
-
-	//the function that will be called when each input field gets updated
-		//the function simply logs the value to the element with the ID 'settings_debugFormOutput'
-	let logToFormOutput = (value) => {document.getElementById('settings_debugFormOutput').innerText = `${typeof value}\n${ (typeof value === 'object') ? JSON.stringify(value) : value }`;};
-
-	let formTest = inputfield_createField('form', main, {
-		onchange: logToFormOutput
-	});
-
-	//create a input field
-	cElem('br', formTest);
-	inputfield_createField('radio', formTest, {
-		variation: 'checkbox',
-		onchange: logToOutput,
-		addToForm: formTest,
-		tag: 'radio',
-		options: [
-			{
-				name: 'Mario',
-				value: 'mario',
-				src: 'images/icons/characters/starRushIcon/mario.png'
-			},
-			{
-				name: 'Weegee',
-				value: 'weegee',
-				src: 'images/icons/characters/starRushIcon/luigi.png'
-			},
-			{
-				name: 'Wario',
-				value: 'wario',
-				src: 'images/icons/characters/starRushIcon/wario.png'
-			},
-			{
-				name: 'WAAAAAAAAAAAH',
-				value: 'waaaaaaaaaaah',
-				src: 'images/icons/characters/starRushIcon/waluigi.png'
-			}
-		]
-	});
-
-	//create a text input
-	cElem('br', formTest);
-	inputfield_createField('text', formTest, {
-		onchange: logToOutput,
-		addToForm: formTest,
-		tag: 'text',
-	});
-
-	//create a host
-	cElem('br', formTest);
-	let testFormHost = cElem('span', formTest);
-
-	cElem('span', testFormHost)
-		.textContent = 'Mario: ';
-	inputfield_createField('checkbox', testFormHost, {
-		host: testFormHost,
-		checkboxValue: 'mario',
-		onchange: logToOutput,
-		addToForm: formTest,
-		tag: 'hostTag'
-	});
-	cElem('br', testFormHost);
-
-	cElem('span', testFormHost)
-		.textContent = 'Weegee: ';
-	inputfield_createField('checkbox', testFormHost, {
-		host: testFormHost,
-		checkboxValue: 'weegee',
-		onchange: logToOutput
-	});
-	cElem('br', testFormHost);
-
-	cElem('span', testFormHost)
-		.textContent = 'Wario: ';
-	inputfield_createField('checkbox', testFormHost, {
-		host: testFormHost,
-		checkboxValue: 'wario',
-		onchange: logToOutput
-	});
-	cElem('br', testFormHost);
-
-	cElem('span', testFormHost)
-		.textContent = 'WAAAAAAAAAAAH: ';
-	inputfield_createField('checkbox', testFormHost, {
-		host: testFormHost,
-		checkboxValue: 'waaaaaaaaaaah',
-		onchange: logToOutput
-	});
-	cElem('br', testFormHost);
-
-	cElem('span', testFormHost)
-		.textContent = 'Mario: ';
-	inputfield_createField('checkbox', testFormHost, {
-		host: testFormHost,
-		checkboxValue: 'mario',
-		onchange: logToOutput
-	});
-	cElem('br', testFormHost);
-
-	//create a checkbox with the same tag as the form below
-	cElem('br', formTest);
-	cElem('span', formTest)
-		.textContent = 'Checkbox with same tag as below form: ';
-	inputfield_createField('checkbox', formTest, {
-		onchange: logToOutput,
-		addToForm: formTest,
-		tag: 'formOrCheck',
-		checkboxValue: 'This should overwrite the form'
-	});
-
-	//create a form in a form
-	cElem('br', formTest);
-	cElem('span', formTest)
-		.textContent = '=== FORM IN FORM ===';
-	let formInFormTest = inputfield_createField('form', formTest, {
-		addToForm: formTest,
-		onchange: logToOutput,
-		tag: 'formOrCheck'
-	});
-
-	//create a text input inside the new form
-	cElem('br', formInFormTest);
-	inputfield_createField('text', formInFormTest, {
-		onchange: logToOutput,
-		addToForm: [formInFormTest, formTest],
-		tag: 'texto',
-	});
+	//=== FOOTER ===
 
 	//Set footer up
 	cElem('span', footer, {class: 'settings_seperator'});

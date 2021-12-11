@@ -176,7 +176,7 @@ function listeners_pointerDown (e) {
 					break;
 
 				//a modal
-				case 'modal_container':
+				case 'modal_floatingModal':
 					//only execute this if it's the first modal found
 					if (foundModals.length === 0) {
 

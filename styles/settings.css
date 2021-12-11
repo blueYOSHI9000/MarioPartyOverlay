@@ -90,6 +90,30 @@
 	height: 100%;
 
 	/**	Forces the scrollbar to appear in this element instead of '.settings_base'.
+	 *
+	 * 	Set "y" to 'scroll' since the vertical one should always be visible.
+	 * 	Set "x" to 'auto' since the horinzontal scrollbar should only show when needed.
 	 */
-	overflow: auto;
+	overflow-y: scroll;
+	overflow-x: auto;
+}
+
+/**	Every "piece" in settings is within a modal so this targets each "piece".
+ * 	Though it really just targets every modal inside '#settings_main'.
+ */
+#settings_main > .modal_container {
+	/**	Add some margin and padding so it isn't all stuck to the edge.
+	 */
+	margin: 7px;
+	padding: 3px;
+
+	/**	Add a border to show that everything in here is related to one another.
+	 * 	And some radius to make it look better.
+	 */
+	border: 2px gray solid;
+	border-radius: 10px;
+
+	/**	Add a background to make it look better.
+	 */
+	background: linear-gradient(135deg, #51b6cdcf, #00000000 50%);
 }

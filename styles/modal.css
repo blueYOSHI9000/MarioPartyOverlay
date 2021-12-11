@@ -16,10 +16,19 @@
 /**	The container of a regular, non-embedded modal.
  */
 .modal_container {
-	/**	'display: block' is needed so that it actually takes up the exact amount of space that's specified.
+	/**	'block' is needed so that it actually takes up the exact amount of space that's specified (necessary for floating modals since they can be resized).
+	 * 	'inline' is needed so they're actually exactly where they should be embedded in (necessary for embedded modals).
+	 *
+	 * 	'inline-block' is used to make sure it's the same across all embeds, whether they're embedded or floating.
 	 */
-	display: block;
+	display: inline-block;
+}
 
+/**	The container of a floating modal (any modal that isn't embed).
+ */
+.modal_floatingModal {
+	/**	Set all properties that 'interaction.js' uses to use the variables set by 'interaction.js'.
+	 */
 	height: var(--interaction_elemHeight);
 	width:  var(--interaction_elemWidth );
 	top:    var(--interaction_elemY     );
@@ -37,11 +46,14 @@
 
 /**	The container of a embedded modal.
  */
-.modal_embedContainer {
-	/**	'inline' is needed so it can actually be embedded properly.
-	 *	'block' is here so it behaves the same way 'modal_container' does.
+.modal_embedModal {}
+
+/**	The menu bar of a modal.
+ */
+.modal_menuBar {
+	/**	Set it to 'block' so it gets it's own line.
 	 */
-	display: inline-block;
+	display: block;
 }
 
 /**	The modal at the front.
@@ -65,6 +77,11 @@
  * 	'!important' has to be used on all declarations in here to make sure other stuff doesn't overwrite it (not on accident at least).
  */
 .modal_collapsed > .modal_main {
+	/**	'display: block;' is needed because it not being 'block' causes 'height: 0;' to not work.
+	 * 	Don't ask me why.
+	 */
+	display: block !important;
+
 	/**	Set 'height' to 0 instead of using 'display: hidden;' to keep the width.
 	 */
 	height: 0 !important;

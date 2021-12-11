@@ -36,10 +36,11 @@
  *
  * 		embedTo [DOM Element/null] <null>
  * 			Leave empty or set to null if you don't need this.
- * 			This will embed the modal into regular HTML without it being an embed at all but still having some of it's features like being collapsable.
+ * 			This will embed the modal into regular HTML without it being a modal at all but still having some of it's features like being collapsable.
  * 			Simply provide the DOM Element it should be appended to.
  *
- * 			If embedding it used then the 'openOnTop', 'autoPin', 'draggable' and 'resizeable' attributes will all be set to false.
+ * 			If embedding is used then the 'openOnTop', 'draggable' and 'resizeable' attributes will all be set to false.
+ * 			Additionally the 'autoPin' attribute will be set to true.
  * 			Note that this is subject to change (a feature to un-embed and re-embed might be added at some point).
  *			The "subject to change" thing is especially important for 'resizeable' since it might be possible in the future to resize embedded modals (at least the bottom right edge).
  *
@@ -56,6 +57,10 @@
  *
  * 		collapsable [Boolean] <true>
  * 			If true the modal can be collapsed.
+ * 			Note that the modal can always be collapsed manually, this only affects whether the user can collapse it by themselves.
+ *
+ * 		startCollapsed [Boolean] <false>
+ * 			If the modal should be collapsed after creation.
  *
  * 		draggable [Boolean] <true>
  * 			If true the modal can be moved around by the user.
@@ -70,6 +75,11 @@
  * 	The 'status' object of a modal lists some info about the current status of the modal like whether the modal is pinned or not.
  * 	This is all updated by the site itself and it's best not to modify the object manually.
  *	The following properties are found inside the 'status' object:
+ *
+ * 		type [String]
+ * 			Whether the modal is floating or embedded. Can be one of the following:
+ * 				- 'floating': A regular, floating modal.
+ * 				- 'embed': A embedded modal that's embedded into regular HTML code.
  *
  * 		pinned [Boolean]
  * 			Whether the modal is pinned or not.
@@ -139,6 +149,8 @@ function modal_ModalObject (specifics) {
 	//increase the total amount of modals made and use the new value as the ID
 	this.id = ++modal_totalModalsMade;
 
+
+
 	// === MODIFYING ATTRIBUTES ===
 
 	//for quick access, use this instead of the 'specifics' one
@@ -160,6 +172,38 @@ function modal_ModalObject (specifics) {
 		//which were deleted so the defaults are all found in a single place (the 'modal_defaultAttributes' variable)
 	attributes = attributes.fillIn(modal_defaultAttributes);
 
+	//force some attributes if the modal should be embedded
+	if (Object.isDOMElement(attributes.embedTo) === true) {
+		attributes.openOnTop  = false;
+		attributes.autoPin    = true ;
+		attributes.draggable  = false;
+		attributes.resizeable = false;
+
+	//if it shouldn't be embedded then make sure it's set to null
+	} else {
+		attributes.embedTo    = null ;
+	}
+
+	//convert all values to boolean values whenever needed (even if the output is somewhat unwanted then)
+		//I could do a ternary operator to only convert to Boolean when necessary but it's just *barely* faster than this but looks SO much worse
+		//so we just always convert to boolean, even when it already is a boolean
+
+		//now, one might ask "but why not simply delete them like we did with 'group'?"
+		//well, there's a simple answer to that: I'm lazy as fuck. And the code would also look ugly as hell.
+	attributes.testModal      = Boolean(attributes.testModal     );
+
+	attributes.openOnTop      = Boolean(attributes.openOnTop     );
+	attributes.autoPin        = Boolean(attributes.autoPin       );
+	attributes.collapsable    = Boolean(attributes.collapsable   );
+	attributes.startCollapsed = Boolean(attributes.startCollapsed);
+	attributes.draggable      = Boolean(attributes.draggable     );
+	attributes.resizeable     = Boolean(attributes.resizeable    );
+
+	//if it's a test-modal then add the class 'modalClass_testo'
+	if (attributes.testModal === true) {
+		attributes.cssClass.push('modalClass_testo');
+	}
+
 	//if 'cssClass' is a string then add it to an empty array
 	if (typeof attributes.cssClass === 'string') {
 		attributes.cssClass = [attributes.cssClass];
@@ -179,39 +223,30 @@ function modal_ModalObject (specifics) {
 		}
 	});
 
-	//disable some attributes if the modal should be embedded
-	if (Object.isDOMElement(attributes.embedTo) === true) {
-		attributes.openOnTop  = false;
-		attributes.autoPin    = false;
-		attributes.draggable  = false;
-		attributes.resizeable = false;
+	//add the resizeable class at the beginning if needed
+	if (attributes.resizeable === true) {
+		attributes.cssClass.unshift('interaction_resizeable');
+	}
 
-	//if it shouldn't be embedded then make sure it's set to null
+	//add the draggable class at the beginning if needed
+	if (attributes.draggable === true) {
+		attributes.cssClass.unshift('interaction_draggable');
+	}
+
+	//add the 'embedModal' or 'floatingModal' depending on which one it is
+	if (attributes.embedTo !== null) {
+		attributes.cssClass.unshift('modal_embedModal');
 	} else {
-		attributes.embedTo    = null ;
+		attributes.cssClass.unshift('modal_floatingModal');
 	}
 
-	//convert all values to boolean values whenever needed (even if the output is somewhat unwanted then)
-		//I could do a ternary operator to only convert to Boolean when necessary but it's just *barely* faster than this but looks SO much worse
-		//so we just always convert to boolean, even when it already is a boolean
-
-		//now, one might ask "but why not simply delete them like we did with 'group'?"
-		//well, there's a simple answer to that: I'm lazy as fuck. And the code would also look ugly as hell.
-	attributes.testModal   = Boolean(attributes.testModal  );
-
-	attributes.openOnTop   = Boolean(attributes.openOnTop  );
-	attributes.autoPin     = Boolean(attributes.autoPin    );
-	attributes.collapsable = Boolean(attributes.collapsable);
-	attributes.draggable   = Boolean(attributes.draggable  );
-	attributes.resizeable  = Boolean(attributes.resizeable );
-
-	//if it's a test-modal then add the class 'modalClass_testo'
-	if (attributes.testModal === true) {
-		attributes.cssClass.push('modalClass_testo');
-	}
+	//add the regular 'container' class
+	attributes.cssClass.unshift('modal_container');
 
 	//actually set the attributes
 	this.attributes = attributes;
+
+
 
 	//=== CREATING THE STATUS OBJECT ===
 
@@ -220,6 +255,9 @@ function modal_ModalObject (specifics) {
 
 	//for quick access
 	let status = this.status;
+
+	//set the modal type
+	status.type = (attributes.embedTo !== null) ? 'embed' : 'floating';
 
 	//create the 'pinned' status
 		//but convert it to a boolean first just to be sure
@@ -264,23 +302,12 @@ function modal_createModal (constructModal, attributes={}) {
 
 	// === BUILD THE ACTUAL MODAL ===
 
-	//get all CSS classes
-	let cssClasses = ['modal_container', 'interaction_draggable', 'interaction_resizeable', ...attributes.cssClass];
-
-	//replace the first class with 'modal_embedContainer' if it's embedded
-	if (attributes.embedTo !== null) {
-		cssClasses[0] = 'modal_embedContainer';
-	}
-
-		//push the type specific one
-	//cssClasses.push(`modalType-${modalObj.type}`); //commented because types no longer exist
-
 	//create a document fragment to add all elements to
 	const docFrag = new DocumentFragment();
 
 	//create the actual DOM Element
 	const container = cElem('span', docFrag, {
-		class                  : cssClasses.join(' '),
+		class                  : attributes.cssClass.join(' '),
 		'data-modalid'         : modalObj.id,
 		'data-modalgroup'      : modalObj.group
 	});
@@ -297,7 +324,7 @@ function modal_createModal (constructModal, attributes={}) {
 	//add the collapse element to the menu bar if needed
 	if (attributes.collapsable === true) {
 		cElem('span', menuBar, {class: 'modal_collapseHandle', 'data-linkedtomodal': modalObj.id})
-			.textContent = 'COLLAPSE ME!';
+			.textContent = 'COLLAPSE/EXPAND!';
 	}
 
 	//create the main body
@@ -352,16 +379,18 @@ function modal_createModal (constructModal, attributes={}) {
 		document.getElementById('modal_catchAllContainer').appendChild(docFrag);
 	}
 
-	//and then set the actual modal to be that exact size
-		//has to be 'offsetWidth' instead of 'getBoundingClientRect().width' because the latter includes modification made through the CSS 'transform' property which shouldn't happen
-		//TODO: does this even do anything at all??
-	//container.style.width  = container.offsetWidth;
-	//container.style.height = container.offsetHeight;
+	//collapse it if needed
+	if (attributes.startCollapsed === true) {
+		modal_toggleCollapse(container);
+	}
 
 	//add the new modal to the focus-order list and also focus it if needed
-	modal_focusOrder.push(modalID);
-	if (modalObj.attributes.openOnTop === true) {
-		modal_changeFocus(modalID);
+		//but only if it's a floating modal!
+	if (modalObj.status.type === 'floating') {
+		modal_focusOrder.push(modalID);
+		if (modalObj.attributes.openOnTop === true) {
+			modal_changeFocus(modalID);
+		}
 	}
 
 	//update the focus order
@@ -381,7 +410,17 @@ function modal_createModal (constructModal, attributes={}) {
  */
 function modal_changeFocus (modalID) {
 	//convert it to an actual number (will do nothing if it already is a number)
-	modalID = parseInt(modalID);
+	modalID = Number(modalID);
+
+	//get the modal object
+	modalObj = modal_getModalObj(modalID);
+
+	//complain and return if it's a embedded modal
+		//note that 'modalObj' can be false but you can access properties on booleans
+	if (modalObj.status?.type === 'embed') {
+		console.warn(`[MPO] Tried to change the focus of a embedded modal in 'modal_changeFocus()'. Modal ID: "${modalID}"`);
+		return;
+	}
 
 	//get index of ID and then remove it from 'modal_focusOrder'
 	const index = modal_focusOrder.indexOf(modalID);
@@ -401,14 +440,30 @@ function modal_changeFocus (modalID) {
  * 	Updates the z-index values and adds/removes the 'modal_focused' and 'modal_unfocused' CSS classes
  */
 function modal_updateFocusOrder () {
+	//loop through all open modals
 	for (let key in modal_openModals) {
+
 		//convert string to number
-		key = parseInt(key);
+		key = Number(key);
+
+		//get the index of the modal
+		const index = modal_focusOrder.indexOf(key);
+
+		//skip it if it's a embedded modal
+		if (modal_openModals[key].status.type === 'embed') {
+
+			//remove the modal from the focus order if needed
+				//this is more of a failsafe than anything
+			if (index !== -1) {
+				console.warn(`[MPO] An embedded modal was found in 'modal_focusOrder' while updating the order in 'modal_updateFocusOrder()'. Modal ID: "${key}"`);
+				modal_focusOrder.splice(index, 1);
+			}
+
+			continue;
+		}
 
 		//get the DOM Element
 		const elem = modal_getDOMElement(key);
-
-		const index = modal_focusOrder.indexOf(key);
 
 		//set the z-index CSS property
 		if (index === -1) {
@@ -496,8 +551,10 @@ function modal_closeModal (modalID, updateFocus) {
 /**	Collapses and expands the modal.
  *
  * 	Args:
- * 		modalID [Number/String]
- * 			The ID of the modal.
+ * 		modal [Number/String/DOM Element]
+ * 			The modal.
+ * 			Can be it's unique ID (can be either a number or string, so 6 and '6' are both fine).
+ * 			Can also be the container DOM element (the one with the '.modal_container' class).
  *
  * 		action [String] <'toggle'>
  * 			What action should be done. Can be one of the following:
@@ -506,13 +563,13 @@ function modal_closeModal (modalID, updateFocus) {
  * 				- 'toggle': Toggles the state of the modal. If it was expanded then it will be collapsed, if it was collapsed then it will be expanded.
  * 			On default or with a invalid 'action' argument it will simply pick 'toggle'.
  */
-function modal_toggleCollapse (modalID, action='toggle') {
+function modal_toggleCollapse (modal, action='toggle') {
 	//get the modal
-	const elem = modal_getDOMElement(modalID);
+	const elem = modal_getDOMElement(modal);
 
 	//return and complain if the modal could not be found
 	if (elem.isDOMElement() !== true) {
-		console.warn(`[MPO] modal_toggleCollapse() could not get the modal with ID "${modalID}".`);
+		console.warn(`[MPO] modal_toggleCollapse() could not get the modal: "${modalID}".`);
 		return;
 	}
 
@@ -549,22 +606,56 @@ function modal_toggleCollapse (modalID, action='toggle') {
 /**	Gets the HTML element of the modal.
  *
  * 	Args:
- * 		modalID [Number/String]
- * 			The ID of the Modal to be focused. Has to be a number but it can be in string-form (so '6' and 6 are both fine).
+ * 		modal [Number/String/DOM Element]
+ * 			The modal.
+ * 			Can be it's unique ID (can be either a number or string, so 6 and '6' are both fine).
+ * 			Can also be the container DOM element (the one with the '.modal_container' class).
  *
  * 	Returns [DOM Element/Boolean]:
  * 		Returns the DOM Element of the modal.
  * 		Returns false if the element can't be found.
  */
-function modal_getDOMElement (modalID) {
-	//convert string to number
-	modalID = parseInt(modalID);
+function modal_getDOMElement (modal) {
+	//check if it's a DOM element
+	if (Object.isDOMElement(modal) === true) {
+
+		//if yes then check if it's the actual modal container
+		if (modal.classList.contains('modal_container') === true && modal.getAttribute('data-modalid') !== null) {
+
+			//and return it
+			return modal;
+		} else {
+			//if not then return false
+				//it doesn't have to go through the rest of the function since the rest of the function needs it to be a number/string
+			return false;
+		}
+	}
 
 	//get element by using the custom 'modalid' attribute
-	const elem = document.querySelector(`[data-modalid="${modalID}"]`);
+	const elem = document.querySelector(`[data-modalid="${modal}"]`);
 
 	//return false if element doesn't exist, otherwise simply return the DOM Element
 	return elem ?? false;
+}
+
+/**	Get the 'modalObj' from 'modal_openModals'.
+ *
+ * 	Args:
+ * 		modalID [Number/String]
+ * 			The unique ID of the modal.
+ * 			Can be in string-form (so 6 and '6' are both fine).
+ *
+ * 	Returns [Object/Boolean]:
+ * 		The modal object.
+ * 		Returns false if the object couldn't be found.
+ */
+function modal_getModalObj (modalID) {
+	//get the 'modalObj'
+	const modalObj = modal_openModals[modalID];
+
+	//return the modal object
+		//but return false if the modal object couldn't be found
+	return modalObj ?? false;
 }
 
 /**	Auto-close all modals that didn't get clicked on.
@@ -577,9 +668,6 @@ function modal_getDOMElement (modalID) {
  * 			Can be any type, it will convert string to number. Anything else will be handled like there shouldn't be an exception.
  */
 function modal_autoCloseModals (exception) {
-	//the currently active modal
-	activeModalID = modal_focusOrder[0];
-
 	//convert exception to Number
 	if (typeof exception === 'string') {
 		exception = parseInt(exception);
@@ -587,7 +675,7 @@ function modal_autoCloseModals (exception) {
 
 	for (let key in modal_openModals) {
 		//convert string to number
-		key = parseInt(key);
+		key = Number(key);
 
 		//skip modal if it's the currently active one
 		if (key === exception)
@@ -601,4 +689,7 @@ function modal_autoCloseModals (exception) {
 			modal_closeModal(key);
 		}
 	}
+
+	//update the focus order
+	modal_updateFocusOrder();
 }
