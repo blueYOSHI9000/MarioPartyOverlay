@@ -24,3 +24,23 @@ function trackerInterface_updateCounter (counterName, player) {
 		item.textContent = stat;
 	}
 }
+
+/**	Change the color of the counter text.
+ *
+ * 	This will loop through every single item of class '.tracker_counterText' and apply the new color for each element.
+ * 	If there's a better way to do this then please use that instead of this.
+ *
+ * 	Args:
+ * 		newColor [String]
+ * 			The new color in the format of '#FFFFFF' (that being white).
+ * 			This function does NOT check whether this is valid or not. It simply applies it without thinking.
+ */
+function trackerInterface_changeCounterColor (newColor) {
+	//get all elements that should be modified
+	let elemList = document.querySelectorAll('.tracker_counterText');
+
+	//loop through them all and replace the color
+	for (item of elemList) {
+		item.style.color = newColor;
+	}
+}

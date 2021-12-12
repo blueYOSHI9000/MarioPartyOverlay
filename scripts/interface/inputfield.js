@@ -119,6 +119,11 @@
  * 		cssClass [String/Array] <optional>
  * 			Regular CSS classes that will be added to the container.
  *
+ * 		HTMLAttributes [Object] <optional>
+ * 			A object of HTML attributes to add to the container. `{id: 'testo'}` would add 'testo' as the 'id' attribute.
+ * 			The following attributes will be ignored (mainly because they're needed internally/can be set through input-field attributes):
+ * 				'class', 'data-fieldid'
+ *
  * 	# 'checkbox' type attributes:
  *
  * 		checkboxValue [*any*] <true>
@@ -373,6 +378,21 @@ function inputfield_FieldObject (specifics) {
 	//if it's not an array then replace it with an empty array as a failsafe
 	} else {
 		attributes.cssClass = [];
+	}
+
+	//set all 'HTMLAttributes'
+	if (typeof attributes.HTMLAttributes === 'object') {
+		for (key in attributes.HTMLAttributes) {
+
+			//if it's 'class' or 'data-fieldid' then delete the entry and continue with the next one
+			if (key === 'class' || key === 'data-fieldid') {
+				delete attributes.HTMLAttributes[key];
+				continue;
+			}
+
+			//actually apply it to the element
+			specifics.elem.setAttribute(key, attributes.HTMLAttributes[key]);
+		}
 	}
 
 	//set 'checkboxValue' to true if it hasn't been specified

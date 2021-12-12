@@ -50,27 +50,29 @@
  *	The goal of the boot process is to reduce the initial load as much as possible (this is also why 'index.html' only includes the bare minimum).
  *	'index.html' is loaded first, inside it is a bit of JS that adds a new <script> with a 'onload' attribute.
  *	The <script> element loads 'helpers.js', once it finished loading it executes the 'onload' attribute which loads 'boot.js' through the 'loadScripts()' function (that's why 'helpers.js' is loaded first, because that function is needed).
- *	Once 'boot.js' finished loading it executes the 'onload' attribute of it's <script> element which calls 'boot_scriptLoaded()' which then finally calls 'boot_startup()'.
- *	 'boot_startup()' then loads all other JS and CSS files. Each JS file is loaded with a <script> element that has a 'onLoad' attribute that pushes the file-name to 'boot_scriptsLoaded'.
- *	Once all script files are loaded it executes 'boot_setupCounterObject()' and 'buildSite_build()'.
+ *	Once 'boot.js' finished loading it executes the 'onload' attribute of it's <script> element which calls 'boot_scriptLoaded()' which then finally calls 'boot_basicStartup()'.
+ *	 'boot_basicStartup()' then loads all other JS and CSS files. Each JS file is loaded with a <script> element that has a 'onload' attribute that pushes the file name to 'boot_scriptsLoaded'.
+ *	Once all script files are loaded it executes 'boot_finishStartup()'.
  *
  *
  *	Basically, this is how it looks:
  *		> index.html <script> element
  *			- load helpers.js
- *			> 'onLoad' attribute
+ *			> 'onload' attribute
  *				- load boot.js via loadScripts()
- * 				> 'onLoad' attribute > boot_scriptLoaded()
- *					> boot_startup()
+ * 				> 'onload' attribute > boot_scriptLoaded()
+ *					> boot_basicStartup()
  *						- check if cookies are enabled
- *						- load localStorage
- *						- update localStorage
  *						- load database
  *						- load all other scripts
  *						- load all css files
- *						> 'onLoad' attributes of all new <script> elements > boot_scriptLoaded()
+ *						> 'onload' attributes of all new <script> elements > boot_scriptLoaded()
  *							- count the amount of script files loaded
- *							> once all are loaded (tracked inside 'boot_scriptsLoaded')
+ * 							> once 'applySettings()' is loaded
+ * 								> applySettings_loadLocalStorage()
+ * 									- load localStorage
+ * 									- update localStorage
+ *							> once all are loaded (tracked inside 'boot_scriptsLoaded') > boot_finishStartup()
  * 								- boot_setupCounterObject()
  *								> buildSite_build()
  *									> buildSite_buildNavbar()
@@ -176,41 +178,27 @@ function boot_scriptLoaded (script) {
 	//execute code once a certain file has been loaded
 	switch (script) {
 		case 'boot.js':
-			boot_startup();
+			boot_basicStartup();
+			break;
+
+		case 'applySettings.js':
+			applySettings_loadLocalStorage();
 			break;
 	}
 
-	//execute code once all script files have been loaded
+	//finish startup as soon as soon as all files are loaded
+		//call it with a 0ms timeout to make sure it gets executed after everything else
 	if (boot_scriptsLoaded.length === boot_totalScriptFiles) {
-
-		//setup the 'trackerCore_status' object
-		boot_setupCounterObject();
-
-		//build the actual site
-		buildSite_build();
+		setTimeout(boot_finishStartup, 0);
 	}
 }
 
-/** Starts the site up.
+/** Starts up the boot process.
  *
  * 	NOTE: This gets loaded when nothing besides 'helpers.js' and 'boot.js' are loaded!
- *
- *	Checks for cookies, loads localStorage, loads css files, loads js files (incl. database).
- *	See the list above to see what this function does.
  */
-function boot_startup () {
-	//TODO: Add cookie check (likely using Modernizr: https://github.com/Modernizr/Modernizr)
-
-	//Load localStorage
-	const ls = localStorage;
-
-	//save settings to variable if present
-		//else it simply leaves the variable as is
-	if (typeof ls.settings !== 'undefined') {
-		settings_settings = JSON.parse(ls.settings);
-	}
-
-	//TODO: Update localStorage
+function boot_basicStartup () {
+	//TODO: Check whether cookies are enabled
 
 	//Load Scripts
 		//use 'boot_scriptLoaded()' as a argument so it gets called whenever a file is being loaded
@@ -218,6 +206,23 @@ function boot_startup () {
 
 	//Load styles
 	let styleElems = loadStyles(boot_stylesToLoad);
+}
+
+/**	Finishes the startup process.
+ *
+ * 	This is done once all script files have finished loading.
+ *
+ * 	This builds the site up completely and does basically everything that 'boot_basicStartup()' didn't do.
+ */
+function boot_finishStartup () {
+	//setup the 'trackerCore_status' object
+	boot_setupCounterObject();
+
+	//build the actual site
+	buildSite_build();
+
+	//apply settings
+	applySettings_applyAll(true);
 }
 
 /**	Sets up the 'trackerCore_status' object completely.
