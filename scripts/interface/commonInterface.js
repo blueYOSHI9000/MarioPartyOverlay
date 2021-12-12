@@ -45,7 +45,7 @@ function commonInterface_createCounterList (parent, player) {
 
 		//counter image
 			//note that this uses the bonus star icon because there's currently no icons for 'misc' counters
-		cElem('img', counterElem, {class: 'tracker_counterImg', src: dbparsing_getIcon(`bonusStars.${key}`, trackerCore_status['game'])});
+		cElem('img', counterElem, {class: 'tracker_counterImg', src: dbparsing_getIcon(`bonusStars.${key}`, updatesTracker_getGame())});
 
 		//counter text
 		let counterText = cElem('span', counterElem, {class: 'tracker_counterText'});
@@ -70,7 +70,7 @@ function commonInterface_createCounterList (parent, player) {
  * 		The DOM element of the input-field.
  * 		Use 'inputfield_getValue(elem)' with this element as it's argument to get the character selected.
  */
-function commonInterface_createCharacterSelection (parent, game=trackerCore_status['game']) {
+function commonInterface_createCharacterSelection (parent, game=updatesTracker_getGame()) {
 	//get all characters
 	const characters = dbparsing_getCharacterList(game);
 

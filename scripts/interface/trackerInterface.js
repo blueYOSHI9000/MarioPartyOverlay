@@ -25,6 +25,53 @@ function trackerInterface_updateCounter (counterName, player) {
 	}
 }
 
+function trackerInterface_updateCharacter (player) {
+	//get character
+	const charName = updatesTracker_getCharacter(player);
+
+	//get all character icons of this player
+	const characterIcons = document.querySelectorAll(`.tracker_characterDisplay[data-player="${player}"] .tracker_characterIcon`);
+
+	//get icon source for this character
+	const src = dbparsing_getIcon(`characters.${charName}`, updatesTracker_getGame());
+
+	for (const item of characterIcons) {
+		//replace the image source
+		item.src = src;
+	}
+}
+
+/**	This updates all visuals to be in-line with what is actually saved in 'trackerCore_status'.
+ */
+function trackerInterface_updateVisuals () {
+	//get the current savefile
+	const savefile = trackerCore_getSavefileFromStatus();
+
+	//the following loops through each stat for each player and then calls 'trackerInterface_updateCounter()' on each one
+
+	//loop for each player
+	for (playerKey in savefile.players) {
+
+		//loop for each piece ('misc', 'bonusStars', etc.)
+		for (pieceKey in savefile.players[playerKey].stats) {
+
+			//loop for each stat ('distanceWalked', 'happeningStar', etc.)
+			for (statKey in savefile.players[playerKey].stats[pieceKey]) {
+
+				//update the counter
+					//add one to 'playerKey' because 'playerKey' starts at 0
+				trackerInterface_updateCounter(`${pieceKey}.${statKey}`, Number(playerKey) + 1);
+			}
+		}
+	}
+
+	//update all characters
+	trackerInterface_updateCharacter(1);
+	trackerInterface_updateCharacter(2);
+	trackerInterface_updateCharacter(3);
+	trackerInterface_updateCharacter(4);
+}
+
 /**	Change the color of the counter text.
  *
  * 	This will loop through every single item of class '.tracker_counterText' and apply the new color for each element.

@@ -213,6 +213,11 @@ function listeners_pointerDown (e) {
 					functionsToExecute.push(handleNavbar_changeAmount);
 					break;
 
+				//the navbar entry for saving the tracker stats
+				case 'navbar_saveTracker':
+					functionsToExecute.push(trackerCore_saveSavefiles);
+					break;
+
 				//any input field element that should be updated when clicked on
 				case 'inputfield_callUpdate':
 					inputfield_executedAfterFieldChange(elem);

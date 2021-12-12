@@ -29,35 +29,45 @@
  * 			- amount [Number]
  * 				By how much the counter should be modified.
  *
- * 		- game [String]
- * 			The current game. Can also be '_all' for "no game in particular".
+ * 		> savefiles [Array]
+ * 			This is a list of all savefiles.
+ * 			This includes all info that each savefile saves like the current game, players, stats.
  *
- * 		- playerAmount [Number]
- * 			The amount of players present (includes COM).
- *
- * 		> players [Array]
- * 			A list of all players. Saves everything related to those players.
+ * 			- current [Number]
+ * 				The array index of the currently selected savefile.
+ * 				This is a unique property that's added to the array and it won't appear in any 'for' loops. Kinda like the 'length' property.
  *
  * 			> *array item* [Object]
- * 				Each array item is one player. Player 1 is [0], Player 2 is [1], etc.
  *
- * 				- name [String/null]
- * 					The name of the player. Can be null in case no player name has been entered.
+ * 				- game [String]
+ * 					The current game. Can also be '_all' for "no game in particular".
  *
- * 				- character [String]
- * 					The character they're playing as. Has to be the same name that's used in the database.
+ * 				- playerAmount [Number]
+ * 					The amount of players present (includes COM).
  *
- * 				- com [Boolean]
- * 					Whether they're a computer or not.
+ * 				> players [Array]
+ * 					A list of all players. Saves everything related to those players.
  *
- * 				> stats [Object]
- * 					The stats of this player.
+ * 					> *array item* [Object]
+ * 						Each array item is one player. Player 1 is [0], Player 2 is [1], etc.
  *
- *						> 'bonusStars'/'spaces'/'misc'/etc [Object]
- * 							A counter category.
+ * 						- name [String/null]
+ * 							The name of the player. Can be null in case no player name has been entered.
  *
- * 							- 'runningStar'/'blueSpace'/'distanceWalked'/etc [Number]
- * 								The stat of this counter. Can be any number. If not present it's assumed the counter is at 0.
+ * 						- character [String]
+ * 							The character they're playing as. Has to be the same name that's used in the database.
+ *
+ * 						- com [Boolean]
+ * 							Whether they're a computer or not.
+ *
+ * 						> stats [Object]
+ * 							The stats of this player.
+ *
+ *								> 'bonusStars'/'spaces'/'misc'/etc [Object]
+ * 									A counter category.
+ *
+ * 									- 'runningStar'/'blueSpace'/'distanceWalked'/etc [Number]
+ * 										The stat of this counter. Can be any number. If not present it's assumed the counter is at 0.
  *
  * 		> counters [Object]
  * 			Lists everything related to counters.
@@ -109,48 +119,52 @@ var trackerCore_status = {
 		action: 'add',
 		amount: 1
 	},
-	game: '_all',
-	playerAmount: 4,
-	players: [
+	savefiles: [
 		{
-			name: null,
-			character: 'mario',
-			com: true,
-			stats: {
-				bonusStars: {},
-				spaces: {},
-				misc: {}
-			}
-		},
-		{
-			name: null,
-			character: 'luigi',
-			com: false,
-			stats: {
-				bonusStars: {},
-				spaces: {},
-				misc: {}
-			}
-		},
-		{
-			name: null,
-			character: 'yoshi',
-			com: true,
-			stats: {
-				bonusStars: {},
-				spaces: {},
-				misc: {}
-			}
-		},
-		{
-			name: null,
-			character: 'peach',
-			com: true,
-			stats: {
-				bonusStars: {},
-				spaces: {},
-				misc: {}
-			}
+			game: '_all',
+			playerAmount: 4,
+			players: [
+				{
+					name: null,
+					character: 'mario',
+					com: true,
+					stats: {
+						bonusStars: {},
+						spaces: {},
+						misc: {}
+					}
+				},
+				{
+					name: null,
+					character: 'luigi',
+					com: false,
+					stats: {
+						bonusStars: {},
+						spaces: {},
+						misc: {}
+					}
+				},
+				{
+					name: null,
+					character: 'yoshi',
+					com: true,
+					stats: {
+						bonusStars: {},
+						spaces: {},
+						misc: {}
+					}
+				},
+				{
+					name: null,
+					character: 'peach',
+					com: true,
+					stats: {
+						bonusStars: {},
+						spaces: {},
+						misc: {}
+					}
+				}
+			]
 		}
 	],
 	counters: {
@@ -159,6 +173,13 @@ var trackerCore_status = {
 		misc: {}
 	}
 };
+
+//set the 'current' property for the 'savefiles' array
+	//this has to be done this way if we don't want it to be iterable
+Object.defineProperty(trackerCore_status.savefiles, 'current', {
+	value: 0,
+	writable: true
+});
 
 /**	This creates a 'trackerCore_Counter' object.
  *
@@ -231,6 +252,21 @@ function trackerCore_Counter (counterRelation, relation) {
 	}
 }
 
+/**	Gets the specified savefile.
+ *
+ * 	Args:
+ * 		savefileSlot [Number] <current>
+ * 			Which savefile it should get.
+ * 			Gets the current savefile on default.
+ *
+ * 	Returns [Object/null]:
+ * 		Returns the specified savefile. This will be a array item of 'trackerCore_status.savefiles'.
+ * 		Returns null if the savefile couldn't be found.
+ */
+function trackerCore_getSavefileFromStatus (savefileSlot=trackerCore_status.savefiles.current) {
+	return trackerCore_status.savefiles[savefileSlot] ?? null;
+}
+
 /**	Gets the specified counter from 'trackerCore_status'.
  *
  * 	Args:
@@ -244,83 +280,13 @@ function trackerCore_Counter (counterRelation, relation) {
  */
 function trackerCore_getCounter (counterName) {
 	//get and return the counter
-	return trackerCore_getCounterFromNameInObj(counterName, trackerCore_status['counters']);
+	return trackerCore_status['counters'].fetchProperty(counterName);
 }
 
-/**	Gets the correct counter inside an object by it's name.
+/**	This saves the current stats to localStorage.
  *
- * 	Args:
- * 		counterName [String]
- * 			The name of the counter like 'misc.distanceWalked' or 'bonusStars.runningStar'.
- *
- * 		obj [Object]
- * 			The object the counter should be gotten from. Can be a reference or a unique object.
- *
- * 	Returns [*any* / Boolean]:
- * 		Returns the property found, no matter what type it is.
- * 		Returns false if it couldn't be found.
+ * 	Note: This is temporary, this does not consider a potentital character-limit to a single localStorage entry (if there is one) and it also does not save which counters are displayed.
  */
-function trackerCore_getCounterFromNameInObj (counterName, obj) {
-	//split the string into array pieces ('misc.distanceWalked' > ['misc', 'distanceWalked'])
-	const arr = counterName.split('.');
-
-	//use a try catch in case the variable doesn't exist
-	try {
-		//get the correct item by looping through the array and going one property further in each time
-		for (const item of arr) {
-			obj = obj[item];
-		}
-
-		return obj;
-	} catch (e) {
-		console.error(`[MPO] trackerCore_getCounterFromNameInObj() couldn\'t get the counter "${counterName}"`);
-		return false;
-	}
-}
-
-/**	Sets the correct counter inside an object to something else.
- *
- * 	Args:
- * 		counterName [String]
- * 			The name of the counter like 'misc.distanceWalked' or 'bonusStars.runningStar'.
- *
- * 		obj [Object]
- * 			The object the counter should be gotten from. Can be a reference or a unique object.
- *
- * 		value [*any*]
- * 			The value it should be set to. Can be anything.
- *
- * 	Returns [Boolean]:
- * 		Returns true if it succesfully set the value.
- * 		Returns false if something went wrong.
- */
-function trackerCore_setCounterFromNameInObj (counterName, obj, value) {
-	//split the string into array pieces ('misc.distanceWalked' > ['misc', 'distanceWalked'])
-	const arr = counterName.split('.');
-
-	//get the last item in the array
-	const lastItem = arr[arr.length - 1];
-
-	//use a try catch in case the variable doesn't exist
-	try {
-		//get the correct item by looping through the array and going one property further in each time
-		for (const item of arr) {
-			//if it's the last item in the array then replace the value directly without assigning it to 'obj' first
-			if (item === lastItem) {
-				obj[item] = value;
-
-				//and then return true
-				return true;
-			}
-
-			obj = obj[item];
-		}
-
-		//return false since it shouldn't get here to begin with
-		console.error(`[MPO] trackerCore_setCounterFromNameInObj() failed in mysterious ways with the counter "${counterName}"`);
-		return false;
-	} catch (e) {
-		console.error(`[MPO] trackerCore_setCounterFromNameInObj() couldn\'t get the counter "${counterName}"`);
-		return false;
-	}
+function trackerCore_saveSavefiles () {
+	localStorage.setItem('savefiles', JSON.stringify(trackerCore_status.savefiles));
 }

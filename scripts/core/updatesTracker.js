@@ -12,8 +12,7 @@
  * 			The go-to function for updating a counter.
  *
  * 		updatesTracker_getStat()
- * 		updatesTracker_setStat()
- * 			Get and set a stat of a player & counter directly.
+ * 			Get a stat of a player & counter.
  *
  * 	# PLAYERS
  *
@@ -122,14 +121,14 @@ function updatesTracker_updateCounter (counterName, player, action=updatesTracke
  */
 function updatesTracker_getStat (counterName, player) {
 	//get the actual stat
-	let stat = trackerCore_getCounterFromNameInObj(counterName, trackerCore_status['players'][player - 1]['stats']);
+	let stat = trackerCore_getSavefileFromStatus()['players'][player - 1]['stats'].fetchProperty(counterName);
 
 	//if stat doesn't exist yet then set it to 0
 	stat ??= 0;
 
 	//use a failsafe in case the stat isn't valid
 	if (typeof stat !== 'number' && stat !== false) {
-		console.error(`[MPO] updatesTracker_getStat() found a invalid stat for counter "${counterName}" and player "${player}"`);
+		console.error(`[MPO] updatesTracker_getStat() found a invalid stat for counter "${counterName}" and player "${player}": "${stat}".`);
 		stat = false;
 	}
 
@@ -137,6 +136,8 @@ function updatesTracker_getStat (counterName, player) {
 }
 
 /**	Sets a stat for the specified counter & player to a new value.
+ *
+ * 	Note that this DOES NOT update the visuals. Use 'updatesTracker_updateCounter()' for that.
  *
  * 	Args:
  * 		counterName [String]
@@ -161,7 +162,7 @@ function updatesTracker_setStat (counterName, player, value) {
 	}
 
 	//set the stat and save the response (Boolean of whether it was successful or not)
-	let result = trackerCore_setCounterFromNameInObj(counterName, trackerCore_status['players'][player - 1]['stats'], value);
+	let result = trackerCore_getSavefileFromStatus()['players'][player - 1]['stats'].fetchProperty(counterName, {setTo: value});
 
 	return result;
 }
@@ -184,7 +185,7 @@ function updatesTracker_getCharacter (player) {
 
 	//use 'player - 1' since it's an array starting at 0
 		//if the character couldn't be found (is undefined) then it will simply return false
-	return trackerCore_status.players[player - 1]?.character ?? false;
+	return trackerCore_getSavefileFromStatus().players[player - 1]?.character ?? false;
 }
 
 /**	Change the character of a single player.
@@ -197,19 +198,25 @@ function updatesTracker_getCharacter (player) {
  * 			The name of the character as listed in the database.
  */
 function updatesTracker_setCharacter (player, charName) {
-	//get all character icons of this player
-	const characterIcons = document.querySelectorAll(`.tracker_characterDisplay[data-player="${player}"] .tracker_characterIcon`);
-
-	//get icon source for this character
-	const src = dbparsing_getIcon(`characters.${charName}`, trackerCore_status['game']);
-
-	for (const item of characterIcons) {
-		//replace the image source
-		item.src = src;
-	}
-
 	//update 'trackerCore_status'
-	trackerCore_status['players'][player - 1]['character'] = charName;
+	trackerCore_getSavefileFromStatus()['players'][player - 1]['character'] = charName;
+
+	//update the visual
+	trackerInterface_updateCharacter(player);
+}
+
+/**	Gets the current game.
+ *
+ * 	Args:
+ * 		savefileSlot [Number] <current>
+ * 			The savefile it should get the current game from.
+ * 			Will default to the currently selected savefile.
+ *
+ * 	Returns [String]:
+ * 		The current game in the format of 'all', 'mp1', 'mp4', 'mptt100', etc.
+ */
+function updatesTracker_getGame (savefileSlot) {
+	return trackerCore_getSavefileFromStatus(savefileSlot).game;
 }
 
 /**	Gets the current default action of the tracker.

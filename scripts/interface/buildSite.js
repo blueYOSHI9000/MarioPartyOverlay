@@ -85,12 +85,17 @@ function buildSite_buildNavbar (docFrag) {
 		cElem('img', navbarPlayer, {class: 'navbar_icon', player: playerNum, src: characterIconSrc});
 	}
 
-	//
-	let trackerActionButton = cElem('span', navbarBase, {class: 'navbar_trackerAction'})
+	//create the 'action' button for the tracker
+	cElem('span', navbarBase, {class: 'navbar_trackerAction'})
 		.textContent = '+';
 
-	let trackerAmountButton = cElem('span', navbarBase, {class: 'navbar_trackerAmount'})
+	//create the 'amount' button for the tracker
+	cElem('span', navbarBase, {class: 'navbar_trackerAmount'})
 		.textContent = '1';
+
+	//create a shitty save button
+	cElem('span', navbarBase, {style: 'color: white;cursor: pointer;', class: 'navbar_saveTracker'})
+		.textContent = 'save';
 
 	//create the shitty open settings button
 	let openSettingsButton = cElem('span', navbarBase, {style: 'color: white;cursor: pointer;', onclick: 'handleSettings_toggleSettings();'})

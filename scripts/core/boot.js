@@ -68,22 +68,15 @@
  *						- load all css files
  *						> 'onload' attributes of all new <script> elements > boot_scriptLoaded()
  *							- count the amount of script files loaded
- * 							> once 'applySettings()' is loaded
- * 								> applySettings_loadLocalStorage()
- * 									- load localStorage
- * 									- update localStorage
  *							> once all are loaded (tracked inside 'boot_scriptsLoaded') > boot_finishStartup()
- * 								- boot_setupCounterObject()
- *								> buildSite_build()
- *									> buildSite_buildNavbar()
- *										- build html trackers
- *										- load related images
- *									> buildSite_buildSettings()
- *										- build html settings
- *										- load related images
- *									> buildSite_buildTrackers()
- *										- build html trackers
- *										- load related images
+ * 								- setup the 'trackerCore_status' object
+ *								- load localStorage (and update it so it works in case it was from an older version)
+ *								> build the actual site (HTML only)
+ *									- build navbar
+ *									- build settings
+ *									- build the tracker
+ * 								- apply all settings
+ * 								- update all trackers (visually, so the number actually represents what's saved)
  */
 
 //all scripts that have to be loaded
@@ -180,10 +173,6 @@ function boot_scriptLoaded (script) {
 		case 'boot.js':
 			boot_basicStartup();
 			break;
-
-		case 'applySettings.js':
-			applySettings_loadLocalStorage();
-			break;
 	}
 
 	//finish startup as soon as soon as all files are loaded
@@ -215,14 +204,65 @@ function boot_basicStartup () {
  * 	This builds the site up completely and does basically everything that 'boot_basicStartup()' didn't do.
  */
 function boot_finishStartup () {
+	//place every single call in a setTimeout (TODO)
+
 	//setup the 'trackerCore_status' object
-	boot_setupCounterObject();
+	setTimeout(boot_setupCounterObject, 0);
+
+	//load localStorage
+	setTimeout(boot_loadLocalStorage, 0);
 
 	//build the actual site
-	buildSite_build();
+	setTimeout(buildSite_build, 0);
 
 	//apply settings
-	applySettings_applyAll(true);
+	setTimeout(() => {applySettings_applyAll(true);}, 0);
+
+	//update all counters
+	setTimeout(trackerInterface_updateVisuals, 0);
+}
+
+/**	This loads the data saved in localStorage.
+ *
+ * 	This will only load the data and set the variables (like 'applySettings_settings' or 'trackerCore_status').
+ * 	This does NOT properly apply them!
+ * 	Mainly because this function is supposed to be called before the site is actually built.
+ */
+function boot_loadLocalStorage () {
+	//get localStorage
+	let ls = localStorage;
+
+	//if the saved data is from the original MPO then clear it
+		//TODO: Once the rewrite is far enough it has to take the original data and update it!
+	if (ls.lsVer <= 10) {
+		console.warn('[MPO] Outdated localStorage. Will be cleared.');
+
+		//clear localStorage and update the variable in here
+		localStorage.clear();
+		ls = localStorage;
+	}
+
+	//if settings were present then take them
+	if (ls.settings !== undefined) {
+		applySettings_settings = JSON.parse(ls.settings);
+
+	//if not then use the default ones
+	} else {
+		applySettings_settings = applySettings_defaultSettings;
+	}
+
+	//load savefiles if present
+		//this does not need default behaviour as the defaults are already there
+	if (ls.savefiles !== undefined) {
+		trackerCore_status.savefiles = JSON.parse(ls.savefiles);
+
+		//set this again since it got overwritten
+			//TODO: Replace this whole thing by loading each savefile individually so we don't have to set this again
+		Object.defineProperty(trackerCore_status.savefiles, 'current', {
+			value: 0,
+			writable: true
+		});
+	}
 }
 
 /**	Sets up the 'trackerCore_status' object completely.

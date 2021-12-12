@@ -163,7 +163,6 @@ function handleNavbar_changeCharacterFromModal (value, fieldObj) {
 		return;
 	}
 
-	//debugger;
 	//change the character
-	updatesTracker_setCharacter(value.player, value.character);
+	updatesTracker_setCharacter(Number(value.player), value.character);
 }

@@ -163,36 +163,3 @@ function applySettings_applyDefaults (force=true) {
 	//set and apply them
 	applySettings_applyAll(true);
 }
-
-/**	This loads the data saved in localStorage.
- *
- * 	This will only load the data and set 'applySettings_settings'.
- * 	This does NOT apply them!
- * 	Mainly because this function is supposed to be called before the site finished loading.
- */
-function applySettings_loadLocalStorage () {
-	//get localStorage
-	let ls = localStorage;
-
-	//if the saved data is from the original MPO then clear it
-		//TODO: Once the rewrite is far enough it has to take the original data and update it!
-	if (ls.lsVer <= 10) {
-		console.warn('[MPO] Outdated localStorage. Will be cleared.');
-
-		//clear localStorage and update the variable in here
-		localStorage.clear();
-		ls = localStorage;
-	}
-
-	//if settings were present then take them
-		//note that we DON'T apply these - we simply set the 'settings' object
-		//this is important because when this function is called the site hasn't finished loading yet
-		//so all we do is set the 'settings' object so while the site loads it can already load it correctly
-	if (ls.settings !== undefined) {
-		applySettings_settings = JSON.parse(ls.settings);
-
-	//if not then use the default ones
-	} else {
-		applySettings_settings = applySettings_defaultSettings;
-	}
-}

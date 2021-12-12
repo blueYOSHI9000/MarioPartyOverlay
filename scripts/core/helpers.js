@@ -133,6 +133,82 @@ function cElem (type, parent, attributes) {
 	return elem;
 }
 
+/**	Fetches a specific item inside a object.
+ *
+ * 	Provide a name like 'misc.distanceWalked' and it will fetch the item found in 'misc' > 'distanceWalked' in the object you called this on.
+ *
+ * 	Args:
+ * 		path [String]
+ * 			The path it should go through in the form of 'misc.distanceWalked'.
+ *
+ * 		specifics [Object] <optional>
+ * 			Includes the following properties:
+ *
+ * 				setTo [*any*] <none>
+ * 					If present it will set the property found to this value.
+ * 					If not present it will simply fetch the value as normal.
+ *
+ * 				setToUndefined [Boolean] <false>
+ * 					If present it will set the value found to undefined. 'setTo' will be ignored if this is true.
+ */
+Object.defineProperty(Object.prototype, 'fetchProperty', {value: function (path, specifics={}) {
+	//complain and return if 'specifics' isn't an object
+	if (typeof specifics !== 'object') {
+		console.warn(`[MPO] Object.fetchProperty() received a non-object as 'specifics': "${specifics}".`);
+	}
+
+	//complain and return undefined if 'path' isn't a string
+	if (typeof path !== 'string') {
+		console.warn(`[MPO] Object.fetchProperty() received a non-string for 'path': "${path}".`);
+		return undefined;
+	}
+
+	//the item that will be searched in
+	let item = this;
+
+	//split the 'path' into an array
+	const pathItems = path.split('.');
+
+	//the index of 'pathItems'
+	let index = 0;
+
+	//loop through all property names specified in 'path'
+	for (key of pathItems) {
+
+		//complain and return undefined if it couldn't finish looping through
+		if (typeof item !== 'object') {
+			console.warn(`[MPO] Object.fetchProperty() couldn't finish looping through the 'path' specified as it found a non-object with name "${key}": "${obj}".`);
+			return undefined;
+		}
+
+		//check if it's the last item
+		if (index++ === pathItems.length - 1) {
+			//if it should be set to undefined then set it to undefined and return
+			if (specifics.setToUndefined === true) {
+				item[key] = undefined;
+				return true;
+
+			//if it should be set to something else then do that
+			} else if (specifics.setTo !== undefined) {
+				item[key] = specifics.setTo;
+				return true;
+			}
+		}
+
+		//replace 'item' with the next property in line
+		item = item[key];
+	}
+
+	//complain and return false if it couldn't be set
+	if (specifics.setToUndefined === true || specifics.setTo !== undefined) {
+		console.warn(`[MPO] Object.fetchProperty() could not set the value. Path specified: "${path}".`);
+		return false;
+	}
+
+	//return the found item
+	return item;
+}});
+
 /**	Fills an object in with default values.
  *
  * 	This will replace any undefined property with a property from 'defaultObj'.
@@ -165,6 +241,11 @@ function cElem (type, parent, attributes) {
  * 		This will be the original object that the function was called on/the object specified in 'objToOverwrite'.
  */
 Object.defineProperty(Object.prototype, 'fillIn', {value: function (defaultObj, specifics={}) {
+	//complain and return if 'specifics' isn't an object
+	if (typeof specifics !== 'object') {
+		console.warn(`[MPO] Object.fillIn() received a non-object as 'specifics': "${specifics}".`);
+	}
+
 	//get 'objToOverwrite' if it's an object, otherwise use 'this'
 	let obj = (typeof specifics.objToOverwrite === 'object') ? specifics.objToOverwrite : this;
 
