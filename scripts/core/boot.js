@@ -234,6 +234,9 @@ function boot_loadLocalStorage () {
 
 	//if the saved data is from the original MPO then clear it
 		//TODO: Once the rewrite is far enough it has to take the original data and update it!
+
+		//IMPORTANT: This stuff HAS to be done before everything else because stuff like stats will only take stats that are currently used, anything that's not used anymore is immediately thrown away
+		//so if we want to reuse those stats and move them to a different counter then we have to do that right here before it's thrown away
 	if (ls.lsVer <= 10) {
 		console.warn('[MPO] Outdated localStorage. Will be cleared.');
 
@@ -254,14 +257,27 @@ function boot_loadLocalStorage () {
 	//load savefiles if present
 		//this does not need default behaviour as the defaults are already there
 	if (ls.savefiles !== undefined) {
-		trackerCore_status.savefiles = JSON.parse(ls.savefiles);
+		//parse the data
+		const parsedSavefiles = JSON.parse(ls.savefiles);
 
-		//set this again since it got overwritten
-			//TODO: Replace this whole thing by loading each savefile individually so we don't have to set this again
-		Object.defineProperty(trackerCore_status.savefiles, 'current', {
-			value: 0,
-			writable: true
-		});
+		//check if the data is an array and does contain at least 1 array item
+		if (Array.isArray(parsedSavefiles) === true && parsedSavefiles?.length > 0) {
+
+			//loop through all savefiles
+			for (const item of parsedSavefiles) {
+
+				//and add the savefile by letting 'trackerCore_Savefile()' handle the verifying
+				trackerCore_status.savefiles.push(new trackerCore_Savefile(item));
+			}
+		} else {
+			//complain and use default
+			console.warn(`[MPO] Stored savefile in localStorage is either not an array or doesn't include any array items in it. Weird, isn't it? Array: "${parsedSavefiles}".`);
+			trackerCore_status.savefiles.push(new trackerCore_Savefile());
+		}
+
+	//else create a default savefile
+	} else {
+		trackerCore_status.savefiles.push(new trackerCore_Savefile());
 	}
 }
 
@@ -286,7 +302,7 @@ function boot_setupCounterObject () {
 		'stompedOthers',
 		'getStompedOn'
 	];
-	miscCounters.forEach(item => trackerCore_status['counters']['misc'][item] = new trackerCore_Counter('standAlone'));
+	miscCounters.forEach(item => trackerCore_status['counters']['misc'][item] = new trackerCore_Counter('standalone'));
 
 
 	//get all bonus stars
@@ -434,11 +450,11 @@ function boot_setupCounterObject () {
 			combines = [duplicateCounter];
 		}
 
-		//=== check whether the counter should be a 'standAlone', 'linked' or 'combined' and also do that ===
+		//=== check whether the counter should be a 'standalone', 'linked' or 'combined' and also do that ===
 
 		//create a stand-alone counter if it shouldn't be combined with any
 		if (combines.length <= 0) {
-			trackerCore_status['counters']['bonusStars'][key] = new trackerCore_Counter('standAlone');
+			trackerCore_status['counters']['bonusStars'][key] = new trackerCore_Counter('standalone');
 
 			//push this to the list of counters made
 			countersMade.push(currentCounterMade);
@@ -462,7 +478,7 @@ function boot_setupCounterObject () {
 				}
 			} else {
 				//if the linked counter can't be found then simply create a new, unique counter
-				trackerCore_status['counters']['bonusStars'][key] = new trackerCore_Counter('standAlone');
+				trackerCore_status['counters']['bonusStars'][key] = new trackerCore_Counter('standalone');
 			}
 
 		//list every counter that 'currentCounterName' combines

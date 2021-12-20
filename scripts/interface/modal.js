@@ -143,7 +143,13 @@ const modal_defaultAttributes = {
  * 		status [Object]
  * 			The current status of the modal. See explanation at the beginning of the file for a list of all status properties.
  */
-function modal_ModalObject (specifics) {
+function modal_ModalObject (specifics={}) {
+	//complain and use defaults if 'specifics' is invalid
+	if (typeof specifics !== 'object') {
+		console.warn(`[MPO] modal_ModalObject() received a non-object as 'specifics': "${specifics}".`);
+		specifics = {};
+	}
+
 	// === GET AND SET THE ID ===
 
 	//increase the total amount of modals made and use the new value as the ID

@@ -312,7 +312,13 @@ let inputfield_hosts = new WeakMap();
  * 			An array that lists all input-fields that are part of the form. Consists of DOM elements.
  * 			Will be null if this isn't a form.
  */
-function inputfield_FieldObject (specifics) {
+function inputfield_FieldObject (specifics={}) {
+	//complain and use defaults if 'specifics' is invalid
+	if (typeof specifics !== 'object') {
+		console.warn(`[MPO] inputfield_FieldObject() received a non-object as 'specifics': "${specifics}".`);
+		specifics = {};
+	}
+
 	// === GET AND SET THE ID ===
 
 	//set ID
@@ -606,6 +612,12 @@ function inputfield_FieldObject (specifics) {
  * 			A list of all forms this belongs to. Is an array consisting of DOM elements.
  */
 function inputfield_HostObject (specifics={}) {
+	//complain and use defaults if 'specifics' is invalid
+	if (typeof specifics !== 'object') {
+		console.warn(`[MPO] inputfield_HostObject() received a non-object as 'specifics': "${specifics}".`);
+		specifics = {};
+	}
+
 	//set the 'childList' to an empty array if it hasn't been defined yet
 	specifics.childList ??= [];
 
