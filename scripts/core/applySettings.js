@@ -18,13 +18,16 @@ var applySettings_defaultSettings = {
  * 				- `tag: 'tracker_counterTextColor'`: this needs to be the name of the setting! Used to identify which setting actually got updated.
  * 				- `HTMLAttributes: {'data-settingstag': 'tracker_counterTextColor'}`: again, needs to be the name of the setting. Used to find the setting whenever it has to be updated.
  * 			- If something other than a input-field is used then all it needs to do is call 'applySettings_apply()' with the correct arguments.
- * 				- Not using a input-field also means having to add the setting to the switch in 'applySettings_set()'.
+ * 				- Not using a input-field also means having to add the setting to the switch in 'applySettings_set()' and 'applySettings_validate()'.
  * 		- Add the default in 'applySettings_defaultSettings'.
  * 		- Create a function that applies the value (like, if the background should be changed then there has to be a function that actually changes the background).
  * 		- Add the function to 'applySettings_apply()' inside the switch.
  */
 
-/**
+/** Applies the value after the user changed settings.
+ *
+ * 	Note: This does NOT update the display in settings (like, it doesn't make sure that a checkbox is actually checked - it simply applies the value given to it, whether the checkbox in settings reflects that or not doesn't matter here).
+ * 	Basically, don't call this function directly to change a setting, use 'applySettings_set()' for that.
  *
  * 	Args:
  * 		newValue [*any*]
@@ -63,11 +66,12 @@ function applySettings_apply (newValue, settingName) {
 			//throw so the 'catch' block gets executed
 			default:
 				throw `[MPO] applySettings_apply() received a unknown 'settingsName': "${settingName}".`;
+				break;
 		}
 
 	//complain if something went wrong
 		//and return since we don't want to save a value that couldn't be applied
-		//TODO: add better error-reporting for the user to see
+		//TODO: add better error-reporting for the user to see (update: what better error-reporting?)
 	} catch (e) {
 		console.warn(`[MPO] applySettings_apply() could not apply the value "${newValue}" to the setting "${settingName}". Following error caused this:`);
 		console.log(e);
@@ -108,7 +112,7 @@ function applySettings_set (newValue, settingName) {
 		//this is for updating a input-field
 		default:
 			//get the input-field
-			const elem = document.querySelector(`[data-settingstag=${settingName}]`);
+			const elem = applySettings_getElement(settingName);
 
 			//update and return it
 				//'inputfield_setValue()' already returns whether it could be updated or not
@@ -116,6 +120,136 @@ function applySettings_set (newValue, settingName) {
 				return inputfield_setValue(elem, newValue);
 			}
 	}
+}
+
+/**	Validates whether a given value can be used for a setting or not.
+ *
+ * 	Args:
+ * 		value [*any*]
+ * 			The value that should be verified.
+ *
+ * 		setting [String/DOM Element]
+ * 			Either the name of the setting or the DOM element of it (the one with the 'data-settingstag' attribute).
+ *
+ * 	Returns [Boolean]:
+ * 		Whether the value can be used with that setting or not.
+ * 		Also returns false if it couldn't find the setting.
+ */
+function applySettings_validate (value, setting) {
+	//if it's a string then get the DOM element for the setting
+	if (typeof setting === 'string') {
+		//create variable for the name and the element
+		var settingName = setting;
+		var settingElem = applySettings_getElement();
+
+		//complain and return if the element couldn't be found
+		if (settingElem === null) {
+			console.warn(`[MPO] applySettings_validate() could not find the setting with the name "${setting}".`);
+			return false;
+		}
+
+	//else, if 'setting' isn't a string
+	} else {
+
+		//complain and return if it's not a DOM Element either
+		if (Object.isDOMElement(setting) !== true) {
+			console.warn(`[MPO] applySettings_validate() received a value for 'setting' that's neither a string nor a DOM Element: "${setting}"`);
+			return false;
+		}
+
+		//create variable for the name and the element
+		var settingElem = setting;
+		var settingName = setting.getAttribute('data-settingstag');
+
+		//complain and return if the element isn't a settings element (identified by it's 'data-settingstag' attribute)
+		if (settingName === null) {
+			console.warn(`[MPO] applySettings_validate() received a DOM element as 'setting' but it doesn't have a 'data-settingstag' attribute:`);
+			console.warn(setting);
+			return false;
+		}
+	}
+
+	//validate the value based on which setting it is
+	switch (settingName) {
+
+		//this simply validates a input-field
+		default:
+			return inputfield_validateValue(value, {
+				field: settingElem
+			});
+	}
+}
+
+/**	This removes all values in an object that aren't valid.
+ *
+ * 	This will get rid of all properties that aren't a setting (by checking whether it exists in 'applySettings_defaultSettings' or not).
+ * 	This will also get rid of all values that are undefined.
+ *
+ * 	Any removal will be logged to the console using 'console.warn()'.
+ *
+ * 	Args:
+ * 		objToVerify [Object]
+ * 			The object to verify where each property has the name and value of a setting.
+ * 			The function will validate all properties within this object.
+ *
+ * 	Returns [Object]:
+ * 		The object provided in 'objToVerify' except all values that aren't valid are removed.
+ * 		Returns an empty object if a non-object is given to it.
+ */
+function applySettings_validateAll (objToVerify, specifics={}) {
+	//the finished object with all validated values
+	let finishedObj = {};
+
+	//loop through the object to verify
+	for (const key in objToVerify) {
+
+		//complain and skip if the value isn't used
+		if (applySettings_defaultSettings[key] === undefined) {
+			console.warn(`[MPO] applySettings_validateAll() found an unused value of the name "${key}" that will be removed: "${objToVerify[key]}".`);
+			continue;
+		}
+
+		//check if the value is valid
+		if (applySettings_validate(objToVerify[key], key) === true) {
+
+			//and then add it to the verified/finished object
+			finishedObj[key] = objToVerify[key];
+		} else {
+			console.warn(`[MPO] applySettings_validateAll() found an invalid value of the name "${key}": "${objToVerify[key]}".`);
+		}
+	}
+
+	//loop through all setting names found in 'applySettings_defaultSettings'
+		//we loop through this one instead of 'objToVerify' to make sure it only contains properties of settings that are actually needed
+	for (const key in applySettings_defaultSettings) {
+
+		//make sure the value even exists
+			//this is to save time so we don't have to validate values that aren't even used
+		if (objToVerify[key] !== undefined) {
+
+			//and finally, check if the value is valid...
+			if (applySettings_validate(objToVerify[key], key) === true) {
+
+				//...and then apply it
+				finishedObj[key] = objToVerify[key];
+			}
+		}
+	}
+
+	//return the fully verified object
+	return finishedObj;
+}
+
+/**	Gets the DOM element of a setting, that likely being the input-field.
+ *
+ * 	Returns [DOM Element/null]:
+ * 		The DOM element of the setting, that likely being the input-field.
+ * 		Returns null if it couldn't be found.
+ */
+function applySettings_getElement (settingName) {
+	//get the element
+		//'.querySelector' automatically returns null if it couldn't be found
+	return document.querySelector(`[data-settingstag=${settingName}]`);
 }
 
 /**	This applies all settings.

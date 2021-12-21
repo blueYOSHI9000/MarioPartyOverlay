@@ -161,6 +161,7 @@
 //TODO: Replace this with a more dynamic approach
 	//update: how so?
 		//maybe the categories? ('bonusStars', 'spaces', etc.)
+	//update 2: I think I already did this?
 var trackerCore_status = {
 	controls: {
 		action: 'add',
@@ -216,6 +217,10 @@ function trackerCore_Savefile (specifics={}) {
 		specifics = {};
 	}
 
+
+
+	//=== SET METADATA ===
+
 	//create a empty object to fill-in afterwards
 	this._metadata = {};
 
@@ -225,27 +230,41 @@ function trackerCore_Savefile (specifics={}) {
 	this._metadata.settingsType = (['noSettings', 'standalone', 'layered'].indexOf(specifics.metadata_settingsType) !== -1) ? specifics.metadata_settingsType
 	                            : 'noSettings';
 
+
+
+	//=== SET GAME & PLAYERS ===
+
 	//set the game but only if it's valid
-		//now, use your wildest imagination
-		//and then some more
-		//just imagine that this is an actual, useful check that actually checks whether the game entered is valid or not
+		//get a list of all game abbreviations and then check if 'specifics.game' is one of them
+	this.game = (dbparsing_getAllGameAbbreviations().indexOf(specifics.game) !== -1) ? specifics.game : '_all';
 
-		//...and then replace it with an actual useful implementation
-		//TODO
-	this.game = (specifics.game !== undefined) ? specifics.game : '_all';
 
-	//create a empty array which will then be filled in
+	//create an empty array which will then be filled in
 	this.players = [];
 
-	//set the 'playerAmount' property of the array to 4
-		//TODO: Replace this with a getter/setter pair that actually does the extremely difficult job of at least working properly
+	//set the 'playerAmount' property of the array
 	Object.defineProperty(this.players, 'playerAmount', {
+
+		//it shouldn't show up in for loops
 		enumerable: false,
-		value: 4
+
+		//return the length of the array
+		get: () => {return this.players.length},
+
+		//refuse to edit the value
+			//TODO: this should automatically create a new player (or remove one) whenever someone tries to set it
+			//or you create a dedicated function for that which is probably better since that can take arguments
+		set: (newValue) => {return;}
 	});
 
-	//if no players are specified then use the default
-	if (Array.isArray(specifics.players) !== true) {
+	//if players are specified then create a 'trackerCore_Player()' object for each player specified (everything is handled inside that function so no need to get our hands dirty here)
+	if (Array.isArray(specifics.players) === true) {
+		for (const item of specifics.players) {
+			this.players.push(new trackerCore_Player(item));
+		}
+
+	//else, if no players are specified then use the defaults
+	} else {
 		this.players.push(new trackerCore_Player({
 			character: 'mario',
 			com: false
@@ -262,27 +281,29 @@ function trackerCore_Savefile (specifics={}) {
 			character: 'peach',
 			com: true
 		}));
-
-	//otherwise create one player for each one specified (everything is handled inside that function so no need to get our hands dirty here)
-	} else {
-		for (const item of specifics.players) {
-			this.players.push(new trackerCore_Player(item));
-		}
 	}
 
-	//set 'settings' but only if it's valid - otherwise use an empty object
-		//again, imagination is important, so imagine that there's a good check here
-		//as a kid they told me my imagination is great so I sure hope the same applies to you too!
-		//TODO
-	this.settings = (typeof specifics.settings === 'object') ? specifics.settings
-	              : {};
+
+
+	//=== SET SETTINGS ===
+
+	//set 'settings'
+		//use the provided object if there is one (and then validate each value inside it -- all invalid values are removed)
+		//otherwise simply use a empty object
+	this.settings = (typeof specifics.settings !== undefined) ? applySettings_validateAll(specifics.settings) : {};
+
+
+
+	//=== SET PER-COUNTER OPTIONS ===
 
 	//create an empty object to be filled in afterwards
 	this.perCounterOptions = {};
 
-	//if 'perCounterOptions' has not been provided then set it to an empty object
-		//this is done because we need to check whether
-	specifics.perCounterOptions ??= {};
+	//if the 'perCounterOptions' specific isn't an object then replace it with an empty one
+		//this is done because we need to check properties of this object so it's best to make sure that it is actually an object
+	if (typeof specifics.perCounterOptions !== 'object') {
+		specifics.perCounterOptions = {};
+	}
 
 	//the following for loop goes through all counters specified in 'trackerCore_status.counters' and adds them all to the 'perCounterOptions' property
 		//two for loops are needed because all counters are categorized into various categories so it has to loop through all categories so it can THEN loop through all counters
@@ -298,7 +319,7 @@ function trackerCore_Savefile (specifics={}) {
 		//the following loops through all counters
 			//it simply loops through all available counters in 'trackerCore_status.counters[categoryKey]'
 			//it first checks whether the current category was specified in 'specifics.perCounterOptions'
-			//if yes then provide each counter specified in 'specifics.perCounterOptions', if not then 'trackerCore_CounterOptions()' is called without providing anything
+			//if yes then create a 'trackerCore_CounterOptions()' object while providing the counter specified in 'specifics.perCounterOptions', if not then 'trackerCore_CounterOptions()' is called without providing anything
 
 			//this is split into two identical loops because we can't provide the counters in 'specifics.perCounterOptions' without a if check
 			//but doing that for every single counter is redundant and wasteful (since there might be a fuck-ton of counters at some point)
@@ -431,19 +452,19 @@ function trackerCore_Player (specifics={}) {
 		specifics = {};
 	}
 
-	//set name but use null as default
-	this.name = specifics.name ?? null;
+	//set name but only use the provided one if it's a string, otherwise use null
+	this.name = (typeof specifics.name === 'string') ? specifics.name : null;
 
-	//set character and use 'mario' as default
-	this.character = specifics.character ?? 'mario';
+	//set character but only use the provided one if it's valid, otherwise use Mario
+	this.character = (dbparsing_getAllCharacterNames().indexOf(specifics.character) !== -1) ? specifics.character : 'mario';
 
 	//set COM and use false as default
-	this.com = specifics.com ?? false;
+	this.com = (typeof specifics.com === 'boolean') ? specifics.com : false;
 
 	//set stats to be an empty object...
 	this.stats = {};
 
-	//loop through all counter categories
+	//loop through all available counter categories
 	for (const categoryKey in trackerCore_status.counters) {
 
 		this.stats[categoryKey] = {}

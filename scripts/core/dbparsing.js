@@ -142,3 +142,23 @@ function dbparsing_getIcon (path, game, check_all=true) {
 	//just return the first one because we don't even have a theme system
 	return 'images/' + icons[0].filePath;
 }
+
+/**	This returns a list of all game abbreviations (like 'mp1', 'mpds', etc). Includes '_all'.
+ *
+ * 	Returns [Array]:
+ * 		An array consisting of strings. Each array item is an abbreviation.
+ */
+function dbparsing_getAllGameAbbreviations () {
+	//surprisingly all it takes
+	return mpdb._index;
+}
+
+/**	This returns a list of all character names (like 'mario', 'peach', 'dryBones', etc).
+ *
+ * 	Returns [Array]:
+ * 		An array consisting of strings.
+ */
+function dbparsing_getAllCharacterNames () {
+	//surprisingly all it takes
+	return mpdb._all.characters._index;
+}

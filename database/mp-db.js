@@ -1,5 +1,6 @@
 // Copyright 2021 MarioPartyOverlay AUTHORS
 // SPDX-License-Identifier: CC-BY-4.0
+
 const mpdb = {
 	_info: {
 		__copyrightNotice__: "Copyright 2021 MarioPartyOverlay AUTHORS",

@@ -73,7 +73,7 @@
  *
  * 	color
  * 		A way to select a custom color.
- * 		Will store the selected color in hex form ('#ffffff' being white) as a string.
+ * 		Will store the selected color in hex form ('#ffffff' being white) as a string. [NOTE: currently, any form that's allowed by CSS is able to be stored in here -- this is subject to change]
  * 		Variations:
  * 			- regular <default>: A regular color selection. Basically the same as '<input type="color">'.
  *
@@ -362,7 +362,7 @@ function inputfield_FieldObject (specifics={}) {
 
 	//check if 'defaultValue' is valid and if not, replace it with a default value
 		//note that we pass 'attributes' here despite those still getting verified in here but that doesn't matter here since it only needs attribute properties that we don't modify here
-	if (inputfield_validateValue(attributes.defaultValue, specifics.fieldType, attributes) !== true) {
+	if (inputfield_validateValue(attributes.defaultValue, {fieldType: specifics.fieldType, attributes: attributes}) !== true) {
 		attributes.defaultValue = inputfield_getDefaultValue(specifics.fieldType, attributes);
 	}
 
@@ -1134,17 +1134,65 @@ function inputfield_setValue (field, value, specifics={}) {
  * 		value [*any*]
  * 			The value that should be validated.
  *
- * 		fieldType [String]
- * 			The fieldType that should be used to validate.
+ * 		specifics [Object]
+ * 			Contains the following:
  *
- * 		attributes [Object]
- * 			The attributes of the input-field.
- * 			This is only really required to get the 'checkboxValue' and the 'options' for checkboxes and radio fields respectively but it's best to always pass it.
+ * 				fieldType [String]
+ * 					The fieldType that should be used to validate.
+ *
+ * 				attributes [Object]
+ * 					The attributes of the input-field.
+ * 					This is only really required to get the 'checkboxValue' and the 'options' for checkboxes and radio fields respectively but it's best to always pass it.
+ *
+ * 				field [Object/DOM Element] <optional>
+ * 					A 'FieldObject' or the DOM Element of the input-field.
+ * 					Can be used instead of 'fieldType' and 'attributes'.
+ * 					Will automatically fetch 'fieldType' and 'attributes' if provided.
  *
  * 	Returns [Boolean]:
  * 		true if it's valid, false if not.
  */
-function inputfield_validateValue (value, fieldType, attributes) {
+function inputfield_validateValue (value, specifics={}) {
+	//complain and use defaults if 'specifics' is invalid
+	if (typeof specifics !== 'object') {
+		console.warn(`[MPO] inputfield_validateValue() received a non-object as 'specifics': "${specifics}".`);
+		specifics = {};
+	}
+
+	//check if the 'field' specific is used
+	if (specifics.field !== undefined) {
+
+		//if 'field' is a DOM Element then get the 'FieldObject' for it
+		if (Object.isDOMElement(specifics.field) === true) {
+			specifics.field = inputfield_fields.get(specifics.field);
+		}
+
+		//for quick access
+		const field = specifics.field;
+
+		//check if 'fieldType' and 'attributes' are actually present
+		if (typeof field.fieldType === 'string' && typeof field.attributes === 'object') {
+
+			//and then apply them
+			specifics.fieldType  = field.fieldType ;
+			specifics.attributes = field.attributes;
+
+		//else complain
+			//but don't return because the switch will do that anyway
+		} else {
+			console.warn(`[MPO] inputfield_validateValue() got a invalid 'field' argument: "${field}" (either 'field.fieldType' is not a string: "${field.fieldType}" or 'field.attributes' is not an object: "${field.attributes}").`);
+
+			//apply them because one might be correct ¯\_(ツ)_/¯
+			specifics.fieldType  = field.fieldType ;
+			specifics.attributes = field.attributes;
+		}
+	}
+
+	//for quick access
+	const fieldType  = specifics.fieldType ;
+	const attributes = specifics.attributes;
+
+	//check which value is true based on which 'fieldType' it is
 	switch (fieldType) {
 
 		case 'form':
@@ -1184,8 +1232,9 @@ function inputfield_validateValue (value, fieldType, attributes) {
 			return true;
 
 		case 'color':
-			//TODO: add an actual check here
-			return true;
+			//with this the browser automatically checks whether the value is allowed for the 'color' CSS property
+				//this means that anything from 'red' to '#ffffff' to 'rgba(0, 0, 0, 0)' will be true just like regular CSS
+			return CSS.supports('color', value);
 
 		case 'file':
 			break;

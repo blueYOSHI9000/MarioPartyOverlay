@@ -114,6 +114,8 @@ const boot_scriptsToLoad = [
 
 		//database-parsing
 			//this parses the database file (the actual database is located at 'database/mp-db.js')
+			//it should be mentioned that this file is NOT self-contained!
+			//this file is part of the actual codebase and can (and should) access various parts, like the current theme or current players, etc
 			'scripts/core/dbparsing.js',
 
 		//helper file
