@@ -209,6 +209,9 @@ Object.defineProperty(trackerCore_status.savefiles, 'current', {
  * 				settings [Object] <nothing>
  *
  * 				perCounterOptions [Object] <none>
+ *
+ * 	Constructs:
+ * 		*See documentation at the top of this file under 'trackerCore_status' > 'savefiles' > '*array item*'.
  */
 function trackerCore_Savefile (specifics={}) {
 	//complain and use defaults if 'specifics' is invalid
