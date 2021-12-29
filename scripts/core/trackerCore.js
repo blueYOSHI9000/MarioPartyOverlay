@@ -33,9 +33,15 @@
 			This is a list of all savefiles.
 			This includes all info that each savefile saves like the current game, players, stats.
 
-			- current [Number]
+			- currentSlot [Number]
 				The array index of the currently selected savefile.
 				This is a unique property that's added to the array and it won't appear in any 'for' loops. Kinda like the 'length' property.
+
+			> current [*Object*]
+				This simply redirects to the currently selected array item. This is not a property on it's own.
+				This is the best way to get the current savefile as it's always up-to-date (the current savefile is dynamically calulated the moment this property is used).
+
+				To be more accurate, it's a getter/setter pair (setter does nothing).
 
 			> savefileless [Object]
 				This is a unique savefile that only stores settings.
@@ -175,10 +181,28 @@ var trackerCore_status = {
 	}
 };
 
-//set the 'current' property for the 'savefiles' array
+//set the 'currentSlot' property for the 'savefiles' array
 	//this has to be done this way if we don't want it to be iterable
-Object.defineProperty(trackerCore_status.savefiles, 'current', {
+Object.defineProperty(trackerCore_status.savefiles, 'currentSlot', {
 	value: 0,
+	writable: true
+});
+
+//create the 'current' property which simply redirects to the current savefile
+Object.defineProperty(trackerCore_status.savefiles, 'current', {
+	get () {
+		return this[this.currentSlot];
+	},
+	set (value) {
+		return;
+	}
+})
+
+//create the "savefile-less" property
+	//just a empty object for now
+	//this will be set-up properly in 'boot_loadLocalStorage()'
+Object.defineProperty(trackerCore_status.savefiles, 'savefileless', {
+	value: {},
 	writable: true
 });
 
@@ -191,11 +215,14 @@ Object.defineProperty(trackerCore_status.savefiles, 'current', {
  * 			In addition, unless mentioned otherwise it will always fall back to the default whenever a argument is invalid. This won't be reported to the console (with few exceptions).
  * 			Contains the following properties:
  *
- * 				premade [Object/String] <none>
+ * 				_premade [Object/String] <none>
  * 					You can provide a pre-made 'trackerCore_Savefile' object in this and it will automatically fetch all values inside it.
  * 					This can also be a stringified JSON object, in which case it will automatically be parsed.
- * 					If this is used it will overwrite all other arguments.
+ * 					Other values specified WILL take priority over the values found in '_premade' (unless the value is null).
  * 					If this is invalid it will be ignored completely.
+ *
+ * 				metadata_savefileless [Boolean] <false>
+ * 					If true this is a special "savefile-less" savefile that only stores settings.
  *
  * 				metadata_settingsType [String] <'noSettings'>
  * 					See '_metadata' > 'settingsType' in the documentation.
@@ -222,70 +249,115 @@ function trackerCore_Savefile (specifics={}) {
 
 
 
+	//=== LOAD PREMADE OBJECT ===
+
+	//parse the JSON string (if it is a string)
+	if (typeof specifics._premade === 'string') {
+
+		//put it in a 'try ... catch' because this WILL throw an error and break everything otherwise
+		try {
+
+			//actually parse the string
+			specifics._premade = JSON.parse(specifics._premade);
+
+		} catch (e) {
+			//complain...
+			console.warn(e);
+			console.warn(`[MPO]	trackerCore_Savefile() could not parse the JSON string in '_premade' (following string is cut-off at 100 characters): "${specifics._premade.substring(0, 100)}".`);
+
+			//...and pretend like this never happened
+				//this is done so the rest of the function doesn't think there's an actual '_premade' object it should use
+			specifics._premade = undefined;
+		}
+	}
+
+	//apply the pre-made object (if there is one)
+		//but only apply them if there isn't already a value for it
+	if (typeof specifics._premade === 'object') {
+		specifics.metadata_settingsType ??= specifics._premade?.metadata?.settingsType;
+		specifics.metadata_savefileless ??= specifics._premade?.metadata?.savefileless;
+
+		specifics.game              ??= specifics._premade?.game;
+		specifics.players           ??= specifics._premade?.players;
+		specifics.settings          ??= specifics._premade?.settings;
+		specifics.perCounterOptions ??= specifics._premade?.perCounterOptions;
+	} else {
+		//set it to undefined to make sure the rest of the function doesn't rely on a object that doesn't exist
+			//more of a fail-safe than anything
+		specifics._premade = undefined;
+	}
+
+
+
 	//=== SET METADATA ===
 
 	//create a empty object to fill-in afterwards
 	this._metadata = {};
 
 	//set 'settingsType'
-		//use the one specified in 'specifics' but only if it's valid (if it's one of the strings in the array)
+		//use 'standalone' if it's a "savefile-less" savefile
+		//otherwise use the one specified in 'specifics' but only if it's valid (if it's one of the strings in the array)
 		//otherwise use 'noSettings'
-	this._metadata.settingsType = (['noSettings', 'standalone', 'layered'].indexOf(specifics.metadata_settingsType) !== -1) ? specifics.metadata_settingsType
+	this._metadata.settingsType = (specifics.metadata_savefileless === true) ? 'standalone'
+	                            : (['noSettings', 'standalone', 'layered'].indexOf(specifics.metadata_settingsType) !== -1) ? specifics.metadata_settingsType
 	                            : 'noSettings';
 
 
 
 	//=== SET GAME & PLAYERS ===
 
-	//set the game but only if it's valid
-		//get a list of all game abbreviations and then check if 'specifics.game' is one of them
-	this.game = (dbparsing_getAllGameAbbreviations().indexOf(specifics.game) !== -1) ? specifics.game : '_all';
+	//don't set the game & players if it's a "savefile-less" savefile
+	if (specifics.metadata_savefileless !== true) {
+
+		//set the game but only if it's valid
+			//get a list of all game abbreviations and then check if 'specifics.game' is one of them
+		this.game = (dbparsing_getAllGameAbbreviations().indexOf(specifics.game) !== -1) ? specifics.game : '_all';
 
 
-	//create an empty array which will then be filled in
-	this.players = [];
+		//create an empty array which will then be filled in
+		this.players = [];
 
-	//set the 'playerAmount' property of the array
-	Object.defineProperty(this.players, 'playerAmount', {
+		//set the 'playerAmount' property of the array
+		Object.defineProperty(this.players, 'playerAmount', {
 
-		//it shouldn't show up in for loops
-		enumerable: false,
+			//it shouldn't show up in for loops
+			enumerable: false,
 
-		//return the length of the array
-		get: () => {return this.players.length},
+			//return the length of the array
+			get: () => {return this.players.length},
 
-		//refuse to edit the value
-			//TODO: this should automatically create a new player (or remove one) whenever someone tries to set it
-			//or you create a dedicated function for that which is probably better since that can take arguments
-		set: (newValue) => {return;}
-	});
+			//refuse to edit the value
+				//TODO: this should automatically create a new player (or remove one) whenever someone tries to set it
+				//or you create a dedicated function for that which is probably better since that can take arguments
+			set: (newValue) => {return;}
+		});
 
-	//if players are specified then create a 'trackerCore_Player()' object for each player specified (everything is handled inside that function so no need to get our hands dirty here)
-	if (Array.isArray(specifics.players) === true) {
-		for (const item of specifics.players) {
-			this.players.push(new trackerCore_Player(item));
+		//if players are specified then create a 'trackerCore_Player()' object for each player specified (everything is handled inside that function so no need to get our hands dirty here)
+		if (Array.isArray(specifics.players) === true) {
+			for (const item of specifics.players) {
+				this.players.push(new trackerCore_Player(item));
+			}
+
+		//else, if no players are specified then use the defaults
+		} else {
+			this.players.push(new trackerCore_Player({
+				character: 'mario',
+				com: false
+			}));
+			this.players.push(new trackerCore_Player({
+				character: 'luigi',
+				com: true
+			}));
+			this.players.push(new trackerCore_Player({
+				character: 'yoshi',
+				com: true
+			}));
+			this.players.push(new trackerCore_Player({
+				character: 'peach',
+				com: true
+			}));
 		}
-
-	//else, if no players are specified then use the defaults
-	} else {
-		this.players.push(new trackerCore_Player({
-			character: 'mario',
-			com: false
-		}));
-		this.players.push(new trackerCore_Player({
-			character: 'luigi',
-			com: true
-		}));
-		this.players.push(new trackerCore_Player({
-			character: 'yoshi',
-			com: true
-		}));
-		this.players.push(new trackerCore_Player({
-			character: 'peach',
-			com: true
-		}));
 	}
-
 
 
 	//=== SET SETTINGS ===
@@ -293,7 +365,11 @@ function trackerCore_Savefile (specifics={}) {
 	//set 'settings'
 		//use the provided object if there is one (and then validate each value inside it -- all invalid values are removed)
 		//otherwise simply use a empty object
-	this.settings = (typeof specifics.settings !== undefined) ? applySettings_validateAll(specifics.settings) : {};
+	this.settings = (specifics.settings !== undefined) ? applySettings_validateAll(specifics.settings) : {};
+
+	if (this._metadata.settingsType === 'standalone') {
+		this.settings.fillIn(applySettings_defaultSettings);
+	}
 
 
 
@@ -473,7 +549,7 @@ function trackerCore_Player (specifics={}) {
 		this.stats[categoryKey] = {}
 
 		//check if stats for this category have already been provided
-		if (typeof specifics.stats[categoryKey] === 'object') {
+		if (typeof specifics.stats === 'object' && typeof specifics.stats[categoryKey] === 'object') {
 
 			//loop through all stats provided for this category
 			for (const statKey in specifics.stats[categoryKey]) {
@@ -560,21 +636,6 @@ function trackerCore_Counter (counterRelation, relation) {
 	}
 }
 
-/**	Gets the specified savefile.
- *
- * 	Args:
- * 		savefileSlot [Number] <current>
- * 			Which savefile it should get.
- * 			Gets the current savefile on default.
- *
- * 	Returns [Object/null]:
- * 		Returns the specified savefile. This will be a array item of 'trackerCore_status.savefiles'.
- * 		Returns null if the savefile couldn't be found.
- */
-function trackerCore_getSavefileFromStatus (savefileSlot=trackerCore_status.savefiles.current) {
-	return trackerCore_status.savefiles[savefileSlot] ?? null;
-}
-
 /**	Gets the specified counter from 'trackerCore_status'.
  *
  * 	Args:
@@ -591,10 +652,55 @@ function trackerCore_getCounter (counterName) {
 	return trackerCore_status['counters'].fetchProperty(counterName);
 }
 
+/**	Gets a savefile. Can also be used to verify that a given 'savefileSlot' is valid.
+ *
+ * 	Args:
+ * 		savefileSlot [Number/String] <current>
+ * 			The savefile slot that should be used.
+ * 			Will use the currently selected one on default.
+ *
+ * 	Returns [Object/null]:
+ * 		The savefile object in 'trackerCore_status.savefiles[*slot*]'.
+ * 		Or null if the savefile couldn't be found.
+ */
+function trackerCore_getSavefile (savefileSlot=trackerCore_status.savefiles.currentSlot) {
+	//convert string to number
+	if (typeof savefileSlot === 'string') {
+		savefileSlot = Number(savefileSlot);
+	}
+
+	//complain and return if not a number
+	if (typeof savefileSlot !== 'number') {
+		console.warn(`[MPO] trackerCore_getSavefile() received a non-number as 'savefileSlot' (might've been converted from a string): "${savefileSlot}".`);
+		return null;
+	}
+
+	//complain and return if the slot is invalid
+	if (savefileSlot === NaN || savefileSlot === Infinity || savefileSlot === -Infinity || savefileSlot < 0) {
+		console.warn(`[MPO] trackerCore_getSavefile() received a invalid number as 'savefileSlot': "${savefileSlot}".`);
+		return null;
+	}
+
+	//get the savefile
+	let savefile = trackerCore_status.savefiles[savefileSlot];
+
+	//complain and return if not an object
+	if (typeof savefile !== 'object') {
+		console.warn(`[MPO] trackerCore_getSavefile() found a non-object in savefile slot "${savefileSlot}".`);
+		return null;
+	}
+
+	return savefile;
+}
+
 /**	This saves the current stats to localStorage.
  *
  * 	Note: This is temporary, this does not consider a potentital character-limit to a single localStorage entry (if there is one) and it also does not save which counters are displayed.
  */
 function trackerCore_saveSavefiles () {
 	localStorage.setItem('savefiles', JSON.stringify(trackerCore_status.savefiles));
+
+	//set these properties manually since they're not enumerable
+	localStorage.setItem('savefileless', JSON.stringify(trackerCore_status.savefiles.savefileless));
+	localStorage.setItem('currentSavefileSlot', trackerCore_status.savefiles.currentSlot);
 }

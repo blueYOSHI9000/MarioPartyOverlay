@@ -181,7 +181,7 @@ function buildSite_buildSettings (docFrag) {
 		cElem('span', elem)
 			.textContent = 'Change counter text color: ';
 		inputfield_createField('color', elem, {
-			onchange: applySettings_apply,
+			onchange: applySettings_onChangeCall,
 			tag: 'tracker_counterTextColor',
 			HTMLAttributes: {'data-settingstag': 'tracker_counterTextColor'}
 		});

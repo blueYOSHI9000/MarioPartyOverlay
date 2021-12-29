@@ -247,15 +247,6 @@ function boot_loadLocalStorage () {
 		ls = localStorage;
 	}
 
-	//if settings were present then take them
-	if (ls.settings !== undefined) {
-		applySettings_settings = JSON.parse(ls.settings);
-
-	//if not then use the default ones
-	} else {
-		applySettings_settings = applySettings_defaultSettings;
-	}
-
 	//load savefiles if present
 		//this does not need default behaviour as the defaults are already there
 	if (ls.savefiles !== undefined) {
@@ -269,7 +260,7 @@ function boot_loadLocalStorage () {
 			for (const item of parsedSavefiles) {
 
 				//and add the savefile by letting 'trackerCore_Savefile()' handle the verifying
-				trackerCore_status.savefiles.push(new trackerCore_Savefile(item));
+				trackerCore_status.savefiles.push(new trackerCore_Savefile({_premade: item, metadata_savefileless: false}));
 			}
 		} else {
 			//complain and use default
@@ -280,6 +271,29 @@ function boot_loadLocalStorage () {
 	//else create a default savefile
 	} else {
 		trackerCore_status.savefiles.push(new trackerCore_Savefile());
+	}
+
+	//if a "savefile-less" savefile is stored then use it
+		//'trackerCore_Savefile()' handles all the verifying
+	if (ls.savefileless !== undefined) {
+		trackerCore_status.savefiles.savefileless = new trackerCore_Savefile({_premade: ls.savefileless, metadata_savefileless: true, metadata_settingsType: 'standalone'});
+
+	//else create a default savefile
+	} else {
+		trackerCore_status.savefiles.savefileless = new trackerCore_Savefile({                           metadata_savefileless: true, metadata_settingsType: 'standalone'});
+	}
+
+	//check if the currently selected savefile is stored
+		//note that we don't need a 'else' for this because the default (0) is already set
+		//so if the stores value isn't valid we simply don't use the value and keep the default value
+	if (ls.currentSavefileSlot !== undefined) {
+
+		//convert it to a number
+		let currentSavefileSlot = Number(ls.currentSavefileSlot);
+
+		//select the savefile
+			//we don't need to verify if it's correct since this function already does that
+		updatesTracker_loadSavefile(currentSavefileSlot);
 	}
 }
 

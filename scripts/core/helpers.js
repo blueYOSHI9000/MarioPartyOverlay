@@ -213,7 +213,7 @@ Object.defineProperty(Object.prototype, 'fetchProperty', {value: function (path,
  *
  * 	This will replace any undefined property with a property from 'defaultObj'.
  *
- * 	This can be called on an object like 'obj.fillInObject()' where 'obj' is a variable.
+ * 	This can be called on an object like 'obj.fillIn()' where 'obj' is a variable.
  * 	Any value with undefined will be overwritten (even if it was set to undefined on purpose).
  * 	This will only take values from 'defaultObj' that are enumerable.
  *

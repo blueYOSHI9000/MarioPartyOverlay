@@ -121,7 +121,7 @@ function updatesTracker_updateCounter (counterName, player, action=updatesTracke
  */
 function updatesTracker_getStat (counterName, player) {
 	//get the actual stat
-	let stat = trackerCore_getSavefileFromStatus()['players'][player - 1]['stats'].fetchProperty(counterName);
+	let stat = trackerCore_getSavefile().players[player - 1].stats.fetchProperty(counterName);
 
 	//if stat doesn't exist yet then set it to 0
 	stat ??= 0;
@@ -162,7 +162,7 @@ function updatesTracker_setStat (counterName, player, value) {
 	}
 
 	//set the stat and save the response (Boolean of whether it was successful or not)
-	let result = trackerCore_getSavefileFromStatus()['players'][player - 1]['stats'].fetchProperty(counterName, {setTo: value});
+	let result = trackerCore_getSavefile().players[player - 1].stats.fetchProperty(counterName, {setTo: value});
 
 	return result;
 }
@@ -185,7 +185,7 @@ function updatesTracker_getCharacter (player) {
 
 	//use 'player - 1' since it's an array starting at 0
 		//if the character couldn't be found (is undefined) then it will simply return false
-	return trackerCore_getSavefileFromStatus().players[player - 1]?.character ?? false;
+	return trackerCore_getSavefile().players[player - 1]?.character ?? false;
 }
 
 /**	Change the character of a single player.
@@ -199,7 +199,7 @@ function updatesTracker_getCharacter (player) {
  */
 function updatesTracker_setCharacter (player, charName) {
 	//update 'trackerCore_status'
-	trackerCore_getSavefileFromStatus()['players'][player - 1]['character'] = charName;
+	trackerCore_getSavefile()['players'][player - 1]['character'] = charName;
 
 	//update the visual
 	trackerInterface_updateCharacter(player);
@@ -216,7 +216,7 @@ function updatesTracker_setCharacter (player, charName) {
  * 		The current game in the format of 'all', 'mp1', 'mp4', 'mptt100', etc.
  */
 function updatesTracker_getGame (savefileSlot) {
-	return trackerCore_getSavefileFromStatus(savefileSlot).game;
+	return trackerCore_getSavefile(savefileSlot).game;
 }
 
 /**	Gets the current default action of the tracker.
@@ -287,4 +287,106 @@ function updatesTracker_setAmount (newAmount) {
 
 	//update navbar display
 	handleNavbar_updateAmount();
+}
+
+/**	Creates a new savefile.
+ *
+ * 	The newly created savefile will only have defaults (for now).
+ */
+function updatesTracker_createSavefile () {
+	trackerCore_status.savefiles.push(new trackerCore_Savefile());
+
+	trackerCore_saveSavefiles();
+}
+
+/**	Selects and loads a savefile.
+ *
+ * 	Args:
+ * 		savefileSlot [Number]
+ * 			The slot that should be loaded. Starts at 0.
+ *
+ * 	Returns [Boolean]:
+ * 		true if the savefile got loaded, false if not.
+ */
+function updatesTracker_loadSavefile (savefileSlot) {
+	//complain and return if 'savefileSlot' is not a number
+	if (typeof savefileSlot !== 'number') {
+		console.warn(`[MPO] updatesTracker_loadSavefile() received a non-number as 'savefileSlot': "${savefileSlot}".`);
+		return false;
+	}
+
+	//complain and return if the savefile couldn't be found
+		//on one hand, this arguably isn't the best way to do it
+		//on the other hand, this is arguably perfect because this function is always used when a savefile should be gotten so either it fails to grab it now or later
+	if (trackerCore_getSavefile(savefileSlot) === null) {
+		console.warn(`[MPO] updatesTracker_selectSavefile() received a invalid 'savefileSlot': "${savefileSlot}".`);
+		return false;
+	}
+
+	//update the currently selected savefile
+	trackerCore_status.savefiles.currentSlot = savefileSlot;
+
+	//update all visuals
+	trackerInterface_updateVisuals();
+
+	//apply all settings
+	applySettings_applyAll(true);
+
+	//save to localStorage
+	trackerCore_saveSavefiles();
+
+	//return true as it's been successfully loaded
+	return true;
+}
+
+/**	Deletes a savefile.
+ *
+ * 	Args:
+ * 		savefileSlot [Number]
+ * 			The savefile slot that should be deleted.
+ *
+ * 	Returns [Boolean]:
+ * 		true if it got successfully deleted, false if not.
+ */
+function updatesTracker_deleteSavefile (savefileSlot) {
+	//complain and return if 'savefileSlot' is not a number
+	if (typeof savefileSlot !== 'number') {
+		console.warn(`[MPO] updatesTracker_deleteSavefile() received a non-number as 'savefileSlot': "${savefileSlot}.`);
+		return false;
+	}
+
+	//make sure the savefile exists
+	if (trackerCore_getSavefile(savefileSlot) === null) {
+		console.warn(`[MPO] updatesTracker_deleteSavefile() couldn't find the savefile on slot "${savefileSlot}".`);
+		return false;
+	}
+
+	//make sure we're not deleting the only available savefile
+	if (trackerCore_status.savefiles.length <= 1) {
+		console.warn(`[MPO] updatesTracker_deleteSavefile() can't delete the savefile because it's the last one.`);
+		return false;
+	}
+
+	//get the currently selected savefile slot
+	let currentSavefileSlot = trackerCore_status.savefiles.currentSlot
+
+	//remove the specified savefile
+		//note that we don't need to worry about the currently selected savefile being out-of-bounds since we immediately select savefile 0 afterwards
+	trackerCore_status.savefiles.splice(savefileSlot, 1);
+
+	//if the currently selected savefile was removed then select slot 0
+	if (savefileSlot === currentSavefileSlot) {
+		updatesTracker_loadSavefile(0);
+
+	//if the savefile removed was higher than the currently selected savefile then decrease '[...].savefiles.currentSlot' by 1 so it's accurate again
+		//we don't need to load the savefile since it's already loaded, we only need to update this variable to be accurate again since we removed a array item
+	} else if (savefileSlot < currentSavefileSlot) {
+		trackerCore_status.savefiles.currentSlot -= 1;
+	}
+
+	//and finally save it
+	trackerCore_saveSavefiles();
+
+	//and also return true since it was removed successfully
+	return true;
 }

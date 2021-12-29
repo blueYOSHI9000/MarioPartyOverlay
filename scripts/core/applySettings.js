@@ -1,55 +1,226 @@
 // Copyright 2021 MarioPartyOverlay AUTHORS
 // SPDX-License-Identifier: Apache-2.0
 
-//this will store all settings with their current value
-var applySettings_settings = {};
-
 //this stores default values for all settings
 var applySettings_defaultSettings = {
 	'tracker_counterTextColor': '#000000'
 };
 
 /**	=== ADDING A NEW SETTING ===
- *
- * 	To add a new setting, the following things have to be done:
- * 		- Add the interface for it in 'buildSite_buildSettings()' in 'interface/buildSite.js'.
- * 			- Note that if a input-field is used then use the following attributes:
- * 				- `onchange: applySettings_apply`: so it actually applies the value whenever the user changes it.
- * 				- `tag: 'tracker_counterTextColor'`: this needs to be the name of the setting! Used to identify which setting actually got updated.
- * 				- `HTMLAttributes: {'data-settingstag': 'tracker_counterTextColor'}`: again, needs to be the name of the setting. Used to find the setting whenever it has to be updated.
- * 			- If something other than a input-field is used then all it needs to do is call 'applySettings_apply()' with the correct arguments.
- * 				- Not using a input-field also means having to add the setting to the switch in 'applySettings_set()' and 'applySettings_validate()'.
- * 		- Add the default in 'applySettings_defaultSettings'.
- * 		- Create a function that applies the value (like, if the background should be changed then there has to be a function that actually changes the background).
- * 		- Add the function to 'applySettings_apply()' inside the switch.
+
+	To add a new setting, the following things have to be done:
+		- Add the interface for it in 'buildSite_buildSettings()' (found in 'interface/buildSite.js').
+
+			> If a input-field is used the following attributes should be used:
+				- `onchange: applySettings_onChangeCall`: so it actually applies the value whenever the user changes it.
+				- `tag: 'tracker_counterTextColor'`: this needs to be the name of the setting! Used to identify which setting actually got updated.
+				- `HTMLAttributes: {'data-settingstag': 'tracker_counterTextColor'}`: again, needs to be the name of the setting. Used to find the setting whenever it has to be updated.
+
+			> If something other than a input-field is used:
+				- Make sure the 'onchange' event calls 'applySettings_onChangeCall()' with the correct arguments (current value first, name of setting second).
+				- Add the new setting to the switch inside 'applySettings_updateSetting()' so the setting can be updated properly.
+
+		- Add the new setting to 'applySettings_validateSetting()' so it can be validated properly (note that the function isn't allowed to access the DOM Element).
+		- Add the default value in 'applySettings_defaultSettings' (right above this comment).
+		- Create a function that applies the value (like, if the background should be changed then there has to be a function that actually changes the background).
+			- And add this function to 'applySettings_applySetting()' inside the switch.
  */
+
+/**	Updates a setting to a new value.
+ *
+ * 	This will make sure the visuals are updated (so the checkbox shows up as checked when it should be checked).
+ * 	This will update 'trackerCore_status'.
+ * 	This will also apply the actual value (...)
+ *
+ * 	Args:
+ * 		settingName [String]
+ * 			The name of the setting that should be updated.
+ *
+ * 		newValue [*any*]
+ * 			The new value it should be set to.
+ *
+ * 		specifics [Object] <optional>
+ * 			Includes the following properties:
+ *
+ * 				skipValidating [Boolean] <false>
+ * 					If validation should be skipped.
+ * 					If true it applies the value regardless of whether it's valid or not.
+ *
+ * 	Returns [Boolean]:
+ * 		Returns true if succesfully updated and false if it couldn't be updated.
+ * 		This will also return true if the value specified is already set.
+ */
+function applySettings_updateSetting (settingName, newValue, specifics={}) {
+	//complain and return if it's not a string
+	if (typeof settingName !== 'string') {
+		console.warn(`[MPO] applySettings_updateSetting() received a non-string for 'settingName': "${settingName}".`);
+		return false;
+	}
+
+	//complain and return if the value is invalid
+		//but only if 'skipValidating' is false
+	if (specifics.skipValidating !== true && applySettings_validateSetting(settingName, newValue) === false) {
+		console.warn(`[MPO] applySettings_updateSetting() received a invalid value as 'newValue': "${newValue}".`);
+		return false;
+	}
+
+	//use a switch case to determine how to set the value
+		//if a setting ever uses something other than a input-field then place it in here so it can be set properly
+	switch (settingName) {
+
+		//this is for updating a input-field
+		default:
+			//get the input-field
+			const elem = applySettings_getElement(settingName);
+
+			//update the input-field
+			if (Object.isDOMElement(elem) === true) {
+				let fieldResult = inputfield_setValue(elem, newValue);
+
+				//complain and return if it failed
+				if (fieldResult === false) {
+					console.warn(`[MPO] applySettings_updateSetting() couldn't update the setting "${settingName}" as 'inputfield_setValue()' failed.`);
+					return false;
+				}
+			}
+	}
+
+	//set the 'settings' object to the new value
+	applySettings_setSettingValue(settingName, newValue);
+
+	//apply the value
+	applySettings_applySetting(settingName, newValue);
+
+	//save it to localStorage
+	trackerCore_saveSavefiles();
+}
+
+/**	Gets the value of a setting from the proper savefile.
+ */
+function applySettings_getSettingValue (settingName) {
+	//this saves on which savefile-slot we're currently iterating on
+	let savefileSlot = trackerCore_status.savefiles.currentSlot;
+
+	//the savefile we're currently iterating on
+	let savefile = trackerCore_getSavefile(savefileSlot);
+
+	//this creates a loop for each savefile
+		//this will only loop multiple times for layered savefiles
+	while (true) {
+
+		//if the savefile-slot is below 0 or the savefile couldn't be found then use the 'savefileless' savefile
+		if (savefileSlot < 0 || typeof savefile !== 'object') {
+			savefile = trackerCore_status.savefiles.savefileless;
+		}
+
+		//get the value based on which 'settingsType' the current savefile is
+		switch (savefile._metadata.settingsType) {
+
+			//get the value from the 'savefileless' savefile
+			case 'noSettings':
+				return trackerCore_status.savefiles.savefileless.settings[settingName];
+				break;
+
+			//get the value from the savefile (or get defaults if not present)
+			case 'standalone':
+				//if no value is present for this setting then take defaults instead
+				if (savefile.settings[settingName] === undefined) {
+					return applySettings_defaultSettings[settingName];
+
+				//else return the value from this savefile
+				} else {
+					return savefile.settings[settingName];
+				}
+				break;
+
+			//get the value from the savefile if present, otherwise go to the next layer
+			case 'layered':
+				//if the value isn't present then do nothing (so it goes to the next layer)
+				if (savefile.settings[settingName] === undefined) {
+					break;
+
+				//else return the found value
+				} else {
+					return savefile.settings[settingName];
+				}
+				break;
+		}
+
+		//go one savefile lower
+		savefileSlot--;
+		savefile = trackerCore_status.savefiles[savefileSlot];
+	}
+}
+
+/**	Sets a setting to a new value. The value won't be validated.
+ *
+ * 	This ONLY changes the value in 'trackerCore_status' in the correct savefile.
+ * 	It does NOT update the visual checkbox/whatever.
+ * 	It does NOT actually apply the value.
+ *
+ * 	Args:
+ * 		settingName [String]
+ * 			The name of the setting.
+ *
+ * 		newValue [*any*]
+ * 			The value it should be set to.
+ *
+ * 	Returns [Boolean]
+ */
+function applySettings_setSettingValue (settingName, newValue) {
+	//complain and return if 'settingName' is not a string
+	if (typeof settingName !== 'string') {
+		console.warn(`[MPO] applySettings_setSettingValue() received a non-string as 'settingName': "${settingName}".`);
+		return false;
+	}
+
+	//get the current savefile
+	let currentSavefile = trackerCore_getSavefile();
+
+	//get the 'settings' object that should be modified
+	let obj;
+	switch (currentSavefile._metadata.settingsType) {
+
+		//get it from the 'savefileless' savefile
+		case 'noSettings':
+			obj = trackerCore_status.savefiles.savefileless.settings;
+			break;
+
+		//get it from the currently selected savefile
+		case 'standalone':
+		case 'layered':
+			obj = currentSavefile.settings;
+			break;
+	}
+
+	//complain and return if the object couldn't be found
+	if (typeof obj !== 'object') {
+		console.warn(`[MPO] applySettings_setSettingValue() could not find the object to apply the setting in. Value found where the object should have been: "${obj}".`);
+		return false;
+	}
+
+	//actually set the value
+	obj[settingName] = newValue;
+	return true;
+}
 
 /** Applies the value after the user changed settings.
  *
- * 	Note: This does NOT update the display in settings (like, it doesn't make sure that a checkbox is actually checked - it simply applies the value given to it, whether the checkbox in settings reflects that or not doesn't matter here).
- * 	Basically, don't call this function directly to change a setting, use 'applySettings_set()' for that.
+ * 	This will apply the value (if text color has been changed to red then the color is changed in here).
+ * 	This will update the apropriate value in 'trackerCore_status'.
+ * 	This will NOT update the visuals (so it will not update the color-picker to display red - use 'applySettings_updateSetting()' for that).
  *
  * 	Args:
- * 		newValue [*any*]
- * 			The new value that should be used.
- *
  * 		settingName [String/Object]
  * 			The name of the setting that has been updated.
- * 			You can also pass the 'FieldObject' from an input-field and it will automatically get it's tag.
  *
- * 			Basically, if this is a string it uses that.
- * 			If it's a object it uses it's 'tag' property.
+ * 		newValue [*any*]
+ * 			The new value that should be used.
  */
-function applySettings_apply (newValue, settingName) {
-	//if 'settingName' is an object then replace it with it's own 'tag' property
-		//basically, this gets the tag of a input-field if a 'FieldObject' is passed
-	if (typeof settingName === 'object') {
-		settingName = settingName.tag;
-	}
-
+function applySettings_applySetting (settingName, newValue) {
 	//complain and return if it's not a string
 	if (typeof settingName !== 'string') {
-		console.warn(`[MPO] applySettings_apply() received a non-string for 'settingName': "${settingName}".`);
+		console.warn(`[MPO] applySettings_applySetting() received a non-string for 'settingName': "${settingName}".`);
 		return;
 	}
 
@@ -65,7 +236,7 @@ function applySettings_apply (newValue, settingName) {
 
 			//throw so the 'catch' block gets executed
 			default:
-				throw `[MPO] applySettings_apply() received a unknown 'settingsName': "${settingName}".`;
+				throw `[MPO] applySettings_applySetting() received a unknown 'settingsName': "${settingName}".`;
 				break;
 		}
 
@@ -73,110 +244,157 @@ function applySettings_apply (newValue, settingName) {
 		//and return since we don't want to save a value that couldn't be applied
 		//TODO: add better error-reporting for the user to see (update: what better error-reporting?)
 	} catch (e) {
-		console.warn(`[MPO] applySettings_apply() could not apply the value "${newValue}" to the setting "${settingName}". Following error caused this:`);
+		console.warn(`[MPO] applySettings_applySetting() could not apply the value "${newValue}" to the setting "${settingName}". Following error caused this:`);
 		console.log(e);
 		return;
 	}
 
-	//set the 'settings' object to the new value
-	applySettings_settings[settingName] = newValue;
-
-	//save it to localStorage
-	localStorage.setItem('settings', JSON.stringify(applySettings_settings));
+	//update 'trackerCore_status'
+	applySettings_setSettingValue(settingName, newValue);
 }
 
-/**	Sets a setting to a new value.
+/**	This applies all settings.
+ *
+ * 	It simply calls 'applySettings_applySetting()' on all 'applySettings_settings' entries.
  *
  * 	Args:
- * 		newValue [*any*]
- * 			The new value it should be set to.
- *
- * 		settingName [String]
- * 			The name of the setting that should be updated.
- *
- * 	Returns [Boolean]:
- * 		Returns true if succesfully updated and false if it couldn't be updated.
- * 		This will also return true if the value specified is already set.
+ * 		setValues [Boolean] <false>
+ * 			If true it calls 'applySettings_set()' on all entries as well using the value found in 'applySettings_settings'.
+ * 			This will be done before applying them.
  */
-function applySettings_set (newValue, settingName) {
-	//complain and return if it's not a string
-	if (typeof settingName !== 'string') {
-		console.warn(`[MPO] applySettings_apply() received a non-string for 'settingName': "${settingName}".`);
+function applySettings_applyAll (setValues) {
+	//loop through all settings that exist
+	for (key in applySettings_defaultSettings) {
+
+		//get the value for that setting
+		let value = applySettings_getSettingValue(key);
+
+		//if 'setValues' is true then set the value
+		if (setValues === true) {
+			applySettings_updateSetting(key, value);
+
+		//else simply apply it
+		} else {
+			applySettings_applySetting(key, value);
+		}
+	}
+}
+
+/**	This sets and applies all default settings to the current savefile.
+ *
+ * 	Note that this will set and apply ALL settings, regardless of whether a value got changed or not.
+ *
+ * 	This function will behave differently depending on what 'settingsType' the current savefile has.
+ * 		- 'noSettings': The defaults will be applied to 'savefileless'.
+ * 		- 'standalone': The defaults will be applied to the current savefile.
+ * 		- 'layered': All settings from the current savefile will be removed. This means it will now use values from the other layers/savefiles.
+ *
+ * 	Note that for 'layered' nothing will be done if 'force' is not true.
+ *
+ * 	Args:
+ * 		force [Boolean] <true>
+ * 			If true all current settings will be completely overwritten.
+ * 			If false it simply fills in any that don't exist yet.
+ *
+ * 			Note that if this is true then it will reset the object completely which will also get rid of any left-over values.
+ */
+function applySettings_applyDefaults (force) {
+	//this essentially converts 'force' to a Boolean where any non-boolean value will be converted to 'true'
+		//true    -> true
+		//false   -> false
+		//1       -> true
+		//'false' -> true
+		//*       -> true
+	force = (force !== false);
+
+	//this will store the savefile where the defaults should be applied to
+	let savefile;
+
+	//get the savefile that should be modified
+	switch (trackerCore_getSavefile()._metadata.settingsType) {
+
+		//get the 'savefileless' savefile
+		case 'noSettings':
+			savefile = trackerCore_status.savefiles.savefileless;
+			break;
+
+		//get the current savefile
+		case 'standalone':
+		case 'layered':
+			savefile = trackerCore_getSavefile();
+			return;
+	}
+
+	//if 'force' is true then set the 'settings' object of the savefile to an empty object so there's no left-over properties
+	if (force === true) {
+		savefile.settings = {}
+	}
+
+	//if the savefile is a 'layered' type then apply the values and return now since values shouldn't be applied to it
+	if (savefile._metadata.settingsType === 'layered') {
+		applySettings_applyAll(true);
 		return;
 	}
 
-	//use a switch case to determine how to set the value
-		//if a setting ever uses something other than a input-field then place it in here so it can be set properly
-	switch (settingName) {
+	//fill in the object with default values
+	savefile.settings.fillIn(applySettings_defaultSettings, {force: force});
 
-		//this is for updating a input-field
-		default:
-			//get the input-field
-			const elem = applySettings_getElement(settingName);
-
-			//update and return it
-				//'inputfield_setValue()' already returns whether it could be updated or not
-			if (Object.isDOMElement(elem) === true) {
-				return inputfield_setValue(elem, newValue);
-			}
-	}
+	//set and apply them
+	applySettings_applyAll(true);
 }
 
 /**	Validates whether a given value can be used for a setting or not.
  *
  * 	Args:
- * 		value [*any*]
- * 			The value that should be verified.
- *
  * 		setting [String/DOM Element]
  * 			Either the name of the setting or the DOM element of it (the one with the 'data-settingstag' attribute).
  *
+ * 		value [*any*]
+ * 			The value that should be verified.
+ *
  * 	Returns [Boolean]:
- * 		Whether the value can be used with that setting or not.
+ * 		true if it's valid and false if it's not valid.
  * 		Also returns false if it couldn't find the setting.
  */
-function applySettings_validate (value, setting) {
-	//if it's a string then get the DOM element for the setting
-	if (typeof setting === 'string') {
-		//create variable for the name and the element
-		var settingName = setting;
-		var settingElem = applySettings_getElement();
+function applySettings_validateSetting (setting, value) {
 
-		//complain and return if the element couldn't be found
-		if (settingElem === null) {
-			console.warn(`[MPO] applySettings_validate() could not find the setting with the name "${setting}".`);
-			return false;
+	//IMPORTANT: This function is NOT allowed to access DOM because this function runs before the website is actually being constructed.
+		//Basically, no DOM elements exist when this function gets called first.
+
+
+
+	//get the name of the setting
+		//if 'setting' is a DOM-Element then get it's 'data-settingstag' attribute
+		//otherwise use 'setting' as-is
+	let settingName = (Object.isDOMElement(setting) === true) ? setting.getAttribute('data-settingstag')
+	                : setting;
+
+	//complain and return if 'settingName' isn't a string
+	if (typeof settingName !== 'string') {
+
+		//complain more accurately based on whether a DOM Element was given or something else
+		if (Object.isDOMElement(setting) === true) {
+			console.warn(`[MPO] applySettings_validateSetting() received a DOM Element that doesn't have a valid 'data-settingstag' attribute: "${settingsTag}".`);
+		} else {
+			console.warn(`[MPO] applySettings_validateSetting() received neither a string nor a DOM Element as 'setting': "${setting}".`);
 		}
 
-	//else, if 'setting' isn't a string
-	} else {
-
-		//complain and return if it's not a DOM Element either
-		if (Object.isDOMElement(setting) !== true) {
-			console.warn(`[MPO] applySettings_validate() received a value for 'setting' that's neither a string nor a DOM Element: "${setting}"`);
-			return false;
-		}
-
-		//create variable for the name and the element
-		var settingElem = setting;
-		var settingName = setting.getAttribute('data-settingstag');
-
-		//complain and return if the element isn't a settings element (identified by it's 'data-settingstag' attribute)
-		if (settingName === null) {
-			console.warn(`[MPO] applySettings_validate() received a DOM element as 'setting' but it doesn't have a 'data-settingstag' attribute:`);
-			console.warn(setting);
-			return false;
-		}
+		return false;
 	}
 
 	//validate the value based on which setting it is
 	switch (settingName) {
 
-		//this simply validates a input-field
-		default:
+		//validate a color value
+		case 'tracker_counterTextColor':
 			return inputfield_validateValue(value, {
-				field: settingElem
+				fieldType: 'color'
 			});
+
+		//complain and return if the setting doesn't exist
+		default:
+			console.warn(`[MPO] applySettings_validateSetting() received a unknown name as 'setting': "${settingName}".`);
+			return false;
 	}
 }
 
@@ -197,6 +415,11 @@ function applySettings_validate (value, setting) {
  * 		Returns an empty object if a non-object is given to it.
  */
 function applySettings_validateAll (objToVerify, specifics={}) {
+	if (typeof objToVerify !== 'object') {
+		console.warn(`[MPO] applySettings_validateAll() received a non-object as 'objToVerify': "${objToVerify}".`);
+		return {};
+	}
+
 	//the finished object with all validated values
 	let finishedObj = {};
 
@@ -210,7 +433,7 @@ function applySettings_validateAll (objToVerify, specifics={}) {
 		}
 
 		//check if the value is valid
-		if (applySettings_validate(objToVerify[key], key) === true) {
+		if (applySettings_validateSetting(key, objToVerify[key]) === true) {
 
 			//and then add it to the verified/finished object
 			finishedObj[key] = objToVerify[key];
@@ -228,7 +451,7 @@ function applySettings_validateAll (objToVerify, specifics={}) {
 		if (objToVerify[key] !== undefined) {
 
 			//and finally, check if the value is valid...
-			if (applySettings_validate(objToVerify[key], key) === true) {
+			if (applySettings_validateSetting(key, objToVerify[key]) === true) {
 
 				//...and then apply it
 				finishedObj[key] = objToVerify[key];
@@ -252,48 +475,37 @@ function applySettings_getElement (settingName) {
 	return document.querySelector(`[data-settingstag=${settingName}]`);
 }
 
-/**	This applies all settings.
+/**	Gets called whenever the user changes a setting.
  *
- * 	It simply calls 'applySettings_apply()' on all 'applySettings_settings' entries.
- *
- * 	Args:
- * 		setValues [Boolean] <false>
- * 			If true it calls 'applySettings_set()' on all entries as well using the value found in 'applySettings_settings'.
- * 			This will be done before applying them.
- */
-function applySettings_applyAll (setValues) {
-	//loop through all settings saved and apply them with their current value.
-	for (key in applySettings_settings) {
-		//set the value if needed
-		if (setValues === true) {
-			applySettings_set(applySettings_settings[key], key);
-		}
-
-		//apply the value
-		applySettings_apply(applySettings_settings[key], key);
-	}
-}
-
-/**	This sets and applies all default settings.
- *
- * 	Note that this will set and apply ALL settings, regardless of whether a value got changed or not.
+ * 	Only here to call 'applySettings_applySetting()' and 'trackerCore_saveSavefiles()'.
  *
  * 	Args:
- * 		force [Boolean] <true>
- * 			If true all current settings will be completely overwritten.
- * 			If false it simply fills in any that don't exist in 'applySettings_settings'.
+ * 		newValue [*any*]
+ * 			The new value that should be used.
  *
- * 			Note that if this is true then it will reset the object completely which will also get rid of any left-over values.
+ * 		settingName [String/Object]
+ * 			The name of the setting that has been updated.
+ * 			You can also pass the 'FieldObject' from an input-field and it will automatically get it's tag.
+ *
+ * 			Basically, if this is a string it uses that.
+ * 			If it's a object it uses it's 'tag' property.
  */
-function applySettings_applyDefaults (force=true) {
-	//if true then set it to a empty object so there's no left-over properties
-	if (force === true) {
-		applySettings_settings = {}
+function applySettings_onChangeCall (newValue, settingName) {
+	//if 'settingName' is an object then replace it with it's own 'tag' property
+		//basically, this gets the tag of a input-field if a 'FieldObject' is passed
+	if (typeof settingName === 'object') {
+		settingName = settingName.tag;
 	}
 
-	//fill in the object
-	applySettings_settings.fillIn(applySettings_defaultSettings, {force: Boolean(force)});
+	//complain and return if it's not a string
+	if (typeof settingName !== 'string') {
+		console.warn(`[MPO] applySettings_onChangeCall() received a non-string for 'settingName': "${settingName}".`);
+		return;
+	}
 
-	//set and apply them
-	applySettings_applyAll(true);
+	//apply the value
+	applySettings_applySetting(settingName, newValue);
+
+	//save it permanently
+	trackerCore_saveSavefiles();
 }

@@ -25,6 +25,12 @@ function trackerInterface_updateCounter (counterName, player) {
 	}
 }
 
+/**	Updates a character on the interface.
+ *
+ * 	Args:
+ * 		player [Number]
+ * 			The player. Starts at 1.
+ */
 function trackerInterface_updateCharacter (player) {
 	//get character
 	const charName = updatesTracker_getCharacter(player);
@@ -45,7 +51,7 @@ function trackerInterface_updateCharacter (player) {
  */
 function trackerInterface_updateVisuals () {
 	//get the current savefile
-	const savefile = trackerCore_getSavefileFromStatus();
+	const savefile = trackerCore_getSavefile();
 
 	//the following loops through each stat for each player and then calls 'trackerInterface_updateCounter()' on each one
 
@@ -53,10 +59,12 @@ function trackerInterface_updateVisuals () {
 	for (playerKey in savefile.players) {
 
 		//loop for each piece ('misc', 'bonusStars', etc.)
-		for (pieceKey in savefile.players[playerKey].stats) {
+			//note that we loop through 'trackerCore_status.counters' because we need to loop through ALL AVAILABLE counters, not just the ones the player has stats for
+			//though this only gets important on the next loop but it's best to use it here too
+		for (pieceKey in trackerCore_status.counters) {
 
 			//loop for each stat ('distanceWalked', 'happeningStar', etc.)
-			for (statKey in savefile.players[playerKey].stats[pieceKey]) {
+			for (statKey in trackerCore_status.counters[pieceKey]) {
 
 				//update the counter
 					//add one to 'playerKey' because 'playerKey' starts at 0
