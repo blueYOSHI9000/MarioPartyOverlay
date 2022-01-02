@@ -203,6 +203,11 @@ function listeners_pointerDown (e) {
 					functionsToExecute.push(handleNavbar_createCharacterModal);
 					break;
 
+				//the navbar entry for updating players
+				case 'navbar_player':
+					//functionsToExecute.push(handleNavbar_createGameModal);
+					break;
+
 				//the navbar entry for changing the action
 				case 'navbar_trackerAction':
 					functionsToExecute.push(handleNavbar_changeAction);
@@ -218,9 +223,19 @@ function listeners_pointerDown (e) {
 					functionsToExecute.push(trackerCore_saveSavefiles);
 					break;
 
+				//the navbar entry for selecting the savefile
+				case 'navbar_selectSavefile':
+					functionsToExecute.push(handleNavbar_createSavefileModal);
+					break;
+
 				//any input field element that should be updated when clicked on
 				case 'inputfield_callUpdate':
 					inputfield_executedAfterFieldChange(elem);
+					break;
+
+				//input-field labels
+				case 'inputfield_label':
+					inputfield_executedAfterLabelPress(elem);
 					break;
 			}
 		}

@@ -86,6 +86,10 @@ function buildSite_buildNavbar (docFrag) {
 	}
 
 	//create the 'action' button for the tracker
+	cElem('span', navbarBase, {style: 'color: white;cursor: pointer;', class: 'navbar_game'})
+		.textContent = 'All';
+
+	//create the 'action' button for the tracker
 	cElem('span', navbarBase, {class: 'navbar_trackerAction'})
 		.textContent = '+';
 
@@ -96,6 +100,10 @@ function buildSite_buildNavbar (docFrag) {
 	//create a shitty save button
 	cElem('span', navbarBase, {style: 'color: white;cursor: pointer;', class: 'navbar_saveTracker'})
 		.textContent = 'save';
+
+	//create a shitty savefile button
+	cElem('span', navbarBase, {style: 'color: white;cursor: pointer;', class: 'navbar_selectSavefile'})
+		.textContent = 'savefile';
 
 	//create the shitty open settings button
 	let openSettingsButton = cElem('span', navbarBase, {style: 'color: white;cursor: pointer;', onclick: 'handleSettings_toggleSettings();'})
@@ -135,6 +143,10 @@ function buildSite_buildSettings (docFrag) {
 	//Set main up
 		//Note that each section is made using embedded modals.
 		//This is done so they can be collapsed.
+
+	//this saves a label (or an array of them)
+		//this variable will be overwritten as new settings are added
+	var label;
 
 
 
@@ -178,11 +190,12 @@ function buildSite_buildSettings (docFrag) {
 
 		//option to change text color
 			//call 'trackerInterface_changeCounterColor()' with the new value as it's first argument (which is automatically done)
-		cElem('span', elem)
-			.textContent = 'Change counter text color: ';
+		label = cElem('span', elem);
+		label.textContent = 'Change counter text color: ';
 		inputfield_createField('color', elem, {
 			onchange: applySettings_onChangeCall,
 			tag: 'tracker_counterTextColor',
+			labels: label,
 			HTMLAttributes: {'data-settingstag': 'tracker_counterTextColor'}
 		});
 
@@ -220,19 +233,21 @@ function buildSite_buildSettings (docFrag) {
 
 		//create a checkbox
 		cElem('br', elem);
-		let checkboxTest = cElem('span', elem);
-		checkboxTest.textContent = 'Checkbox:';
-		inputfield_createField('checkbox', checkboxTest, {
-			onchange: logToOutput
+		label = cElem('span', elem);
+		label.textContent = 'Checkbox:';
+		inputfield_createField('checkbox', elem, {
+			onchange: logToOutput,
+			labels: label
 		});
 
 		//create a checkbox but with a 'checkboxValue'
 		cElem('br', elem);
-		let checkboxTest2 = cElem('span', elem);
-		checkboxTest2.textContent = 'Checkbox with checkboxValue:';
-		inputfield_createField('checkbox', checkboxTest2, {
+		label = cElem('span', elem);
+		label.textContent = 'Checkbox with checkboxValue:';
+		inputfield_createField('checkbox', elem, {
 			onchange: logToOutput,
-			checkboxValue: 'this is true'
+			checkboxValue: 'this is true',
+			labels: label
 		});
 
 		//create a radio checkbox
@@ -360,48 +375,53 @@ function buildSite_buildSettings (docFrag) {
 
 		let testHost = cElem('span', elem);
 
-		cElem('span', testHost)
-			.textContent = 'Mario: ';
+		label = cElem('span', testHost);
+		label.textContent = 'Mario: ';
 		inputfield_createField('checkbox', testHost, {
 			host: testHost,
 			checkboxValue: 'mario',
-			onchange: logToOutput
+			onchange: logToOutput,
+			labels: label
 		});
 		cElem('br', testHost);
 
-		cElem('span', testHost)
-			.textContent = 'Weegee: ';
+		label = cElem('span', testHost);
+		label.textContent = 'Weegee: ';
 		inputfield_createField('checkbox', testHost, {
 			host: testHost,
 			checkboxValue: 'weegee',
-			onchange: logToOutput
+			onchange: logToOutput,
+			labels: label
 		});
 		cElem('br', testHost);
 
-		cElem('span', testHost)
-			.textContent = 'Wario: ';
+		label = cElem('span', testHost);
+		label.textContent = 'Wario: ';
 		inputfield_createField('checkbox', testHost, {
 			host: testHost,
 			checkboxValue: 'wario',
-			onchange: logToOutput
+			onchange: logToOutput,
+			labels: label
 		});
 		cElem('br', testHost);
 
-		cElem('span', testHost)
-			.textContent = 'WAAAAAAAAAAAH: ';
+		label = cElem('span', testHost);
+		label.textContent = 'WAAAAAAAAAAAH: ';
 		inputfield_createField('checkbox', testHost, {
 			host: testHost,
 			checkboxValue: 'waaaaaaaaaaah',
-			onchange: logToOutput
+			onchange: logToOutput,
+			labels: label
 		});
 		cElem('br', testHost);
 
-		cElem('span', testHost)
-			.textContent = 'Mario: ';
+		label = cElem('span', testHost);
+		label.textContent = 'Mario: ';
 		inputfield_createField('checkbox', testHost, {
 			host: testHost,
 			checkboxValue: 'mario',
-			onchange: logToOutput
+			onchange: logToOutput,
+			labels: label
 		});
 		cElem('br', testHost);
 
@@ -470,62 +490,68 @@ function buildSite_buildSettings (docFrag) {
 		cElem('br', formTest);
 		let testFormHost = cElem('span', formTest);
 
-		cElem('span', testFormHost)
-			.textContent = 'Mario: ';
+		label = cElem('span', testFormHost);
+		label.textContent = 'Mario: ';
 		inputfield_createField('checkbox', testFormHost, {
 			host: testFormHost,
 			checkboxValue: 'mario',
 			onchange: logToOutput,
 			addToForm: formTest,
-			tag: 'hostTag'
+			tag: 'hostTag',
+			labels: label
 		});
 		cElem('br', testFormHost);
 
-		cElem('span', testFormHost)
-			.textContent = 'Weegee: ';
+		label = cElem('span', testFormHost);
+		label.textContent = 'Weegee: ';
 		inputfield_createField('checkbox', testFormHost, {
 			host: testFormHost,
 			checkboxValue: 'weegee',
-			onchange: logToOutput
+			onchange: logToOutput,
+			labels: label
 		});
 		cElem('br', testFormHost);
 
-		cElem('span', testFormHost)
-			.textContent = 'Wario: ';
+		label = cElem('span', testFormHost);
+		label.textContent = 'Wario: ';
 		inputfield_createField('checkbox', testFormHost, {
 			host: testFormHost,
 			checkboxValue: 'wario',
-			onchange: logToOutput
+			onchange: logToOutput,
+			labels: label
 		});
 		cElem('br', testFormHost);
 
-		cElem('span', testFormHost)
-			.textContent = 'WAAAAAAAAAAAH: ';
+		label = cElem('span', testFormHost);
+		label.textContent = 'WAAAAAAAAAAAH: ';
 		inputfield_createField('checkbox', testFormHost, {
 			host: testFormHost,
 			checkboxValue: 'waaaaaaaaaaah',
-			onchange: logToOutput
+			onchange: logToOutput,
+			labels: label
 		});
 		cElem('br', testFormHost);
 
-		cElem('span', testFormHost)
-			.textContent = 'Mario: ';
+		label = cElem('span', testFormHost);
+		label.textContent = 'Mario: ';
 		inputfield_createField('checkbox', testFormHost, {
 			host: testFormHost,
 			checkboxValue: 'mario',
-			onchange: logToOutput
+			onchange: logToOutput,
+			labels: label
 		});
 		cElem('br', testFormHost);
 
 		//create a checkbox with the same tag as the form below
 		cElem('br', formTest);
-		cElem('span', formTest)
-			.textContent = 'Checkbox with same tag as below form: ';
+		label = cElem('span', formTest);
+		label.textContent = 'Checkbox with same tag as below form: ';
 		inputfield_createField('checkbox', formTest, {
 			onchange: logToOutput,
 			addToForm: formTest,
 			tag: 'formOrCheck',
-			checkboxValue: 'This should overwrite the form'
+			checkboxValue: 'This should overwrite the form',
+			labels: label
 		});
 
 		//create a form in a form

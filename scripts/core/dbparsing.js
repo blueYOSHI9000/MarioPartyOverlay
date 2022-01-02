@@ -1,58 +1,6 @@
 // Copyright 2021 MarioPartyOverlay AUTHORS
 // SPDX-License-Identifier: Apache-2.0
 
-/**	Gets a list of bonus stars in object form.
- *
- * 	Simply gets the 'bonusStars' object from the database.
- * 	The '_array' property will be removed as the keys can be gotten via "for ... in".
- *
- * 	Args:
- * 		game [String]
- * 			The name of the game. Can also be '_all'.
- *
- * 	Returns [Object]:
- * 		Returns the 'bonusStars' object of the specified game from the database.
- */
-function dbparsing_getBonusStarList (game) {
-	//use try catch in case game doesn't have a list of bonus stars
-	try {
-		//get bonus star list
-		var obj = mpdb[game]['bonusStars'];
-
-		//remove '_index'
-		delete obj['_index'];
-	} catch (e) {
-		return {};
-	}
-	return obj;
-}
-
-/**	Gets a list of characters in object form.
- *
- * 	Simple gets the 'characters' object from the database.
- * 	The '_array' property will be removed as the keys can be gotten via "for ... in".
- *
- * 	Args:
- * 		game [String]
- * 			The name of the game. Can also be '_all'.
- *
- * 	Returns [Object]:
- * 		Returns the 'characters' object of the specified game from the database.
- */
-function dbparsing_getCharacterList (game) {
-	//use try catch in case game doesn't have a list of characters
-	try {
-		//get character list
-		var obj = mpdb[game]['characters'];
-
-		//remove '_index'
-		delete obj['_index'];
-	} catch (e) {
-		return {};
-	}
-	return obj;
-}
-
 /**	Gets the correct icon from the database.
  *
  * 	Args:
@@ -143,14 +91,59 @@ function dbparsing_getIcon (path, game, check_all=true) {
 	return 'images/' + icons[0].filePath;
 }
 
-/**	This returns a list of all game abbreviations (like 'mp1', 'mpds', etc). Includes '_all'.
+/**	Gets a list of bonus stars in object form.
  *
- * 	Returns [Array]:
- * 		An array consisting of strings. Each array item is an abbreviation.
+ * 	Simply gets the 'bonusStars' object from the database.
+ * 	The '_array' property will be removed as the keys can be gotten via "for ... in".
+ *
+ * 	Args:
+ * 		game [String]
+ * 			The name of the game. Can also be '_all'.
+ *
+ * 	Returns [Object]:
+ * 		Returns the 'bonusStars' object of the specified game from the database.
  */
-function dbparsing_getAllGameAbbreviations () {
-	//surprisingly all it takes
-	return mpdb._index;
+function dbparsing_getBonusStarList (game) {
+	//get the object
+	let obj = mpdb[game]?.bonusStars;
+
+	//complain and return if no object was found
+	if (typeof obj !== 'object') {
+		console.warn(`[MPO] dbparsing_getBonusStarList() found a non-object at 'mpdb["${game}"]?.bonusStars'.`);
+		return {};
+	}
+
+	//return the found object but remove the '_index' property
+		//this uses an empty object and copies all properties from the database except '_index'
+	return {}.fillIn(obj, {ignoreKeys: ['_index']});
+}
+
+/**	Gets a list of characters in object form.
+ *
+ * 	Simply gets the 'characters' object from the database.
+ * 	The '_array' property will be removed as the keys can be gotten via "for ... in".
+ *
+ * 	Args:
+ * 		game [String]
+ * 			The name of the game. Can also be '_all'.
+ *
+ * 	Returns [Object]:
+ * 		Returns the 'characters' object of the specified game from the database.
+ * 		Will return an empty object if something went wrong.
+ */
+function dbparsing_getCharacterList (game) {
+	//get the object
+	let obj = mpdb[game]?.characters;
+
+	//complain and return if no object was found
+	if (typeof obj !== 'object') {
+		console.warn(`[MPO] dbparsing_getCharacterList() found a non-object at 'mpdb["${game}"]?.characters'.`);
+		return {};
+	}
+
+	//return the found object but remove the '_index' property
+		//this uses an empty object and copies all properties from the database except '_index'
+	return {}.fillIn(obj, {ignoreKeys: ['_index']});
 }
 
 /**	This returns a list of all character names (like 'mario', 'peach', 'dryBones', etc).
@@ -161,4 +154,35 @@ function dbparsing_getAllGameAbbreviations () {
 function dbparsing_getAllCharacterNames () {
 	//surprisingly all it takes
 	return mpdb._all.characters._index;
+}
+
+/**	Gets a list of all games. Will be the object from the database.
+ *
+ * 	Returns [Object]:
+ * 		A object that includes an object for each game. Use 'for ... if' to loop through them.
+ * 		Returns an empty object if something went wrong.
+ */
+function dbparsing_getGameList () {
+	//get the object
+	let obj = mpdb;
+
+	//complain and return if no object was found
+	if (typeof obj !== 'object') {
+		console.warn(`[MPO] dbparsing_getGameList() found a non-object at 'mpdb'.`);
+		return {};
+	}
+
+	//return the found object but remove the '_index' property
+		//this uses an empty object and copies all properties from the database except '_index'
+	return {}.fillIn(obj, {ignoreKeys: ['_index', '_info', '_imageSources']});
+}
+
+/**	This returns a list of all game abbreviations (like 'mp1', 'mpds', etc). Includes '_all'.
+ *
+ * 	Returns [Array]:
+ * 		An array consisting of strings. Each array item is an abbreviation.
+ */
+function dbparsing_getAllGameAbbreviations () {
+	//surprisingly all it takes
+	return mpdb._index;
 }

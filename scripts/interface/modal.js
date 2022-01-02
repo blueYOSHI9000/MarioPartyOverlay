@@ -527,12 +527,23 @@ function modal_closeAllModalsOfGroup (group) {
  * 		updateFocus [Boolean] <true>
  * 			Whether 'modalupdateFocusOrder()' should be called or not.
  * 			Only set this to false if this is called in a bigger function that's gonna call it later anyway.
+ *
+ * 	Returns [Boolean]:
+ * 		true if it got successfully removed, false if not.
  */
 function modal_closeModal (modalID, updateFocus) {
-	//convert string to number
-	modalID = parseInt(modalID);
+	//convert modal ID from string to number
+	if (typeof modalID === 'string') {
+		modalID = Number(modalID);
+	}
 
-	//remove it from the 'modal_focusOrder' array
+	//complain and return if the modal ID isn't a number
+	if (typeof modalID !== 'number' || modalID === NaN) {
+		console.warn(`[MPO] modal_closeModal() received a non-number as 'modalID' (could've been converted from string to number): "${modalID}".`);
+		return false;
+	}
+
+	//remove it from the 'modal_focusOrder' array (if it's even in there)
 	const index = modal_focusOrder.indexOf(modalID);
 	if (index !== -1) {
 		modal_focusOrder.splice(index, 1);
@@ -549,9 +560,52 @@ function modal_closeModal (modalID, updateFocus) {
 	//and finally remove the 'modal_openModals' entry
 	delete modal_openModals[modalID];
 
+	//update the focus-order if needed
 	if (updateFocus !== false) {
 		modal_updateFocusOrder();
 	}
+
+	//return true since it got removed
+	return true;
+}
+
+/**	Closes the modal the element is in.
+ *
+ * 	This goes up the DOM tree and closes the first modal it finds.
+ *
+ * 	Args:
+ * 		elem [DOM Element]
+ * 			A element inside a modal. The modal that contains the element will be closed.
+ *
+ * 	Returns [Boolean]:
+ * 		true if the modal got successfully closed, false if not.
+ */
+function modal_closeThisModal (elem) {
+	//complain and return if not a DOM element
+	if (Object.isDOMElement(elem) !== true) {
+		console.warn(`[MPO] modal_closeThisModal() received a non-object as 'elem': "${elem}".`);
+		return false;
+	}
+
+	//loop for as long as it's still a element
+	while (Object.isDOMElement(elem) === true) {
+
+		//get the elements modal-ID
+		const id = elem.getAttribute('data-modalid');
+
+		//check if it actually had a modal ID
+		if (id !== null) {
+
+			//if yes, close the modal and return the value from it (which is whether it got successfully removed or not)
+			return modal_closeModal(id);
+		}
+
+		//go to it's parent next
+		elem = elem.parentNode;
+	}
+
+	//return false as it couldn't be closed
+	return false;
 }
 
 /**	Collapses and expands the modal.

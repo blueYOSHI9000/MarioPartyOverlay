@@ -228,6 +228,10 @@ Object.defineProperty(Object.prototype, 'fetchProperty', {value: function (path,
  *					If true all values from 'defaultObj' will be applied, regardless of whether a value already exists.
  * 					If false it will only take the values from 'defaultObj' that don't exist yet.
  *
+ * 				ignoreKeys [Array] <none>
+ * 					A list of keys that should be ignored.
+ * 					If `['_index']` is given then any property with the name '_index' will be ignored completely (meaning it won't get filled in).
+ *
  * 				replaceNull [Boolean] <false>
  * 					If true it will also overwrite values that are null.
  * 					Will be ignored if 'force' is set to true.
@@ -264,17 +268,48 @@ Object.defineProperty(Object.prototype, 'fillIn', {value: function (defaultObj, 
 
 	//=== ACTUAL FUNCTION ===
 
-	//loop through 'defaultObj'
-	for (const key in defaultObj) {
-		//check whether the value should be replaced or not
-			//replace if 'force' is true
-			//replace if the property is undefined in 'obj'
-			//replace if 'replaceNull' is true and the property in 'obj' is null
-		if ((specifics.force === true) || (obj[key] === undefined || (specifics.replaceNull === true && obj[key] === null))) {
-			obj[key] = defaultObj[key];
+	//the 'if' and 'else' blocks are both identical with the exception that the 'if' block checks for 'ignoreKeys'
+		//this is done so it doesn't have to check 'ignoreKeys' every single loop when it's not even used
+	if (Array.isArray(specifics.ignoreKeys) === true) {
+
+		//loop through 'defaultObj'
+		for (const key in defaultObj) {
+
+			//if the key is present in 'ignoreKeys' then ignore it
+			if (specifics.ignoreKeys.indexOf(key) !== -1) {
+				continue;
+			}
+
+			//check whether the value should be replaced or not
+				//replace if 'force' is true
+				//replace if the property is undefined in 'obj'
+				//replace if 'replaceNull' is true and the property in 'obj' is null
+			if ((specifics.force === true) || (obj[key] === undefined || (specifics.replaceNull === true && obj[key] === null))) {
+				obj[key] = defaultObj[key];
+			}
+		}
+
+	} else {
+
+		//complain if 'ignoreKeys' was specified but not valid
+		if (specifics.ignoreKeys !== undefined) {
+			console.warn(`[MPO] Object.fillIn() received a non-array as 'ignoreKeys': "${specifics.ignoreKeys}".`);
+		}
+
+		//loop through 'defaultObj'
+		for (const key in defaultObj) {
+
+			//check whether the value should be replaced or not
+				//replace if 'force' is true
+				//replace if the property is undefined in 'obj'
+				//replace if 'replaceNull' is true and the property in 'obj' is null
+			if ((specifics.force === true) || (obj[key] === undefined || (specifics.replaceNull === true && obj[key] === null))) {
+				obj[key] = defaultObj[key];
+			}
 		}
 	}
 
+	//return it
 	return obj;
 }});
 
