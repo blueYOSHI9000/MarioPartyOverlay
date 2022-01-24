@@ -463,7 +463,7 @@ function inputfield_FieldObject (specifics={}) {
 		let loopedElem = specifics.parent;
 
 		if (Object.isDOMElement(loopedElem) !== true) {
-			console.warn(`[MPO] Could not apply 'autoAddToForm' during the creation of a input-field (ID: ${this.id}) as the provided parent in 'inputfield_FieldObject()' is not a DOM Element (this is likely a internal error).`);
+			console.warn(`[MPO] Could not apply 'autoAddToForm' during the creation of a input-field (ID: "${this.id}") as the provided parent in 'inputfield_FieldObject()' is not a DOM Element (this is likely a internal error).`);
 		}
 
 		//only loop if it is actually a DOM element
@@ -714,9 +714,8 @@ function inputfield_HostObject (specifics={}) {
  * 				labelElem [DOM Element]
  * 					The element that should be converted to a label.
  *
- * 				fieldID [String/DOM Element]
- * 					The field ID of the input-field it should be linked to.
- * 					It can also be a DOM element in which case it will simply get the 'data-fieldid' attribute from it.
+ * 				field [DOM Element/String]
+ * 					The input-field. Can be the DOM element itself or it's input-field ID.
  *
  * 				action [String] <'click'>
  * 					What action should be done once the user clicks on it.
@@ -791,13 +790,13 @@ function inputfield_LabelObject (specifics={}) {
 	//=== VERIFY ALL ARGUMENTS ===
 
 	//fetch the 'data-fieldid' attribute if a DOM element was given
-	if (Object.isDOMElement(specifics.fieldID) === true) {
-		specifics.fieldID = specifics.fieldID.getAttribute('data-fieldid');
+	if (Object.isDOMElement(specifics.field) === true) {
+		specifics.field = specifics.field.getAttribute('data-fieldid');
 	}
 
-	//complain and return if 'fieldID' isn't a string
-	if (typeof specifics.fieldID !== 'string') {
-		console.warn(`[MPO] inputfield_LabelObject() received a non-string as 'fieldID': ${specifics.fieldID} (note that if a DOM element was given then this means it's 'data-fieldid' attribute was invalid).`);
+	//complain and return if 'field' isn't a string
+	if (typeof specifics.field !== 'string') {
+		console.warn(`[MPO] inputfield_LabelObject() received a non-string as 'field': "${specifics.field}" (note that if a DOM element was given then this means it's 'data-fieldid' attribute was invalid).`);
 		return;
 	}
 
@@ -831,7 +830,7 @@ function inputfield_LabelObject (specifics={}) {
 	// === SETTING THE ACTUAL PROPERTIES ===
 
 	//the ID of the field it's linked to
-	this.labelForFieldID = specifics.fieldID;
+	this.labelForFieldID = specifics.field;
 
 	this.action = specifics.action;
 
@@ -1750,18 +1749,30 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 		//will be undefined if it doesn't exist
 	const hostObj = inputfield_hosts.get(fieldObj.belongsToHost);
 
-	//set the new value
-		//check if 'formProperty' is defined, if yes then only set the property
+
+
+	//=== SET NEW VALUE TO 'fieldObj' ===
+
+	//if 'formProperty' is specified then only update the property
 	if (specifics.formProperty !== undefined) {
+
+		//update the property
 		fieldObj.value[specifics.formProperty] = newValue;
 
 		//also set the 'propertyChanged' property
 		fieldObj['propertyChanged'] = specifics.formProperty;
+
+	//otherwise simply set the new value to the fieldObj directly
 	} else {
 		fieldObj.value = newValue;
 	}
 
-	//if this is a radio field then loop through all actual input elements to mark the correct ones as selected
+
+
+	//=== MARK RADIO OPTIONS ===
+	//this loops through all actual input elements to mark the correct ones as selected and all others as not selected
+
+	//check to see if it's even a radio field
 	if (fieldObj.fieldType === 'radio') {
 
 		//get the list of <input> elements (or an alternative to them)...
@@ -1781,12 +1792,20 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 		}
 	}
 
+
+
+	//=== UPDATE HOST ===
+
 	//update all other fields that belong to the host
 		//but only if the host should be updated
 		//and only if a host even exists
 	if (specifics.updateHost !== false && hostObj !== undefined) {
 		inputfield_updateHostsChildren(fieldObj.belongsToHost, newValue);
 	}
+
+
+
+	//=== EXECUTE 'onchange' FUNCTION ===
 
 	//execute the 'onchange' function (unless it should be skipped)
 	if (specifics.skipOnchange !== true) {
@@ -1797,10 +1816,15 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 
 		//execute the 'onchange' function
 			//use 'setTimeout()' with a delay of 0 so it gets it's own call-stack (it basically tells the browser "Hey, execute this bit as soon as everything else is done!")
+				//update on this: It doesn't even work this way - it still keeps the call-stack. That said, it still feels wrong to remove this so it'll stay this way.
 		if (typeof onchangeFunction === 'function') {
 			setTimeout(() => {onchangeFunction(fieldObj.value, fieldObj);}, 0);
 		}
 	}
+
+
+
+	//=== UPDATE THE FORM ===
 
 	//get the 'belongsToForm' property
 		//try to get it from the host if possible
