@@ -190,12 +190,12 @@ function buildSite_buildSettings (docFrag) {
 
 		//option to change text color
 			//call 'trackerInterface_changeCounterColor()' with the new value as it's first argument (which is automatically done)
-		label = cElem('span', elem);
-		label.textContent = 'Change counter text color: ';
+		cElem('span', elem)
+			.inputfield_convertToLabel('tracker_counterTextColor')
+			.textContent = 'Change counter text color: ';
 		inputfield_createField('color', elem, {
 			onchange: applySettings_onChangeCall,
-			tag: 'tracker_counterTextColor',
-			labels: label,
+			id: 'tracker_counterTextColor',
 			HTMLAttributes: {'data-settingstag': 'tracker_counterTextColor'}
 		});
 

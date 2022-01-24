@@ -98,6 +98,20 @@
  * 			Will take the default variable of the 'fieldType' if not specified.
  * 			If a invalid variation is given then this WILL break, it won't automatically go back to the default. This includes specifying a variation when no variations exist.
  *
+ * 		id [String] <optional>
+ * 			The ID of the input-field. Can be used to access the input-field.
+ * 			The ID can't consist of only numbers (so '123' is not allowed but '123a' is allowed).
+ * 			The ID should be unique. If the same ID is used multiple times it may result in unexpected behaviour.
+ * 			On default this will be a unique ID which represents the total amount of input-fields made (so the default IDs would be '1' > '2' > '3' etc.).
+ *
+ * 			More on what happens if the same ID is used multiple times:
+ * 				Whenever an input-field is fetched by an ID, it will always only use the first input-field it finds with that ID. It won't even bother scanning for a second one.
+ * 				And which one is found first can be dependant on various factors, all of them are due to how 'inputfield_getElement()' works.
+ * 				The function won't be able to find a element inside a DocumentFragment or other places unless specifically specified.
+ * 				The function will also search for "related" elements first if a 'referenceElem' is given (see the documentation on the function).
+ * 				Both of these can affect which element is found first.
+ * 				This also isn't fixed in stone, this can change in any update (for better or worse). So it's recommended to avoid using the same ID multiple times as much as possible.
+ *
  * 		onchange [Function] <none>
  * 			A function that gets executed each time the input-field is updated. Available for all input types.
  * 			The first argument will be the current value of the input field.
@@ -178,7 +192,7 @@
  * 			If multiple input-fields have the same tag then when a input-field is updated it will simply overwrite the value that's already there.
  * 			This essentially allows you to have a form value that's simply the value of the most recently updated input-field.
  *
- * 		addToForm [Array/DOM Element/Number/String] <none>
+ * 		addToForm [Array/DOM Element/String] <none>
  * 			The form element it should be added to. Can be either the DOM element of the form or it's ID (can be in string-form, so 6 and '6' are both fine).
  * 				If you use DocumentFragments then don't use the field-ID if the input-field is inside a DocumentFragment as it won't be able to find it.
  * 			Can also be an array consisting of multiple DOM elements/field-IDs.
@@ -217,7 +231,8 @@
 /**	=== USING THIS ON ANOTHER PROJECT ===
  * 	If you want to use this file on another project you gotta do the following things:
  *
- * 		- Load the script (obviously).
+ * 		- Load this file (obviously).
+ * 		- Load 'styles/inputfield.css'
  * 		- Add a 'pointerdown' event that calls 'inputfield_executedAfterFieldChange(elem)' whenever the user clicks on a element with a 'inputfield_callUpdate' class ('elem' is the element being clicked on).
  * 		- Add a 'pointerdown' event that calls 'inputfield_executedAfterLabelPress(elem)'  whenever the user clicks on a element with a 'inputfield_label'      class ('elem' is the element being clicked on).
  */
@@ -339,9 +354,20 @@ function inputfield_FieldObject (specifics={}) {
 
 	// === GET AND SET THE ID ===
 
+	//increase the total of input-fields made (needed for unique IDs)
+	inputfield_totalFieldsCreated++;
+
 	//set ID
-		//this increases the total amount of fields made and immediately uses the new value
-	this.id = ++inputfield_totalFieldsCreated;
+		//this checks if a custom ID was specified (and if yes, apply that)
+			//this check works by making sure it's a string and then making sure that it's not just consisting of digits
+			//so '0128' would return true -- '1ab037' would return false -- '12 ' would return false (due to the white-space)
+			//arguably stuff like white-space should be removed first but I feel like we can trust the coder here
+			//if someone puts white-space in a ID then either they know what they're doing or they'll find another 100 ways to break this
+	if (typeof specifics.attributes.id === 'string' && /^\d+$/.test(specifics.attributes.id) !== true) {
+		this.id = specifics.attributes.id;
+	} else {
+		this.id = String(inputfield_totalFieldsCreated);
+	}
 
 	//add the ID to the element
 	if (specifics.elem.isDOMElement() === true) {
@@ -457,7 +483,7 @@ function inputfield_FieldObject (specifics={}) {
 	attributes.addToForm.removeEachIf((item, index) => {
 
 		//convert it to a DOM element if it only specified the fieldID
-		if (typeof item === 'number' || typeof item === 'string') {
+		if (typeof item === 'string') {
 			item = inputfield_getElement(item, {referenceElem: specifics.elem});
 
 			//complain if the element couldn't be found
@@ -688,24 +714,26 @@ function inputfield_HostObject (specifics={}) {
  * 				labelElem [DOM Element]
  * 					The element that should be converted to a label.
  *
- * 				field [DOM Element/Number/String]
- * 					The input-field. Can be the DOM element itself or it's input-field ID (string-form is fine, so 6 and '6' are both fine).
- * 					It will NOT be verified whether the input-field even exists or not.
+ * 				fieldID [String/DOM Element]
+ * 					The field ID of the input-field it should be linked to.
+ * 					It can also be a DOM element in which case it will simply get the 'data-fieldid' attribute from it.
  *
  * 				action [String] <'click'>
  * 					What action should be done once the user clicks on it.
  * 					The default will be used if this is invalid.
  * 					Can be one of the following:
- * 						- click: Simulates a click. Input-fields of type 'button' will be clicked on; 'checkbox' fields will be toggled; nothing happens to all other types.
- * 						         After the click all input-fields regardless of type will also be focused.
+ * 						- click: Simulates a click on the element. Identical to an actual click done by the user. Uses `elem.click()`.
  * 						- focus: Simply focuses the element.
  * 						- copy: Copies the value of the input-field to the clipboard.
  * 						- setToValue: Sets the value of the field to the one specified (see 'value' below).
  *
- * 				radioOption [String] <none>
- * 					The value of the radio option this should apply to.
- * 					If no value is specified then this applies to the radio-field as a whole.
- * 					If a value is specified here then the following applies to that option:
+ * 				radioOption [String/null] <null>
+ * 					Only used if the input-field is of type 'radio'.
+ * 					This defines if the label should only affect a single radio option (instead of the input-field as a whole) and which one.
+ * 					If null the input-field as a whole will be targeted (like any other input-field).
+ * 					Has to be the name of the targeted radio option (specified in the attributes of the input-field under 'radioOptions' -> 'value').
+ *
+ * 					If this variable is used the label will act the following way depending on what 'action' is:
  * 						- click: The specified option will be selected.
  * 						- focus: The specified option will be focused.
  * 						- copy: The value of the specified option will be copied (NOT the selected value - only the value of this option).
@@ -758,21 +786,20 @@ function inputfield_LabelObject (specifics={}) {
 		return;
 	}
 
-	//get the field object for the input-field it should be linked to
-	const fieldObj = inputfield_fields.get(inputfield_getElement(specifics.field));
-
-	//complain and return if the field couldn't be found
-	if (typeof fieldObj !== 'object') {
-		console.warn(`[MPO] inputfield_LabelObject() could not find the input-field to link the label to: "${specifics.field}".`);
-		return;
-	}
-
-	//get the type of the input-field
-	const fieldType = fieldObj.fieldType;
-
 
 
 	//=== VERIFY ALL ARGUMENTS ===
+
+	//fetch the 'data-fieldid' attribute if a DOM element was given
+	if (Object.isDOMElement(specifics.fieldID) === true) {
+		specifics.fieldID = specifics.fieldID.getAttribute('data-fieldid');
+	}
+
+	//complain and return if 'fieldID' isn't a string
+	if (typeof specifics.fieldID !== 'string') {
+		console.warn(`[MPO] inputfield_LabelObject() received a non-string as 'fieldID': ${specifics.fieldID} (note that if a DOM element was given then this means it's 'data-fieldid' attribute was invalid).`);
+		return;
+	}
 
 	//if 'action' isn't valid then set it to the default
 	if (['click', 'focus', 'copy', 'setToValue'].indexOf(specifics.action) === -1) {
@@ -787,18 +814,15 @@ function inputfield_LabelObject (specifics={}) {
 	}
 
 	//verify 'radioOption'
-		//but only if it's a radio field
-	if (fieldType === 'radio') {
+	if (typeof specifics.radioOption !== 'string' && specifics.radioOption !== null) {
 
-		//check if 'radioOption' is a string
-			//if not complain and set it to `null`
-		if (typeof specifics.radioOption !== 'string') {
+		//complain if 'radioOption' was invalid
+			//but only if it hasn't been left out on purpose
+		if (specifics.radioOption !== undefined) {
 			console.warn(`[MPO] inputfield_LabelObject() received a non-string as 'radioOption': "${specifics.radioOption}".`);
-			specifics.radioOption = null;
 		}
 
-	//if it's not a radio field then 'radioOption' isn't needed
-	} else {
+		//use default
 		specifics.radioOption = null;
 	}
 
@@ -807,9 +831,7 @@ function inputfield_LabelObject (specifics={}) {
 	// === SETTING THE ACTUAL PROPERTIES ===
 
 	//the ID of the field it's linked to
-		//has the same name as the HTML Attribute
-	this.labelForFieldID = fieldObj.id;
-
+	this.labelForFieldID = specifics.fieldID;
 
 	this.action = specifics.action;
 
@@ -971,7 +993,7 @@ function inputfield_createField (fieldType, parent, attributes) {
 		//and also ignore the host because this should apply to the individual input-field only
 	inputfield_setValue(container, attributes.defaultValue, {
 		skipOnchange: true,
-		ignoreHost: true,
+		updateHost: false,
 		DOMTree: docFrag
 	});
 
@@ -1023,8 +1045,8 @@ function inputfield_setupHost (specifics={}) {
  * 			Note: If you call this function via 'variable.inputfield_convertToLabel()' then you can completely skip this argument.
  * 			      Don't even use `undefined` or `null` or something, just skip it completely.
  *
- * 		field [DOM Element/Number/String]
- * 			The input-field. Can be the DOM element itself or it's input-field ID (string-form is fine, so 6 and '6' are both fine).
+ * 		field [DOM Element/String]
+ * 			The input-field. Can be the DOM element itself or it's input-field ID.
  * 			It will NOT be verified whether the input-field even exists or not.
  *
  * 		specifics [Object] <optional>
@@ -1094,8 +1116,8 @@ Object.defineProperty(HTMLElement.prototype, 'inputfield_convertToLabel', {
 /**	Gets the value of a input-field.
  *
  * 	Args:
- * 		field [DOM Element/Number/String]
- * 			The input-field. Can be the DOM element itself or it's input-field ID (string-form is fine, so 6 and '6' are both fine).
+ * 		field [DOM Element/String]
+ * 			The input-field. Can be the DOM element itself or it's input-field ID.
  *
  * 	Returns [String/null]:
  * 		The value of the input-field as a string.
@@ -1151,9 +1173,8 @@ function inputfield_getValue (field) {
  * 	This can be called for a button. Simply use `null` (though it'll work with any value except `undefined`).
  *
  * 	Args:
- * 		field [Number/String/DOM Element]
- * 			The unique ID of the input-field (can be in string-form, so 6 and '6' are both fine).
- * 			Or the actual container DOM element.
+ * 		field [DOM Element/String]
+ * 			The input-field. Can be the DOM element itself or it's input-field ID.
  *
  * 		value [*any*]
  * 			The value the input-field should be set to.
@@ -1165,9 +1186,9 @@ function inputfield_getValue (field) {
  * 				skipOnchange [Boolean] <false>
  * 					If true it will skip calling the 'onchange' function of the input-field.
  *
- * 				ignoreHost [Boolean] <false>
- * 					If true it ignores the specified host and simply applies the value to the actual input-field itself.
- * 					If false it applies the value to the host instead.
+ * 				updateHost [Boolean] <true>
+ * 					If true it updates the host if there is a host (as it should).
+ * 					If false it ignores the host and simply applies the value to the actual input-field itself.
  *
  * 				formProperty [String/Boolean] <false>
  * 					Which form property it should update.
@@ -1207,7 +1228,7 @@ function inputfield_setValue (field, value, specifics={}) {
 	const hostObj = inputfield_hosts.get(fieldObj.belongsToHost);
 
 	//check if the host should be updated and also check if the host even exists
-	if (specifics.ignoreHost !== true && hostObj !== undefined) {
+	if (specifics.updateHost !== false && hostObj !== undefined) {
 
 		//return if it's already set to the correct value
 		if (hostObj.value === value) {
@@ -1417,7 +1438,7 @@ function inputfield_setValue (field, value, specifics={}) {
 
 	//if the value has been succesfully changed then update the value inside the 'fieldObj'
 	if (changed === true) {
-		inputfield_applyNewValue(containerElem, value, {skipOnchange: specifics.skipOnchange});
+		inputfield_applyNewValue(containerElem, value, {skipOnchange: specifics.skipOnchange, updateHost: specifics.updateHost});
 		return true;
 	}
 	return false;
@@ -1605,7 +1626,7 @@ function inputfield_executedAfterFieldChange (elem) {
 	const fieldID = elem.getAttribute('data-linktofieldid');
 
 	//get the container element
-	const containerElem = inputfield_getElement(fieldID, elem);
+	const containerElem = inputfield_getElement(fieldID, {referenceElem: elem});
 
 	//return if container can't be found
 	if (containerElem === false) {
@@ -1698,12 +1719,16 @@ function inputfield_executedAfterFieldChange (elem) {
  * 		specifics [Object] <optional>
  * 			Includes the following optional properties:
  *
- * 			skipOnChange [Boolean] <false>
- * 				If true it skips executing the 'onchange' function.
+ * 				skipOnChange [Boolean] <false>
+ * 					If true it skips executing the 'onchange' function.
  *
- * 			formProperty [String] <optional>
- * 				In case a form is being updated it will only update the property with this name instead of the whole object.
- * 				If this is not specified the form value will be completely replaced with 'newValue'.
+ * 				formProperty [String] <optional>
+ * 					In case a form is being updated it will only update the property with this name instead of the whole object.
+ * 					If this is not specified the form value will be completely replaced with 'newValue'.
+ *
+ * 				updateHost [Boolean] <true>
+ * 					If true it updates the host if there is a host (as it should).
+ * 					If false it ignores the host and simply applies the value to the actual input-field itself.
  */
 function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 	//complain and use defaults if 'specifics' is invalid
@@ -1756,8 +1781,10 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 		}
 	}
 
-	//check if it belongs to a host and if it does then update all other fields that belong to the host
-	if (hostObj !== undefined) {
+	//update all other fields that belong to the host
+		//but only if the host should be updated
+		//and only if a host even exists
+	if (specifics.updateHost !== false && hostObj !== undefined) {
 		inputfield_updateHostsChildren(fieldObj.belongsToHost, newValue);
 	}
 
@@ -1965,11 +1992,11 @@ function inputfield_updateHostsChildren (hostElem, newValue) {
 				//if the checkbox has the same value then check it
 					//use 'skipOnchange' on both because the 'onchange' function of the individual input-fields shouldn't be activated
 				if (fieldObj.attributes.checkboxValue === newValue) {
-					inputfield_setValue(item, newValue, {skipOnchange: true, ignoreHost: true});
+					inputfield_setValue(item, newValue, {skipOnchange: true, updateHost: false});
 
 				//uncheck it otherwise
 				} else {
-					inputfield_setValue(item, false, {skipOnchange: true, ignoreHost: true});
+					inputfield_setValue(item, false, {skipOnchange: true, updateHost: false});
 				}
 				break;
 		}
@@ -2021,8 +2048,8 @@ function inputfield_getDefaultVariation (fieldType) {
 /**	Gets the actual DOM element of a input-field.
  *
  * 	Args:
- * 		fieldID [Number/String/DOM Element]
- * 			The field ID of the input-field, can be in string-form (6 and '6' are both fine).
+ * 		fieldID [String/DOM Element]
+ * 			The field ID of the input-field.
  * 			It can also be a DOM element in which case it will simply return that.
  *
  * 		specifics [Object] <optional>
@@ -2053,13 +2080,8 @@ function inputfield_getElement (fieldID, specifics={}) {
 	if (typeof fieldID === 'object' && fieldID.isDOMElement()) {
 		return fieldID;
 
-	//if a field ID has been specified and, if yes, find the input-field with that
-	} else if (typeof fieldID === 'string' || typeof fieldID === 'number') {
-
-		//convert to string if needed
-		if (typeof fieldID === 'number') {
-			fieldID = String(fieldID);
-		}
+	//if a field ID has been specified, and if yes, find the input-field with that
+	} else if (typeof fieldID === 'string') {
 
 		if (Object.isDOMElement(specifics.referenceElem) === true) {
 			let elem = specifics.referenceElem;
@@ -2107,9 +2129,8 @@ function inputfield_getElement (fieldID, specifics={}) {
 /**	Gets the actual DOM elements of the <input> element. NOT the input-field container.
  *
  * 	Args:
- * 		field [DOM Element/Number/String]
- * 			The input-field. Can be the DOM element itself or it's input-field ID (string-form is fine, so 6 and '6' are both fine).
- * 			DOM elements are preferred in case they're contained within a 'DocumentFragment'.
+ * 		field [DOM Element/String]
+ * 			The input-field. Can be the DOM element itself or it's input-field ID.
  *
  * 		DOMTree [DOM Tree] <document>
  * 			Which DOM tree it should look for the input-field.
@@ -2145,6 +2166,9 @@ function inputfield_getActualInputElements (field, DOMTree=document) {
 		if (results.length >= 1) {
 			return results;
 		}
+
+		//make sure to set 'field' to the input-field ID
+		field = fieldID;
 	}
 
 	//complain and return if 'DOMTree' is invalid
