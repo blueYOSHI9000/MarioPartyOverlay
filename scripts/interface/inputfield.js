@@ -1,231 +1,231 @@
 // Copyright 2021 MarioPartyOverlay AUTHORS
 // SPDX-License-Identifier: Apache-2.0
 
-/**	=== HOW INPUT-FIELDS WORK ===
- *
- * 	Input-fields are a way to get user-input. Whether it's a button, a checkbox, a set of options to choose from or whatever.
- * 	Basically a <input> element that looks better.
- *
- * 	You create a input-field with 'inputfield_createField()'.
- * 	Said function then creates a <span> that contains the entire input-field. This <span> also has the 'inputfield_container' class and is called the "container".
- * 	The container also stores the unique 'fieldID' inside it's 'data-fieldid' attribute.
- *
- * 	Input-fields entirely work through the container element and fieldIDs, if you want to do anything with a already-created input-field you need one of the two.
- *
- * 	In order to create a input-field you need to specify a type and variation (though variations are automatically set to a default if not specified).
- * 	Types specify what kind of input the field should take. Each type has a different purpose.
- * 	Variations on the other hand simply change the appearance of the input-field, they don't change the actual functionality. Any variation can be replaced with any other and it still works.
- * 		(though variations are unique to each type)
- *
- *
- * 	One important thing: The DOM elements that input-fields create should NOT be messed with. If any changes are made to the DOM element they might break. It's best to completely leave them alone.
- * 	It should also be mentioned that input-fields rarely report errors, chances are they silently break with no one realizing.
- *
- *
- * 	=== INPUT FIELD TYPES & VARIATIONS ===
- *
- * 	Each type is listed here and each type will list all variations it has (which can be specified with the 'variation' attribute).
- *
- * 	form
- * 		This is a special type as it doesn't really create an actual input-field (aside from an empty '<span>'), instead it can be used to combine several input-fields into a single form.
- * 		When creating a new form you can use it's ID to add other input-fields to it. To add a input-field to a form you can use the ID of the form inside the 'addToForm' attribute.
- * 		The form will have an object as it's value containing an item for each input-field that's part of it.
- * 		Each item has the 'tag' attribute as it's name that can be used to access the value inside the object.
- *
- * 		Variations:
- * 			- regular <default>: A regular form.
- *
- * 	checkbox
- * 		A simple box that can be either checked or unchecked.
- * 		Will store the values 'checked' and 'unchecked'.
- *		Varitions:
- * 			- regular <default>: A regular simple checkbox.
- *
- * 	radio
- * 		The user has to select one option of many. Multi-choice is not supported yet but will be.
- * 		Will store one user-defined value which can be any string.
- * 		Variations:
- * 			- checkbox <default>: A set of checkboxes. Basically the same as '<input type="radio">'.
- * 			- select: Opens a list of all options where the user can select one. Basically the same as '<select>'.
- * 			- image: Creates a set of images that look like buttons and the user can select one of them.
- *
- * 	text
- * 		A way to enter custom text.
- * 		Will store whatever the user entered as it's value. Will always be a string.
- * 		Variations:
- * 			- small <default>: A small textfield intended for single-line values. Basically the same as '<input type="text">'.
- * 			- area: A resizable text area intended for longer, multi-line values. Basically the same as '<textarea>'.
- *
- * 	number
- * 		A way to enter any number (aside from Infinity and NaN). Can include negative values.
- * 		Will store a number as a number. Note that it might be NaN if something broke.
- * 		Variations:
- * 			- text <default>: A text-field to enter a number manually with tiny buttons to increase/decrease. Does not allow text-input. Basically the same as '<input type="number">'
- * 			- range: A slider that allows the user to select a number. Basically the same as '<input type="slider">'.
- * 			- counter: A MPO-styled counter. Takes MPO's controls into account (+/- and how much). Not supported yet.
- *
- * 	button
- * 		A simple button. You press it, it does things.
- * 		Does not store a value so it will simply return undefined. Will trigger the 'onchange' function specified in attributes when clicked on.
- * 		Variations:
- * 			- regular <default>: A regular button. Basically the same as '<button>'.
- * 			- image: Creates a image that looks like a button. Not supported yet.
- *
- * 	color
- * 		A way to select a custom color.
- * 		Will store the selected color in hex form ('#ffffff' being white) as a string. [NOTE: currently, any form that's allowed by CSS is able to be stored in here -- this is subject to change]
- * 		Variations:
- * 			- regular <default>: A regular color selection. Basically the same as '<input type="color">'.
- *
- * 	file
- * 		A way to upload a file. Not supported yet.
- * 		How it's stored is still to be determined.
- * 		Variations:
- * 			- regular <default>: A regular file upload. Basically the same as '<input type="file">'.
- *
- *
- * 	=== FIELD ATTRIBUTES ===
- *
- * 	Each input-field has a set of attributes that can be specified when creating it.
- * 	Attributes can (currently) only be set when creating the input-field, they can not be changed afterwards.
- *
- * 	Note that some attributes are only available for some types.
- *
- * 	# general attributes (available for all types):
- *
- * 		variation [String] <default variation>
- * 			What variation this should be. See the list above for more info.
- * 			Will take the default variable of the 'fieldType' if not specified.
- * 			If a invalid variation is given then this WILL break, it won't automatically go back to the default. This includes specifying a variation when no variations exist.
- *
- * 		id [String] <optional>
- * 			The ID of the input-field. Can be used to access the input-field.
- * 			The ID can't consist of only numbers (so '123' is not allowed but '123a' is allowed).
- * 			The ID should be unique. If the same ID is used multiple times it may result in unexpected behaviour.
- * 			On default this will be a unique ID which represents the total amount of input-fields made (so the default IDs would be '1' > '2' > '3' etc.).
- *
- * 			More on what happens if the same ID is used multiple times:
- * 				Whenever an input-field is fetched by an ID, it will always only use the first input-field it finds with that ID. It won't even bother scanning for a second one.
- * 				And which one is found first can be dependant on various factors, all of them are due to how 'inputfield_getElement()' works.
- * 				The function won't be able to find a element inside a DocumentFragment or other places unless specifically specified.
- * 				The function will also search for "related" elements first if a 'referenceElem' is given (see the documentation on the function).
- * 				Both of these can affect which element is found first.
- * 				This also isn't fixed in stone, this can change in any update (for better or worse). So it's recommended to avoid using the same ID multiple times as much as possible.
- *
- * 		onchange [Function] <none>
- * 			A function that gets executed each time the input-field is updated. Available for all input types.
- * 			The first argument will be the current value of the input field.
- * 			The second argument will be the field object inside 'inputfield_fields' (see the 'inputfield_FieldObject()' function for a documentation of this object).
- *
- * 		defaultValue [*any*] <optional>
- * 			This defines the value the input-field will have after it's been created.
- * 			The default value will only be applied if it's actually valid.
- * 			If no default value is specified (or if it's invalid) then it will use the following (depending on which type it is):
- * 				form:     *N/A*
- * 				checkbox: false
- * 				radio:    *the first 'option'*
- * 				text:     '' (a blank string)
- * 				number:   0
- * 				button:   *N/A*
- * 				color:    '#000000'
- * 				file:     *N/A*
- *
- * 		labels [Array/DOM Element] <optional>
- * 			A DOM element (or an array of them) that should act as labels. Basically like a '<label>' element.
- *
- * 		cssClass [String/Array] <optional>
- * 			Regular CSS classes that will be added to the container.
- *
- * 		HTMLAttributes [Object] <optional>
- * 			A object of HTML attributes to add to the container. `{id: 'testo'}` would add 'testo' as the 'id' attribute.
- * 			The following attributes will be ignored (mainly because they're needed internally/can be set through input-field attributes):
- * 				'class', 'data-fieldid'
- *
- * 	# 'checkbox' type attributes:
- *
- * 		checkboxValue [*any*] <true>
- * 			The value the checkbox has when it's checked. Can be anything except null or undefined.
- * 			Note that the value for it being unchecked will always be false.
- *
- * 		host [DOM Element] <none>
- * 			Specifying a "host" element (can be any DOM element - even a input-field) allows you to connect several input-fields with each other.
- * 			To connect input-fields you simply use the same host element when creating the input-field and they're automatically connected with each other.
- * 			Once input-fields are connected there can only be one checkbox that's checked. Basically a 'radio' replacement.
- *
- * 			The 'onchange' attribute will only be set on the host element (which will be triggered when the value changes) and not on the individual checkboxes.
- * 			Setting a 'onchange' attribute when one has already been set then it will replace the existing one.
- * 			It is not possible to set a 'onchange' function on a individual checkbox without it applying to the host as a whole.
- *
- * 			If no 'tag' is provided then it will attempt to take the tag of the first child, if not possible it uses 'host' instead as a tag.
- *
- * 	# 'radio' type attributes:
- *
- * 		options [Array]
- * 			A list of options for radio input fields.
- * 			Available for all radio input fields [exact list to follow]. Will be ignored for all others.
- * 			Each array item is a object consisting of the following:
- * 				- name [String]
- * 					The name of the option as it's displayed to the user.
- * 					This is also needed for images as a alt-text.
- * 				- value [String]
- * 					The value of the option, will be returned to the 'onchange' function.
- * 				- src [String]
- * 					The source of the image. Only needed if the 'fieldType' is 'radio-image'.
- *
- * 	# 'image' type attributes:
- *
- * 		src [String]
- * 			The source of the image. Has to be the full file path just like a <img> 'src' attribute would require it.
- * 			Available for all input types that require a image [exact list to follow]. Will be ignored for all others.
- *
- * 		altText [String] <none>
- * 			Alt-text for images.
- * 			Available for all input types that require a image (see 'src' attribute above for list).
- *
- * 	# form related attributes (available for all types but only needed if used inside a form):
- *
- * 		tag [String] <ID>
- * 			A tag-name is used to access the value inside a form.
- * 			It's suggested that a tag should be unique within a form, but it's not required.
- * 			If not specified then it will use it's ID as the tag. Due to this, it should be avoided to create tags that are only a number and nothing else.
- *
- * 			If multiple input-fields have the same tag then when a input-field is updated it will simply overwrite the value that's already there.
- * 			This essentially allows you to have a form value that's simply the value of the most recently updated input-field.
- *
- * 		addToForm [Array/DOM Element/String] <none>
- * 			The form element it should be added to. Can be either the DOM element of the form or it's ID (can be in string-form, so 6 and '6' are both fine).
- * 				If you use DocumentFragments then don't use the field-ID if the input-field is inside a DocumentFragment as it won't be able to find it.
- * 			Can also be an array consisting of multiple DOM elements/field-IDs.
- * 			Leave empty if it should not be added to a form.
- *
- * 		autoAddToForm [Boolean] <false>
- * 			If true any field that's a descendant of a form will automatically be added to the form.
- * 			The way this works is that it will go up the DOM tree and if it finds a form then it will be added to that form.
- * 			This only applies the moment the field is created. If the input-field is created and is afterwards appended to a form then it will NOT be added to the form.
- *
- * 	=== USING LABELS ===
- * 		Input-fields also have their own <label> alternative that's called... labels. I may like to over-complicate things but not even I would call them something else.
- *
- * 		There's multiple ways to create a label or convert an existing element to a label (any element can be a label):
- *
- * 			- Add a 'inputfield_label' class and a 'data-labelforfieldid' attribute that saves the unique input-field ID.
- *
- * 			- Include the element in the 'labels' attribute when creating a input-field.
- *
- * 			- Call 'inputfield_convertToLabel()'. This way you get more options and more control. See the documentation on the function for more info.
- * 				> You can also call '.inputfield_convertToLabel()' on a DOM element directly (again, see function for more info).
- *
- * 	=== IMPORTANT FUNCTIONS ===
- *
- * 	inputfield_createField()
- * 		Creates a new input-field.
- *
- * 	inputfield_getValue()
- * 		Gets the value of a input-field.
- *
- * 	inputfield_setValue()
- * 		Sets the input-field to a new value.
- *
+/*	=== HOW INPUT-FIELDS WORK ===
+
+	Input-fields are a way to get user-input. Whether it's a button, a checkbox, a set of options to choose from or whatever.
+	Basically a <input> element that looks better.
+
+	You create a input-field with 'inputfield_createField()'.
+	Said function then creates a <span> that contains the entire input-field. This <span> also has the 'inputfield_container' class and is called the "container".
+	The container also stores the unique 'fieldID' inside it's 'data-fieldid' attribute.
+
+	Input-fields entirely work through the container element and fieldIDs, if you want to do anything with a already-created input-field you need one of the two.
+
+	In order to create a input-field you need to specify a type and variation (though variations are automatically set to a default if not specified).
+	Types specify what kind of input the field should take. Each type has a different purpose.
+	Variations on the other hand simply change the appearance of the input-field, they don't change the actual functionality. Any variation can be replaced with any other and it still works.
+		(though variations are unique to each type)
+
+
+	One important thing: The DOM elements that input-fields create should NOT be messed with. If any changes are made to the DOM element they might break. It's best to completely leave them alone.
+	It should also be mentioned that input-fields rarely report errors, chances are they silently break with no one realizing.
+
+
+	=== INPUT FIELD TYPES & VARIATIONS ===
+
+	Each type is listed here and each type will list all variations it has (which can be specified with the 'variation' attribute).
+
+	form
+		This is a special type as it doesn't really create an actual input-field (aside from an empty '<span>'), instead it can be used to combine several input-fields into a single form.
+		When creating a new form you can use it's ID to add other input-fields to it. To add a input-field to a form you can use the ID of the form inside the 'addToForm' attribute.
+		The form will have an object as it's value containing an item for each input-field that's part of it.
+		Each item has the 'tag' attribute as it's name that can be used to access the value inside the object.
+
+		Variations:
+			- regular <default>: A regular form.
+
+	checkbox
+		A simple box that can be either checked or unchecked.
+		Will store the values 'checked' and 'unchecked'.
+		Varitions:
+			- regular <default>: A regular simple checkbox.
+
+	radio
+		The user has to select one option of many. Multi-choice is not supported yet but will be.
+		Will store one user-defined value which can be any string.
+		Variations:
+			- checkbox <default>: A set of checkboxes. Basically the same as '<input type="radio">'.
+			- select: Opens a list of all options where the user can select one. Basically the same as '<select>'.
+			- image: Creates a set of images that look like buttons and the user can select one of them.
+
+	text
+		A way to enter custom text.
+		Will store whatever the user entered as it's value. Will always be a string.
+		Variations:
+			- small <default>: A small textfield intended for single-line values. Basically the same as '<input type="text">'.
+			- area: A resizable text area intended for longer, multi-line values. Basically the same as '<textarea>'.
+
+	number
+		A way to enter any number (aside from Infinity and NaN). Can include negative values.
+		Will store a number as a number. Note that it might be NaN if something broke.
+		Variations:
+			- text <default>: A text-field to enter a number manually with tiny buttons to increase/decrease. Does not allow text-input. Basically the same as '<input type="number">'
+			- range: A slider that allows the user to select a number. Basically the same as '<input type="slider">'.
+			- counter: A MPO-styled counter. Takes MPO's controls into account (+/- and how much). Not supported yet.
+
+	button
+		A simple button. You press it, it does things.
+		Does not store a value so it will simply return undefined. Will trigger the 'onchange' function specified in attributes when clicked on.
+		Variations:
+			- regular <default>: A regular button. Basically the same as '<button>'.
+			- image: Creates a image that looks like a button. Not supported yet.
+
+	color
+		A way to select a custom color.
+		Will store the selected color in hex form ('#ffffff' being white) as a string. [NOTE: currently, any form that's allowed by CSS is able to be stored in here -- this is subject to change]
+		Variations:
+			- regular <default>: A regular color selection. Basically the same as '<input type="color">'.
+
+	file
+		A way to upload a file. Not supported yet.
+		How it's stored is still to be determined.
+		Variations:
+			- regular <default>: A regular file upload. Basically the same as '<input type="file">'.
+
+
+	=== FIELD ATTRIBUTES ===
+
+	Each input-field has a set of attributes that can be specified when creating it.
+	Attributes can (currently) only be set when creating the input-field, they can not be changed afterwards.
+
+	Note that some attributes are only available for some types.
+
+	# general attributes (available for all types):
+
+		variation [String] <default variation>
+			What variation this should be. See the list above for more info.
+			Will take the default variable of the 'fieldType' if not specified.
+			If a invalid variation is given then this WILL break, it won't automatically go back to the default. This includes specifying a variation when no variations exist.
+
+		id [String] <optional>
+			The ID of the input-field. Can be used to access the input-field.
+			The ID can't consist of only numbers (so '123' is not allowed but '123a' is allowed).
+			The ID should be unique. If the same ID is used multiple times it may result in unexpected behaviour.
+			On default this will be a unique ID which represents the total amount of input-fields made (so the default IDs would be '1' > '2' > '3' etc.).
+
+			More on what happens if the same ID is used multiple times:
+				Whenever an input-field is fetched by an ID, it will always only use the first input-field it finds with that ID. It won't even bother scanning for a second one.
+				And which one is found first can be dependant on various factors, all of them are due to how 'inputfield_getElement()' works.
+				The function won't be able to find a element inside a DocumentFragment or other places unless specifically specified.
+				The function will also search for "related" elements first if a 'referenceElem' is given (see the documentation on the function).
+				Both of these can affect which element is found first.
+				This also isn't fixed in stone, this can change in any update (for better or worse). So it's recommended to avoid using the same ID multiple times as much as possible.
+
+		onchange [Function] <none>
+			A function that gets executed each time the input-field is updated. Available for all input types.
+			The first argument will be the current value of the input field.
+			The second argument will be the field object inside 'inputfield_fields' (see the 'inputfield_FieldObject()' function for a documentation of this object).
+
+		defaultValue [*any*] <optional>
+			This defines the value the input-field will have after it's been created.
+			The default value will only be applied if it's actually valid.
+			If no default value is specified (or if it's invalid) then it will use the following (depending on which type it is):
+				form:     *N/A*
+				checkbox: false
+				radio:    *the first 'option'*
+				text:     '' (a blank string)
+				number:   0
+				button:   *N/A*
+				color:    '#000000'
+				file:     *N/A*
+
+		labels [Array/DOM Element] <optional>
+			A DOM element (or an array of them) that should act as labels. Basically like a '<label>' element.
+
+		cssClass [String/Array] <optional>
+			Regular CSS classes that will be added to the container.
+
+		HTMLAttributes [Object] <optional>
+			A object of HTML attributes to add to the container. `{id: 'testo'}` would add 'testo' as the 'id' attribute.
+			The following attributes will be ignored (mainly because they're needed internally/can be set through input-field attributes):
+				'class', 'data-fieldid'
+
+	# 'checkbox' type attributes:
+
+		checkboxValue [*any*] <true>
+			The value the checkbox has when it's checked. Can be anything except null or undefined.
+			Note that the value for it being unchecked will always be false.
+
+		host [DOM Element] <none>
+			Specifying a "host" element (can be any DOM element - even a input-field) allows you to connect several input-fields with each other.
+			To connect input-fields you simply use the same host element when creating the input-field and they're automatically connected with each other.
+			Once input-fields are connected there can only be one checkbox that's checked. Basically a 'radio' replacement.
+
+			The 'onchange' attribute will only be set on the host element (which will be triggered when the value changes) and not on the individual checkboxes.
+			Setting a 'onchange' attribute when one has already been set then it will replace the existing one.
+			It is not possible to set a 'onchange' function on a individual checkbox without it applying to the host as a whole.
+
+			If no 'tag' is provided then it will attempt to take the tag of the first child, if not possible it uses 'host' instead as a tag.
+
+	# 'radio' type attributes:
+
+		options [Array]
+			A list of options for radio input fields.
+			Available for all radio input fields [exact list to follow]. Will be ignored for all others.
+			Each array item is a object consisting of the following:
+				- name [String]
+					The name of the option as it's displayed to the user.
+					This is also needed for images as a alt-text.
+				- value [String]
+					The value of the option, will be returned to the 'onchange' function.
+				- src [String]
+					The source of the image. Only needed if the 'fieldType' is 'radio-image'.
+
+	# 'image' type attributes:
+
+		src [String]
+			The source of the image. Has to be the full file path just like a <img> 'src' attribute would require it.
+			Available for all input types that require a image [exact list to follow]. Will be ignored for all others.
+
+		altText [String] <none>
+			Alt-text for images.
+			Available for all input types that require a image (see 'src' attribute above for list).
+
+	# form related attributes (available for all types but only needed if used inside a form):
+
+		tag [String] <ID>
+			A tag-name is used to access the value inside a form.
+			It's suggested that a tag should be unique within a form, but it's not required.
+			If not specified then it will use it's ID as the tag. Due to this, it should be avoided to create tags that are only a number and nothing else.
+
+			If multiple input-fields have the same tag then when a input-field is updated it will simply overwrite the value that's already there.
+			This essentially allows you to have a form value that's simply the value of the most recently updated input-field.
+
+		addToForm [Array/DOM Element/String] <none>
+			The form element it should be added to. Can be either the DOM element of the form or it's ID (can be in string-form, so 6 and '6' are both fine).
+				If you use DocumentFragments then don't use the field-ID if the input-field is inside a DocumentFragment as it won't be able to find it.
+			Can also be an array consisting of multiple DOM elements/field-IDs.
+			Leave empty if it should not be added to a form.
+
+		autoAddToForm [Boolean] <false>
+			If true any field that's a descendant of a form will automatically be added to the form.
+			The way this works is that it will go up the DOM tree and if it finds a form then it will be added to that form.
+			This only applies the moment the field is created. If the input-field is created and is afterwards appended to a form then it will NOT be added to the form.
+
+	=== USING LABELS ===
+		Input-fields also have their own <label> alternative that's called... labels. I may like to over-complicate things but not even I would call them something else.
+
+		There's multiple ways to create a label or convert an existing element to a label (any element can be a label):
+
+			- Add a 'inputfield_label' class and a 'data-labelforfieldid' attribute that saves the unique input-field ID.
+
+			- Include the element in the 'labels' attribute when creating a input-field.
+
+			- Call 'inputfield_convertToLabel()'. This way you get more options and more control. See the documentation on the function for more info.
+				> You can also call '.inputfield_convertToLabel()' on a DOM element directly (again, see function for more info).
+
+	=== IMPORTANT FUNCTIONS ===
+
+	inputfield_createField()
+		Creates a new input-field.
+
+	inputfield_getValue()
+		Gets the value of a input-field.
+
+	inputfield_setValue()
+		Sets the input-field to a new value.
+
  */
 
 /**	=== USING THIS ON ANOTHER PROJECT ===
