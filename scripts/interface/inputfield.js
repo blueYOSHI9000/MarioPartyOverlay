@@ -35,6 +35,13 @@
 		Variations:
 			- regular <default>: A regular form.
 
+	button
+		A simple button. You press it, it does things.
+		Does not store a value so it will simply return undefined. Will trigger the 'onchange' function specified in attributes when clicked on.
+		Variations:
+			- regular <default>: A regular button. Basically the same as '<button>'.
+			- image: Creates a image that looks like a button. Not supported yet.
+
 	checkbox
 		A simple box that can be either checked or unchecked.
 		Will store the values 'checked' and 'unchecked'.
@@ -64,13 +71,6 @@
 			- range: A slider that allows the user to select a number. Basically the same as '<input type="slider">'.
 			- counter: A MPO-styled counter. Takes MPO's controls into account (+/- and how much). Not supported yet.
 
-	button
-		A simple button. You press it, it does things.
-		Does not store a value so it will simply return undefined. Will trigger the 'onchange' function specified in attributes when clicked on.
-		Variations:
-			- regular <default>: A regular button. Basically the same as '<button>'.
-			- image: Creates a image that looks like a button. Not supported yet.
-
 	color
 		A way to select a custom color.
 		Will store the selected color in hex form ('#ffffff' being white) as a string. [NOTE: currently, any form that's allowed by CSS is able to be stored in here -- this is subject to change]
@@ -90,6 +90,7 @@
 	Attributes can (currently) only be set when creating the input-field, they can not be changed afterwards.
 
 	Note that some attributes are only available for some types.
+
 
 	# general attributes (available for all types):
 
@@ -112,11 +113,6 @@
 				Both of these can affect which element is found first.
 				This also isn't fixed in stone, this can change in any update (for better or worse). So it's recommended to avoid using the same ID multiple times as much as possible.
 
-		onchange [Function] <none>
-			A function that gets executed each time the input-field is updated. Available for all input types.
-			The first argument will be the current value of the input field.
-			The second argument will be the field object inside 'inputfield_fields' (see the 'inputfield_FieldObject()' function for a documentation of this object).
-
 		defaultValue [*any*] <optional>
 			This defines the value the input-field will have after it's been created.
 			The default value will only be applied if it's actually valid.
@@ -130,6 +126,19 @@
 				color:    '#000000'
 				file:     *N/A*
 
+		onchange [Function] <none>
+			A function that gets executed each time the input-field is updated. Available for all input types.
+			The first argument will be the current value of the input field.
+			The second argument will be the field object inside 'inputfield_fields' (see the 'inputfield_FieldObject()' function for a documentation of this object).
+
+		beforeText [String] <none>
+			If present it will create a label before the input-field consisting of this text.
+			Useful if you want a description before a checkbox.
+			This won't be parsed as HTML, it will simply be inserted as-is.
+
+		afterText [String] <none>
+			Same as 'beforeText' except it will be created after the input-field.
+
 		labels [Array/DOM Element] <optional>
 			A DOM element (or an array of them) that should act as labels. Basically like a '<label>' element.
 
@@ -141,48 +150,8 @@
 			The following attributes will be ignored (mainly because they're needed internally/can be set through input-field attributes):
 				'class', 'data-fieldid'
 
-	# 'checkbox' type attributes:
 
-		checkboxValue [*any*] <true>
-			The value the checkbox has when it's checked. Can be anything except null or undefined.
-			Note that the value for it being unchecked will always be false.
-
-		host [DOM Element] <none>
-			Specifying a "host" element (can be any DOM element - even a input-field) allows you to connect several input-fields with each other.
-			To connect input-fields you simply use the same host element when creating the input-field and they're automatically connected with each other.
-			Once input-fields are connected there can only be one checkbox that's checked. Basically a 'radio' replacement.
-
-			The 'onchange' attribute will only be set on the host element (which will be triggered when the value changes) and not on the individual checkboxes.
-			Setting a 'onchange' attribute when one has already been set then it will replace the existing one.
-			It is not possible to set a 'onchange' function on a individual checkbox without it applying to the host as a whole.
-
-			If no 'tag' is provided then it will attempt to take the tag of the first child, if not possible it uses 'host' instead as a tag.
-
-	# 'radio' type attributes:
-
-		options [Array]
-			A list of options for radio input fields.
-			Available for all radio input fields [exact list to follow]. Will be ignored for all others.
-			Each array item is a object consisting of the following:
-				- name [String]
-					The name of the option as it's displayed to the user.
-					This is also needed for images as a alt-text.
-				- value [String]
-					The value of the option, will be returned to the 'onchange' function.
-				- src [String]
-					The source of the image. Only needed if the 'fieldType' is 'radio-image'.
-
-	# 'image' type attributes:
-
-		src [String]
-			The source of the image. Has to be the full file path just like a <img> 'src' attribute would require it.
-			Available for all input types that require a image [exact list to follow]. Will be ignored for all others.
-
-		altText [String] <none>
-			Alt-text for images.
-			Available for all input types that require a image (see 'src' attribute above for list).
-
-	# form related attributes (available for all types but only needed if used inside a form):
+	# form related attributes (NOT just for 'form' types -- these are available to all types but are only needed when used inside a form):
 
 		tag [String] <ID>
 			A tag-name is used to access the value inside a form.
@@ -202,6 +171,48 @@
 			If true any field that's a descendant of a form will automatically be added to the form.
 			The way this works is that it will go up the DOM tree and if it finds a form then it will be added to that form.
 			This only applies the moment the field is created. If the input-field is created and is afterwards appended to a form then it will NOT be added to the form.
+
+	# host related attributes (available only to 'checkbox' types for now):
+
+		host [DOM Element] <none>
+			Specifying a "host" element (can be any DOM element - even a input-field) allows you to connect several input-fields with each other.
+			To connect input-fields you simply use the same host element when creating the input-field and they're automatically connected with each other.
+			Once input-fields are connected there can only be one checkbox that's checked. Basically a 'radio' replacement.
+
+			The 'onchange' attribute will only be set on the host element (which will be triggered when the value changes) and not on the individual checkboxes.
+			Setting a 'onchange' attribute when one has already been set then it will replace the existing one.
+			It is not possible to set a 'onchange' function on a individual checkbox without it applying to the host as a whole.
+
+			If no 'tag' is provided then it will attempt to take the tag of the first child, if not possible it uses 'host' instead as a tag.
+
+
+	# 'button' type attributes
+
+		content [String] <empty>
+			The text inside the button.
+			This won't be parsed as HTML, it will simply be inserted as-is.
+
+
+	# 'checkbox' type attributes:
+
+		checkboxValue [*any*] <true>
+			The value the checkbox has when it's checked. Can be anything except null or undefined.
+			Note that the value for it being unchecked will always be false.
+
+
+	# 'radio' type attributes:
+
+		options [Array]
+			A list of options for radio input fields.
+			Available for all radio input fields [exact list to follow]. Will be ignored for all others.
+			Each array item is a object consisting of the following:
+				- name [String]
+					The name of the option as it's displayed to the user.
+					This is also needed for images as a alt-text.
+				- value [String]
+					The value of the option, will be returned to the 'onchange' function.
+				- src [String]
+					The source of the image. Only needed if the 'fieldType' is 'radio-image'.
 
 	=== USING LABELS ===
 		Input-fields also have their own <label> alternative that's called... labels. I may like to over-complicate things but not even I would call them something else.
@@ -278,6 +289,10 @@ let inputfield_labels = new WeakMap();
  * 	This sets up the host if needed.
  * 	This updates the host and all forms if needed.
  *
+ * 	This will also execute the attributes immediately if necessary (for example, if a 'host' is specified then it will immediately be added to the host) with the following exceptions:
+ * 		- 'content'
+ * 	These exceptions will all be executed in 'inputfield_createField()'. They are still verified within this function though.
+ *
  * 	Args:
  * 		specifics [Object]
  * 			Includes the following properties:
@@ -321,6 +336,8 @@ let inputfield_labels = new WeakMap();
  *
  * 		attributes [Object]
  * 			All attributes of the field.
+ * 			This isn't 1:1 the attributes that were given, these were verified and updated by this function.
+ * 			Any attributes that were incorrect have been set to their defaults (likely `undefined`).
  *
  * 		onchange [Function/undefined]
  * 			The 'onchange' function.
@@ -352,6 +369,8 @@ function inputfield_FieldObject (specifics={}) {
 		specifics = {};
 	}
 
+
+
 	// === GET AND SET THE ID ===
 
 	//increase the total of input-fields made (needed for unique IDs)
@@ -374,7 +393,12 @@ function inputfield_FieldObject (specifics={}) {
 		specifics.elem.setAttribute('data-fieldid', this.id);
 	}
 
+
+
 	// === MODIFYING ATTRIBUTES ===
+		//note that the following is more or less in order as the attributes are listed in the documentation
+		//I say "more or less" because some attributes rely on another attribute already being verified
+		//so it's not possible to have them completely in order
 
 	//replace 'attributes' with a empty object if it isn't already an object
 	if (typeof specifics.attributes !== 'object') {
@@ -383,6 +407,9 @@ function inputfield_FieldObject (specifics={}) {
 
 	//for quick access
 	let attributes = specifics.attributes;
+
+
+	// # 'variation'
 
 	//if no variation has been specified then try getting it from 'fieldType' (so 'radio-checkbox' is split into the fieldType 'radio' and variation 'checkbox')
 	if (attributes.variation === undefined) {
@@ -402,15 +429,126 @@ function inputfield_FieldObject (specifics={}) {
 	//get default variation if no variation has been specified
 	attributes.variation ??= inputfield_getDefaultVariation(specifics.fieldType);
 
+
+	// # 'id'
+		//verified at the start of this function
+
+
+	// # 'checkboxValue'
+
 	//set 'checkboxValue' to true if it hasn't been specified
-		//this has to be done before calling 'inputfield_getDefaultValue()' since that would think a value of `undefined` is valid (when it isn't)
+		//this has to be done before calling 'inputfield_getDefaultValue()' (done below for 'defaultValue') since that would think a value of `undefined` is valid (when it isn't)
 	attributes.checkboxValue ??= true;
+
+
+	// # 'defaultValue'
 
 	//check if 'defaultValue' is valid and if not, replace it with a default value
 		//note that we pass 'attributes' here despite those still getting verified in here but that doesn't matter here since it only needs attribute properties that we don't modify here
 	if (inputfield_validateValue(attributes.defaultValue, {fieldType: specifics.fieldType, attributes: attributes}) !== true) {
 		attributes.defaultValue = inputfield_getDefaultValue(specifics.fieldType, attributes);
 	}
+
+
+	// # 'beforeText'
+
+	//if 'beforeText' is neither a string nor undefined then complain and set it to undefined
+		//this attribute has to be a string but undefined is valid too (as undefined == "don't use this")
+	if (typeof attributes.beforeText !== 'string' && attributes.beforeText !== undefined) {
+		console.warn(`[MPO] inputfield_FieldObject() received a non-string as 'beforeText': "${attributes.beforeText}".`);
+		attributes.beforeText = undefined;
+	}
+
+	//create the 'beforeText' element
+	if (typeof attributes.beforeText === 'string') {
+		//create the element...
+		let beforeTextNode = cElem('span', specifics.elem.parentNode);
+
+		//...and insert it before the input-field
+			//note that '.insertBefore()' needs to be called on the parent that contains both element
+			//(at least I think you have to do it that way, this function is honestly a complete mess -- that or I'm stupid)
+		specifics.elem.parentNode.insertBefore(beforeTextNode, specifics.elem);
+
+		//add the correct text
+			//note that this will not parse HTML (which is intended)
+		beforeTextNode.textContent = attributes.beforeText;
+
+		//make it a label
+		beforeTextNode.classList.add('inputfield_label');
+		beforeTextNode.setAttribute('data-labelforfieldid', this.id);
+	}
+
+
+	// # 'afterText'
+
+	//if 'afterText' is neither a string nor undefined then complain and set it to undefined
+		//this attribute has to be a string but undefined is valid too (as undefined == "don't use this")
+	if (typeof attributes.afterText !== 'string' && attributes.afterText !== undefined) {
+		console.warn(`[MPO] inputfield_FieldObject() received a non-string as 'afterText': "${attributes.afterText}".`);
+		attributes.afterText = undefined;
+	}
+
+	//create the 'afterText' element
+	if (typeof attributes.afterText === 'string') {
+		//create the element...
+		let afterTextNode = cElem('span', specifics.elem.parentNode);
+
+		//...and insert it after the input-field
+			//ok, let's explain this absolute nut-case of a mess (shoutouts to JS for sucking massive dick and shoutouts to StackOverflow for not sucking as much dick)
+			//from what I can gather there's no 'insertAfter()' function or something. So, what do we have to do?
+			//well, obviously we have to fetch the next element and then append it before that. Obviously. Why would there be a easier way?
+
+			//ok, actual explanation here:
+			//we fetch the parent that contains all of this via 'specifics.elem.parentNode' (which is likely a Document-Fragment)
+			//then we call '.insertBefore()' on it ('.insertBefore()' needs to be called on a parent that contains both element -- at least I think it does, fuck knows what it needs)
+			//then we specifify out text-node that we want to move
+			//and finally we fetch the next sibling of the input-field ('specifics.elem'), this is basically the element that comes after the input-field
+			//and that's how we insert our text-node after the input-field -- by inserting it before the element that comes after the input-field
+
+			//now, what if there is no element after the input-field?
+			//'specifics.elem.nextSibling' would return `null` in that case
+			//but '.insertBefore()' inserts an element at the end of the list if you give it `null`
+
+			//almost like they realized that people would have to do things this way, but why add a dedicated '.insertAfter()' function when you can simply expect people to use this?
+		specifics.elem.parentNode.insertBefore(afterTextNode, specifics.elem.nextSibling);
+
+		//add the correct text
+			//note that this will not parse HTML (which is intended)
+		afterTextNode.textContent = attributes.afterText;
+
+		//make it a label
+		afterTextNode.classList.add('inputfield_label');
+		afterTextNode.setAttribute('data-labelforfieldid', this.id);
+	}
+
+
+	// # 'labels'
+
+	//if 'labels' is undefined then convert it to an empty array
+	if (attributes.labels === undefined) {
+		attributes.labels = [];
+
+	//if 'labels' isn't a array then put it inside an array
+	} else if (Array.isArray(attributes.labels) !== true) {
+		attributes.labels = [attributes.labels];
+	}
+
+	//apply the 'labels' attribute and remove all invalid array items
+	attributes.labels.removeEachIf((item) => {
+		//if it's not a DOM element then return true (which removes the array item)
+		if (Object.isDOMElement(item) !== true) {
+			return true;
+
+		//if it's a DOM element then convert it to a basic label and return false (keep the array item)
+		} else {
+			item.classList.add('inputfield_label');
+			item.setAttribute('data-labelforfieldid', this.id);
+			return false;
+		}
+	});
+
+
+	// # 'cssClass'
 
 	//if 'cssClass' is a string then add it to an empty array
 	if (typeof attributes.cssClass === 'string') {
@@ -432,6 +570,9 @@ function inputfield_FieldObject (specifics={}) {
 		attributes.cssClass = [];
 	}
 
+
+	// # 'HTMLAttributes'
+
 	//set all 'HTMLAttributes'
 	if (typeof attributes.HTMLAttributes === 'object') {
 		for (key in attributes.HTMLAttributes) {
@@ -446,6 +587,9 @@ function inputfield_FieldObject (specifics={}) {
 			specifics.elem.setAttribute(key, attributes.HTMLAttributes[key]);
 		}
 	}
+
+
+	// # 'addToForm' & 'autoAddToForm'
 
 	//turn 'addToForm' into an empty array if nullish
 	if (attributes.addToForm === undefined || attributes.addToForm === null) {
@@ -498,6 +642,9 @@ function inputfield_FieldObject (specifics={}) {
 		return (Object.isDOMElement(item) !== true || attributes.addToForm.indexOf(item) !== index);
 	});
 
+
+	// # 'host'
+
 	//set the host object as undefined
 		//has to be actually initialized later as the host object might not even exist yet
 	let hostObj;
@@ -538,6 +685,9 @@ function inputfield_FieldObject (specifics={}) {
 		attributes.host = undefined;
 	}
 
+
+	// # 'addToForm' ...again
+
 	//add this input-field to all forms it should be added to
 	if (Array.isArray(attributes.addToForm) === true) {
 		for (const item of attributes.addToForm) {
@@ -566,36 +716,73 @@ function inputfield_FieldObject (specifics={}) {
 		attributes.addToForm = [];
 	}
 
+
+	// # 'tag'
+
 	//get default tag if no tag has been specified
-		//note that this has to be done after the previous stuff because one bit relies on whether a tag has been specified or not
+		//note that this has to be done after the host stuff because that part checks whether a 'tag' has been specified (and replaces the hosts tag with it if necessary)
 	attributes.tag ??= String(this.id);
 
+
+	// # 'onchange'
+
 	//set the 'onchange' to a empty function if nothing is specified
-		//note that this has to be done after the previous stuff because one bit relies on whether a onchange function has been specified or not
+		//note that this has to be done after the host stuff because that part checks whether a 'tag' has been specified (and replaces the hosts tag with it if necessary)
 	attributes.onchange = (typeof attributes.onchange !== 'function' || attributes.host !== undefined) ? (() => {return;}) : attributes.onchange;
 
-	//if 'labels' is undefined then convert it to an empty array
-	if (attributes.labels === undefined) {
-		attributes.labels = [];
 
-	//if 'labels' isn't a array then put it inside an array
-	} else if (Array.isArray(attributes.labels) !== true) {
-		attributes.labels = [attributes.labels];
+	// # 'content'
+
+	//if 'content' is neither a string nor undefined then complain and set it to undefined
+		//this attribute has to be a string but undefined is valid too (as undefined == "don't use this")
+	if (typeof attributes.content !== 'string' && attributes.content !== undefined) {
+		console.warn(`[MPO] inputfield_FieldObject() received a non-string as 'content': "${attributes.content}".`);
+		attributes.content = undefined;
 	}
 
-	//apply the 'labels' attribute and remove all invalid array items
-	attributes.labels.removeEachIf((item) => {
-		//if it's not a DOM element then return true (which removes the array item)
-		if (Object.isDOMElement(item) !== true) {
-			return true;
 
-		//if it's a DOM element then convert it to a basic label and return false (keep the array item)
-		} else {
-			item.classList.add('inputfield_label');
-			item.setAttribute('data-labelforfieldid', this.id);
-			return false;
+	// # 'options'
+
+	//set 'options' to an empty array if it's undefined
+	attributes.options ??= [];
+
+	//if 'options' isn't an array then complain about it and set it to an empty array
+	if (Array.isArray(attributes.options) !== true) {
+		console.warn(`[MPO] inputfield_FieldObject() received a non-array as 'options': "${attributes.options}".`);
+		attributes.options = [];
+	}
+
+	//loop through all options to make sure they're all valid
+	for (const key in attributes.options) {
+		const item = attributes.options[key];
+
+		//delete the array item if it's not an object
+		if (typeof item !== 'object') {
+			console.warn(`[MPO] inputfield_FieldObject() couldn't parse the 'options' array as item Nr. ${key} wasn't a object: "${item}".`);
+			delete attributes.options[key];
+			continue;
 		}
-	})
+
+		//set 'name' to 'Unknown' if it's not valid
+		if (typeof item.name !== 'string') {
+			console.warn(`[MPO] inputfield_FieldObject() couldn't properly parse the 'options' array as item Nr. ${key} had a non-string as 'name': "${item.name}".`);
+			item.name = 'Unknown';
+		}
+
+		//set 'src' to undefined if it's neither a string nor undefined
+		if (attributes.src !== undefined && typeof attributes.src !== 'string') {
+			console.warn(`[MPO] inputfield_FieldObject() couldn't properly parse the 'options' array as item Nr. ${key} had neither a string nor undefined as 'src': "${item.src}".`);
+			item.src = undefined;
+		}
+
+		//delete the array item if 'value' isn't valid
+			//do this one last so all other warnings are also immediately printed
+		if (typeof item.value !== 'string') {
+			console.warn(`[MPO] inputfield_FieldObject() couldn't parse the 'options' array as item Nr. ${key} had a non-string as 'value': "${item.value}". Option will now be removed.`);
+			delete attributes.options[key];
+			continue;
+		}
+	}
 
 
 
@@ -968,7 +1155,12 @@ function inputfield_createField (fieldType, parent, attributes) {
 			break;
 
 		case 'button-regular':
-			cElem('input', container, {type: 'button', class: 'fieldType-button inputfield_actualInputElement', autocomplete: 'off', onclick: 'inputfield_executedAfterFieldChange(this);', 'data-linktofieldid': fieldID});
+			var button = cElem('input', container, {type: 'button', class: 'fieldType-button inputfield_actualInputElement', autocomplete: 'off', onclick: 'inputfield_executedAfterFieldChange(this);', 'data-linktofieldid': fieldID});
+
+			//add text to the button
+			if (attributes.content !== undefined) {
+				button.setAttribute('value', attributes.content);
+			}
 			break;
 
 		case 'button-image':

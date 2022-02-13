@@ -358,6 +358,7 @@ function buildSite_buildSettings (docFrag) {
 		//create a button
 		cElem('br', elem);
 		inputfield_createField('button', elem, {
+			content: 'button',
 			onchange: logToOutput
 		});
 
@@ -570,6 +571,17 @@ function buildSite_buildSettings (docFrag) {
 			onchange: logToOutput,
 			addToForm: [formInFormTest, formTest],
 			tag: 'texto',
+		});
+
+		//
+		cElem('br', formTest);
+		cElem('br', formTest);
+		cElem('span', formTest)
+			.textContent = '=== \'beforeText\' AND \'afterText\' ATTRIBUTE TEST ===';
+		cElem('br', formTest);
+		var suckmydick = inputfield_createField('checkbox', elem, {
+			beforeText: 'test: ',
+			afterText : ' :tset'
 		});
 
 	//collapse the modal automatically and then embed it inside settings

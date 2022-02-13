@@ -93,10 +93,13 @@ function loadScripts (scripts, onload) {
  *		type [String]
  *			The type of element it should be. 'span' for <span> and so on.
  *
- *		parent [String/DOM Element]
+ *		parent [String/DOM Element/null]
  *			The element it should be created in.
  *			Can be either a DOM Element or the ID of the element as a string.
  * 			Will return false if the parent can't be found.
+ *
+ * 			Alternatively this can also be null, in which case the element won't be appended at all (it'll simply be created using 'document.createElement()' and nothing more).
+ * 			This should only be used if the element will be appended manually afterwards.
  *
  *		attributes [Object]
  *			A list of attributes the element should have. {src: 'scripts/boot.js'} would give the element a 'src="scripts/boot.js"' attribute.
@@ -106,13 +109,20 @@ function loadScripts (scripts, onload) {
  * 		If it couldn't be created due to the specified parent not existing then it'll simply return false.
  */
 function cElem (type, parent, attributes) {
+	//if the element should be appended to it's parent
+		//if 'parent' is null then it should be skipped
+	const appendElem = (parent === null) ? false : true;
+
 	//get parent by ID
 	if (typeof parent === 'string') {
 		parent = document.getElementById(parent);
 	}
 
-	//return if it's not an object
-	if (typeof parent !== 'object') {
+	//return if 'parent' isn't valid
+		//but only return if the element has to be appended (if it doesn't have to be appended then 'parent' isn't needed anyway)
+
+		//note that we only check whether '.appendChild()' exists because that's all we need it for
+	if (typeof parent.appendChild !== 'function' && appendElem === true) {
 		console.warn('[helpers.js] cElem couldn\'t get parent.');
 		return false;
 	}
@@ -127,8 +137,10 @@ function cElem (type, parent, attributes) {
 		}
 	}
 
-	//append element to parent
-	parent.appendChild(elem);
+	//append element to parent if needed
+	if (appendElem === true) {
+		parent.appendChild(elem);
+	}
 
 	return elem;
 }
