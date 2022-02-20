@@ -267,6 +267,10 @@ function buildSite_buildSettings (docFrag) {
 				{
 					name: 'Option 3',
 					value: 'three'
+				},
+				{
+					name: 'Option 1',
+					value: 'one'
 				}
 			]
 		});
@@ -573,7 +577,7 @@ function buildSite_buildSettings (docFrag) {
 			tag: 'texto',
 		});
 
-		//
+		//test the 'beforeText' and 'afterText' attributes
 		cElem('br', formTest);
 		cElem('br', formTest);
 		cElem('span', formTest)
@@ -583,6 +587,8 @@ function buildSite_buildSettings (docFrag) {
 			beforeText: 'test: ',
 			afterText : ' :tset'
 		});
+
+
 
 	//collapse the modal automatically and then embed it inside settings
 	}, {

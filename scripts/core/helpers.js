@@ -415,6 +415,28 @@ Object.defineProperty(Object.prototype, 'isDOMElement', {value: function (elemen
 	}
 }});
 
+/**	Checks if an object is iterable.
+ *
+ * 	Returns [Boolean]:
+ * 		`true` if it's iterable, `false` if not.
+ */
+Object.defineProperty(Object.prototype, 'isIterable', {value: function (obj) {
+	//if 'obj' hasn't been specified then use the variable this has been called on (that being `this`)
+	if (obj === undefined) {
+		obj = this;
+	}
+
+	// checks for null
+	if (obj === null) {
+		return false;
+	}
+
+	//checks for ... uh, something
+		//see:     https://stackoverflow.com/questions/18884249/checking-whether-something-is-iterable
+		//or this: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols
+	return typeof obj[Symbol.iterator] === 'function';
+}});
+
 /**	=== PERFORMANCE TESTING ===
  *
  * 	These two function automatically check performance of a piece of code.

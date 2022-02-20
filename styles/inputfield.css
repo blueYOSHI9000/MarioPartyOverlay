@@ -3,7 +3,7 @@
 
 /* === 'fieldType' SPECIFIC RULES === */
 
-.fieldType-imgButton {
+.inputfield_imgButton {
 	/**	Give them a fixed size. 80px mainly because it's neither too big nor too small.
 	 */
 	height: 80px;
@@ -13,16 +13,16 @@
 	 */
 	opacity: .5;
 }
-.fieldType-imgButton:hover {
+.inputfield_imgButton:hover {
 	opacity: .7;
 }
-.fieldType-imgButton:active {
+.inputfield_imgButton:active {
 	opacity: .9;
 }
 
 /**	This selects all selected image-buttons.
  */
-.fieldType-imgButton.inputfield_selected {
+.inputfield_imgButton.inputfield_selected {
 	/**	Make them fully visible.
 	 */
 	opacity: 1;

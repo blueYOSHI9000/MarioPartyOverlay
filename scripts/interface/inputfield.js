@@ -226,6 +226,12 @@
 			- Call 'inputfield_convertToLabel()'. This way you get more options and more control. See the documentation on the function for more info.
 				> You can also call '.inputfield_convertToLabel()' on a DOM element directly (again, see function for more info).
 
+	=== CREATING CUSTOM VARIATIONS ===
+		A better way to do this will be added later (and with that a better tutorial).
+		For now, view the documentation on the 'inputfield_variations' variable further down.
+
+
+
 	=== IMPORTANT FUNCTIONS ===
 
 	inputfield_createField()
@@ -279,6 +285,354 @@ let inputfield_hosts = new WeakMap();
 
 // This saves info about all labels
 let inputfield_labels = new WeakMap();
+
+//this saves each variation that exists
+	//use the '.get()' function inside to get the "variation object" that's needed
+
+	//if a new variation should be added then only this variable has to be edited, nothing else
+	//this is a "variation object" (found inside 'inputfield_variations.variations[type]'):
+	/*
+			regular: {
+				/**	This creates the HTML elements for the input-field to work.
+				 *
+				 * 	Note that the HTML elements created should also automatically call 'inputfield_executedAfterFieldChange(fieldID, newValue);' ('fieldID' being a string and 'newValue' depends on the field-type -- note that some values might need to be converted first).
+				 *
+				 * 	Args:
+				 * 		container [DOM Element]
+				 * 			The container of the input-field. Always a empty <span> element.
+				 * 			The input-field should be created inside this.
+				 *
+				 * 		fieldObj [Object]
+				 * 			The 'inputfield_FieldObject()' object.
+				 *
+				 * 		fieldID [String]
+				 * 			The unique ID of the input-field.
+				 *
+				 * 		attributes [Object]
+				 * 			All attributes of this input-field.
+				 * /
+				constructor: function (container, fieldObj, fieldID, attributes) {
+					//create a checkbox <input> element
+					cElem('input', container, {type: 'checkbox', onchange: `inputfield_executedAfterFieldChange('${fieldID}', this.checked);`});
+				},
+				/**	This gets the actual input element itself.
+				 *
+				 * 	Args:
+				 * 		container [DOM Element]
+				 * 			The container of the input-field. Always a empty <span> element.
+				 * 			The input-field should be created inside this.
+				 *
+				 * 	Returns [DOM Element]:
+				 * 		Returns the actual input element itself. This is likely the <input> element or an alternative to it.
+				 * 		This is needed so '.click()' or '.focus()' can be executed on it.
+				 * /
+				getActualInputElement: function (container) {
+					//return the first child of the container
+					return container.children[0];
+				},
+				/**	This sets the value to the HTML elements.
+				 *
+				 * 	This is called whenever the value changes (both when the user changes it and when 'inputfield_setValue()' is called on it).
+				 * 	This function has to make sure that the visuals represent the new value.
+				 * 	A checkbox for example would have to make sure that the checkbox actually has a check inside it when the value is `true`.
+				 *
+				 * 	Args:
+				 * 		container [DOM Element]
+				 * 			The container of the input-field. Always a empty <span> element.
+				 * 			The input-field should be created inside this.
+				 *
+				 * 		fieldObj [Object]
+				 * 			The 'inputfield_FieldObject()' object.
+				 *
+				 * 		newValue [*any*]
+				 * 			The new value. This value is already verified, so no need to make sure it's a boolean/number/whatever.
+				 * 			Will always be a boolean for checkboxes, even if 'checkboxValue' is used.
+				 * /
+				setRawValue: function (container, fieldObj, newValue) {
+					//apply the value directly to the actual input element
+					this.getActualInputElement(container).checked = newValue;
+
+					return true;
+				}
+			}
+	*/
+var inputfield_variations = {
+	/**	Gets the object for a specific variation.
+	 *
+	 * 	Args:
+	 * 		fieldTypeAndVariation [String]
+	 * 			'fieldType' and it's 'variation' in the form of 'checkbox-regular'.
+	 *
+	 * 	Returns [Object/null]:
+	 * 		The object that's found inside 'inputfield_variations.variations[type][variation]'.
+	 * 		Or `null` if it couldn't be found.
+	 */
+	get: function (path) {
+		//split the path once so it's a two-item array
+			//'checkbox-regular-test' will be split into this: `['checkbox', 'regular-test']`
+		path = path.splitOnce('-');
+
+		//complain and return if it couldn't find an entry for the field-type
+		if (typeof this.variations[path[0]] !== 'object') {
+			console.error(`[MPO] inputfield_variations.get() received a invalid 'path': "${path.join('-')}" (could not find a field-type for "${path[0]}").`);
+			return null;
+		}
+
+		//complain and use the default if a variation couldn't be found
+		if (typeof this.variations[path[0]][path[1]] !== 'object') {
+			console.warn(`[MPO] inputfield_variations.get() couldn't find the variation "${path[1]}" for type "${path[0]}", falling back to the default variation.`);
+
+			//get the default for this field-type
+			path[1] = inputfield_getDefaultVariation(path[0]);
+		}
+
+		//return the object
+		return this.variations[path[0]][path[1]];
+	},
+	variations: {
+		form: {
+			regular: {
+				constructor: function (container, fieldObj, fieldID, attributes) {
+					//forms only create a simple <span> element (the container) and nothing more
+					return;
+				},
+				getActualInputElement: function (container) {
+					//return the container since that's the whole input-field
+					return container;
+				},
+				setRawValue: function (container, fieldObj, newValue) {
+					//return true as there's no value to be applied here, so it's always successful
+					return true;
+				}
+			}
+		},
+		button: {
+			regular: {
+				constructor: function (container, fieldObj, fieldID, attributes) {
+					//create a button <input> element
+					var button = cElem('input', container, {type: 'button', autocomplete: 'off', onclick: `inputfield_executedAfterFieldChange('${fieldID}');`});
+
+					//add text to the button (if needed)
+					if (attributes.content !== undefined) {
+						button.setAttribute('value', attributes.content);
+					}
+				},
+				getActualInputElement: function (container) {
+					//return the first child of the container
+					return container.children[0];
+				},
+				setRawValue: function (container, fieldObj, newValue) {
+					//return true as there's no value to be applied here, so it's always successful
+					return true;
+				}
+			}
+		},
+		checkbox: {
+			regular: {
+				constructor: function (container, fieldObj, fieldID, attributes) {
+					//create a checkbox <input> element
+					cElem('input', container, {type: 'checkbox', autocomplete: 'off', onchange: `inputfield_executedAfterFieldChange('${fieldID}', this.checked);`});
+				},
+				getActualInputElement: function (container) {
+					//return the first child of the container
+					return container.children[0];
+				},
+				setRawValue: function (container, fieldObj, newValue) {
+					//apply the value directly to the actual input element
+					this.getActualInputElement(container).checked = newValue;
+
+					return true;
+				}
+			}
+		},
+		radio: {
+			checkbox: {
+				constructor: function (container, fieldObj, fieldID, attributes) {
+					//create a <input> radio checkbox for each option with | on each side to divide them
+					for (const item of attributes.options) {
+						//create the label
+							//first, create a <span>
+							//then convert it to a label
+							//and lastly add the text
+						cElem('span', container)
+							.inputfield_convertToLabel(container, {radioOption: item.value})
+							.textContent = `| ${item.name}: `;
+
+						//create the actual checkbox
+						cElem('input', container, {type: 'radio', autocomplete: 'off', onchange: `inputfield_executedAfterFieldChange('${fieldID}', '${item.value}');`, 'data-holdsvalue': item.value});
+
+						//create another label
+						cElem('span', container)
+							.inputfield_convertToLabel(container, {radioOption: item.value})
+							.textContent = '|';
+					}
+				},
+				getActualInputElement: function (container) {
+					//this returns all children of the container that are an <input> element
+					return container.querySelectorAll('input');
+				},
+				setRawValue: function (container, fieldObj, newValue) {
+					//get the actual input elements
+					const actualElems = this.getActualInputElement(container);
+
+					//loop through them
+					for (const item of actualElems) {
+
+						//if it's value is the same as 'newValue' then check it
+						if (item.getAttribute('data-holdsvalue') === newValue) {
+							item.checked = true;
+
+						//and if not then uncheck it
+						} else {
+							item.checked = false;
+						}
+					}
+
+					return true;
+				}
+			},
+			select: {
+				constructor: function (container, fieldObj, fieldID, attributes) {
+					//create the <select> element
+					let selectElem = cElem('select', container, {autocomplete: 'off', onchange: `inputfield_executedAfterFieldChange('${fieldID}', this.value);`});
+
+					//create a <option> inside the <select> for each option
+					for (const item of attributes.options) {
+						cElem('option', selectElem, {value: item.value}).textContent = item.name;
+					}
+				},
+				getActualInputElement: function (container) {
+					//return the first child of the container
+					return container.children[0];
+				},
+				setRawValue: function (container, fieldObj, newValue) {
+					//apply the value directly to the actual input element
+					this.getActualInputElement(container).value = newValue;
+
+					return true;
+				}
+			},
+			image: {
+				constructor: function (container, fieldObj, fieldID, attributes) {
+					//create a <img> for each option
+					for (const item of attributes.options) {
+						cElem('img', container, {class: 'inputfield_imgButton', autocomplete: 'off', onclick: `inputfield_executedAfterFieldChange('${fieldID}', '${item.value}')`, src: item.src, 'data-holdsvalue': item.value});
+					}
+				},
+				getActualInputElement: function (container) {
+					//this returns all children of the container since there's no other elements inside it
+					return container.children;
+				},
+				setRawValue: function (container, fieldObj, newValue) {
+					//get the actual input elements
+					const actualElems = this.getActualInputElement(container);
+
+					//loop through them
+					for (const item of actualElems) {
+
+						//if it's value is the same as 'newValue' then give it the 'inputfield_selected' class
+						if (item.getAttribute('data-holdsvalue') === newValue) {
+							item.classList.add('inputfield_selected');
+
+						//and if not then remove the 'inputfield_selected' class
+						} else {
+							item.classList.remove('inputfield_selected');
+						}
+					}
+
+					return true;
+				}
+			},
+		},
+		text: {
+			small: {
+				constructor: function (container, fieldObj, fieldID, attributes) {
+					//create a text <input> element
+					cElem('input', container, {type: 'text', autocomplete: 'off', onchange: `inputfield_executedAfterFieldChange('${fieldID}', this.value);`});
+				},
+				getActualInputElement: function (container) {
+					//return the first child of the container
+					return container.children[0];
+				},
+				setRawValue: function (container, fieldObj, newValue) {
+					//apply the value directly to the actual input element
+					this.getActualInputElement(container).value = newValue;
+
+					return true;
+				}
+			},
+			area: {
+				constructor: function (container, fieldObj, fieldID, attributes) {
+					//create a text <textarea> element
+					cElem('textarea', container, {autocomplete: 'off', onchange: `inputfield_executedAfterFieldChange('${fieldID}', this.value);`});
+				},
+				getActualInputElement: function (container) {
+					//return the first child of the container
+					return container.children[0];
+				},
+				setRawValue: function (container, fieldObj, newValue) {
+					//apply the value directly to the actual input element
+					this.getActualInputElement(container).value = newValue;
+
+					return true;
+				}
+			}
+		},
+		number: {
+			text: {
+				constructor: function (container, fieldObj, fieldID, attributes) {
+					//create a number <input> element
+					cElem('input', container, {type: 'number', autocomplete: 'off', onchange: `inputfield_executedAfterFieldChange('${fieldID}', Number(this.value));`});
+				},
+				getActualInputElement: function (container) {
+					//return the first child of the container
+					return container.children[0];
+				},
+				setRawValue: function (container, fieldObj, newValue) {
+					//apply the value directly to the actual input element
+					this.getActualInputElement(container).value = newValue;
+
+					return true;
+				}
+			},
+			range: {
+				constructor: function (container, fieldObj, fieldID, attributes) {
+					//create a range <input> element
+					cElem('input', container, {type: 'range', autocomplete: 'off', onchange: `inputfield_executedAfterFieldChange('${fieldID}', Number(this.value));`});
+				},
+				getActualInputElement: function (container) {
+					//return the first child of the container
+					return container.children[0];
+				},
+				setRawValue: function (container, fieldObj, newValue) {
+					//apply the value directly to the actual input element
+					this.getActualInputElement(container).value = newValue;
+
+					return true;
+				}
+			}
+		},
+		color: {
+			regular: {
+				constructor: function (container, fieldObj, fieldID, attributes) {
+					//create a color <input> element
+					cElem('input', container, {type: 'color', autocomplete: 'off', onchange: `inputfield_executedAfterFieldChange('${fieldID}', this.value);`});
+				},
+				getActualInputElement: function (container) {
+					//return the first child of the container
+					return container.children[0];
+				},
+				setRawValue: function (container, fieldObj, newValue) {
+					//apply the value directly to the actual input element
+					this.getActualInputElement(container).value = newValue;
+
+					return true;
+				}
+			}
+		},
+		file: {}
+	}
+};
 
 /**	Creates and sets up the 'FieldObject' that saves all info related to the input-field.
  *
@@ -1086,99 +1440,7 @@ function inputfield_createField (fieldType, parent, attributes) {
 	let value;
 
 	//create the actual input fields depending on which type it is
-	switch (fieldObj.fieldTypeAndVariation) {
-		case 'form-regular':
-			//forms only create a simple <span> element (the container) and nothing more as such that's the actual input element
-			container.classList.add('inputfield_actualInputElement');
-			break;
-
-		case 'checkbox-regular':
-			cElem('input', container, {type: 'checkbox', class: 'fieldType-checkbox inputfield_actualInputElement', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this)', 'data-linktofieldid': fieldID});
-			break;
-
-		case 'radio-checkbox':
-			//create a <input> radio checkbox for each option with | on each side to divide them
-			for (const item of attributes.options) {
-				//create the label
-					//first, create a <span>
-					//then convert it to a label
-					//and lastly add the text
-				cElem('span', container)
-					.inputfield_convertToLabel(container, {radioOption: item.value})
-					.textContent = `| ${item.name}: `;
-
-				//create the actual checkbox
-				cElem('input', container, {type: 'radio', name: `fieldID-${fieldID}`, class: 'fieldType-radioCheckbox inputfield_actualInputElement', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this)', 'data-linktofieldid': fieldID, 'data-holdsvalue': item.value});
-
-				//create another label
-				cElem('span', container)
-					.inputfield_convertToLabel(container, {radioOption: item.value})
-					.textContent = '|';
-			}
-			break;
-
-		case 'radio-select': {
-			let selectElem = cElem('select', container, {class: 'fieldType-radioSelect inputfield_actualInputElement', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-linktofieldid': fieldID});
-
-			//create a <option> inside the <select> for each option
-			for (const item of attributes.options) {
-				cElem('option', selectElem, {value: item.value}).textContent = item.name;
-			}
-			break;
-		}
-
-		case 'radio-image':
-			//create a <img> for each option
-			for (const item of attributes.options) {
-				cElem('img', container, {class: 'fieldType-imgButton inputfield_actualInputElement', autocomplete: 'off', onclick: 'inputfield_executedAfterFieldChange(this)', src: item.src, 'data-linktofieldid': fieldID, 'data-holdsvalue': item.value});
-			}
-			break;
-
-		case 'text-small':
-			cElem('input', container, {type: 'text', class: 'fieldType-text inputfield_actualInputElement', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-linktofieldid': fieldID});
-			break;
-
-		case 'text-area':
-			cElem('textarea', container, {class: 'fieldType-textarea inputfield_actualInputElement', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-linktofieldid': fieldID})
-			break;
-
-		case 'number-text':
-			cElem('input', container, {type: 'number', class: 'fieldType-numberText inputfield_actualInputElement', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-linktofieldid': fieldID});
-			break;
-
-		case 'number-range':
-			cElem('input', container, {type: 'range', class: 'fieldType-numberRange inputfield_actualInputElement', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-linktofieldid': fieldID});
-			break;
-
-		case 'number-counter':
-			console.warn('[MPO] Number-counters aint supported yet.');
-			break;
-
-		case 'button-regular':
-			var button = cElem('input', container, {type: 'button', class: 'fieldType-button inputfield_actualInputElement', autocomplete: 'off', onclick: 'inputfield_executedAfterFieldChange(this);', 'data-linktofieldid': fieldID});
-
-			//add text to the button
-			if (attributes.content !== undefined) {
-				button.setAttribute('value', attributes.content);
-			}
-			break;
-
-		case 'button-image':
-			console.warn('[MPO] Image buttons aint supported yet.');
-			break;
-
-		case 'color-regular':
-			cElem('input', container, {type: 'color', class: 'fieldType-color inputfield_actualInputElement', autocomplete: 'off', onchange: 'inputfield_executedAfterFieldChange(this);', 'data-linktofieldid': fieldID});
-			break;
-
-		case 'file-regular':
-			console.warn('[MPO] File inputs aint supported yet.');
-			break;
-
-		default:
-			console.warn(`[MPO] Unknown 'fieldType' in 'inputfield_createField()': "${fieldType}"`);
-			break;
-	}
+	inputfield_variations.get(fieldObj.fieldTypeAndVariation).constructor(container, fieldObj, fieldID, attributes);
 
 	//set the default value (without triggering 'onchange')
 		//and also ignore the host because this should apply to the individual input-field only
@@ -1395,7 +1657,7 @@ function inputfield_getValue (field) {
  * 		Returns true if succesfully updated and false if it couldn't be updated.
  * 		This will also return true if the value specified is already set.
  */
-function inputfield_setValue (field, value, specifics={}) {
+function inputfield_setValue (field, newValue, specifics={}) {
 	//complain and use defaults if 'specifics' is invalid
 	if (typeof specifics !== 'object') {
 		console.warn(`[MPO] inputfield_setValue() received a non-object as 'specifics': "${specifics}".`);
@@ -1422,45 +1684,23 @@ function inputfield_setValue (field, value, specifics={}) {
 	if (specifics.updateHost !== false && hostObj !== undefined) {
 
 		//return if it's already set to the correct value
-		if (hostObj.value === value) {
+		if (hostObj.newValue === newValue) {
 			return true;
 		}
 
 		//update the hosts value
-		inputfield_updateHostsChildren(fieldObj.belongsToHost, value);
+		inputfield_updateHostsChildren(fieldObj.belongsToHost, newValue);
 
 		return true;
 	}
 
 	//return if it's already set to the correct value
-	if (fieldObj.value === value) {
+	if (fieldObj.newValue === newValue) {
 		return true;
 	}
 
-	//this tracks whether the field has actually been updated or not
-		//NOTICE: If this is set to true then at the end of the function the 'value' variable will be used to update 'fieldObj', which means 'value' has to be identical to the value actually used.
-	let changed = false;
-
-	//if this is set to true then at the end of the function it will call 'console.warn()' with the value and the fieldID in it
-	let complain = false;
-
-	//this is a list of the actual <input> elements (or an alternative to them)
-	const actualElemList = inputfield_getActualInputElements(containerElem, specifics.DOMTree);
-
-	//this is the first actual element (since usually only the first is needed)
-	const actualElem = actualElemList[0];
-
-	//complain and return if nothing was found
-	if (Object.isDOMElement(actualElem) !== true) {
-		console.warn(`[MPO] inputfield_setValue() couldn't find the actual input element for input-field "${fieldObj.id}".`);
-		return false;
-	}
-
-	//combine fieldType and variation into a single string for the switch
-	const fieldTypeAndVariation = fieldObj.fieldTypeAndVariation;
-
-	switch (fieldTypeAndVariation) {
-		case 'form-regular':
+	switch (fieldObj.fieldType) {
+		case 'form':
 			//if a form property is provided then apply the value to the specified input-field
 			if (typeof specifics.formProperty === 'string') {
 
@@ -1471,168 +1711,65 @@ function inputfield_setValue (field, value, specifics={}) {
 					if (inputfield_fields.get(item).tag == specifics.formProperty) {
 
 						//update the input-field with the matching tag instead
-						inputfield_setValue(item, value, {skipOnchange: specifics.skipOnchange});
+						inputfield_setValue(item, newValue, {skipOnchange: specifics.skipOnchange});
 
 						//if the 'onchange' function should be executed then it's already been executed anyway by calling 'inputfield_setValue()' above
 						specifics.skipOnchange = true;
-
-						//just fucking return it
-							//can't change 'changed' to true because that would overwrite the form but can't not do that either since it'll complain about it
-							//the rest of the function isn't needed anyway
-						return true;
 					}
 				}
-
-			//else simply overwrite the form
-			} else {
-				//there's no actual form element that has to be updated so all it needs to do is update the field object which it does at the end of this function
-				changed = true;
 			}
+
 			break;
 
-		case 'checkbox-regular':
-			switch (value) {
-				//if the value is true then update 'value' to the one specified in 'checkboxValue' and then let it fall through to the next case
-				case true:
-					value = fieldObj.attributes.checkboxValue;
-
-				//set it to true if it equals to the 'checkboxValue'
-				case fieldObj.attributes.checkboxValue:
-					actualElem.checked = true;
-					changed = true;
-					break;
-
-				//if false, it's false
-				case false:
-					actualElem.checked = false;
-					changed = true;
-					break;
-
-				//complain about it if it's something else
-				default:
-					complain = true;
-					break;
+		case 'checkbox':
+			//if the value is the 'checkboxValue' then set it to `true` instead
+			if (newValue === fieldObj.attributes.checkboxValue) {
+				newValue = true;
 			}
 			break;
+	}
 
-		case 'radio-checkbox':
+	//if the value is valid then apply it
+	if (inputfield_validateValue(newValue, {field: fieldObj}) === true) {
 
-			//loop through all radio buttons and see if any of them have the value it should be changed to, if yes then check it
-			for (const item of actualElemList) {
-				if (item.getAttribute('data-holdsvalue') === value) {
-					item.checked = true;
-					changed = true;
-				}
-			}
-			break;
+		//this saves whether the value has been changed or not
+		let changed = false;
 
-		case 'radio-select': {
-			//loop through all possible options to see if the value is even possible
-				//this should be done as plain <select> elements are not capable of holding values that aren't already part of it
-				//I mean, I suppose you can create a non-selectable <option> just for this but that's a bit out-of-scope for now (one day though -- jk, I'll simply forget about adding this)
-			for (const item of actualElem.options) {
-				if (item.value === value) {
-					actualElem.value = value;
-					changed = true;
-				}
-			}
+		//apply it by calling the '.setRawValue()' function of the respective 'inputfield_variations' entry
+		changed = inputfield_variations.get(fieldObj.fieldTypeAndVariation).setRawValue(containerElem, fieldObj, newValue);
 
-			//complain if the value couldn't be found
-			if (changed === false) {
-				complain = true;
-			}
-			break;
+		//return and complain if the value couldn't be updated
+			//we can let it continue but it's not exactly much better either
+			//it's a question of "letting the user change the value but the value displayed is wrong" or "don't let the user change the value but the value displayed is still accurate"
+			//I chose the latter but who knows which one is really better ¯\_(ツ)_/¯
+		if (changed !== true) {
+			console.warn(`[MPO] inputfield_setValue(): 'inputfield_variations.get(${fieldObj.fieldTypeAndVariation}).setRawValue()' didn't return 'true'. Input-field ID: "${fieldObj.id}" -- Value: "${newValue}"`);
+			return false;
 		}
 
-		case 'radio-image':
-			//believe it or not, this is how it's supposed to be done. For now at least.
-			fieldObj.value = value;
-			changed = true;
-			break;
-
-		case 'text-small':
-		case 'text-area':
-			actualElem.value = value;
-			changed = true;
-			break;
-
-		case 'number-text':
-		case 'number-range':
-			//convert it to a number if it isn't already
-			if (typeof value !== 'number') {
-				value = Number(value);
-			}
-
-			//check first if the number is even valid
-				//if not then complain about it
-			if (isNaN(value) === true) {
-				complain = true;
-
-			} else {
-				actualElem.value = value;
-				changed = true;
-			}
-			break;
-
-		case 'number-counter':
-			console.warn('[MPO] Number-counters aint supported yet.');
-			break;
-
-		case 'button-regular':
-			//pretend the button updated so the 'onchange' value gets executed
-				//'value' should be set to `undefined` since buttons aren't supposed to have actual values
-			value = undefined;
-			changed = true;
-			break;
-
-		case 'button-image':
-			console.warn('[MPO] Image buttons aint supported yet.');
-			break;
-
-		case 'color-regular':
-			if (typeof value === 'string') {
-				//first, get the initial value
-				let initialValue = actualElem.value;
-
-				//try to set it
-				actualElem.value = value;
-
-				//if it's not the value we set it to then it means it failed and so, we complain about it
-					//note that it sets it to '#000000' automatically when it fails, that's why we put it back to the initial value because that's way better than a likely unwanted color
-				if (actualElem.value !== value) {
-					actualElem.value = initialValue;
-
-					complain = true;
-				} else {
-					changed = true;
-				}
-			}
-			break;
-
-		case 'file-regular':
-			console.warn('[MPO] File inputs aint supported yet.');
-			break;
-
-		default:
-			console.warn(`[MPO] Unknown 'fieldType' in 'inputfield_createField()': "${fieldType}"`);
-			break;
+	//if the value is invalid then complain and return `false`
+	} else {
+		console.warn(`[MPO] inputfield_setValue() has received an invalid value: "${newValue}" for the input-field "${fieldObj.id}" of type/variation: "${fieldTypeAndVariation}".`);
+		return false;
 	}
 
-	//WARNING: When editing anything here, make sure it still works properly when updating forms with the 'formProperty' specific since that returns immediately without even getting here
-
-	//complain about it
-	if (complain === true) {
-		console.warn(`[MPO] inputfield_setValue() has received an invalid value: "${value}" for the input-field "${fieldObj.id}" of type/variation: "${fieldTypeAndVariation}".`);
-	} else if (changed === false) {
-		console.warn(`[MPO] inputfield_setValue() couldn't change the field but nothing complained about it. Value: "${value}" for the input-field "${fieldObj.id}" of type/variation: "${fieldTypeAndVariation}".`);
+	//if it's a checkbox and the value is `true` then set it to the 'checkboxValue' attribute
+	if (fieldObj.fieldType === 'checkbox' && newValue === true) {
+		newValue = fieldObj.attributes.checkboxValue;
 	}
 
-	//if the value has been succesfully changed then update the value inside the 'fieldObj'
-	if (changed === true) {
-		inputfield_applyNewValue(containerElem, value, {skipOnchange: specifics.skipOnchange, updateHost: specifics.updateHost});
+	//if it's a form and 'formProperty' has been specified then return it
+		//because if 'formProperty' is used then 'newValue' should NOT be applied to the form as a whole, that's why we return it here so 'inputfield_applyNewValue()' won't be called on it
+	if (fieldObj.fieldType === 'form' && typeof specifics.formProperty === 'string') {
 		return true;
 	}
-	return false;
+
+	//apply the value inside the 'fieldObj'
+		//set 'skipSetRawValue' to true since it's already been executed in here
+	inputfield_applyNewValue(containerElem, newValue, {skipOnchange: specifics.skipOnchange, skipSetRawValue: true, updateHost: specifics.updateHost});
+
+	//and return `true` since at this point it has to be successful
+	return true;
 }
 
 /**	This will validate whether a given value is valid or not.
@@ -1807,88 +1944,28 @@ function inputfield_getDefaultValue (fieldType, attributes) {
 /**	Gets executed when a input field is changed.
  *
  * 	Gets the raw value of the input-field, then calls 'inputfield_applyNewValue()' so the new value is saved properly.
+ * 	It's really just here to call 'inputfield_applyNewValue()' and nothing else
  *
  * 	Args:
  * 		elem [DOM Element]
  * 			The actual input element that got updated or in case of buttons, the element that got clicked on.
  */
-function inputfield_executedAfterFieldChange (elem) {
-	//get the field ID of the field it belongs to
-	const fieldID = elem.getAttribute('data-linktofieldid');
-
+function inputfield_executedAfterFieldChange (fieldID, newValue) {
 	//get the container element
-	const containerElem = inputfield_getElement(fieldID, {referenceElem: elem});
+	const containerElem = inputfield_getElement(fieldID);
 
 	//return if container can't be found
 	if (containerElem === false) {
-		console.error(`[MPO] Could not find container element with a 'fieldID' of "${fieldID}"`);
+		console.error(`[MPO] inputfield_executedAfterFieldChange(): Could not find container element with a 'fieldID' of "${fieldID}"`);
 		return;
 	}
 
 	//get field object
 	const fieldObj = inputfield_fields.get(containerElem);
 
-	//get new value based on which 'fieldType' it is
-		//note that this can't use 'inputfield_getValue()' because that function simply gets the 'fieldValue' attribute of the element
-		//but we're currently in the process of setting said attribute so that function would only return the previous value
-	let newValue;
-	switch (fieldObj.fieldTypeAndVariation) {
-
-		case 'checkbox-regular':
-			//invert the value because checkboxes are weird and the new value will only be applied afterwards
-			newValue = elem.checked;
-
-			//get the actual value
-			if (newValue === true) {
-				newValue = fieldObj.attributes.checkboxValue;
-			}
-			break;
-
-		case 'radio-checkbox':
-			newValue = elem.getAttribute('data-holdsvalue');
-			break;
-
-		case 'radio-select':
-			newValue = elem.value;
-			break;
-
-		case 'radio-image':
-			newValue = elem.getAttribute('data-holdsvalue');
-			break;
-
-		case 'text-small':
-			newValue = elem.value;
-			break;
-
-		case 'text-area':
-			newValue = elem.value;
-			break;
-
-		case 'number-text':
-			newValue = elem.valueAsNumber;
-			break;
-
-		case 'number-range':
-			newValue = elem.valueAsNumber;
-			break;
-
-		case 'number-counter':
-			break;
-
-		case 'button-regular':
-			newValue = undefined;
-			break;
-
-		case 'color-regular':
-			newValue = elem.value;
-			break;
-
-		case 'file-regular':
-			break;
-
-		default:
-			console.warn(`[MPO] Unknown 'fieldType' in 'inputfield_executedAfterFieldChange()': "${fieldObj.fieldType}"`);
-			break;
+	//apply 'checkboxValue' to the new value if it's a checkbox and the value is `true`
+	if (fieldObj.fieldType === 'checkbox' && newValue === true) {
+		newValue = fieldObj.attributes.checkboxValue;
 	}
 
 	//update the field with the new value
@@ -1912,6 +1989,10 @@ function inputfield_executedAfterFieldChange (elem) {
  *
  * 				skipOnChange [Boolean] <false>
  * 					If true it skips executing the 'onchange' function.
+ *
+ * 				skipSetRawValue [Boolean] <false>
+ * 					If true it skips executing the 'inputfield_variations.get().setRawValue()' function.
+ * 					Should only be used if it's already been executed.
  *
  * 				formProperty [String] <optional>
  * 					In case a form is being updated it will only update the property with this name instead of the whole object.
@@ -1961,27 +2042,11 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 
 
 
-	//=== MARK RADIO OPTIONS ===
-	//this loops through all actual input elements to mark the correct ones as selected and all others as not selected
+	//=== SET RAW VALUE ===
 
-	//check to see if it's even a radio field
-	if (fieldObj.fieldType === 'radio') {
-
-		//get the list of <input> elements (or an alternative to them)...
-		const actualElemList = inputfield_getActualInputElements(containerElem);
-
-		//...and loop through them
-		for (const item of actualElemList) {
-
-			//if this element holds the same value as the new one then mark it as selected
-			if (item.getAttribute('data-holdsvalue') === newValue) {
-				item.classList.add('inputfield_selected');
-
-			//if not then make sure it's not marked as selected
-			} else {
-				item.classList.remove('inputfield_selected');
-			}
-		}
+	//set the raw value to make sure the correct value is actually displayed (especially important for radio-fields)
+	if (specifics.skipSetRawValue !== true) {
+		inputfield_variations.get(fieldObj.fieldTypeAndVariation).setRawValue(containerElem, fieldObj, newValue);
 	}
 
 
@@ -2074,27 +2139,24 @@ function inputfield_executedAfterLabelPress (labelElem) {
 		//if no 'LabelObject' exists then use the default action
 	const action = labelObj?.action ?? 'click';
 
-	//get the list of actual input elements
-	const actualElemList = inputfield_getActualInputElements(fieldElem);
-
-	//the first actual input element
-	const actualElem = actualElemList[0];
-
-	//complain and return if the actual element couldn't be found
-	if (Object.isDOMElement(actualElem) !== true) {
-		console.warn(`[MPO] inputfield_executedAfterLabelPress() couldn't find the actual input element for input-field "${fieldObj.id}".`);
-		return;
-	}
+	//get the actual input element
+	const actualElem = inputfield_variations.get(fieldObj.fieldTypeAndVariation).getActualInputElement(fieldElem);
 
 	//do different things if it's a radio field AND 'radioOption' has been used
 		//if those are true then the label affects a specific radio option, not the radio field as a whole
 	if (fieldType === 'radio' && labelObj !== undefined && labelObj.radioOption !== null) {
 
+		//check and see if the object is iterable
+		if (Object.isIterable(actualElem) !== true) {
+			console.warn(`[MPO] inputfield_executedAfterLabelPress(): Can't iterate over the value returned by 'inputfield_variations.get(${fieldObj.fieldTypeAndVariation}).getActualInputElement()' (likely because it's not an Array when it should be one) for input-field ID "${fieldObj.id}".`);
+			return;
+		}
+
 		//this is used to check whether the element was actually found or not
 		let foundElem = false;
 
 		//...and loop through them
-		for (const item of actualElemList) {
+		for (const item of actualElem) {
 
 			//check whether this is the correct element
 			if (item.getAttribute('data-holdsvalue') === labelObj.radioOption) {
@@ -2138,6 +2200,12 @@ function inputfield_executedAfterLabelPress (labelElem) {
 
 	//if not then the label affects the input-field as a whole
 	} else {
+
+		//complain and return if 'actualElem' isn't valid
+		if (Object.isDOMElement(actualElem) !== true) {
+			console.warn(`[MPO] inputfield_executedAfterLabelPress() couldn't find the actual input element for input-field "${fieldObj.id}".`);
+			return;
+		}
 		switch (action) {
 
 			//simulate the click
@@ -2281,9 +2349,9 @@ function inputfield_getDefaultVariation (fieldType) {
  * 				Note that if the input-field can't be found with this reference element then it will simply fall back to the normal function.
  * 				This also double-checks to make sure that 'referenceElem' is an actual DOM element, so you can pass a string or anything and it will simply be ignored without breaking.
  *
- * 	Returns [DOM Element/Boolean]:
+ * 	Returns [DOM Element/null]:
  * 		The DOM Element of the input-field if found.
- * 		Returns false if no field can be found.
+ * 		Returns `null` if no input-field can be found.
  */
 function inputfield_getElement (fieldID, specifics={}) {
 	//complain and use defaults if 'specifics' is invalid
@@ -2295,104 +2363,53 @@ function inputfield_getElement (fieldID, specifics={}) {
 	//check if 'fieldID' is a DOM element, if yes then return that.
 	if (typeof fieldID === 'object' && fieldID.isDOMElement()) {
 		return fieldID;
+	}
 
-	//if a field ID has been specified, and if yes, find the input-field with that
-	} else if (typeof fieldID === 'string') {
+	//complain and return if 'fieldID' isn't a string
+	if (typeof fieldID !== 'string') {
+		console.warn(`[MPO] inputfield_getElement() received a non-string as 'fieldID': "${fieldID}".`);
+		return null;
+	}
 
-		if (Object.isDOMElement(specifics.referenceElem) === true) {
-			let elem = specifics.referenceElem;
-			while (true) {
-				//check if it's the one
-					//check if 'data-fieldid' is correct and if it includes the 'inputfield_container' class
-				if (elem.getAttribute('data-fieldid') === fieldID && elem.classList.contains('inputfield_container')) {
-					return elem;
-				}
-
-				//if it wasn't the one then set 'elem' to the parent node and continue with the loop
-				elem = elem.parentNode;
-
-				//if the element is no longer a DOM Element then break the loop
-					//you could also simply check if it's <body> or <html> but then you'd need to make sure you don't do this for DocumentFragments -- all in all, I think simply doing this check is faster/better
-				if (Object.isDOMElement(elem) !== true) {
-					break;
-				}
-			}
-		}
-
-		//if the specified DOM Tree doesn't have the 'querySelector' function then use 'document' as the DOM tree
-			//this will also trigger if no DOM tree has been specified
-		if (typeof specifics.DOMTree?.querySelector !== 'function') {
-			//complain if a DOM tree was specifed
-			if (specifics.DOMTree !== undefined) {
-				console.warn(`[MPO] The 'DOMTree' argument in 'inputfield_getElement()' is invalid. fieldID used: "${fieldID}" - DOMTree: "${specifics.DOMTree}"`);
+	//if a reference-element was specified then use that to try and get the element
+	if (Object.isDOMElement(specifics.referenceElem) === true) {
+		let elem = specifics.referenceElem;
+		while (true) {
+			//check if it's the one
+				//check if 'data-fieldid' is correct and if it includes the 'inputfield_container' class
+			if (elem.getAttribute('data-fieldid') === fieldID && elem.classList.contains('inputfield_container')) {
+				return elem;
 			}
 
-			//actually use 'document' now
-			specifics.DOMTree = document;
+			//if it wasn't the one then set 'elem' to the parent node and continue with the loop
+			elem = elem.parentNode;
+
+			//if the element is no longer a DOM Element then break the loop
+				//you could also simply check if it's <body> or <html> but then you'd need to make sure you don't do this for DocumentFragments -- all in all, I think simply doing this check is faster/better
+			if (Object.isDOMElement(elem) !== true) {
+				break;
+			}
 		}
-
-		//get the container element
-		const containerElem = specifics.DOMTree.querySelector(`.inputfield_container[data-fieldid="${fieldID}"]`);
-
-		//return the element if it exists, otherwise return false
-		return containerElem ?? false;
 	}
 
-	//return false if 'fieldID' a different type
-	return false;
-}
-
-/**	Gets the actual DOM elements of the <input> element. NOT the input-field container.
- *
- * 	Args:
- * 		field [DOM Element/String]
- * 			The input-field. Can be the DOM element itself or it's input-field ID.
- *
- * 		DOMTree [DOM Tree] <document>
- * 			Which DOM tree it should look for the input-field.
- * 			Chances are this is simply 'document', but it can also be a 'DocumentFragment' in which case that should be passed as a whole.
- *
- * 	Returns [Array]:
- * 		An array consisting of DOM elements. May be an empty array if nothing was found.
- */
-function inputfield_getActualInputElements (field, DOMTree=document) {
-	//check if a DOM element was provided
-	if (Object.isDOMElement(field) === true) {
-
-		//save the element and get it's field ID
-		const fieldElem = field;
-		const fieldID = field.getAttribute('data-fieldid');
-
-		//get the root node of the element (which is likely either `document`, a 'DocumentFragment' or a 'ShadowRoot' (don't ask me on the last one))
-		const root = fieldElem.getRootNode();
-
-		let results = [];
-
-		//if a root was found with a '.querySelectorAll()' function then execute it
-		if (typeof root.querySelectorAll === 'function') {
-			results = root     .querySelectorAll(`.inputfield_actualInputElement[data-linktofieldid="${fieldID}"], .inputfield_actualInputElement[data-fieldid="${fieldID}"]`);
-
-		//otherwise try again by calling '.querySelectorAll()' on the input-field container
-		} else {
-			results = fieldElem.querySelectorAll(`.inputfield_actualInputElement[data-linktofieldid="${fieldID}"], .inputfield_actualInputElement[data-fieldid="${fieldID}"]`);
+	//if the specified DOM Tree doesn't have the 'querySelector' function then use 'document' as the DOM tree
+		//this will also trigger if no DOM tree has been specified
+	if (typeof specifics.DOMTree?.querySelector !== 'function') {
+		//complain if a DOM tree was specifed
+		if (specifics.DOMTree !== undefined) {
+			console.warn(`[MPO] The 'DOMTree' argument in 'inputfield_getElement()' is invalid. fieldID used: "${fieldID}" - DOMTree: "${specifics.DOMTree}"`);
 		}
 
-		//if something was found then return it
-			//otherwise fall back to the regular function
-		if (results.length >= 1) {
-			return results;
-		}
-
-		//make sure to set 'field' to the input-field ID
-		field = fieldID;
+		//actually use 'document' now
+		specifics.DOMTree = document;
 	}
 
-	//complain and return if 'DOMTree' is invalid
-	if (typeof DOMTree.querySelectorAll !== 'function') {
-		console.warn(`[MPO] inputfield_getActualInputElements() received a invalid 'DOMTree' value: "${DOMTree}" (it's considered invalid as it doesn't have a '.querySelectorAll' function).`);
-		return [];
-	}
+	//get the container element
+	const containerElem = specifics.DOMTree.querySelector(`.inputfield_container[data-fieldid="${fieldID}"]`);
 
-	//get and return the elements
-	return DOMTree.querySelectorAll(`.inputfield_actualInputElement[data-linktofieldid="${field}"], .inputfield_actualInputElement[data-fieldid="${field}"]`);
+	//return the element if it exists, otherwise return `null`
+	return containerElem ?? null;
+
+	//return `null` if 'fieldID' a different type
+	return null;
 }
