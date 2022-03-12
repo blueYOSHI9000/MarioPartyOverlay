@@ -3,6 +3,9 @@
 
 /*	=== HOW INPUT-FIELDS WORK ===
 
+	IMPORTANT: This "How input-fields work" section is quite outdated. It still works (probably) but it will only be updated once I'm done with all To-Do items on my list.
+
+
 	Input-fields are a way to get user-input. Whether it's a button, a checkbox, a set of options to choose from or whatever.
 	Basically a <input> element that looks better.
 
@@ -635,11 +638,29 @@ var inputfield_variations = {
 	}
 };
 
+//THE <input-field> ELEMENT
+
+/**	Creates a input-field.
+ *
+ * 	A newly created <input-field> will always be empty at first (like a <span>).
+ * 	In order to use it you have to set it up first.
+ * 	The best way is to call '.setup()' on it (it's a function that each <input-field> element has -- see 'inputfield_setupField()' for documentation).
+ * 	Alternatively you can also simply add a 'type' and a 'variation' attribute to it.
+ *
+ * 	<input-field> elements will automatically attempt to setup themselves either once code is done being executed (using a 'setTimeout()' of 0ms) or once it gets accessed (like by using 'inputfield_getValue()').
+ * 	If by that point '.setup()' hasn't been called and no 'type' HTML attribute is present then the site might break.
+ */
 class InputFieldElement extends HTMLElement {
 	constructor() {
 		super();
 
 		//attach a shadow-root
+			//this has been commented out as it breaks input-fields
+			//using this creates the issue of there being a "barrier" between the outside and inside of input-fields
+			//<input-fields> can't access the inside using '.children' and elements inside can't access the outside using '.parentNode'
+			//input-fields weren't created with this limitation in mind so it causes some issues
+			//might be fixed at some point but at this point... is it really worth it?
+			//the only real upside for Shadow-Roots is it being more idiot-proof when other people use it but that's not that big of an issue when it's created with only MPO in mind
 		//const shadow = this.attachShadow({mode: 'open'});
 
 		//create a FieldObject and add it to 'inputfield_fields'
@@ -753,6 +774,22 @@ function inputfield_FieldObject (specifics={}) {
 
 
 
+	//complain and return if 'elem' isn't a DOM element
+	if (Object.isDOMElement(specifics.elem) !== true) {
+		console.error(`[MPO] inputfield_FieldObject() received a non-element as 'elem': "${specifics.elem}".`);
+		return;
+	}
+
+	//replace 'attributes' with a empty object if it isn't already an object
+	if (typeof specifics.attributes !== 'object') {
+		specifics.attributes = {};
+	}
+
+	//for quick access
+	let attributes = specifics.attributes;
+
+
+
 	// === GET AND SET THE ID ===
 
 	//increase the total of input-fields made (needed for unique IDs)
@@ -764,16 +801,55 @@ function inputfield_FieldObject (specifics={}) {
 			//so '0128' would return true -- '1ab037' would return false -- '12 ' would return false (due to the white-space)
 			//arguably stuff like white-space should be removed first but I feel like we can trust the coder here
 			//if someone puts white-space in a ID then either they know what they're doing or they'll find another 100 ways to break this
-	if (typeof specifics.attributes.id === 'string' && /^\d+$/.test(specifics.attributes.id) !== true) {
-		this.id = specifics.attributes.id;
+	if (typeof attributes.id === 'string' && /^\d+$/.test(attributes.id) !== true) {
+		this.id = attributes.id;
 	} else {
 		this.id = String(inputfield_totalFieldsCreated);
 	}
 
-	//add the ID to the element
-	if (specifics.elem.isDOMElement() === true) {
-		specifics.elem.setAttribute('data-fieldid', this.id);
+
+
+	// === VERIFY TYPE AND VARIATION ===
+
+	//check if 'fieldType' has the variation included (would be 'checkbox-regular' for example).
+	if (specifics.fieldType.indexOf('-') !== -1) {
+
+		//actually split it
+		const fieldTypeSplit = specifics.fieldType.splitOnce('-');
+
+		//if no variation was specified in 'attributes' then apply this one
+		if (typeof attributes.variation !== 'string') {
+			attributes.variation = fieldTypeSplit[1];
+
+		//complain if a variation was specified in 'attributes' because now we have two variations (the 'attributes' one takes priority)
+			//the 'attributes' one takes priority because I'd say that one has a higher chance of being entered on purpose
+		} else {
+			console.warn(`[MPO] inputfield_FieldObject() received two variations. One in 'attributes.variation' ("${attributes.variation}" - this one will be used), the other one as 'fieldType': "${specifics.fieldType}" ("${fieldTypeSplit[1]}" being the variation). Do note that 'fieldType' accepts variations when including a dash (-) in them, so 'checkbox-regular' would be type 'checkbox' and variation 'regular'.`);
+		}
+
+		//apply the new type
+		specifics.fieldType = fieldTypeSplit[0];
 	}
+
+	//complain and return if the fieldType is invalid
+	if (typeof inputfield_variations.variations[specifics.fieldType] !== 'object') {
+		console.error(`[MPO] inputfield_FieldObject() received a invalid 'fieldType': "${specifics.fieldType}". Note that this type might've been split ('checkbox-regular' would be split to 'checkbox').`);
+		return;
+	}
+
+	//get default variation if no variation has been specified
+	attributes.variation ??= inputfield_getDefaultVariation(specifics.fieldType);
+
+
+
+	// === ADD HTML ATTRIBUTES TO THE <input-field> ELEMENT
+
+	//add 'type' and 'variation'
+	specifics.elem.setAttribute('type', specifics.fieldType);
+	specifics.elem.setAttribute('variation', attributes.variation);
+
+	//add the ID to the element
+	specifics.elem.setAttribute('data-fieldid', this.id);
 
 
 
@@ -781,14 +857,6 @@ function inputfield_FieldObject (specifics={}) {
 		//note that the following is more or less in order as the attributes are listed in the documentation
 		//I say "more or less" because some attributes rely on another attribute already being verified
 		//so it's not possible to have them completely in order
-
-	//replace 'attributes' with a empty object if it isn't already an object
-	if (typeof specifics.attributes !== 'object') {
-		specifics.attributes = {};
-	}
-
-	//for quick access
-	let attributes = specifics.attributes;
 
 
 	// # 'variation'
@@ -1512,39 +1580,27 @@ function inputfield_setupField (specifics={}) {
 	let variation;
 	let attributes;
 
-	//if the field-type has been specified in 'specifics' then use that, otherwise take it from the 'type' attribute of the <input-field> element
-	if (typeof specifics.fieldType === 'string') {
-		fieldType = specifics.fieldType;
-	} else {
-		fieldType = this.getAttribute('type');
-	}
-
-	//check if the type is valid by checking if a object for it exists in 'inputfield_variations'
-	if (typeof inputfield_variations.variations[fieldType] !== 'object') {
-		console.warn(`[MPO] <input-field>.setup() couldn't find a field-type value. This is can likely be fixed by either calling <input-field>.setup() manually with a 'fieldType' argument or by adding a 'type' attribute to the <input-field> element.`);
-		return this;
-	}
-
-	//if a variation has been specified in 'specifics' then use that, otherwise take it from the 'variation' attribute of the <input-field> element
-	if (typeof specifics.variation === 'string') {
-		variation = specifics.variation;
-	} else {
-		variation = this.getAttribute('variation');
-
-		//if it a variation couldn't be found then get the default variation
-			//the `!` converts 'variation' to a boolean and inverts it
-			//basically, an empty string and `null` would both be converted to `false` and then inverted to `true`
-			//this is because '.getAttribute()' returns either an empty string or `null`
-		if (!variation) {
-			variation = inputfield_getDefaultVariation(fieldType);
-		}
-	}
-
-
 	//if 'attributes' isn't specified then use an empty object
 	attributes = specifics.attributes;
 	if (typeof attributes !== 'object') {
 		attributes = {};
+	}
+
+	//if no type is specified then fetch it from the <input-field> element
+	if (typeof specifics.fieldType !== 'string') {
+		fieldType = this.getAttribute('type');
+	} else {
+		fieldType = specifics.fieldType;
+	}
+
+	//this checks if a variation is present in the following order: 'attributes.variation' -> 'specifics.variation' -> '<input-field>.variation'
+		//if one is not present then the next is applied
+	if (typeof attributes.variation !== 'string') {
+		if (typeof specifics.variation !== 'string') {
+			attributes.variation = this.getAttribute('variation');
+		} else {
+			attributes.variation = specifics.variation;
+		}
 	}
 
 
@@ -1558,6 +1614,10 @@ function inputfield_setupField (specifics={}) {
 		fieldType: fieldType,
 		attributes: attributes
 	});
+
+	//apply the new type & variation after it's been parsed by 'inputfield_FieldObject()'
+	fieldType = fieldObj.fieldType;
+	variation = fieldObj.variation;
 
 	//and add the FieldObject to 'inputfield_fields'
 	inputfield_fields.set(this, fieldObj);
