@@ -585,7 +585,8 @@ function buildSite_buildSettings (docFrag) {
 		cElem('br', formTest);
 		var suckmydick = inputfield_createField('checkbox', elem, {
 			beforeText: 'test: ',
-			afterText : ' :tset'
+			afterText : ' :tset',
+			onchange: logToOutput
 		});
 
 

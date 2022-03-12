@@ -168,6 +168,7 @@
 			Leave empty if it should not be added to a form.
 
 		autoAddToForm [Boolean] <false>
+			--- DOES NOT WORK ANYMORE --- Will be supported again soon though.
 			If true any field that's a descendant of a form will automatically be added to the form.
 			The way this works is that it will go up the DOM tree and if it finds a form then it will be added to that form.
 			This only applies the moment the field is created. If the input-field is created and is afterwards appended to a form then it will NOT be added to the form.
@@ -634,6 +635,23 @@ var inputfield_variations = {
 	}
 };
 
+class InputFieldElement extends HTMLElement {
+	constructor() {
+		super();
+
+		//attach a shadow-root
+		//const shadow = this.attachShadow({mode: 'open'});
+
+		//create a FieldObject and add it to 'inputfield_fields'
+		inputfield_fields.set(this, new inputfield_FieldObject({setup: false}));
+
+		//add the '.setup()' function
+		this.setup = inputfield_setupField;
+	}
+}
+
+customElements.define('input-field', InputFieldElement);
+
 /**	Creates and sets up the 'FieldObject' that saves all info related to the input-field.
  *
  * 	NOTE: To create a input-field, use 'inputfield_createField()' instead of this!
@@ -654,24 +672,26 @@ var inputfield_variations = {
  * 				elem [DOM Element]
  * 					The input-field element.
  *
- * 				parent [DOM Element]
- * 					The parent of the newly created input-field.
- * 					Only needed for the 'autoAddToForm' attribute.
- *
- * 				fieldID [Number]
- * 					The unique ID of the field.
- * 					This can also include the variation by seperating the two with a - (so 'radio-checkbox' would give a inputType of 'radio' with a variation of 'checkbox').
- *
- * 				value [*any*]
- * 					The current value of the field.
- *
  * 				fieldType [String]
  * 					The type of the field.
+ * 					This can also include the variation by seperating the two with a - (so 'radio-checkbox' would give a inputType of 'radio' with a variation of 'checkbox').
  *
  * 				attributes [Object]
  * 					A list of all attributes of the field.
  *
+ * 				setup [Boolean] <true>
+ * 					Whether the element has been setup already. Defaults to `true`.
+ * 					If this is `false` then no other variables have to be provided.
+ * 					Note that by using `false` here it means the function will return immediately without doing anything (this includes not generating a unique ID!).
+ *
  * 	Constructs:
+ * 		setup [Boolean]
+ * 			Whether the field has been setup or not.
+ * 			If this is `false` then the HTML element hasn't been built yet which means the field can't be used yet.
+ *
+ * 			IMPORTANT: IF THIS IS `false` THEN NO OTHER PROPERTIES WILL BE FOUND INSIDE THIS OBJECT!
+ * 			Do note that by using 'inputfield_getFieldObject()' it will automatically setup the field so by using that function this will never be `false`.
+ *
  * 		id [Number]
  * 			The unique ID of the field.
  *
@@ -721,6 +741,14 @@ function inputfield_FieldObject (specifics={}) {
 	if (typeof specifics !== 'object') {
 		console.warn(`[MPO] inputfield_FieldObject() received a non-object as 'specifics': "${specifics}".`);
 		specifics = {};
+	}
+
+
+
+	//if the field isn't setup yet then set mark it as such and return immediately
+	if (specifics.setup === false) {
+		this.setup = false;
+		return;
 	}
 
 
@@ -793,15 +821,6 @@ function inputfield_FieldObject (specifics={}) {
 	//set 'checkboxValue' to true if it hasn't been specified
 		//this has to be done before calling 'inputfield_getDefaultValue()' (done below for 'defaultValue') since that would think a value of `undefined` is valid (when it isn't)
 	attributes.checkboxValue ??= true;
-
-
-	// # 'defaultValue'
-
-	//check if 'defaultValue' is valid and if not, replace it with a default value
-		//note that we pass 'attributes' here despite those still getting verified in here but that doesn't matter here since it only needs attribute properties that we don't modify here
-	if (inputfield_validateValue(attributes.defaultValue, {fieldType: specifics.fieldType, attributes: attributes}) !== true) {
-		attributes.defaultValue = inputfield_getDefaultValue(specifics.fieldType, attributes);
-	}
 
 
 	// # 'beforeText'
@@ -958,7 +977,7 @@ function inputfield_FieldObject (specifics={}) {
 	if (attributes.autoAddToForm === true) {
 
 		//get the parent element of the current input-field (if available)
-		let loopedElem = specifics.parent;
+		let loopedElem = specifics.elem.parentNode;
 
 		if (Object.isDOMElement(loopedElem) !== true) {
 			console.warn(`[MPO] Could not apply 'autoAddToForm' during the creation of a input-field (ID: "${this.id}") as the provided parent in 'inputfield_FieldObject()' is not a DOM Element (this is likely a internal error).`);
@@ -968,7 +987,7 @@ function inputfield_FieldObject (specifics={}) {
 		while (Object.isDOMElement(loopedElem) === true) {
 
 			//if it's a form then add it to the 'addToForm' array
-			if (inputfield_fields.get(loopedElem)?.fieldType === 'form') {
+			if (inputfield_getFieldObject(loopedElem)?.fieldType === 'form') {
 				attributes.addToForm.push(loopedElem);
 			}
 
@@ -1045,7 +1064,7 @@ function inputfield_FieldObject (specifics={}) {
 	//add this input-field to all forms it should be added to
 	if (Array.isArray(attributes.addToForm) === true) {
 		for (const item of attributes.addToForm) {
-			const formChildren = inputfield_fields.get(item)?.formChildren;
+			const formChildren = inputfield_getFieldObject(item)?.formChildren;
 
 			//skip if the field object doesn't exist
 			if (formChildren === undefined) {
@@ -1139,8 +1158,20 @@ function inputfield_FieldObject (specifics={}) {
 	}
 
 
+	// # 'defaultValue'
+
+	//check if 'defaultValue' is valid and if not, replace it with a default value
+		//this has to be done after verifying 'options' as that attribute is needed in here
+	if (inputfield_validateValue(attributes.defaultValue, {fieldType: specifics.fieldType, attributes: attributes}) !== true) {
+		attributes.defaultValue = inputfield_getDefaultValue(specifics.fieldType, attributes);
+	}
+
+
 
 	// === SETTING THE ACTUAL PROPERTIES ===
+
+	//if the function got this far then it has to be `true`
+	this.setup = true;
 
 	//set value
 		//if it's a form then set it to an empty object - otherwise set it to the value specified
@@ -1240,6 +1271,7 @@ function inputfield_HostObject (specifics={}) {
 	this.onchange = (typeof specifics.onchange !== 'function') ? (() => {return;}) : specifics.onchange;
 
 	//set tag
+		//if no tag in 'specific.tag' has been specified then use the tag of the first child and if that isn't present then use 'host'
 	this.tag = specifics.tag ?? inputfield_fields.get(this.childList[0])?.tag ?? 'host';
 
 	//set belongsToForm
@@ -1411,50 +1443,135 @@ function inputfield_createField (fieldType, parent, attributes) {
 	let docFrag = new DocumentFragment();
 
 	//this will contain the entire input field
-	const container = cElem('span', docFrag, {
+	const container = cElem('input-field', docFrag, {
 		class: 'inputfield_container'
 	});
 
-	//create the field object
-	const fieldObj = new inputfield_FieldObject({
-		elem:       container,
-		parent:     parent,
-		value:      undefined,
-		fieldType:  fieldType,
-		attributes: attributes
+	container.setup({
+		fieldType: fieldType,
+		variation: attributes.variation,
+		attributes
 	});
 
-	container.classList.add('fieldType-' + fieldObj.fieldType);
-	container.classList.add('fieldVariation-' + fieldObj.variation);
-
-	//add the field object to the list
-	inputfield_fields.set(container, fieldObj);
-
-	//get the ID of this input field
-	const fieldID = fieldObj.id;
-
-	//get the actual attributes (since 'inputfield_FieldObject()' verifies and updates them)
-	attributes = fieldObj.attributes;
-
-	//this will be the default value
-	let value;
-
-	//create the actual input fields depending on which type it is
-	inputfield_variations.get(fieldObj.fieldTypeAndVariation).constructor(container, fieldObj, fieldID, attributes);
-
-	//set the default value (without triggering 'onchange')
-		//and also ignore the host because this should apply to the individual input-field only
-	inputfield_setValue(container, attributes.defaultValue, {
-		skipOnchange: true,
-		updateHost: false,
-		DOMTree: docFrag
-	});
+	//container.classList.add('fieldType-' + fieldObj.fieldType);
+	//container.classList.add('fieldVariation-' + fieldObj.variation);
 
 	//append the document fragment to the actual parent
 	parent.appendChild(docFrag);
 
 	//return the input-field DOM element
 	return container;
+}
+
+/** Sets a <input-field> element up. SHOULD ONLY BE CALLED VIA '<input-field>.setup()'.
+ *
+ * 	Args:
+ * 		fieldType [String] <optional>
+ * 			The field-type it should use.
+ * 			Will use the 'type' attribute on the <input-field> element if not present.
+ *
+ * 		variation [String] <optional>
+ * 			The variation fo the field.
+ * 			Will use the 'variation' attribute on the <inpu-field> element if not present. If that isn't present either then the default variation will be used.
+ *
+ * 		attributes [Object] <defaults>
+ * 			The input-field attributes.
+ * 			Will use the default attributes if not present.
+ *
+ * 	Returns [DOM Element]:
+ * 		The <input-field> element.
+ */
+function inputfield_setupField (specifics={}) {
+	//complain and return if it didn't get called on a DOM element
+	if (Object.isDOMElement(this) !== true) {
+		//use 'inputfield_setupField()' instead of '<input-field>.setup()' since this will likely only get triggered if called directly
+		console.warn(`[MPO] inputfield_setupField() didn't get called on a DOM element.`);
+		return this;
+	}
+
+	//complain and return if it didn't get called on a <input-field> element
+	if (this.tagName !== 'INPUT-FIELD') {
+		console.warn(`[MPO] <input-field>.setup() didn't get called on a <input-field> element.`);
+		return this;
+	}
+
+	//complain and return if 'specifics' is invalid
+	if (typeof specifics !== 'object') {
+		console.warn(`[MPO] <input-field>.setup() received a non-object as 'specifics': "${specifics}".`);
+		return this;
+	}
+
+
+
+	// === GET FIELD-TYPE, VARIATION & ATTRIBUTES ===
+
+	//all of this really just takes the type and variation from 'specifics' if specified and if those aren't present then from the <input-field> element
+		//also uses the default variation when it can't find a variation
+		//will also get the variation
+	let fieldType;
+	let variation;
+	let attributes;
+
+	//if the field-type has been specified in 'specifics' then use that, otherwise take it from the 'type' attribute of the <input-field> element
+	if (typeof specifics.fieldType === 'string') {
+		fieldType = specifics.fieldType;
+	} else {
+		fieldType = this.getAttribute('type');
+	}
+
+	//check if the type is valid by checking if a object for it exists in 'inputfield_variations'
+	if (typeof inputfield_variations.variations[fieldType] !== 'object') {
+		console.warn(`[MPO] <input-field>.setup() couldn't find a field-type value. This is can likely be fixed by either calling <input-field>.setup() manually with a 'fieldType' argument or by adding a 'type' attribute to the <input-field> element.`);
+		return this;
+	}
+
+	//if a variation has been specified in 'specifics' then use that, otherwise take it from the 'variation' attribute of the <input-field> element
+	if (typeof specifics.variation === 'string') {
+		variation = specifics.variation;
+	} else {
+		variation = this.getAttribute('variation');
+
+		//if it a variation couldn't be found then get the default variation
+			//the `!` converts 'variation' to a boolean and inverts it
+			//basically, an empty string and `null` would both be converted to `false` and then inverted to `true`
+			//this is because '.getAttribute()' returns either an empty string or `null`
+		if (!variation) {
+			variation = inputfield_getDefaultVariation(fieldType);
+		}
+	}
+
+
+	//if 'attributes' isn't specified then use an empty object
+	attributes = specifics.attributes;
+	if (typeof attributes !== 'object') {
+		attributes = {};
+	}
+
+
+
+	// === CONSTRUCT THE ELEMENT ===
+
+	//create a FieldObject
+		//note that technically one was already made but that one was made using `setup: false` which means it didn't do much so now we're overwriting that one
+	const fieldObj = new inputfield_FieldObject({
+		elem: this,
+		fieldType: fieldType,
+		attributes: attributes
+	});
+
+	//and add the FieldObject to 'inputfield_fields'
+	inputfield_fields.set(this, fieldObj);
+
+	//construct the <input-field> element
+	inputfield_variations.get(`${fieldType}-${variation}`).constructor(this, fieldObj, fieldObj.id, attributes);
+
+
+
+	// === APPLY THE STARTING VALUE ===
+	inputfield_setValue(this, attributes.defaultValue, {skipOnchange: true});
+
+	//return the element
+	return this;
 }
 
 /**	Sets up a input-field host.
@@ -1586,7 +1703,7 @@ function inputfield_getValue (field) {
 	}
 
 	//get the field object
-	const fieldObj = inputfield_fields.get(elem);
+	const fieldObj = inputfield_getFieldObject(elem);
 
 	//return null if it can't be found
 	if (fieldObj === undefined) {
@@ -1649,10 +1766,6 @@ function inputfield_getValue (field) {
  * 					If this is set to false it will simply overwrite the form as a whole.
  * 					Will be ignored for anything that's not a form.
  *
- * 				DOMTree [DOM Tree] <document>
- * 					Which DOM tree it should look for the input-field.
- * 					Chances are this is simply 'document', but it can also be a 'DocumentFragment' in which case that should be passed as a whole.
- *
  * 	Return [Boolean]:
  * 		Returns true if succesfully updated and false if it couldn't be updated.
  * 		This will also return true if the value specified is already set.
@@ -1669,7 +1782,7 @@ function inputfield_setValue (field, newValue, specifics={}) {
 	const containerElem = inputfield_getElement(field);
 
 	//get the field object
-	const fieldObj = inputfield_fields.get(containerElem);
+	const fieldObj = inputfield_getFieldObject(containerElem);
 
 	//return and complain if the 'fieldObj' could not be found
 	if (fieldObj === undefined) {
@@ -1708,7 +1821,7 @@ function inputfield_setValue (field, newValue, specifics={}) {
 				for (const item of fieldObj.formChildren) {
 
 					//check if the tag of the field matches the 'formProperty'
-					if (inputfield_fields.get(item).tag == specifics.formProperty) {
+					if (inputfield_getFieldObject(item).tag == specifics.formProperty) {
 
 						//update the input-field with the matching tag instead
 						inputfield_setValue(item, newValue, {skipOnchange: specifics.skipOnchange});
@@ -1749,7 +1862,7 @@ function inputfield_setValue (field, newValue, specifics={}) {
 
 	//if the value is invalid then complain and return `false`
 	} else {
-		console.warn(`[MPO] inputfield_setValue() has received an invalid value: "${newValue}" for the input-field "${fieldObj.id}" of type/variation: "${fieldTypeAndVariation}".`);
+		console.warn(`[MPO] inputfield_setValue() has received an invalid value: "${newValue}" for the input-field "${fieldObj.id}" of type/variation: "${fieldObj.fieldTypeAndVariation}".`);
 		return false;
 	}
 
@@ -1808,7 +1921,7 @@ function inputfield_validateValue (value, specifics={}) {
 
 		//if 'field' is a DOM Element then get the 'FieldObject' for it
 		if (Object.isDOMElement(specifics.field) === true) {
-			specifics.field = inputfield_fields.get(specifics.field);
+			specifics.field = inputfield_getFieldObject(specifics.field);
 		}
 
 		//for quick access
@@ -1853,10 +1966,14 @@ function inputfield_validateValue (value, specifics={}) {
 
 		case 'radio':
 			//loop through all the options to see if they have the same value
-			for (const item of attributes.options) {
-				if (item.value === value) {
-					return true;
+			if (Object.isIterable(attributes.options) === true) {
+				for (const item of attributes.options) {
+					if (item.value === value) {
+						return true;
+					}
 				}
+			} else {
+				//
 			}
 			return false;
 
@@ -1961,7 +2078,7 @@ function inputfield_executedAfterFieldChange (fieldID, newValue) {
 	}
 
 	//get field object
-	const fieldObj = inputfield_fields.get(containerElem);
+	const fieldObj = inputfield_getFieldObject(containerElem);
 
 	//apply 'checkboxValue' to the new value if it's a checkbox and the value is `true`
 	if (fieldObj.fieldType === 'checkbox' && newValue === true) {
@@ -2010,7 +2127,7 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 	}
 
 	//get the field object
-	const fieldObj = inputfield_fields.get(containerElem);
+	const fieldObj = inputfield_getFieldObject(containerElem);
 
 	//complain and return if the field object couldn't be found
 	if (fieldObj === undefined) {
@@ -2069,7 +2186,7 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 
 		//get the 'onchange' function
 			//if a host is used then get the 'onchange' function from that
-		const onchangeFunction = (fieldObj.belongsToHost !== false) ? inputfield_hosts.get(fieldObj.belongsToHost).onchange : inputfield_fields.get(containerElem).onchange;
+		const onchangeFunction = (fieldObj.belongsToHost !== false) ? inputfield_hosts.get(fieldObj.belongsToHost).onchange : inputfield_getFieldObject(containerElem).onchange;
 
 		//execute the 'onchange' function
 			//use 'setTimeout()' with a delay of 0 so it gets it's own call-stack (it basically tells the browser "Hey, execute this bit as soon as everything else is done!")
@@ -2124,7 +2241,7 @@ function inputfield_executedAfterLabelPress (labelElem) {
 	const fieldElem = inputfield_getElement(labelElem.getAttribute('data-labelforfieldid'));
 
 	//get the field object
-	const fieldObj = inputfield_fields.get(fieldElem);
+	const fieldObj = inputfield_getFieldObject(fieldElem);
 
 	//return and complain if the field couldn't be found
 	if (typeof fieldObj !== 'object') {
@@ -2269,7 +2386,7 @@ function inputfield_updateHostsChildren (hostElem, newValue) {
 
 	for (const item of childList) {
 		//get the field object
-		const fieldObj = inputfield_fields.get(item);
+		const fieldObj = inputfield_getFieldObject(item);
 
 		switch (fieldObj.fieldType) {
 			case 'checkbox':
@@ -2407,9 +2524,64 @@ function inputfield_getElement (fieldID, specifics={}) {
 	//get the container element
 	const containerElem = specifics.DOMTree.querySelector(`.inputfield_container[data-fieldid="${fieldID}"]`);
 
-	//return the element if it exists, otherwise return `null`
-	return containerElem ?? null;
+	if (Object.isDOMElement(containerElem) !== true) {
+		console.warn(`[MPO] inputfield_getElement() couldn't find a DOM element with the ID: "${fieldID}".`);
+		return null;
+	}
 
-	//return `null` if 'fieldID' a different type
-	return null;
+	//return the element
+	return containerElem;
+}
+
+/**	Gets the FieldObject for a input-field.
+ *
+ * 	Gets the object that's found inside the 'inputfield_fields' variable.
+ * 	Will also setup a input-field if it hasn't already.
+ *
+ * 	Args:
+ * 		field [DOM Element/String]
+ * 			The input-field. Can be the DOM element itself or it's input-field ID.
+ *
+ * 	Returns [FieldObject/null]:
+ * 		Returns a FieldObject (see 'inputfield_FieldObject()').
+ * 		Returns `null` if it couldn't be found.
+ */
+function inputfield_getFieldObject (field) {
+	//complain and return if it's not a DOM element
+	if (typeof field !== 'string' && Object.isDOMElement(field) !== true) {
+		console.warn(`[MPO] inputfield_getFieldObject() received neither a string nor a DOM element as 'field': "${field}".`);
+		return null;
+	}
+
+	//get the DOM element if an ID was given
+	if (typeof field === 'string') {
+		field = inputfield_getElement(field);
+
+		//complain and return if it's not a DOM element
+		if (Object.isDOMElement(field) !== true) {
+			console.warn(`[MPO] inputfield_getFieldObject() couldn't find the input-field specified in 'field'.`);
+			return null;
+		}
+	}
+
+	//get the FieldObject
+	let fieldObj = inputfield_fields.get(field);
+
+	//complain and return if it couldn't be found
+	if (fieldObj === undefined) {
+		console.warn(`[MPO] inputfield_getFieldObject() couldn't get the FieldObject for the following element:`);
+		console.warn(field);
+		return null;
+	}
+
+	//check if the field has been setup and, if not, set it up
+	if (fieldObj.setup !== true) {
+		field.setup();
+
+		//and assign the new FieldObject so we can return the newly created one
+		fieldObj = inputfield_fields.get(field);
+	}
+
+	//return it!
+	return fieldObj;
 }
