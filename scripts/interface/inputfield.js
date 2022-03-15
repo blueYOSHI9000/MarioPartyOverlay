@@ -170,12 +170,6 @@
 			Can also be an array consisting of multiple DOM elements/field-IDs.
 			Leave empty if it should not be added to a form.
 
-		autoAddToForm [Boolean] <false>
-			--- DOES NOT WORK ANYMORE --- Will be supported again soon though.
-			If true any field that's a descendant of a form will automatically be added to the form.
-			The way this works is that it will go up the DOM tree and if it finds a form then it will be added to that form.
-			This only applies the moment the field is created. If the input-field is created and is afterwards appended to a form then it will NOT be added to the form.
-
 	# host related attributes (available only to 'checkbox' types for now):
 
 		host [DOM Element] <none>
@@ -188,6 +182,14 @@
 			It is not possible to set a 'onchange' function on a individual checkbox without it applying to the host as a whole.
 
 			If no 'tag' is provided then it will attempt to take the tag of the first child, if not possible it uses 'host' instead as a tag.
+
+	# 'form' type attributes
+
+		autoAddToForm [Boolean] <false>
+			If true the input-field will check the DOM Tree and will automatically add any descendants to the form.
+			Basically, if a input-field is a descendant of a form then it will automatically be added to the form.
+
+			Do note: Any descendant will be added automatically to the form but they will NOT be removed if the element is no longer a descendant.
 
 
 	# 'button' type attributes
@@ -860,24 +862,7 @@ function inputfield_FieldObject (specifics={}) {
 
 
 	// # 'variation'
-
-	//if no variation has been specified then try getting it from 'fieldType' (so 'radio-checkbox' is split into the fieldType 'radio' and variation 'checkbox')
-	if (attributes.variation === undefined) {
-
-		//check if it even has a dash in it
-		if (specifics.fieldType.indexOf('-') !== -1) {
-
-			//actually split it
-			const fieldTypeSplit = specifics.fieldType.splitOnce('-');
-
-			//apply the new strings
-			specifics.fieldType = fieldTypeSplit[0];
-			attributes.variation = fieldTypeSplit[1];
-		}
-	}
-
-	//get default variation if no variation has been specified
-	attributes.variation ??= inputfield_getDefaultVariation(specifics.fieldType);
+		//verified at the start of this function
 
 
 	// # 'id'
@@ -935,6 +920,7 @@ function inputfield_FieldObject (specifics={}) {
 		let afterTextNode = cElem('span', specifics.elem.parentNode);
 
 		//...and insert it after the input-field
+		specifics.elem.parentNode.insertBefore(afterTextNode, specifics.elem.nextSibling);
 			//ok, let's explain this absolute nut-case of a mess (shoutouts to JS for sucking massive dick and shoutouts to StackOverflow for not sucking as much dick)
 			//from what I can gather there's no 'insertAfter()' function or something. So, what do we have to do?
 			//well, obviously we have to fetch the next element and then append it before that. Obviously. Why would there be a easier way?
@@ -951,7 +937,6 @@ function inputfield_FieldObject (specifics={}) {
 			//but '.insertBefore()' inserts an element at the end of the list if you give it `null`
 
 			//almost like they realized that people would have to do things this way, but why add a dedicated '.insertAfter()' function when you can simply expect people to use this?
-		specifics.elem.parentNode.insertBefore(afterTextNode, specifics.elem.nextSibling);
 
 		//add the correct text
 			//note that this will not parse HTML (which is intended)
@@ -1030,41 +1015,34 @@ function inputfield_FieldObject (specifics={}) {
 	}
 
 
-	// # 'addToForm' & 'autoAddToForm'
+	// # 'autoAddToForm'
 
-	//turn 'addToForm' into an empty array if nullish
-	if (attributes.addToForm === undefined || attributes.addToForm === null) {
-		attributes.addToForm = [];
+	//check if 'autoAddToForm' is true
+	if (attributes.autoAddToForm === true) {
 
-	//add 'addToForm' to an empty array if it's not an array already
-	} else if (Array.isArray(attributes.addToForm) !== true) {
+		//check if it's a form, if yes then add this field to the observer
+		if (specifics.fieldType === 'form') {
+			inputfield_observer.observe(specifics.elem, {subtree: true, childList: true});
+
+		//if it's not a form then complain about it and do nothing else
+		} else {
+			console.warn(`[MPO] inputfield_FieldObject() received \`true\` for 'autoAddToForm' despite the input-field not being a form. ID: "${this.id}"`);
+		}
+	}
+
+
+	// # 'addToForm'
+
+	//if 'addToForm' is nullish (null / undefined) then make it an array
+	attributes.addToForm ??= [];
+
+	//if 'addToForm' is not an array then add it inside an array
+	if (Array.isArray(attributes.addToForm) !== true) {
 		attributes.addToForm = [attributes.addToForm];
 	}
 
-	//if 'autoAddToForm' is true then automatically add this field to any form that can be found by going up the DOM Tree
-	if (attributes.autoAddToForm === true) {
-
-		//get the parent element of the current input-field (if available)
-		let loopedElem = specifics.elem.parentNode;
-
-		if (Object.isDOMElement(loopedElem) !== true) {
-			console.warn(`[MPO] Could not apply 'autoAddToForm' during the creation of a input-field (ID: "${this.id}") as the provided parent in 'inputfield_FieldObject()' is not a DOM Element (this is likely a internal error).`);
-		}
-
-		//only loop if it is actually a DOM element
-		while (Object.isDOMElement(loopedElem) === true) {
-
-			//if it's a form then add it to the 'addToForm' array
-			if (inputfield_getFieldObject(loopedElem)?.fieldType === 'form') {
-				attributes.addToForm.push(loopedElem);
-			}
-
-			//get the parent element
-			loopedElem = loopedElem.parentNode;
-		}
-	}
-
-	//'.removeEachIf()' executes this function for each array item and then removes the item if the function returns true
+	//loop through the array and add the input-field to all specified forms while removing any array entry that's not valid
+		//'.removeEachIf()' loops through all array items in reverse and when returning `true` it removes said array item
 	attributes.addToForm.removeEachIf((item, index) => {
 
 		//convert it to a DOM element if it only specified the fieldID
@@ -1820,12 +1798,6 @@ function inputfield_getValue (field) {
  * 					If true it updates the host if there is a host (as it should).
  * 					If false it ignores the host and simply applies the value to the actual input-field itself.
  *
- * 				formProperty [String/Boolean] <false>
- * 					Which form property it should update.
- * 					This will automatically search for the input-field with this tag and update all that match.
- * 					If this is set to false it will simply overwrite the form as a whole.
- * 					Will be ignored for anything that's not a form.
- *
  * 	Return [Boolean]:
  * 		Returns true if succesfully updated and false if it couldn't be updated.
  * 		This will also return true if the value specified is already set.
@@ -1846,102 +1818,23 @@ function inputfield_setValue (field, newValue, specifics={}) {
 
 	//return and complain if the 'fieldObj' could not be found
 	if (fieldObj === undefined) {
-		console.warn(`[MPO] inputfield_setValue() could not find the 'fieldObj' for the field "${field}".`);
+		console.warn(`[MPO] inputfield_setValue() could not find the 'FieldObject' for the field "${field}".`);
 		return false;
 	}
 
 	//get host object
 	const hostObj = inputfield_hosts.get(fieldObj.belongsToHost);
 
-	//check if the host should be updated and also check if the host even exists
-	if (specifics.updateHost !== false && hostObj !== undefined) {
-
-		//return if it's already set to the correct value
-		if (hostObj.newValue === newValue) {
-			return true;
-		}
-
-		//update the hosts value
-		inputfield_updateHostsChildren(fieldObj.belongsToHost, newValue);
-
-		return true;
-	}
-
-	//return if it's already set to the correct value
-	if (fieldObj.newValue === newValue) {
-		return true;
-	}
-
-	switch (fieldObj.fieldType) {
-		case 'form':
-			//if a form property is provided then apply the value to the specified input-field
-			if (typeof specifics.formProperty === 'string') {
-
-				//loop through all form-children
-				for (const item of fieldObj.formChildren) {
-
-					//check if the tag of the field matches the 'formProperty'
-					if (inputfield_getFieldObject(item).tag == specifics.formProperty) {
-
-						//update the input-field with the matching tag instead
-						inputfield_setValue(item, newValue, {skipOnchange: specifics.skipOnchange});
-
-						//if the 'onchange' function should be executed then it's already been executed anyway by calling 'inputfield_setValue()' above
-						specifics.skipOnchange = true;
-					}
-				}
-			}
-
-			break;
-
-		case 'checkbox':
-			//if the value is the 'checkboxValue' then set it to `true` instead
-			if (newValue === fieldObj.attributes.checkboxValue) {
-				newValue = true;
-			}
-			break;
-	}
-
-	//if the value is valid then apply it
-	if (inputfield_validateValue(newValue, {field: fieldObj}) === true) {
-
-		//this saves whether the value has been changed or not
-		let changed = false;
-
-		//apply it by calling the '.setRawValue()' function of the respective 'inputfield_variations' entry
-		changed = inputfield_variations.get(fieldObj.fieldTypeAndVariation).setRawValue(containerElem, fieldObj, newValue);
-
-		//return and complain if the value couldn't be updated
-			//we can let it continue but it's not exactly much better either
-			//it's a question of "letting the user change the value but the value displayed is wrong" or "don't let the user change the value but the value displayed is still accurate"
-			//I chose the latter but who knows which one is really better ¯\_(ツ)_/¯
-		if (changed !== true) {
-			console.warn(`[MPO] inputfield_setValue(): 'inputfield_variations.get(${fieldObj.fieldTypeAndVariation}).setRawValue()' didn't return 'true'. Input-field ID: "${fieldObj.id}" -- Value: "${newValue}"`);
-			return false;
-		}
-
-	//if the value is invalid then complain and return `false`
-	} else {
-		console.warn(`[MPO] inputfield_setValue() has received an invalid value: "${newValue}" for the input-field "${fieldObj.id}" of type/variation: "${fieldObj.fieldTypeAndVariation}".`);
+	//complain and return if the value isn't valid
+	if (inputfield_validateValue(newValue, fieldObj) !== true) {
+		console.warn(`[MPO] inputfield_setValue() received an invalid value "${newValue}" for input-field "${fieldObj.id}".`);
 		return false;
 	}
 
-	//if it's a checkbox and the value is `true` then set it to the 'checkboxValue' attribute
-	if (fieldObj.fieldType === 'checkbox' && newValue === true) {
-		newValue = fieldObj.attributes.checkboxValue;
-	}
+	//apply the new value
+	inputfield_applyNewValue(containerElem, newValue, {skipOnchange: specifics.skipOnchange, updateHost: specifics.updateHost});
 
-	//if it's a form and 'formProperty' has been specified then return it
-		//because if 'formProperty' is used then 'newValue' should NOT be applied to the form as a whole, that's why we return it here so 'inputfield_applyNewValue()' won't be called on it
-	if (fieldObj.fieldType === 'form' && typeof specifics.formProperty === 'string') {
-		return true;
-	}
-
-	//apply the value inside the 'fieldObj'
-		//set 'skipSetRawValue' to true since it's already been executed in here
-	inputfield_applyNewValue(containerElem, newValue, {skipOnchange: specifics.skipOnchange, skipSetRawValue: true, updateHost: specifics.updateHost});
-
-	//and return `true` since at this point it has to be successful
+	//and return true
 	return true;
 }
 
@@ -2151,7 +2044,12 @@ function inputfield_executedAfterFieldChange (fieldID, newValue) {
 
 /**	Applies the new value to the input-field and executes the 'onchange' function of the field.
  *
- * 	Updates the 'value' property inside the field object, marks the new value as selected in case of radio fields and executes the 'onchange' function of the input field.
+ * 	Does NOT verify if the value given is valid, the new value will be applied regardless.
+ * 	Updates the 'value' property inside the FieldObject.
+ * 	Updates the visuals (so a checkbox actually has the check when it's checked).
+ * 	Updates the host.
+ * 	Executes the 'onchange' function.
+ * 	Updates the form.
  *
  * 	Args:
  * 		containerElem [DOM Element]
@@ -2173,7 +2071,7 @@ function inputfield_executedAfterFieldChange (fieldID, newValue) {
  *
  * 				formProperty [String] <optional>
  * 					In case a form is being updated it will only update the property with this name instead of the whole object.
- * 					If this is not specified the form value will be completely replaced with 'newValue'.
+ * 					If this is not specified then the form value will be completely replaced with 'newValue'.
  *
  * 				updateHost [Boolean] <true>
  * 					If true it updates the host if there is a host (as it should).
@@ -2460,6 +2358,54 @@ function inputfield_updateHostsChildren (hostElem, newValue) {
 					inputfield_setValue(item, false, {skipOnchange: true, updateHost: false});
 				}
 				break;
+		}
+	}
+}
+
+//this is used for 'autoAddToForm', it will track any element that's added to a input-field with 'autoAddToForm' enabled
+let inputfield_observer = new MutationObserver(inputfield_observerCallback);
+
+/**	Gets called after every observer change.
+ *
+ * 	Adds any new elements to the form if 'autoAddToForm' is enabled.
+ *
+ * 	Args:
+ * 		record [MutationRecord object]
+ * 			The MutationRecord object that gets made after the MutationObserver callback.
+ */
+function inputfield_observerCallback (record) {
+	//loop through all records
+	for (const recItem of record) {
+
+		//loop through all elements added
+		for (const elem of recItem.addedNodes) {
+
+			//continue loop if it's not a <input-field> element
+			if (elem.tagName !== 'INPUT-FIELD') {
+				continue;
+			}
+
+			//double-check to make sure the input-field is actually a descendant of the form...
+				//...and then add the new input-field to the form
+			if (recItem.target.contains(elem) === true) {
+
+				//get the 'FieldObject' for both
+				const targetObj = inputfield_getFieldObject(recItem.target);
+				const elemObj   = inputfield_getFieldObject(elem);
+
+				//complain and skip if it's not a form
+				if (targetObj.fieldType !== 'form') {
+					console.warn(`[MPO] inputfield_observerCallback() received a 'autoAddToForm' change for the input-field "${targetObj.id}" despite it not being a form.`);
+					continue;
+				}
+
+				//add both fields to each other
+				targetObj.formChildren .push(elem);
+				elemObj  .belongsToForm.push(recItem.target);
+
+				//update the form to include the new value
+				inputfield_applyNewValue(recItem.target, elemObj.value, {skipOnchange: true, formProperty: elemObj.tag});
+			}
 		}
 	}
 }

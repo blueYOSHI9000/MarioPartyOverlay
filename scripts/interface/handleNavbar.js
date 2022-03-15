@@ -135,7 +135,8 @@ function handleNavbar_createCharacterModal () {
 	const constructModal = function (main) {
 		//create a form
 		var form = inputfield_createField('form', main, {
-			onchange: handleNavbar_changeCharacterFromModal
+			onchange: handleNavbar_changeCharacterFromModal,
+			autoAddToForm: true
 		});
 
 		//create a player selection
@@ -159,7 +160,7 @@ function handleNavbar_createCharacterModal () {
 
 /**	Called when changing the character from the character-selection modal.
  *
- * 	Should only be called by an input-field 'onchange' function.
+ * 	Should only be called by an input-field's 'onchange' function.
  *
  * 	Args:
  * 		value [*any*]

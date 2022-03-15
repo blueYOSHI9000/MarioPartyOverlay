@@ -56,7 +56,6 @@ function commonInterface_createCounterList (parent, player) {
 /**	Creates a list of all characters for the user to select.
  *
  * 	This will create a 'radio' input-field which creates one image for each character.
- * 	The 'autoAddToForm' attribute for the input-field is set to true.
  *
  * 	Args:
  * 		parent [DOM Element]
@@ -97,15 +96,13 @@ function commonInterface_createCharacterSelection (parent, game=updatesTracker_g
 	return inputfield_createField('radio-image', parent, {
 		options: fieldOptions,
 		cssClass: 'commonInterface_characterSelection',
-		tag: 'character',
-		autoAddToForm: true
+		tag: 'character'
 	});
 }
 
 /**	Creates a player selection.
  *
  * 	This creates a 'radio' input-field with 4 images, one for each player.
- * 	The 'autoAddToForm' attribute for the input-field is set to true.
  *
  * 	Args:
  * 		parent [DOM Element]
@@ -140,7 +137,6 @@ function commonInterface_createPlayerSelection (parent) {
 			}
 		],
 		cssClass: 'commonInterface_playerSelection',
-		tag: 'player',
-		autoAddToForm: true
+		tag: 'player'
 	});
 }
