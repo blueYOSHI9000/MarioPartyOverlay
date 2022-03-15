@@ -172,8 +172,6 @@ function handleNavbar_createCharacterModal () {
 function handleNavbar_changeCharacterFromModal (value, fieldObj) {
 	//return if 'player' has been updated
 	if (fieldObj.propertyChanged === 'player') {
-		//change the currently selected character to the one the player uses
-		inputfield_setValue(fieldObj.id, updatesTracker_getCharacter(Number(value.player)), {formProperty: 'character', skipOnchange: true});
 		return;
 	}
 
