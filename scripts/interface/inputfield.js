@@ -663,6 +663,7 @@ class InputFieldElement extends HTMLElement {
 			//input-fields weren't created with this limitation in mind so it causes some issues
 			//might be fixed at some point but at this point... is it really worth it?
 			//the only real upside for Shadow-Roots is it being more idiot-proof when other people use it but that's not that big of an issue when it's created with only MPO in mind
+			//also, worth noting that <input-field> elements can change when attributes get updated so a closed shadow-root wouldn't really work either without some work
 		//const shadow = this.attachShadow({mode: 'open'});
 
 		//create a FieldObject and add it to 'inputfield_fields'
@@ -670,6 +671,14 @@ class InputFieldElement extends HTMLElement {
 
 		//add the '.setup()' function
 		this.setup = inputfield_setupField;
+
+		//setup the element automatically with a 0ms timeout
+			//this is done for two primary reasons:
+			// - it's easier to make a primitive prototype (simply create a <input-field> element with a 'type' attribute - without calling '.setup()' or anything)
+			// - avoids an empty element being displayed before being replaced by the actual input-field which a end-user could notice
+			//of course, there's an argument to be made for "trust the coder" but I'd say the chances that a coder doesn't want this are slim without there being other ways around this
+			//(for example, you could use a empty <span> element and use '.replaceWith()' to replace it with a finished <input-field> if you don't want '.setup()' to be called on it)
+		setTimeout(() => {this.setup()}, 0);
 	}
 }
 
@@ -812,6 +821,12 @@ function inputfield_FieldObject (specifics={}) {
 
 
 	// === VERIFY TYPE AND VARIATION ===
+
+	//complain and return if no 'fieldType' was specified
+	if (typeof specifics.fieldType !== 'string') {
+		console.error(`[MPO] inputfield_FieldObject() received a non-string for 'fieldType': "${specifics.fieldType}".`);
+		return;
+	}
 
 	//check if 'fieldType' has the variation included (would be 'checkbox-regular' for example).
 	if (specifics.fieldType.indexOf('-') !== -1) {
@@ -1512,20 +1527,24 @@ function inputfield_createField (fieldType, parent, attributes) {
 /** Sets a <input-field> element up. SHOULD ONLY BE CALLED VIA '<input-field>.setup()'.
  *
  * 	Args:
- * 		fieldType [String] <optional>
- * 			The field-type it should use.
- * 			Will use the 'type' attribute on the <input-field> element if not present.
+ * 		specifics [Object]
+ * 			Includes the following properties:
  *
- * 		variation [String] <optional>
- * 			The variation fo the field.
- * 			Will use the 'variation' attribute on the <inpu-field> element if not present. If that isn't present either then the default variation will be used.
+ * 				fieldType [String] <optional>
+ * 					The field-type it should use.
+ * 					Will use the 'type' attribute on the <input-field> element if not present.
  *
- * 		attributes [Object] <defaults>
- * 			The input-field attributes.
- * 			Will use the default attributes if not present.
+ * 				variation [String] <optional>
+ * 					The variation fo the field.
+ * 					Will use the 'variation' attribute on the <inpu-field> element if not present. If that isn't present either then the default variation will be used.
+ *
+ * 				attributes [Object] <defaults>
+ * 					The input-field attributes.
+ * 					Will use the default attributes if not present.
  *
  * 	Returns [DOM Element]:
  * 		The <input-field> element.
+ * 		The element will be returned regardless of if it was setup succesfully or not (be sure to check the console for warnings).
  */
 function inputfield_setupField (specifics={}) {
 	//complain and return if it didn't get called on a DOM element
@@ -1549,26 +1568,47 @@ function inputfield_setupField (specifics={}) {
 
 
 
-	// === GET FIELD-TYPE, VARIATION & ATTRIBUTES ===
+	// === CHECK IF IT'S ALREADY BEEN SETUP ===
+	let fieldObj = inputfield_getFieldObject(this, {skipSetupCheck: true});
 
+	//complain if a FieldObject doesn't already exist
+	if (fieldObj === null) {
+		console.warn(`[MPO] inputfield_setupField(): A FieldObject wasn't already made for the following input-field (this is likely an internal error):`);
+		console.warn(this);
+
+	//if the FieldObject does exist...
+	} else {
+
+		//...then check if it's already been setup; if it was already setup then return
+		if (fieldObj.setup === true) {
+			return this;
+		}
+	}
+
+
+
+	// === GET FIELD-TYPE, VARIATION & ATTRIBUTES ===
 	//all of this really just takes the type and variation from 'specifics' if specified and if those aren't present then from the <input-field> element
-		//also uses the default variation when it can't find a variation
-		//will also get the variation
-	let fieldType;
-	let variation;
-	let attributes;
 
 	//if 'attributes' isn't specified then use an empty object
-	attributes = specifics.attributes;
+	let attributes = specifics.attributes;
 	if (typeof attributes !== 'object') {
 		attributes = {};
 	}
 
 	//if no type is specified then fetch it from the <input-field> element
+	let fieldType;
 	if (typeof specifics.fieldType !== 'string') {
 		fieldType = this.getAttribute('type');
 	} else {
 		fieldType = specifics.fieldType;
+	}
+
+	//complain and return if no 'fieldType' was specified
+	if (typeof fieldType !== 'string') {
+		console.error(`[MPO] inputfield_setupField() could not setup the following input-field as no type was specified (make sure to always setup a <input-field> element by calling '.setup()' on it or by using a 'type' HTML attribute):`);
+		console.error(this);
+		return this;
 	}
 
 	//this checks if a variation is present in the following order: 'attributes.variation' -> 'specifics.variation' -> '<input-field>.variation'
@@ -1587,7 +1627,7 @@ function inputfield_setupField (specifics={}) {
 
 	//create a FieldObject
 		//note that technically one was already made but that one was made using `setup: false` which means it didn't do much so now we're overwriting that one
-	const fieldObj = new inputfield_FieldObject({
+	fieldObj = new inputfield_FieldObject({
 		elem: this,
 		fieldType: fieldType,
 		attributes: attributes
@@ -2462,15 +2502,15 @@ function inputfield_getDefaultVariation (fieldType) {
  * 		specifics [Object] <optional>
  * 			A object of optional specifics about how the input-field should be gotten.
  *
- * 			DOMTree [DOM Tree] <document>
- * 				Which DOM tree it should look for the input-field.
- * 				Chances are this is simply 'document', but it can also be a 'DocumentFragment' in which case that should be passed as a whole.
+ * 				DOMTree [DOM Tree] <document>
+ * 					Which DOM tree it should look for the input-field.
+ * 					Chances are this is simply 'document', but it can also be a 'DocumentFragment' in which case that should be passed as a whole.
  *
- * 			referenceElem [DOM Element] <optional>
- * 				A optional reference element that can be used to speed-up the process of getting the element.
- * 				If a reference element is used then this function will simply go up the DOM tree and check if the input-field can be found.
- * 				Note that if the input-field can't be found with this reference element then it will simply fall back to the normal function.
- * 				This also double-checks to make sure that 'referenceElem' is an actual DOM element, so you can pass a string or anything and it will simply be ignored without breaking.
+ * 				referenceElem [DOM Element] <optional>
+ * 					A optional reference element that can be used to speed-up the process of getting the element.
+ * 					If a reference element is used then this function will simply go up the DOM tree and check if the input-field can be found.
+ * 					Note that if the input-field can't be found with this reference element then it will simply fall back to the normal function.
+ * 					This also double-checks to make sure that 'referenceElem' is an actual DOM element, so you can pass a string or anything and it will simply be ignored without breaking.
  *
  * 	Returns [DOM Element/null]:
  * 		The DOM Element of the input-field if found.
@@ -2548,11 +2588,23 @@ function inputfield_getElement (fieldID, specifics={}) {
  * 		field [DOM Element/String]
  * 			The input-field. Can be the DOM element itself or it's input-field ID.
  *
+ * 		specifics [Object] <optional>
+ * 			Includes the following (optional) properties:
+ *
+ * 				skipSetupCheck [Boolean] <false>
+ * 					If `true` it won't check whether the FieldObject has been setup or not.
+ *
  * 	Returns [FieldObject/null]:
  * 		Returns a FieldObject (see 'inputfield_FieldObject()').
  * 		Returns `null` if it couldn't be found.
  */
-function inputfield_getFieldObject (field) {
+function inputfield_getFieldObject (field, specifics={}) {
+	//complain and use defaults if 'specifics' is invalid
+	if (typeof specifics !== 'object') {
+		console.warn(`[MPO] inputfield_getFieldObject() received a non-object as 'specifics': "${specifics}".`);
+		specifics = {};
+	}
+
 	//complain and return if it's not a DOM element
 	if (typeof field !== 'string' && Object.isDOMElement(field) !== true) {
 		console.warn(`[MPO] inputfield_getFieldObject() received neither a string nor a DOM element as 'field': "${field}".`);
@@ -2581,7 +2633,8 @@ function inputfield_getFieldObject (field) {
 	}
 
 	//check if the field has been setup and, if not, set it up
-	if (fieldObj.setup !== true) {
+		//but only if 'skipSetupCheck' isn't `true`
+	if (fieldObj.setup !== true && specifics.skipSetupCheck !== true) {
 		field.setup();
 
 		//and assign the new FieldObject so we can return the newly created one
