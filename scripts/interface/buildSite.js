@@ -396,7 +396,8 @@ function buildSite_buildSettings (docFrag) {
 			host: testHost,
 			checkboxValue: 'weegee',
 			onchange: logToOutput,
-			labels: label
+			labels: label,
+			defaultValue: true
 		});
 		cElem('br', testHost);
 

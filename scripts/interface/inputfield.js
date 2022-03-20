@@ -117,15 +117,15 @@
 				This also isn't fixed in stone, this can change in any update (for better or worse). So it's recommended to avoid using the same ID multiple times as much as possible.
 
 		defaultValue [*any*] <optional>
-			This defines the value the input-field will have after it's been created.
+			This defines the value the input-field will have after it's been created. Can't be `undefined`.
 			The default value will only be applied if it's actually valid.
 			If no default value is specified (or if it's invalid) then it will use the following (depending on which type it is):
-				form:     *N/A*
+				form:     *empty object*
 				checkbox: false
 				radio:    *the first 'option'*
 				text:     '' (a blank string)
 				number:   0
-				button:   *N/A*
+				button:   undefined
 				color:    '#000000'
 				file:     *N/A*
 
@@ -176,6 +176,7 @@
 			Specifying a "host" element (can be any DOM element - even a input-field) allows you to connect several input-fields with each other.
 			To connect input-fields you simply use the same host element when creating the input-field and they're automatically connected with each other.
 			Once input-fields are connected there can only be one checkbox that's checked. Basically a 'radio' replacement.
+			When connecting a new input-field to a host then the host's current value will take priority unless a 'defaultValue' was specified for the newly added input-field, in which case that will be used.
 
 			The 'onchange' attribute will only be set on the host element (which will be triggered when the value changes) and not on the individual checkboxes.
 			Setting a 'onchange' attribute when one has already been set then it will replace the existing one.
@@ -727,10 +728,6 @@ customElements.define('input-field', InputFieldElement);
  * 		id [Number]
  * 			The unique ID of the field.
  *
- * 		value [*any*]
- * 			The value of the field.
- * 			What type this is depends on the 'fieldType', see the documentation at the top of this file for more info.
- *
  * 		fieldType [String]
  * 			The type of the field.
  *
@@ -739,6 +736,19 @@ customElements.define('input-field', InputFieldElement);
  *
  * 		fieldTypeAndVariation [String]
  * 			A simple string that combines the 'fieldType' and 'variation' with a dash ('-') in between.
+ *
+ * 		value [*any*]
+ * 			The value of the field.
+ * 			What type this is depends on the 'fieldType', see the documentation at the top of this file for more info.
+ *
+ * 		displayedValue [*any*]
+ * 			The value that's actually being displayed.
+ * 			This will likely always be the same as 'value' but when forcing a invalid value onto it then this will be different.
+ * 			Example: If a string was forced onto a 'number' input-field then 'value' will be the string while 'displayedValue' will be 0 because the field will display 0.
+ *
+ * 		nullValue [*any*]
+ * 			The value that's used as a fail-safe when the real value is invalid.
+ * 			Mainly used when a value from the host is applied.
  *
  * 		attributes [Object]
  * 			All attributes of the field.
@@ -767,6 +777,11 @@ customElements.define('input-field', InputFieldElement);
  * 		formChildren [Array/null]
  * 			An array that lists all input-fields that are part of the form. Consists of DOM elements.
  * 			Will be null if this isn't a form.
+ *
+ * 		startingValue [*any*] <undefined>
+ * 			The value the field should start out with.
+ * 			WILL BE DELETED IMMEDIATELY AFTER 'inputfield_setupField()' IS CALLED. Use 'attributes.defaultValue' instead.
+ * 			This is only exists since the starting-value and default-value differ when a host is used (specifically to make sure that fields with a 'defaultValue' take priority over other fields without one when added to a host).
  */
 function inputfield_FieldObject (specifics={}) {
 	//complain and use defaults if 'specifics' is invalid
@@ -1219,12 +1234,28 @@ function inputfield_FieldObject (specifics={}) {
 	}
 
 
-	// # 'defaultValue'
+
+	// === 'belongsToHost' & 'startingValue' PROPERTIES & 'defaultValue' ATTRIBUTE ===
+	//Yes, I'm aware this is a mess. They all rely on each other and there's no real better way to do it (at least to my knowledge).
+
+	//set whether this belongs to a host (and which one)
+	this.belongsToHost = specifics.attributes.host ?? false;
+
+	//set 'startingValue' to the hosts value if no 'defaultValue' has been specified and a host is present
+		//but use 'inputfield_getDefaultValue()' if the host doesn't have a value yet
+	if (attributes.defaultValue === undefined && this.belongsToHost !== false) {
+		this.startingValue = inputfield_hosts.get(this.belongsToHost)?.value ?? inputfield_getDefaultValue(specifics.fieldType, attributes);
+	}
 
 	//check if 'defaultValue' is valid and if not, replace it with a default value
 		//this has to be done after verifying 'options' as that attribute is needed in here
 	if (inputfield_validateValue(attributes.defaultValue, {fieldType: specifics.fieldType, attributes: attributes}) !== true) {
 		attributes.defaultValue = inputfield_getDefaultValue(specifics.fieldType, attributes);
+	}
+
+	//if 'startingValue' wasn't defined yet then set it to 'defaultValue'
+	if (this.startingValue === undefined) {
+		this.startingValue = attributes.defaultValue;
 	}
 
 
@@ -1234,41 +1265,54 @@ function inputfield_FieldObject (specifics={}) {
 	//if the function got this far then it has to be `true`
 	this.setup = true;
 
-	//set value
-		//if it's a form then set it to an empty object - otherwise set it to the value specified
-	this.value = (specifics.fieldType === 'form') ? {} : specifics.value;
+	//set 'id'
+		//already set at the beginning
 
-	//set type
+	//set 'fieldType'
 	this.fieldType = specifics.fieldType;
 
-	//set variation
+	//set 'variation'
 		//if no variation has been specified then get the default one
 	this.variation = specifics.attributes.variation;
 
 	//create a string that combines fieldType and it's variation for use on switches
 	this.fieldTypeAndVariation = `${this.fieldType}-${this.variation}`;
 
-	//set attributes
+	//set 'value'
+		//if it's a form then set it to an empty object - otherwise set it to the value specified
+	this.value = (specifics.fieldType === 'form') ? {} : specifics.value;
+
+	//set 'displayedValue'
+		//this will always be the same as 'value' when starting out
+	this.displayedValue = this.value;
+
+	//set 'nullValue'
+	this.nullValue = inputfield_getDefaultValue(this.fieldType);
+
+	//set 'attributes'
 	this.attributes = specifics.attributes;
 
-	//set the onchange function
+	//set 'onchange'
 	this.onchange = specifics.attributes.onchange;
 
-	//set whether this belongs to a host (and which one)
-	this.belongsToHost = specifics.attributes.host ?? false;
+	//set 'belongsToHost'
+		//has been defined above
 
-	//set tag
+	//set 'tag'
 	this.tag = specifics.attributes.tag;
 
-	//set propertyChanged
+	//set 'propertyChanged'
 		//always defaults to an empty string
 	this.propertyChanged = '';
 
-	//set belongsToForm
+	//set 'belongsToForm'
 	this.belongsToForm = specifics.attributes.addToForm;
 
 	//create a list of all input-fields this form contains (but only if it is a form)
 	this.formChildren = (specifics.fieldType === 'form') ? [] : null;
+
+	//set 'startingValue'
+		//has been defined above
 }
 
 /**	Creates a 'HostObject' that saves all info related to a host.
@@ -1646,7 +1690,10 @@ function inputfield_setupField (specifics={}) {
 
 
 	// === APPLY THE STARTING VALUE ===
-	inputfield_setValue(this, attributes.defaultValue, {skipOnchange: true});
+	inputfield_setValue(this, fieldObj.startingValue, {skipOnchange: true, forceInvalidValue: true});
+
+	//and delete the 'startingValue'
+	delete fieldObj.startingValue;
 
 	//return the element
 	return this;
@@ -1838,6 +1885,10 @@ function inputfield_getValue (field) {
  * 					If true it updates the host if there is a host (as it should).
  * 					If false it ignores the host and simply applies the value to the actual input-field itself.
  *
+ * 				forceInvalidValue [Boolean] <false>
+ * 					If `true` it will force an invalid value.
+ * 					Note that the invalid value won't be displayed as that's impossible (if a string is force-applied to a number input-field then 0 will be displayed for example).
+ *
  * 	Return [Boolean]:
  * 		Returns true if succesfully updated and false if it couldn't be updated.
  * 		This will also return true if the value specified is already set.
@@ -1862,17 +1913,28 @@ function inputfield_setValue (field, newValue, specifics={}) {
 		return false;
 	}
 
-	//get host object
-	const hostObj = inputfield_hosts.get(fieldObj.belongsToHost);
+	//the value that should actually be displayed
+		//usually the same as 'newValue'
+	let displayedValue = newValue;
 
-	//complain and return if the value isn't valid
+	//check if the value is even valid
 	if (inputfield_validateValue(newValue, fieldObj) !== true) {
-		console.warn(`[MPO] inputfield_setValue() received an invalid value "${newValue}" for input-field "${fieldObj.id}".`);
-		return false;
+
+		//if an invalid value should be forced then set the displayed value to a 'nullValue' (usually 0, '', {} and that stuff)
+		if (specifics.forceInvalidValue === true) {
+			displayedValue = fieldObj.nullValue;
+		} else {
+			console.warn(`[MPO] inputfield_setValue() received an invalid value "${newValue}" for input-field "${fieldObj.id}".`);
+			return false;
+		}
 	}
 
 	//apply the new value
-	inputfield_applyNewValue(containerElem, newValue, {skipOnchange: specifics.skipOnchange, updateHost: specifics.updateHost});
+	inputfield_applyNewValue(containerElem, newValue, {
+		skipOnchange: specifics.skipOnchange,
+		updateHost: specifics.updateHost,
+		displayedValue: displayedValue
+	});
 
 	//and return true
 	return true;
@@ -1915,6 +1977,12 @@ function inputfield_validateValue (value, specifics={}) {
 		//if 'field' is a DOM Element then get the 'FieldObject' for it
 		if (Object.isDOMElement(specifics.field) === true) {
 			specifics.field = inputfield_getFieldObject(specifics.field);
+		}
+
+		//complain and return if it's not a 'FieldObject'
+		if (specifics.field?.constructor !== inputfield_FieldObject) {
+			console.warn(`[MPO] inputfield_validateValue() received a invalid 'field' argument. Returning \`false\`...`);
+			return false;
 		}
 
 		//for quick access
@@ -2057,8 +2125,11 @@ function inputfield_getDefaultValue (fieldType, attributes) {
  * 	It's really just here to call 'inputfield_applyNewValue()' and nothing else
  *
  * 	Args:
- * 		elem [DOM Element]
- * 			The actual input element that got updated or in case of buttons, the element that got clicked on.
+ * 		fieldID [String/DOM Element]
+ * 			The ID of the input-field or the <input-field> element.
+ *
+ * 		newValue [*any*]
+ * 			The new value of the input-field.
  */
 function inputfield_executedAfterFieldChange (fieldID, newValue) {
 	//get the container element
@@ -2068,14 +2139,6 @@ function inputfield_executedAfterFieldChange (fieldID, newValue) {
 	if (containerElem === false) {
 		console.error(`[MPO] inputfield_executedAfterFieldChange(): Could not find container element with a 'fieldID' of "${fieldID}"`);
 		return;
-	}
-
-	//get field object
-	const fieldObj = inputfield_getFieldObject(containerElem);
-
-	//apply 'checkboxValue' to the new value if it's a checkbox and the value is `true`
-	if (fieldObj.fieldType === 'checkbox' && newValue === true) {
-		newValue = fieldObj.attributes.checkboxValue;
 	}
 
 	//update the field with the new value
@@ -2116,6 +2179,12 @@ function inputfield_executedAfterFieldChange (fieldID, newValue) {
  * 				updateHost [Boolean] <true>
  * 					If true it updates the host if there is a host (as it should).
  * 					If false it ignores the host and simply applies the value to the actual input-field itself.
+ *
+ * 				displayedValue [*any*] <same as newValue>
+ * 					The value that should actually be displayed.
+ * 					Will be the same as 'newValue' on default.
+ * 					Should not be used unless absolutely necessary.
+ * 					If this is `undefined` then it'll be replaced by 'newValue'.
  */
 function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 	//complain and use defaults if 'specifics' is invalid
@@ -2139,6 +2208,35 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 
 
 
+	//=== PARSE NEW VALUE & 'displayedValue' ===
+
+	//parse 'checkboxValue' if it's a checkbox
+	if (fieldObj.fieldType === 'checkbox') {
+
+		//get 'checkboxValue'
+		const checkboxValue = fieldObj.attributes.checkboxValue;
+
+		//if the new value is `true` then replace it with 'checkboxValue'
+		if (newValue === true) {
+			newValue = checkboxValue;
+
+		//if the 'checkboxValue' was used then change the displayed value to `true` since the checkbox would be checked then
+		} else if (newValue === checkboxValue) {
+
+			//only change the displayed value if it wasn't already specified
+			if (specifics.displayedValue === undefined) {
+				specifics.displayedValue = true;
+			}
+		}
+	}
+
+	//use 'newValue' if 'displayedValue' isn't specified
+	if (specifics.displayedValue === undefined) {
+		specifics.displayedValue = newValue;
+	}
+
+
+
 	//=== SET NEW VALUE TO 'fieldObj' ===
 
 	//if 'formProperty' is specified then only update the property
@@ -2150,18 +2248,19 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 		//also set the 'propertyChanged' property
 		fieldObj['propertyChanged'] = specifics.formProperty;
 
-	//otherwise simply set the new value to the fieldObj directly
+	//otherwise simply set the new value & the displayed value to the fieldObj directly
 	} else {
-		fieldObj.value = newValue;
+		fieldObj.         value =                 newValue;
+		fieldObj.displayedValue = specifics.displayedValue;
 	}
 
 
 
-	//=== SET RAW VALUE ===
+	//=== UPDATE THE DISPLAY ===
 
 	//set the raw value to make sure the correct value is actually displayed (especially important for radio-fields)
 	if (specifics.skipSetRawValue !== true) {
-		inputfield_variations.get(fieldObj.fieldTypeAndVariation).setRawValue(containerElem, fieldObj, newValue);
+		inputfield_variations.get(fieldObj.fieldTypeAndVariation).setRawValue(containerElem, fieldObj, specifics.displayedValue);
 	}
 
 
@@ -2370,34 +2469,36 @@ function inputfield_updateHostsChildren (hostElem, newValue) {
 	//get the host object
 	const hostObj = inputfield_hosts.get(hostElem);
 
-	//apply the new value
-	hostObj.value = newValue;
-
-	//return if the host object doesn't exist
+	//complain and return if it doesn't exist
 	if (hostObj === undefined) {
-		console.warn('[MPO] inputfield_updateHostsChildren() could not find the host entry inside the WeakMap.');
+		console.error(`[MPO] inputfield_updateHostsChildren() couldn't find the HostObject for the following host:`);
+		console.error(hostElem);
 		return;
 	}
 
-	//get the list of children (array consisting of DOM Elements)
-	const childList = hostObj.childList;
+	//set the new value
+	hostObj.value = newValue;
 
-	for (const item of childList) {
-		//get the field object
-		const fieldObj = inputfield_getFieldObject(item);
+	//loop through all children and update them
+	if (hostObj.childList.isIterable() === true) {
+		for (const item of hostObj.childList) {
 
-		switch (fieldObj.fieldType) {
-			case 'checkbox':
-				//if the checkbox has the same value then check it
-					//use 'skipOnchange' on both because the 'onchange' function of the individual input-fields shouldn't be activated
-				if (fieldObj.attributes.checkboxValue === newValue) {
-					inputfield_setValue(item, newValue, {skipOnchange: true, updateHost: false});
+			//get FieldObject
+			const fieldObj = inputfield_getFieldObject(item);
 
-				//uncheck it otherwise
-				} else {
-					inputfield_setValue(item, false, {skipOnchange: true, updateHost: false});
-				}
-				break;
+			if (fieldObj === null) {
+				console.warn(`[MPO] inputfield_updateHostsChildren() skipped a field as it's 'FieldObject' couldn't be found.`);
+				continue;
+			}
+
+			//update the input-field
+				//check if the new value is valid; if it is then use the new value, otherwise use the 'defaultValue' as the 'displayedValue'
+			if (inputfield_validateValue(newValue, {field: fieldObj}) === true) {
+				inputfield_applyNewValue(item, newValue, {skipOnchange: true, updateHost: false});
+			} else {
+				//use 'defaultValue' for the displayed value because if the current value isn't valid then it can't be displayed (like a string for a number-field)
+				inputfield_applyNewValue(item, newValue, {skipOnchange: true, updateHost: false, displayedValue: fieldObj.nullValue});
+			}
 		}
 	}
 }
