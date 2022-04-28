@@ -103,7 +103,7 @@ function listeners_pointerDown (e) {
 	let foundModals = [];
 
 	//element that got hit
-	let elem = e.path[0];
+	let elem = e.target;
 
 	//if it's the first loop
 	let firstLoop = true;
