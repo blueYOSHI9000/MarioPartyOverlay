@@ -134,6 +134,9 @@
 			The first argument will be the current value of the input field.
 			The second argument will be the field object inside 'inputfield_fields' (see the 'inputfield_FieldObject()' function for a documentation of this object).
 
+
+	# starting attributes (these will only affect how the input-field is created):
+
 		beforeText [String] <none>
 			If present it will create a label before the input-field consisting of this text.
 			Useful if you want a description before a checkbox.
@@ -771,9 +774,9 @@ customElements.define('input-field', InputFieldElement);
  * 			The 'onchange' function.
  * 			Will simply be undefined if not used.
  *
- * 		belongsToHost [DOM Element/null]
+ * 		belongsToHost [*any* / null]
  * 			This defines whether this input-field belongs to a host or not.
- * 			Will be the DOM element of the host it belongs to or simple `null` if it doesn't belong to any host.
+ * 			Will be the value of the host it belongs to or simply `null` if it doesn't belong to any host.
  *
  * 		tag [String]
  * 			The tag of the input-field. Only needed for input-fields that are part of a form.
@@ -884,12 +887,18 @@ function inputfield_FieldObject (specifics={}) {
 
 	//complain and return if the fieldType is invalid
 	if (typeof inputfield_variations.variations[specifics.fieldType] !== 'object') {
-		console.error(`[MPO] inputfield_FieldObject() received a invalid 'fieldType': "${specifics.fieldType}". Note that this type might've been split ('checkbox-regular' would be split to 'checkbox').`);
+		console.error(`[MPO] inputfield_FieldObject() received a invalid 'fieldType' for input-field "${this.id}": "${specifics.fieldType}". Note that this type might've been split ('checkbox-regular' would be split to 'checkbox').`);
 		return;
 	}
 
-	//get default variation if no variation has been specified
+	//get default variation if nothing is specified
 	attributes.variation ??= inputfield_getDefaultVariation(specifics.fieldType);
+
+	//complain and use default if the variation is invalid
+	if (typeof inputfield_variations.variations[specifics.fieldType][attributes.variation] !== 'object') {
+		console.warn(`[MPO] inputfield_FieldObject() received a invalid 'variation' for input-field "${this.id}": "${specifics.variation}".`);
+		attributes.variation = inputfield_getDefaultVariation(specifics.fieldType);
+	}
 
 
 
@@ -1655,10 +1664,11 @@ function inputfield_createField (fieldType, parent, attributes) {
 		class: 'inputfield_container'
 	});
 
+	//setup the actual input-field (see 'inputfield_setupField()')
 	container.setup({
 		fieldType: fieldType,
 		variation: attributes.variation,
-		attributes
+		attributes: attributes
 	});
 
 	//container.classList.add('fieldType-' + fieldObj.fieldType);
@@ -1688,6 +1698,10 @@ function inputfield_createField (fieldType, parent, attributes) {
  * 				attributes [Object] <defaults>
  * 					The input-field attributes.
  * 					Will use the default attributes if not present.
+ *
+ * 				forceSetup [Boolean] <false>
+ * 					Only needed if the input-field has to be remade.
+ * 					If `true` the input-field will be setup again, even if it was already setup.
  *
  * 	Returns [DOM Element]:
  * 		The <input-field> element.
@@ -1726,8 +1740,9 @@ function inputfield_setupField (specifics={}) {
 	//if the FieldObject does exist...
 	} else {
 
-		//...then check if it's already been setup; if it was already setup then return
-		if (fieldObj.setup === true) {
+		//...then check if it's already been setup; return if it's already setup
+			//skip this if 'forceSetup' is true
+		if (fieldObj.setup === true && specifics.forceSetup !== true) {
 			return this;
 		}
 	}
@@ -1743,12 +1758,12 @@ function inputfield_setupField (specifics={}) {
 		attributes = {};
 	}
 
-	//if no type is specified then fetch it from the <input-field> element
-	let fieldType;
-	if (typeof specifics.fieldType !== 'string') {
+	//get fieldType
+	let fieldType = specifics.fieldType;
+
+	//if 'fieldType' is invalid then get it from the <input-field> element
+	if (typeof fieldType !== 'string') {
 		fieldType = this.getAttribute('type');
-	} else {
-		fieldType = specifics.fieldType;
 	}
 
 	//complain and return if no 'fieldType' was specified
@@ -1758,13 +1773,23 @@ function inputfield_setupField (specifics={}) {
 		return this;
 	}
 
-	//this checks if a variation is present in the following order: 'attributes.variation' -> 'specifics.variation' -> '<input-field>.variation'
+	//this checks if a variation is present in the following order: 'specifics.variation' -> 'attributes.variation' -> '<input-field>.variation'
 		//if one is not present then the next is applied
-	if (typeof attributes.variation !== 'string') {
-		if (typeof specifics.variation !== 'string') {
+
+		//Why this order?
+			//I'd say chances are highest that 'specifics.variation' has the highest chance of being entered on purpose.
+			//'attributes' might just be copied over from a different field (hell, 'inputfield_changeAttribute()' does this)
+
+	//use 'specifics.variation' if available
+	if (typeof specifics.variation === 'string') {
+		attributes.variation = specifics.variation;
+
+	//else use 'attributes.variation'
+	} else {
+
+		//if 'attributes.variation' isn't valid either then use '<input-field>.variation'
+		if (typeof attributes.variation !== 'string') {
 			attributes.variation = this.getAttribute('variation');
-		} else {
-			attributes.variation = specifics.variation;
 		}
 	}
 
@@ -2129,27 +2154,28 @@ function inputfield_validateValue (value, specifics={}) {
 	switch (fieldType) {
 
 		case 'form':
+			//this only checks whether it's an object or not for now, unsure if it should actually verify that each property is present
 			if (typeof value === 'object') {
 				return true;
 			}
 			return false;
 
 		case 'checkbox':
-			if (value === true || value === false || value === attributes.checkboxValue) {
+			//if it's a Boolean or the 'checkboxValue' then it's correct
+			if (typeof value === 'boolean' || value === attributes.checkboxValue) {
 				return true;
 			}
 			return false;
 
 		case 'radio':
 			//loop through all the options to see if they have the same value
+				//note that if it isn't iterable then the if block gets skipped and `false` is returned
 			if (Object.isIterable(attributes.options) === true) {
 				for (const item of attributes.options) {
 					if (item.value === value) {
 						return true;
 					}
 				}
-			} else {
-				//
 			}
 			return false;
 
@@ -2166,7 +2192,12 @@ function inputfield_validateValue (value, specifics={}) {
 			return false;
 
 		case 'button':
-			return true;
+			//if it's `undefined` then it's correct
+				//buttons should always be `undefined`
+			if (value === undefined) {
+				return true;
+			}
+			return false;
 
 		case 'color':
 			//with this the browser automatically checks whether the value is allowed for the 'color' CSS property
