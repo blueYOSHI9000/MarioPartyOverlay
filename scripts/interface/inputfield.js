@@ -184,7 +184,7 @@
 
 			A host can be a string, a number, a boolean (not recommended), any object, a DOM Element or even a function.
 			The only values that aren't allowed are `undefined` and `null`.
-			Note that for objects & functions that they have to be the same instance! Works the same as the `===` operator. In addition, all objects & functions are saved in a 'WeakMap' so they will be garbage-collected when no longer in use.
+			Note that for objects & functions that they have to be the same instance! Works the same way as the `===` operator. In addition, all objects & functions are saved in a 'WeakMap' so they will be garbage-collected when no longer in use.
 
 			In addition to synchronizing the value, it will also automatically synchronize the following attributes: 'onchange', 'defaultValue', 'tag', 'addToForm'.
 			When a new input-field is added to a host with one of these attributes then the attribute will overwrite the attributes of the host (and with that the attributes of all other linked input-fields).
@@ -193,7 +193,7 @@
 
 			"Ok, but why would I use this? How is this useful?"
 				It's main use-case is if you have the same option on multiple spots on a website.
-				Say you have a dedicated control-panel on your website with a "Text color" option, then you have a Live-Chat that also uses the exact same "Text color" option.
+				Say you have a dedicated control-panel on your website with a "Text color" option, then you have a Live-Chat that also has the exact same "Text color" option present.
 				By using the same host on both input-fields they will always have the exact same value. If one is updated then the other will also be updated immediately.
 
 	# 'form' type attributes
@@ -685,6 +685,13 @@ class InputFieldElement extends HTMLElement {
 		//create a FieldObject and add it to 'inputfield_fields'
 		inputfield_fields.set(this, new inputfield_FieldObject({setup: false}));
 
+		//create the 'fieldAttributes' property
+			//a getter is used to avoid saving the <input-field> element or referencing the WeakMap entry (not sure if that would stop the Garbage Collector but don't wanna risk it)
+			//no setter is used so the property can't be overwritten
+		Object.defineProperty(this, 'fieldAttributes', {
+			get: this.#getAttributes
+		});
+
 		//add the '.setup()' function
 		this.setup = inputfield_setupField;
 
@@ -695,6 +702,21 @@ class InputFieldElement extends HTMLElement {
 			//of course, there's an argument to be made for "trust the coder" but I'd say the chances that a coder doesn't want this are slim without there being other ways around this
 			//(for example, you could use a empty <span> element and use '.replaceWith()' to replace it with a finished <input-field> if you don't want '.setup()' to be called on it)
 		setTimeout(() => {this.setup()}, 0);
+	}
+	//gets the 'attributes' property of a 'FieldObject'
+	#getAttributes () {
+		//save this <input-field> element so the proxy can use it
+			//important because `this` refers to the proxy handler inside the 'set' function
+		const elem = this;
+
+		//create and return a proxy
+			//important so we can actually apply the new attributes
+			//if we just returned the 'attributes' property directly changes made to it wouldn't be applied
+		return new Proxy(inputfield_fields.get(elem).attributes, {
+			set: function (target, property, newValue) {
+				inputfield_changeAttribute(elem, property, newValue);
+			}
+		});
 	}
 }
 
@@ -1134,7 +1156,7 @@ function inputfield_FieldObject (specifics={}) {
 
 		//check if it's a form, if yes then add this field to the observer
 		if (specifics.fieldType === 'form') {
-			inputfield_observer.observe(specifics.elem, {subtree: true, childList: true});
+			inputfield_formObserver.observe(specifics.elem, inputfield_formObserverOptions);
 
 		//if it's not a form then complain about it and do nothing else
 		} else {
@@ -1229,7 +1251,7 @@ function inputfield_FieldObject (specifics={}) {
 
 	// # 'onchange'
 
-	//set the 'onchange' to a empty function if nothing is specified or this is part of a host (since then the 'onchange' functionw as already applied to the host)
+	//set the 'onchange' to a empty function if nothing is specified or this is part of a host (since then the 'onchange' function was already applied to the host)
 		//has to be done after the host stuff because that part relies on this being `undefined` if it's not specified
 	attributes.onchange = (typeof attributes.onchange !== 'function' || this.belongsToHost !== null) ? (() => {return;}) : attributes.onchange;
 
@@ -1797,6 +1819,11 @@ function inputfield_setupField (specifics={}) {
 
 	// === CONSTRUCT THE ELEMENT ===
 
+	//delete all children of the element
+		//important in case the input-field is "reset"
+		//this technically replaces children but since we don't provide any arguments it simply deletes them instead
+	this.replaceChildren();
+
 	//create a FieldObject
 		//note that technically one was already made but that one was made using `setup: false` which means it didn't do much so now we're overwriting that one
 	fieldObj = new inputfield_FieldObject({
@@ -1822,6 +1849,13 @@ function inputfield_setupField (specifics={}) {
 
 	//and delete the 'startingValue'
 	delete fieldObj.startingValue;
+
+
+
+	// === FINISHING TOUCHES ===
+
+	//add this to the attribute MutationObserver
+	//inputfield_attributeObserver.observe(this, {attributes: true});
 
 	//return the element
 	return this;
@@ -2362,12 +2396,11 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 		//get 'checkboxValue'
 		const checkboxValue = fieldObj.attributes.checkboxValue;
 
-		//if the new value is `true` then replace it with 'checkboxValue'
-		if (newValue === true) {
+		//if the new value is `true` (or equal to 'checkboxValue') then update both 'newValue' and 'displayedValue' to be accurate
+			//the new value has to be equal to 'checkboxValue'
+			//while 'displayedValue' has to be a boolean
+		if (newValue === true || newValue === checkboxValue) {
 			newValue = checkboxValue;
-
-		//if the 'checkboxValue' was used then change the displayed value to `true` since the checkbox would be checked then
-		} else if (newValue === checkboxValue) {
 
 			//only change the displayed value if it wasn't already specified
 			if (specifics.displayedValue === undefined) {
@@ -2649,10 +2682,230 @@ function inputfield_updateHostsChildren (hostElem, newValue) {
 	}
 }
 
-//this is used for 'autoAddToForm', it will track any element that's added to a input-field with 'autoAddToForm' enabled
-let inputfield_observer = new MutationObserver(inputfield_observerCallback);
+/**	Changes and applies attributes for a input-field.
+ *
+ * 	Args:
+ * 		field [DOM Element/String]
+ * 			The input-field. Can be the DOM element itself or it's input-field ID.
+ *
+ * 		attributeName [String]
+ * 			The name of the attribute.
+ *
+ * 		newValue [*any*]
+ * 			The new value for the attribute.\
+ *
+ * 	Returns [Boolean]
+ * 		`true` if successful, `false` if not.
+ */
+function inputfield_changeAttribute (field, attributeName, newValue) {
+	//get the actual field element
+	field = inputfield_getElement(field);
 
-/**	Gets called after every observer change.
+	//get field-object
+	let fieldObj = inputfield_getFieldObject(field);
+
+	//complain and return if the field-object couldn't be found
+	if (fieldObj === null) {
+		console.warn(`[MPO] inputfield_changeAttribute() received a invalid 'field': "${field}".`);
+		return false;
+	}
+
+	//complain and return if 'attributeName' is not a string
+	if (typeof attributeName !== 'string') {
+		console.warn(`[MPO] inputfield_changeAttribute() received a non-string as 'attributeName': "${attributeName}".`);
+		return false;
+	}
+
+	//TODO: should it 'console.warn()'?
+	if (newValue === fieldObj.attributes[attributeName]) {
+		return true;
+	}
+
+	//
+	switch (attributeName) {
+
+		case 'variation':
+			//complain and return if the variation is invalid
+				//this uses the 'inputfield_variations' variable to check if a variation with this name is present
+			if (typeof inputfield_variations.variations[fieldObj.fieldType][newValue] !== 'object') {
+				console.warn(`[MPO] inputfield_changeAttribute() received a invalid variation as 'newValue': "${newValue}".`);
+				return false;
+			}
+
+			//apply the new value
+			fieldObj.attributes.variation = newValue;
+
+			//and setup the field again
+			field.setup({
+				fieldType: fieldObj.fieldType,
+				attributes: fieldObj.attributes,
+				forceSetup: true
+			});
+			break;
+
+		//TODO: Update this with a better way
+		case 'id':
+			//complain and return if it's nullish
+			if (newValue === undefined || newValue === null) {
+				console.warn(`[MPO] inputfield_changeAttribute() received a invalid 'id' attribute (can't be undefined or null).`);
+				return false;
+			}
+
+			//apply the new value
+			fieldObj.attributes.variation = newValue;
+
+			//and setup the field again
+			field.setup({
+				fieldType: fieldObj.fieldType,
+				attributes: fieldObj.attributes,
+				forceSetup: true
+			});
+			break;
+
+		case 'defaultValue':
+			//no changes are needed aside from applying this
+			fieldObj.attributes[attributeName] = newValue;
+			break;
+
+		case 'onchange':
+			//complain and return if it's not a function
+			if (typeof newValue !== 'function' && newValue !== undefined) {
+				console.warn(`[MPO] inputfield_changeAttribute() received a non-function for 'onchange': `, newValue);
+				return false;
+			}
+
+			//apply the value to the 'FieldObject'
+			fieldObj.attributes[attributeName] = newValue;
+
+			//apply the value to the fieldObj
+				//use a empty function in case `null` or `undefined` was used (which is supposed to remove the 'onchange' function)
+			if (newValue === undefined) {
+				fieldObj.onchange = () => {return;};
+			} else {
+				fieldObj.onchange = newValue;
+			}
+			break;
+
+		case 'beforeText':
+		case 'afterText':
+		case 'labels':
+		case 'cssClass':
+		case 'HTMLAttributes':
+			console.warn(`[MPO] inputfield_changeAttribute() can not change the "${attributeName}" attribute. Said attribute only defines how the input-field is created, it is useless afterwards.`);
+			return false;
+
+		case 'tag':
+			//complain and return if it's not a string
+			if (typeof newValue !== 'string') {
+				console.warn(`[MPO] inputfield_changeAttribute() received a non-string for 'tag': `, newValue);
+				return false;
+			}
+
+			//apply the value to the 'FieldObject'
+			fieldObj.attributes[attributeName] = newValue;
+
+			//loop through all forms this belongs to
+			for (form of belongsToForm) {
+
+				//get the fieldObj of the form
+				const formObj = inputfield_getFieldObject(form);
+
+				//make sure this input-fields value is present under the new tag
+				formObj.value[newValue] = fieldObj.value;
+			}
+			break;
+
+		case 'addToForm':
+			//TODO
+			console.warn(`[MPO] inputfield_changeAttribute() currently does not support updating the 'addToForm' attribute.`);
+			break;
+
+		case 'host':
+			//TODO
+			console.warn(`[MPO] inputfield_changeAttribute() currently does not support updating the 'host' attribute.`);
+			break;
+
+		case 'autoAddToForm':
+			if (typeof newValue !== 'boolean') {
+				console.warn(`[MPO] inputfield_changeAttribute() received a non-boolean for 'autoAddToForm': `, newValue);
+				return false;
+			}
+
+			//apply the value to the 'FieldObject'
+			fieldObj.attributes[attributeName] = newValue;
+
+			//add the observer
+			if (newValue === true) {
+				inputfield_formObserver.observe(field, inputfield_formObserverOptions);
+			} else {
+				//inputfield_formObserver.observe(field, {});
+				console.warn(`[MPO] inputfield_changeAttribute() could not disable 'autoAddToForm' because MutationObservers are trash. Will be fixed at some point.`);
+			}
+			break;
+
+		//TODO: Create a better way to update this alongside 'options' (same issue)
+		case 'content':
+			if (typeof newValue !== 'string') {
+				console.warn(`[MPO] inputfield_changeAttribute() received a non-string for 'content': `, newValue);
+				return false;
+			}
+
+			//apply the new value
+			fieldObj.attributes.variation = newValue;
+
+			//and setup the field again
+			field.setup({
+				fieldType: fieldObj.fieldType,
+				attributes: fieldObj.attributes,
+				forceSetup: true
+			});
+			break;
+
+		case 'checkboxValue':
+			//complain and return if it's invalid
+			if (newValue === null || newValue === undefined) {
+				console.warn("[MPO] inputfield_changeAttribute() received a invalid value for 'checkboxValue' (can't be null or undefined -- use `true` to reset it):", newValue);
+				return false;
+			}
+
+			//apply the value to the 'FieldObject'
+			fieldObj.attributes[attributeName] = newValue;
+
+			//if it's a checkbox that's currently checked then update the value
+				//hosts have to be updated
+				//it's best to call the 'onchange' function as well since it might rely on having the new value
+			if (fieldObj.fieldType === 'checkbox' && fieldObj.displayedValue === true) {
+				inputfield_setValue(field, newValue);
+			}
+			break;
+
+		//TODO: Create a better way to update this alongside 'content' (same issue)
+		case 'options':
+			//apply the new value
+			fieldObj.attributes.variation = newValue;
+
+			//and setup the field again
+			field.setup({
+				fieldType: fieldObj.fieldType,
+				attributes: fieldObj.attributes,
+				forceSetup: true
+			});
+			break;
+
+		default:
+			console.warn(`[MPO] inputfield_changeAttribute() received a unknown 'attributeName' value: `, attributeName);
+			return false;
+	}
+
+	return true;
+}
+
+//this is used for 'autoAddToForm', it will track any element that's added to a input-field with 'autoAddToForm' enabled
+let inputfield_formObserver = new MutationObserver(inputfield_formObserverCallback);
+
+//the options for 'inputfield_formObserver'
+const inputfield_formObserverOptions = {subtree: true, childList: true};
+/**	Gets called after every form MutationObserver change. Do not call this manually.
  *
  * 	Adds any new elements to the form if 'autoAddToForm' is enabled.
  *
@@ -2660,7 +2913,7 @@ let inputfield_observer = new MutationObserver(inputfield_observerCallback);
  * 		record [MutationRecord object]
  * 			The MutationRecord object that gets made after the MutationObserver callback.
  */
-function inputfield_observerCallback (record) {
+function inputfield_formObserverCallback (record) {
 	//loop through all records
 	for (const recItem of record) {
 
@@ -2682,7 +2935,7 @@ function inputfield_observerCallback (record) {
 
 				//complain and skip if it's not a form
 				if (targetObj.fieldType !== 'form') {
-					console.warn(`[MPO] inputfield_observerCallback() received a 'autoAddToForm' change for the input-field "${targetObj.id}" despite it not being a form.`);
+					console.warn(`[MPO] inputfield_formObserverCallback() received a 'autoAddToForm' change for the input-field "${targetObj.id}" despite it not being a form.`);
 					continue;
 				}
 
@@ -2694,6 +2947,38 @@ function inputfield_observerCallback (record) {
 				inputfield_applyNewValue(recItem.target, elemObj.value, {skipOnchange: true, formProperty: elemObj.tag});
 			}
 		}
+	}
+}
+
+//this is used to observe all changes made to <input-field> attributes
+	//we could use the 'attributeChangedCallback' property on the <input-field> class but there's a significant lack of documentation on MDN for it
+	//and we'd have to manually specify every single attribute we want to observe which would be a pain to maintain
+	//not to mention that there's way better error-handling this way (if a user misspells a attribute we can 'console.warn()' it for example)
+let inputfield_attributeObserver = new MutationObserver(inputfield_attributeObserverCallback);
+
+/**	[CURRENTLY UNUSED] Gets called after every attribute MutationObserver change. Do not call this manually.
+ *
+ * 	Calls 'inputfield_changeAttribute()' for every attribute that's updated.
+ *
+ * 	CURRENTLY UNUSED. It will be added back in in a future update.
+ *
+ * 	Args:
+ * 		record [MutationRecord object]
+ * 			The MutationRecord object that gets made after the MutationObserver callback.
+ */
+function inputfield_attributeObserverCallback (record) {
+	return;
+	//loop through all records
+	for (const recItem of record) {
+
+		//make sure it's of type 'attributes'
+		if (typeof recItem.attributeName !== 'string') {
+			console.warn(`[MPO] inputfield_attributeObserverCallback() received a record with a non-string 'attributeName': "${attributeName}". Type: "${recItem.type}" - Target: `, recItem.target);
+			continue;
+		}
+
+		//call 'changeAttribute()' to actually apply the new value
+		inputfield_changeAttribute(recItem.target, recItem.attributeName, recItem.target.getAttribute(recItem.attributeName));
 	}
 }
 
