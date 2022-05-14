@@ -299,11 +299,8 @@ let inputfield_fields = new WeakMap();
 	//note that this won't happen if another variable still has the DOM Element linkec in it -- that's just how the garbage collector works
 	//it is worth adding that the garbage collector doesn't remove the value immediately but only whenever it's needed so the value will likely still show up in DevTools
 
-// This saves info about all hosts.
-	//these use two different variables because objects/functions need a 'WeakMap' so the original objects can be handed off to the garbage-collection
-	//meanwhile anything that's not a object/function needs a normal 'Map' as a 'WeakMap' can't store them
-let inputfield_hostsWeakMap = new WeakMap();
-let inputfield_hostsMap     = new Map();
+// This saves info about all hosts
+let inputfield_hosts = new Map();
 
 // This saves info about all labels
 let inputfield_labels = new WeakMap();
@@ -564,7 +561,7 @@ var inputfield_variations = {
 
 					return true;
 				}
-			},
+			}
 		},
 		text: {
 			small: {
@@ -1166,51 +1163,49 @@ function inputfield_FieldObject (specifics={}) {
 
 
 	// # 'host'
-	// # 'defaultValue'
-	// # 'startingValue' property
-	//note that these 3 have to be done together and in this specific order because they all depend on each other and can't be verified seperately (without a lot of duplicate code at least)
 
-	//if 'host' is `undefined` then set it to `null`
-	attributes.host ??= null;
+	//complain and use `undefined` if 'host' is invalid
+	if (typeof attributes.host !== 'string') {
 
-	//get the HostObject
-	let hostObj = inputfield_getHostObject(attributes.host);
+		//only complain if necessary
+		if (attributes.host !== undefined) {
+			console.warn(`[MPO] inputfield_FieldObject() received a non-string as 'host' for input-field "${this.id}": `, attributes.host);
+		}
 
-	//if the host object exists then add this <input-field> to it...
-	if (hostObj !== null) {
-		hostObj.childList.push(specifics.elem);
+		attributes.host = undefined;
 
-		//...and set 'startingValue' to the hosts value (if 'defaultValue' isn't specified here)
-		if (attributes.defaultValue === undefined) {
-			this.startingValue = hostObj.value;
+	//if 'host' is valid then set it up
+	} else {
+		//get the HostObject
+		let hostObj = inputfield_getHostObject(attributes.host);
 
-		//TODO: Update the hosts attributes with all attributes specified in here
-		} else {}
-	}
+		//if the host doesn't exist yet then create it
+		if (hostObj === null) {
+			//setup the host
+				//note that most attributes in here weren't verified yet, but the host will verify them before adding them anyway
+				//and some of the attributes verified after this rely on the host already being setup
+				//TODO: should really all of these attributes be synced??
+			inputfield_setupHost(attributes.host, {
+				childList: [specifics.elem],
+				defaultValue: attributes.defaultValue,
+				onchange: attributes.onchange,
+				tag: attributes.tag,
+				addToForm: attributes.addToForm
+			});
 
-	//check if 'defaultValue' is valid and if not, replace it with a default value
-		//this has to be done after verifying 'options' and 'checkboxValue' as those attributes are needed in here
-	if (inputfield_validateValue(attributes.defaultValue, {fieldType: specifics.fieldType, attributes: attributes}) !== true) {
-		attributes.defaultValue = inputfield_getDefaultValue(specifics.fieldType, attributes);
-	}
+		//if the host already exists...
+		} else {
+			//...then add it to it's list
+			hostObj.childList.push(specifics.elem);
 
-	//if a host was specified but doesn't exist yet, then make it
-	if (attributes.host !== null && hostObj === null) {
-		//setup the host
-			//note that most attributes in here weren't verified yet, but the host will verify them before adding them anyway
-			//and some of the attributes used here rely on the host already being verified
-		inputfield_setupHost(attributes.host, {
-			childList: [specifics.elem],
-			defaultValue: attributes.defaultValue,
-			onchange: attributes.onchange,
-			tag: attributes.tag,
-			addToForm: attributes.addToForm
-		});
-	}
+			//if no 'defaultValue' was specified then let this input-field start with the host's value
+			if (attributes.defaultValue === undefined) {
+				this.startingValue = hostObj.value;
+			}
 
-	//if 'startingValue' wasn't specified yet then set it to the 'defaultValue'
-	if (this.startingValue === undefined) {
-		this.startingValue = attributes.defaultValue;
+			//TODO: Update the hosts attributes with all attributes specified in here
+				//DONT FORGET ABOUT THIS!!
+		}
 	}
 
 	//set 'belongsToHost'
@@ -1218,10 +1213,34 @@ function inputfield_FieldObject (specifics={}) {
 	this.belongsToHost = attributes.host ?? null;
 
 
+	// # 'defaultValue'
+
+	//check if 'defaultValue' is invalid
+		//this has to be done after verifying 'options' and 'checkboxValue' as those attributes are needed in here
+	if (attributes.defaultValue === undefined || inputfield_validateValue(attributes.defaultValue, {fieldType: specifics.fieldType, attributes: attributes}) !== true) {
+
+		//complain about an invalid value (but only if necessary)
+		if (attributes.defaultValue !== undefined) {
+			console.warn(`[MPO] inputfield_FieldObject() received a invalid value as 'defaultValue' for input-field "${this.id}": `, attributes.defaultValue);
+		}
+
+		//and replace 'defaultValue' with a valid default value
+		attributes.defaultValue = inputfield_getDefaultValue(specifics.fieldType, attributes);
+	}
+
+
+	// # 'startingValue' property
+
+	//if 'startingValue' wasn't specified yet then set it to the 'defaultValue'
+	if (this.startingValue === undefined) {
+		this.startingValue = attributes.defaultValue;
+	}
+
+
 	// # 'addToForm'
 
 	//if a host is specified then use an empty array because in that case it was already applied to the host
-	if (attributes.host !== null) {
+	if (this.belongsToHost !== null) {
 		attributes.addToForm = [];
 
 	//otherwise verify and apply it
@@ -1242,7 +1261,7 @@ function inputfield_FieldObject (specifics={}) {
 
 		//if a invalid tag was specified on purpose then complain about it
 		if (specifics.tag !== undefined) {
-			console.warn(`[MPO] inputfield_HostObject() received a non-string as 'tag': "${specifics.tag}".`);
+			console.warn(`[MPO] inputfield_FieldObject() received a non-string as 'tag': "${specifics.tag}".`);
 		}
 
 		attributes.tag = this.id;
@@ -1596,6 +1615,10 @@ function inputfield_LabelObject (specifics={}) {
  * 				fieldOrHost [String]
  * 					Whether it's a input-field or a host.
  * 					Can be either 'field' or 'host'.
+ *
+ * 	Returns [Array]:
+ * 		Will be an empty array if something went wrong (or if no entries were valid). See console for warnings.
+ * 		Otherwise it will return an array with all entries that are valid.
  */
 function inputfield_verifyAddToForm (specifics) {
 	//complain and return if 'specifics' is invalid
@@ -1882,8 +1905,8 @@ function inputfield_setupHost (host, specifics={}) {
 	}
 
 	//if the host specified is nullish then complain and return
-	if (host === undefined || host === null) {
-		console.warn(`[MPO] inputfield_setupHost() received a 'host' that's nullish (both \`undefined\` and \`null\` are not allowed): "${host}".`);
+	if (typeof host !== 'string') {
+		console.warn(`[MPO] inputfield_setupHost() received a non-string as 'host' (only strings are allowed): "${host}".`);
 		return;
 	}
 
@@ -1896,12 +1919,8 @@ function inputfield_setupHost (host, specifics={}) {
 		addToForm: specifics.addToForm
 	});
 
-	//apply the HostObject to the correct Map
-	if (typeof host === 'object' || typeof host === 'function') {
-		inputfield_hostsWeakMap.set(host, hostObj);
-	} else {
-		inputfield_hostsMap    .set(host, hostObj);
-	}
+	//apply the HostObject to the Map
+	inputfield_hosts.set(host, hostObj);
 }
 
 /**	Converts a DOM Element to a input-field label.
@@ -2644,14 +2663,13 @@ function inputfield_executedAfterLabelPress (labelElem) {
  * 		newValue [*any*]
  * 			The new value that should be applied.
  */
-function inputfield_updateHostsChildren (hostElem, newValue) {
+function inputfield_updateHostsChildren (host, newValue) {
 	//get the host object
-	const hostObj = inputfield_getHostObject(hostElem);
+	const hostObj = inputfield_getHostObject(host);
 
 	//complain and return if it doesn't exist
 	if (hostObj === null) {
-		console.error(`[MPO] inputfield_updateHostsChildren() couldn't find the HostObject for the following host:`);
-		console.error(hostElem);
+		console.error(`[MPO] inputfield_updateHostsChildren() couldn't find the HostObject for the following host: `, host);
 		return;
 	}
 
@@ -2675,7 +2693,7 @@ function inputfield_updateHostsChildren (hostElem, newValue) {
 			if (inputfield_validateValue(newValue, {field: fieldObj}) === true) {
 				inputfield_applyNewValue(item, newValue, {skipOnchange: true, updateHost: false});
 			} else {
-				//use 'defaultValue' for the displayed value because if the current value isn't valid then it can't be displayed (like a string for a number-field)
+				//use 'nullValue' for the displayed value because if the current value isn't valid then it can't be displayed (like a string for a number-field)
 				inputfield_applyNewValue(item, newValue, {skipOnchange: true, updateHost: false, displayedValue: fieldObj.nullValue});
 			}
 		}
@@ -3190,19 +3208,13 @@ function inputfield_getFieldObject (field, specifics={}) {
  * 		The 'HostObject' for the host, or `null` if it couldn't be found.
  */
 function inputfield_getHostObject (host) {
-	//return if the host is nullish
-	if (host === undefined || host === null) {
+	//return if the host is not a string
+	if (typeof host !== 'string') {
 		return null;
 	}
 
-
 	//get the HostObject
-	let hostObj;
-	if (typeof host === 'object' || typeof host === 'function') {
-		hostObj = inputfield_hostsWeakMap.get(host);
-	} else {
-		hostObj = inputfield_hostsMap    .get(host);
-	}
+	let hostObj = inputfield_hosts.get(host);
 
 	//and return the HostObject, or `null` if it couldn't be found
 	return hostObj ?? null;

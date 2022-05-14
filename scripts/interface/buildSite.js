@@ -383,7 +383,7 @@ function buildSite_buildSettings (docFrag) {
 		label = cElem('span', testHost);
 		label.textContent = 'Mario: ';
 		inputfield_createField('checkbox', testHost, {
-			host: 'testHost',
+			host: 'inputfield_testHost',
 			checkboxValue: 'mario',
 			onchange: logToOutput,
 			labels: label
@@ -393,7 +393,7 @@ function buildSite_buildSettings (docFrag) {
 		label = cElem('span', testHost);
 		label.textContent = 'Weegee: ';
 		inputfield_createField('checkbox', testHost, {
-			host: 'testHost',
+			host: 'inputfield_testHost',
 			checkboxValue: 'weegee',
 			onchange: logToOutput,
 			labels: label,
@@ -404,7 +404,7 @@ function buildSite_buildSettings (docFrag) {
 		label = cElem('span', testHost);
 		label.textContent = 'Wario: ';
 		inputfield_createField('checkbox', testHost, {
-			host: 'testHost',
+			host: 'inputfield_testHost',
 			checkboxValue: 'wario',
 			onchange: logToOutput,
 			labels: label
@@ -414,7 +414,7 @@ function buildSite_buildSettings (docFrag) {
 		label = cElem('span', testHost);
 		label.textContent = 'WAAAAAAAAAAAH: ';
 		inputfield_createField('checkbox', testHost, {
-			host: 'testHost',
+			host: 'inputfield_testHost',
 			checkboxValue: 'waaaaaaaaaaah',
 			onchange: logToOutput,
 			labels: label
@@ -424,7 +424,7 @@ function buildSite_buildSettings (docFrag) {
 		label = cElem('span', testHost);
 		label.textContent = 'Mario: ';
 		inputfield_createField('checkbox', testHost, {
-			host: 'testHost',
+			host: 'inputfield_testHost',
 			checkboxValue: 'mario',
 			onchange: logToOutput,
 			labels: label
@@ -432,13 +432,13 @@ function buildSite_buildSettings (docFrag) {
 		cElem('br', testHost);
 
 		inputfield_createField('number-range', testHost, {
-			host: 'testHost',
+			host: 'inputfield_testHost',
 			onchange: logToOutput
 		});
 		cElem('br', testHost);
 
 		inputfield_createField('text', testHost, {
-			host: 'testHost',
+			host: 'inputfield_testHost',
 			onchange: logToOutput
 		});
 		cElem('br', testHost);
@@ -511,7 +511,7 @@ function buildSite_buildSettings (docFrag) {
 		label = cElem('span', testFormHost);
 		label.textContent = 'Mario: ';
 		inputfield_createField('checkbox', testFormHost, {
-			host: testFormHost,
+			host: 'inputfield_hostInFormTest',
 			checkboxValue: 'mario',
 			onchange: logToOutput,
 			addToForm: formTest,
@@ -523,7 +523,7 @@ function buildSite_buildSettings (docFrag) {
 		label = cElem('span', testFormHost);
 		label.textContent = 'Weegee: ';
 		inputfield_createField('checkbox', testFormHost, {
-			host: testFormHost,
+			host: 'inputfield_hostInFormTest',
 			checkboxValue: 'weegee',
 			onchange: logToOutput,
 			labels: label
@@ -533,7 +533,7 @@ function buildSite_buildSettings (docFrag) {
 		label = cElem('span', testFormHost);
 		label.textContent = 'Wario: ';
 		inputfield_createField('checkbox', testFormHost, {
-			host: testFormHost,
+			host: 'inputfield_hostInFormTest',
 			checkboxValue: 'wario',
 			onchange: logToOutput,
 			labels: label
@@ -543,7 +543,7 @@ function buildSite_buildSettings (docFrag) {
 		label = cElem('span', testFormHost);
 		label.textContent = 'WAAAAAAAAAAAH: ';
 		inputfield_createField('checkbox', testFormHost, {
-			host: testFormHost,
+			host: 'inputfield_hostInFormTest',
 			checkboxValue: 'waaaaaaaaaaah',
 			onchange: logToOutput,
 			labels: label
@@ -553,7 +553,7 @@ function buildSite_buildSettings (docFrag) {
 		label = cElem('span', testFormHost);
 		label.textContent = 'Mario: ';
 		inputfield_createField('checkbox', testFormHost, {
-			host: testFormHost,
+			host: 'inputfield_hostInFormTest',
 			checkboxValue: 'mario',
 			onchange: logToOutput,
 			labels: label
