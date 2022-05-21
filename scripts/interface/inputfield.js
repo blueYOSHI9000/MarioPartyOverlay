@@ -1164,14 +1164,15 @@ function inputfield_FieldObject (specifics={}) {
 
 	// # 'host'
 
-	//complain and use `undefined` if 'host' is invalid
+	//if 'host' is invalid
 	if (typeof attributes.host !== 'string') {
 
-		//only complain if necessary
+		//complain if necessary
 		if (attributes.host !== undefined) {
 			console.warn(`[MPO] inputfield_FieldObject() received a non-string as 'host' for input-field "${this.id}": `, attributes.host);
 		}
 
+		//and set it to default (no host will be used)
 		attributes.host = undefined;
 
 	//if 'host' is valid then set it up
@@ -1185,27 +1186,27 @@ function inputfield_FieldObject (specifics={}) {
 				//note that most attributes in here weren't verified yet, but the host will verify them before adding them anyway
 				//and some of the attributes verified after this rely on the host already being setup
 				//TODO: should really all of these attributes be synced??
-			inputfield_setupHost(attributes.host, {
-				childList: [specifics.elem],
+			hostObj = inputfield_setupHost(attributes.host, {
+				childList: [],
 				defaultValue: attributes.defaultValue,
 				onchange: attributes.onchange,
 				tag: attributes.tag,
 				addToForm: attributes.addToForm
 			});
-
-		//if the host already exists...
-		} else {
-			//...then add it to it's list
-			hostObj.childList.push(specifics.elem);
-
-			//if no 'defaultValue' was specified then let this input-field start with the host's value
-			if (attributes.defaultValue === undefined) {
-				this.startingValue = hostObj.value;
-			}
-
-			//TODO: Update the hosts attributes with all attributes specified in here
-				//DONT FORGET ABOUT THIS!!
 		}
+
+		//add this input-field to the host:
+
+		//add it to it's list
+		hostObj.childList.push(this.id);
+
+		//if no 'defaultValue' was specified then let this input-field start with the host's value
+			//doesn't have to be validated here since 'startingValue' gets validated anyway
+		if (attributes.defaultValue === undefined) {
+			this.startingValue = hostObj.value;
+		}
+
+		//TODO: Update the hosts attributes with all attributes specified in here
 	}
 
 	//set 'belongsToHost'
@@ -1230,9 +1231,10 @@ function inputfield_FieldObject (specifics={}) {
 
 
 	// # 'startingValue' property
+	//needs to be done after the host bit since it might change this value
 
-	//if 'startingValue' wasn't specified yet then set it to the 'defaultValue'
-	if (this.startingValue === undefined) {
+	//if 'startingValue' wasn't specified yet or is not valid then set it to the 'defaultValue'
+	if (this.startingValue === undefined || inputfield_validateValue(attributes.defaultValue, {fieldType: specifics.fieldType, attributes: attributes}) !== true) {
 		this.startingValue = attributes.defaultValue;
 	}
 
@@ -1338,7 +1340,8 @@ function inputfield_FieldObject (specifics={}) {
  * 			Includes the following properties:
  *
  * 				childList [Array] <optional>
- * 					A list of all DOM elements that belong to the host. Defaults to creating an empty array.
+ * 					A list of all DOM elements that belong to the host. Has to be DOM elements, not strings!
+ * 					Defaults to creating an empty array.
  *
  * 				defaultValue [*any*] <undefined>
  * 					The default value it should have.
@@ -1354,12 +1357,21 @@ function inputfield_FieldObject (specifics={}) {
  *
  * 	Constructs:
  * 		childList [Array]
- * 			A list of all DOM elements that belong to the host.
+ * 			A list of all input-field IDs that belong to the host.
+ * 			All array entries are strings.
  *
  * 		value [*any*]
  * 			The value that it holds. Can be any type but will likely be a string.
+ * 			See 'valueUpdatePending' below for more info.
  *
- * 		defaultValue [*any*] <undefined>
+ * 		valueUpdatePending [Boolean]
+ * 			The host won't update it's children with a new value immediately, instead it uses a 0ms 'setTimeout()' to update them as soon as everything else is done.
+ * 			This value is `true` if such a 0ms timeout has been created. If there's no 0ms timeout active or it's already been executed then this value is `false`.
+ *
+ * 			This is done in case the value is changed multiple times in quick succession to avoid updating every single child every time.
+ * 			It's also needed when the website is created in case some of it's children are still in a DocumentFragment and can't be found until the site is fully loaded.
+ *
+ * 		defaultValue [*any*]
  * 			The default value it should have.
  *
  * 		tag [String]
@@ -1382,12 +1394,22 @@ function inputfield_HostObject (specifics={}) {
 
 	// === VERIFY PROPERTIES ===
 
-	// # 'childList'
+
+	// # 'childList' (part 1 of 2)
 
 	//set the 'childList' to an empty array if it hasn't been defined yet
 	specifics.childList ??= [];
 
+	//if it's not an array then make it one
+	if (Array.isArray(specifics.childList) !== true) {
+		specifics.childList = [specifics.childList];
+	}
+
+	//remove all invalid array entries and replace the <input-field> element with their IDs
+		//see 'removeEachIf()' in 'helpers.js'
 	specifics.childList.removeEachIf((item, index) => {
+
+		//remove all entries that aren't an <input-field> element
 		if (Object.isDOMElement(item) !== true || item.tagName !== 'INPUT-FIELD') {
 			console.warn(`[MPO] inputfield_HostObject() found a non-<input-field> inside the 'childList' array: "${item}" (at index "${index}").`);
 			return true;
@@ -1400,13 +1422,50 @@ function inputfield_HostObject (specifics={}) {
 	//if it's not a string then use the default one
 	if (typeof specifics.tag !== 'string') {
 
-		//if a invalid tag was specified on purpose then complain about it
+		//complain if necessary
 		if (specifics.tag !== undefined) {
 			console.warn(`[MPO] inputfield_HostObject() received a non-string as 'tag': "${specifics.tag}".`);
 		}
 
-		specifics.tag = 'host';
+		//try to get the 'tag' property from the first child
+		if (specifics.childList.length >= 1) {
+
+			//get the 'tag' from the FieldObject
+				//'skipSetupCheck' is used to avoid setting up a input-field
+				//we only need the 'tag' attribute here, nothing else
+				//and if a input-field isn't setup yet then setting it up won't change anything because we can't provide attributes to it
+				//aside from that, this will also cause issues since this function is likely called during 'FieldObject()' and chances are doing this would setup that very input-field again
+			specifics.tag = inputfield_getFieldObject(specifics.childList[0], {skipSetupCheck: true})?.tag;
+		}
+
+		//use default tag:
+			//if it's not a string OR
+			//if the string consists of only numbers ('123' === true, '1b3' === false, better explanation is found in 'FieldObject()')
+				//the latter is used to avoid taking the ID from the input-field
+				//note that a string like '123' can still be used but only if the user specifically asks for it, this is on purpose
+		if (typeof specifics.tag !== 'string' || /^\d+$/.test(specifics.tag) === true) {
+			specifics.tag = 'host';
+		}
 	}
+
+
+	// # 'childList' (part 2 of 2)
+
+	//convert all <input-field> elements to their ID
+	specifics.childList.removeEachIf((item, index) => {
+
+		//get the FieldObject
+		let fieldObj = inputfield_getFieldObject(item, {skipSetupCheck: true});
+
+		//remove the entry if the FieldObject couldn't be found
+		if (typeof fieldObj?.id !== 'string') {
+			console.warn(`[MPO] inputfield_HostObject() found an invalid <input-field> element inside the 'childList' array (could not get it's ID): `, item);
+			return true;
+		}
+
+		//set the array entry to it's ID
+		item = fieldObj.id;
+	});
 
 
 	// # 'onchange'
@@ -1429,11 +1488,7 @@ function inputfield_HostObject (specifics={}) {
 	// === SETTING THE ACTUAL PROPERTIES ===
 
 	//set the list of children
-		//use an empty array if no child has been defined
-		//if it's not an array then wrap it in one first, otherwise use it as-is
-	this.childList = (specifics.childList === undefined)           ? []
-	               : (Array.isArray(specifics.childList) !== true) ? [specifics.childList]
-	               : specifics.childList;
+	this.childList = specifics.childList;
 
 	//set the defaultValue
 		//note that if it hasn't been specified then it'll be undefined which is what we need then anyway
@@ -1441,11 +1496,10 @@ function inputfield_HostObject (specifics={}) {
 
 	//set the 'onchange' function
 		//use a empty function if it hasn't been defined
-	this.onchange = (typeof specifics.onchange !== 'function') ? (() => {return;}) : specifics.onchange;
+	this.onchange = specifics.onchange;
 
 	//set tag
-		//if no tag in 'specific.tag' has been specified then use the tag of the first child and if that isn't present then use 'host'
-	this.tag = specifics.tag ?? inputfield_fields.get(this.childList[0])?.tag ?? 'host';
+	this.tag = specifics.tag;
 
 	//set belongsToForm
 	this.belongsToForm = specifics.addToForm;
@@ -1813,8 +1867,7 @@ function inputfield_setupField (specifics={}) {
 
 	//complain and return if no 'fieldType' was specified
 	if (typeof fieldType !== 'string') {
-		console.error(`[MPO] inputfield_setupField() could not setup the following input-field as no type was specified (make sure to always setup a <input-field> element by calling '.setup()' on it or by using a 'type' HTML attribute):`);
-		console.error(this);
+		console.error(`[MPO] inputfield_setupField() could not setup the following input-field as no type was specified (make sure to always setup a <input-field> element by calling '.setup()' on it or by using a 'type' HTML attribute): `, this);
 		return this;
 	}
 
@@ -1896,6 +1949,9 @@ function inputfield_setupField (specifics={}) {
  * 			Includes the following properties:
  *
  * 				//
+ *
+ * 	Returns [null / HostObject]:
+ * 		The 'HostObject' object or `null` if something went wrong.
  */
 function inputfield_setupHost (host, specifics={}) {
 	//complain and use defaults if 'specifics' is invalid
@@ -1907,7 +1963,7 @@ function inputfield_setupHost (host, specifics={}) {
 	//if the host specified is nullish then complain and return
 	if (typeof host !== 'string') {
 		console.warn(`[MPO] inputfield_setupHost() received a non-string as 'host' (only strings are allowed): "${host}".`);
-		return;
+		return null;
 	}
 
 	//create the HostObject
@@ -1921,6 +1977,8 @@ function inputfield_setupHost (host, specifics={}) {
 
 	//apply the HostObject to the Map
 	inputfield_hosts.set(host, hostObj);
+
+	return hostObj;
 }
 
 /**	Converts a DOM Element to a input-field label.
@@ -2335,7 +2393,7 @@ function inputfield_executedAfterFieldChange (fieldID, newValue) {
 	const containerElem = inputfield_getElement(fieldID);
 
 	//return if container can't be found
-	if (containerElem === false) {
+	if (Object.isDOMElement(containerElem) !== true) {
 		console.error(`[MPO] inputfield_executedAfterFieldChange(): Could not find container element with a 'fieldID' of "${fieldID}"`);
 		return;
 	}
@@ -2396,8 +2454,8 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 	const fieldObj = inputfield_getFieldObject(containerElem);
 
 	//complain and return if the field object couldn't be found
-	if (fieldObj === undefined) {
-		console.warn('[MPO] inputfield_applyNewValue() could not get the \'fieldObj\'.');
+	if (fieldObj === null) {
+		console.error('[MPO] inputfield_applyNewValue() could not get the \'FieldObject\' for this input-field (should be a <input-field> element): ', containerElem);
 		return;
 	}
 
@@ -2469,7 +2527,23 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 		//but only if the host should be updated
 		//and only if a host even exists
 	if (specifics.updateHost !== false && hostObj !== null) {
-		inputfield_updateHostsChildren(fieldObj.belongsToHost, newValue);
+
+		//set the new value
+			//'updateHostsChildren()' will always take this value, even if a pending update is already on it's way
+		hostObj.value = newValue;
+
+		//check first if a update is already pending
+			//if no update is pending then update the value
+			//see  'valueUpdatePending' under the 'HostObject' documentation
+		if (hostObj.valueUpdatePending !== true) {
+			hostObj.valueUpdatePending = true;
+
+			//update all input-fields that belong to the host
+				//but with a 0ms timeout
+			setTimeout( () => {
+				inputfield_updateHostsChildren(fieldObj.belongsToHost, {DOMTree: containerElem.getRootNode()});
+			}, 0);
+		}
 	}
 
 
@@ -2660,10 +2734,21 @@ function inputfield_executedAfterLabelPress (labelElem) {
  * 		hostElem [DOM Element]
  * 			The DOM element of the host.
  *
- * 		newValue [*any*]
- * 			The new value that should be applied.
+ * 		specifics [Object] <optional>
+ * 			A object of optional specifics about how the input-field should be gotten.
+ *
+ * 				DOMTree [DOM Tree] <document>
+ * 					Only needed if the elements aren't in the regular DOM tree.
+ * 					Which DOM tree it should look for the input-field.
+ * 					Chances are this is simply 'document', but it can also be a 'DocumentFragment' in which case that should be passed as a whole.
  */
-function inputfield_updateHostsChildren (host, newValue) {
+function inputfield_updateHostsChildren (host, specifics={}) {
+	//complain and use defaults if 'specifics' is invalid
+	if (typeof specifics !== 'object') {
+		console.warn(`[MPO] inputfield_updateHostsChildren() received a non-object as 'specifics': "${specifics}".`);
+		specifics = {};
+	}
+
 	//get the host object
 	const hostObj = inputfield_getHostObject(host);
 
@@ -2673,15 +2758,21 @@ function inputfield_updateHostsChildren (host, newValue) {
 		return;
 	}
 
-	//set the new value
-	hostObj.value = newValue;
+	//if this function is called then there's no update pending anymore
+	hostObj.valueUpdatePending = false;
+
+	//get the new value
+	const newValue = hostObj.value;
 
 	//loop through all children and update them
 	if (hostObj.childList.isIterable() === true) {
 		for (const item of hostObj.childList) {
 
+			//get the <input-field> element
+			const containerElem = inputfield_getElement(item, {DOMTree: specifics.DOMTree});
+
 			//get FieldObject
-			const fieldObj = inputfield_getFieldObject(item);
+			const fieldObj = inputfield_getFieldObject(containerElem);
 
 			if (fieldObj === null) {
 				console.warn(`[MPO] inputfield_updateHostsChildren() skipped a field as it's 'FieldObject' couldn't be found.`);
@@ -2691,10 +2782,10 @@ function inputfield_updateHostsChildren (host, newValue) {
 			//update the input-field
 				//check if the new value is valid; if it is then use the new value, otherwise use the 'defaultValue' as the 'displayedValue'
 			if (inputfield_validateValue(newValue, {field: fieldObj}) === true) {
-				inputfield_applyNewValue(item, newValue, {skipOnchange: true, updateHost: false});
+				inputfield_applyNewValue(containerElem, newValue, {skipOnchange: true, updateHost: false});
 			} else {
 				//use 'nullValue' for the displayed value because if the current value isn't valid then it can't be displayed (like a string for a number-field)
-				inputfield_applyNewValue(item, newValue, {skipOnchange: true, updateHost: false, displayedValue: fieldObj.nullValue});
+				inputfield_applyNewValue(containerElem, newValue, {skipOnchange: true, updateHost: false, displayedValue: fieldObj.nullValue});
 			}
 		}
 	}
@@ -3144,6 +3235,11 @@ function inputfield_getElement (fieldID, specifics={}) {
  * 				skipSetupCheck [Boolean] <false>
  * 					If `true` it won't check whether the FieldObject has been setup or not.
  *
+ * 				DOMTree [DOM Tree] <document>
+ * 					Only needed if you only pass the input-field ID and the element isn't in the regular DOM tree.
+ * 					Which DOM tree it should look for the input-field.
+ * 					Chances are this is simply 'document', but it can also be a 'DocumentFragment' in which case that should be passed as a whole.
+ *
  * 	Returns [FieldObject/null]:
  * 		Returns a FieldObject (see 'inputfield_FieldObject()').
  * 		Returns `null` if it couldn't be found.
@@ -3163,7 +3259,7 @@ function inputfield_getFieldObject (field, specifics={}) {
 
 	//get the DOM element if an ID was given
 	if (typeof field === 'string') {
-		field = inputfield_getElement(field);
+		field = inputfield_getElement(field, {DOMTree: specifics.DOMTree});
 
 		//complain and return if it's not a DOM element
 		if (Object.isDOMElement(field) !== true) {
