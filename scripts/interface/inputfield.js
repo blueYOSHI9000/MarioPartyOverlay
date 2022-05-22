@@ -1353,7 +1353,10 @@ function inputfield_FieldObject (specifics={}) {
  * 				onchange [Function] <optional>
  * 					The function that gets executed when the value changes. Will default to not doing anything.
  *
- * 				addToForm []
+ * 				addToForm [Array/DOM Element/String]
+ * 					The form element it should be added to. Can be either the DOM element of the form or it's ID (can be in string-form, so 6 and '6' are both fine).
+ * 					Use the DOM element if it's inside a DocumentFragment or other places that are "hidden".
+ * 					Can also be an array consisting of multiple DOM elements/field-IDs.
  *
  * 	Constructs:
  * 		childList [Array]
@@ -1659,7 +1662,7 @@ function inputfield_LabelObject (specifics={}) {
  *
  * 				addToForm [Array/DOM Element/String]
  * 					The form element it should be added to. Can be either the DOM element of the form or it's ID (can be in string-form, so 6 and '6' are both fine).
- * 						Use the DOM element if it's inside a DocumentFragment or other places that are "hidden".
+ * 					Use the DOM element if it's inside a DocumentFragment or other places that are "hidden".
  * 					Can also be an array consisting of multiple DOM elements/field-IDs.
  *
  * 				elem [*any*]
@@ -1948,7 +1951,21 @@ function inputfield_setupField (specifics={}) {
  * 		specifics [Object]
  * 			Includes the following properties:
  *
- * 				//
+ * 				childList [Array] <optional>
+ * 					A list of all DOM elements that belong to the host. Has to be DOM elements, not strings!
+ * 					Defaults to creating an empty array.
+ *
+ * 				tag [String] <'host'>
+ * 					The tag of the host. See the 'tag' attribute for more info.
+ * 					Uses the tag of the first child and then simply 'host' if no tag is specified.
+ *
+ * 				onchange [Function] <optional>
+ * 					The function that gets executed when the value changes. Will default to not doing anything.
+ *
+ * 				addToForm [Array/DOM Element/String]
+ * 					The form element it should be added to. Can be either the DOM element of the form or it's ID (can be in string-form, so 6 and '6' are both fine).
+ * 					Use the DOM element if it's inside a DocumentFragment or other places that are "hidden".
+ * 					Can also be an array consisting of multiple DOM elements/field-IDs.
  *
  * 	Returns [null / HostObject]:
  * 		The 'HostObject' object or `null` if something went wrong.
@@ -2725,10 +2742,11 @@ function inputfield_executedAfterLabelPress (labelElem) {
 	}
 }
 
-/**	This updates all input-fields that belong to a host.
+/**	This updates all input-fields that belong to a host to reflect the host's value.
  *
- * 	This loops through all input-fields that belong to the host and it checks any that have the same 'checkboxValue' as the 'newValue'.
- * 	This does NOT call the 'onchange' functions of the individual input-fields.
+ * 	This makes sure that every input-field that belong to a host has the same value as the host.
+ * 	Does NOT trigger the 'onchange' function of each input-field.
+ * 	Does NOT update input-fields that can't be found.
  *
  * 	Args:
  * 		hostElem [DOM Element]
