@@ -591,16 +591,41 @@ function buildSite_buildSettings (docFrag) {
 		});
 
 		//test the 'beforeText' and 'afterText' attributes
-		cElem('br', formTest);
-		cElem('br', formTest);
-		cElem('span', formTest)
+		cElem('br', elem);
+		cElem('br', elem);
+		cElem('span', elem)
 			.textContent = '=== \'beforeText\' AND \'afterText\' ATTRIBUTE TEST ===';
-		cElem('br', formTest);
-		var suckmydick = inputfield_createField('checkbox', elem, {
+		cElem('br', elem);
+		var uhhhh = inputfield_createField('checkbox', elem, {
 			beforeText: 'test: ',
 			afterText : ' :tset',
 			onchange: logToOutput
 		});
+
+
+
+		// # test 'autoAddToForm'
+
+		//create title
+		cElem('br', elem);
+		cElem('br', elem);
+		cElem('span', elem)
+			.textContent = '=== \'autoAddToForm\' Test (use DevTools - does not log values) ===';
+		cElem('br', elem);
+
+		let autoAddForm1 = inputfield_createField('form', elem, {
+			id: 'autoAddForm1',
+			autoAddToForm: true
+		});
+		let textFieldMovedBetweenForms = inputfield_createField('text-area', autoAddForm1, {
+			defaultValue: "This was created inside 'autoAddForm1' and then moved to 'autoAddForm2",
+			id: 'textFieldMovedBetweenForms'
+		});
+		let autoAddForm2 = inputfield_createField('form', elem, {
+			id: 'autoAddForm2',
+			autoAddToForm: true
+		});
+		autoAddForm2.append(textFieldMovedBetweenForms);
 
 
 

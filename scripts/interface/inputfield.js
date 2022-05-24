@@ -95,7 +95,7 @@
 	Note that some attributes are only available for some types.
 
 
-	# general attributes (available for all types):
+	# core attributes:
 
 		variation [String] <default variation>
 			What variation this should be. See the list above for more info.
@@ -106,15 +106,40 @@
 			The ID of the input-field. Can be used to access the input-field.
 			The ID can't consist of only numbers (so '123' is not allowed but '123a' is allowed).
 			The ID should be unique. If the same ID is used multiple times it may result in unexpected behaviour.
-			On default this will be a unique ID which represents the total amount of input-fields made (so the default IDs would be '1' > '2' > '3' etc.).
+			On default this will be a unique ID which represents the total amount of input-fields made (so the default IDs would be '1' -> '2' -> '3' etc.).
 
 			More on what happens if the same ID is used multiple times:
 				Whenever an input-field is fetched by an ID, it will always only use the first input-field it finds with that ID. It won't even bother scanning for a second one.
 				And which one is found first can be dependant on various factors, all of them are due to how 'inputfield_getElement()' works.
-				The function won't be able to find a element inside a DocumentFragment or other places unless specifically specified.
+				The function won't be able to find a element inside a DocumentFragment or other places unless specified.
 				The function will also search for "related" elements first if a 'referenceElem' is given (see the documentation on the function).
 				Both of these can affect which element is found first.
 				This also isn't fixed in stone, this can change in any update (for better or worse). So it's recommended to avoid using the same ID multiple times as much as possible.
+
+	# starting attributes (these only affect how the input-field is created, they're ignored afterwards):
+
+		beforeText [String] <none>
+			If present it will create a label before the input-field consisting of this text.
+			Useful if you want a description before a checkbox.
+			This won't be parsed as HTML, it will simply be inserted as-is.
+
+		afterText [String] <none>
+			Same as 'beforeText' except it will be created after the input-field.
+
+		labels [Array/DOM Element] <optional>
+			A DOM element (or an array of them) that should act as labels. Basically like a '<label>' element.
+
+		HTMLAttributes [Object] <optional>
+			A object of HTML attributes to add to the container. `{id: 'testo'}` would set 'testo' as the elements ID.
+			If HTML attributes have to be changed after it's creation then you have to change them manually through 'Element.setAttribute()'.
+
+
+	# behaviour attributes:
+
+		onchange [Function] <none>
+			A function that gets executed each time the input-field is updated. Available for all input types.
+			The first argument will be the current value of the input field.
+			The second argument will be the field object inside 'inputfield_fields' (see the 'inputfield_FieldObject()' function for a documentation of this object).
 
 		defaultValue [*any*] <optional>
 			This defines the value the input-field will have after it's been created. Can't be `undefined`.
@@ -129,35 +154,11 @@
 				color:    '#000000'
 				file:     *N/A*
 
-		onchange [Function] <none>
-			A function that gets executed each time the input-field is updated. Available for all input types.
-			The first argument will be the current value of the input field.
-			The second argument will be the field object inside 'inputfield_fields' (see the 'inputfield_FieldObject()' function for a documentation of this object).
-
-
-	# starting attributes (these will only affect how the input-field is created):
-
-		beforeText [String] <none>
-			If present it will create a label before the input-field consisting of this text.
-			Useful if you want a description before a checkbox.
-			This won't be parsed as HTML, it will simply be inserted as-is.
-
-		afterText [String] <none>
-			Same as 'beforeText' except it will be created after the input-field.
-
-		labels [Array/DOM Element] <optional>
-			A DOM element (or an array of them) that should act as labels. Basically like a '<label>' element.
-
-		cssClass [String/Array] <optional>
-			Regular CSS classes that will be added to the container.
-
-		HTMLAttributes [Object] <optional>
-			A object of HTML attributes to add to the container. `{id: 'testo'}` would add 'testo' as the 'id' attribute.
-			The following attributes will be ignored (mainly because they're needed internally/can be set through input-field attributes):
-				'class', 'data-fieldid'
-
-
-	# form related attributes (NOT just for 'form' types -- these are available to all types but are only needed when used inside a form):
+		addToForm [Array/DOM Element/String] <none>
+			The form element it should be added to. Can be either the DOM element of the form or it's ID (can be in string-form, so 6 and '6' are both fine).
+				Use the DOM element if it's inside a DocumentFragment or other places that are "hidden".
+			Can also be an array consisting of multiple DOM elements/field-IDs.
+			Leave empty if it should not be added to a form.
 
 		tag [String] <ID>
 			A tag-name is used to access the value inside a form.
@@ -167,34 +168,27 @@
 			If multiple input-fields have the same tag then when a input-field is updated it will simply overwrite the value that's already there.
 			This essentially allows you to have a form value that's simply the value of the most recently updated input-field.
 
-		addToForm [Array/DOM Element/String] <none>
-			The form element it should be added to. Can be either the DOM element of the form or it's ID (can be in string-form, so 6 and '6' are both fine).
-				Use the DOM element if it's inside a DocumentFragment or other places that are "hidden".
-			Can also be an array consisting of multiple DOM elements/field-IDs.
-			Leave empty if it should not be added to a form.
+	# host related attributes (any type can use these):
 
-	# host related attributes:
+		host [String] <none>
+			Specifying a host links the input-field to the specified host.
+			Every input-field linked to the host shares the exact same value at all times.
+			In addition, they also share all "behaviour attributes" listed above (that includes 'addToForm' and the 'onchange' function).
+			All of that will be hosted permanently (hence the name), even if all input-fields are deleted the host will still exist and new input-fields linked will take the host's values & attributes.
 
-		host [*any*] <none>
-			Specifying the same host on multiple input-fields links them.
-			The value and other stuff will now be saved on the host and no longer on the individual input-fields.
-			When the value of a input-field is accessed it will give the value of the host instead and the value of the input-field is changed then the value of the host is changed instead.
+			Basically, since everything relating to an input-field is immediately deleted once the input-field is gone you can instead use hosts to store values permanently.
+			Another use-case is that all input-fields with the same host share the same value, so if you want to display the same checkbox in different spots on your website then you can use a host to make sure they're always identical.
 
-			tl;dr: All input-fields that are connected through a host all have the same values, the same 'onchange' function, etc.
+			Important: Be careful with DocumentFragments or other "hidden" spots that 'document.querySelector()' can't find. See below for more info.
 
-			A host can be a string, a number, a boolean (not recommended), any object, a DOM Element or even a function.
-			The only values that aren't allowed are `undefined` and `null`.
-			Note that for objects & functions that they have to be the same instance! Works the same way as the `===` operator. In addition, all objects & functions are saved in a 'WeakMap' so they will be garbage-collected when no longer in use.
+			In more detail:
+				If a attribute listed under "behaviour attributes" is changed on a input-field it will immediately overwrite the host's attribute. If an attribute isn't specified on a input-field's creation then it will take the attribute from the host instead.
 
-			In addition to synchronizing the value, it will also automatically synchronize the following attributes: 'onchange', 'defaultValue', 'tag', 'addToForm'.
-			When a new input-field is added to a host with one of these attributes then the attribute will overwrite the attributes of the host (and with that the attributes of all other linked input-fields).
+				Once a host gets updated it immediately updates all input-fields linked to it. If a input-field can't be found it will be removed from the host.
+				That can either happen when a input-field gets deleted or when a input-field is moved to a "hidden" spot that 'document.querySelector()' can't access.
+				Once a input-field gets moved from a "hidden" spot back onto the regular DOM document then it will immediately overwrite all of it's own attributes & values from the host.
+				That said, if a "hidden" input-field gets updated (attributes or value) then it will still affect the host and all of it's input-fields. This is because the host is always accessible.
 
-			When adding a new input-field to a host then the host's current value will take priority unless a 'defaultValue' was specified for the newly added input-field, in which case that will be used.
-
-			"Ok, but why would I use this? How is this useful?"
-				It's main use-case is if you have the same option on multiple spots on a website.
-				Say you have a dedicated control-panel on your website with a "Text color" option, then you have a Live-Chat that also has the exact same "Text color" option present.
-				By using the same host on both input-fields they will always have the exact same value. If one is updated then the other will also be updated immediately.
 
 	# 'form' type attributes
 
@@ -715,6 +709,15 @@ class InputFieldElement extends HTMLElement {
 			}
 		});
 	}
+	connectedCallback () {
+		//console.log(arguments);
+	}
+	disconnectedCallback () {
+		//console.log(arguments);
+	}
+	adoptedCallback () {
+		console.warn(`[MPO] NOTICE: Input-fields may cause issues when adopted to different documents as they weren't tested. Please contact me with a use-case so I can properly test and implement support for it.`);
+	}
 }
 
 customElements.define('input-field', InputFieldElement);
@@ -932,6 +935,24 @@ function inputfield_FieldObject (specifics={}) {
 
 
 
+	// === MUTATION OBSERVERS ===
+
+	//create the object
+	this.observers = {};
+
+	//add the observer for attributes
+		//we could use the 'attributeChangedCallback' property on the <input-field> class but there's a significant lack of documentation on MDN for it
+		//and we'd have to manually specify every single attribute we want to observe which would be a pain to maintain
+		//not to mention that there's way better error-handling this way (if a user misspells a attribute we can 'console.warn()' it for example)
+	this.observers. attributeObserver = new MutationObserver(inputfield_attributeObserverCallback);
+	this.observers. attributeObserver.observe(specifics.elem, {attributes: true});
+
+	//add the observer for 'autoAddToForm'
+		//but don't observe it yet
+	this.observers.formObserver = new MutationObserver(inputfield_formObserverCallback);
+
+
+
 	// === MODIFYING ATTRIBUTES ===
 		//note that the following is more or less in order as the attributes are listed in the documentation
 		//I say "more or less" because some attributes rely on another attribute already being verified
@@ -1051,39 +1072,17 @@ function inputfield_FieldObject (specifics={}) {
 	});
 
 
-	// # 'cssClass'
-
-	//if 'cssClass' is a string then add it to an empty array
-	if (typeof attributes.cssClass === 'string') {
-		attributes.cssClass = [attributes.cssClass];
-	}
-
-	//if 'cssClass' is an array then iterate through all of them
-	if (Array.isArray(attributes.cssClass) === true) {
-		for (const item of attributes.cssClass) {
-
-			//if the array item is a string then add it to the element
-			if (typeof item === 'string') {
-				specifics.elem.classList.add(item);
-			}
-		}
-
-	//if it's not an array then replace it with an empty array as a failsafe
-	} else {
-		attributes.cssClass = [];
-	}
-
-
 	// # 'HTMLAttributes'
 
 	//set all 'HTMLAttributes'
 	if (typeof attributes.HTMLAttributes === 'object') {
 		for (key in attributes.HTMLAttributes) {
 
-			//if it's 'class' or 'data-fieldid' then delete the entry and continue with the next one
-			if (key === 'class' || key === 'data-fieldid') {
-				delete attributes.HTMLAttributes[key];
-				continue;
+			//if it's 'data-fieldid' then complain about it but still apply it
+				//mainly because we can't stop the user from applying a "forbidden" attribute afterwards (not without serious draw-backs at least)
+				//so why not already allow it during the elements creation? this way we can at least warn them about it
+			if (['data-fieldid', 'data-holdsvalue', 'data-labelforfieldid'].indexOf(key) !== -1) {
+				console.warn(`[MPO] inputfield_FieldObject() received a troubling value while parsing 'HTMLAttributes' for input-field "${this.id}". "${key}" is already used by input-field themselves, the value will still be applied but things may break.`);
 			}
 
 			//actually apply it to the element
@@ -1153,7 +1152,7 @@ function inputfield_FieldObject (specifics={}) {
 
 		//check if it's a form, if yes then add this field to the observer
 		if (specifics.fieldType === 'form') {
-			inputfield_formObserver.observe(specifics.elem, inputfield_formObserverOptions);
+			this.observers.formObserver.observe(specifics.elem, inputfield_formObserverOptions);
 
 		//if it's not a form then complain about it and do nothing else
 		} else {
@@ -1331,6 +1330,9 @@ function inputfield_FieldObject (specifics={}) {
 
 	//set 'startingValue'
 		//has been defined alongside the 'host' and 'defaultValue' attributes
+
+	//set 'observers'
+		//already set near the start of this function
 }
 
 /**	Creates a 'HostObject' that saves all info related to a host.
@@ -1932,9 +1934,6 @@ function inputfield_setupField (specifics={}) {
 
 
 	// === FINISHING TOUCHES ===
-
-	//add this to the attribute MutationObserver
-	//inputfield_attributeObserver.observe(this, {attributes: true});
 
 	//return the element
 	return this;
@@ -2961,12 +2960,13 @@ function inputfield_changeAttribute (field, attributeName, newValue) {
 			//apply the value to the 'FieldObject'
 			fieldObj.attributes[attributeName] = newValue;
 
-			//add the observer
+			//if `true` then setup the 'formObserver' to start observing
 			if (newValue === true) {
-				inputfield_formObserver.observe(field, inputfield_formObserverOptions);
+				fieldObj.observers.formObserver.observe(field, inputfield_formObserverOptions);
+
+			//if not then disconnect the observer
 			} else {
-				//inputfield_formObserver.observe(field, {});
-				console.warn(`[MPO] inputfield_changeAttribute() could not disable 'autoAddToForm' because MutationObservers are trash. Will be fixed at some point.`);
+				fieldObj.observers.formObserver.disconnect();
 			}
 			break;
 
@@ -3027,11 +3027,9 @@ function inputfield_changeAttribute (field, attributeName, newValue) {
 	return true;
 }
 
-//this is used for 'autoAddToForm', it will track any element that's added to a input-field with 'autoAddToForm' enabled
-let inputfield_formObserver = new MutationObserver(inputfield_formObserverCallback);
-
 //the options for 'inputfield_formObserver'
 const inputfield_formObserverOptions = {subtree: true, childList: true};
+
 /**	Gets called after every form MutationObserver change. Do not call this manually.
  *
  * 	Adds any new elements to the form if 'autoAddToForm' is enabled.
@@ -3076,12 +3074,6 @@ function inputfield_formObserverCallback (record) {
 		}
 	}
 }
-
-//this is used to observe all changes made to <input-field> attributes
-	//we could use the 'attributeChangedCallback' property on the <input-field> class but there's a significant lack of documentation on MDN for it
-	//and we'd have to manually specify every single attribute we want to observe which would be a pain to maintain
-	//not to mention that there's way better error-handling this way (if a user misspells a attribute we can 'console.warn()' it for example)
-let inputfield_attributeObserver = new MutationObserver(inputfield_attributeObserverCallback);
 
 /**	[CURRENTLY UNUSED] Gets called after every attribute MutationObserver change. Do not call this manually.
  *
