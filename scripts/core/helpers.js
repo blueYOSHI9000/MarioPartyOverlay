@@ -328,9 +328,12 @@ Object.defineProperty(Object.prototype, 'fillIn', {value: function (defaultObj, 
 
 /**	Removes array items that matches a expression.
  *
+ * 	Immediately applies the value to the array it got called on.
+ *
  * 	Args:
  * 		expr [Function]
- * 			The function that gets called for each array item. The array item is passed as the first argument.
+ * 			The function that gets called for each array item.
+ * 			The array item is passed as the first argument, the index as the second.
  * 			If the function returns true then the array item will be removed.
  *
  * 	Returns [Array]:

@@ -40,7 +40,7 @@
 
 	button
 		A simple button. You press it, it does things.
-		Does not store a value so it will simply return undefined. Will trigger the 'onchange' function specified in attributes when clicked on.
+		Does not store a value so it will simply return `null`. Will trigger the 'onchange' function specified in attributes when clicked on.
 		Variations:
 			- regular <default>: A regular button. Basically the same as '<button>'.
 			- image: Creates a image that looks like a button. Not supported yet.
@@ -80,12 +80,6 @@
 		Variations:
 			- regular <default>: A regular color selection. Basically the same as '<input type="color">'.
 
-	file
-		A way to upload a file. Not supported yet.
-		How it's stored is still to be determined.
-		Variations:
-			- regular <default>: A regular file upload. Basically the same as '<input type="file">'.
-
 
 	=== FIELD ATTRIBUTES ===
 
@@ -115,23 +109,6 @@
 				The function will also search for "related" elements first if a 'referenceElem' is given (see the documentation on the function).
 				Both of these can affect which element is found first.
 				This also isn't fixed in stone, this can change in any update (for better or worse). So it's recommended to avoid using the same ID multiple times as much as possible.
-
-	# starting attributes (these only affect how the input-field is created, they're ignored afterwards):
-
-		beforeText [String] <none>
-			If present it will create a label before the input-field consisting of this text.
-			Useful if you want a description before a checkbox.
-			This won't be parsed as HTML, it will simply be inserted as-is.
-
-		afterText [String] <none>
-			Same as 'beforeText' except it will be created after the input-field.
-
-		labels [Array/DOM Element] <optional>
-			A DOM element (or an array of them) that should act as labels. Basically like a '<label>' element.
-
-		HTMLAttributes [Object] <optional>
-			A object of HTML attributes to add to the container. `{id: 'testo'}` would set 'testo' as the elements ID.
-			If HTML attributes have to be changed after it's creation then you have to change them manually through 'Element.setAttribute()'.
 
 
 	# behaviour attributes:
@@ -188,6 +165,25 @@
 				That can either happen when a input-field gets deleted or when a input-field is moved to a "hidden" spot that 'document.querySelector()' can't access.
 				Once a input-field gets moved from a "hidden" spot back onto the regular DOM document then it will immediately overwrite all of it's own attributes & values from the host.
 				That said, if a "hidden" input-field gets updated (attributes or value) then it will still affect the host and all of it's input-fields. This is because the host is always accessible.
+
+				If no 'tag' is specified then the host and all input-fields will have different tags. They will only share a tag once one is specified (and from then on every input-field that joins the host will have the same tag).
+
+	# starting attributes (these only affect how the input-field is created, they're ignored afterwards):
+
+		beforeText [String] <none>
+			If present it will create a label before the input-field consisting of this text.
+			Useful if you want a description before a checkbox.
+			This won't be parsed as HTML, it will simply be inserted as-is.
+
+		afterText [String] <none>
+			Same as 'beforeText' except it will be created after the input-field.
+
+		labels [Array/DOM Element] <optional>
+			A DOM element (or an array of them) that should act as labels. Basically like a '<label>' element.
+
+		HTMLAttributes [Object] <optional>
+			A object of HTML attributes to add to the container. `{id: 'testo'}` would set 'testo' as the elements ID.
+			If HTML attributes have to be changed after it's creation then you have to change them manually through 'Element.setAttribute()'.
 
 
 	# 'form' type attributes
@@ -423,7 +419,7 @@ var inputfield_variations = {
 			regular: {
 				constructor: function (container, fieldObj, fieldID, attributes) {
 					//create a button <input> element
-					var button = cElem('input', container, {type: 'button', autocomplete: 'off', onclick: `inputfield_executedAfterFieldChange('${fieldID}');`});
+					var button = cElem('input', container, {type: 'button', autocomplete: 'off', onclick: `inputfield_executedAfterFieldChange('${fieldID}', null);`});
 
 					//add text to the button (if needed)
 					if (attributes.content !== undefined) {
@@ -796,7 +792,7 @@ customElements.define('input-field', InputFieldElement);
  * 		tag [String]
  * 			The tag of the input-field. Only needed for input-fields that are part of a form.
  * 			If no tag was specified then this will be the ID of the input-field. This will always be a string.
- * 			If you specifically need the value from the user then use 'tag' inside 'attributes', that one will be `undefined` if nothing was specified.
+ * 			If you specifically need the value from the user then use 'attributes.tag', that one will be `undefined` if nothing was specified.
  *
  * 		propertyChanged [String/undefined]
  * 			The name of the property that has been updated inside a form.
@@ -965,11 +961,274 @@ function inputfield_FieldObject (specifics={}) {
 		//verified at the start of this function
 
 
+	// # 'onchange'
+		//has to be done before 'host'
+
+	//complain and delete it if it's not a function
+	if (attributes.onchange !== undefined && typeof attributes.onchange !== 'function') {
+		console.warn(`[MPO] inputfield_FieldObject() received a non-function as 'onchange': `, attributes.onchange);
+		delete attributes.onchange;
+	}
+
+
+	// # 'defaultValue' -----> verified right before 'host'
+
+
+	// # 'tag'
+		//has to be done before 'host'
+		//has to be done before 'addToForm'
+
+	//if the tag is neither a string nor `undefined` then complain and delete it
+	if (typeof attributes.tag !== 'string' && attributes.tag !== undefined) {
+		console.warn(`[MPO] inputfield_FieldObject() received a non-string as 'tag':`, specifics.tag);
+		delete attributes.tag;
+	}
+
+	//define the 'tag' property
+		//use a default tag if no tag has been specified
+	if (typeof attributes.tag === 'string') {
+		this.tag = attributes.tag;
+	} else {
+		this.tag = this.id;
+	}
+
+
+	// # 'autoAddToForm'
+
+	//check if 'autoAddToForm' is true
+	if (attributes.autoAddToForm === true) {
+
+		//check if it's a form, if yes then add this field to the observer
+		if (specifics.fieldType === 'form') {
+			this.observers.formObserver.observe(specifics.elem, inputfield_formObserverOptions);
+
+		//if it's not a form then complain about it and do nothing else
+		} else {
+			console.warn(`[MPO] inputfield_FieldObject() received \`true\` for 'autoAddToForm' despite the input-field not being a form. ID: "${this.id}"`);
+		}
+
+	//if it's not `true` then delete it
+	} else {
+
+		//if it's neither a boolean nor `undefined` then complain
+			//note that we already checked if it's `true` before
+		if (attributes.autoAddToForm !== false && attributes.autoAddToForm !== undefined) {
+			console.warn(`[MPO] inputfield_FieldObject() received a non-boolean as 'autoAddToForm': `, autoAddToForm);
+		}
+
+		delete attributes.autoAddToForm;
+	}
+
+
+	// # 'content'
+		//this has to be done before calling 'inputfield_getDefaultValue()' (done below for 'defaultValue')
+
+	//if 'content' is neither a string nor undefined then complain and delete it
+		//this attribute has to be a string but undefined is valid too (as undefined == "don't use this")
+	if (typeof attributes.content !== 'string' && attributes.content !== undefined) {
+		console.warn(`[MPO] inputfield_FieldObject() received a non-string as 'content': `, attributes.content);
+		delete attributes.content;
+	}
+
+
 	// # 'checkboxValue'
+		//this has to be done before calling 'inputfield_getDefaultValue()' (done below for 'defaultValue')
 
 	//set 'checkboxValue' to true if it hasn't been specified
-		//this has to be done before calling 'inputfield_getDefaultValue()' (done below for 'defaultValue') since that would think a value of `undefined` is valid (when it isn't)
 	attributes.checkboxValue ??= true;
+
+
+	// # 'options'
+
+	//set 'options' to an empty array if it's undefined
+	attributes.options ??= [];
+
+	//if 'options' isn't an array then complain about it and set it to an empty array
+	if (Array.isArray(attributes.options) !== true) {
+		console.warn(`[MPO] inputfield_FieldObject() received a non-array as 'options': `, attributes.options);
+		attributes.options = [];
+	}
+
+	//loop through all options to make sure they're all valid
+	for (const key in attributes.options) {
+		const item = attributes.options[key];
+
+		//delete the array item if it's not an object
+		if (typeof item !== 'object') {
+			console.warn(`[MPO] inputfield_FieldObject() couldn't parse the 'options' array as item Nr. "${key}" wasn't a object: `, item);
+			delete attributes.options[key];
+			continue;
+		}
+
+		//set 'name' to 'Unknown' if it's not valid
+		if (typeof item.name !== 'string') {
+			console.warn(`[MPO] inputfield_FieldObject() couldn't properly parse the 'options' array as item Nr. "${key}" had a non-string as 'name': `, item.name);
+			item.name = 'Unknown';
+		}
+
+		//set 'src' to undefined if it's neither a string nor undefined
+		if (item.src !== undefined && typeof item.src !== 'string') {
+			console.warn(`[MPO] inputfield_FieldObject() couldn't properly parse the 'options' array as item Nr. "${key}" had neither a string nor undefined as 'src': `, item.src);
+			item.src = undefined;
+		}
+
+		//delete the array item if 'value' isn't valid
+			//do this one last so all other warnings are also immediately printed
+		if (typeof item.value !== 'string') {
+			console.warn(`[MPO] inputfield_FieldObject() couldn't parse the 'options' array as item Nr. "${key}" had a non-string as 'value': `, item.value, ` - Option will now be removed.`);
+			delete attributes.options[key];
+			continue;
+		}
+	}
+
+	//if it's an empty array then delete it to remove clutter
+	if (attributes.options.length === 0) {
+		delete attributes.options;
+	}
+
+
+	// # 'defaultValue' (pre-host - 1/2)
+		//this has to be done after verifying 'options' and 'checkboxValue' as those attributes are needed in here
+		//has to be done before 'host'
+
+	//replace 'defaultValue' with 'checkboxValue' if necessary
+		//this will only apply if it's a checkbox and 'defaultValue' is `true`
+	if (specifics.fieldType === 'checkbox' && attributes.defaultValue === true) {
+		attributes.defaultValue = attributes.checkboxValue;
+	}
+
+	//check if 'defaultValue' is invalid
+	if (attributes.defaultValue === undefined || inputfield_validateValue(attributes.defaultValue, {fieldType: specifics.fieldType, attributes: attributes}) !== true) {
+
+		//complain about it if necessary
+		if (attributes.defaultValue !== undefined) {
+			console.warn(`[MPO] inputfield_FieldObject() received a invalid value as 'defaultValue' for input-field "${this.id}": `, attributes.defaultValue);
+		}
+
+		//and delete it
+		delete attributes.defaultValue;
+	}
+
+
+	// # 'host'
+		//has to be done after all "behaviour attributes"
+		//has to be done before 'addToForm'
+
+	//if 'host' is invalid...
+	if (typeof attributes.host !== 'string') {
+
+		//complain if necessary
+		if (attributes.host !== undefined) {
+			console.warn(`[MPO] inputfield_FieldObject() received a non-string as 'host' for input-field "${this.id}": `, attributes.host);
+		}
+
+		//...then delete it (no host will be used)
+		delete attributes.host;
+
+	//if 'host' is valid then set it up
+	} else {
+
+		//get the HostObject
+		let hostObj = inputfield_getHostObject(attributes.host);
+
+		//if the host doesn't exist yet then create it
+		if (hostObj === null) {
+			//setup the host
+			hostObj = inputfield_setupHost(attributes.host, {
+				childList: []
+			});
+		}
+
+		//add this input-field to the host - quick summary:
+			//all "behaviour attributes" are synced
+			//if an attribute in here is NOT specified then take the host's value
+			//if an attribute in here is     specified then overwrite the host
+			//attributes from this input-field take priority over the host's because this input-field is newer
+
+		//add it to it's list
+		hostObj.childList.push(this.id);
+
+		//list of all "behaviour attributes"
+		const behaviourAttributes = ['defaultValue', 'onchange', 'tag', 'addToForm'];
+
+		//check for specified attributes
+		for (const behaviourKey of behaviourAttributes) {
+
+			//if it's specified here then overwrite the host
+			if (attributes[behaviourKey] !== undefined) {
+
+				//if it's 'addToForm' then verify that...
+				if (behaviourKey === 'addToForm') {
+					//this is called for the host, not the input-field
+					hostObj.belongsToForm = inputfield_verifyFormAttributes({
+						formsAdd: attributes.addToForm,
+						name: attributes.host,
+						tag: hostObj.tag,
+						value: hostObj.value,
+						belongsToForm: hostObj.belongsToForm,
+						fieldOrHost: 'host'
+					});
+
+					//and also replace the attribute
+					hostObj.attributes.addToForm = hostObj.belongsToForm;
+
+				//...and if not then simply replace the hosts attribute
+				} else {
+					hostObj.attributes[behaviourKey] = attributes[behaviourKey];
+				}
+			}
+
+			//if it's not specified then get it from it's host
+				//TODO: what if the host's attribute is also undefined??
+			if (attributes[behaviourKey] === undefined) {
+				attributes[behaviourKey] = hostObj.attributes[behaviourKey];
+			}
+		}
+	}
+
+	//set 'belongsToHost'
+		//use `null` instead if no host is specified
+	this.belongsToHost = attributes.host ?? null;
+
+
+	// # 'defaultValue' (post-host - 2/2)
+
+	//if 'defaultValue' still hasn't been set then get a default value
+	if (attributes.defaultValue === undefined) {
+		attributes.defaultValue = inputfield_getDefaultValue(specifics.fieldType, attributes);
+	}
+
+	//if 'startingValue' wasn't specified yet then set it to the 'defaultValue'
+		//NOTE: Do NOT verify this! This can take a host's value which can be invalid for this field. That's how hosts work.
+	if (this.startingValue === undefined) {
+		this.startingValue = attributes.defaultValue;
+	}
+
+
+	// # 'addToForm'
+		//has to be done after 'host' & 'tag'
+		//has to be done after 'defaultValue' because the 'startingValue' property is needed
+
+	//if a host is specified then delete it because in that case it was already applied to the host
+	if (this.belongsToHost !== null) {
+		delete attributes.addToForm;
+
+	//otherwise verify and apply it
+	} else {
+		attributes.addToForm = inputfield_verifyFormAttributes({
+			formsAdd: attributes.addToForm,
+			name: this.id,
+			tag: this.tag,
+			value: this.startingValue,
+			belongsToForm: [],
+			fieldOrHost: 'field'
+		});
+
+		//if it's an empty array then delete it
+		if (attributes.addToForm.length === 0) {
+			delete attributes.addToForm;
+		}
+	}
 
 
 	// # 'beforeText'
@@ -1081,7 +1340,7 @@ function inputfield_FieldObject (specifics={}) {
 	if (typeof attributes.HTMLAttributes === 'object') {
 		for (key in attributes.HTMLAttributes) {
 
-			//if it's 'data-fieldid' then complain about it but still apply it
+			//if it's an internally used attribute then complain about it but still apply it
 				//mainly because we can't stop the user from applying a "forbidden" attribute afterwards (not without serious draw-backs at least)
 				//so why not already allow it during the elements creation? this way we can at least warn them about it
 			if (['data-fieldid', 'data-holdsvalue', 'data-labelforfieldid'].indexOf(key) !== -1) {
@@ -1104,209 +1363,6 @@ function inputfield_FieldObject (specifics={}) {
 	}
 
 
-	// # 'content'
-
-	//if 'content' is neither a string nor undefined then complain and delete it
-		//this attribute has to be a string but undefined is valid too (as undefined == "don't use this")
-	if (typeof attributes.content !== 'string' && attributes.content !== undefined) {
-		console.warn(`[MPO] inputfield_FieldObject() received a non-string as 'content': `, attributes.content);
-		delete attributes.content;
-	}
-
-
-	// # 'options'
-
-	//set 'options' to an empty array if it's undefined
-	attributes.options ??= [];
-
-	//if 'options' isn't an array then complain about it and set it to an empty array
-	if (Array.isArray(attributes.options) !== true) {
-		console.warn(`[MPO] inputfield_FieldObject() received a non-array as 'options': `, attributes.options);
-		attributes.options = [];
-	}
-
-	//loop through all options to make sure they're all valid
-	for (const key in attributes.options) {
-		const item = attributes.options[key];
-
-		//delete the array item if it's not an object
-		if (typeof item !== 'object') {
-			console.warn(`[MPO] inputfield_FieldObject() couldn't parse the 'options' array as item Nr. "${key}" wasn't a object: `, item);
-			delete attributes.options[key];
-			continue;
-		}
-
-		//set 'name' to 'Unknown' if it's not valid
-		if (typeof item.name !== 'string') {
-			console.warn(`[MPO] inputfield_FieldObject() couldn't properly parse the 'options' array as item Nr. "${key}" had a non-string as 'name': `, item.name);
-			item.name = 'Unknown';
-		}
-
-		//set 'src' to undefined if it's neither a string nor undefined
-		if (item.src !== undefined && typeof item.src !== 'string') {
-			console.warn(`[MPO] inputfield_FieldObject() couldn't properly parse the 'options' array as item Nr. "${key}" had neither a string nor undefined as 'src': `, item.src);
-			item.src = undefined;
-		}
-
-		//delete the array item if 'value' isn't valid
-			//do this one last so all other warnings are also immediately printed
-		if (typeof item.value !== 'string') {
-			console.warn(`[MPO] inputfield_FieldObject() couldn't parse the 'options' array as item Nr. "${key}" had a non-string as 'value': `, item.value, ` - Option will now be removed.`);
-			delete attributes.options[key];
-			continue;
-		}
-	}
-
-	//if it's an empty array then delete it to remove clutter
-	if (attributes.options.length === 0) {
-		delete attributes.options;
-	}
-
-
-	// # 'autoAddToForm'
-
-	//check if 'autoAddToForm' is true
-	if (attributes.autoAddToForm === true) {
-
-		//check if it's a form, if yes then add this field to the observer
-		if (specifics.fieldType === 'form') {
-			this.observers.formObserver.observe(specifics.elem, inputfield_formObserverOptions);
-
-		//if it's not a form then complain about it and do nothing else
-		} else {
-			console.warn(`[MPO] inputfield_FieldObject() received \`true\` for 'autoAddToForm' despite the input-field not being a form. ID: "${this.id}"`);
-		}
-
-	//if it's not `true` then delete it
-	} else {
-
-		//if it's neither a boolean nor `undefined` then complain
-			//note that we already checked if it's `true` before
-		if (attributes.autoAddToForm !== false && attributes.autoAddToForm !== undefined) {
-			console.warn(`[MPO] inputfield_FieldObject() received a non-boolean as 'autoAddToForm': `, autoAddToForm);
-		}
-
-		delete attributes.autoAddToForm;
-	}
-
-
-	// # 'host'
-
-	//if 'host' is invalid...
-	if (typeof attributes.host !== 'string') {
-
-		//complain if necessary
-		if (attributes.host !== undefined) {
-			console.warn(`[MPO] inputfield_FieldObject() received a non-string as 'host' for input-field "${this.id}": `, attributes.host);
-		}
-
-		//...then delete it (no host will be used)
-		delete attributes.host;
-
-	//if 'host' is valid then set it up
-	} else {
-
-		//get the HostObject
-		let hostObj = inputfield_getHostObject(attributes.host);
-
-		//if the host doesn't exist yet then create it
-		if (hostObj === null) {
-			//setup the host
-				//note that most attributes in here weren't verified yet, but the host will verify them before adding them anyway
-				//and some of the attributes verified after this rely on the host already being setup
-				//TODO: should really all of these attributes be synced???
-			hostObj = inputfield_setupHost(attributes.host, {
-				childList: [],
-				defaultValue: attributes.defaultValue,
-				onchange: attributes.onchange,
-				tag: attributes.tag,
-				addToForm: attributes.addToForm
-			});
-		}
-
-		//add this input-field to the host:
-
-		//add it to it's list
-		hostObj.childList.push(this.id);
-
-		//if no 'defaultValue' was specified then let this input-field start with the host's value
-			//doesn't have to be validated here since 'startingValue' gets validated anyway
-		if (attributes.defaultValue === undefined) {
-			this.startingValue = hostObj.value;
-		}
-
-		//TODO: Update the hosts attributes with all attributes specified in here
-	}
-
-	//set 'belongsToHost'
-		//use `null` instead if no host is specified
-	this.belongsToHost = attributes.host ?? null;
-
-
-	// # 'defaultValue'
-
-	//check if 'defaultValue' is invalid
-		//this has to be done after verifying 'options' and 'checkboxValue' as those attributes are needed in here
-	if (attributes.defaultValue === undefined || inputfield_validateValue(attributes.defaultValue, {fieldType: specifics.fieldType, attributes: attributes}) !== true) {
-
-		//complain about an invalid value (but only if necessary)
-		if (attributes.defaultValue !== undefined) {
-			console.warn(`[MPO] inputfield_FieldObject() received a invalid value as 'defaultValue' for input-field "${this.id}": `, attributes.defaultValue);
-		}
-
-		//and replace 'defaultValue' with a valid default value
-		attributes.defaultValue = inputfield_getDefaultValue(specifics.fieldType, attributes);
-	}
-
-
-	// # 'startingValue' property
-	//needs to be done after the host bit since it might change this value
-
-	//if 'startingValue' wasn't specified yet or is not valid then set it to the 'defaultValue'
-	if (this.startingValue === undefined || inputfield_validateValue(attributes.defaultValue, {fieldType: specifics.fieldType, attributes: attributes}) !== true) {
-		this.startingValue = attributes.defaultValue;
-	}
-
-
-	// # 'addToForm'
-
-	//if a host is specified then delete it because in that case it was already applied to the host
-	if (this.belongsToHost !== null) {
-		delete attributes.addToForm;
-
-	//otherwise verify and apply it
-	} else {
-		attributes.addToForm = inputfield_verifyAddToForm({
-			addToForm: attributes.addToForm,
-			key: specifics.elem,
-			fieldOrHost: 'field'
-		});
-
-		//if it's an empty array then delete it
-		if (attributes.addToForm.length === 0) {
-			delete attributes.addToForm;
-		}
-	}
-
-
-	// # 'tag'
-
-	//if the tag is neither a string nor `undefined` then complain and delete it
-	if (typeof attributes.tag !== 'string' && attributes.tag !== undefined) {
-		console.warn(`[MPO] inputfield_FieldObject() received a non-string as 'tag':`, specifics.tag);
-		delete attributes.tag;
-	}
-
-
-	// # 'onchange'
-
-	//complain and delete it if it's not a function
-	if (attributes.onchange !== undefined && typeof attributes.onchange !== 'function') {
-		console.warn(`[MPO] inputfield_FieldObject() received a non-function as 'onchange': `, attributes.onchange);
-		delete attributes.onchange;
-	}
-
-
 
 	// === SETTING THE ACTUAL PROPERTIES ===
 
@@ -1321,11 +1377,11 @@ function inputfield_FieldObject (specifics={}) {
 
 	//set 'variation'
 		//if no variation has been specified then get the default one
-	this.variation = specifics.attributes.variation;
+	this.variation = attributes.variation;
 
 	//set 'value'
 		//if it's a form then set it to an empty object - otherwise set it to the value specified
-	this.value = (specifics.fieldType === 'form') ? {} : specifics.value;
+	this.value = (specifics.fieldType === 'form') ? {} : attributes.value;
 
 	//set 'displayedValue'
 		//this will always be the same as 'value' when starting out
@@ -1335,18 +1391,13 @@ function inputfield_FieldObject (specifics={}) {
 	this.nullValue = inputfield_getDefaultValue(this.fieldType);
 
 	//set 'attributes'
-	this.attributes = specifics.attributes;
+	this.attributes = attributes;
 
 	//set 'belongsToHost'
 		//has been defined alongside the 'host' and 'defaultValue' attributes
 
 	//set 'tag'
-		//if 'tag' is `undefined` then use the ID instead
-	if (specifics.attributes.tag === undefined) {
-		this.tag = this.id;
-	} else {
-		this.tag = specifics.attributes.tag;
-	}
+		//has been defined during the 'tag' attribute
 
 	//set 'propertyChanged' if it's a form
 		//always defaults to an empty string
@@ -1355,11 +1406,11 @@ function inputfield_FieldObject (specifics={}) {
 	}
 
 	//set 'belongsToForm'
-		//if it isn't an array already then use an empty array
-	if (Array.isArray(specifics.attributes.addToForm) !== true) {
-		this.belongsToForm = [];
+		//if it's not an array then use an empty array
+	if (Array.isArray(attributes.addToForm) === true) {
+		this.belongsToForm = attributes.addToForm;
 	} else {
-		this.belongsToForm = specifics.attributes.addToForm;
+		this.belongsToForm = [];
 	}
 
 	//create a list of all input-fields this form contains (but only if it is a form)
@@ -1371,7 +1422,7 @@ function inputfield_FieldObject (specifics={}) {
 	}
 
 	//set 'startingValue'
-		//has been defined alongside the 'host' and 'defaultValue' attributes
+		//set alongside 'defaultValue'
 
 	//set 'observers'
 		//already set near the start of this function
@@ -1383,24 +1434,31 @@ function inputfield_FieldObject (specifics={}) {
  * 		specifics [Object]
  * 			Includes the following properties:
  *
+ * 				host [String]
+ * 					The host string.
+ *
  * 				childList [Array] <optional>
  * 					A list of all DOM elements that belong to the host. Has to be DOM elements, not strings!
  * 					Defaults to creating an empty array.
  *
- * 				defaultValue [*any*] <undefined>
- * 					The default value it should have.
+ * 				attributes [Object] <optional>
+ * 					Includes the following attributes:
  *
- * 				tag [String] <'host'>
- * 					The tag of the host. See the 'tag' attribute for more info.
- * 					Uses the tag of the first child and then simply 'host' if no tag is specified.
+ * 						defaultValue [*any*] <undefined>
+ * 							The default value the host should have.
+ * 							This will also be the value the host starts out with.
  *
- * 				onchange [Function] <optional>
- * 					The function that gets executed when the value changes. Will default to not doing anything.
+ * 						tag [String] <'host'>
+ * 							The tag of the host. See the 'tag' attribute for more info.
+ * 							Uses the tag of the first child and then simply 'host' if no tag is specified.
  *
- * 				addToForm [Array/DOM Element/String]
- * 					The form element it should be added to. Can be either the DOM element of the form or it's ID (can be in string-form, so 6 and '6' are both fine).
- * 					Use the DOM element if it's inside a DocumentFragment or other places that are "hidden".
- * 					Can also be an array consisting of multiple DOM elements/field-IDs.
+ * 						onchange [Function] <optional>
+ * 							The function that gets executed when the value changes. Will default to not doing anything.
+ *
+ * 						addToForm [Array/DOM Element/String] <optional>
+ * 							The form element it should be added to. Can be either the DOM element of the form or it's ID (can be in string-form, so 6 and '6' are both fine).
+ * 							Use the DOM element if it's inside a DocumentFragment or other places that are "hidden".
+ * 							Can also be an array consisting of multiple DOM elements/field-IDs.
  *
  * 	Constructs:
  * 		childList [Array]
@@ -1418,17 +1476,16 @@ function inputfield_FieldObject (specifics={}) {
  * 			This is done in case the value is changed multiple times in quick succession to avoid updating every single child every time.
  * 			It's also needed when the website is created in case some of it's children are still in a DocumentFragment and can't be found until the site is fully loaded.
  *
- * 		defaultValue [*any*]
- * 			The default value it should have.
- *
  * 		tag [String]
- * 			The tag of the input-field. Only needed for input-fields that are part of a form.
- *
- * 		onchange [Function]
- * 			The function that gets executed when the value changes.
+ * 			The tag of the input-field. Only needed for hosts that are part of a form.
+ * 			If no tag was specified then this will be the host's name. This will always be a string.
+ * 			If you specifically need the value from the user then use 'attributes.tag', that one will be `undefined` if nothing was specified.
  *
  * 		belongsToForm [Array]
  * 			A list of all forms this belongs to. Is an array consisting of DOM elements.
+ *
+ * 		attributes [Object]
+ * 			A list of all attributes. All attributes are listed above under 'Args'.
  */
 function inputfield_HostObject (specifics={}) {
 	//complain and use defaults if 'specifics' is invalid
@@ -1437,12 +1494,87 @@ function inputfield_HostObject (specifics={}) {
 		specifics = {};
 	}
 
+	//return if the host isn't a string
+	if (typeof specifics.host !== 'string') {
+		console.warn(`[MPO] inputfield_HostObject() received a non-string as 'host': `, specifics.host);
+		return;
+	}
+
+	//replace 'attributes' with a empty object if it isn't already an object
+	if (typeof specifics.attributes !== 'object') {
+		specifics.attributes = {};
+	}
+
+
+	//for quick access
+	let attributes = specifics.attributes;
+
+
+
+	// === VERIFY ATTRIBUTES ===
+
+
+	// # 'tag'
+
+	//if it's not a string then delete it
+	if (typeof attributes.tag !== 'string') {
+
+		//complain if necessary
+		if (attributes.tag !== undefined) {
+			console.warn(`[MPO] inputfield_HostObject() received a non-string as 'tag': `, attributes.tag);
+		}
+
+		delete attributes.tag;
+	}
+
+	//set the 'tag' property
+		//use a default tag if no tag has been specified
+	if (typeof attributes.tag === 'string') {
+		this.tag = attributes.tag;
+	} else {
+		this.tag = specifics.host;
+	}
+
+
+	// # 'onchange'
+
+	//complain and delete if it's not a function
+	if (typeof attributes.onchange !== 'function' && attributes.onchange !== undefined) {
+		console.warn(`[MPO] inputfield_HostObject() received a non-function as 'onchange': `, attributes.onchange);
+		delete attributes.onchange;
+	}
+
+
+	// # 'defaultValue'
+
+	//nothing has to be done here, any value is valid on a host
+		//I guess `undefined` would be one "invalid" value but what are we gonna do about it? delete it? so it's undefined again?
+
+
+	// # 'addToForm'
+		//has to be done after 'defaultValue'
+
+	//verify and apply it
+	attributes.addToForm = inputfield_verifyFormAttributes({
+		formsAdd: attributes.addToForm,
+		name: specifics.host,
+		tag: this.tag,
+		value: specifics.defaultValue,
+		belongsToForm: [],
+		fieldOrHost: 'host'
+	});
+
+	//delete if it's an empty array
+	if (attributes.addToForm.length === 0) {
+		delete attributes.addToForm;
+	}
+
 
 
 	// === VERIFY PROPERTIES ===
 
 
-	// # 'childList' (part 1 of 2)
+	// # 'childList'
 
 	//set the 'childList' to an empty array if it hasn't been defined yet
 	specifics.childList ??= [];
@@ -1458,76 +1590,21 @@ function inputfield_HostObject (specifics={}) {
 
 		//remove all entries that aren't an <input-field> element
 		if (Object.isDOMElement(item) !== true || item.tagName !== 'INPUT-FIELD') {
-			console.warn(`[MPO] inputfield_HostObject() found a non-<input-field> inside the 'childList' array: "${item}" (at index "${index}").`);
+			console.warn(`[MPO] inputfield_HostObject() found a non-<input-field> inside the 'childList' array (at index "${index}"): `, item);
 			return true;
 		}
-	});
-
-
-	// # 'tag'
-
-	//if it's not a string then use the default one
-	if (typeof specifics.tag !== 'string') {
-
-		//complain if necessary
-		if (specifics.tag !== undefined) {
-			console.warn(`[MPO] inputfield_HostObject() received a non-string as 'tag': "${specifics.tag}".`);
-		}
-
-		//try to get the 'tag' property from the first child
-		if (specifics.childList.length >= 1) {
-
-			//get the 'tag' from the FieldObject
-				//'skipSetupCheck' is used to avoid setting up a input-field
-				//we only need the 'tag' attribute here, nothing else
-				//and if a input-field isn't setup yet then setting it up won't change anything because we can't provide attributes to it
-				//aside from that, this will also cause issues since this function is likely called during 'FieldObject()' and chances are doing this would setup that very input-field again
-
-				//get 'tag' from attributes, NOT from the FieldObject directly!
-				//the FieldObject 'tag' property uses the ID if no tag was specified while the 'attributes' one doesn't do that
-				//and we don't want to use something like '14' as a tag
-			specifics.tag = inputfield_getFieldObject(specifics.childList[0], {skipSetupCheck: true})?.attributes?.tag;
-		}
-
-		//use default tag if it's not a string
-		if (typeof specifics.tag !== 'string') {
-			specifics.tag = 'host';
-		}
-	}
-
-
-	// # 'childList' (part 2 of 2)
-
-	//convert all <input-field> elements to their ID
-	specifics.childList.removeEachIf((item, index) => {
 
 		//get the FieldObject
 		let fieldObj = inputfield_getFieldObject(item, {skipSetupCheck: true});
 
 		//remove the entry if the FieldObject couldn't be found
 		if (typeof fieldObj?.id !== 'string') {
-			console.warn(`[MPO] inputfield_HostObject() found an invalid <input-field> element inside the 'childList' array (could not get it's ID): `, item);
+			console.warn(`[MPO] inputfield_HostObject() found an invalid <input-field> element inside the 'childList' array (could not get it's ID - at index "${index}"): `, item);
 			return true;
 		}
 
 		//set the array entry to it's ID
 		item = fieldObj.id;
-	});
-
-
-	// # 'onchange'
-
-	//use an empty function if 'onchange' isn't a function
-	specifics.onchange = (typeof specifics.onchange !== 'function') ? (() => {return;}) : specifics.onchange;
-
-
-	// # 'addToForm'
-
-	//verify and apply it
-	specifics.addToForm = inputfield_verifyAddToForm({
-		addToForm: specifics.addToForm,
-		key: specifics.host,
-		fieldOrHost: 'host'
 	});
 
 
@@ -1541,15 +1618,23 @@ function inputfield_HostObject (specifics={}) {
 		//note that if it hasn't been specified then it'll be undefined which is what we need then anyway
 	this.value = specifics.defaultValue;
 
-	//set the 'onchange' function
-		//use a empty function if it hasn't been defined
-	this.onchange = specifics.onchange;
+	//set 'valueUpdatePending'
+		//there's no update pending right now so it's always `false`
+	this.valueUpdatePending = false;
 
-	//set tag
-	this.tag = specifics.tag;
+	//set attributes
+	this.attributes = attributes;
 
-	//set belongsToForm
-	this.belongsToForm = specifics.addToForm;
+	//set 'tag'
+		//has been defined during the 'tag' attribute
+
+	//set 'belongsToForm'
+		//if it's not an array then use an empty array
+	if (Array.isArray(attributes.addToForm) === true) {
+		this.belongsToForm = attributes.addToForm;
+	} else {
+		this.belongsToForm = [];
+	}
 }
 
 /**	Creates a 'LabelObject' that saves all info related to a label.
@@ -1696,93 +1781,317 @@ function inputfield_LabelObject (specifics={}) {
 	specifics.labelElem.setAttribute('data-labelforfieldid', this.labelForFieldID);
 }
 
-/**	Verifies and applies the 'addToForm' attribute.
+/**	Verifies and applies the 'forms', 'formsAdd', 'formsRemove' attribute.
  *
- * 	Note that this also applies the attribute, meaning the element specified will get properly added to all forms.
+ * 	Note that this also applies the attributes, meaning the element specified will get properly added to/removed from all forms.
  *
  * 	Args:
  * 		specifics [Object]
  * 			Includes the following properties:
  *
- * 				addToForm [Array/DOM Element/String]
- * 					The form element it should be added to. Can be either the DOM element of the form or it's ID (can be in string-form, so 6 and '6' are both fine).
- * 					Use the DOM element if it's inside a DocumentFragment or other places that are "hidden".
- * 					Can also be an array consisting of multiple DOM elements/field-IDs.
- *
- * 				elem [*any*]
+ * 				target [*any*]
  * 					The input-field or host.
  * 					Will be added to all forms automatically.
+ * 					Can be ignored if the individual arguments are given (see below).
  *
  * 				fieldOrHost [String]
  * 					Whether it's a input-field or a host.
  * 					Can be either 'field' or 'host'.
  *
+ * 				forms [Array/DOM Element/String]
+ * 					A list of all forms it should be apart of.
+ * 					This is a definitive list. If the input-field is part of froms that aren't included here then it will be removed from those.
+ *
+ * 					Can be either the DOM element of the form or it's ID.
+ * 					Can also be an array consisting of those.
+ *
+ * 				formsAdd [Array/DOM Element/String]
+ * 					A list of forms the input-field should be added to.
+ * 					If the same form is specified in both 'formsAdd' and 'formsRemove' then nothing will happen, it will neither be added nor removed to the form.
+ *
+ * 				formsRemove [Array/DOM Element/String]
+ * 					A list of forms the input-field should be removed from.
+ * 					If the same form is specified in both 'formsAdd' and 'formsRemove' then nothing will happen, it will neither be added nor removed to the form.
+ *
+ *
+ * 				// if 'target' is ignored then use the following properties instead:
+ *
+ * 				name [String] <optional>
+ * 					Either an input-field's ID or a host's name.
+ * 					If this isn't present it will be taken from the 'target' instead.
+ *
+ * 				tag [String] <optional>
+ * 					The input-field's or host's tag.
+ * 					If this isn't present it will be taken from the 'target' instead.
+ *
+ * 				value [*any*] <optional>
+ * 					The input-field's or host's value.
+ * 					If this isn't present it will be taken from the 'target' instead.
+ *
+ * 				belongsToForm [Array] <optional>
+ * 					The already existing 'belongsToForm' property of the input-field/host.
+ * 					If this isn't present it will be taken from the 'target' instead.
+ *
  * 	Returns [Array]:
  * 		Will be an empty array if something went wrong (or if no entries were valid). See console for warnings.
- * 		Otherwise it will return an array with all entries that are valid.
+ * 		Otherwise it will return an array that represents the 'forms' attribute.
  */
-function inputfield_verifyAddToForm (specifics) {
+function inputfield_verifyFormAttributes (specifics) {
 	//complain and return if 'specifics' is invalid
 	if (typeof specifics !== 'object') {
-		console.warn(`[MPO] inputfield_verifyAddToForm() received a non-object as 'specifics': "${specifics}".`);
+		console.warn(`[MPO] inputfield_verifyFormAttributes() received a non-object as 'specifics': "${specifics}".`);
 		return [];
 	}
 
 	//complain and return if 'fieldOrHost' is invalid
 	if (['field', 'host'].indexOf(specifics.fieldOrHost) === -1) {
-		console.warn(`[MPO] inputfield_verifyAddToForm() received a invalid 'fieldOrHost': "${specifics.fieldOrHost}" (can either be 'field' or 'host').`);
+		console.warn(`[MPO] inputfield_verifyFormAttributes() received a invalid 'fieldOrHost': "${specifics.fieldOrHost}" (can either be 'field' or 'host').`);
 		return [];
 	}
 
-	//for quick access
-	let addToForm = specifics.addToForm;
 
-	//if 'addToForm' is nullish (null / undefined) then make it an array
-	addToForm ??= [];
 
-	//if 'addToForm' is not an array then add it inside an array
-	if (Array.isArray(addToForm) !== true) {
-		addToForm = [addToForm];
+	// === GET THE FieldObject OR HostObject ===
+
+
+	//this will either be the FieldObject or the HostObject
+	let targetObj;
+
+	//if 'target' was provided then try to get the FieldObject or HostObject
+	if (typeof specifics.target === 'string' || (Object.isDOMElement(specifics.target) && specifics.target.tagName === 'INPUT-FIELD')) {
+
+		//get the FieldObject if it's a field
+		if (specifics.fieldOrHost === 'field') {
+			targetObj = inputfield_getFieldObject(specifics.target);
+
+			//if the FieldObject could be found then look at it
+			if (targetObj !== null) {
+
+				//if it's part of a host then shift focus towards that instead
+				if (typeof targetObj.belongsToHost === 'string') {
+					specifics.fieldOrHost = 'host';
+					specifics.elem = targetObj.belongsToHost;
+
+				//if it isn't part of a host then fill in any arguments that aren't already present
+				} else {
+					specifics.name          ??= targetObj.id           ;
+					specifics.tag           ??= targetObj.tag          ;
+					specifics.value         ??= targetObj.value        ;
+					specifics.belongsToForm ??= targetObj.belongsToForm;
+				}
+			}
+
+		}
+
+		//get the HostObject if it's a host
+			//note that this should NOT be a 'else if {}' because this can also apply if a input-field belonged to a host
+		if (specifics.fieldOrHost === 'host') {
+			targetObj = inputfield_getHostObject(specifics.target);
+
+			//if the HostObject was found then fill in any arguments that aren't already present
+			if (targetObj !== null) {
+				specifics.name          ??= targetObj.id           ;
+				specifics.tag           ??= targetObj.tag          ;
+				specifics.value         ??= targetObj.value        ;
+				specifics.belongsToForm ??= targetObj.belongsToForm;
+			}
+		}
 	}
 
-	//loop through the array and add the input-field to all specified forms while removing any array entry that's not valid
-		//'.removeEachIf()' loops through all array items in reverse and when returning `true` it removes said array item
-	addToForm.removeEachIf((item, index) => {
+	//complain and return if 'name' isn't a string
+	if (typeof specifics.name !== 'string') {
+		console.warn(`[MPO] inputfield_verifyFormAttributes() received a non-string as 'name': `, specifics.name, ` - It's possible this value was taken from the FieldObject/HostObject if it wasn't provided.`);
+		return [];
+	}
 
-		//convert it to a DOM element if it only specified the fieldID
-		if (typeof item === 'string') {
-			item = inputfield_getElement(item, {referenceElem: specifics.key});
+	//complain and return if 'tag' isn't a string
+	if (typeof specifics.tag !== 'string') {
+		console.warn(`[MPO] inputfield_verifyFormAttributes() received a non-string as 'tag': `, specifics.tag, ` - It's possible this value was taken from the FieldObject/HostObject if it wasn't provided.`);
+		return [];
+	}
 
-			//complain and remove the entry if the element couldn't be found
-			if (item === false) {
-				console.warn(`[MPO] Could not find the input-field with the ID "${item}" while trying to scan the 'addToForm' attribute during the creation of input-field "${this.id}". This could be a cause of using DocumentFragments.`);
-				return true;
+	//complain and return if 'value' is undefined
+		//but allow it if it's a host since hosts can have `undefined` as a value
+	if (specifics.value === undefined && specifics.fieldOrHost !== 'host') {
+		console.warn(`[MPO] inputfield_verifyFormAttributes() received a undefined 'value': `, specifics.value, ` - It's possible this value was taken from the FieldObject/HostObject if it wasn't provided.`);
+		return [];
+	}
+
+	//complain and return if 'belongsToForm' isn't a string
+	if (Array.isArray(specifics.belongsToForm) !== true) {
+		console.warn(`[MPO] inputfield_verifyFormAttributes() received a non-array as 'belongsToForm': `, specifics.belongsToForm, ` - It's possible this value was taken from the FieldObject/HostObject if it wasn't provided.`);
+		return [];
+	}
+
+
+
+	// === PARSE THE ATTRIBUTES ===
+
+	//if 'formsAdd' is nullish then replace it with an array
+	specifics.formsAdd ??= [];
+
+	//if it's still not an array then add it to an empty array
+	if (Array.isArray(specifics.formsAdd) !== true) {
+		specifics.formsAdd = [specifics.formsAdd];
+	}
+
+
+	//if 'formsRemove' is nullish then replace it with an array
+	specifics.formsRemove ??= [];
+
+	//if it's still not an array then add it to an empty array
+	if (Array.isArray(specifics.formsRemove) !== true) {
+		specifics.formsRemove = [specifics.formsRemove];
+	}
+
+
+	//make sure 'forms' is an array (unless it's null or undefined)
+	if (Array.isArray(specifics.forms) !== true) {
+
+		//if it's undefined then replace it with an array...
+		if (specifics.forms === undefined || specifics.forms === null) {
+			specifics.forms = null;
+
+		//...otherwise add it to an empty array
+		} else {
+			specifics.forms = [specifics.forms];
+		}
+	}
+
+
+	//return if all of them are empty
+		//but no complaining because the point of this function is to verify these attributes and, by all means, empty attributes are valid!
+	if (specifics.formsAdd.length === 0 && specifics.formsRemove.length === 0 && specifics.forms === null) {
+		return [];
+	}
+
+
+
+	// === APPLY THE ATTRIBUTES ===
+
+	//get the 'belongsToForm' property
+	let belongsToForm = [...new Set(specifics.belongsToForm)];
+
+	//for quick access
+		//convert it to a set and then back into an array
+		//this removes all duplicate values
+	let forms;
+	let formsAdd    = [...new Set(specifics.formsAdd   )];
+	let formsRemove = [...new Set(specifics.formsRemove)];
+
+	//do the same for 'forms' but keep it `null`
+	if (specifics.forms === null) {
+		forms = null;
+	} else {
+		forms = [...new Set(specifics.forms)];
+	}
+
+	//quick summary:
+		//divide 'forms' into 'formsRemove' and 'formsAdd'
+		//apply 'formsRemove' & check for duplicates in 'formsAdd'
+		//apply 'formsAdd'
+
+
+	//if a definitive form list was specified then split it into 'formsRemove' and 'formsAdd'
+	if (forms !== null) {
+
+		//add all entries to 'formsRemove' that are in 'belongsToForm' but not in the 'forms' argument
+		for (const item of belongsToForm) {
+			if (forms.indexOf(item) === -1) {
+				formsRemove.push(item);
 			}
 		}
 
-		//delete any array entries that are invalid
-			//if it's not a DOM element then delete it
-			//if it's not the first instance of this exact value then delete it
-		if (Object.isDOMElement(item) !== true || addToForm.indexOf(item) !== index) {
-			return true;
-		}
+		//add all 'forms' entries to 'formsAdd'
+		formsAdd = formsAdd.concat(forms);
 
-		//get the 'formChildren' from the input-field
-		const formChildren = inputfield_getFieldObject(item)?.formChildren;
+	//if 'forms' isn't specified then we shouldn't modify the list of forms, which means we're taking 'belongsToForm'
+	} else {
+		forms = belongsToForm;
+	}
 
-		//remove the item if 'formChildren' isn't an object
-			//this will also happen if the input-field specified wasn't valid
-		if (typeof formChildren !== 'object') {
-			return true;
-		}
-
-		//check if the element has already been added, if no then add it
-		if (formChildren[`${specifics.fieldOrHost}s`].indexOf(specifics.key) === -1) {
-			formChildren[`${specifics.fieldOrHost}s`].push(specifics.key);
+	//convert all IDs to DOM elements for 'formsAdd'
+		//this has to be done now so 'formsRemove' can properly check against this to actually remove duplicates
+	formsAdd.removeEachIf((item, index) => {
+		if (typeof item === 'string' || item?.tagName === 'INPUT-FIELD') {
+			item = inputfield_getElement(item);
 		}
 	});
 
-	return addToForm;
+
+	//apply 'formsRemove'
+	formsRemove.removeEachIf((item, index) => {
+
+		//convert the item to a DOM element
+		if (typeof item === 'string' || item?.tagName === 'INPUT-FIELD') {
+			item = inputfield_getElement(item);
+		}
+
+		//remove array item in both if it also exists in 'formsAdd'
+		const indexOf = formsAdd.indexOf(item);
+		if (indexOf !== -1) {
+			formsAdd.splice(indexOf, 1);
+			return true;
+		}
+
+		//get the FieldObject from the form...
+		let formObj = inputfield_getFieldObject(item);
+
+		//...and then check if it exists
+			//if not, complain and remove the item
+		if (formObj === null) {
+			console.warn(`[MPO] inputfield_verifyFormAttributes() received a invalid input-field for 'formsRemove' (couldn't get the FieldObject - at index "${index}"): `, item, ` - Item could have been added from the 'forms' attribute.`);
+			return true;
+		}
+
+		//check if the field/host is even part of the form's children
+			//if it is then remove it
+		const childIndex = formObj.formChildren[`${specifics.fieldOrHost}s`].indexOf(specifics.name);
+		if (childIndex !== -1) {
+			formObj.formChildren[`${specifics.fieldOrHost}s`].splice(childIndex, 1);
+		}
+
+		//remove this item from 'forms'
+			//but only if it's actually there
+		const formsIndex = forms.indexOf(item);
+		if (formsIndex !== -1) {
+			forms.splice(formsIndex, 1);
+		}
+	});
+
+	//apply 'formsAdd'
+	formsAdd.removeEachIf((item, index) => {
+
+		//get the FieldObject from the form
+		let formObj = inputfield_getFieldObject(item);
+
+		//and then check if it exists
+			//if not, complain and remove the item
+		if (formObj === null) {
+			console.warn(`[MPO] inputfield_verifyFormAttributes() received a invalid input-field for 'formsAdd' (couldn't get the FieldObject - at index "${index}"): `, item, ` - Item could have been added from the 'forms' attribute.`);
+			return true;
+		}
+
+		//add this item to the form's children
+			//but only if it isn't already there
+		const childIndex = formObj.formChildren[`${specifics.fieldOrHost}s`].indexOf(item);
+		if (childIndex === -1) {
+			formObj.formChildren[`${specifics.fieldOrHost}s`].push(specifics.name);
+		}
+
+		//add this item to 'forms'
+			//but only if it isn't already there
+		const formsIndex = forms.indexOf(item);
+		if (formsIndex === -1) {
+			forms.push(item);
+		}
+
+		//add the value to the form
+			//'onchange' and the host will be called by this which is intended as they might rely on the new property
+		inputfield_applyNewValue(item, specifics.value, {formProperty: specifics.tag});
+	});
+
+	return forms;
 }
 
 /**	Creates a input field.
@@ -2000,6 +2309,10 @@ function inputfield_setupField (specifics={}) {
  * 					The tag of the host. See the 'tag' attribute for more info.
  * 					Uses the tag of the first child and then simply 'host' if no tag is specified.
  *
+ * 				defaultValue [*any*] <undefined>
+ * 					The default value the host should have.
+ * 					This will also be the value the host starts out with.
+ *
  * 				onchange [Function] <optional>
  * 					The function that gets executed when the value changes. Will default to not doing anything.
  *
@@ -2028,9 +2341,12 @@ function inputfield_setupHost (host, specifics={}) {
 	const hostObj = new inputfield_HostObject({
 		host: host,
 		childList: specifics.childList,
-		onchange: specifics.onchange,
-		tag: specifics.tag,
-		addToForm: specifics.addToForm
+		attributes: {
+			onchange: specifics.onchange,
+			tag: specifics.tag,
+			defaultValue: specifics.defaultValue,
+			addToForm: specifics.addToForm
+		}
 	});
 
 	//apply the HostObject to the Map
@@ -2361,9 +2677,9 @@ function inputfield_validateValue (value, specifics={}) {
 			return false;
 
 		case 'button':
-			//if it's `undefined` then it's correct
-				//buttons should always be `undefined`
-			if (value === undefined) {
+			//if it's `null` then it's correct
+				//buttons should always be `null`
+			if (value === null) {
 				return true;
 			}
 			return false;
@@ -2372,9 +2688,6 @@ function inputfield_validateValue (value, specifics={}) {
 			//with this the browser automatically checks whether the value is allowed for the 'color' CSS property
 				//this means that anything from 'red' to '#ffffff' to 'rgba(0, 0, 0, 0)' will be true just like regular CSS
 			return CSS.supports('color', value);
-
-		case 'file':
-			break;
 
 		default:
 			console.warn(`[MPO] Unknown 'fieldType' in 'inputfield_validateValue()': "${fieldType}"`);
@@ -2419,19 +2732,16 @@ function inputfield_getDefaultValue (fieldType, attributes) {
 			return 0;
 
 		case 'button':
-			return undefined;
+			return null;
 
 		case 'color':
 			return '#000000';
-
-		case 'file':
-			return undefined;
 
 		default:
 			console.warn(`[MPO] Unknown 'fieldType' in 'inputfield_getDefaultValue()': "${fieldType}"`);
 			break;
 	}
-	return undefined;
+	return null;
 }
 
 /**	Gets executed when a input field is changed.
@@ -2508,6 +2818,12 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 		specifics = {};
 	}
 
+	//complain and return if 'containerElem' isn't a <input-field> element
+	if (containerElem.tagName !== 'INPUT-FIELD') {
+		console.warn(`[MPO] inputfield_applyNewValue() received a invalid 'containerElem', it has to be a <input-field> element: `, containerElem);
+		return;
+	}
+
 	//get the field object
 	const fieldObj = inputfield_getFieldObject(containerElem);
 
@@ -2537,8 +2853,9 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 		if (newValue === true || newValue === checkboxValue) {
 			newValue = checkboxValue;
 
-			//only change the displayed value if it wasn't already specified
-			if (specifics.displayedValue === undefined) {
+			//if 'displayedValue' is equal to 'checkboxValue' then replace it with `true`
+				//do the same if it's undefined
+			if (specifics.displayedValue === checkboxValue || specifics.displayedValue === undefined) {
 				specifics.displayedValue = true;
 			}
 		}
@@ -2613,7 +2930,7 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 
 		//get the 'onchange' function
 			//if a host is used then get the 'onchange' function from that
-		const onchangeFunction = (hostObj !== null) ? hostObj.onchange : fieldObj.attributes.onchange;
+		const onchangeFunction = (hostObj !== null) ? hostObj.attributes.onchange : fieldObj.attributes.onchange;
 
 		//execute the 'onchange' function
 			//use 'setTimeout()' with a delay of 0 so it gets it's own call-stack (it basically tells the browser "Hey, execute this bit as soon as everything else is done!")
@@ -2842,7 +3159,7 @@ function inputfield_updateHostsChildren (host, specifics={}) {
 			}
 
 			//update the input-field
-				//check if the new value is valid; if it is then use the new value, otherwise use the 'defaultValue' as the 'displayedValue'
+				//check if the new value is valid; if it is then use the new value, otherwise use the 'nullValue' as the 'displayedValue'
 			if (inputfield_validateValue(newValue, {field: fieldObj}) === true) {
 				inputfield_applyNewValue(containerElem, newValue, {skipOnchange: true, updateHost: false});
 			} else {
@@ -3171,9 +3488,6 @@ function inputfield_getDefaultVariation (fieldType) {
 
 		case 'color':
 			return 'regular';
-
-		case 'file':
-			return 'regular';
 	}
 
 	//log error and return empty string if no variation could be found
@@ -3295,13 +3609,13 @@ function inputfield_getElement (fieldID, specifics={}) {
 function inputfield_getFieldObject (field, specifics={}) {
 	//complain and use defaults if 'specifics' is invalid
 	if (typeof specifics !== 'object') {
-		console.warn(`[MPO] inputfield_getFieldObject() received a non-object as 'specifics': "${specifics}".`);
+		console.warn(`[MPO] inputfield_getFieldObject() received a non-object as 'specifics': `, specifics);
 		specifics = {};
 	}
 
 	//complain and return if it's not a DOM element
 	if (typeof field !== 'string' && Object.isDOMElement(field) !== true) {
-		console.warn(`[MPO] inputfield_getFieldObject() received neither a string nor a DOM element as 'field': "${field}".`);
+		console.warn(`[MPO] inputfield_getFieldObject() received neither a string nor a DOM element as 'field': `, field);
 		return null;
 	}
 
@@ -3321,8 +3635,7 @@ function inputfield_getFieldObject (field, specifics={}) {
 
 	//complain and return if it couldn't be found
 	if (fieldObj === undefined) {
-		console.warn(`[MPO] inputfield_getFieldObject() couldn't get the FieldObject for the following element:`);
-		console.warn(field);
+		console.warn(`[MPO] inputfield_getFieldObject() couldn't get the FieldObject for the following element: `, field);
 		return null;
 	}
 

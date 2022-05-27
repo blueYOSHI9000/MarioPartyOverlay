@@ -336,14 +336,16 @@ function buildSite_buildSettings (docFrag) {
 		//create a text input
 		cElem('br', elem);
 		inputfield_createField('text', elem, {
-			onchange: logToOutput
+			onchange: logToOutput,
+			defaultValue: 'text'
 		});
 
 		//create a textarea
 		cElem('br', elem);
 		inputfield_createField('text', elem, {
 			variation: 'area',
-			onchange: logToOutput
+			onchange: logToOutput,
+			defaultValue: 'text-area'
 		});
 
 		//create a number-text
