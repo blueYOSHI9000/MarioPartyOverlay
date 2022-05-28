@@ -3377,6 +3377,8 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 		//change the attribute
 		switch (attributeName) {
 
+			// # core attributes:
+
 			case 'variation':
 				//complain and return if the variation is invalid
 					//this uses the 'inputfield_variations' variable to check if a variation with this name is present
@@ -3410,21 +3412,9 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 				setupFieldAgain = true;
 				break;
 
-			case 'beforeText'://TODO: update complaint & check if these are all of them
-			case 'afterText':
-			case 'labels':
-			case 'HTMLAttributes':
-				console.warn(`[MPO] inputfield_changeAttribute() can not change the "${attributeName}" attribute. Said attribute only defines how the input-field is created, it is useless afterwards.`);
-				changedSuccessfully = false;
-				continue;
 
-			case 'defaultValue':
-				//no changes are needed aside from applying this
-				fieldObj.attributes.defaultValue = newValue;
-
-				//update the host
-				updatedHost = true;
-				break;
+			// # behaviour attributes:
+				//NOTE: These should all update the host if a host is used. Use the 'target' variables.
 
 			case 'onchange':
 				//complain and return if it's not a function
@@ -3436,6 +3426,14 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 
 				//apply the value to the 'FieldObject'
 				targetObj.attributes[attributeName] = newValue;
+
+				//update the host
+				updatedHost = true;
+				break;
+
+			case 'defaultValue':
+				//no changes are needed aside from applying this
+				fieldObj.attributes.defaultValue = newValue;
 
 				//update the host
 				updatedHost = true;
@@ -3498,6 +3496,20 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 				changedSuccessfully = false;
 				continue;
 
+
+			// # starting attributes:
+
+			case 'beforeText':
+			case 'afterText':
+			case 'labels':
+			case 'HTMLAttributes':
+				console.warn(`[MPO] inputfield_changeAttribute() can not change the "${attributeName}" attribute as it's a "starting attributes" which can't be changed after the field's creation. Though you can always replicate it manually.`);
+				changedSuccessfully = false;
+				continue;
+
+
+			// # 'form' type attributes
+
 			case 'autoAddToForm':
 				if (typeof newValue !== 'boolean') {
 					console.warn(`[MPO] inputfield_changeAttribute() received a non-boolean for 'autoAddToForm': `, newValue);
@@ -3518,6 +3530,9 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 				}
 				break;
 
+
+			// # 'button' type attributes
+
 			//TODO: Create a better way to update this alongside 'options' (same issue)
 			case 'content':
 				if (typeof newValue !== 'string') {
@@ -3532,6 +3547,9 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 				//and setup the field again
 				setupFieldAgain = true;
 				break;
+
+
+			// # 'checkbox' type attributes
 
 			case 'checkboxValue':
 				//complain and return if it's invalid
@@ -3551,6 +3569,8 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 					inputfield_setValue(field, newValue);
 				}
 				break;
+
+			// # 'radio' type attributes
 
 			//TODO: Create a better way to update this alongside 'content' (same issue)
 				//TODO: Also actually verify this
