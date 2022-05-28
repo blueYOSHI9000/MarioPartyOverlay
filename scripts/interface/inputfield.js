@@ -31,7 +31,7 @@
 
 	form
 		This is a special type as it doesn't really create an actual input-field (aside from an empty '<span>'), instead it can be used to combine several input-fields into a single form.
-		When creating a new form you can use it's ID to add other input-fields to it. To add a input-field to a form you can use the ID of the form inside the 'addToForm' attribute.
+		When creating a new form you can use it's ID to add other input-fields to it. To add a input-field to a form you can use the ID of the form inside the 'forms' attribute.
 		The form will have an object as it's value containing an item for each input-field that's part of it.
 		Each item has the 'tag' attribute as it's name that can be used to access the value inside the object.
 
@@ -160,7 +160,7 @@
 		host [String] <none>
 			Specifying a host links the input-field to the specified host.
 			Every input-field linked to the host shares the exact same value at all times.
-			In addition, they also share all "behaviour attributes" listed above (that includes 'addToForm' and the 'onchange' function).
+			In addition, they also share all "behaviour attributes" listed above (that includes the form attributes and the 'onchange' function).
 			All of that will be hosted permanently (hence the name), even if all input-fields are deleted the host will still exist and new input-fields linked will take the host's values & attributes.
 
 			Basically, since everything relating to an input-field is immediately deleted once the input-field is gone you can instead use hosts to store values permanently.
@@ -176,7 +176,10 @@
 				Once a input-field gets moved from a "hidden" spot back onto the regular DOM document then it will immediately overwrite all of it's own attributes & values from the host.
 				That said, if a "hidden" input-field gets updated (attributes or value) then it will still affect the host and all of it's input-fields. This is because the host is always accessible.
 
-				If no 'tag' is specified then the host and all input-fields will have different tags. They will only share a tag once one is specified (and from then on every input-field that joins the host will have the same tag).
+				A host always updates it's children with a 'setTimeout()' of 0ms. This can cause a backlog if other functions use the same feature.
+
+				If no 'tag' attribute is specified then the host and all input-fields will have different tags. They will only share a tag once one is specified (and from then on every input-field that joins the host will have the same tag).
+				This does in theory not affect anything, but if a host is a part of a form and a input-field & it's host get seperated then both will individually be part of the same form. If they have a different 'tag' then they will both set a different property of the form but if they have the same 'tag' then they will both fight for it.
 
 	# starting attributes (these only affect how the input-field is created, they're ignored afterwards):
 
@@ -986,7 +989,7 @@ function inputfield_FieldObject (specifics={}) {
 
 	// # 'tag'
 		//has to be done before 'host'
-		//has to be done before 'addToForm'
+		//has to be done before 'forms'
 
 	//if the tag is neither a string nor `undefined` then complain and delete it
 	if (typeof attributes.tag !== 'string' && attributes.tag !== undefined) {
@@ -1122,7 +1125,7 @@ function inputfield_FieldObject (specifics={}) {
 
 	// # 'host'
 		//has to be done after all "behaviour attributes"
-		//has to be done before 'addToForm'
+		//has to be done before 'forms'
 
 	//if 'host' is invalid...
 	if (typeof attributes.host !== 'string') {
@@ -1248,7 +1251,7 @@ function inputfield_FieldObject (specifics={}) {
 
 	//otherwise verify and apply it
 	} else {
-		attributes.addToForm = inputfield_verifyFormAttributes({
+		attributes.forms = inputfield_verifyFormAttributes({
 			forms      : attributes.forms      ,
 			formsAdd   : attributes.formsAdd   ,
 			formsRemove: attributes.formsRemove,
@@ -1260,7 +1263,7 @@ function inputfield_FieldObject (specifics={}) {
 		});
 
 		//if 'forms' is an empty array then delete it
-		if (attributes.addToForm.length === 0) {
+		if (attributes.forms.length === 0) {
 			delete attributes.forms;
 		}
 
@@ -1447,8 +1450,8 @@ function inputfield_FieldObject (specifics={}) {
 
 	//set 'belongsToForm'
 		//if it's not an array then use an empty array
-	if (Array.isArray(attributes.addToForm) === true) {
-		this.belongsToForm = attributes.addToForm;
+	if (Array.isArray(attributes.forms) === true) {
+		this.belongsToForm = attributes.forms;
 	} else {
 		this.belongsToForm = [];
 	}
@@ -1495,10 +1498,16 @@ function inputfield_FieldObject (specifics={}) {
  * 						onchange [Function] <optional>
  * 							The function that gets executed when the value changes. Will default to not doing anything.
  *
- * 						addToForm [Array/DOM Element/String] <optional>
+ * 						forms [Array/DOM Element/String] <optional>
  * 							The form element it should be added to. Can be either the DOM element of the form or it's ID (can be in string-form, so 6 and '6' are both fine).
  * 							Use the DOM element if it's inside a DocumentFragment or other places that are "hidden".
  * 							Can also be an array consisting of multiple DOM elements/field-IDs.
+ *
+ * 						formsAdd [Array/DOM Element/String] <optional>
+ * 							The 'formsAdd' attribute.
+ *
+ * 						formsRemove [Array/DOM Element/String] <optional>
+ * 							The 'formsRemove' attribute.
  *
  * 	Constructs:
  * 		childList [Array]
@@ -1678,8 +1687,8 @@ function inputfield_HostObject (specifics={}) {
 
 	//set 'belongsToForm'
 		//if it's not an array then use an empty array
-	if (Array.isArray(attributes.addToForm) === true) {
-		this.belongsToForm = attributes.addToForm;
+	if (Array.isArray(attributes.forms) === true) {
+		this.belongsToForm = attributes.forms;
 	} else {
 		this.belongsToForm = [];
 	}
@@ -1918,7 +1927,7 @@ function inputfield_verifyFormAttributes (specifics) {
 				//if it's part of a host then shift focus towards that instead
 				if (typeof targetObj.belongsToHost === 'string') {
 					specifics.fieldOrHost = 'host';
-					specifics.elem = targetObj.belongsToHost;
+					specifics.target = targetObj.belongsToHost;
 
 				//if it isn't part of a host then fill in any arguments that aren't already present
 				} else {
@@ -1938,7 +1947,7 @@ function inputfield_verifyFormAttributes (specifics) {
 
 			//if the HostObject was found then fill in any arguments that aren't already present
 			if (targetObj !== null) {
-				specifics.name          ??= targetObj.id           ;
+				specifics.name          ??= specifics.target       ;
 				specifics.tag           ??= targetObj.tag          ;
 				specifics.value         ??= targetObj.value        ;
 				specifics.belongsToForm ??= targetObj.belongsToForm;
@@ -2364,10 +2373,16 @@ function inputfield_setupField (specifics={}) {
  * 				onchange [Function] <optional>
  * 					The function that gets executed when the value changes. Will default to not doing anything.
  *
- * 				addToForm [Array/DOM Element/String]
+ * 				forms [Array/DOM Element/String] <optional>
  * 					The form element it should be added to. Can be either the DOM element of the form or it's ID (can be in string-form, so 6 and '6' are both fine).
  * 					Use the DOM element if it's inside a DocumentFragment or other places that are "hidden".
  * 					Can also be an array consisting of multiple DOM elements/field-IDs.
+ *
+ * 				formsAdd [Array/DOM Element/String] <optional>
+ * 					The 'formsAdd' attribute.
+ *
+ * 				formsRemove [Array/DOM Element/String] <optional>
+ * 					The 'formsRemove' attribute.
  *
  * 	Returns [null / HostObject]:
  * 		The 'HostObject' object or `null` if something went wrong.
@@ -2393,7 +2408,9 @@ function inputfield_setupHost (host, specifics={}) {
 			onchange: specifics.onchange,
 			tag: specifics.tag,
 			defaultValue: specifics.defaultValue,
-			addToForm: specifics.addToForm
+			forms: specifics.forms,
+			formsAdd: specifics.formsAdd,
+			formsRemove: specifics.formsRemove
 		}
 	});
 
@@ -3151,11 +3168,14 @@ function inputfield_executedAfterLabelPress (labelElem) {
 	}
 }
 
-/**	This updates all input-fields that belong to a host to reflect the host's value.
+/**	This update sall of the host's children to be up-to-date with the host.
  *
- * 	This makes sure that every input-field that belong to a host has the same value as the host.
- * 	Does NOT trigger the 'onchange' function of each input-field.
- * 	Does NOT update input-fields that can't be found.
+ * 	This loops through all of the host's children and does the following to each:
+ * 		- Removes the input-field from the host if it can't be found (it will automatically be re-added once it can be found again).
+ * 		- Applies all "behaviour attributes" to the input-field.
+ * 		- Applies the host's value to the input-field.
+ *
+ * 	This does NOT apply anything to the host! This simply takes the host's values & attributes and applies them to it's children.
  *
  * 	Args:
  * 		hostElem [DOM Element]
@@ -3172,7 +3192,7 @@ function inputfield_executedAfterLabelPress (labelElem) {
 function inputfield_updateHostsChildren (host, specifics={}) {
 	//complain and use defaults if 'specifics' is invalid
 	if (typeof specifics !== 'object') {
-		console.warn(`[MPO] inputfield_updateHostsChildren() received a non-object as 'specifics': "${specifics}".`);
+		console.warn(`[MPO] inputfield_updateHostsChildren() received a non-object as 'specifics': `, specifics);
 		specifics = {};
 	}
 
@@ -3185,29 +3205,53 @@ function inputfield_updateHostsChildren (host, specifics={}) {
 		return;
 	}
 
+	//complain and return if it's not an array
+	if (Array.isArray(hostObj.childList) !== true) {
+		console.error(`[MPO] inputfield_updateHostsChildren() found a non-array as 'childList' on the following HostObject: `, hostObj, ` - host: `, host);
+		return;
+	}
+
 	//if this function is called then there's no update pending anymore
 	hostObj.valueUpdatePending = false;
 
 	//get the new value
 	const newValue = hostObj.value;
 
-	//loop through all children and update them
-	if (hostObj.childList.isIterable() === true) {
-		for (const item of hostObj.childList) {
+	//get the new attributes
+	const newAttributes = hostObj.attributes;
 
-			//get the <input-field> element
-			const containerElem = inputfield_getElement(item, {DOMTree: specifics.DOMTree});
+	//loop through all children
+	hostObj.childList.removeEachIf((item, index) => {
 
-			//get FieldObject
-			const fieldObj = inputfield_getFieldObject(containerElem);
+		//get the <input-field>
+		const containerElem = inputfield_getElement(item, {DOMTree: specifics.DOMTree});
 
-			if (fieldObj === null) {
-				console.warn(`[MPO] inputfield_updateHostsChildren() skipped a field as it's 'FieldObject' couldn't be found.`);
-				continue;
+		//get the FieldObject
+		const fieldObj = inputfield_getFieldObject(containerElem);
+
+		//remove the input-field if it's no longer available
+		if (fieldObj === null) {
+			console.log(`[MPO] inputfield_updateHostsChildren() removed input-field "${item}" from the host "${host}" as it couldn't be found (likely because it's outside the regular DOM tree, see the detailed documentation for the 'host' attribute for details).`);
+			return true;
+		}
+
+		//apply the attributes
+		for (const key in newAttributes) {
+
+			//update the value
+				//don't have to check whether the value is the same because it's just replacing a property so it's probably faster not to check
+			fieldObj.attributes[key] = newAttributes[key];
+
+			//if 'forms' is updated then also update the 'belongsToForm' property
+			if (key === 'forms') {
+				fieldObj.belongsToForm = newAttributes.forms;
 			}
+		}
 
-			//update the input-field
-				//check if the new value is valid; if it is then use the new value, otherwise use the 'nullValue' as the 'displayedValue'
+		//if the input-field doesn't have the same value then update that
+		if (fieldObj.value !== newValue) {
+
+			//check if the new value is valid; if it is then use the new value, otherwise use the 'nullValue' as the 'displayedValue'
 			if (inputfield_validateValue(newValue, {field: fieldObj}) === true) {
 				inputfield_applyNewValue(containerElem, newValue, {skipOnchange: true, updateHost: false});
 			} else {
@@ -3215,7 +3259,7 @@ function inputfield_updateHostsChildren (host, specifics={}) {
 				inputfield_applyNewValue(containerElem, newValue, {skipOnchange: true, updateHost: false, displayedValue: fieldObj.nullValue});
 			}
 		}
-	}
+	});
 }
 
 /**	Changes and applies attributes for a input-field.
@@ -3299,68 +3343,117 @@ function inputfield_changeAttribute (field, attributeName, newValue) {
 			});
 			break;
 
+		case 'beforeText':
+		case 'afterText':
+		case 'labels':
+		case 'HTMLAttributes':
+			console.warn(`[MPO] inputfield_changeAttribute() can not change the "${attributeName}" attribute. Said attribute only defines how the input-field is created, it is useless afterwards.`);
+			return false;
+
 		case 'defaultValue':
 			//no changes are needed aside from applying this
 			fieldObj.attributes.defaultValue = newValue;
 			break;
 
+		//these are "behaviour attributes" which means we have to update the host instead if a host is used
 		case 'onchange':
-			//complain and return if it's not a function
-			if (typeof newValue !== 'function' && newValue !== undefined) {
-				console.warn(`[MPO] inputfield_changeAttribute() received a non-function for 'onchange': `, newValue);
-				return false;
-			}
-
-			//apply the value to the 'FieldObject'
-			fieldObj.attributes[attributeName] = newValue;
-			break;
-
-		case 'beforeText':
-		case 'afterText':
-		case 'labels':
-		case 'cssClass':
-		case 'HTMLAttributes':
-			console.warn(`[MPO] inputfield_changeAttribute() can not change the "${attributeName}" attribute. Said attribute only defines how the input-field is created, it is useless afterwards.`);
-			return false;
-
 		case 'tag':
-			//complain and return if it's not a string
-			if (typeof newValue !== 'string') {
-				console.warn(`[MPO] inputfield_changeAttribute() received a non-string for 'tag': `, newValue);
-				return false;
-			}
-
-			//apply the value to the 'FieldObject'
-			fieldObj.attributes.tag = newValue;
-
-			//loop through all forms this belongs to
-			for (form of fieldObj.belongsToForm) {
-
-				//get the fieldObj of the form
-				const formObj = inputfield_getFieldObject(form);
-
-				//make sure this input-fields value is present under the new tag
-				formObj.value[newValue] = fieldObj.value;
-			}
-			break;
-
 		case 'forms':
 		case 'formsAdd':
 		case 'formsRemove':
-			//the object that 'verifyFormAttributes()' will be called with
-			let verifyFormArgument = {
-				elem: field,
-				belongsToForm: [],
-				fieldOrHost: 'field'
-			};
 
-			//add the new value to it
-				//has to be done this way if we want to combine all three form attributes into one switch case
-			verifyFormArgument[attributeName] = newValue;
+			//the target (either the input-field or the host)
+			let target;
 
-			//and finally call the function and apply it's new value
-			fieldObj.belongsToForm = inputfield_verifyFormAttributes(verifyFormArgument);
-			fieldObj.attributes.forms = fieldObj.belongsToForm;
+			//either a FieldObject or a HostObject
+			let targetObj;
+
+			//whether we're updating a input-field or a host
+				//is either 'field' or 'host'
+			let fieldOrHost = 'field';
+
+			//get the HostObject if a host is used
+			if (fieldObj.belongsToHost !== null) {
+				target      = fieldObj.belongsToHost;
+				targetObj   = inputfield_getHostObject(target);
+				fieldOrHost = 'host';
+
+				//if the HostObject couldn't be found then revert back to just updating the input-field (better than nothing)
+				if (targetObj === null) {
+					console.warn(`[MPO] inputfield_changeAttribute() couldn't find the host for input-field "${fieldObj.id}": `, fieldObj.belongsToHost, ` - Continuing by only updating the attributes of the input-field.`);
+
+					target      = field   ;
+					targetObj   = fieldObj;
+					fieldOrHost = 'field' ;
+				}
+
+			//if no host is used then continue by updating the input-field
+			} else {
+				target      = field   ;
+				targetObj   = fieldObj;
+				fieldOrHost = 'field' ;
+			}
+
+			//now update the attribute
+			switch (attributeName) {
+
+				case 'onchange':
+					//complain and return if it's not a function
+					if (typeof newValue !== 'function' && newValue !== undefined) {
+						console.warn(`[MPO] inputfield_changeAttribute() received a non-function for 'onchange': `, newValue);
+						return false;
+					}
+
+					//apply the value to the 'FieldObject'
+					targetObj.attributes[attributeName] = newValue;
+					break;
+
+				case 'tag':
+					//complain and return if it's not a string
+					if (typeof newValue !== 'string') {
+						console.warn(`[MPO] inputfield_changeAttribute() received a non-string for 'tag': `, newValue);
+						return false;
+					}
+
+					//apply the value to the 'FieldObject'
+					targetObj.attributes.tag = newValue;
+
+					//loop through all forms this belongs to
+					for (form of targetObj.belongsToForm) {
+
+						//get the FieldObject of the form
+						const formObj = inputfield_getFieldObject(form);
+
+						//make sure this input-fields value is present under the new tag
+							//TODO: shouldn't this call 'applyNewValue()'?
+						formObj.value[newValue] = targetObj.value;
+					}
+					break;
+
+				case 'forms':
+				case 'formsAdd':
+				case 'formsRemove':
+					//the object that 'verifyFormAttributes()' will be called with
+					let verifyFormArgument = {
+						target: target,
+						belongsToForm: [],
+						fieldOrHost: fieldOrHost
+					};
+
+					//add the new value to it
+						//has to be done this way if we want to combine all three form attributes into one switch case
+					verifyFormArgument[attributeName] = newValue;
+
+					//and finally call the function and apply it's new value
+					targetObj.belongsToForm = inputfield_verifyFormAttributes(verifyFormArgument);
+					targetObj.attributes.forms = targetObj.belongsToForm;
+					break;
+			}
+
+			//if the host got updated then update all it's children
+			if (fieldOrHost === 'host') {
+				inputfield_updateHostsChildren(target);
+			}
 			break;
 
 		case 'host':
