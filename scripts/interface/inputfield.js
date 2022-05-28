@@ -72,7 +72,6 @@
 		Variations:
 			- text <default>: A text-field to enter a number manually with tiny buttons to increase/decrease. Does not allow text-input. Basically the same as '<input type="number">'
 			- range: A slider that allows the user to select a number. Basically the same as '<input type="slider">'.
-			- counter: A MPO-styled counter. Takes MPO's controls into account (+/- and how much). Not supported yet.
 
 	color
 		A way to select a custom color.
@@ -131,12 +130,6 @@
 				color:    '#000000'
 				file:     *N/A*
 
-		addToForm [Array/DOM Element/String] <none>
-			The form element it should be added to. Can be either the DOM element of the form or it's ID (can be in string-form, so 6 and '6' are both fine).
-				Use the DOM element if it's inside a DocumentFragment or other places that are "hidden".
-			Can also be an array consisting of multiple DOM elements/field-IDs.
-			Leave empty if it should not be added to a form.
-
 		tag [String] <ID>
 			A tag-name is used to access the value inside a form.
 			It's suggested that a tag should be unique within a form, but it's not required.
@@ -144,6 +137,23 @@
 
 			If multiple input-fields have the same tag then when a input-field is updated it will simply overwrite the value that's already there.
 			This essentially allows you to have a form value that's simply the value of the most recently updated input-field.
+
+
+
+		forms [Array/DOM Element/String] <none>
+			A list of all forms the input-field should be a part of.
+			Can also be a single form. Can be the <input-field> element of the form or it's ID.
+
+			This is a definitive list of all forms that the input-field is part of. If this is changed to an empty array then it will no longer be part of any forms.
+			If you simply want to add the input-field to a new form then use 'formsAdd'.
+
+		formsAdd [Array/DOM Element/String] <none>
+			A list of all forms the input-field should be added to.
+			Can also be a single form. Can be the <input-field> element of the form or it's ID.
+
+		formsRemove [Array/DOM Element/String] <none>
+			A list of all forms the input-field should be removed from.
+			Can also be a single form. Can be the <input-field> element of the form or it's ID.
 
 	# host related attributes (any type can use these):
 
@@ -1149,33 +1159,34 @@ function inputfield_FieldObject (specifics={}) {
 		hostObj.childList.push(this.id);
 
 		//list of all "behaviour attributes"
-		const behaviourAttributes = ['defaultValue', 'onchange', 'tag', 'addToForm'];
+		const behaviourAttributes     = ['defaultValue',  'onchange', 'tag'];
+		const behaviourAttributesForm = ['forms', 'formsAdd', 'formsRemove'];
 
 		//check for specified attributes
 		for (const behaviourKey of behaviourAttributes) {
 
 			//if it's specified here then overwrite the host
 			if (attributes[behaviourKey] !== undefined) {
+				hostObj.attributes[behaviourKey] = attributes[behaviourKey];
+			}
 
-				//if it's 'addToForm' then verify that...
-				if (behaviourKey === 'addToForm') {
-					//this is called for the host, not the input-field
-					hostObj.belongsToForm = inputfield_verifyFormAttributes({
-						formsAdd: attributes.addToForm,
-						name: attributes.host,
-						tag: hostObj.tag,
-						value: hostObj.value,
-						belongsToForm: hostObj.belongsToForm,
-						fieldOrHost: 'host'
-					});
+			//if it's not specified then get it from it's host
+				//TODO: what if the host's attribute is also undefined???
+			if (attributes[behaviourKey] === undefined) {
+				attributes[behaviourKey] = hostObj.attributes[behaviourKey];
+			}
+		}
 
-					//and also replace the attribute
-					hostObj.attributes.addToForm = hostObj.belongsToForm;
+		//track whether the form attributes got changed on the host because if they did we need to call 'verifyFormAttributes()' on them
+		let formAttributesChanged = false;
 
-				//...and if not then simply replace the hosts attribute
-				} else {
-					hostObj.attributes[behaviourKey] = attributes[behaviourKey];
-				}
+		//check for the form behaviour attributes
+		for (const behaviourKey of behaviourAttributesForm) {
+
+			//if it's specified here then overwrite the host
+			if (attributes[behaviourKey] !== undefined) {
+				hostObj.attributes[behaviourKey] = attributes[behaviourKey];
+				formAttributesChanged = true;
 			}
 
 			//if it's not specified then get it from it's host
@@ -1183,6 +1194,25 @@ function inputfield_FieldObject (specifics={}) {
 			if (attributes[behaviourKey] === undefined) {
 				attributes[behaviourKey] = hostObj.attributes[behaviourKey];
 			}
+		}
+
+		//if the host's form attributes got changed then we need to apply them
+		if (formAttributesChanged === true) {
+
+			//this is called for the host, not the input-field
+			hostObj.belongsToForm = inputfield_verifyFormAttributes({
+				forms      : attributes.forms      ,
+				formsAdd   : attributes.formsAdd   ,
+				formsRemove: attributes.formsRemove,
+				name       : attributes.host ,
+				tag        :    hostObj.tag  ,
+				value      :    hostObj.value,
+				belongsToForm:  hostObj.belongsToForm,
+				fieldOrHost: 'host'
+			});
+
+			//and also replace the attribute
+			hostObj.attributes.forms = hostObj.belongsToForm;
 		}
 	}
 
@@ -1205,29 +1235,39 @@ function inputfield_FieldObject (specifics={}) {
 	}
 
 
-	// # 'addToForm'
+	// # 'forms'
+	// # 'formsAdd'
+	// # 'formsRemove'
 		//has to be done after 'host' & 'tag'
 		//has to be done after 'defaultValue' because the 'startingValue' property is needed
 
-	//if a host is specified then delete it because in that case it was already applied to the host
+	//if a host is specified then delete 'formsAdd' and 'formsRemove' because they're not needed anymore
 	if (this.belongsToHost !== null) {
-		delete attributes.addToForm;
+		delete attributes.formsAdd;
+		delete attributes.formsRemove;
 
 	//otherwise verify and apply it
 	} else {
 		attributes.addToForm = inputfield_verifyFormAttributes({
-			formsAdd: attributes.addToForm,
-			name: this.id,
-			tag: this.tag,
+			forms      : attributes.forms      ,
+			formsAdd   : attributes.formsAdd   ,
+			formsRemove: attributes.formsRemove,
+			name : this.id,
+			tag  : this.tag,
 			value: this.startingValue,
 			belongsToForm: [],
 			fieldOrHost: 'field'
 		});
 
-		//if it's an empty array then delete it
+		//if 'forms' is an empty array then delete it
 		if (attributes.addToForm.length === 0) {
-			delete attributes.addToForm;
+			delete attributes.forms;
 		}
+
+		//delete 'formsAdd' and 'formsRemove'
+			//these attributes are "relative" attributes which means they should always be empty so a new form can be added or removed
+		delete attributes.formsAdd   ;
+		delete attributes.formsRemove;
 	}
 
 
@@ -1551,23 +1591,31 @@ function inputfield_HostObject (specifics={}) {
 		//I guess `undefined` would be one "invalid" value but what are we gonna do about it? delete it? so it's undefined again?
 
 
-	// # 'addToForm'
+	// # 'forms'
+	// # 'formsAdd'
+	// # 'formsRemove'
 		//has to be done after 'defaultValue'
 
 	//verify and apply it
-	attributes.addToForm = inputfield_verifyFormAttributes({
-		formsAdd: attributes.addToForm,
-		name: specifics.host,
-		tag: this.tag,
+	attributes.forms = inputfield_verifyFormAttributes({
+		forms      : attributes.forms      ,
+		formsAdd   : attributes.formsAdd   ,
+		formsRemove: attributes.formsRemove,
+		name : specifics.host        ,
+		tag  :      this.tag         ,
 		value: specifics.defaultValue,
 		belongsToForm: [],
 		fieldOrHost: 'host'
 	});
 
 	//delete if it's an empty array
-	if (attributes.addToForm.length === 0) {
-		delete attributes.addToForm;
+	if (attributes.forms.length === 0) {
+		delete attributes.forms;
 	}
+
+	//always delete 'formsAdd' and 'formsRemove' because they're "relative" attributes and are supposed to be empty
+	delete attributes.formsAdd   ;
+	delete attributes.formsRemove;
 
 
 
@@ -3296,9 +3344,23 @@ function inputfield_changeAttribute (field, attributeName, newValue) {
 			}
 			break;
 
-		case 'addToForm':
-			//TODO
-			console.warn(`[MPO] inputfield_changeAttribute() currently does not support updating the 'addToForm' attribute.`);
+		case 'forms':
+		case 'formsAdd':
+		case 'formsRemove':
+			//the object that 'verifyFormAttributes()' will be called with
+			let verifyFormArgument = {
+				elem: field,
+				belongsToForm: [],
+				fieldOrHost: 'field'
+			};
+
+			//add the new value to it
+				//has to be done this way if we want to combine all three form attributes into one switch case
+			verifyFormArgument[attributeName] = newValue;
+
+			//and finally call the function and apply it's new value
+			fieldObj.belongsToForm = inputfield_verifyFormAttributes(verifyFormArgument);
+			fieldObj.attributes.forms = fieldObj.belongsToForm;
 			break;
 
 		case 'host':

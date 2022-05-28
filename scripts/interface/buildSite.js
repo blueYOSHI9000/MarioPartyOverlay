@@ -472,7 +472,7 @@ function buildSite_buildSettings (docFrag) {
 		inputfield_createField('radio', formTest, {
 			variation: 'checkbox',
 			onchange: logToOutput,
-			addToForm: formTest,
+			formsAdd: formTest,
 			tag: 'radio',
 			options: [
 				{
@@ -502,7 +502,7 @@ function buildSite_buildSettings (docFrag) {
 		cElem('br', formTest);
 		inputfield_createField('text', formTest, {
 			onchange: logToOutput,
-			addToForm: formTest,
+			forms: formTest,
 			tag: 'text',
 		});
 
@@ -516,7 +516,7 @@ function buildSite_buildSettings (docFrag) {
 			host: 'inputfield_hostInFormTest',
 			checkboxValue: 'mario',
 			onchange: logToOutput,
-			addToForm: formTest,
+			forms: formTest,
 			tag: 'hostTag',
 			labels: label
 		});
@@ -568,7 +568,7 @@ function buildSite_buildSettings (docFrag) {
 		label.textContent = 'Checkbox with same tag as below form: ';
 		inputfield_createField('checkbox', formTest, {
 			onchange: logToOutput,
-			addToForm: formTest,
+			forms: formTest,
 			tag: 'formOrCheck',
 			checkboxValue: 'This should overwrite the form',
 			labels: label
@@ -579,7 +579,7 @@ function buildSite_buildSettings (docFrag) {
 		cElem('span', formTest)
 			.textContent = '=== FORM IN FORM ===';
 		let formInFormTest = inputfield_createField('form', formTest, {
-			addToForm: formTest,
+			forms: formTest,
 			onchange: logToOutput,
 			tag: 'formOrCheck'
 		});
@@ -588,7 +588,7 @@ function buildSite_buildSettings (docFrag) {
 		cElem('br', formInFormTest);
 		inputfield_createField('text', formInFormTest, {
 			onchange: logToOutput,
-			addToForm: [formInFormTest, formTest],
+			forms: [formInFormTest, formTest],
 			tag: 'texto',
 		});
 
