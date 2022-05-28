@@ -3264,20 +3264,26 @@ function inputfield_updateHostsChildren (host, specifics={}) {
 
 /**	Changes and applies attributes for a input-field.
  *
+ * 	Can be called as `changeAttribute(field, 'checkboxValue', true)` to change a single attribute.
+ *
+ * 	Can be called as `changeAttribute(field, {checkboxValue: true})` to change multiple attributes.
+ *
  * 	Args:
  * 		field [DOM Element/String]
  * 			The input-field. Can be the DOM element itself or it's input-field ID.
  *
- * 		attributeName [String]
- * 			The name of the attribute.
+ * 		attributes [Object/String]
+ * 			An object containing all new attributes.
  *
- * 		newValue [*any*]
- * 			The new value for the attribute.\
+ * 			Alternatively this can be the attribute name [String] and use 'newValue'.
  *
- * 	Returns [Boolean]
+ * 		newValue [*any*] <optional>
+ * 			The new value of the attribute. Only needed if 'attributes' is a string.
+ *
+ * 	Returns [Boolean]:
  * 		`true` if successful, `false` if not.
  */
-function inputfield_changeAttribute (field, attributeName, newValue) {
+function inputfield_changeAttribute (field, attributes, newValue) {
 	//get the actual field element
 	field = inputfield_getElement(field);
 
@@ -3290,251 +3296,293 @@ function inputfield_changeAttribute (field, attributeName, newValue) {
 		return false;
 	}
 
-	//complain and return if 'attributeName' is not a string
-	if (typeof attributeName !== 'string') {
-		console.warn(`[MPO] inputfield_changeAttribute() received a non-string as 'attributeName': "${attributeName}".`);
-		return false;
+	//if 'attributes' is a string then add it to an empty object
+	if (typeof attributes === 'string') {
+		//'Object.fromEntries()' creates a object from with an array of "key-value" pairs
+			//the first array includes a full list of all properties that should be made (which is just 1 here)
+			//the second array is the "key-value" pair; first entry is the property-name, second entry is the value it should have
+		attributes = Object.fromEntries([[attributes, newValue]]);
 	}
 
-	//TODO: should it 'console.warn()'?
-	if (newValue === fieldObj.attributes[attributeName]) {
-		return true;
+
+
+	// === PREPARE FOR HOST ===
+		//all of these variables should only be used if the attribute has to be changed on the host
+		//because these variables will automatically point to either the input-field or the host depending on which one has to be updated
+
+	//the target (either the input-field or the host)
+	let target;
+
+	//either a FieldObject or a HostObject
+	let targetObj;
+
+	//whether we're updating a input-field or a host
+		//is either 'field' or 'host'
+	let fieldOrHost = 'field';
+
+	//get the HostObject if a host is used
+	if (fieldObj.belongsToHost !== null) {
+		target      = fieldObj.belongsToHost;
+		targetObj   = inputfield_getHostObject(target);
+		fieldOrHost = 'host';
+
+		//if the HostObject couldn't be found then revert back to just updating the input-field (better than nothing)
+		if (targetObj === null) {
+			console.warn(`[MPO] inputfield_changeAttribute() couldn't find the host for input-field "${fieldObj.id}": `, fieldObj.belongsToHost, ` - Continuing by only updating the attributes of the input-field.`);
+
+			target      = field   ;
+			targetObj   = fieldObj;
+			fieldOrHost = 'field' ;
+		}
+
+	//if no host is used then continue by updating the input-field
+	} else {
+		target      = field   ;
+		targetObj   = fieldObj;
+		fieldOrHost = 'field' ;
 	}
 
-	//
-	switch (attributeName) {
+	//list of all "behaviour attributes"
+	const behaviourAttributes = ['onchange', 'defaultValue', 'tag', 'forms', 'formsAdd', 'formsRemove'];
 
-		case 'variation':
-			//complain and return if the variation is invalid
-				//this uses the 'inputfield_variations' variable to check if a variation with this name is present
-			if (typeof inputfield_variations.variations[fieldObj.fieldType][newValue] !== 'object') {
-				console.warn(`[MPO] inputfield_changeAttribute() received a invalid variation as 'newValue': "${newValue}".`);
-				return false;
-			}
 
-			//apply the new value
-			fieldObj.variation = newValue;
-			fieldObj.attributes.variation = newValue;
 
-			//and setup the field again
-			field.setup({
-				fieldType: fieldObj.fieldType,
-				attributes: fieldObj.attributes,
-				forceSetup: true
-			});
-			break;
+	// === UPDATE THE ACTUAL ATTRIBUTES ===
 
-		//TODO: Update this with a better way
-		case 'id':
-			//complain and return if it's nullish
-			if (newValue === undefined || newValue === null) {
-				console.warn(`[MPO] inputfield_changeAttribute() received a invalid 'id' attribute (can't be undefined or null).`);
-				return false;
-			}
+	//if this is `true` then the input-field will be setup again at the end of this function
+	let setupFieldAgain = false;
 
-			//apply the new value
-			fieldObj.attributes.id = newValue;
+	//set this to `true` if 'updateHostsChildren()' should be called at the end
+	let updatedHost = false;
 
-			//and setup the field again
-			field.setup({
-				fieldType: fieldObj.fieldType,
-				attributes: fieldObj.attributes,
-				forceSetup: true
-			});
-			break;
+	//set this to `false` if an attribute couldn't be changed
+		//this should be `false` if even a single attribute couldn't be changed
+	let changedSuccessfully = true;
 
-		case 'beforeText':
-		case 'afterText':
-		case 'labels':
-		case 'HTMLAttributes':
-			console.warn(`[MPO] inputfield_changeAttribute() can not change the "${attributeName}" attribute. Said attribute only defines how the input-field is created, it is useless afterwards.`);
-			return false;
+	//loop through all attributes
+	for (const attributeName in attributes) {
+		const newValue =          attributes[attributeName];
+		const oldValue = fieldObj.attributes[attributeName];
+		const behaviourAttributeIndex = behaviourAttributes.indexOf(attributeName);
 
-		case 'defaultValue':
-			//no changes are needed aside from applying this
-			fieldObj.attributes.defaultValue = newValue;
-			break;
+		//skip this attribute if the value was already used
+			//if it's not a "behaviour attribute" then check against the input-field
+			//if it's     a "behaviour attribute" then it has to check against the host if there is one (see 'target' above)
+		if (behaviourAttributeIndex === -1 && newValue === oldValue) {
+			continue;
+		} else if (behaviourAttributeIndex !== -1 && newValue === targetObj.attributes[attributeName]) {
+			continue;
+		}
 
-		//these are "behaviour attributes" which means we have to update the host instead if a host is used
-		case 'onchange':
-		case 'tag':
-		case 'forms':
-		case 'formsAdd':
-		case 'formsRemove':
+		//change the attribute
+		switch (attributeName) {
 
-			//the target (either the input-field or the host)
-			let target;
-
-			//either a FieldObject or a HostObject
-			let targetObj;
-
-			//whether we're updating a input-field or a host
-				//is either 'field' or 'host'
-			let fieldOrHost = 'field';
-
-			//get the HostObject if a host is used
-			if (fieldObj.belongsToHost !== null) {
-				target      = fieldObj.belongsToHost;
-				targetObj   = inputfield_getHostObject(target);
-				fieldOrHost = 'host';
-
-				//if the HostObject couldn't be found then revert back to just updating the input-field (better than nothing)
-				if (targetObj === null) {
-					console.warn(`[MPO] inputfield_changeAttribute() couldn't find the host for input-field "${fieldObj.id}": `, fieldObj.belongsToHost, ` - Continuing by only updating the attributes of the input-field.`);
-
-					target      = field   ;
-					targetObj   = fieldObj;
-					fieldOrHost = 'field' ;
+			case 'variation':
+				//complain and return if the variation is invalid
+					//this uses the 'inputfield_variations' variable to check if a variation with this name is present
+				if (typeof inputfield_variations.variations[fieldObj.fieldType][newValue] !== 'object') {
+					console.warn(`[MPO] inputfield_changeAttribute() received a invalid variation as 'newValue': "${newValue}".`);
+					changedSuccessfully = false;
+					continue;
 				}
 
-			//if no host is used then continue by updating the input-field
-			} else {
-				target      = field   ;
-				targetObj   = fieldObj;
-				fieldOrHost = 'field' ;
-			}
+				//apply the new value
+				fieldObj.variation = newValue;
+				fieldObj.attributes.variation = newValue;
 
-			//now update the attribute
-			switch (attributeName) {
+				//and setup the field again
+				setupFieldAgain = true;
+				break;
 
-				case 'onchange':
-					//complain and return if it's not a function
-					if (typeof newValue !== 'function' && newValue !== undefined) {
-						console.warn(`[MPO] inputfield_changeAttribute() received a non-function for 'onchange': `, newValue);
-						return false;
-					}
+			//TODO: Update this with a better way
+			case 'id':
+				//complain and return if it's nullish
+				if (newValue === undefined || newValue === null) {
+					console.warn(`[MPO] inputfield_changeAttribute() received a invalid 'id' attribute (can't be undefined or null).`);
+					changedSuccessfully = false;
+					continue;
+				}
 
-					//apply the value to the 'FieldObject'
-					targetObj.attributes[attributeName] = newValue;
-					break;
+				//apply the new value
+				fieldObj.attributes.id = newValue;
 
-				case 'tag':
-					//complain and return if it's not a string
-					if (typeof newValue !== 'string') {
-						console.warn(`[MPO] inputfield_changeAttribute() received a non-string for 'tag': `, newValue);
-						return false;
-					}
+				//and setup the field again
+				setupFieldAgain = true;
+				break;
 
-					//apply the value to the 'FieldObject'
-					targetObj.attributes.tag = newValue;
+			case 'beforeText'://TODO: update complaint & check if these are all of them
+			case 'afterText':
+			case 'labels':
+			case 'HTMLAttributes':
+				console.warn(`[MPO] inputfield_changeAttribute() can not change the "${attributeName}" attribute. Said attribute only defines how the input-field is created, it is useless afterwards.`);
+				changedSuccessfully = false;
+				continue;
 
-					//loop through all forms this belongs to
-					for (form of targetObj.belongsToForm) {
+			case 'defaultValue':
+				//no changes are needed aside from applying this
+				fieldObj.attributes.defaultValue = newValue;
 
-						//get the FieldObject of the form
-						const formObj = inputfield_getFieldObject(form);
+				//update the host
+				updatedHost = true;
+				break;
 
-						//make sure this input-fields value is present under the new tag
-							//TODO: shouldn't this call 'applyNewValue()'?
-						formObj.value[newValue] = targetObj.value;
-					}
-					break;
+			case 'onchange':
+				//complain and return if it's not a function
+				if (typeof newValue !== 'function' && newValue !== undefined) {
+					console.warn(`[MPO] inputfield_changeAttribute() received a non-function for 'onchange': `, newValue);
+					changedSuccessfully = false;
+					continue;
+				}
 
-				case 'forms':
-				case 'formsAdd':
-				case 'formsRemove':
-					//the object that 'verifyFormAttributes()' will be called with
-					let verifyFormArgument = {
-						target: target,
-						belongsToForm: [],
-						fieldOrHost: fieldOrHost
-					};
+				//apply the value to the 'FieldObject'
+				targetObj.attributes[attributeName] = newValue;
 
-					//add the new value to it
-						//has to be done this way if we want to combine all three form attributes into one switch case
-					verifyFormArgument[attributeName] = newValue;
+				//update the host
+				updatedHost = true;
+				break;
 
-					//and finally call the function and apply it's new value
-					targetObj.belongsToForm = inputfield_verifyFormAttributes(verifyFormArgument);
-					targetObj.attributes.forms = targetObj.belongsToForm;
-					break;
-			}
+			case 'tag':
+				//complain and return if it's not a string
+				if (typeof newValue !== 'string') {
+					console.warn(`[MPO] inputfield_changeAttribute() received a non-string for 'tag': `, newValue);
+					changedSuccessfully = false;
+					continue;
+				}
 
-			//if the host got updated then update all it's children
-			if (fieldOrHost === 'host') {
-				inputfield_updateHostsChildren(target);
-			}
-			break;
+				//apply the value to the 'FieldObject'
+				targetObj.attributes.tag = newValue;
 
-		case 'host':
-			//TODO
-			console.warn(`[MPO] inputfield_changeAttribute() currently does not support updating the 'host' attribute.`);
-			break;
+				//loop through all forms this belongs to
+				for (form of targetObj.belongsToForm) {
 
-		case 'autoAddToForm':
-			if (typeof newValue !== 'boolean') {
-				console.warn(`[MPO] inputfield_changeAttribute() received a non-boolean for 'autoAddToForm': `, newValue);
+					//get the FieldObject of the form
+					const formObj = inputfield_getFieldObject(form);
+
+					//make sure this input-fields value is present under the new tag
+						//TODO: shouldn't this call 'applyNewValue()'?
+					formObj.value[newValue] = targetObj.value;
+				}
+
+				//update the host
+				updatedHost = true;
+				break;
+
+			//TODO: there's no error reporting for the following attributes
+			case 'forms':
+			case 'formsAdd':
+			case 'formsRemove':
+				//the object that 'verifyFormAttributes()' will be called with
+				let verifyFormArgument = {
+					target: target,
+					belongsToForm: [],
+					fieldOrHost: fieldOrHost
+				};
+
+				//add the new value to it
+					//has to be done this way if we want to combine all three form attributes into one switch case
+				verifyFormArgument[attributeName] = newValue;
+
+				//and finally call the function and apply it's new value
+				targetObj.belongsToForm = inputfield_verifyFormAttributes(verifyFormArgument);
+				targetObj.attributes.forms = targetObj.belongsToForm;
+
+				//update the host
+				updatedHost = true;
+				break;
+
+			case 'host':
+				//TODO: add support for this
+					//will have to fetch all values from the host immediately since depending on the 0ms timeout would be janky
+					//will also have to figure out when to do this since some attributes provided to this function will try to update the host which could end up janky since the order of doing things would matter
+				console.warn(`[MPO] inputfield_changeAttribute() currently does not support updating the 'host' attribute.`);
+				changedSuccessfully = false;
+				continue;
+
+			case 'autoAddToForm':
+				if (typeof newValue !== 'boolean') {
+					console.warn(`[MPO] inputfield_changeAttribute() received a non-boolean for 'autoAddToForm': `, newValue);
+					changedSuccessfully = false;
+					continue;
+				}
+
+				//apply the value to the 'FieldObject'
+				fieldObj.attributes.autoAddToForm = newValue;
+
+				//if `true` then setup the 'formObserver' to start observing
+				if (newValue === true) {
+					fieldObj.observers.formObserver.observe(field, inputfield_formObserverOptions);
+
+				//if not then disconnect the observer
+				} else {
+					fieldObj.observers.formObserver.disconnect();
+				}
+				break;
+
+			//TODO: Create a better way to update this alongside 'options' (same issue)
+			case 'content':
+				if (typeof newValue !== 'string') {
+					console.warn(`[MPO] inputfield_changeAttribute() received a non-string for 'content': `, newValue);
+					changedSuccessfully = false;
+					continue;
+				}
+
+				//apply the new value
+				fieldObj.attributes.content = newValue;
+
+				//and setup the field again
+				setupFieldAgain = true;
+				break;
+
+			case 'checkboxValue':
+				//complain and return if it's invalid
+				if (newValue === null || newValue === undefined) {
+					console.warn("[MPO] inputfield_changeAttribute() received a invalid value for 'checkboxValue' (can't be null or undefined -- use `true` to reset it):", newValue);
+					changedSuccessfully = false;
+					continue;
+				}
+
+				//apply the value to the 'FieldObject'
+				fieldObj.attributes.checkboxValue = newValue;
+
+				//if it's a checkbox that's currently checked then update the value
+					//hosts have to be updated
+					//it's best to call the 'onchange' function as well since it might rely on having the new value
+				if (fieldObj.fieldType === 'checkbox' && fieldObj.displayedValue === true) {
+					inputfield_setValue(field, newValue);
+				}
+				break;
+
+			//TODO: Create a better way to update this alongside 'content' (same issue)
+				//TODO: Also actually verify this
+			case 'options':
+				//apply the new value
+				fieldObj.attributes.options = newValue;
+
+				//and setup the field again
+				setupFieldAgain = true;
+				break;
+
+			default:
+				console.warn(`[MPO] inputfield_changeAttribute() received a unknown 'attributeName' value: `, attributeName);
 				return false;
-			}
-
-			//apply the value to the 'FieldObject'
-			fieldObj.attributes.autoAddToForm = newValue;
-
-			//if `true` then setup the 'formObserver' to start observing
-			if (newValue === true) {
-				fieldObj.observers.formObserver.observe(field, inputfield_formObserverOptions);
-
-			//if not then disconnect the observer
-			} else {
-				fieldObj.observers.formObserver.disconnect();
-			}
-			break;
-
-		//TODO: Create a better way to update this alongside 'options' (same issue)
-		case 'content':
-			if (typeof newValue !== 'string') {
-				console.warn(`[MPO] inputfield_changeAttribute() received a non-string for 'content': `, newValue);
-				return false;
-			}
-
-			//apply the new value
-			fieldObj.attributes.content = newValue;
-
-			//and setup the field again
-			field.setup({
-				fieldType: fieldObj.fieldType,
-				attributes: fieldObj.attributes,
-				forceSetup: true
-			});
-			break;
-
-		case 'checkboxValue':
-			//complain and return if it's invalid
-			if (newValue === null || newValue === undefined) {
-				console.warn("[MPO] inputfield_changeAttribute() received a invalid value for 'checkboxValue' (can't be null or undefined -- use `true` to reset it):", newValue);
-				return false;
-			}
-
-			//apply the value to the 'FieldObject'
-			fieldObj.attributes.checkboxValue = newValue;
-
-			//if it's a checkbox that's currently checked then update the value
-				//hosts have to be updated
-				//it's best to call the 'onchange' function as well since it might rely on having the new value
-			if (fieldObj.fieldType === 'checkbox' && fieldObj.displayedValue === true) {
-				inputfield_setValue(field, newValue);
-			}
-			break;
-
-		//TODO: Create a better way to update this alongside 'content' (same issue)
-		case 'options':
-			//apply the new value
-			fieldObj.attributes.options = newValue;
-
-			//and setup the field again
-			field.setup({
-				fieldType: fieldObj.fieldType,
-				attributes: fieldObj.attributes,
-				forceSetup: true
-			});
-			break;
-
-		default:
-			console.warn(`[MPO] inputfield_changeAttribute() received a unknown 'attributeName' value: `, attributeName);
-			return false;
+		}
 	}
 
-	return true;
+	//setup the field again if necessary
+	if (setupFieldAgain === true) {
+		field.setup({
+			fieldType: fieldObj.fieldType,
+			attributes: fieldObj.attributes,
+			forceSetup: true
+		});
+	}
+
+	//if the host got updated then update all it's children
+	if (fieldOrHost === 'host' && updatedHost === true) {
+		inputfield_updateHostsChildren(target);
+	}
+
+	return changedSuccessfully;
 }
 
 //the options for 'inputfield_formObserver'
