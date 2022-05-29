@@ -88,7 +88,11 @@
 	=== FIELD ATTRIBUTES ===
 
 	Each input-field has a set of attributes that can be specified when creating it.
-	Attributes can (currently) only be set when creating the input-field, they can not be changed afterwards.
+	Attributes can be changed in one of the following three ways:
+		- calling 'inputfield_changeAttribute()' (recommended)
+
+		- setting the value via '<input-field>.fieldAttributes' (use the = operator here, using '.push()' on an array for example isn't gonna do anything)
+		- setting the attribute directly on the HTML element (use lower-case for this -- only accepts string, though some attributes try to convert it)
 
 	Note that some attributes are only available for some types.
 
@@ -709,7 +713,7 @@ class InputFieldElement extends HTMLElement {
 		setTimeout(() => {this.setup()}, 0);
 	}
 	//gets the 'attributes' property of a 'FieldObject'
-		//needed inside the constructor for the '<input-field>.attributes' property
+		//needed inside the constructor for the '<input-field>.fieldAttributes' property
 	#getAttributes () {
 		//save this <input-field> element so the proxy can use it
 			//important because `this` refers to the proxy handler inside the 'set' function
@@ -720,7 +724,7 @@ class InputFieldElement extends HTMLElement {
 			//if we just returned the 'attributes' property directly changes made to it wouldn't be applied
 		return new Proxy(inputfield_fields.get(elem).attributes, {
 			set: function (target, property, newValue) {
-				inputfield_changeAttribute(elem, property, newValue);
+				return inputfield_changeAttribute(elem, property, newValue);
 			}
 		});
 	}
@@ -3622,7 +3626,7 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 				continue;
 
 
-			// # 'form' type attributes
+			// # type-dependent attributes:
 
 			case 'autoAddToForm':
 				if (typeof newValue !== 'boolean') {
@@ -3644,9 +3648,6 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 				}
 				break;
 
-
-			// # 'button' type attributes
-
 			//TODO: Create a better way to update this alongside 'options' (same issue)
 			case 'content':
 				if (typeof newValue !== 'string') {
@@ -3661,9 +3662,6 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 				//and setup the field again
 				setupFieldAgain = true;
 				break;
-
-
-			// # 'checkbox' type attributes
 
 			case 'checkboxValue':
 				//complain and return if it's invalid
@@ -3683,8 +3681,6 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 					inputfield_setValue(field, newValue);
 				}
 				break;
-
-			// # 'radio' type attributes
 
 			//TODO: Create a better way to update this alongside 'content' (same issue)
 				//TODO: Also actually verify this
@@ -3769,7 +3765,7 @@ function inputfield_formObserverCallback (record) {
 	}
 }
 
-/**	[CURRENTLY UNUSED] Gets called after every attribute MutationObserver change. Do not call this manually.
+/**	Gets called after every attribute MutationObserver change. Do not call this manually.
  *
  * 	Calls 'inputfield_changeAttribute()' for every attribute that's updated.
  *
@@ -3780,18 +3776,141 @@ function inputfield_formObserverCallback (record) {
  * 			The MutationRecord object that gets made after the MutationObserver callback.
  */
 function inputfield_attributeObserverCallback (record) {
-	return;
 	//loop through all records
 	for (const recItem of record) {
 
+		//the attribute name
+		let attributeName = recItem.attributeName;
+
 		//make sure it's of type 'attributes'
-		if (typeof recItem.attributeName !== 'string') {
+		if (typeof attributeName !== 'string') {
 			console.warn(`[MPO] inputfield_attributeObserverCallback() received a record with a non-string 'attributeName': "${attributeName}". Type: "${recItem.type}" - Target: `, recItem.target);
 			continue;
 		}
 
+		//get the new value
+		let newValue = recItem.target.getAttribute(attributeName);
+
+		//if it's `null` then return
+			//this happens if a value is deleted
+			//which also happens at the end of this function, so this avoids accidentally calling 'changeAttribute()' again
+			//but even aside from that, `null` can't really be used since most attributes reject both `undefined` and `null` and having to figure out a "default" for each attribute would mostly be a waste
+		if (newValue === null) {
+			return;
+		}
+
+		//convert the value from a string to whatever type is needed
+			//IMPORTANT: all attribute names have to be lower-case because HTML attributes don't allow upper-case
+			//note that it has to be 'checkboxvalue' and not 'checkbox-value', that's how vanilla HTML attributes tend to do things
+		switch (attributeName) {
+
+			// # core attributes:
+
+			case 'variation':
+				break;
+
+			//this is the global ID attribute!
+			case 'id':
+				return;
+
+			//this is the input-field ID we should watch for
+			case 'data-fieldid':
+				attributeName = 'id';
+				break;
+
+
+			// # behaviour attributes:
+
+			//can't take a function and using 'eval()' would be a horrible idea
+				//it might make sense with vanilla-HTML/JS but it really ain't good for anything else
+			case 'onchange':
+				console.warn(`[MPO] inputfield_attributeObserverCallback() can't change the attribute 'options' through HTML attributes. Use 'inputfield_changeAttribute()' or '<input-field>.fieldAttributes' instead.`);
+				return;
+
+			//I guess we'll just take it as a string?
+			case 'defaultvalue':
+				attributeName = 'defaultValue';
+				break;
+
+			case 'tag':
+				break;
+
+			case 'forms':
+				//a space is used to seperate different IDs
+					//by doing it this way it stays consistent with how vanilla-HTML works (see 'class' attribute)
+				newValue = newValue.split(' ');
+				break;
+
+			case 'formsadd':
+				attributeName = 'formsAdd';
+				newValue = newValue.split(' ');
+
+				break;
+			case 'formsremove':
+				attributeName = 'formsRemove';
+				newValue = newValue.split(' ');
+				break;
+
+
+			// # host attributes:
+
+			case 'host':
+				break;
+
+
+			// # starting attributes:
+
+			case 'beforetext':
+				attributeName = 'beforeText';
+				break;
+
+			case 'aftertext':
+				attributeName = 'afterText';
+				break;
+
+			case 'labels':
+				break;
+
+			case 'htmlattributes':
+				attributeName = 'HTMLAttributes';
+				break;
+
+
+			// # type-dependent attributes:
+
+			case 'autoaddtoform':
+				attributeName = 'autoAddToForm';
+				break;
+
+			//can't really take an array with objects in it - not unless using some weird-ass syntax or using JSON but at that point it's better to just expect the user to use another way
+			case 'options':
+				console.warn(`[MPO] inputfield_attributeObserverCallback() can't change the attribute 'options' through HTML attributes. Use 'inputfield_changeAttribute()' or '<input-field>.fieldAttributes' instead.`);
+				return;
+
+			case 'checkboxvalue':
+				//attributeName = 'checkboxValue';
+				break;
+
+			case 'options':
+				console.warn(`[MPO] inputfield_attributeObserverCallback() can't change the attribute 'options' through HTML attributes. Use 'inputfield_changeAttribute()' or '<input-field>.fieldAttributes' instead.`);
+				break;
+
+			//don't want any other attributes to get caught up in this
+				//this makes sure that various 'data-' or global HTML attributes won't land in 'changeAttribute()'
+				//which is also why we won't 'console.warn()' it - this is normal, expected behaviour
+			default:
+				return;
+		}
+
 		//call 'changeAttribute()' to actually apply the new value
-		inputfield_changeAttribute(recItem.target, recItem.attributeName, recItem.target.getAttribute(recItem.attributeName));
+		inputfield_changeAttribute(recItem.target, attributeName, newValue);
+
+		//remove the attribute from the element as long as it's not supposed to be there
+			//note that this doesn't remove attributes that were cancelled with 'return;' above
+			//that's intended so the user can still see the invalid attributes they entered which might help bug-fix it
+		if (['data-fieldid', 'variation'].indexOf(recItem.attributeName) === -1) {
+			recItem.target.removeAttribute(recItem.attributeName);
+		}
 	}
 }
 
