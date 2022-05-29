@@ -383,6 +383,15 @@ function buildSite_buildSettings (docFrag) {
 		let testHost = cElem('span', elem);
 
 		label = cElem('span', testHost);
+		label.textContent = 'Regular checkbox: ';
+		inputfield_createField('checkbox', testHost, {
+			host: 'inputfield_testHost',
+			onchange: logToOutput,
+			labels: label
+		});
+		cElem('br', testHost);
+
+		label = cElem('span', testHost);
 		label.textContent = 'Mario: ';
 		inputfield_createField('checkbox', testHost, {
 			host: 'inputfield_testHost',

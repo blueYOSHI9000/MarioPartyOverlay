@@ -3,26 +3,28 @@
 
 /*	=== HOW INPUT-FIELDS WORK ===
 
-	IMPORTANT: This "How input-fields work" section is quite outdated. It still works (probably) but it will only be updated once I'm done with all To-Do items on my list.
+	Input-fields are an "easy" way to get user-input. "easy" depends on how you look at it...
+	Input-fields are categorized in different types depending on what input you want.
+	If you need the user to enter a number then you use the 'number' type, if you need them to make a selection then you use the 'radio' type.
+
+	One goal of input-fields was to make full customization easy. You can change how an input-field looks by using a different variation.
+	Variation are still very much a WIP. But basic support is there. There's a section on variations further down.
+
+	Each input-field can have attributes that define how they work (not to be confused with HTML attributes!).
+	Some attributes are exclusive to certain types (like the 'options' attribute being exclusive to 'radio' types).
+	There's a section further down listing all attributes and another section on how to change attributes.
 
 
-	Input-fields are a way to get user-input. Whether it's a button, a checkbox, a set of options to choose from or whatever.
-	Basically a <input> element that looks better.
-
-	You create a input-field with 'inputfield_createField()'.
-	Said function then creates a <span> that contains the entire input-field. This <span> also has the 'inputfield_container' class and is called the "container".
-	The container also stores the unique 'fieldID' inside it's 'data-fieldid' attribute.
-
-	Input-fields entirely work through the container element and fieldIDs, if you want to do anything with a already-created input-field you need one of the two.
-
-	In order to create a input-field you need to specify a type and variation (though variations are automatically set to a default if not specified).
-	Types specify what kind of input the field should take. Each type has a different purpose.
-	Variations on the other hand simply change the appearance of the input-field, they don't change the actual functionality. Any variation can be replaced with any other and it still works.
-		(though variations are unique to each type)
+	To create a input-field you use 'inputfield_createField()'.
+	Use Ctrl+F to search for the function in this file, there's some documentation right before it that explains which Arguments to use and all that.
 
 
-	One important thing: The DOM elements that input-fields create should NOT be messed with. If any changes are made to the DOM element they might break. It's best to completely leave them alone.
-	It should also be mentioned that input-fields rarely report errors, chances are they silently break with no one realizing.
+	Some details to keep in mind:
+		This entire system is designed to avoid memory leaks in any way possible.
+		It's designed not to save ANYTHING without making sure it's deleted when an input-field is deleted.
+
+		This does create a couple limitations however. Special care has to be used when moving input-fields into "hidden" spaces that outside the regular document (anything that 'document.querySelector()' can't find).
+		Because if that happens then anything that depends on it won't be able to find it. In other words, functions like 'inputfield_getValue()' won't be able to get it's value with just an ID.
 
 
 	=== INPUT FIELD TYPES & VARIATIONS ===
@@ -156,6 +158,8 @@
 			This is a definitive list of all forms that the input-field is part of. If this is changed to an empty array then it will no longer be part of any forms.
 			If you simply want to add the input-field to a new form then use 'formsAdd'.
 
+			Note: Don't add input-fields to procedually generated forms. Deleted forms are never removed from this attribute so be sure to either clear it or to only use forms that are deleted with this input-field/forms that are always available.
+
 		formsAdd [Array/DOM Element/String] <none>
 			A list of all forms the input-field should be added to.
 			Can also be a single form. Can be the <input-field> element of the form or it's ID.
@@ -166,8 +170,8 @@
 
 	# host related attributes (any type can use these):
 
-		host [String] <none>
-			Specifying a host links the input-field to the specified host.
+		host [String/null] <none>
+			Specifying a host links the input-field to the specified host. Set it to `null` to remove the host.
 			Every input-field linked to the host shares the exact same value at all times.
 			In addition, they also share all "behaviour attributes" listed above (that includes the form attributes and the 'onchange' function).
 			All of that will be hosted permanently (hence the name), even if all input-fields are deleted the host will still exist and new input-fields linked will take the host's values & attributes.
@@ -245,21 +249,33 @@
 				- src [String]
 					The source of the image. Only needed if the 'fieldType' is 'radio-image'.
 
+
+
 	=== USING LABELS ===
 		Input-fields also have their own <label> alternative that's called... labels. I may like to over-complicate things but not even I would call them something else.
 
 		There's multiple ways to create a label or convert an existing element to a label (any element can be a label):
 
-			- Add a 'inputfield_label' class and a 'data-labelforfieldid' attribute that saves the unique input-field ID.
+			- Add a 'inputfield_label' class and a 'data-fieldlabelfor' attribute that saves the unique input-field ID.
 
 			- Include the element in the 'labels' attribute when creating a input-field.
 
 			- Call 'inputfield_convertToLabel()'. This way you get more options and more control. See the documentation on the function for more info.
 				> You can also call '.inputfield_convertToLabel()' on a DOM element directly (again, see function for more info).
 
+
+
 	=== CREATING CUSTOM VARIATIONS ===
 		A better way to do this will be added later (and with that a better tutorial).
 		For now, view the documentation on the 'inputfield_variations' variable further down.
+
+
+
+	=== DATA ATTRIBUTES USED ===
+		Input-fields use the following HTML attributes:
+			- 'data-fieldid'
+			- 'data-fieldlabelfor'
+			- 'data-holdsvalue' (only used inside <input-field> elements)
 
 
 
@@ -274,15 +290,96 @@
 	inputfield_setValue()
 		Sets the input-field to a new value.
 
- */
+	inputfield_changeAttribute()
+		Changes attributes of a input-field.
 
-/**	=== USING THIS ON ANOTHER PROJECT ===
- * 	If you want to use this file on another project you gotta do the following things:
- *
- * 		- Load this file (obviously).
- * 		- Load 'styles/inputfield.css'
- * 		- Add a 'pointerdown' event that calls 'inputfield_executedAfterFieldChange(elem)' whenever the user clicks on a element with a 'inputfield_callUpdate' class ('elem' is the element being clicked on).
- * 		- Add a 'pointerdown' event that calls 'inputfield_executedAfterLabelPress(elem)'  whenever the user clicks on a element with a 'inputfield_label'      class ('elem' is the element being clicked on).
+
+	inputfield_getFieldObject()
+		Gets the object that stores all the data of the input-field.
+		Treat it as read-only because changing a value in it won't actually apply the value!
+		Should only really be used for debugging.
+
+
+
+ 	=== USING THIS ON ANOTHER PROJECT ===
+		If you want to use this file on another project you gotta do the following things:
+
+			- Load this file (obviously).
+			- Load 'styles/inputfield.css'
+			- Add a 'pointerdown' event that calls 'inputfield_executedAfterFieldChange(elem)' whenever the user clicks on a element with a 'inputfield_callUpdate' class ('elem' is the element being clicked on).
+			- Add a 'pointerdown' event that calls 'inputfield_executedAfterLabelPress(elem)'  whenever the user clicks on a element with a 'inputfield_label'      class ('elem' is the element being clicked on).
+
+
+
+	=== MAINTAINING THIS PROJECT ===
+		A quick run-down of all import things to keep in mind if you plan on maintaining this project (whether it's because I abandoned it or because you want to add a new feature).
+		The "Avoiding memory leaks" seems boring but it's the most important part. Please actually read it if you plan on maintaining this project.
+
+		# Avoiding memory leaks
+			This entire system is designed around NOT SAVING ANYTHING!   NOT! SAVING! ANYTHING!
+			Everything that is saved, is saved in a 'WeakMap' which is a feature from browsers to "attach info" onto a DOM elements (or any object for that matter), if the DOM element is deleted then all the info attached is deleted as well.
+			That's the concept of this entire system. You save anything that shouldn't be saved and whoops, you got a memory leak! Good luck trying to even notice that!
+
+			This is such a big issue because input-fields can be created in a "pop-up" of sorts that displays settings for example, if the "pop-up" is closed then all the input-fields are deleted with it. If the "pop-up" is opened again then new input-fields will be created.
+			That's why it's so important to always keep memory leaks in mind.
+
+			This is usually avoided by always saving the IDs of input-fields and not the <input-field> DOM element. That said, endlessly saving IDs will still create a memory leak so we also gotta go back and check any arrays that save IDs to make sure that deleted/unavailable input-fields are removed from the array.
+
+			But that could cause an issue if input-fields go unavailable (for example by being appended to a 'DocumentFragment') and then are available again.
+			For this we usually have a "one-sided" connection. For example, input-fields link to a host but a host doesn't always link back.
+			Whenever a new input-field is added to a host the host immediately removes all unavailable input-field from it's 'childList'.
+			But when a removed input-field is appended back onto the regular document it immediately tries to "re-link" itself with the host.
+
+			A similar problem exists for forms. A form has many children that are a part of it but each input-field can also be part of many forms.
+			This means both sides have a technically unlimited list of potential fields to keep track of.
+			This problem was solved by making forms "one-sided", a input-field always links to every form but the form doesn't save a single child.
+			It's not an ideal solution. You can't see how many or which children a form has.
+			In addition there's still a memory leak in here! Can you spot it?
+			Input-fields still save every single form it's a part of without ever letting go of them.
+			The input-field can't let go of unavailable forms because what if the form gets available again? There's no way to see the difference between a "deleted" and a "unavailable" element.
+			This was "solved" by simply adding a note to the 'form' type documentation above to say "yeah, don't do this, lol".
+
+
+		# Prefix
+			Every global variable is prefixed with 'inputfield_' to create a simple name-space and also to differentiate global and local variables more.
+			The prefixes are often emitted from documentation (so if 'createField()' is referenced then it likely means 'inputfield_createField()').
+
+
+		# The Structure
+			Input-fields are created within 'FieldObject()' and 'setupField()' (the latter is also used as'<input-field>.setup()').
+			'FieldObject()' takes the input - that being all attributes - and verifies & applies them.
+			'setupField()' calls 'FieldObject()' and then creates the "insides" of the <input-field> element (since before that function it's just an empty element).
+
+			Note that everything about the <input-field> element itself runs through variations. Check the 'inputfield_variations' object out, you'll see how it works.
+
+			From that point on, everything really just runs through 'applyNewValue()'. That function is called after a value is changed.
+			It makes sure the value is applied to the actual <input-field> element itself, it updates the hosts (which in return call 'applyNewValue()' for all input-fields that are a part of the host), it calls the 'onchange' function and finally it also updates all forms that need to be updated (which you guessed it, 'applyNewValue()' is also used to update the forms!).
+
+			Most of the host "magic" all happens in 'updateHostsChildren()'.
+
+			This is probably most of what you need to know about the general structure. It's best to quickly read some of the documentations on each function and then just go through 'applyNewValue()' step-by-step, you'll see how most functions are used that way.
+
+		# I want to create a new attribute!
+			If you want to create a new attribute you gotta do the following things (hope I didn't miss anything!):
+				- update the documentation above
+				- verify and apply it inside the 'FieldObject()' function
+					> note that if the attribute affects the <input-field> element directly then the attribute is likely applied inside each variations constructor (see 'content' and 'options')
+				- add it to 'changeAttributes()' so it can be changed
+				- add it to 'attributeObserverCallback()' so it can be changed via HTML attributes on the <input-field> element directly
+
+				- if the attribute is a "behaviour attribute" that gets synced to the host, well, good luck! (the following is likely not everything)
+					- add it to 'HostObject()'
+						> also add it to it's arguments when calling the function and also to 'setupHost()'
+						> it's best to Ctrl+F those two functions and add it everywhere those functions are called
+					- add it to the part where the 'host' attribute gets verified inside 'FieldObject()'
+					- add it to 'updateHostsChildren()'
+
+			Note that even more work is needed if you want to create a property directly inside the 'FieldObject' or 'HostObject' (like 'belongsToForm').
+
+			> Should my attribute be a "behaviour attribute"?
+				If it's something that affects how the value or input-field itself behaves then no (see 'content' or 'options').
+				If it's something that happens "outside" the input-field then yes (see 'onchange' or 'tag').
+
  */
 
 //the total fields created
@@ -800,9 +897,8 @@ customElements.define('input-field', InputFieldElement);
  * 	This sets up the host if needed.
  * 	This updates the host and all forms if needed.
  *
- * 	This will also execute the attributes immediately if necessary (for example, if a 'host' is specified then it will immediately be added to the host) with the following exceptions:
- * 		- 'content'
- * 	These exceptions will all be executed in 'inputfield_createField()'. They are still verified within this function though.
+ * 	This will also execute the attributes immediately if necessary (for example, if a 'host' is specified then it will immediately be added to the host).
+ * 	Exceptions to this are attributes that affect the actual <input-field> element itself (like 'content' or 'options'). Those are instead done inside each variation's constructor.
  *
  * 	Args:
  * 		specifics [Object]
@@ -1102,6 +1198,14 @@ function inputfield_FieldObject (specifics={}) {
 
 	// # 'options'
 
+	//complain and return if this is a 'radio' field with an invalid 'options' attribute
+		//if it's not an array at all then return (doesn't matter if it's `undefined`, a 'radio' field still needs one)
+		//if it's an array with 0 entries then return as well
+	if (specifics.fieldType === 'radio' && (Array.isArray(attributes.options) !== true || attributes.options?.length < 1)) {
+		console.warn(`[MPO] inputfield_FieldObject() requires a 'options' attribute for a input-field of type 'radio' (ID "${this.id}"): `, attributes.options, ` - Has to be an array with at least one entry.`);
+		return;
+	}
+
 	//set 'options' to an empty array if it's undefined
 	attributes.options ??= [];
 
@@ -1145,6 +1249,13 @@ function inputfield_FieldObject (specifics={}) {
 
 	//if it's an empty array then delete it to remove clutter
 	if (attributes.options.length === 0) {
+
+		//complain and return if it's a 'radio' field with an empty array
+		if (specifics.fieldType === 'radio') {
+			console.warn(`[MPO] inputfield_FieldObject() received a invalid 'options' array. There has to be at least one valid entry for a input-field of type 'radio' to work.`);
+			return;
+		}
+
 		delete attributes.options;
 	}
 
@@ -1239,11 +1350,10 @@ function inputfield_FieldObject (specifics={}) {
 						hostObj.tag = attributes.tag;
 					}
 				}
-			}
 
 			//if it's not specified then get it from it's host
-				//TODO: what if the host's attribute is also undefined??
-			if (attributes[behaviourKey] === undefined) {
+				//if the host's value is also `undefined` then it doesn't matter because this value was already `undefined` anyway
+			} else {
 				attributes[behaviourKey] = hostObj.attributes[behaviourKey];
 			}
 		}
@@ -1301,13 +1411,8 @@ function inputfield_FieldObject (specifics={}) {
 		//has to be done after 'host' & 'tag'
 		//has to be done after 'defaultValue' because the 'startingValue' property is needed
 
-	//if a host is specified then delete 'formsAdd' and 'formsRemove' because they're not needed anymore
-	if (this.belongsToHost !== null) {
-		delete attributes.formsAdd;
-		delete attributes.formsRemove;
-
-	//otherwise verify and apply it
-	} else {
+	//if a host isn't specified then verify and apply all form attributes
+	if (this.belongsToHost === null) {
 		attributes.forms = inputfield_verifyFormAttributes({
 			forms      : attributes.forms      ,
 			formsAdd   : attributes.formsAdd   ,
@@ -1323,12 +1428,12 @@ function inputfield_FieldObject (specifics={}) {
 		if (attributes.forms.length === 0) {
 			delete attributes.forms;
 		}
-
-		//delete 'formsAdd' and 'formsRemove'
-			//these attributes are "relative" attributes which means they should always be empty so a new form can be added or removed
-		delete attributes.formsAdd   ;
-		delete attributes.formsRemove;
 	}
+
+	//delete 'formsAdd' and 'formsRemove'
+		//these attributes are "relative" attributes which means they should always be empty so a new form can be added or removed
+	delete attributes.formsAdd   ;
+	delete attributes.formsRemove;
 
 
 	// # 'beforeText'
@@ -1356,7 +1461,7 @@ function inputfield_FieldObject (specifics={}) {
 
 		//make it a label
 		beforeTextNode.classList.add('inputfield_label');
-		beforeTextNode.setAttribute('data-labelforfieldid', this.id);
+		beforeTextNode.setAttribute('data-fieldlabelfor', this.id);
 	}
 
 
@@ -1399,7 +1504,7 @@ function inputfield_FieldObject (specifics={}) {
 
 		//make it a label
 		afterTextNode.classList.add('inputfield_label');
-		afterTextNode.setAttribute('data-labelforfieldid', this.id);
+		afterTextNode.setAttribute('data-fieldlabelfor', this.id);
 	}
 
 
@@ -1423,7 +1528,7 @@ function inputfield_FieldObject (specifics={}) {
 		//if it's a DOM element then convert it to a basic label and return false (keep the array item)
 		} else {
 			item.classList.add('inputfield_label');
-			item.setAttribute('data-labelforfieldid', this.id);
+			item.setAttribute('data-fieldlabelfor', this.id);
 			return false;
 		}
 	});
@@ -1443,7 +1548,7 @@ function inputfield_FieldObject (specifics={}) {
 			//if it's an internally used attribute then complain about it but still apply it
 				//mainly because we can't stop the user from applying a "forbidden" attribute afterwards (not without serious draw-backs at least)
 				//so why not already allow it during the elements creation? this way we can at least warn them about it
-			if (['data-fieldid', 'data-holdsvalue', 'data-labelforfieldid'].indexOf(key) !== -1) {
+			if (['data-fieldid', 'data-holdsvalue', 'data-fieldlabelfor'].indexOf(key) !== -1) {
 				console.warn(`[MPO] inputfield_FieldObject() received a troubling value while parsing 'HTMLAttributes' for input-field "${this.id}". "${key}" is already used by input-field themselves, the value will still be applied but things may break.`);
 			}
 
@@ -1897,7 +2002,7 @@ function inputfield_LabelObject (specifics={}) {
 	specifics.labelElem.classList.add('inputfield_label');
 
 	//add the input-field it's linked to
-	specifics.labelElem.setAttribute('data-labelforfieldid', this.labelForFieldID);
+	specifics.labelElem.setAttribute('data-fieldlabelfor', this.labelForFieldID);
 }
 
 /**	Verifies and applies the 'forms', 'formsAdd', 'formsRemove' attribute.
@@ -2283,7 +2388,7 @@ function inputfield_setupField (specifics={}) {
 
 	//complain if a FieldObject doesn't already exist
 	if (fieldObj === null) {
-		console.warn(`[MPO] inputfield_setupField(): A FieldObject wasn't already made for the following input-field (this is likely an internal error):`);
+		console.warn(`[MPO] <input-field>.setup(): A FieldObject wasn't already made for the following input-field (this is likely an internal error):`);
 		console.warn(this);
 
 	//if the FieldObject does exist...
@@ -2317,7 +2422,7 @@ function inputfield_setupField (specifics={}) {
 
 	//complain and return if no 'fieldType' was specified
 	if (typeof fieldType !== 'string') {
-		console.error(`[MPO] inputfield_setupField() could not setup the following input-field as no type was specified (make sure to always setup a <input-field> element by calling '.setup()' on it or by using a 'type' HTML attribute): `, this);
+		console.error(`[MPO] <input-field>.setup() could not setup the following input-field as no type was specified (make sure to always setup a <input-field> element by calling '.setup()' on it or by using a 'type' HTML attribute): `, this);
 		return this;
 	}
 
@@ -2357,6 +2462,12 @@ function inputfield_setupField (specifics={}) {
 		fieldType: fieldType,
 		attributes: attributes
 	});
+
+	//if the FieldObject still isn't setup then something went wrong
+	if (fieldObj.setup !== true) {
+		console.warn(`[MPO] <input-field>.setup() couldn't setup the input-field "${fieldObj.id}" as something unexpected went wrong. Chances are more warnings got logged to the console. It can happen that more errors appear after this with high IDs, that's because it could be attempting to re-setup this input-field which causes it to get a new ID each time.`);
+		return this;
+	}
 
 	//apply the new type & variation after it's been parsed by 'inputfield_FieldObject()'
 	fieldType = fieldObj.fieldType;
@@ -2825,7 +2936,10 @@ function inputfield_getDefaultValue (fieldType, attributes) {
 		case 'radio':
 			//get the value of the first 'option' specified
 				//return false if it couldn't be found as a failsafe
-			return attributes?.options[0]?.value ?? false;
+			if (Array.isArray(attributes?.options) === true) {
+				return attributes.options[0]?.value ?? false;
+			}
+			return false;
 
 		case 'text':
 			return '';
@@ -2892,7 +3006,7 @@ function inputfield_executedAfterFieldChange (fieldID, newValue) {
  * 		specifics [Object] <optional>
  * 			Includes the following optional properties:
  *
- * 				skipOnChange [Boolean] <false>
+ * 				skipOnchange [Boolean] <false>
  * 					If true it skips executing the 'onchange' function.
  *
  * 				skipSetRawValue [Boolean] <false>
@@ -3077,14 +3191,14 @@ function inputfield_executedAfterLabelPress (labelElem) {
 	const labelObj = inputfield_labels.get(labelElem);
 
 	//get the input-field it's linked to
-	const fieldElem = inputfield_getElement(labelElem.getAttribute('data-labelforfieldid'));
+	const fieldElem = inputfield_getElement(labelElem.getAttribute('data-fieldlabelfor'));
 
 	//get the field object
 	const fieldObj = inputfield_getFieldObject(fieldElem);
 
 	//return and complain if the field couldn't be found
 	if (typeof fieldObj !== 'object') {
-		console.warn(`[MPO] inputfield_executedAfterLabelPress() couldn't find the input-field "${labelElem.getAttribute('data-labelforfieldid')}" while processing a label event.`);
+		console.warn(`[MPO] inputfield_executedAfterLabelPress() couldn't find the input-field "${labelElem.getAttribute('data-fieldlabelfor')}" while processing a label event.`);
 		return;
 	}
 
@@ -3380,8 +3494,9 @@ function inputfield_updateHostsChildren (host, specifics={}) {
 /**	Changes and applies attributes for a input-field.
  *
  * 	Can be called as `changeAttribute(field, 'checkboxValue', true)` to change a single attribute.
- *
  * 	Can be called as `changeAttribute(field, {checkboxValue: true})` to change multiple attributes.
+ *
+ * 	The 'host' attribute will always be checked before any other attribute.
  *
  * 	Args:
  * 		field [DOM Element/String]
@@ -3407,7 +3522,7 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 
 	//complain and return if the field-object couldn't be found
 	if (fieldObj === null) {
-		console.warn(`[MPO] inputfield_changeAttribute() received a invalid 'field': "${field}".`);
+		console.warn(`[MPO] inputfield_changeAttribute() received a invalid 'field': `, field);
 		return false;
 	}
 
@@ -3421,7 +3536,7 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 
 
 
-	// === PREPARE FOR HOST ===
+	// === PREPARE FOR HOST AND UPDATE & APPLY THE 'host' ATTRIBUTE ===
 		//all of these variables should only be used if the attribute has to be changed on the host
 		//because these variables will automatically point to either the input-field or the host depending on which one has to be updated
 
@@ -3435,8 +3550,92 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 		//is either 'field' or 'host'
 	let fieldOrHost = 'field';
 
+
+	//change the host immediately if it was changed
+	if (attributes.host !== undefined) {
+		const newHost = attributes.host;
+
+		//complain if it's invalid
+		if (typeof newHost !== 'string' && newHost !== null) {
+			console.warn(`[MPO] inputfield_changeAttribute() received a invalid value for 'host' (has to be either a string or undefined/null): `, newValue);
+
+		//if it's valid then continue updating the attribute
+		} else {
+
+			//unlink the current host
+				//but only if the input-field already belongs to a host and if the new host is a different host
+			if (typeof fieldObj.belongsToHost === 'string' && fieldObj.belongsToHost !== newHost) {
+
+				//get the HostObject
+				let hostObj = inputfield_getHostObject(fieldObj.belongsToHost);
+
+				//if the HostObject could be found...
+				if (hostObj !== null) {
+
+					//...then remove the input-field from the host's 'childList', but only if it's already in there
+					const hostChildIndex = hostObj.childList.indexOf(fieldObj.id);
+					if (hostChildIndex !== -1) {
+						hostObj.childList.splice(hostChildIndex, 1);
+					}
+				}
+			}
+
+			//link the new host (if one was specified)
+			if (typeof newHost === 'string') {
+
+				//get the new HostObject
+				let newHostObj = inputfield_getHostObject(newHost);
+
+				//if the HostObject doesn't exist yet then create it
+				if (newHostObj === null) {
+					newHostObj = inputfield_setupHost(newHost, {
+						childList   : [field],
+						defaultValue: fieldObj.attributes.defaultValue,
+						tag         : fieldObj.attributes.tag,
+						onchange    : fieldObj.attributes.onchange,
+						forms       : fieldObj.attributes.forms
+					});
+
+				//if a HostObject already exists then add it and take it's value & attributes
+				} else {
+
+					//add it to it's 'childList'
+					newHostObj.childList.push(fieldObj.id);
+
+					//get it's value & attributes
+					inputfield_updateHostsChildren(newHost, {
+						updateAttributes: true,
+						updateSpecificFields: [fieldObj.id],
+						executeImmediately: true
+					});
+				}
+
+				//set the 'belongsToHost' property
+				fieldObj.belongsToHost = newHost;
+
+				//update these variables to be accurate
+				target      = newHost;
+				targetObj   = newHostObj;
+				fieldOrHost = 'host'
+
+			//if no new host was specified then that means it's no longer part of any host
+			} else {
+
+				//set the 'belongsToHost' property
+				fieldObj.belongsToHost = null;
+
+				//delete the attribute since it's no longer needed
+				delete attributes.host;
+
+				//update these variables to be accurate
+				target      = field;
+				targetObj   = fieldObj;
+				fieldOrHost = 'field'
+			}
+		}
+
 	//get the HostObject if a host is used
-	if (fieldObj.belongsToHost !== null) {
+	} else if (fieldObj.belongsToHost !== null) {
 		target      = fieldObj.belongsToHost;
 		targetObj   = inputfield_getHostObject(target);
 		fieldOrHost = 'host';
@@ -3490,6 +3689,7 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 		}
 
 		//change the attribute
+			//IMPORTANT: If changes are done here then make sure to update 'inputfield_attributeObserverCallback()' as well! That function is responsible for allowing lower-cased attribute names and accepting input in string-form only (needed to support changing attributes through the <input-field> HTML attribute).
 		switch (attributeName) {
 
 			// # core attributes:
@@ -3604,14 +3804,11 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 				break;
 
 
-			// # host attributes
+			// # host attributes:
 
 			case 'host':
-				//TODO: add support for this
-					//will have to fetch all values from the host immediately since depending on the 0ms timeout would be janky
-					//will also have to figure out when to do this since some attributes provided to this function will try to update the host which could end up janky since the order of doing things would matter
-				console.warn(`[MPO] inputfield_changeAttribute() currently does not support updating the 'host' attribute.`);
-				changedSuccessfully = false;
+				//already done, so skip it
+					//this case will never be reached anyway since if 'host' was specified then the property was already deleted by now
 				continue;
 
 
@@ -3768,8 +3965,9 @@ function inputfield_formObserverCallback (record) {
 /**	Gets called after every attribute MutationObserver change. Do not call this manually.
  *
  * 	Calls 'inputfield_changeAttribute()' for every attribute that's updated.
- *
- * 	CURRENTLY UNUSED. It will be added back in in a future update.
+ * 	This also "converts" the attribute changes so 'changeAttribute()' can actually use them, this includes:
+ * 		- Changing all attribute-names from lower-case to the "regular" case ('checkboxvalue' -> 'checkboxValue').
+ * 		- Converts some attributes from strings to whatever is needed, but also rejects some outright (like 'onchange', doesn't really work as a string).
  *
  * 	Args:
  * 		record [MutationRecord object]
@@ -3888,7 +4086,7 @@ function inputfield_attributeObserverCallback (record) {
 				return;
 
 			case 'checkboxvalue':
-				//attributeName = 'checkboxValue';
+				attributeName = 'checkboxValue';
 				break;
 
 			case 'options':
@@ -4115,7 +4313,7 @@ function inputfield_getFieldObject (field, specifics={}) {
  * 	Note: Does NOT log to the console if a host couldn't be found.
  *
  * 	Args:
- * 		host [*any*]
+ * 		host [String]
  * 			The host.
  * 			Can't be `undefined` or `null`.
  *
