@@ -325,10 +325,10 @@ Object.defineProperty(Object.prototype, 'fillIn', {value: function (defaultObj, 
 	return obj;
 }});
 
-
 /**	Removes array items that matches a expression.
  *
  * 	Immediately applies the value to the array it got called on.
+ * 	The function has to return exactly `true` for an item to be removed. A "truthy" value will just be treated as `false`.
  *
  * 	Args:
  * 		expr [Function]

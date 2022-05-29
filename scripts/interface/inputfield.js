@@ -1162,8 +1162,13 @@ function inputfield_FieldObject (specifics={}) {
 		hostObj.childList.push(this.id);
 
 		//list of all "behaviour attributes"
-		const behaviourAttributes     = ['defaultValue',  'onchange', 'tag'];
-		const behaviourAttributesForm = ['forms', 'formsAdd', 'formsRemove'];
+		const behaviourAttributes     = ['defaultValue',  'onchange', 'tag', 'forms', 'formsAdd', 'formsRemove'];
+
+		//track whether the form attributes got changed on the host because if they did we need to call 'verifyFormAttributes()' on them
+		let formAttributesChanged = false;
+
+		//track whether other attributes from the host got changed so we can call 'updateHostsChildren()'
+		let hostAttributesChanged = false;
 
 		//check for specified attributes
 		for (const behaviourKey of behaviourAttributes) {
@@ -1171,25 +1176,20 @@ function inputfield_FieldObject (specifics={}) {
 			//if it's specified here then overwrite the host
 			if (attributes[behaviourKey] !== undefined) {
 				hostObj.attributes[behaviourKey] = attributes[behaviourKey];
-			}
 
-			//if it's not specified then get it from it's host
-				//TODO: what if the host's attribute is also undefined???
-			if (attributes[behaviourKey] === undefined) {
-				attributes[behaviourKey] = hostObj.attributes[behaviourKey];
-			}
-		}
+				//if a form attribute changed then update the variable
+				if (['forms', 'formsAdd', 'formsRemove'].indexOf(behaviourKey) !== -1) {
+					formAttributesChanged = true;
 
-		//track whether the form attributes got changed on the host because if they did we need to call 'verifyFormAttributes()' on them
-		let formAttributesChanged = false;
+				//if not a form attributes then other host attribute have changed
+				} else {
+					hostAttributesChanged = true;
 
-		//check for the form behaviour attributes
-		for (const behaviourKey of behaviourAttributesForm) {
-
-			//if it's specified here then overwrite the host
-			if (attributes[behaviourKey] !== undefined) {
-				hostObj.attributes[behaviourKey] = attributes[behaviourKey];
-				formAttributesChanged = true;
+					//update 'tag' property if needed
+					if (behaviourKey === 'tag') {
+						hostObj.tag = attributes.tag;
+					}
+				}
 			}
 
 			//if it's not specified then get it from it's host
@@ -1216,6 +1216,14 @@ function inputfield_FieldObject (specifics={}) {
 
 			//and also replace the attribute
 			hostObj.attributes.forms = hostObj.belongsToForm;
+		}
+
+		//if other host attributes changed then we can call 'updateHostsChildren()'
+		if (hostAttributesChanged === true) {
+			inputfield_updateHostsChildren(attributes.host, {
+				updateAttributes: true,
+				executeImmediately: false
+			});
 		}
 	}
 
@@ -1516,14 +1524,21 @@ function inputfield_FieldObject (specifics={}) {
  *
  * 		value [*any*]
  * 			The value that it holds. Can be any type but will likely be a string.
- * 			See 'valueUpdatePending' below for more info.
+ * 			See 'pendingUpdate' below for more info.
  *
- * 		valueUpdatePending [Boolean]
+ * 		pendingUpdate [Object]
  * 			The host won't update it's children with a new value immediately, instead it uses a 0ms 'setTimeout()' to update them as soon as everything else is done.
- * 			This value is `true` if such a 0ms timeout has been created. If there's no 0ms timeout active or it's already been executed then this value is `false`.
- *
  * 			This is done in case the value is changed multiple times in quick succession to avoid updating every single child every time.
  * 			It's also needed when the website is created in case some of it's children are still in a DocumentFragment and can't be found until the site is fully loaded.
+ *
+ * 			This object contains the following properties:
+ *
+ * 				timeoutID [String]
+ * 					The ID from a 'setTimeout()'.
+ *
+ * 				arguments [Object]
+ * 					The arguments that are used to call 'updateHostsChildren()'.
+ * 					Does not include the 'DOMTree' & 'executeImmediately' arguments.
  *
  * 		tag [String]
  * 			The tag of the input-field. Only needed for hosts that are part of a form.
@@ -1675,9 +1690,15 @@ function inputfield_HostObject (specifics={}) {
 		//note that if it hasn't been specified then it'll be undefined which is what we need then anyway
 	this.value = specifics.defaultValue;
 
-	//set 'valueUpdatePending'
-		//there's no update pending right now so it's always `false`
-	this.valueUpdatePending = false;
+	//set 'pendingUpdate'
+		//use default arguments
+	this.pendingUpdate = {
+		timeoutID: '',
+		arguments: {
+			updateAttributes: false,
+			updateSpecificFields: []
+		}
+	};
 
 	//set attributes
 	this.attributes = attributes;
@@ -2972,18 +2993,11 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 			//'updateHostsChildren()' will always take this value, even if a pending update is already on it's way
 		hostObj.value = newValue;
 
-		//check first if a update is already pending
-			//if no update is pending then update the value
-			//see  'valueUpdatePending' under the 'HostObject' documentation
-		if (hostObj.valueUpdatePending !== true) {
-			hostObj.valueUpdatePending = true;
-
-			//update all input-fields that belong to the host
-				//but with a 0ms timeout
-			setTimeout( () => {
-				inputfield_updateHostsChildren(fieldObj.belongsToHost, {DOMTree: containerElem.getRootNode()});
-			}, 0);
-		}
+		//update all input-fields that belong to the host
+		inputfield_updateHostsChildren(fieldObj.belongsToHost, {
+			//DOMTree: containerElem.getRootNode(),
+			executeImmediately: false
+		});
 	}
 
 
@@ -3168,7 +3182,7 @@ function inputfield_executedAfterLabelPress (labelElem) {
 	}
 }
 
-/**	This update sall of the host's children to be up-to-date with the host.
+/**	This updates all of the host's children to be up-to-date with the host.
  *
  * 	This loops through all of the host's children and does the following to each:
  * 		- Removes the input-field from the host if it can't be found (it will automatically be re-added once it can be found again).
@@ -3178,16 +3192,26 @@ function inputfield_executedAfterLabelPress (labelElem) {
  * 	This does NOT apply anything to the host! This simply takes the host's values & attributes and applies them to it's children.
  *
  * 	Args:
- * 		hostElem [DOM Element]
- * 			The DOM element of the host.
+ * 		host [String]
+ * 			The host.
  *
  * 		specifics [Object] <optional>
  * 			A object of optional specifics about how the input-field should be gotten.
  *
- * 				DOMTree [DOM Tree] <document>
- * 					Only needed if the elements aren't in the regular DOM tree.
- * 					Which DOM tree it should look for the input-field.
- * 					Chances are this is simply 'document', but it can also be a 'DocumentFragment' in which case that should be passed as a whole.
+ * 				executeImmediately [Boolean] <true>
+ * 					If `true` it will immediately update the host.
+ * 					If `false` it will instead use a 0ms 'setTimeout()' to execute it.
+ *
+ * 				updateAttributes [Boolean] <true>
+ * 					Whether attributes should be updated as well.
+ *
+ * 					The value will always be updated because it's quicker that way.
+ *
+ * 				updateSpecificFields [Array] <undefined>
+ * 					If present it will only update these input-fields.
+ * 					Has to be an array consisting of input-field IDs (not DOM elements!).
+ * 					This array will not be verified in any way whatsoever. Any invalid entry will be ignored and if it's not an array then it's the same as `undefined`.
+ * 					That said, it will always be checked whether an input-field is even a part of the host regardless of this argument.
  */
 function inputfield_updateHostsChildren (host, specifics={}) {
 	//complain and use defaults if 'specifics' is invalid
@@ -3211,8 +3235,69 @@ function inputfield_updateHostsChildren (host, specifics={}) {
 		return;
 	}
 
-	//if this function is called then there's no update pending anymore
-	hostObj.valueUpdatePending = false;
+	//if 'updateSpecificFields' is a string then add it to an empty array
+	if (typeof specifics.updateSpecificFields === 'string') {
+		specifics.updateSpecificFields = [specifics.updateSpecificFields];
+	}
+
+
+
+	// === GET HOST'S ARGUMENTS ===
+		//We have to respect both the arguments that this function got called with and the arguments specified in the host.
+		//That means we have to combine the two and keep the "higher priority" values.
+		//If one says that attributes have to be updated and the other says they shouldn't then we update the attributes.
+		//Because more can go wrong by not updating attributes rather than updating them even if we don't have to.
+
+	//for quick access
+	let hostArguments = hostObj.pendingUpdate.arguments;
+
+	//set the host's 'updateAttributes' to `true` if either one is `true`
+	if (hostArguments.updateAttributes !== true) {
+		hostArguments.updateAttributes = specifics.updateAttributes;
+	}
+
+	//if 'updateSpecificFields' is an array in both arguments then combine the two
+		//if it's not an array in any of the two then that means all fields will be updated
+	if (Array.isArray(hostArguments.updateSpecificFields) === true && Array.isArray(specifics.updateSpecificFields) === true) {
+		hostArguments.updateSpecificFields = hostArguments.updateSpecificFields.concat(specifics.updateSpecificFields);
+	}
+
+	//if it shouldn't be executed immediately then create the 0ms timeout
+		//note that the host's arguments have already been updated
+	if (specifics.executeImmediately === false) {
+
+		//clear any existing timeouts in case there is one
+		clearTimeout(hostObj.pendingUpdate.timeoutID);
+
+		//and set a new one
+		hostObj.pendingUpdate.timeoutID = setTimeout(() => {inputfield_updateHostsChildren(host);}, 0);
+		return;
+	}
+
+	//fetch values from host
+	specifics.updateAttributes     = hostArguments.updateAttributes    ;
+	specifics.updateSpecificFields = hostArguments.updateSpecificFields;
+
+	//reset the host's arguments back to defaults
+		//'updateSpecificFields' is an empty array so it can be combined with other arrays
+		//because the check above only combines 'updateSpecificFields' if both are arrays
+	hostArguments.updateAttributes     = false;
+	hostArguments.updateSpecificFields = [];
+
+	//clear the timeout in case there's still one running
+	clearTimeout(hostObj.pendingUpdate.timeoutID);
+
+	//and reset the 'timeoutID'
+	hostObj.pendingUpdate.timeoutID
+
+	//if 'updateSpecificFields' is an empty array then set it to `undefined`
+	if (specifics.updateSpecificFields?.length === 0) {
+		specifics.updateSpecificFields = undefined;
+	}
+
+
+
+	// === UPDATE HOSTS CHILDREN ===
 
 	//get the new value
 	const newValue = hostObj.value;
@@ -3223,8 +3308,14 @@ function inputfield_updateHostsChildren (host, specifics={}) {
 	//loop through all children
 	hostObj.childList.removeEachIf((item, index) => {
 
+		//check 'updateSpecificFields' to see if we can skip this input-field -- if it's in the array then skip it
+			//we only check if '.indexOf()' is a function because it's a sane enough check and it's all we need for this anyway
+		if (typeof specifics.updateSpecificFields?.indexOf === 'function' && specifics.updateSpecificFields.indexOf(item) === -1) {
+			return;
+		}
+
 		//get the <input-field>
-		const containerElem = inputfield_getElement(item, {DOMTree: specifics.DOMTree});
+		const containerElem = inputfield_getElement(item);
 
 		//get the FieldObject
 		const fieldObj = inputfield_getFieldObject(containerElem);
@@ -3235,16 +3326,24 @@ function inputfield_updateHostsChildren (host, specifics={}) {
 			return true;
 		}
 
-		//apply the attributes
-		for (const key in newAttributes) {
+		//update the attributes if necessary
+		if (specifics.updateAttributes === true) {
 
-			//update the value
-				//don't have to check whether the value is the same because it's just replacing a property so it's probably faster not to check
-			fieldObj.attributes[key] = newAttributes[key];
+			//loop through all attributes
+			for (const key in newAttributes) {
 
-			//if 'forms' is updated then also update the 'belongsToForm' property
-			if (key === 'forms') {
-				fieldObj.belongsToForm = newAttributes.forms;
+				//update the value
+					//don't have to check whether the value is the same because it's just replacing a property so it's probably faster not to check
+				fieldObj.attributes[key] = newAttributes[key];
+
+				//if 'forms' is updated then also update the 'belongsToForm' property
+				if (key === 'forms') {
+					fieldObj.belongsToForm = newAttributes.forms;
+
+				//if 'tag' is updated then also update the 'tag' property
+				} else if (key === 'tag') {
+					fieldObj.tag = newAttributes.tag;
+				}
 			}
 		}
 
@@ -3433,7 +3532,7 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 
 			case 'defaultValue':
 				//no changes are needed aside from applying this
-				fieldObj.attributes.defaultValue = newValue;
+				targetObj.attributes.defaultValue = newValue;
 
 				//update the host
 				updatedHost = true;
@@ -3487,6 +3586,9 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 				//update the host
 				updatedHost = true;
 				break;
+
+
+			// # host attributes
 
 			case 'host':
 				//TODO: add support for this
@@ -3599,7 +3701,10 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 
 	//if the host got updated then update all it's children
 	if (fieldOrHost === 'host' && updatedHost === true) {
-		inputfield_updateHostsChildren(target);
+		inputfield_updateHostsChildren(target, {
+			updateAttributes: true,
+			executeImmediately: false
+		});
 	}
 
 	return changedSuccessfully;
