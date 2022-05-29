@@ -32,8 +32,13 @@
 	form
 		This is a special type as it doesn't really create an actual input-field (aside from an empty '<span>'), instead it can be used to combine several input-fields into a single form.
 		When creating a new form you can use it's ID to add other input-fields to it. To add a input-field to a form you can use the ID of the form inside the 'forms' attribute.
-		The form will have an object as it's value containing an item for each input-field that's part of it.
+		The form will have an object as it's value containing an entry for each input-field that's part of it.
 		Each item has the 'tag' attribute as it's name that can be used to access the value inside the object.
+
+		In detail:
+			Forms are completely one-sided. Input-fields added to the form will link to the form but the form doesn't link each input-field.
+			This means forms, by design, do not have a list of all it's children.
+			When a input-field linked to a form gets updated it will simply update the form's value but nothing else. If during this the form can't be found then the form won't be updated which could cause some values to be missing/outdated. Because of this it's recommended that the form stays on the regular DOM tree at all times once it's been created (meaning no DocumentFragments or other "hidden" places that 'document.querySelector()' can't access).
 
 		Variations:
 			- regular <default>: A regular form.
@@ -704,6 +709,7 @@ class InputFieldElement extends HTMLElement {
 		setTimeout(() => {this.setup()}, 0);
 	}
 	//gets the 'attributes' property of a 'FieldObject'
+		//needed inside the constructor for the '<input-field>.attributes' property
 	#getAttributes () {
 		//save this <input-field> element so the proxy can use it
 			//important because `this` refers to the proxy handler inside the 'set' function
@@ -718,12 +724,62 @@ class InputFieldElement extends HTMLElement {
 			}
 		});
 	}
+
+	/**	Gets called once an input-field is back on the regular DOM tree.
+	 *
+	 * 	If a <input-field> gets added to a DocumentFragment (or is created within that) then this will be called once it's appended back onto the regular DOM tree.
+	 * 	Same applies to other "hidden" spaces.
+	 *
+	 *
+	 * 	This function simply adds the element back onto the host since it was likely removed due to being outside of the regular DOM tree.
+	 */
 	connectedCallback () {
-		//console.log(arguments);
+
+		//get the ID
+		const fieldID = this.getAttribute('data-fieldid');
+
+		//get the FieldObject
+		let fieldObj = inputfield_getFieldObject(this);
+
+		//return if the element or FieldObject still can't be found
+		if (inputfield_getElement(fieldID) === null || fieldObj === null) {
+			console.warn(`[MPO] InputFieldElement.connectedCallback() got called but input-field still seems to be unavailable. Element: `, this, ` - This got triggered since either 'inputfield_getElement()' couldn't find the ID "${fieldID}" or the FieldObject was null: `, fieldObj);
+			return;
+		}
+
+		//check if this input-field is even part of a host
+		if (fieldObj.belongsToHost !== null) {
+
+			//get the HostObject
+			let hostObj = inputfield_getHostObject(fieldObj.belongsToHost);
+
+			//complain and return if the host couldn't be found
+			if (hostObj === null) {
+				console.warn(`[MPO] InputFieldElement.connectedCallback() couldn't find the HostObject for input-field "${fieldID}" with the following 'belongsToHost' property: `, fieldObj.belongsToHost);
+				return;
+			}
+
+			//add the field to the host's 'childList' if it isn't already in there
+			if (hostObj.childList.indexOf(fieldID) === -1) {
+				hostObj.childList.push   (fieldID);
+			}
+
+			//and finally take all values from the host
+				//this will take the value and attributes from the host and applies it immediately
+			inputfield_updateHostsChildren(fieldObj.belongsToHost, {
+				updateAttributes: true,
+				updateSpecificFields: [fieldID],
+				executeImmediately: true
+			});
+		}
 	}
+
+	/* //not needed currently
 	disconnectedCallback () {
 		//console.log(arguments);
 	}
+	*/
+
 	adoptedCallback () {
 		console.warn(`[MPO] NOTICE: Input-fields may cause issues when adopted to different documents as they weren't tested. Please contact me with a use-case so I can properly test and implement support for it.`);
 	}
@@ -814,17 +870,6 @@ customElements.define('input-field', InputFieldElement);
  *
  * 		belongsToForm [Array]
  * 			A list of all forms this belongs to. Is an array consisting of DOM elements.
- *
- * 		formChildren [Object/undefined]
- * 			Will be `undefined` if it's not a form. Otherwise it includes the following two properties:
- *
- * 				fields [Array]
- * 					Lists all input-fields that belong to this form.
- * 					Consists of DOM elements.
- *
- * 				hosts [Array]
- * 					Lists all hosts that belong to this form.
- * 					Array entries can be of any type (except `undefined` or `null`).
  *
  * 		startingValue [*any*] <undefined>
  * 			The value the field should start out with.
@@ -1464,14 +1509,6 @@ function inputfield_FieldObject (specifics={}) {
 		this.belongsToForm = [];
 	}
 
-	//create a list of all input-fields this form contains (but only if it is a form)
-	if (this.fieldType === 'form') {
-		this.formChildren = {
-			fields: [],
-			hosts: []
-		}
-	}
-
 	//set 'startingValue'
 		//set alongside 'defaultValue'
 
@@ -2057,21 +2094,13 @@ function inputfield_verifyFormAttributes (specifics) {
 	let formsAdd    = [...new Set(specifics.formsAdd   )];
 	let formsRemove = [...new Set(specifics.formsRemove)];
 
-	//do the same for 'forms' but keep it `null`
+	//if no 'forms' attribute was specified then set it to the current 'forms' attribute (which is 'belongsToForm')
 	if (specifics.forms === null) {
-		forms = null;
+		forms = belongsToForm;
+
+	//if 'forms' was specified then remove duplicates and then split it into 'formsRemove' & 'formsAdd'
 	} else {
 		forms = [...new Set(specifics.forms)];
-	}
-
-	//quick summary:
-		//divide 'forms' into 'formsRemove' and 'formsAdd'
-		//apply 'formsRemove' & check for duplicates in 'formsAdd'
-		//apply 'formsAdd'
-
-
-	//if a definitive form list was specified then split it into 'formsRemove' and 'formsAdd'
-	if (forms !== null) {
 
 		//add all entries to 'formsRemove' that are in 'belongsToForm' but not in the 'forms' argument
 		for (const item of belongsToForm) {
@@ -2082,11 +2111,8 @@ function inputfield_verifyFormAttributes (specifics) {
 
 		//add all 'forms' entries to 'formsAdd'
 		formsAdd = formsAdd.concat(forms);
-
-	//if 'forms' isn't specified then we shouldn't modify the list of forms, which means we're taking 'belongsToForm'
-	} else {
-		forms = belongsToForm;
 	}
+
 
 	//convert all IDs to DOM elements for 'formsAdd'
 		//this has to be done now so 'formsRemove' can properly check against this to actually remove duplicates
@@ -2122,13 +2148,6 @@ function inputfield_verifyFormAttributes (specifics) {
 			return true;
 		}
 
-		//check if the field/host is even part of the form's children
-			//if it is then remove it
-		const childIndex = formObj.formChildren[`${specifics.fieldOrHost}s`].indexOf(specifics.name);
-		if (childIndex !== -1) {
-			formObj.formChildren[`${specifics.fieldOrHost}s`].splice(childIndex, 1);
-		}
-
 		//remove this item from 'forms'
 			//but only if it's actually there
 		const formsIndex = forms.indexOf(item);
@@ -2148,13 +2167,6 @@ function inputfield_verifyFormAttributes (specifics) {
 		if (formObj === null) {
 			console.warn(`[MPO] inputfield_verifyFormAttributes() received a invalid input-field for 'formsAdd' (couldn't get the FieldObject - at index "${index}"): `, item, ` - Item could have been added from the 'forms' attribute.`);
 			return true;
-		}
-
-		//add this item to the form's children
-			//but only if it isn't already there
-		const childIndex = formObj.formChildren[`${specifics.fieldOrHost}s`].indexOf(item);
-		if (childIndex === -1) {
-			formObj.formChildren[`${specifics.fieldOrHost}s`].push(specifics.name);
 		}
 
 		//add this item to 'forms'
@@ -3747,9 +3759,8 @@ function inputfield_formObserverCallback (record) {
 					continue;
 				}
 
-				//add both fields to each other
-				targetObj.formChildren.fields.push(elem);
-				elemObj  .belongsToForm      .push(recItem.target);
+				//add the form
+				elemObj.belongsToForm.push(recItem.target);
 
 				//update the form to include the new value
 				inputfield_applyNewValue(recItem.target, elemObj.value, {skipOnchange: true, formProperty: elemObj.tag});
