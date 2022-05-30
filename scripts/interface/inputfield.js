@@ -50,7 +50,6 @@
 		Does not store a value so it will simply return `null`. Will trigger the 'onchange' function specified in attributes when clicked on.
 		Variations:
 			- regular <default>: A regular button. Basically the same as '<button>'.
-			- image: Creates a image that looks like a button. Not supported yet.
 
 	checkbox
 		A simple box that can be either checked or unchecked.
@@ -840,10 +839,10 @@ class InputFieldElement extends HTMLElement {
 		const fieldID = this.getAttribute('data-fieldid');
 
 		//get the FieldObject
-		let fieldObj = inputfield_getFieldObject(this);
+		let fieldObj = inputfield_getFieldObject(this, {suppressError: true});
 
 		//return if the element or FieldObject still can't be found
-		if (inputfield_getElement(fieldID) === null || fieldObj === null) {
+		if (inputfield_getElement(fieldID, {suppressError: true}) === null || fieldObj === null) {
 			console.warn(`[MPO] InputFieldElement.connectedCallback() got called but input-field still seems to be unavailable. Element: `, this, ` - This got triggered since either 'inputfield_getElement()' couldn't find the ID "${fieldID}" or the FieldObject was null: `, fieldObj);
 			return;
 		}
@@ -969,7 +968,7 @@ customElements.define('input-field', InputFieldElement);
  * 			Will be `undefined` if it's not a form.
  *
  * 		belongsToForm [Array]
- * 			A list of all forms this belongs to. Is an array consisting of DOM elements.
+ * 			A list of all forms this belongs to. Is an array consisting of input-field IDs (strings).
  *
  * 		startingValue [*any*] <undefined>
  * 			The value the field should start out with.
@@ -1215,37 +1214,8 @@ function inputfield_FieldObject (specifics={}) {
 		attributes.options = [];
 	}
 
-	//loop through all options to make sure they're all valid
-	for (const key in attributes.options) {
-		const item = attributes.options[key];
-
-		//delete the array item if it's not an object
-		if (typeof item !== 'object') {
-			console.warn(`[MPO] inputfield_FieldObject() couldn't parse the 'options' array as item Nr. "${key}" wasn't a object: `, item);
-			delete attributes.options[key];
-			continue;
-		}
-
-		//set 'name' to 'Unknown' if it's not valid
-		if (typeof item.name !== 'string') {
-			console.warn(`[MPO] inputfield_FieldObject() couldn't properly parse the 'options' array as item Nr. "${key}" had a non-string as 'name': `, item.name);
-			item.name = 'Unknown';
-		}
-
-		//set 'src' to undefined if it's neither a string nor undefined
-		if (item.src !== undefined && typeof item.src !== 'string') {
-			console.warn(`[MPO] inputfield_FieldObject() couldn't properly parse the 'options' array as item Nr. "${key}" had neither a string nor undefined as 'src': `, item.src);
-			item.src = undefined;
-		}
-
-		//delete the array item if 'value' isn't valid
-			//do this one last so all other warnings are also immediately printed
-		if (typeof item.value !== 'string') {
-			console.warn(`[MPO] inputfield_FieldObject() couldn't parse the 'options' array as item Nr. "${key}" had a non-string as 'value': `, item.value, ` - Option will now be removed.`);
-			delete attributes.options[key];
-			continue;
-		}
-	}
+	//verify the array
+	attributes.options = inputfield_verifyOptionsAttribute(attributes.options);
 
 	//if it's an empty array then delete it to remove clutter
 	if (attributes.options.length === 0) {
@@ -1692,7 +1662,7 @@ function inputfield_FieldObject (specifics={}) {
  * 			If you specifically need the value from the user then use 'attributes.tag', that one will be `undefined` if nothing was specified.
  *
  * 		belongsToForm [Array]
- * 			A list of all forms this belongs to. Is an array consisting of DOM elements.
+ * 			A list of all forms this belongs to. Is an array consisting of input-field IDs (strings).
  *
  * 		attributes [Object]
  * 			A list of all attributes. All attributes are listed above under 'Args'.
@@ -1807,13 +1777,13 @@ function inputfield_HostObject (specifics={}) {
 	specifics.childList.removeEachIf((item, index) => {
 
 		//remove all entries that aren't an <input-field> element
-		if (Object.isDOMElement(item) !== true || item.tagName !== 'INPUT-FIELD') {
+		if (Object.isDOMElement(item) !== true || item.constructor !== InputFieldElement) {
 			console.warn(`[MPO] inputfield_HostObject() found a non-<input-field> inside the 'childList' array (at index "${index}"): `, item);
 			return true;
 		}
 
 		//get the FieldObject
-		let fieldObj = inputfield_getFieldObject(item, {skipSetupCheck: true});
+		let fieldObj = inputfield_getFieldObject(item, {skipSetupCheck: true, suppressError: true});
 
 		//remove the entry if the FieldObject couldn't be found
 		if (typeof fieldObj?.id !== 'string') {
@@ -2082,7 +2052,7 @@ function inputfield_verifyFormAttributes (specifics) {
 	let targetObj;
 
 	//if 'target' was provided then try to get the FieldObject or HostObject
-	if (typeof specifics.target === 'string' || (Object.isDOMElement(specifics.target) && specifics.target.tagName === 'INPUT-FIELD')) {
+	if (typeof specifics.target === 'string' || (Object.isDOMElement(specifics.target) && specifics.target.constructor === InputFieldElement)) {
 
 		//get the FieldObject if it's a field
 		if (specifics.fieldOrHost === 'field') {
@@ -2220,13 +2190,16 @@ function inputfield_verifyFormAttributes (specifics) {
 
 		//add all 'forms' entries to 'formsAdd'
 		formsAdd = formsAdd.concat(forms);
+
+		//replace 'forms' with an empty array since everything in it was added to 'formsRemove' & 'formsAdd'
+		forms = [];
 	}
 
 
 	//convert all IDs to DOM elements for 'formsAdd'
 		//this has to be done now so 'formsRemove' can properly check against this to actually remove duplicates
 	formsAdd.removeEachIf((item, index) => {
-		if (typeof item === 'string' || item?.tagName === 'INPUT-FIELD') {
+		if (typeof item === 'string') {
 			item = inputfield_getElement(item);
 		}
 	});
@@ -2236,7 +2209,7 @@ function inputfield_verifyFormAttributes (specifics) {
 	formsRemove.removeEachIf((item, index) => {
 
 		//convert the item to a DOM element
-		if (typeof item === 'string' || item?.tagName === 'INPUT-FIELD') {
+		if (typeof item === 'string') {
 			item = inputfield_getElement(item);
 		}
 
@@ -2248,7 +2221,7 @@ function inputfield_verifyFormAttributes (specifics) {
 		}
 
 		//get the FieldObject from the form...
-		let formObj = inputfield_getFieldObject(item);
+		let formObj = inputfield_getFieldObject(item, {suppressError: true});
 
 		//...and then check if it exists
 			//if not, complain and remove the item
@@ -2269,7 +2242,7 @@ function inputfield_verifyFormAttributes (specifics) {
 	formsAdd.removeEachIf((item, index) => {
 
 		//get the FieldObject from the form
-		let formObj = inputfield_getFieldObject(item);
+		let formObj = inputfield_getFieldObject(item, {suppressError: true});
 
 		//and then check if it exists
 			//if not, complain and remove the item
@@ -2282,7 +2255,7 @@ function inputfield_verifyFormAttributes (specifics) {
 			//but only if it isn't already there
 		const formsIndex = forms.indexOf(item);
 		if (formsIndex === -1) {
-			forms.push(item);
+			forms.push(formObj.id);
 		}
 
 		//add the value to the form
@@ -2291,6 +2264,55 @@ function inputfield_verifyFormAttributes (specifics) {
 	});
 
 	return forms;
+}
+
+/**	Verifies the 'options' attribute.
+ *
+ * 	Args:
+ * 		options [Array]
+ * 			The 'options' attribute. See the documentation for individual input-field attributes for more details.
+ *
+ * 	Returns [Array]:
+ * 		The fully verified array.
+ * 		Will be an empty array if something went wrong.
+ */
+function inputfield_verifyOptionsAttribute (options) {
+	//complain and return if it's not an array
+	if (Array.isArray(options) !== true) {
+		console.warn(`[MPO] inputfield_verifyOptionsAttribute() received a non-array as 'options': `, options);
+		return [];
+	}
+
+	//loop through all options to make sure they're all valid
+	options.removeEachIf((item, index) => {
+
+		//delete the array item if it's not an object
+		if (typeof item !== 'object') {
+			console.warn(`[MPO] inputfield_verifyOptionsAttribute() had to remove array entry "${index}" as it wasn't an object: `, item);
+			return true;
+		}
+
+		//set 'name' to 'Unknown' if it's not valid
+		if (typeof item.name !== 'string') {
+			console.warn(`[MPO] inputfield_verifyOptionsAttribute() had issues parsing array entry "${index}" as it's 'name' property wasn't a string (will be set to 'Unknown'): `, item);
+			item.name = 'Unknown';
+		}
+
+		//set 'src' to undefined if it's neither a string nor undefined
+		if (item.src !== undefined && typeof item.src !== 'string') {
+			console.warn(`[MPO] inputfield_verifyOptionsAttribute() had issues parsing array entry "${index}" as it's 'src' property was neither a string nor undefined: `, item);
+			item.src = undefined;
+		}
+
+		//delete the array item if 'value' isn't valid
+			//do this one last so all other warnings are also immediately printed
+		if (typeof item.value !== 'string') {
+			console.warn(`[MPO] inputfield_verifyOptionsAttribute() had to remove array entry "${index}" as it didn't have a 'value' property: `, item);
+			return true;
+		}
+	});
+
+	return options;
 }
 
 /**	Creates a input field.
@@ -2370,7 +2392,7 @@ function inputfield_setupField (specifics={}) {
 	}
 
 	//complain and return if it didn't get called on a <input-field> element
-	if (this.tagName !== 'INPUT-FIELD') {
+	if (this.constructor !== InputFieldElement) {
 		console.warn(`[MPO] <input-field>.setup() didn't get called on a <input-field> element.`);
 		return this;
 	}
@@ -2384,7 +2406,7 @@ function inputfield_setupField (specifics={}) {
 
 
 	// === CHECK IF IT'S ALREADY BEEN SETUP ===
-	let fieldObj = inputfield_getFieldObject(this, {skipSetupCheck: true});
+	let fieldObj = inputfield_getFieldObject(this, {skipSetupCheck: true, suppressError: true});
 
 	//complain if a FieldObject doesn't already exist
 	if (fieldObj === null) {
@@ -2658,18 +2680,20 @@ Object.defineProperty(HTMLElement.prototype, 'inputfield_convertToLabel', {
  */
 function inputfield_getValue (field) {
 	//get the element
-	const elem = inputfield_getElement(field);
+	const elem = inputfield_getElement(field, {suppressError: true});
 
 	//return null if element doesn't exist
 	if (elem === null) {
+		console.error(`[MPO] inputfield_getValue() couldn't find the <input-field> element for this input-field: `, field);
 		return null;
 	}
 
 	//get the field object
-	const fieldObj = inputfield_getFieldObject(elem);
+	const fieldObj = inputfield_getFieldObject(elem, {suppressError: true});
 
 	//return null if it can't be found
 	if (fieldObj === undefined) {
+		console.error(`[MPO] inputfield_getValue() couldn't find a FieldObject for this input-field: `, field);
 		return null;
 	}
 
@@ -2684,6 +2708,7 @@ function inputfield_getValue (field) {
 
 		//return null if it can't be found
 		if (hostObj === null) {
+			console.error(`[MPO] inputfield_getValue() couldn't find a HostObject for this host: `, hostElem, ` - Host was needed to get the value for this input-field: `, field);
 			return null;
 		}
 
@@ -2740,14 +2765,14 @@ function inputfield_setValue (field, newValue, specifics={}) {
 
 	//get the container
 		//we don't have to check if this is valid because the field object will simply not be found if this doesn't exist
-	const containerElem = inputfield_getElement(field);
+	const containerElem = inputfield_getElement(field, {suppressError: true});
 
 	//get the field object
-	const fieldObj = inputfield_getFieldObject(containerElem);
+	const fieldObj = inputfield_getFieldObject(containerElem, {suppressError: true});
 
 	//return and complain if the 'fieldObj' could not be found
-	if (fieldObj === undefined) {
-		console.warn(`[MPO] inputfield_setValue() could not find the 'FieldObject' for the field "${field}".`);
+	if (fieldObj === null) {
+		console.warn(`[MPO] inputfield_setValue() could not find the FieldObject for the field: `, field);
 		return false;
 	}
 
@@ -2926,8 +2951,7 @@ function inputfield_getDefaultValue (fieldType, attributes) {
 	switch (fieldType) {
 
 		case 'form':
-			//in theory we should get each element that belongs to this form and then apply it but in practise that should be done automatically anyway when the individual input-fields are being created
-				//now, this should still apply all values from every input-field but unfortunately I'm not doing that today (if ever), so I'll just mark this as a TODO:
+			//in theory the "default value" for a form should be an object with all values from it's children in it but unfortunately there's no way to find all of the host's children so instead we just use an empty object
 			return {};
 
 		case 'checkbox':
@@ -2974,11 +2998,11 @@ function inputfield_getDefaultValue (fieldType, attributes) {
  */
 function inputfield_executedAfterFieldChange (fieldID, newValue) {
 	//get the container element
-	const containerElem = inputfield_getElement(fieldID);
+	const containerElem = inputfield_getElement(fieldID, {suppressError: true});
 
 	//return if container can't be found
-	if (Object.isDOMElement(containerElem) !== true) {
-		console.error(`[MPO] inputfield_executedAfterFieldChange(): Could not find container element with a 'fieldID' of "${fieldID}"`);
+	if (containerElem?.constructor !== InputFieldElement) {
+		console.error(`[MPO] inputfield_executedAfterFieldChange() could not find container element with a 'fieldID' of "${fieldID}"`);
 		return;
 	}
 
@@ -3035,17 +3059,17 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 	}
 
 	//complain and return if 'containerElem' isn't a <input-field> element
-	if (containerElem.tagName !== 'INPUT-FIELD') {
+	if (containerElem.constructor !== InputFieldElement) {
 		console.warn(`[MPO] inputfield_applyNewValue() received a invalid 'containerElem', it has to be a <input-field> element: `, containerElem);
 		return;
 	}
 
 	//get the field object
-	const fieldObj = inputfield_getFieldObject(containerElem);
+	const fieldObj = inputfield_getFieldObject(containerElem, {suppressError: true});
 
 	//complain and return if the field object couldn't be found
 	if (fieldObj === null) {
-		console.error('[MPO] inputfield_applyNewValue() could not get the \'FieldObject\' for this input-field (should be a <input-field> element): ', containerElem);
+		console.error('[MPO] inputfield_applyNewValue() could not get the FieldObject for this input-field (should be a <input-field> element): ', containerElem);
 		return;
 	}
 
@@ -3081,6 +3105,8 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 	if (specifics.displayedValue === undefined) {
 		specifics.displayedValue = newValue;
 	}
+
+	//It currently doesn't check whether 'displayedValue' is even valid or not to save time since this function is executed often.
 
 
 
@@ -3168,7 +3194,15 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
 			//note that this HAS to use 'fieldObj.value' instead of 'newValue' so it takes the actual value itself
 			//if this belongs to a form that also belongs to a form then the second form has to take the value of the first form, that's why we use 'fieldObj.value' for this
 		for (const item of belongsToForm) {
-			inputfield_applyNewValue(item, fieldObj.value, {skipOnchange: specifics.skipOnchange, formProperty: formTag});
+
+			//get the <input-field> element
+			let elem = inputfield_getElement(item, {suppressError: true});
+
+			//if the element was found then apply the new value
+				//note that a form being unavailable can happen and would be intended behaviour
+			if (elem !== null) {
+				inputfield_applyNewValue(elem, fieldObj.value, {skipOnchange: specifics.skipOnchange, formProperty: formTag});
+			}
 		}
 	}
 }
@@ -3197,7 +3231,7 @@ function inputfield_executedAfterLabelPress (labelElem) {
 	const fieldObj = inputfield_getFieldObject(fieldElem);
 
 	//return and complain if the field couldn't be found
-	if (typeof fieldObj !== 'object') {
+	if (fieldObj === null) {
 		console.warn(`[MPO] inputfield_executedAfterLabelPress() couldn't find the input-field "${labelElem.getAttribute('data-fieldlabelfor')}" while processing a label event.`);
 		return;
 	}
@@ -3445,14 +3479,15 @@ function inputfield_updateHostsChildren (host, specifics={}) {
 		}
 
 		//get the <input-field>
-		const containerElem = inputfield_getElement(item);
+		const containerElem = inputfield_getElement(item, {suppressError: true});
 
 		//get the FieldObject
-		const fieldObj = inputfield_getFieldObject(containerElem);
+		const fieldObj = inputfield_getFieldObject(containerElem, {suppressError: true});
 
 		//remove the input-field if it's no longer available
+			//just log it (no warning/error) since this is expected behaviour
 		if (fieldObj === null) {
-			console.log(`[MPO] inputfield_updateHostsChildren() removed input-field "${item}" from the host "${host}" as it couldn't be found (likely because it's outside the regular DOM tree, see the detailed documentation for the 'host' attribute for details).`);
+			console.log(`[MPO] inputfield_updateHostsChildren() removed input-field "${item}" from the host "${host}" as it couldn't be found.`);
 			return true;
 		}
 
@@ -3515,10 +3550,10 @@ function inputfield_updateHostsChildren (host, specifics={}) {
  */
 function inputfield_changeAttribute (field, attributes, newValue) {
 	//get the actual field element
-	field = inputfield_getElement(field);
+	field = inputfield_getElement(field, {suppressError: true});
 
 	//get field-object
-	let fieldObj = inputfield_getFieldObject(field);
+	let fieldObj = inputfield_getFieldObject(field, {suppressError: true});
 
 	//complain and return if the field-object couldn't be found
 	if (fieldObj === null) {
@@ -3675,7 +3710,7 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 
 	//loop through all attributes
 	for (const attributeName in attributes) {
-		const newValue =          attributes[attributeName];
+		let   newValue =          attributes[attributeName];
 		const oldValue = fieldObj.attributes[attributeName];
 		const behaviourAttributeIndex = behaviourAttributes.indexOf(attributeName);
 
@@ -3768,12 +3803,19 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 				//loop through all forms this belongs to
 				for (form of targetObj.belongsToForm) {
 
+					//get the <input-field> element
+					const formElem = inputfield_getElement(form, {suppressError: true});
+
 					//get the FieldObject of the form
-					const formObj = inputfield_getFieldObject(form);
+					const formObj = inputfield_getFieldObject(formElem, {suppressError: true});
 
 					//make sure this input-fields value is present under the new tag
-						//TODO: shouldn't this call 'applyNewValue()'?
-					formObj.value[newValue] = targetObj.value;
+						//'onchange' and the host will be updated as well because they might depend on the new form value
+					if (formObj !== null) {
+						inputfield_applyNewValue(formElem, targetObj.value, {
+							formProperty: newValue,
+						})
+					}
 				}
 
 				//update the host
@@ -3880,8 +3922,25 @@ function inputfield_changeAttribute (field, attributes, newValue) {
 				break;
 
 			//TODO: Create a better way to update this alongside 'content' (same issue)
-				//TODO: Also actually verify this
 			case 'options':
+				//complain and skip if it's not an array
+				if (Array.isArray(newValue) !== true) {
+					console.warn(`[MPO] inputfield_changeAttribute() received a non-array as 'options': `, newValue);
+					changedSuccessfully = false;
+					continue;
+				}
+
+				//verify the attribute
+					//this will also remove all invalid entries
+				newValue = inputfield_verifyOptionsAttribute(newValue);
+
+				//complain and skip the value if the array is empty now
+				if (newValue.length === 0) {
+					console.warn(`[MPO] inputfield_changeAttribute() could not apply the 'options' attribute as there wasn't a single valid value in it: `, newValue, ` - There should be more warnings logged to the console explaining what went wrong.`);
+					changedSuccessfully = false;
+					continue;
+				}
+
 				//apply the new value
 				fieldObj.attributes.options = newValue;
 
@@ -3934,7 +3993,7 @@ function inputfield_formObserverCallback (record) {
 		for (const elem of recItem.addedNodes) {
 
 			//continue loop if it's not a <input-field> element
-			if (elem.tagName !== 'INPUT-FIELD') {
+			if (elem.constructor !== InputFieldElement) {
 				continue;
 			}
 
@@ -3947,13 +4006,13 @@ function inputfield_formObserverCallback (record) {
 				const elemObj   = inputfield_getFieldObject(elem);
 
 				//complain and skip if it's not a form
-				if (targetObj.fieldType !== 'form') {
+				if (targetObj?.fieldType !== 'form') {
 					console.warn(`[MPO] inputfield_formObserverCallback() received a 'autoAddToForm' change for the input-field "${targetObj.id}" despite it not being a form.`);
 					continue;
 				}
 
 				//add the form
-				elemObj.belongsToForm.push(recItem.target);
+				elemObj.belongsToForm.push(targetObj.id);
 
 				//update the form to include the new value
 				inputfield_applyNewValue(recItem.target, elemObj.value, {skipOnchange: true, formProperty: elemObj.tag});
@@ -4151,10 +4210,12 @@ function inputfield_getDefaultVariation (fieldType) {
 	return '';
 }
 
-/**	Gets the actual DOM element of a input-field.
+/**	Gets the actual <input-field> DOM element of a input-field.
+ *
+ * 	This function depends entirely on '.querySelector()' and the 'data-fieldid' attribute. If arguments are provided then it will try to call '.querySelector()' on them as well.
  *
  * 	Args:
- * 		fieldID [String/DOM Element]
+ * 		field [String/DOM Element]
  * 			The field ID of the input-field.
  * 			It can also be a DOM element in which case it will simply return that.
  *
@@ -4163,79 +4224,108 @@ function inputfield_getDefaultVariation (fieldType) {
  *
  * 				DOMTree [DOM Tree] <document>
  * 					Which DOM tree it should look for the input-field.
- * 					Chances are this is simply 'document', but it can also be a 'DocumentFragment' in which case that should be passed as a whole.
+ * 					Chances are this argument can be ignored completely, however if the input-field is in a "hidden" spot like a DocumentFragment then that should be passed.
  *
  * 				referenceElem [DOM Element] <optional>
- * 					A optional reference element that can be used to speed-up the process of getting the element.
- * 					If a reference element is used then this function will simply go up the DOM tree and check if the input-field can be found.
- * 					Note that if the input-field can't be found with this reference element then it will simply fall back to the normal function.
- * 					This also double-checks to make sure that 'referenceElem' is an actual DOM element, so you can pass a string or anything and it will simply be ignored without breaking.
+ * 					A optional reference element that can be used instead of the 'DOMTree'.
+ * 					If used it will try to go through the document where this element is (...by using '.getRootNode().querySelector()').
+ *
+ * 				suppressError [Boolean] <false>
+ * 					If `true` it won't log an error to the console if a input-field couldn't be found.
+ * 					Note that this function will still complain about invalid arguments regardless of this.
  *
  * 	Returns [DOM Element/null]:
- * 		The DOM Element of the input-field if found.
+ * 		The <inout-field> DOM element if found.
  * 		Returns `null` if no input-field can be found.
  */
-function inputfield_getElement (fieldID, specifics={}) {
+function inputfield_getElement (field, specifics={}) {
 	//complain and use defaults if 'specifics' is invalid
 	if (typeof specifics !== 'object') {
 		console.warn(`[MPO] inputfield_getElement() received a non-object as 'specifics': "${specifics}".`);
 		specifics = {};
 	}
 
-	//check if 'fieldID' is a DOM element, if yes then return that.
-	if (typeof fieldID === 'object' && fieldID.isDOMElement()) {
-		return fieldID;
+	//check if 'field' is a DOM element
+	if (Object.isDOMElement(field) === true) {
+
+		//if 'field' is a <input-field> element then return it
+		if (field.constructor === InputFieldElement) {
+			return field;
+
+		//if 'field' is a DOM element but not a <input-field> element then complain and return `null` since we can't do anything about that
+		} else {
+			console.warn(`[MPO] inputfield_getElement() received a DOM element as 'field' that wasn't a <input-field> element: `, field);
+			return null;
+		}
 	}
 
-	//complain and return if 'fieldID' isn't a string
-	if (typeof fieldID !== 'string') {
-		console.warn(`[MPO] inputfield_getElement() received a non-string as 'fieldID': "${fieldID}".`);
+	//if it's neither a DOM element nor a string then complain and return since we can't do anything with that
+	if (typeof field !== 'string') {
+		console.warn(`[MPO] inputfield_getElement() received neither a string nor a DOM element as 'field': `, field);
 		return null;
 	}
 
-	//if a reference-element was specified then use that to try and get the element
-	if (Object.isDOMElement(specifics.referenceElem) === true) {
-		let elem = specifics.referenceElem;
-		while (true) {
-			//check if it's the one
-				//check if 'data-fieldid' is correct and if it includes the 'inputfield_container' class
-			if (elem.getAttribute('data-fieldid') === fieldID && elem.classList.contains('inputfield_container')) {
+	//the string used for 'querySelector()'
+	const queryString = `.inputfield_container[data-fieldid="${field}"]`;
+
+	//the element found by '.querySelector()'
+	let elem;
+
+	//if a 'DOMTree' got specified then use that
+	if (specifics.DOMTree !== undefined) {
+
+		//call '.querySelector()' on it if it exists
+		if (typeof specifics.DOMTree.querySelector === 'function') {
+			elem = specifics.DOMTree.querySelector(queryString);
+
+			//if a <input-field> element was found then return it
+			if (elem?.constructor === InputFieldElement) {
 				return elem;
 			}
 
-			//if it wasn't the one then set 'elem' to the parent node and continue with the loop
-			elem = elem.parentNode;
+		//if a 'DOMTree' was specified but doesn't have a '.querySelector()' function then complain about it (but still continue on)
+		} else {
+			console.warn(`[MPO] inputfield_getElement() received a 'DOMTree' argument that doesn't have a '.querySelector()' function on it: `, specifics.DOMTree);
+		}
+	}
 
-			//if the element is no longer a DOM Element then break the loop
-				//you could also simply check if it's <body> or <html> but then you'd need to make sure you don't do this for DocumentFragments -- all in all, I think simply doing this check is faster/better
-			if (Object.isDOMElement(elem) !== true) {
-				break;
+	//check the 'referenceElem' instead
+	if (specifics.referenceElem !== undefined) {
+
+		//get the root node of the 'referenceElem' if '.getRootNode()' exists
+			//this will try to get the top-most object (like '#document' or '#document-fragment')
+		if (typeof specifics.referenceElem.getRootNode === 'function') {
+			const rootNode = specifics.referenceElem.getRootNode();
+
+			//call '.querySelector()' on it if it exists
+			if (typeof rootNode.querySelector === 'function') {
+				elem = rootNode.querySelector(queryString);
+
+				//if a <input-field> element was found then return it
+				if (elem?.constructor === InputFieldElement) {
+					return elem;
+				}
+			} else {
+				console.warn(`[MPO] inputfield_getElement() couldn't use the 'referenceElem': `, specifics.referenceElem, ` - The following element was found via '.getRootNode()' which doesn't have a '.querySelector()' function on it: `, rootNode);
 			}
+		} else {
+			console.warn(`[MPO] inputfield_getElement() received a 'referenceElem' argument without a '.getRootNode()' function on it (every DOM element should have that): `, specifics.referenceElem);
 		}
 	}
 
-	//if the specified DOM Tree doesn't have the 'querySelector' function then use 'document' as the DOM tree
-		//this will also trigger if no DOM tree has been specified
-	if (typeof specifics.DOMTree?.querySelector !== 'function') {
-		//complain if a DOM tree was specifed
-		if (specifics.DOMTree !== undefined) {
-			console.warn(`[MPO] The 'DOMTree' argument in 'inputfield_getElement()' is invalid. fieldID used: "${fieldID}" - DOMTree: "${specifics.DOMTree}"`);
-		}
+	//if all else fails then simply call '.querySelector()' on the regular document
+	elem = document.querySelector(queryString);
 
-		//actually use 'document' now
-		specifics.DOMTree = document;
+	//if a <input-field> element was found then return it
+	if (elem?.constructor === InputFieldElement) {
+		return elem;
 	}
 
-	//get the container element
-	const containerElem = specifics.DOMTree.querySelector(`.inputfield_container[data-fieldid="${fieldID}"]`);
-
-	if (Object.isDOMElement(containerElem) !== true) {
-		console.warn(`[MPO] inputfield_getElement() couldn't find a DOM element with the ID: "${fieldID}".`);
-		return null;
+	//if it still couldn't be found then complain (if necessary) and return
+	if (specifics.suppressError !== true) {
+		console.error(`[MPO] inputfield_getElement() couldn't find the following input-field: `, field, ` - Following 'DOMTree' argument was tried: `, specifics.DOMTree, ` - Following 'referenceElem' was tried: `, specifics.referenceElem);
 	}
-
-	//return the element
-	return containerElem;
+	return null;
 }
 
 /**	Gets the FieldObject for a input-field.
@@ -4258,6 +4348,10 @@ function inputfield_getElement (fieldID, specifics={}) {
  * 					Which DOM tree it should look for the input-field.
  * 					Chances are this is simply 'document', but it can also be a 'DocumentFragment' in which case that should be passed as a whole.
  *
+ * 				suppressError [Boolean] <false>
+ * 					If `true` it won't log an error to the console if a input-field couldn't be found.
+ * 					Note that this function will still complain about invalid arguments regardless of this.
+ *
  * 	Returns [FieldObject/null]:
  * 		Returns a FieldObject (see 'inputfield_FieldObject()').
  * 		Returns `null` if it couldn't be found.
@@ -4277,13 +4371,18 @@ function inputfield_getFieldObject (field, specifics={}) {
 
 	//get the DOM element if an ID was given
 	if (typeof field === 'string') {
-		field = inputfield_getElement(field, {DOMTree: specifics.DOMTree});
+		let fieldElem = inputfield_getElement(field, {DOMTree: specifics.DOMTree});
 
 		//complain and return if it's not a DOM element
 		if (Object.isDOMElement(field) !== true) {
-			console.warn(`[MPO] inputfield_getFieldObject() couldn't find the input-field specified in 'field'.`);
+			if (specifics.suppressError !== true) {
+				console.warn(`[MPO] inputfield_getFieldObject() couldn't find the input-field specified in 'field': `, field);
+			}
 			return null;
 		}
+
+		//if the element was found then set 'field' to it
+		field = fieldElem;
 	}
 
 	//get the FieldObject
@@ -4291,7 +4390,9 @@ function inputfield_getFieldObject (field, specifics={}) {
 
 	//complain and return if it couldn't be found
 	if (fieldObj === undefined) {
-		console.warn(`[MPO] inputfield_getFieldObject() couldn't get the FieldObject for the following element: `, field);
+		if (specifics.suppressError !== true) {
+			console.error(`[MPO] inputfield_getFieldObject() couldn't get the FieldObject for the following element: `, field);
+		}
 		return null;
 	}
 
