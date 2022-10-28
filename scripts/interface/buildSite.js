@@ -34,10 +34,10 @@ function buildSite_build () {
  * 	This only really includes the '#modal_catchAllContainer' element, it doesn't create any actual modals.
  *
  * 	Args:
- * 		docFrag [DocumentFragment object]
+ * 		docFrag [DocumentFragment]
  * 			The document fragment that the elements should be created in.
  *
- * 	Returns [DocumentFragment object]:
+ * 	Returns [DocumentFragment]:
  * 		Returns the modified DocumentFragment.
  */
 function buildSite_buildModalCatchAll (docFrag) {
@@ -49,13 +49,10 @@ function buildSite_buildModalCatchAll (docFrag) {
 /** Builds the navbar.
  *
  * 	Args:
- * 		docFrag [DocumentFragment object]
+ * 		docFrag [DocumentFragment]
  * 			The document fragment that the elements should be created in.
  *
- * 	Returns [DocumentFragment object]:
- * 		Returns the modified DocumentFragment.
- *
- * 	Returns [DocumentFragment object]:
+ * 	Returns [DocumentFragment]:
  * 		Returns the modified DocumentFragment.
  */
 function buildSite_buildNavbar (docFrag) {
@@ -115,10 +112,10 @@ function buildSite_buildNavbar (docFrag) {
 /** Builds settings.
  *
  * 	Args:
- * 		docFrag [DocumentFragment object]
+ * 		docFrag [DocumentFragment]
  * 			The document fragment that the elements should be created in.
  *
- * 	Returns [DocumentFragment object]:
+ * 	Returns [DocumentFragment]:
  * 		Returns the modified DocumentFragment.
  */
 function buildSite_buildSettings (docFrag) {
@@ -660,10 +657,10 @@ function buildSite_buildSettings (docFrag) {
 /** Builds all trackers (counters & everything else related to them).
  *
  * 	Args:
- * 		docFrag [DocumentFragment object]
+ * 		docFrag [DocumentFragment]
  * 			The document fragment that the elements should be created in.
  *
- * 	Returns [DocumentFragment object]:
+ * 	Returns [DocumentFragment]:
  * 		Returns the modified DocumentFragment.
  */
 function buildSite_buildTracker (docFrag) {

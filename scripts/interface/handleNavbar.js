@@ -116,6 +116,7 @@ function handleNavbar_updateAction () {
 
 		//failsafe
 		default:
+			console.error(`[MPO] handleNavbar_updateAction() found a invalid action "${updatesTracker_getAction()}".`);
 			document.querySelector('.navbar_trackerAction').textContent = '?';
 			break;
 	}
@@ -124,7 +125,6 @@ function handleNavbar_updateAction () {
 /**	Updates the visuals of the "Amount" display on the navbar.
  */
 function handleNavbar_updateAmount () {
-	//set it
 	document.querySelector('.navbar_trackerAmount').textContent = updatesTracker_getAmount();
 }
 

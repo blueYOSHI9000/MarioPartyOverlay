@@ -179,7 +179,7 @@ function modal_ModalObject (specifics={}) {
 	attributes = attributes.fillIn(modal_defaultAttributes);
 
 	//force some attributes if the modal should be embedded
-	if (Object.isDOMElement(attributes.embedTo) === true) {
+	if (isDOMElement(attributes.embedTo) === true) {
 		attributes.openOnTop  = false;
 		attributes.autoPin    = true ;
 		attributes.draggable  = false;
@@ -377,7 +377,7 @@ function modal_createModal (constructModal, attributes={}) {
 	// === FINISHING TOUCHES === (calculate size, focus it and all that)
 
 	//if the modal should be embedded then append it to the correct place
-	if (Object.isDOMElement(attributes.embedTo) === true) {
+	if (isDOMElement(attributes.embedTo) === true) {
 		attributes.embedTo.appendChild(docFrag);
 
 	//if the modal shouldn't be embedded then append it like any regular modal
@@ -553,7 +553,7 @@ function modal_closeModal (modalID, updateFocus) {
 	const elem = modal_getDOMElement(modalID);
 
 	//...and delete it (if it can even be found)
-	if (elem.isDOMElement() === true) {
+	if (isDOMElement(elem) === true) {
 		elem.remove();
 	}
 
@@ -582,13 +582,13 @@ function modal_closeModal (modalID, updateFocus) {
  */
 function modal_closeThisModal (elem) {
 	//complain and return if not a DOM element
-	if (Object.isDOMElement(elem) !== true) {
+	if (isDOMElement(elem) !== true) {
 		console.warn(`[MPO] modal_closeThisModal() received a non-object as 'elem': "${elem}".`);
 		return false;
 	}
 
 	//loop for as long as it's still a element
-	while (Object.isDOMElement(elem) === true) {
+	while (isDOMElement(elem) === true) {
 
 		//get the elements modal-ID
 		const id = elem.getAttribute('data-modalid');
@@ -628,7 +628,7 @@ function modal_toggleCollapse (modal, action='toggle') {
 	const elem = modal_getDOMElement(modal);
 
 	//return and complain if the modal could not be found
-	if (elem.isDOMElement() !== true) {
+	if (isDOMElement(elem) !== true) {
 		console.warn(`[MPO] modal_toggleCollapse() could not get the modal: "${modalID}".`);
 		return;
 	}
@@ -677,7 +677,7 @@ function modal_toggleCollapse (modal, action='toggle') {
  */
 function modal_getDOMElement (modal) {
 	//check if it's a DOM element
-	if (Object.isDOMElement(modal) === true) {
+	if (isDOMElement(modal) === true) {
 
 		//if yes then check if it's the actual modal container
 		if (modal.classList.contains('modal_container') === true && modal.getAttribute('data-modalid') !== null) {

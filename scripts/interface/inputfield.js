@@ -967,7 +967,7 @@ customElements.define('input-field', InputFieldElement);
  * 			Will be an empty string if no value was updated (likely after the form's creation).
  * 			Will be `undefined` if it's not a form.
  *
- * 		belongsToForm [Array]
+ * 		belongsToForm [Array of Strings]
  * 			A list of all forms this belongs to. Is an array consisting of input-field IDs (strings).
  *
  * 		startingValue [*any*] <undefined>
@@ -993,7 +993,7 @@ function inputfield_FieldObject (specifics={}) {
 
 
 	//complain and return if 'elem' isn't a DOM element
-	if (Object.isDOMElement(specifics.elem) !== true) {
+	if (isDOMElement(specifics.elem) !== true) {
 		console.error(`[MPO] inputfield_FieldObject() received a non-element as 'elem': "${specifics.elem}".`);
 		return;
 	}
@@ -1492,7 +1492,7 @@ function inputfield_FieldObject (specifics={}) {
 	//apply the 'labels' attribute and remove all invalid array items
 	attributes.labels.removeEachIf((item) => {
 		//if it's not a DOM element then return true (which removes the array item)
-		if (Object.isDOMElement(item) !== true) {
+		if (isDOMElement(item) !== true) {
 			return true;
 
 		//if it's a DOM element then convert it to a basic label and return false (keep the array item)
@@ -1604,7 +1604,7 @@ function inputfield_FieldObject (specifics={}) {
  * 				host [String]
  * 					The host string.
  *
- * 				childList [Array] <optional>
+ * 				childList [Array of DOM Elements] <optional>
  * 					A list of all DOM elements that belong to the host. Has to be DOM elements, not strings!
  * 					Defaults to creating an empty array.
  *
@@ -1634,9 +1634,8 @@ function inputfield_FieldObject (specifics={}) {
  * 							The 'formsRemove' attribute.
  *
  * 	Constructs:
- * 		childList [Array]
+ * 		childList [Array of Strings]
  * 			A list of all input-field IDs that belong to the host.
- * 			All array entries are strings.
  *
  * 		value [*any*]
  * 			The value that it holds. Can be any type but will likely be a string.
@@ -1661,7 +1660,7 @@ function inputfield_FieldObject (specifics={}) {
  * 			If no tag was specified then this will be the host's name. This will always be a string.
  * 			If you specifically need the value from the user then use 'attributes.tag', that one will be `undefined` if nothing was specified.
  *
- * 		belongsToForm [Array]
+ * 		belongsToForm [Array of Strings]
  * 			A list of all forms this belongs to. Is an array consisting of input-field IDs (strings).
  *
  * 		attributes [Object]
@@ -1777,7 +1776,7 @@ function inputfield_HostObject (specifics={}) {
 	specifics.childList.removeEachIf((item, index) => {
 
 		//remove all entries that aren't an <input-field> element
-		if (Object.isDOMElement(item) !== true || item.constructor !== InputFieldElement) {
+		if (isDOMElement(item) !== true || item.constructor !== InputFieldElement) {
 			console.warn(`[MPO] inputfield_HostObject() found a non-<input-field> inside the 'childList' array (at index "${index}"): `, item);
 			return true;
 		}
@@ -1906,7 +1905,7 @@ function inputfield_LabelObject (specifics={}) {
 	}
 
 	//complain and return if 'labelElem' is not a DOM element
-	if (Object.isDOMElement(specifics.labelElem) !== true) {
+	if (isDOMElement(specifics.labelElem) !== true) {
 		console.warn(`[MPO] inputfield_convertToLabel() received a non-element as 'labelElem': "${specifics.labelElem}".`);
 		return;
 	}
@@ -1916,7 +1915,7 @@ function inputfield_LabelObject (specifics={}) {
 	//=== VERIFY ALL ARGUMENTS ===
 
 	//fetch the 'data-fieldid' attribute if a DOM element was given
-	if (Object.isDOMElement(specifics.field) === true) {
+	if (isDOMElement(specifics.field) === true) {
 		specifics.field = specifics.field.getAttribute('data-fieldid');
 	}
 
@@ -2022,7 +2021,7 @@ function inputfield_LabelObject (specifics={}) {
  * 					The input-field's or host's value.
  * 					If this isn't present it will be taken from the 'target' instead.
  *
- * 				belongsToForm [Array] <optional>
+ * 				belongsToForm [Array of Strings] <optional>
  * 					The already existing 'belongsToForm' property of the input-field/host.
  * 					If this isn't present it will be taken from the 'target' instead.
  *
@@ -2052,7 +2051,7 @@ function inputfield_verifyFormAttributes (specifics) {
 	let targetObj;
 
 	//if 'target' was provided then try to get the FieldObject or HostObject
-	if (typeof specifics.target === 'string' || (Object.isDOMElement(specifics.target) && specifics.target.constructor === InputFieldElement)) {
+	if (typeof specifics.target === 'string' || (isDOMElement(specifics.target) && specifics.target.constructor === InputFieldElement)) {
 
 		//get the FieldObject if it's a field
 		if (specifics.fieldOrHost === 'field') {
@@ -2269,10 +2268,10 @@ function inputfield_verifyFormAttributes (specifics) {
 /**	Verifies the 'options' attribute.
  *
  * 	Args:
- * 		options [Array]
+ * 		options [Array of Objects]
  * 			The 'options' attribute. See the documentation for individual input-field attributes for more details.
  *
- * 	Returns [Array]:
+ * 	Returns [Array of Objects]:
  * 		The fully verified array.
  * 		Will be an empty array if something went wrong.
  */
@@ -2385,7 +2384,7 @@ function inputfield_createField (fieldType, parent, attributes) {
  */
 function inputfield_setupField (specifics={}) {
 	//complain and return if it didn't get called on a DOM element
-	if (Object.isDOMElement(this) !== true) {
+	if (isDOMElement(this) !== true) {
 		//use 'inputfield_setupField()' instead of '<input-field>.setup()' since this will likely only get triggered if called directly
 		console.warn(`[MPO] inputfield_setupField() didn't get called on a DOM element.`);
 		return this;
@@ -2528,7 +2527,7 @@ function inputfield_setupField (specifics={}) {
  * 		specifics [Object]
  * 			Includes the following properties:
  *
- * 				childList [Array] <optional>
+ * 				childList [Array of DOM Elements] <optional>
  * 					A list of all DOM elements that belong to the host. Has to be DOM elements, not strings!
  * 					Defaults to creating an empty array.
  *
@@ -2644,7 +2643,7 @@ function inputfield_convertToLabel (elem, field, specifics={}) {
 
 	//complain and return if 'elem' isn't a DOM element
 		//but return the element anyway for good measure
-	if (Object.isDOMElement(elem) !== true) {
+	if (isDOMElement(elem) !== true) {
 		console.warn(`[MPO] inputfield_convertToLabel() received a non-element as 'elem': "${elem}".`);
 		return elem;
 	}
@@ -2838,7 +2837,7 @@ function inputfield_validateValue (value, specifics={}) {
 	if (specifics.field !== undefined) {
 
 		//if 'field' is a DOM Element then get the 'FieldObject' for it
-		if (Object.isDOMElement(specifics.field) === true) {
+		if (isDOMElement(specifics.field) === true) {
 			specifics.field = inputfield_getFieldObject(specifics.field);
 		}
 
@@ -2893,7 +2892,7 @@ function inputfield_validateValue (value, specifics={}) {
 		case 'radio':
 			//loop through all the options to see if they have the same value
 				//note that if it isn't iterable then the if block gets skipped and `false` is returned
-			if (Object.isIterable(attributes.options) === true) {
+			if (isIterable(attributes.options) === true) {
 				for (const item of attributes.options) {
 					if (item.value === value) {
 						return true;
@@ -3215,7 +3214,7 @@ function inputfield_applyNewValue (containerElem, newValue, specifics={}) {
  */
 function inputfield_executedAfterLabelPress (labelElem) {
 	//complain and return if 'labelElem' isn't a DOM element
-	if (Object.isDOMElement(labelElem) !== true) {
+	if (isDOMElement(labelElem) !== true) {
 		console.warn(`[MPO] inputfield_executedAfterLabelPress() received a non-element as 'labelElem': "${labelElem}".`);
 		return;
 	}
@@ -3254,7 +3253,7 @@ function inputfield_executedAfterLabelPress (labelElem) {
 	if (fieldType === 'radio' && labelObj !== undefined && labelObj.radioOption !== null) {
 
 		//check and see if the object is iterable
-		if (Object.isIterable(actualElem) !== true) {
+		if (isIterable(actualElem) !== true) {
 			console.warn(`[MPO] inputfield_executedAfterLabelPress(): Can't iterate over the value returned by 'inputfield_variations.get("${fieldTypeAndVariation}").getActualInputElement()' (likely because it's not an Array when it should be one) for input-field ID "${fieldObj.id}".`);
 			return;
 		}
@@ -3309,7 +3308,7 @@ function inputfield_executedAfterLabelPress (labelElem) {
 	} else {
 
 		//complain and return if 'actualElem' isn't valid
-		if (Object.isDOMElement(actualElem) !== true) {
+		if (isDOMElement(actualElem) !== true) {
 			console.warn(`[MPO] inputfield_executedAfterLabelPress() couldn't find the actual input element for input-field "${fieldObj.id}".`);
 			return;
 		}
@@ -3371,7 +3370,7 @@ function inputfield_executedAfterLabelPress (labelElem) {
  *
  * 					The value will always be updated because it's quicker that way.
  *
- * 				updateSpecificFields [Array] <undefined>
+ * 				updateSpecificFields [Array of Strings] <undefined>
  * 					If present it will only update these input-fields.
  * 					Has to be an array consisting of input-field IDs (not DOM elements!).
  * 					This array will not be verified in any way whatsoever. Any invalid entry will be ignored and if it's not an array then it's the same as `undefined`.
@@ -4246,7 +4245,7 @@ function inputfield_getElement (field, specifics={}) {
 	}
 
 	//check if 'field' is a DOM element
-	if (Object.isDOMElement(field) === true) {
+	if (isDOMElement(field) === true) {
 
 		//if 'field' is a <input-field> element then return it
 		if (field.constructor === InputFieldElement) {
@@ -4364,7 +4363,7 @@ function inputfield_getFieldObject (field, specifics={}) {
 	}
 
 	//complain and return if it's not a DOM element
-	if (typeof field !== 'string' && Object.isDOMElement(field) !== true) {
+	if (typeof field !== 'string' && isDOMElement(field) !== true) {
 		console.warn(`[MPO] inputfield_getFieldObject() received neither a string nor a DOM element as 'field': `, field);
 		return null;
 	}
@@ -4374,7 +4373,7 @@ function inputfield_getFieldObject (field, specifics={}) {
 		let fieldElem = inputfield_getElement(field, {DOMTree: specifics.DOMTree});
 
 		//complain and return if it's not a DOM element
-		if (Object.isDOMElement(field) !== true) {
+		if (isDOMElement(field) !== true) {
 			if (specifics.suppressError !== true) {
 				console.warn(`[MPO] inputfield_getFieldObject() couldn't find the input-field specified in 'field': `, field);
 			}

@@ -21,22 +21,36 @@
  *			An array of all stylesheets to be loaded.
  *			Each item is a string consisting of a relative path to the css file (like 'scripts/boot.js').
  *
- *	Returns [Array]:
+ *	Returns [Array of DOM Elements]:
  *		An array of all <link> elements created.
  */
 function loadStyles (styles) {
+
+	//if 'styles' is empty then warn and return
 	if (styles.length === 0) {
 		console.warn('[helpers.js] loadStyles() received an empty array.');
 		return [];
 	}
-	let elemList = [];
+
+	//this will store all script names that have been loaded
+	let finishedList = [];
+
+	//loop through all stylesheets to load them
 	styles.forEach(element => {
+
+		//create a <link> element and add the necessary attributes to it
 		var styleElem = document.createElement('link');
 		styleElem.rel = 'stylesheet';
 		styleElem.href = element;
-		elemList.push(document.getElementsByTagName('head')[0].appendChild(styleElem));
+
+		//append the element to the document
+		document.getElementsByTagName('head')[0].appendChild(styleElem);
+
+		//and finally, add it to 'finishedList' which will then be returned
+		finishedList.push(styleElem);
 	});
-	return elemList;
+
+	return finishedList;
 }
 
 /**	Loads all scripts specified.
@@ -53,19 +67,26 @@ function loadStyles (styles) {
  * 			The function that should be applied to the 'onload' attribute.
  * 			If a function is provided it will be called with the file-name as it's first argument. If a string is provided it will simply be used as the 'onload' attribute as-is.
  *
- *	Returns [Array]:
+ *	Returns [Array of DOM Elements]:
  *		An array of all <script> elements created.
  */
 function loadScripts (scripts, onload) {
+
+	//if 'scripts' is empty then warn and return
 	if (scripts.length === 0) {
 		console.warn('[helpers.js] loadScripts() received an empty array.');
 		return [];
 	}
-	let elemList = [];
+
+	//this will store all script names that have been loaded
+	let finishedList = [];
+
+	//loop through all scripts to load them
 	scripts.forEach(element => {
+
 		//create a <script> element and add the necessary attributes to it
-		var scriptElem = document.createElement('script');
-		scriptElem.src = element;
+		var scriptElem  = document.createElement('script');
+		scriptElem.src  = element;
 		scriptElem.type = 'text/javascript';
 
 		//get the actual file name (needed to keep track of which files have already been loaded)
@@ -81,10 +102,14 @@ function loadScripts (scripts, onload) {
 			scriptElem.onload = () => {onload(fileName)};
 		}
 
-		//and finally, add it to 'elemList' which will then be returned
-		elemList.push(document.getElementsByTagName('head')[0].appendChild(scriptElem));
+		//append the element to the document
+		document.getElementsByTagName('head')[0].appendChild(scriptElem);
+
+		//and finally, add it to 'finishedList' which will then be returned
+		finishedList.push(scriptElem);
 	});
-	return elemList;
+
+	return finishedList;
 }
 
 /**	Creates an element and returns it.
@@ -102,11 +127,11 @@ function loadScripts (scripts, onload) {
  * 			This should only be used if the element will be appended manually afterwards.
  *
  *		attributes [Object]
- *			A list of attributes the element should have. {src: 'scripts/boot.js'} would give the element a 'src="scripts/boot.js"' attribute.
+ *			A list of attributes the element should have. {src: "scripts/boot.js"} would give the element a 'src="scripts/boot.js"' attribute.
  *
  *	Returns [DOM Element/Boolean]:
  *		The DOM Element that was created.
- * 		If it couldn't be created due to the specified parent not existing then it'll simply return false.
+ * 		Returns 'null' if the parent couldn't be found.
  */
 function cElem (type, parent, attributes) {
 	//if the element should be appended to it's parent
@@ -124,7 +149,7 @@ function cElem (type, parent, attributes) {
 		//note that we only check whether '.appendChild()' exists because that's all we need it for
 	if (typeof parent.appendChild !== 'function' && appendElem === true) {
 		console.warn('[helpers.js] cElem couldn\'t get parent.');
-		return false;
+		return null;
 	}
 
 	//create the element
@@ -147,7 +172,7 @@ function cElem (type, parent, attributes) {
 
 /**	Fetches a specific item inside a object.
  *
- * 	Provide a name like 'misc.distanceWalked' and it will fetch the item found in 'misc' > 'distanceWalked' in the object you called this on.
+ * 	Provide a name like 'misc.distanceWalked' and it will fetch the item found in 'misc' -> 'distanceWalked' in the object you called this on.
  *
  * 	Args:
  * 		path [String]
@@ -162,17 +187,25 @@ function cElem (type, parent, attributes) {
  *
  * 				setToUndefined [Boolean] <false>
  * 					If present it will set the value found to undefined. 'setTo' will be ignored if this is true.
+ *
+ * 	Returns [???/null/Boolean]:
+ * 		The fetched property from the object (can be anything).
+ * 		Returns 'null' if it couldn't loop through.
+ *
+ * 		With either 'setTo' or 'setToUndefined' used it will instead return a Boolean.
+ * 			'true' if the value got set succesfully and 'false' if not (the latter likely if it couldn't be found).
  */
 Object.defineProperty(Object.prototype, 'fetchProperty', {value: function (path, specifics={}) {
 	//complain and return if 'specifics' isn't an object
 	if (typeof specifics !== 'object') {
 		console.warn(`[MPO] Object.fetchProperty() received a non-object as 'specifics': "${specifics}".`);
+		return null;
 	}
 
 	//complain and return undefined if 'path' isn't a string
 	if (typeof path !== 'string') {
 		console.warn(`[MPO] Object.fetchProperty() received a non-string for 'path': "${path}".`);
-		return undefined;
+		return null;
 	}
 
 	//the item that will be searched in
@@ -187,10 +220,10 @@ Object.defineProperty(Object.prototype, 'fetchProperty', {value: function (path,
 	//loop through all property names specified in 'path'
 	for (key of pathItems) {
 
-		//complain and return undefined if it couldn't finish looping through
+		//complain and return 'null' if it couldn't finish looping through
 		if (typeof item !== 'object') {
 			console.warn(`[MPO] Object.fetchProperty() couldn't finish looping through the 'path' specified as it found a non-object with name "${key}": "${obj}".`);
-			return undefined;
+			return null;
 		}
 
 		//check if it's the last item
@@ -242,7 +275,7 @@ Object.defineProperty(Object.prototype, 'fetchProperty', {value: function (path,
  *
  * 				ignoreKeys [Array] <none>
  * 					A list of keys that should be ignored.
- * 					If `['_index']` is given then any property with the name '_index' will be ignored completely (meaning it won't get filled in).
+ * 					If '["_index"]' is given then any property with the name '_index' will be ignored completely (meaning it won't get filled in).
  *
  * 				replaceNull [Boolean] <false>
  * 					If true it will also overwrite values that are null.
@@ -252,7 +285,8 @@ Object.defineProperty(Object.prototype, 'fetchProperty', {value: function (path,
  * 					If this is present it will take this over the object it has been called on.
  * 					Use this if you want to call this function via 'Object.defineProperty()'.
  *
- * 	Returns [Object]:
+ * 	Returns [Object/null]:
+ * 		'null' if if 'defaultObj' or the object it's called on wasn't an object.
  * 		The modified object.
  * 		This will be the original object that the function was called on/the object specified in 'objToOverwrite'.
  */
@@ -260,6 +294,7 @@ Object.defineProperty(Object.prototype, 'fillIn', {value: function (defaultObj, 
 	//complain and return if 'specifics' isn't an object
 	if (typeof specifics !== 'object') {
 		console.warn(`[MPO] Object.fillIn() received a non-object as 'specifics': "${specifics}".`);
+		return null;
 	}
 
 	//get 'objToOverwrite' if it's an object, otherwise use 'this'
@@ -269,13 +304,13 @@ Object.defineProperty(Object.prototype, 'fillIn', {value: function (defaultObj, 
 	if (typeof obj !== 'object') {
 		//complain differently depending on whether 'objToOverwrite' was used or not
 		console.warn(`[MPO] Object.fillIn() ${(specifics.objToOverwrite !== undefined) ? "received a non-object as the 'objToOverwrite' argument:" : "was called on a non-object without a valid 'objToOverwrite' argument:"} "${obj}".`);
-		return;
+		return null;
 	}
 
 	//complain and return if 'defaultObj' is not a object
 	if (typeof defaultObj !== 'object') {
 		console.warn(`[MPO] Object.fillIn() received a non-object as the 'defaultObj': "${defaultObj}".`);
-		return;
+		return null;
 	}
 
 	//=== ACTUAL FUNCTION ===
@@ -328,7 +363,7 @@ Object.defineProperty(Object.prototype, 'fillIn', {value: function (defaultObj, 
 /**	Removes array items that matches a expression.
  *
  * 	Immediately applies the value to the array it got called on.
- * 	The function has to return exactly `true` for an item to be removed. A "truthy" value will just be treated as `false`.
+ * 	The function has to return exactly 'true' for an item to be removed. A "truthy" value will just be treated as 'false'.
  *
  * 	Args:
  * 		expr [Function]
@@ -368,7 +403,7 @@ Object.defineProperty(Array.prototype, 'removeEachIf', {value: function (expr) {
  * 			The seperator that's used to split the string.
  * 			Note that the variable is automatically converted to a string.
  *
- * 	Returns [Array]:
+ * 	Returns [Array of Strings]:
  * 		The string split inside two array items. Note: If no match was found then it will simply return the string as-is inside the first array item.
  */
 Object.defineProperty(String.prototype, 'splitOnce', {value: function (seperator) {
@@ -389,23 +424,15 @@ Object.defineProperty(String.prototype, 'splitOnce', {value: function (seperator
 /**	Checks if a object is a DOM Element.
  *
  * 	Stack-overflow copy: https://stackoverflow.com/questions/384286/how-do-you-check-if-a-javascript-object-is-a-dom-object
- * 	Note that this has to be defined using 'Object.defineProperty()' so the function isn't enumerable.
  *
  * 	Args:
  * 		element [*any*] <optional>
  * 			The variable it should check for.
- * 			Useful for calling this variable via 'Object.isDOMElement(*variable*)'.
- * 			If not present it will simply use the variable this got called on.
  *
  * 	Returns [Boolean]:
- * 		true if DOM Element, false if not.
+ * 		'true' if DOM Element, 'false' if not.
  */
-Object.defineProperty(Object.prototype, 'isDOMElement', {value: function (element) {
-	//if 'element' hasn't been specified then use the variable this has been called on (that being 'this')
-	if (element === undefined) {
-		element = this;
-	}
-
+function isDOMElement (element) {
 	try {
 		//Using W3 DOM2 (works for FF, Opera and Chrome)
 		return element instanceof HTMLElement;
@@ -416,19 +443,14 @@ Object.defineProperty(Object.prototype, 'isDOMElement', {value: function (elemen
 		//properties that all elements have (works on IE7)
 		return (typeof element === 'object') && (element.nodeType === 1) && (typeof element.style === 'object') && (typeof element.ownerDocument === 'object');
 	}
-}});
+}
 
 /**	Checks if an object is iterable.
  *
  * 	Returns [Boolean]:
- * 		`true` if it's iterable, `false` if not.
+ * 		'true' if it's iterable, 'false' if not.
  */
-Object.defineProperty(Object.prototype, 'isIterable', {value: function (obj) {
-	//if 'obj' hasn't been specified then use the variable this has been called on (that being `this`)
-	if (obj === undefined) {
-		obj = this;
-	}
-
+function isIterable (obj) {
 	// checks for null
 	if (obj === null) {
 		return false;
@@ -438,7 +460,7 @@ Object.defineProperty(Object.prototype, 'isIterable', {value: function (obj) {
 		//see:     https://stackoverflow.com/questions/18884249/checking-whether-something-is-iterable
 		//or this: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols
 	return typeof obj[Symbol.iterator] === 'function';
-}});
+}
 
 /**	=== PERFORMANCE TESTING ===
  *

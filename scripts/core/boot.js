@@ -6,13 +6,16 @@
  * 	# FUNCTION COMMENTS
  *
  * 	Each function needs a short explanation of what it does and (if it's not enough) a full explanation that also explains HOW it does it.
- * 	This is important as it helps reduce errors when you always know how exactly the function does the thing.
+ * 	This is important as it helps reduce errors when you always know exactly how the function does the thing.
  *
  * 	As for how it's formatted, it's inspired by Google's Python Docstring (https://github.com/google/styleguide/blob/gh-pages/pyguide.md#38-comments-and-docstrings).
  * 	That said, it's probably easier to simply scroll down and see how I did it. Especially considering it doesn't quite follow the guidelines exactly.
- * 	The important thing is probably the indentation. It starts with " * " followed by a tab (the space after the * can be skipped if you want to, it's mainly there because some code-editors automatically add one).
+ * 	The important thing is probably the indentation. It starts with ' * ' followed by a tab (the space after the * can be skipped if you want to, it's mainly there because some code-editors automatically add one).
  *
  * 	Why this one is picked over the default '@param' style JS documentation is really just personal preference on my part.
+ * 	But if you want the reason behind it, in my opinion it's easier to find exactly what you're looking for:
+ * 		The argument name comes first (likely what you're looking for), followed immediately by the type. Chances are this is all you need, that's why they got their own line.
+ * 		The lines after the name & argument give a detailed description if you need to know more, not limited to a single line! Instead it gets all the space it needs, each new line gets a new info.
  *
  *
  * 	# VARIABLE & FUNCTION CREATION/NAMING
@@ -31,10 +34,10 @@
  * 		Any function defined on a prototype (like 'Object.prototype') has to be defined with 'Object.defineProperty()' or any other way to make sure that the function is NOT enumerable.
  * 		That's because the prototype functions should not show up in 'for ... in' loops.
  *
- * 		## THE 'specififcs' ARGUMENT
+ * 		## THE 'specifics' ARGUMENT
  *
- * 		Whenever a function takes a single object as a rgument instead of scattering them over many arguments then that object has to be named 'specifics'.
- * 		"Why not 'options'?" Good question, 'options' would be better but that name is reserved for stuff like "a list of options", like a <select> element with a list of options in it.
+ * 		Whenever a function takes a single object as an argument instead of scattering them over many arguments then that object has to be named 'specifics'.
+ * 		'options' while being overall better should be avoided because it's reserved for stuff like "a list of options", like a <select> element with a list of options in it.
  *
  *
  * 	# INTERFACE

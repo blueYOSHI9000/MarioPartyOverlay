@@ -114,10 +114,10 @@ function updatesTracker_updateCounter (counterName, player, action=updatesTracke
  * 		player [Number]
  * 			The player. Starts at 1.
  *
- * 	Returns [Number/Boolean]:
+ * 	Returns [Number/null]:
  * 		The stat as a number.
  * 		If no stat for the counter has been entered yet then it will automatically return 0 (as intended).
- * 		If it however can't even get far enough to check if the stat exists (say, the player or counter category doesn't exist) then it will return false.
+ * 		If it can't even get far enough to check if the stat exists (say, the player or counter category doesn't exist) then it will return 'null'.
  */
 function updatesTracker_getStat (counterName, player) {
 	//get the actual stat
@@ -127,9 +127,9 @@ function updatesTracker_getStat (counterName, player) {
 	stat ??= 0;
 
 	//use a failsafe in case the stat isn't valid
-	if (typeof stat !== 'number' && stat !== false) {
+	if (typeof stat !== 'number' && stat !== null) {
 		console.error(`[MPO] updatesTracker_getStat() found a invalid stat for counter "${counterName}" and player "${player}": "${stat}".`);
-		stat = false;
+		stat = null;
 	}
 
 	return stat;
@@ -152,8 +152,8 @@ function updatesTracker_getStat (counterName, player) {
  * 			This function only checks if it is a number but not if it's valid (anything that's not NaN or infinity).
  *
  * 	Returns [Boolean]:
- * 		true if it was succesfully updated.
- * 		false if something went wrong.
+ * 		'true' if it was succesfully updated.
+ * 		'false' if something went wrong.
  */
 function updatesTracker_setStat (counterName, player, value) {
 	//return if the value isn't a number
@@ -173,19 +173,19 @@ function updatesTracker_setStat (counterName, player, value) {
  * 		player [Number]
  * 			The player.
  *
- * 	Returns [String/Boolean]:
+ * 	Returns [String/null]:
  * 		The name of character.
- * 		Will return false if the character couldn't be found.
+ * 		Will return 'null' if the character couldn't be found.
  */
 function updatesTracker_getCharacter (player) {
 	if (typeof player !== 'number') {
 		console.warn(`[MPO] updatesTracker_getCharacter() received a non-number as an argument: "${player}".`);
-		return false;
+		return null;
 	}
 
 	//use 'player - 1' since it's an array starting at 0
-		//if the character couldn't be found (is undefined) then it will simply return false
-	return trackerCore_getSavefile().players[player - 1]?.character ?? false;
+		//if the character couldn't be found (is undefined) then it will simply return 'null'
+	return trackerCore_getSavefile().players[player - 1]?.character ?? null;
 }
 
 /**	Change the character of a single player.
@@ -212,8 +212,9 @@ function updatesTracker_setCharacter (player, charName) {
  * 			The savefile it should get the current game from.
  * 			Will default to the currently selected savefile.
  *
- * 	Returns [String]:
+ * 	Returns [String/null]:
  * 		The current game in the format of 'all', 'mp1', 'mp4', 'mptt100', etc.
+ * 		Returns 'null' if it can't be found.
  */
 function updatesTracker_getGame (savefileSlot) {
 	return trackerCore_getSavefile(savefileSlot).game;
@@ -234,6 +235,9 @@ function updatesTracker_getAction () {
  * 		newAction [String]
  * 			The new action.
  * 			Can be either 'add', 'sub' (subtract) or 'set'.
+ *
+ * 	Returns [Boolean]:
+ * 		'true' if it was successfully updated, 'false' if something went wrong.
  */
 function updatesTracker_setAction (newAction) {
 	//check to make sure 'newAction' is valid and then immediately set it
@@ -250,13 +254,16 @@ function updatesTracker_setAction (newAction) {
 			trackerCore_status['controls']['action'] = 'set';
 			break;
 
+		//complain and return if argument was invalid
 		default:
 			console.warn(`[MPO] updatedTracker_changeAction() received a invalid argument: "${newAction}".`);
-			return;
+			return false;
 	}
 
 	//update the navbar display
 	handleNavbar_updateAction();
+
+	return true;
 }
 
 /**	Gets the current default amount of the tracker.
@@ -274,12 +281,16 @@ function updatesTracker_getAmount () {
  * 		newAmount [Number]
  * 			The new amount.
  * 			Has to be more than 0 and less than 1000 (anything from 1 to 999, including them, is good).
+ *
+ * 	Return [Boolean]:
+ * 		'true' if it was successfully updated, 'false' if something went wrong.
  */
 function updatesTracker_setAmount (newAmount) {
 	//make sure 'newAmount' is valid
-	if (newAmount === NaN || newAmount < 0 || newAmount > 999) {
+		//if it's not, complain and return
+	if (newAmount === NaN || newAmount < 1 || newAmount > 999) {
 		console.warn(`[MPO] updatedTracker_changeAmount() received a invalid argument: "${newAmount}".`);
-		return;
+		return false;
 	}
 
 	//set the new amount
@@ -287,6 +298,8 @@ function updatesTracker_setAmount (newAmount) {
 
 	//update navbar display
 	handleNavbar_updateAmount();
+
+	return true;
 }
 
 /**	Creates a new savefile.
@@ -306,7 +319,7 @@ function updatesTracker_createSavefile () {
  * 			The slot that should be loaded. Starts at 0.
  *
  * 	Returns [Boolean]:
- * 		true if the savefile got loaded, false if not.
+ * 		'true' if the savefile got loaded, 'false' if not.
  */
 function updatesTracker_loadSavefile (savefileSlot) {
 	//complain and return if 'savefileSlot' is not a number
@@ -346,7 +359,7 @@ function updatesTracker_loadSavefile (savefileSlot) {
  * 			The savefile slot that should be deleted.
  *
  * 	Returns [Boolean]:
- * 		true if it got successfully deleted, false if not.
+ * 		'true' if it got successfully deleted, 'false' if not.
  */
 function updatesTracker_deleteSavefile (savefileSlot) {
 	//complain and return if 'savefileSlot' is not a number

@@ -38,7 +38,7 @@
 				This is a unique property that's added to the array and it won't appear in any 'for' loops. Kinda like the 'length' property.
 
 			> current [*Object*]
-				This simply redirects to the currently selected array item. This is not a property on it's own.
+				This simply redirects to the currently selected array item. This is not a property on it's own and won't appear in any 'for' loops either.
 				This is the best way to get the current savefile as it's always up-to-date (the current savefile is dynamically calulated the moment this property is used).
 
 				To be more accurate, it's a getter/setter pair (setter does nothing).
@@ -69,7 +69,7 @@
 				- game [String]
 					The current game. Can also be '_all' for "no game in particular".
 
-				> players [Array]
+				> players [Array of Objects]
 					A list of all players. Saves everything related to those players.
 
 					- playerAmount [Number]
@@ -125,13 +125,14 @@
 			Lists everything related to counters.
 			The only exception is which counters are activated, that's saved in 'savefiles' instead.
 
-			> 'bonusStars'/'spaces'/'misc'/etc [Object]
+			> *category* [Object]
 				Lists all the counters that are part of this category.
 				Categories consist of 'bonusStars', 'spaces', 'misc'. More will be added in later.
 				The 'misc' category is simply for everything that doesn't fit in any of the other categories while also not being big enough to warrant a new category being made for it.
 
-				> 'runningStar'/'blueSpace'/'distanceWalked'/etc [Counter Object]
+				> *counter* [Counter Object]
 					This is a counter. This can be a bonus star, a space or something else.
+					Could be 'runningStar', 'blueSpace', 'distanceWalked' or any other counter.
 
 					- active [Boolean]
 						Whether the counter is active or not
@@ -205,6 +206,8 @@ Object.defineProperty(trackerCore_status.savefiles, 'savefileless', {
 	value: {},
 	writable: true
 });
+
+// === CONSTRUCTORS ===
 
 /**	This sets up a 'Savefile' object which contains everything a single savefile needs.
  *
@@ -636,6 +639,8 @@ function trackerCore_Counter (counterRelation, relation) {
 	}
 }
 
+// === FUNCTIONS ===
+
 /**	Gets the specified counter from 'trackerCore_status'.
  *
  * 	Args:
@@ -643,9 +648,9 @@ function trackerCore_Counter (counterRelation, relation) {
  * 			The counter that should be gotten.
  * 			Is in the format of 'bonusStars.runningStar'.
  *
- * 	Returns [Object/Boolean]:
+ * 	Returns [Object/null]:
  * 		The object from 'trackerCore_status' as a reference.
- * 		If the counter can't be found then it will simply return false.
+ * 		If the counter can't be found then it will simply return 'null'.
  */
 function trackerCore_getCounter (counterName) {
 	//get and return the counter

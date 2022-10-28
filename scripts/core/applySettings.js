@@ -44,11 +44,11 @@ var applySettings_defaultSettings = {
  *
  * 				skipValidating [Boolean] <false>
  * 					If validation should be skipped.
- * 					If true it applies the value regardless of whether it's valid or not.
+ * 					If 'true' it applies the value regardless of whether it's valid or not.
  *
  * 	Returns [Boolean]:
- * 		Returns true if succesfully updated and false if it couldn't be updated.
- * 		This will also return true if the value specified is already set.
+ * 		Returns 'true' if succesfully updated and 'false' if it couldn't be updated.
+ * 		This will also return 'true' if the value specified is already set.
  */
 function applySettings_updateSetting (settingName, newValue, specifics={}) {
 	//complain and return if it's not a string
@@ -74,7 +74,7 @@ function applySettings_updateSetting (settingName, newValue, specifics={}) {
 			const elem = applySettings_getElement(settingName);
 
 			//update the input-field
-			if (Object.isDOMElement(elem) === true) {
+			if (isDOMElement(elem) === true) {
 				let fieldResult = inputfield_setValue(elem, newValue);
 
 				//complain and return if it failed
@@ -366,14 +366,14 @@ function applySettings_validateSetting (setting, value) {
 	//get the name of the setting
 		//if 'setting' is a DOM-Element then get it's 'data-settingstag' attribute
 		//otherwise use 'setting' as-is
-	let settingName = (Object.isDOMElement(setting) === true) ? setting.getAttribute('data-settingstag')
+	let settingName = (isDOMElement(setting) === true) ? setting.getAttribute('data-settingstag')
 	                : setting;
 
 	//complain and return if 'settingName' isn't a string
 	if (typeof settingName !== 'string') {
 
 		//complain more accurately based on whether a DOM Element was given or something else
-		if (Object.isDOMElement(setting) === true) {
+		if (isDOMElement(setting) === true) {
 			console.warn(`[MPO] applySettings_validateSetting() received a DOM Element that doesn't have a valid 'data-settingstag' attribute: "${settingsTag}".`);
 		} else {
 			console.warn(`[MPO] applySettings_validateSetting() received neither a string nor a DOM Element as 'setting': "${setting}".`);
