@@ -29,6 +29,49 @@
 			- amount [Number]
 				By how much the counter should be modified.
 
+		> counters [Object]
+			Lists everything related to counters.
+			The only exception is which counters are activated, that's saved in 'savefiles' instead.
+
+			> *category* [Object]
+				Lists all the counters that are part of this category.
+				Categories consist of 'bonusStars', 'spaces', 'misc'. More will be added in later.
+				The 'misc' category is simply for everything that doesn't fit in any of the other categories while also not being big enough to warrant a new category being made for it.
+
+				> *counter* [Counter Object]
+					This is a counter. This can be a bonus star, a space or something else.
+					Could be 'runningStar', 'blueSpace', 'distanceWalked' or any other counter.
+
+					- active [Boolean]
+						Whether the counter is active or not
+
+					- counterRelation [String]
+						Defines how the counter works. Can be one of the following:
+							- standalone: The counter is a stand-alone counter, it's not dependant on any other counter.
+							- combination: This counter is a combination of others. The "Unlucky Star" for example is awarded to the person that landed on the most red AND bowser spaces.
+							- linked: This counter is linked to another counter. This means this counter doesn't track stats on it's own, it simply links to another counter instead.
+
+					> relations [Object]
+						The relations to other counters. Depends a lot on what 'counterRelation' is.
+
+						- linkTo [String]
+							The counter it should be linked to. Only needed if 'counterRelation' is 'linked'.
+						- combinesCounters [Array]
+							List of counters this combines. Only needed if 'counterRelation' is 'combination'.
+						- addToCombination [Array]
+							List of counters this is part of.
+
+					> status [Object]
+						Saves the status of the counter like whether it should be displayed or whether it should be highlighted or not.
+						Not needed if 'counterRelation' is set to 'linked'.
+
+						- displayed [Array] //TODO: Array of what??
+							Defines whether this counter should be displayed.
+						- highlightHighest [Array]
+							Defines whether the highest score should be highlighted.
+						- highlightLowest [Array]
+							Defines whether the lowest score should be highlighted.
+
 		> savefiles [Array of Objects]
 			This is a list of all savefiles.
 			This includes all info that each savefile saves like the current game, players, stats.
@@ -120,55 +163,14 @@
 
 							- highlightLowest [Boolean]
 								If the lowest number should be highlighted.
-
-		> counters [Object]
-			Lists everything related to counters.
-			The only exception is which counters are activated, that's saved in 'savefiles' instead.
-
-			> *category* [Object]
-				Lists all the counters that are part of this category.
-				Categories consist of 'bonusStars', 'spaces', 'misc'. More will be added in later.
-				The 'misc' category is simply for everything that doesn't fit in any of the other categories while also not being big enough to warrant a new category being made for it.
-
-				> *counter* [Counter Object]
-					This is a counter. This can be a bonus star, a space or something else.
-					Could be 'runningStar', 'blueSpace', 'distanceWalked' or any other counter.
-
-					- active [Boolean]
-						Whether the counter is active or not
-
-					- counterRelation [String]
-						Defines how the counter works. Can be one of the following:
-							- standalone: The counter is a stand-alone counter, it's not dependant on any other counter.
-							- combination: This counter is a combination of others. The "Unlucky Star" for example is awarded to the person that landed on the most red AND bowser spaces.
-							- linked: This counter is linked to another counter. This means this counter doesn't track stats on it's own, it simply links to another counter instead.
-
-					> relations [Object]
-						The relations to other counters. Depends a lot on what 'counterRelation' is.
-
-						- linkTo [String]
-							The counter it should be linked to. Only needed if 'counterRelation' is 'linked'.
-						- combinesCounters [Array]
-							List of counters this combines. Only needed if 'counterRelation' is 'combination'.
-						- addToCombination [Array]
-							List of counters this is part of.
-
-					> status [Object]
-						Saves the status of the counter like whether it should be displayed or whether it should be highlighted or not.
-						Not needed if 'counterRelation' is set to 'linked'.
-
-						- displayed [Array]
-							Defines whether this counter should be displayed.
-						- highlightHighest [Array]
-							Defines whether the highest score should be highlighted.
-						- highlightLowest [Array]
-							Defines whether the lowest score should be highlighted.
  */
 
 //TODO: Replace this with a more dynamic approach
 	//update: how so?
 		//maybe the categories? ('bonusStars', 'spaces', etc.)
 	//update 2: I think I already did this?
+//TODO: Add some shortcuts in the form of getters for stuff like players
+	//meaning, add a 'player' getter into the root object that accesses the savefile - finding the correct savefile is not something that has to be done every time
 var trackerCore_status = {
 	controls: {
 		action: 'add',
