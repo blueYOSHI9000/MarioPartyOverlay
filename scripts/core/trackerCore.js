@@ -29,7 +29,7 @@
 			- amount [Number]
 				By how much the counter should be modified.
 
-		> savefiles [Array]
+		> savefiles [Array of Objects]
 			This is a list of all savefiles.
 			This includes all info that each savefile saves like the current game, players, stats.
 
@@ -206,6 +206,77 @@ Object.defineProperty(trackerCore_status.savefiles, 'savefileless', {
 	value: {},
 	writable: true
 });
+
+// === FUNCTIONS ===
+
+/**	Gets the specified counter from 'trackerCore_status'.
+ *
+ * 	Args:
+ * 		counterName [String]
+ * 			The counter that should be gotten.
+ * 			Is in the format of 'bonusStars.runningStar'.
+ *
+ * 	Returns [Object/null]:
+ * 		The object from 'trackerCore_status' as a reference.
+ * 		If the counter can't be found then it will simply return 'null'.
+ */
+function trackerCore_getCounter (counterName) {
+	//get and return the counter
+	return trackerCore_status['counters'].fetchProperty(counterName);
+}
+
+/**	Gets a savefile. Can also be used to verify that a given 'savefileSlot' is valid.
+ *
+ * 	Args:
+ * 		savefileSlot [Number/String] <current>
+ * 			The savefile slot that should be used.
+ * 			Will use the currently selected one on default.
+ *
+ * 	Returns [Object/null]:
+ * 		The savefile object in 'trackerCore_status.savefiles[*slot*]'.
+ * 		Or null if the savefile couldn't be found.
+ */
+function trackerCore_getSavefile (savefileSlot=trackerCore_status.savefiles.currentSlot) {
+	//convert string to number
+	if (typeof savefileSlot === 'string') {
+		savefileSlot = Number(savefileSlot);
+	}
+
+	//complain and return if not a number
+	if (typeof savefileSlot !== 'number') {
+		console.warn(`[MPO] trackerCore_getSavefile() received a non-number as 'savefileSlot' (might've been converted from a string): "${savefileSlot}".`);
+		return null;
+	}
+
+	//complain and return if the slot is invalid
+	if (savefileSlot === NaN || savefileSlot === Infinity || savefileSlot === -Infinity || savefileSlot < 0) {
+		console.warn(`[MPO] trackerCore_getSavefile() received a invalid number as 'savefileSlot': "${savefileSlot}".`);
+		return null;
+	}
+
+	//get the savefile
+	let savefile = trackerCore_status.savefiles[savefileSlot];
+
+	//complain and return if not an object
+	if (typeof savefile !== 'object') {
+		console.warn(`[MPO] trackerCore_getSavefile() found a non-object in savefile slot "${savefileSlot}".`);
+		return null;
+	}
+
+	return savefile;
+}
+
+/**	This saves the current stats to localStorage.
+ *
+ * 	Note: This is temporary, this does not consider a potentital character-limit to a single localStorage entry (if there is one) and it also does not save which counters are displayed.
+ */
+function trackerCore_saveSavefiles () {
+	localStorage.setItem('savefiles', JSON.stringify(trackerCore_status.savefiles));
+
+	//set these properties manually since they're not enumerable
+	localStorage.setItem('savefileless', JSON.stringify(trackerCore_status.savefiles.savefileless));
+	localStorage.setItem('currentSavefileSlot', trackerCore_status.savefiles.currentSlot);
+}
 
 // === CONSTRUCTORS ===
 

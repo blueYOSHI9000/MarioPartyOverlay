@@ -225,6 +225,10 @@ function boot_finishStartup () {
 
 	//update all counters
 	setTimeout(trackerInterface_updateVisuals, 0);
+
+	//update the 2nd navbar player icon (on default the Luigi icon) because Chrome keeps shitting itself and just neither loads the correct icon (just displays a random one) or it just flickers sometimes. So until I figure out a better solution this will have to do ¯\_(ツ)_/¯
+		//and yes, this has to have a 100ms delay! Or at least a 0ms delay doesn't work and why bother to figure out the exact number needed for a temporary hack?
+	setTimeout(() => {document.querySelector('.navbar_icon[player="2"]').src = document.querySelector('.navbar_icon[player="2"]').src}, 100);
 }
 
 /**	This loads the data saved in localStorage.
