@@ -53,6 +53,10 @@ function trackerInterface_updateVisuals () {
 	//get the current savefile
 	const savefile = trackerCore_getSavefile();
 
+	//this will be set to 'true' if a stat was found - mainly needed to error report if not a single counter can be found
+		//this variable is dedicated to me wasting way too much time after updating the 'trackerCore_status' object and getting 0 errors despite nothing working
+	let foundSomething = false;
+
 	//the following loops through each stat for each player and then calls 'trackerInterface_updateCounter()' on each one
 
 	//loop for each player
@@ -61,16 +65,24 @@ function trackerInterface_updateVisuals () {
 		//loop for each piece ('misc', 'bonusStars', etc.)
 			//note that we loop through 'trackerCore_status.counters' because we need to loop through ALL AVAILABLE counters, not just the ones the player has stats for
 			//though this only gets important on the next loop but it's best to use it here too
-		for (pieceKey in trackerCore_status.counters) {
+		for (pieceKey in trackerCore_status.counters.behaviour) {
 
 			//loop for each stat ('distanceWalked', 'happeningStar', etc.)
-			for (statKey in trackerCore_status.counters[pieceKey]) {
+			for (statKey in trackerCore_status.counters.behaviour[pieceKey]) {
 
 				//update the counter
 					//add one to 'playerKey' because 'playerKey' starts at 0
 				trackerInterface_updateCounter(`${pieceKey}.${statKey}`, Number(playerKey) + 1);
+
+				foundSomething = true;
 			}
 		}
+	}
+
+	//complain if nothing was found
+		//but don't return yet, the rest of the function can still be useful (moreso than the previous bit anyway)
+	if (foundSomething !== true) {
+		console.error(`[MPO] trackerInterface_updateVisuals() could not find a single stat in 'trackerCore_status'.`);
 	}
 
 	//update all characters

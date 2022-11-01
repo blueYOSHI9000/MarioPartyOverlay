@@ -222,7 +222,7 @@ Object.defineProperty(Object.prototype, 'fetchProperty', {value: function (path,
 
 		//complain and return 'null' if it couldn't finish looping through
 		if (typeof item !== 'object') {
-			console.warn(`[MPO] Object.fetchProperty() couldn't finish looping through the 'path' specified as it found a non-object with name "${key}": "${obj}".`);
+			console.warn(`[MPO] Object.fetchProperty() couldn't finish looping through the 'path' specified as it found a non-object with name "${key}": "${item}".`);
 			return null;
 		}
 

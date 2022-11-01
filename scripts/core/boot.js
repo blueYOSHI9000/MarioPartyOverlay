@@ -325,7 +325,7 @@ function boot_setupCounterObject () {
 		'stompedOthers',
 		'getStompedOn'
 	];
-	miscCounters.forEach(item => trackerCore_status['counters']['misc'][item] = new trackerCore_Counter('standalone'));
+	miscCounters.forEach(item => trackerCore_status.counters.behaviour.misc[item] = new trackerCore_Counter('standalone'));
 
 
 	//get all bonus stars
@@ -477,7 +477,7 @@ function boot_setupCounterObject () {
 
 		//create a stand-alone counter if it shouldn't be combined with any
 		if (combines.length <= 0) {
-			trackerCore_status['counters']['bonusStars'][key] = new trackerCore_Counter('standalone');
+			trackerCore_status.counters.behaviour.bonusStars[key] = new trackerCore_Counter('standalone');
 
 			//push this to the list of counters made
 			countersMade.push(currentCounterMade);
@@ -491,7 +491,7 @@ function boot_setupCounterObject () {
 			//check if the counter it links to even exists -- if not then don't link
 			if (linkedCounter !== undefined) {
 				//create the counter
-				trackerCore_status['counters']['bonusStars'][key] = new trackerCore_Counter('linked', combines[0]);
+				trackerCore_status.counters.behaviour.bonusStars[key] = new trackerCore_Counter('linked', combines[0]);
 
 				//add the bonus star to either 'highlightHighest' or 'highlightLowest'
 				if (invert === true) {
@@ -501,13 +501,13 @@ function boot_setupCounterObject () {
 				}
 			} else {
 				//if the linked counter can't be found then simply create a new, unique counter
-				trackerCore_status['counters']['bonusStars'][key] = new trackerCore_Counter('standalone');
+				trackerCore_status.counters.behaviour.bonusStars[key] = new trackerCore_Counter('standalone');
 			}
 
 		//list every counter that 'currentCounterName' combines
 		} else if (combines.length > 1) {
 			//create the counter
-			trackerCore_status['counters']['bonusStars'][key] = new trackerCore_Counter('combination');
+			trackerCore_status.counters.behaviour.bonusStars[key] = new trackerCore_Counter('combination');
 
 			//get the counter
 			const currentCounter = trackerCore_getCounter(currentCounterName);

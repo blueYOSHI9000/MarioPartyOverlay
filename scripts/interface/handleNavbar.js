@@ -46,13 +46,13 @@ function handleNavbar_changeAmount () {
 
 			//create a number input-field to store the new amount
 			inputfield_createField('number', elem, {
-				addToForm: form,
+				formsAdd: form,
 				tag: 'value'
 			});
 
 			//create a button that submits the value
 			inputfield_createField('button', elem, {
-				addToForm: form,
+				formsAdd: form,
 				onchange: (value, fieldObj) => {
 					//this gets the actual value that's needed
 						//it first gets the value of the form (which is a object)

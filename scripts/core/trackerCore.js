@@ -33,44 +33,39 @@
 			Lists everything related to counters.
 			The only exception is which counters are activated, that's saved in 'savefiles' instead.
 
-			> *category* [Object]
-				Lists all the counters that are part of this category.
-				Categories consist of 'bonusStars', 'spaces', 'misc'. More will be added in later.
-				The 'misc' category is simply for everything that doesn't fit in any of the other categories while also not being big enough to warrant a new category being made for it.
+			> status [Object]
+				This is information about the status of the counters, stuff that can be changed by the user. Whether the counter is active, whether it should be highlighted and all that.
 
-				> *counter* [Counter Object]
-					This is a counter. This can be a bonus star, a space or something else.
-					Could be 'runningStar', 'blueSpace', 'distanceWalked' or any other counter.
+				This redirects you to the 'perCounterOptions' object of the current savefile (see 'trackerCore_status' > 'savefiles' > '*array item*' > 'perCounterOptions' in this documentation).
+				Will appear in 'for' loops. Is technically just a getter.
 
-					- active [Boolean]
-						Whether the counter is active or not
+			> behaviour
+				This takes information from the database to define how the counters should work. This is fixed information which will be set once MPO boots up and won't ever be changed again.
 
-					- counterRelation [String]
-						Defines how the counter works. Can be one of the following:
-							- standalone: The counter is a stand-alone counter, it's not dependant on any other counter.
-							- combination: This counter is a combination of others. The "Unlucky Star" for example is awarded to the person that landed on the most red AND bowser spaces.
-							- linked: This counter is linked to another counter. This means this counter doesn't track stats on it's own, it simply links to another counter instead.
+				> *category* [Object]
+					Lists all the counters that are part of this category.
+					Categories consist of 'bonusStars', 'spaces', 'misc'. More will be added in later.
+					The 'misc' category is simply for everything that doesn't fit in any of the other categories while also not being big enough to warrant a new category being made for it.
 
-					> relations [Object]
-						The relations to other counters. Depends a lot on what 'counterRelation' is.
+					> *counter* [Counter Object]
+						This is a counter. This can be a bonus star, a space or something else.
+						Could be 'runningStar', 'blueSpace', 'distanceWalked' or any other counter.
 
-						- linkTo [String]
-							The counter it should be linked to. Only needed if 'counterRelation' is 'linked'.
-						- combinesCounters [Array]
-							List of counters this combines. Only needed if 'counterRelation' is 'combination'.
-						- addToCombination [Array]
-							List of counters this is part of.
+						- counterRelation [String]
+							Defines how the counter works. Can be one of the following:
+								- standalone: The counter is a stand-alone counter, it's not dependant on any other counter.
+								- combination: This counter is a combination of others. The "Unlucky Star" for example is awarded to the person that landed on the most red AND bowser spaces.
+								- linked: This counter is linked to another counter. This means this counter doesn't track stats on it's own, it simply links to another counter instead.
 
-					> status [Object]
-						Saves the status of the counter like whether it should be displayed or whether it should be highlighted or not.
-						Not needed if 'counterRelation' is set to 'linked'.
+						> relations [Object]
+							The relations to other counters. Depends a lot on what 'counterRelation' is.
 
-						- displayed [Array] //TODO: Array of what??
-							Defines whether this counter should be displayed.
-						- highlightHighest [Array]
-							Defines whether the highest score should be highlighted.
-						- highlightLowest [Array]
-							Defines whether the lowest score should be highlighted.
+							- linkTo [String]
+								The counter it should be linked to. Only needed if 'counterRelation' is 'linked'.
+							- combinesCounters [Array]
+								List of counters this combines. Only needed if 'counterRelation' is 'combination'.
+							- addToCombination [Array]
+								List of counters this is part of.
 
 		> savefiles [Array of Objects]
 			This is a list of all savefiles.
@@ -142,7 +137,7 @@
 
 				> settings [Object]
 					All settings for this savefile. Only needed if 'settingsType' is either 'standalone' or 'layered'.
-					If 'settingsType' is 'noSettings' then this should be an object, whether it's empty or includes settings in it does not matter. It can still include left-over settings however if the user for example had this set to 'layered' and then set it back to 'noSettings'.
+					If 'settingsType' is 'noSettings' then this should be an object, whether it's empty or includes settings in it does not matter. It can still include left-over settings if the user for example had this set to 'layered' and then set it back to 'noSettings'.
 					Otherwise it simply includes all settings inside it, each setting being a own property with a value assigned to it.
 
 				> perCounterOptions [Object]
@@ -178,9 +173,11 @@ var trackerCore_status = {
 	},
 	savefiles: [],
 	counters: {
-		bonusStars: {},
-		spaces: {},
-		misc: {}
+		behaviour: {
+			bonusStars: {},
+			spaces: {},
+			misc: {}
+		}
 	}
 };
 
@@ -188,18 +185,30 @@ var trackerCore_status = {
 	//this has to be done this way if we don't want it to be iterable
 Object.defineProperty(trackerCore_status.savefiles, 'currentSlot', {
 	value: 0,
+	enumerable: false,
 	writable: true
 });
 
 //create the 'current' property which simply redirects to the current savefile
 Object.defineProperty(trackerCore_status.savefiles, 'current', {
+	enumerable: false,
 	get () {
 		return this[this.currentSlot];
 	},
 	set (value) {
 		return;
 	}
-})
+});
+
+//create a redirect to the 'perCounterOptions' of the current savefile
+	//and don't allow to overwrite this property
+Object.defineProperty(trackerCore_status.counters, 'status', {
+	enumerable: true,
+	get () {
+		return trackerCore_status.savefiles.current.perCounterOptions;
+	},
+	set (value) {}
+});
 
 //create the "savefile-less" property
 	//just a empty object for now
@@ -211,7 +220,7 @@ Object.defineProperty(trackerCore_status.savefiles, 'savefileless', {
 
 // === FUNCTIONS ===
 
-/**	Gets the specified counter from 'trackerCore_status'.
+/**	Gets the specified counter from 'trackerCore_status.behaviour'.
  *
  * 	Args:
  * 		counterName [String]
@@ -224,7 +233,7 @@ Object.defineProperty(trackerCore_status.savefiles, 'savefileless', {
  */
 function trackerCore_getCounter (counterName) {
 	//get and return the counter
-	return trackerCore_status['counters'].fetchProperty(counterName);
+	return trackerCore_status.counters.behaviour.fetchProperty(counterName);
 }
 
 /**	Gets a savefile. Can also be used to verify that a given 'savefileSlot' is valid.
@@ -464,9 +473,9 @@ function trackerCore_Savefile (specifics={}) {
 		//two for loops are needed because all counters are categorized into various categories so it has to loop through all categories so it can THEN loop through all counters
 
 	//loop through all available categories
-	for (const categoryKey in trackerCore_status.counters) {
+	for (const categoryKey in trackerCore_status.counters.behaviour) {
 		//for quick access
-		const categoryItem = trackerCore_status.counters[categoryKey];
+		const categoryItem = trackerCore_status.counters.behaviour[categoryKey];
 
 		//create the category in 'perCounterOptions'
 		this.perCounterOptions[categoryKey] = {};
@@ -620,7 +629,7 @@ function trackerCore_Player (specifics={}) {
 	this.stats = {};
 
 	//loop through all available counter categories
-	for (const categoryKey in trackerCore_status.counters) {
+	for (const categoryKey in trackerCore_status.counters.behaviour) {
 
 		this.stats[categoryKey] = {}
 
@@ -631,7 +640,7 @@ function trackerCore_Player (specifics={}) {
 			for (const statKey in specifics.stats[categoryKey]) {
 
 				//check if this counter actually exists and if a valid stat has been provided (valid being any number)
-				if (typeof trackerCore_status.counters[categoryKey][statKey] === 'object' && typeof specifics.stats[categoryKey][statKey] === 'number') {
+				if (typeof trackerCore_status.counters.behaviour[categoryKey][statKey] === 'object' && typeof specifics.stats[categoryKey][statKey] === 'number') {
 
 					//and finally add the stat
 					this.stats[categoryKey][statKey] = specifics.stats[categoryKey][statKey];
@@ -671,8 +680,6 @@ function trackerCore_Counter (counterRelation, relation) {
 			break;
 	}
 
-	this.active = false;
-
 	this.counterRelation = counterRelation;
 
 	this.relations = {};
@@ -710,75 +717,4 @@ function trackerCore_Counter (counterRelation, relation) {
 			highlightLowest : []
 		}
 	}
-}
-
-// === FUNCTIONS ===
-
-/**	Gets the specified counter from 'trackerCore_status'.
- *
- * 	Args:
- * 		counterName [String]
- * 			The counter that should be gotten.
- * 			Is in the format of 'bonusStars.runningStar'.
- *
- * 	Returns [Object/null]:
- * 		The object from 'trackerCore_status' as a reference.
- * 		If the counter can't be found then it will simply return 'null'.
- */
-function trackerCore_getCounter (counterName) {
-	//get and return the counter
-	return trackerCore_status['counters'].fetchProperty(counterName);
-}
-
-/**	Gets a savefile. Can also be used to verify that a given 'savefileSlot' is valid.
- *
- * 	Args:
- * 		savefileSlot [Number/String] <current>
- * 			The savefile slot that should be used.
- * 			Will use the currently selected one on default.
- *
- * 	Returns [Object/null]:
- * 		The savefile object in 'trackerCore_status.savefiles[*slot*]'.
- * 		Or null if the savefile couldn't be found.
- */
-function trackerCore_getSavefile (savefileSlot=trackerCore_status.savefiles.currentSlot) {
-	//convert string to number
-	if (typeof savefileSlot === 'string') {
-		savefileSlot = Number(savefileSlot);
-	}
-
-	//complain and return if not a number
-	if (typeof savefileSlot !== 'number') {
-		console.warn(`[MPO] trackerCore_getSavefile() received a non-number as 'savefileSlot' (might've been converted from a string): "${savefileSlot}".`);
-		return null;
-	}
-
-	//complain and return if the slot is invalid
-	if (savefileSlot === NaN || savefileSlot === Infinity || savefileSlot === -Infinity || savefileSlot < 0) {
-		console.warn(`[MPO] trackerCore_getSavefile() received a invalid number as 'savefileSlot': "${savefileSlot}".`);
-		return null;
-	}
-
-	//get the savefile
-	let savefile = trackerCore_status.savefiles[savefileSlot];
-
-	//complain and return if not an object
-	if (typeof savefile !== 'object') {
-		console.warn(`[MPO] trackerCore_getSavefile() found a non-object in savefile slot "${savefileSlot}".`);
-		return null;
-	}
-
-	return savefile;
-}
-
-/**	This saves the current stats to localStorage.
- *
- * 	Note: This is temporary, this does not consider a potentital character-limit to a single localStorage entry (if there is one) and it also does not save which counters are displayed.
- */
-function trackerCore_saveSavefiles () {
-	localStorage.setItem('savefiles', JSON.stringify(trackerCore_status.savefiles));
-
-	//set these properties manually since they're not enumerable
-	localStorage.setItem('savefileless', JSON.stringify(trackerCore_status.savefiles.savefileless));
-	localStorage.setItem('currentSavefileSlot', trackerCore_status.savefiles.currentSlot);
 }

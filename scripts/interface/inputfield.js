@@ -2341,8 +2341,8 @@ function inputfield_createField (fieldType, parent, attributes) {
 
 	//setup the actual input-field (see 'inputfield_setupField()')
 	container.setup({
-		fieldType: fieldType,
-		variation: attributes.variation,
+		fieldType:  fieldType,
+		variation:  attributes?.variation,
 		attributes: attributes
 	});
 

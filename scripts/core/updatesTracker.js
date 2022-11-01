@@ -54,7 +54,7 @@
  */
 function updatesTracker_updateCounter (counterName, player, action=updatesTracker_getAction(), value=updatesTracker_getAmount()) {
 	//get current/old stat
-		//if the 'updatesTracker_getStat' is falsy then simply set it to 0 instead (note that 0 is also considered "falsy" but that doesn't matter here since we set it to 0 anyway)
+		//if the 'updatesTracker_getStat' is falsy (NaN, null) then simply set it to 0 instead (note that 0 is also considered "falsy" but that doesn't matter here since we set it to 0 anyway)
 	const oldStat = updatesTracker_getStat(counterName, player) || 0;
 
 	//set new stat to 0 as a default

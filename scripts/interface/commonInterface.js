@@ -15,7 +15,13 @@
  */
 function commonInterface_createCounterList (parent, player) {
 	//get all bonus stars
-	const bonusStars = trackerCore_status['counters']['bonusStars'];
+	const bonusStars = trackerCore_status.counters.behaviour.bonusStars;
+
+	//complain and return if it's not an object
+	if (typeof bonusStars !== 'object') {
+		console.error(`[MPO] commonInterface_createCounterList() could not find a 'bonusStars' object inside 'trackerCore_status.counters.behaviour': "${bonusStars}".`);
+		return;
+	}
 
 	//list all counters that have been made
 	let countersMade = [];
