@@ -179,6 +179,7 @@ function handleNavbar_changeCharacterFromModal (value, fieldObj) {
 	updatesTracker_setCharacter(Number(value.player), value.character);
 }
 
+//WIP - doesn't currently do anything
 function handleNavbar_createGameModal () {
 	var constructModal = function (elem) {
 		//this is a object that contains all games from the database

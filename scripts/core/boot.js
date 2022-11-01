@@ -53,8 +53,8 @@
  *	The goal of the boot process is to reduce the initial load as much as possible (this is also why 'index.html' only includes the bare minimum).
  *	'index.html' is loaded first, inside it is a bit of JS that adds a new <script> with a 'onload' attribute.
  *	The <script> element loads 'helpers.js', once it finished loading it executes the 'onload' attribute which loads 'boot.js' through the 'loadScripts()' function (that's why 'helpers.js' is loaded first, because that function is needed).
- *	Once 'boot.js' finished loading it executes the 'onload' attribute of it's <script> element which calls 'boot_scriptLoaded()' which then finally calls 'boot_basicStartup()'.
- *	 'boot_basicStartup()' then loads all other JS and CSS files. Each JS file is loaded with a <script> element that has a 'onload' attribute that pushes the file name to 'boot_scriptsLoaded'.
+ *	Once 'boot.js' finished loading it executes the 'onload' attribute of it's <script> element which calls 'boot_scriptLoaded()' which then finally calls 'boot_preStartup()'.
+ *	 'boot_preStartup()' then loads all other JS and CSS files. Each JS file is loaded with a <script> element that has a 'onload' attribute that pushes the file name to 'boot_scriptsLoaded'.
  *	Once all script files are loaded it executes 'boot_finishStartup()'.
  *
  *
@@ -64,7 +64,7 @@
  *			> 'onload' attribute
  *				- load boot.js via loadScripts()
  * 				> 'onload' attribute > boot_scriptLoaded()
- *					> boot_basicStartup()
+ *					> boot_preStartup()
  *						- check if cookies are enabled
  *						- load database
  *						- load all other scripts
@@ -176,7 +176,7 @@ function boot_scriptLoaded (script) {
 	//execute code once a certain file has been loaded
 	switch (script) {
 		case 'boot.js':
-			boot_basicStartup();
+			boot_preStartup();
 			break;
 	}
 
@@ -191,7 +191,7 @@ function boot_scriptLoaded (script) {
  *
  * 	NOTE: This gets loaded when nothing besides 'helpers.js' and 'boot.js' are loaded!
  */
-function boot_basicStartup () {
+function boot_preStartup () {
 	//TODO: Check whether cookies are enabled
 
 	//Load Scripts
@@ -206,10 +206,9 @@ function boot_basicStartup () {
  *
  * 	This is done once all script files have finished loading.
  *
- * 	This builds the site up completely and does basically everything that 'boot_basicStartup()' didn't do.
+ * 	This builds the site up completely and does basically everything that 'boot_preStartup()' didn't do.
  */
 function boot_finishStartup () {
-	//place every single call in a setTimeout (TODO)
 
 	//setup the 'trackerCore_status' object
 	setTimeout(boot_setupCounterObject, 0);
@@ -267,7 +266,7 @@ function boot_loadLocalStorage () {
 			for (const item of parsedSavefiles) {
 
 				//and add the savefile by letting 'trackerCore_Savefile()' handle the verifying
-				trackerCore_status.savefiles.push(new trackerCore_Savefile({_premade: item, metadata_savefileless: false}));
+				trackerCore_status.savefiles.push(new trackerCore_Savefile({_premade: item, metadata_settingsfile: false}));
 			}
 		} else {
 			//complain and use default
@@ -282,12 +281,12 @@ function boot_loadLocalStorage () {
 
 	//if a "savefile-less" savefile is stored then use it
 		//'trackerCore_Savefile()' handles all the verifying
-	if (ls.savefileless !== undefined) {
-		trackerCore_status.savefiles.savefileless = new trackerCore_Savefile({_premade: ls.savefileless, metadata_savefileless: true, metadata_settingsType: 'standalone'});
+	if (ls.settingsfile !== undefined) {
+		trackerCore_status.savefiles.settingsfile = new trackerCore_Savefile({_premade: ls.settingsfile, metadata_settingsfile: true, metadata_settingsType: 'standalone'});
 
 	//else create a default savefile
 	} else {
-		trackerCore_status.savefiles.savefileless = new trackerCore_Savefile({                           metadata_savefileless: true, metadata_settingsType: 'standalone'});
+		trackerCore_status.savefiles.settingsfile = new trackerCore_Savefile({                           metadata_settingsfile: true, metadata_settingsType: 'standalone'});
 	}
 
 	//check if the currently selected savefile is stored

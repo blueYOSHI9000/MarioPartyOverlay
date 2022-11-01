@@ -29,8 +29,8 @@ var applySettings_defaultSettings = {
 /**	Updates a setting to a new value.
  *
  * 	This will make sure the visuals are updated (so the checkbox shows up as checked when it should be checked).
- * 	This will update 'trackerCore_status'.
- * 	This will also apply the actual value (...)
+ * 	This will update the correct savefile in 'trackerCore_status'.
+ * 	This will also apply the actual value (if the text color has been changed to red then the color is changed in here).
  *
  * 	Args:
  * 		settingName [String]
@@ -96,8 +96,23 @@ function applySettings_updateSetting (settingName, newValue, specifics={}) {
 }
 
 /**	Gets the value of a setting from the proper savefile.
+ *
+ * 	Args:
+ * 		settingName [String]
+ * 			The name of the setting that should be gotten.
+ *
+ * 	Returns [???/undefined]:
+ * 		The value of the setting.
+ * 		If a setting can't be found it gets the default value instead.
+ * 		Returns 'undefined' if the setting couldn't be found at all. It's 'undefined' instead of 'null' since a setting could be using 'null' as an intended value.
  */
 function applySettings_getSettingValue (settingName) {
+	//complain and return if 'settingName' isn't a string
+	if (typeof settingName !== 'string') {
+		console.warn(`[MPO] applySettings_getSettingValue() received a non-string as 'settingName':`, settingName);
+		return undefined;
+	}
+
 	//this saves on which savefile-slot we're currently iterating on
 	let savefileSlot = trackerCore_status.savefiles.currentSlot;
 
@@ -108,17 +123,23 @@ function applySettings_getSettingValue (settingName) {
 		//this will only loop multiple times for layered savefiles
 	while (true) {
 
-		//if the savefile-slot is below 0 or the savefile couldn't be found then use the 'savefileless' savefile
+		//complain and return if it loops despite already using the 'settingsfile'
+		if (savefile === trackerCore_status.savefiles.settingsfile) {
+			console.warn(`[MPO] applySettings_getSettingValue() looped despite already using the 'settingsfile'. This was likely caused by 'settingsfile' using a 'settingsType' it shouldn't be using:`, trackerCore_status.savefiles.settingsfile._metadata.settingsType);
+			return undefined;
+		}
+
+		//if the savefile-slot is below 0 or the savefile couldn't be found then use the 'settingsfile' savefile
 		if (savefileSlot < 0 || typeof savefile !== 'object') {
-			savefile = trackerCore_status.savefiles.savefileless;
+			savefile = trackerCore_status.savefiles.settingsfile;
 		}
 
 		//get the value based on which 'settingsType' the current savefile is
 		switch (savefile._metadata.settingsType) {
 
-			//get the value from the 'savefileless' savefile
+			//get the value from the 'settingsfile' savefile
 			case 'noSettings':
-				return trackerCore_status.savefiles.savefileless.settings[settingName];
+				return trackerCore_status.savefiles.settingsfile.settings[settingName];
 				break;
 
 			//get the value from the savefile (or get defaults if not present)
@@ -144,12 +165,21 @@ function applySettings_getSettingValue (settingName) {
 					return savefile.settings[settingName];
 				}
 				break;
+
+			//complain and return if the 'settingsType' is unknown
+			default:
+				console.warn(`[MPO] applySettings_getSettingValue() found an unknown 'settingsType' in savefileSlot "${savefileSlot}":`, savefile._metadata.settingsType);
+				return undefined;
 		}
 
 		//go one savefile lower
 		savefileSlot--;
 		savefile = trackerCore_status.savefiles[savefileSlot];
 	}
+
+	//complain if it reached the end of the function
+	console.warn(`[MPO] applySettings_getSettingValue() reached the end of the function, which shouldn't happen.`);
+	return undefined;
 }
 
 /**	Sets a setting to a new value. The value won't be validated.
@@ -165,7 +195,8 @@ function applySettings_getSettingValue (settingName) {
  * 		newValue [*any*]
  * 			The value it should be set to.
  *
- * 	Returns [Boolean]
+ * 	Returns [Boolean]:
+ * 		'true' if it was successfully updated, 'false' if not.
  */
 function applySettings_setSettingValue (settingName, newValue) {
 	//complain and return if 'settingName' is not a string
@@ -181,9 +212,9 @@ function applySettings_setSettingValue (settingName, newValue) {
 	let obj;
 	switch (currentSavefile._metadata.settingsType) {
 
-		//get it from the 'savefileless' savefile
+		//get it from the 'settingsfile' savefile
 		case 'noSettings':
-			obj = trackerCore_status.savefiles.savefileless.settings;
+			obj = trackerCore_status.savefiles.settingsfile.settings;
 			break;
 
 		//get it from the currently selected savefile
@@ -206,7 +237,7 @@ function applySettings_setSettingValue (settingName, newValue) {
 
 /** Applies the value after the user changed settings.
  *
- * 	This will apply the value (if text color has been changed to red then the color is changed in here).
+ * 	This will apply the actual value (if the text color has been changed to red then the color is changed in here).
  * 	This will update the apropriate value in 'trackerCore_status'.
  * 	This will NOT update the visuals (so it will not update the color-picker to display red - use 'applySettings_updateSetting()' for that).
  *
@@ -255,22 +286,22 @@ function applySettings_applySetting (settingName, newValue) {
 
 /**	This applies all settings.
  *
- * 	It simply calls 'applySettings_applySetting()' on all 'applySettings_settings' entries.
+ * 	It simply calls 'applySetting()' on all settings entries.
  *
  * 	Args:
- * 		setValues [Boolean] <false>
- * 			If true it calls 'applySettings_set()' on all entries as well using the value found in 'applySettings_settings'.
- * 			This will be done before applying them.
+ * 		updateSetting [Boolean] <false>
+ * 			If 'true' it calls 'updateSettings()' instead of 'applySetting()'.
+ * 			Difference being, if this is 'true' it will also update the input-field (basically so the checkbox is actually checked if it should be).
  */
-function applySettings_applyAll (setValues) {
+function applySettings_applyAll (updateSetting) {
 	//loop through all settings that exist
 	for (key in applySettings_defaultSettings) {
 
 		//get the value for that setting
 		let value = applySettings_getSettingValue(key);
 
-		//if 'setValues' is true then set the value
-		if (setValues === true) {
+		//if 'updateSetting' is true then update the value
+		if (updateSetting === true) {
 			applySettings_updateSetting(key, value);
 
 		//else simply apply it
@@ -285,7 +316,7 @@ function applySettings_applyAll (setValues) {
  * 	Note that this will set and apply ALL settings, regardless of whether a value got changed or not.
  *
  * 	This function will behave differently depending on what 'settingsType' the current savefile has.
- * 		- 'noSettings': The defaults will be applied to 'savefileless'.
+ * 		- 'noSettings': The defaults will be applied to 'settingsfile'.
  * 		- 'standalone': The defaults will be applied to the current savefile.
  * 		- 'layered': All settings from the current savefile will be removed. This means it will now use values from the other layers/savefiles.
  *
@@ -313,9 +344,9 @@ function applySettings_applyDefaults (force) {
 	//get the savefile that should be modified
 	switch (trackerCore_getSavefile()._metadata.settingsType) {
 
-		//get the 'savefileless' savefile
+		//get the 'settingsfile' savefile
 		case 'noSettings':
-			savefile = trackerCore_status.savefiles.savefileless;
+			savefile = trackerCore_status.savefiles.settingsfile;
 			break;
 
 		//get the current savefile
@@ -353,8 +384,8 @@ function applySettings_applyDefaults (force) {
  * 			The value that should be verified.
  *
  * 	Returns [Boolean]:
- * 		true if it's valid and false if it's not valid.
- * 		Also returns false if it couldn't find the setting.
+ * 		'true' if it's valid and 'false' if it's not valid.
+ * 		Also returns 'false' if it couldn't find the setting.
  */
 function applySettings_validateSetting (setting, value) {
 
@@ -398,7 +429,7 @@ function applySettings_validateSetting (setting, value) {
 	}
 }
 
-/**	This removes all values in an object that aren't valid.
+/**	This removes all values that aren't valid in an object.
  *
  * 	This will get rid of all properties that aren't a setting (by checking whether it exists in 'applySettings_defaultSettings' or not).
  * 	This will also get rid of all values that are undefined.
@@ -414,7 +445,7 @@ function applySettings_validateSetting (setting, value) {
  * 		The object provided in 'objToVerify' except all values that aren't valid are removed.
  * 		Returns an empty object if a non-object is given to it.
  */
-function applySettings_validateAll (objToVerify, specifics={}) {
+function applySettings_validateAll (objToVerify) {
 	if (typeof objToVerify !== 'object') {
 		console.warn(`[MPO] applySettings_validateAll() received a non-object as 'objToVerify': "${objToVerify}".`);
 		return {};
@@ -467,11 +498,11 @@ function applySettings_validateAll (objToVerify, specifics={}) {
  *
  * 	Returns [DOM Element/null]:
  * 		The DOM element of the setting, that likely being the input-field.
- * 		Returns null if it couldn't be found.
+ * 		Returns 'null' if it couldn't be found.
  */
 function applySettings_getElement (settingName) {
 	//get the element
-		//'.querySelector' automatically returns null if it couldn't be found
+		//'.querySelector' automatically returns 'null' if it couldn't be found
 	return document.querySelector(`[data-settingstag=${settingName}]`);
 }
 

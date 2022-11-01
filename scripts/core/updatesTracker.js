@@ -48,11 +48,11 @@
  * 				- set: Sets stats to a certain number.
  *			If not specified it simply takes the default action that's displayed in the navbar.
  *
- * 		value [Number] <current value>
+ * 		amount [Number] <current amount>
  * 			The amount that should be added/subtracted or set to.
  *			If not specified it simply takes the default amount that's displayed in the navbar.
  */
-function updatesTracker_updateCounter (counterName, player, action=updatesTracker_getAction(), value=updatesTracker_getAmount()) {
+function updatesTracker_updateCounter (counterName, player, action=updatesTracker_getAction(), amount=updatesTracker_getAmount()) {
 	//get current/old stat
 		//if the 'updatesTracker_getStat' is falsy (NaN, null) then simply set it to 0 instead (note that 0 is also considered "falsy" but that doesn't matter here since we set it to 0 anyway)
 	const oldStat = updatesTracker_getStat(counterName, player) || 0;
@@ -63,13 +63,13 @@ function updatesTracker_updateCounter (counterName, player, action=updatesTracke
 	//calculate the new stat
 	switch (action) {
 		case 'add':
-			newStat = oldStat + value;
+			newStat = oldStat + amount;
 			break;
 		case 'sub':
-			newStat = oldStat - value;
+			newStat = oldStat - amount;
 			break;
 		case 'set':
-			newStat = value;
+			newStat = amount;
 			break;
 
 		//log error if 'action' is an invalid argument
@@ -93,7 +93,7 @@ function updatesTracker_updateCounter (counterName, player, action=updatesTracke
 	//if 'newStat' is not in between 0 and 999 (inclusive) then it's invalid
 		//this could be if it's Infinity, -Infinity, NaN or somehow not even of the type 'number'
 	} else if (!(newStat >= 0 && newStat <= 999)) {
-		console.error(`[MPO] updatesTracker_updateCounter() got an invalid 'newStat' of value "${newStat}". oldStat: "${oldStat}" | counterName: "${counterName}" | player: "${player}" | action: "${action}" | value: ${value}`);
+		console.error(`[MPO] updatesTracker_updateCounter() got an invalid 'newStat' of value "${newStat}". oldStat: "${oldStat}" | counterName: "${counterName}" | player: "${player}" | action: "${action}" | amount: ${amount}`);
 		newStat = 0;
 	}
 

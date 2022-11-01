@@ -81,8 +81,9 @@
 
 				To be more accurate, it's a getter/setter pair (setter does nothing).
 
-			> savefileless [Object]
+			> settingsfile [Object]
 				This is a unique savefile that only stores settings.
+				Is not enumerable/does not appear in 'for' loops.
 
 				> settings [Object]
 					See below for full explanation.
@@ -100,12 +101,12 @@
 					- settingsType [String]
 						Whether settings should be included.
 						Can be one of the following:
-							- 'noSettings': Does not include settings so it will simply use the settings from 'savefileless' instead.
+							- 'noSettings': Does not include settings so it will simply use the settings from 'settingsfile' instead.
 							- 'standalone': Includes settings completely on it's own.
 							- 'layered': Includes settings but it will take settings from all previous savefiles for any that are not defined.
 
 				- game [String]
-					The current game. Can also be '_all' for "no game in particular".
+					The current game in the format of 'mp1', 'mp8', 'mptt100', etc. Can also be '_all' for "no game in particular".
 
 				> players [Array of Objects]
 					A list of all players. Saves everything related to those players.
@@ -213,7 +214,7 @@ Object.defineProperty(trackerCore_status.counters, 'status', {
 //create the "savefile-less" property
 	//just a empty object for now
 	//this will be set-up properly in 'boot_loadLocalStorage()'
-Object.defineProperty(trackerCore_status.savefiles, 'savefileless', {
+Object.defineProperty(trackerCore_status.savefiles, 'settingsfile', {
 	value: {},
 	writable: true
 });
@@ -285,7 +286,7 @@ function trackerCore_saveSavefiles () {
 	localStorage.setItem('savefiles', JSON.stringify(trackerCore_status.savefiles));
 
 	//set these properties manually since they're not enumerable
-	localStorage.setItem('savefileless', JSON.stringify(trackerCore_status.savefiles.savefileless));
+	localStorage.setItem('settingsfile', JSON.stringify(trackerCore_status.savefiles.settingsfile));
 	localStorage.setItem('currentSavefileSlot', trackerCore_status.savefiles.currentSlot);
 }
 
@@ -295,9 +296,9 @@ function trackerCore_saveSavefiles () {
  *
  * 	Args:
  * 		specifics [Object] <defaults>
- * 			Most of the listed properties in here are explained in the documentation at the top of this file under 'trackerCore_status' > 'savefiles' > '*array item*'.
- * 			Unless mentioned otherwise you can find a exact explanation in there.
- * 			In addition, unless mentioned otherwise it will always fall back to the default whenever a argument is invalid. This won't be reported to the console (with few exceptions).
+ * 			If a property here doesn't have an explanation then see the documentation at the top of this file under 'trackerCore_status' > 'savefiles' > '*array item*'.
+ * 			If a invalid argument is given then (unless mentioned otherwise) it will simply use the specified defaults, without logging it to the console.
+ *
  * 			Contains the following properties:
  *
  * 				_premade [Object/String] <none>
@@ -306,21 +307,24 @@ function trackerCore_saveSavefiles () {
  * 					Other values specified WILL take priority over the values found in '_premade' (unless the value is null).
  * 					If this is invalid it will be ignored completely.
  *
- * 				metadata_savefileless [Boolean] <false>
- * 					If true this is a special "savefile-less" savefile that only stores settings.
+ * 				metadata_settingsfile [Boolean] <false>
+ * 					If true this is a special savefile that only stores settings.
  *
  * 				metadata_settingsType [String] <'noSettings'>
- * 					See '_metadata' > 'settingsType' in the documentation.
- *
- * 				game [String] <'_all'>
+ * 					*See xx > '_metadata' > 'settingsType' in the documentation.
  *
  * 				players [Array] <4 players; P1 is human, rest computers; characters are 'mario', 'luigi', 'yoshi', 'peach' in that order; all players are unnamed>
  *					A list of all players.
  * 					Array consists of objects. See the arguments of 'trackerCore_Player()' to see what each object should contain.
  *
+ * 				game [String] <'_all'>
+ * 					*See documentation
+ *
  * 				settings [Object] <nothing>
+ * 					*See documentation
  *
  * 				perCounterOptions [Object] <none>
+ * 					*See documentation
  *
  * 	Constructs:
  * 		*See documentation at the top of this file under 'trackerCore_status' > 'savefiles' > '*array item*'.
@@ -360,7 +364,7 @@ function trackerCore_Savefile (specifics={}) {
 		//but only apply them if there isn't already a value for it
 	if (typeof specifics._premade === 'object') {
 		specifics.metadata_settingsType ??= specifics._premade?.metadata?.settingsType;
-		specifics.metadata_savefileless ??= specifics._premade?.metadata?.savefileless;
+		specifics.metadata_settingsfile ??= specifics._premade?.metadata?.settingsfile;
 
 		specifics.game              ??= specifics._premade?.game;
 		specifics.players           ??= specifics._premade?.players;
@@ -383,7 +387,7 @@ function trackerCore_Savefile (specifics={}) {
 		//use 'standalone' if it's a "savefile-less" savefile
 		//otherwise use the one specified in 'specifics' but only if it's valid (if it's one of the strings in the array)
 		//otherwise use 'noSettings'
-	this._metadata.settingsType = (specifics.metadata_savefileless === true) ? 'standalone'
+	this._metadata.settingsType = (specifics.metadata_settingsfile === true) ? 'standalone'
 	                            : (['noSettings', 'standalone', 'layered'].indexOf(specifics.metadata_settingsType) !== -1) ? specifics.metadata_settingsType
 	                            : 'noSettings';
 
@@ -392,7 +396,7 @@ function trackerCore_Savefile (specifics={}) {
 	//=== SET GAME & PLAYERS ===
 
 	//don't set the game & players if it's a "savefile-less" savefile
-	if (specifics.metadata_savefileless !== true) {
+	if (specifics.metadata_settingsfile !== true) {
 
 		//set the game but only if it's valid
 			//get a list of all game abbreviations and then check if 'specifics.game' is one of them
