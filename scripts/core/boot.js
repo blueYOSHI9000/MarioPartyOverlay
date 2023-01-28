@@ -253,8 +253,75 @@ function boot_loadLocalStorage () {
 		ls = localStorage;
 	}
 
+
+
+	// === PROFILES ===
+
+	//if a 'globalProfile' exists then use it
+	if (ls.globalProfile !== undefined) {
+		//parse the data
+		const parsedGlobalProfile = JSON.parse(ls.globalProfile);
+
+		//make sure it's an object
+		if (typeof parsedGlobalProfile === 'object') {
+
+			//then add it
+			trackerCore_status.profiles.globalProfile = new trackerCore_Profile({_premade: parsedGlobalProfile, _globalProfile: true});
+		}
+
+	//else create a default one
+	} else {
+		trackerCore_status.profiles.globalProfile = new trackerCore_Profile({_globalProfile: true});
+	}
+
+	//remembers whether a default profile had to be made
+	let defaultProfileMade = false;
+
+	//load profiles if present
+	if (ls.profiles !== undefined) {
+		//parse the data
+		const parsedProfiles = JSON.parse(ls.profiles);
+
+		//check if the data is an array and does contain at least 1 array item
+			//Note that unlike savefiles, this is an object and NOT an array
+		if (typeof parsedProfiles === 'object' && Object.keys(parsedProfiles).length > 0) {
+
+			//loop through all profiles
+			for (const key in parsedProfiles) {
+				const item = parsedProfiles[key];
+
+				//and add the profile by letting 'trackerCore_Profile()' handle the verifying
+				trackerCore_status.profiles.add(new trackerCore_Profile({_premade: item}));
+			}
+		} else {
+			//complain and use default
+			console.warn(`[MPO] Stored profiles in localStorage is either not an object or doesn't include any properties in it. Weird, isn't it? Object: `, parsedProfiles);
+			trackerCore_status.profiles.add(new trackerCore_Profile());
+			defaultProfileMade = true;
+		}
+
+	//else create a default profile
+	} else {
+		trackerCore_status.profiles.add(new trackerCore_Profile());
+		defaultProfileMade = true;
+	}
+
+
+
+	// === SAVEFILES ===
+
+	//if a 'currentSavefileSlot' property exists then use it
+	if (ls.currentSavefileSlot !== undefined) {
+		//parse the data (since it's just a number a 'JSON.parse()' isn't needed)
+		const parsedCurrentSavefileSlot = Number(ls.currentSlot);
+
+		//if it's a proper number then apply it (an 'else' isn't needed since it's already at 0)
+		if (Number.isSafeInteger(parsedCurrentSavefileSlot) === true) {
+			trackerCore_status.savefiles.currentSlot = parsedCurrentSavefileSlot;
+		}
+	}
+
 	//load savefiles if present
-		//this does not need default behaviour as the defaults are already there
 	if (ls.savefiles !== undefined) {
 		//parse the data
 		const parsedSavefiles = JSON.parse(ls.savefiles);
@@ -266,40 +333,32 @@ function boot_loadLocalStorage () {
 			for (const item of parsedSavefiles) {
 
 				//and add the savefile by letting 'trackerCore_Savefile()' handle the verifying
-				trackerCore_status.savefiles.push(new trackerCore_Savefile({_premade: item, metadata_settingsfile: false}));
+				trackerCore_status.savefiles.push(new trackerCore_Savefile({_premade: item}));
 			}
 		} else {
 			//complain and use default
-			console.warn(`[MPO] Stored savefile in localStorage is either not an array or doesn't include any array items in it. Weird, isn't it? Array: "${parsedSavefiles}".`);
+			console.warn(`[MPO] Stored savefiles in localStorage is either not an array or doesn't include any array items in it. Weird, isn't it? Array: `, parsedSavefiles);
 			trackerCore_status.savefiles.push(new trackerCore_Savefile());
 		}
 
 	//else create a default savefile
 	} else {
-		trackerCore_status.savefiles.push(new trackerCore_Savefile());
-	}
 
-	//if a "savefile-less" savefile is stored then use it
-		//'trackerCore_Savefile()' handles all the verifying
-	if (ls.settingsfile !== undefined) {
-		trackerCore_status.savefiles.settingsfile = new trackerCore_Savefile({_premade: ls.settingsfile, metadata_settingsfile: true, metadata_settingsType: 'standalone'});
+		//if a default profile was already made then add the new savefile to that (this makes sure users notice that profiles exist)
 
-	//else create a default savefile
-	} else {
-		trackerCore_status.savefiles.settingsfile = new trackerCore_Savefile({                           metadata_settingsfile: true, metadata_settingsType: 'standalone'});
-	}
+		//first, get a list of all profile slot numbers
+		const profileList = Object.keys(trackerCore_status.profiles);
+		let profileParent = undefined;
 
-	//check if the currently selected savefile is stored
-		//note that we don't need a 'else' for this because the default (0) is already set
-		//so if the stores value isn't valid we simply don't use the value and keep the default value
-	if (ls.currentSavefileSlot !== undefined) {
+		//check if a default profile was made and that there's only one profile
+			//then save the profile slot
+		if (defaultProfileMade === true && profileList.length === 1) {
+			profileParent = Number(profileList[0]);
+		}
 
-		//convert it to a number
-		let currentSavefileSlot = Number(ls.currentSavefileSlot);
-
-		//select the savefile
-			//we don't need to verify if it's correct since this function already does that
-		updatesTracker_loadSavefile(currentSavefileSlot);
+		//finally, create a savefile and use the profile slot so it's properly added
+			//if a default profile wasn't made then it's simply undefined which works
+		trackerCore_status.savefiles.push(new trackerCore_Savefile({profileParent: profileParent}));
 	}
 }
 

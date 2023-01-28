@@ -200,9 +200,17 @@ function handleNavbar_createSavefileModal () {
 	//function to construct the modal
 	var constructModal = function (elem) {
 
+		elem = cElem('span', elem, {style: 'display: block; max-height: 500px; padding-right: 5px; overflow-y: auto;'});
+
+		//create a button that automatically creates a new profile and closes this modal
+		cElem('button', elem, {onclick: 'trackerCore_status.profiles.add(new trackerCore_Profile());modal_closeThisModal(this);'})
+			.textContent = 'Create new profile';
+
+		cElem('br', elem);
+
 		//create a button that automatically creates a new savefile and closes this modal
-		cElem('button', elem, {onclick: 'updatesTracker_createSavefile();modal_closeThisModal(this);'})
-			.textContent = 'Create new savefile';
+		cElem('button', elem, {onclick: 'updatesTracker_createSavefile(null, true);modal_closeThisModal(this);'})
+			.textContent = 'Create new savefile & select it';
 
 		cElem('br', elem);
 
@@ -214,14 +222,60 @@ function handleNavbar_createSavefileModal () {
 		cElem('br', elem);
 		cElem('br', elem);
 
-		//loop through all savefiles
-		for (key in trackerCore_status.savefiles) {
+		let profileContainerList = {};
 
-			//the DOM container for the savefile
-			const savefileContainer = cElem('span', elem, {class: 'navbar_savefileContainer'});
+		//loop through all profiles
+			//the 'const' here is important because some fuck-ass replaces 'key' with 'class' (not a string, just the class object) - don't fucking ask me why because not once did a 'key = class' happen
+		for (const key in trackerCore_status.profiles) {
+
+			//the profile object
+			const profileObj = trackerCore_status.profiles[key];
+
+			//the DOM container for the profile
+			const profileContainer = cElem('span', elem, {
+				class: 'navbar_profileContainer',
+				'data-profileslot': key,
+				style: 'border-top: 2px black solid; border-bottom: 2px black solid; padding: 3px 0 3px 0; margin: 0 0 6px 0; display: block;'
+			});
+
+			//add it to the list
+			profileContainerList[key] = profileContainer;
+
+			//profile name
+			inputfield_createField('text', profileContainer, {
+				defaultValue: profileObj.name,
+				HTMLAttributes: {class: 'navbar_profileName'},
+				onchange: (val) => {trackerCore_status.profiles[key].name = val;}
+			});
+
+			//add button to create a new savefile in this profile
+			cElem('button', profileContainer, {onclick: `trackerCore_status.profiles.remove(${key});modal_closeThisModal(this);`, style: 'margin-left: 5px;'})
+				.textContent = 'Delete profile';
+
+			cElem('br', profileContainer);
+
+			//add button to create a new savefile in this profile
+			cElem('button', profileContainer, {onclick: `updatesTracker_createSavefile(${key}, true);modal_closeThisModal(this);`, style: 'margin-left: 5px;'})
+				.textContent = 'Create savefile';
+
+			cElem('br', profileContainer);
+			cElem('br', profileContainer);
+		}
+
+		//loop through all savefiles
+		for (const key in trackerCore_status.savefiles) {
 
 			//the savefile object
 			const savefileObj = trackerCore_status.savefiles[key];
+
+			const profileElem = profileContainerList[savefileObj.profileParent];
+
+			//the DOM container for the savefile
+			if (isDOMElement(profileElem) === true) {
+				var savefileContainer = cElem('span', profileElem, {class: 'navbar_savefileContainer', style: 'display: block; margin-left: 7px; padding-left: 3px; border-left: 2px solid black;'});
+			} else {
+				var savefileContainer = cElem('span', elem, {class: 'navbar_savefileContainer', style: 'display: block;'});
+			}
 
 			//list of characters used
 			let characters = [];
@@ -232,21 +286,31 @@ function handleNavbar_createSavefileModal () {
 			}
 
 			//add the text that shows what savefile it is
-			cElem('span', savefileContainer, {class: 'navbar_savefileText', style: 'white-space: nowrap;'})
-				.textContent = `Game: ${savefileObj.game} | Characters: ${characters.join(' + ')}`;
+			let text = cElem('span', savefileContainer, {class: 'navbar_savefileText', style: 'white-space: nowrap;'});
+			text.textContent = `Game: ${savefileObj.game} | Characters: ${characters.join(' + ')}`;
 
 			cElem('br', savefileContainer);
 
 			//add a button to load the savefile
 				//'onclick' loads the savefile and closes this modal
-			cElem('button', savefileContainer, {onclick: `updatesTracker_loadSavefile(${key});modal_closeThisModal(this);`})
-				.textContent = 'Load Savefile';
+			let loadButton = cElem('button', savefileContainer, {onclick: `updatesTracker_loadSavefile(${key});modal_closeThisModal(this);`});
+			loadButton.textContent = 'Load Savefile';
+
+			//disable the load button if this savefile is already selected
+			if (trackerCore_status.savefiles.currentSlot === Number(key)) {
+				loadButton.setAttribute('onclick', '');
+				loadButton.setAttribute('disabled', 'true');
+
+				//and also make the text purple
+				text.style.color = '#960ba7';
+			}
 
 			//add a button to delete the savefile
 				//'onclick' deletes the savefile and closes this modal
 			let delButton = cElem('button', savefileContainer, {onclick: `updatesTracker_deleteSavefile(${key});modal_closeThisModal(this);`});
 			delButton.textContent = 'Delete Savefile';
 
+			//disable the delete button if it's the only savefile left
 			if (trackerCore_status.savefiles.length <= 1) {
 				delButton.setAttribute('onclick', '');
 				delButton.setAttribute('disabled', 'true');

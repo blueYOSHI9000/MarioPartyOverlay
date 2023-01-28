@@ -1520,6 +1520,10 @@ function inputfield_FieldObject (specifics={}) {
 				//so why not already allow it during the elements creation? this way we can at least warn them about it
 			if (['data-fieldid', 'data-holdsvalue', 'data-fieldlabelfor'].indexOf(key) !== -1) {
 				console.warn(`[MPO] inputfield_FieldObject() received a troubling value while parsing 'HTMLAttributes' for input-field "${this.id}". "${key}" is already used by input-field themselves, the value will still be applied but things may break.`);
+
+			//if it's the 'class' attribute then add 'inputfield_container' to it to make sure it's actually there
+			} else if (key === 'class') {
+				attributes.HTMLAttributes.class = 'inputfield_container ' + attributes.HTMLAttributes;
 			}
 
 			//actually apply it to the element

@@ -305,9 +305,25 @@ function updatesTracker_setAmount (newAmount) {
 /**	Creates a new savefile.
  *
  * 	The newly created savefile will only have defaults (for now).
+ *
+ * 	Arguments:
+ * 		profile [Number/null] <null>
+ * 			Which profile it should be added to.
+ * 			null means it won't get added to any profile and is basically ungrouped.
+ *
+ * 		autoSelect [Boolean] <false>
+ * 			Whether the file should immediately be loaded after creation.
  */
-function updatesTracker_createSavefile () {
-	trackerCore_status.savefiles.push(new trackerCore_Savefile());
+function updatesTracker_createSavefile (profile, autoSelect) {
+	trackerCore_status.savefiles.push(new trackerCore_Savefile({profileParent: profile}));
+
+	//immediately load the savefile if 'autoSelect' is true
+	if (autoSelect === true) {
+		updatesTracker_loadSavefile(trackerCore_status.savefiles.length - 1);
+
+		//'saveSavefiles()' is already called in 'loadSavefiles()' so no need to call it twice
+		return;
+	}
 
 	trackerCore_saveSavefiles();
 }

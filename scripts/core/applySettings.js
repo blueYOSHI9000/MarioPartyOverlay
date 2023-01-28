@@ -24,6 +24,10 @@ var applySettings_defaultSettings = {
 		- Add the default value in 'applySettings_defaultSettings' (right above this comment).
 		- Create a function that applies the value (like, if the background should be changed then there has to be a function that actually changes the background).
 			- And add this function to 'applySettings_applySetting()' inside the switch.
+
+	=== OTHER INFO ===
+
+	Settings should never use undefined as a intended value, undefined is strictly reserved for "no value" which allows the site to know when to inherit values (see 'settingsType').
  */
 
 /**	Updates a setting to a new value.
@@ -53,14 +57,14 @@ var applySettings_defaultSettings = {
 function applySettings_updateSetting (settingName, newValue, specifics={}) {
 	//complain and return if it's not a string
 	if (typeof settingName !== 'string') {
-		console.warn(`[MPO] applySettings_updateSetting() received a non-string for 'settingName': "${settingName}".`);
+		console.warn(`[MPO] applySettings_updateSetting() received a non-string for 'settingName': `, settingName);
 		return false;
 	}
 
 	//complain and return if the value is invalid
 		//but only if 'skipValidating' is false
 	if (specifics.skipValidating !== true && applySettings_validateSetting(settingName, newValue) === false) {
-		console.warn(`[MPO] applySettings_updateSetting() received a invalid value as 'newValue': "${newValue}".`);
+		console.warn(`[MPO] applySettings_updateSetting() received a invalid value as 'newValue': `, newValue);
 		return false;
 	}
 
@@ -97,6 +101,8 @@ function applySettings_updateSetting (settingName, newValue, specifics={}) {
 
 /**	Gets the value of a setting from the proper savefile.
  *
+ * 	Uses the currently selected savefile and gets its setting. Takes the inheritance-type 'settingsType' into consideration.
+ *
  * 	Args:
  * 		settingName [String]
  * 			The name of the setting that should be gotten.
@@ -113,73 +119,36 @@ function applySettings_getSettingValue (settingName) {
 		return undefined;
 	}
 
-	//this saves on which savefile-slot we're currently iterating on
-	let savefileSlot = trackerCore_status.savefiles.currentSlot;
+	//fetch the first file that stores settings
+		//it automatically uses the current savefile
+		//'followInheritanceChain()' is used so 'settingsType' is properly followed (if that's 'inherit' then we gotta go up to the profile)
+	let currentFile = trackerCore_followInheritanceChain({
+		inheritanceOption: 'settings',
+		stopCriteria: 'primaryFile'
+	});
 
-	//the savefile we're currently iterating on
-	let savefile = trackerCore_getSavefile(savefileSlot);
+	//loop no more than 3 times as a failsafe (since it never needs more than 3)
+	for (let i = 0; i < 3; i++) {
 
-	//this creates a loop for each savefile
-		//this will only loop multiple times for layered savefiles
-	while (true) {
-
-		//complain and return if it loops despite already using the 'settingsfile'
-		if (savefile === trackerCore_status.savefiles.settingsfile) {
-			console.warn(`[MPO] applySettings_getSettingValue() looped despite already using the 'settingsfile'. This was likely caused by 'settingsfile' using a 'settingsType' it shouldn't be using:`, trackerCore_status.savefiles.settingsfile._metadata.settingsType);
-			return undefined;
+		//if the setting exists then return that
+		if (currentFile.settings[settingName] !== undefined) {
+			return currentFile.settings[settingName];
 		}
 
-		//if the savefile-slot is below 0 or the savefile couldn't be found then use the 'settingsfile' savefile
-		if (savefileSlot < 0 || typeof savefile !== 'object') {
-			savefile = trackerCore_status.savefiles.settingsfile;
-		}
-
-		//get the value based on which 'settingsType' the current savefile is
-		switch (savefile._metadata.settingsType) {
-
-			//get the value from the 'settingsfile' savefile
-			case 'noSettings':
-				return trackerCore_status.savefiles.settingsfile.settings[settingName];
-				break;
-
-			//get the value from the savefile (or get defaults if not present)
-			case 'standalone':
-				//if no value is present for this setting then take defaults instead
-				if (savefile.settings[settingName] === undefined) {
-					return applySettings_defaultSettings[settingName];
-
-				//else return the value from this savefile
-				} else {
-					return savefile.settings[settingName];
-				}
-				break;
-
-			//get the value from the savefile if present, otherwise go to the next layer
-			case 'layered':
-				//if the value isn't present then do nothing (so it goes to the next layer)
-				if (savefile.settings[settingName] === undefined) {
-					break;
-
-				//else return the found value
-				} else {
-					return savefile.settings[settingName];
-				}
-				break;
-
-			//complain and return if the 'settingsType' is unknown
-			default:
-				console.warn(`[MPO] applySettings_getSettingValue() found an unknown 'settingsType' in savefileSlot "${savefileSlot}":`, savefile._metadata.settingsType);
-				return undefined;
-		}
-
-		//go one savefile lower
-		savefileSlot--;
-		savefile = trackerCore_status.savefiles[savefileSlot];
+		//if the setting didn't exist then go to the next file
+		currentFile = trackerCore_followInheritanceChain({
+			slot: currentFile,
+			inheritanceOption: 'settings',
+			stopCriteria: 'nextFile'
+		});
 	}
 
-	//complain if it reached the end of the function
-	console.warn(`[MPO] applySettings_getSettingValue() reached the end of the function, which shouldn't happen.`);
-	return undefined;
+	//complain if it got here since that shouldn't happen
+	console.warn(`[MPO] applySettings_getSettingValue() reached the end of the function without finding a value for the setting "${settingName}". This likely happened if something went wrong with 'trackerCore_followInheritanceChain()'. Returning the default value now.`);
+
+	//and return the default
+		//if the setting doesn't exist at all then it's undefined which is intended
+	return applySettings_defaultSettings[settingName];
 }
 
 /**	Sets a setting to a new value. The value won't be validated.
@@ -205,33 +174,13 @@ function applySettings_setSettingValue (settingName, newValue) {
 		return false;
 	}
 
-	//get the current savefile
-	let currentSavefile = trackerCore_getSavefile();
+	//this takes the current savefile and automatically fetches the correct profile/savefile to save settings to (needs to have a inheritance-type of 'combined' or 'standalone')
+	const file = trackerCore_followInheritanceChain({
+		inheritanceOption: 'settings',
+		stopCriteria: 'primaryFile'
+	});
 
-	//get the 'settings' object that should be modified
-	let obj;
-	switch (currentSavefile._metadata.settingsType) {
-
-		//get it from the 'settingsfile' savefile
-		case 'noSettings':
-			obj = trackerCore_status.savefiles.settingsfile.settings;
-			break;
-
-		//get it from the currently selected savefile
-		case 'standalone':
-		case 'layered':
-			obj = currentSavefile.settings;
-			break;
-	}
-
-	//complain and return if the object couldn't be found
-	if (typeof obj !== 'object') {
-		console.warn(`[MPO] applySettings_setSettingValue() could not find the object to apply the setting in. Value found where the object should have been: "${obj}".`);
-		return false;
-	}
-
-	//actually set the value
-	obj[settingName] = newValue;
+	file.settings[settingName] = newValue;
 	return true;
 }
 
@@ -313,14 +262,8 @@ function applySettings_applyAll (updateSetting) {
 
 /**	This sets and applies all default settings to the current savefile.
  *
+ * 	This function follows the inheritance-type of the current savefile, so depending on which one is used this may overwrite the settings of a profile or the 'globalProfile'.
  * 	Note that this will set and apply ALL settings, regardless of whether a value got changed or not.
- *
- * 	This function will behave differently depending on what 'settingsType' the current savefile has.
- * 		- 'noSettings': The defaults will be applied to 'settingsfile'.
- * 		- 'standalone': The defaults will be applied to the current savefile.
- * 		- 'layered': All settings from the current savefile will be removed. This means it will now use values from the other layers/savefiles.
- *
- * 	Note that for 'layered' nothing will be done if 'force' is not true.
  *
  * 	Args:
  * 		force [Boolean] <true>
@@ -330,45 +273,22 @@ function applySettings_applyAll (updateSetting) {
  * 			Note that if this is true then it will reset the object completely which will also get rid of any left-over values.
  */
 function applySettings_applyDefaults (force) {
-	//this essentially converts 'force' to a Boolean where any non-boolean value will be converted to 'true'
-		//true    -> true
-		//false   -> false
-		//1       -> true
-		//'false' -> true
-		//*       -> true
+	//replace any value that isn't `false` with `true`
 	force = (force !== false);
 
-	//this will store the savefile where the defaults should be applied to
-	let savefile;
+	//get the correct profile/savefile (uses the current savefile and automatically fetches the correct profile/savefile depending on what 'settingsType' is used)
+	const file = trackerCore_followInheritanceChain({
+		inheritanceOption: 'settings',
+		stopCriteria: 'primaryFile'
+	});
 
-	//get the savefile that should be modified
-	switch (trackerCore_getSavefile()._metadata.settingsType) {
-
-		//get the 'settingsfile' savefile
-		case 'noSettings':
-			savefile = trackerCore_status.savefiles.settingsfile;
-			break;
-
-		//get the current savefile
-		case 'standalone':
-		case 'layered':
-			savefile = trackerCore_getSavefile();
-			return;
-	}
-
-	//if 'force' is true then set the 'settings' object of the savefile to an empty object so there's no left-over properties
+	//if 'force' is true then set the 'settings' object of the file to an empty object so there's no left-over properties
 	if (force === true) {
-		savefile.settings = {}
-	}
-
-	//if the savefile is a 'layered' type then apply the values and return now since values shouldn't be applied to it
-	if (savefile._metadata.settingsType === 'layered') {
-		applySettings_applyAll(true);
-		return;
+		file.settings = {};
 	}
 
 	//fill in the object with default values
-	savefile.settings.fillIn(applySettings_defaultSettings, {force: force});
+	file.settings.fillIn(applySettings_defaultSettings, {force: force});
 
 	//set and apply them
 	applySettings_applyAll(true);
