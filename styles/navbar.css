@@ -40,9 +40,9 @@
 	padding: 5px;
 }
 
-/**	Style the "action" and "amount" navbar buttons.
+/**	Style the "action" and "amount" navbar buttons (and also the "counter" button).
  */
-.navbar_trackerAction, .navbar_trackerAmount {
+.navbar_trackerAction, .navbar_trackerAmount, .navbar_counter {
 	/**	Give it the MP9 font, make it big enough and make it white to make it easy to read.
 	 */
 	font-family: 'mp9';

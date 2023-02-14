@@ -228,6 +228,11 @@ function listeners_pointerDown (e) {
 					functionsToExecute.push(handleNavbar_createSavefileModal);
 					break;
 
+				//the navbar entry for changing counters
+				case 'navbar_counter':
+					functionsToExecute.push(handleNavbar_createCounterModal);
+					break;
+
 				//any input field element that should be updated when clicked on
 				case 'inputfield_callUpdate':
 					inputfield_executedAfterFieldChange(elem);

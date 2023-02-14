@@ -362,233 +362,168 @@ function boot_loadLocalStorage () {
 	}
 }
 
-/**	Sets up the 'trackerCore_status' object completely.
+/**	Sets up the 'trackerCore_status.counters.behaviour' object completely.
  *
- * 	See 'tracker.js' for full documentation on what the variable does.
+ * 	See 'core/trackerCore.js' for full documentation on what the variable does.
 */
 function boot_setupCounterObject () {
-	//create the 'misc' counters
-	const miscCounters = [
-		'highestCoinCount',
-		'totalCoinCount',
-		'minigameWins',
-		'minigameCoins',
-		'distanceWalked',
-		'coinsSpentInShop',
-		'miniZtarsCollected',
-		'balloonsCollected',
-		'starBalloonsCollected',
-		'allyAmount',
-		'allyTimeSpent',
-		'stompedOthers',
-		'getStompedOn'
-	];
-	miscCounters.forEach(item => trackerCore_status.counters.behaviour.misc[item] = new trackerCore_Counter('standalone'));
+	//quick access
+	const counterBehaviour = trackerCore_status.counters.behaviour;
 
 
-	//get all bonus stars
-	const bonusStars = dbparsing_getBonusStarList('_all');
 
-	//list of counters made
-		//this is used to identify when "duplicate" counters are made so they can be linked
-	let countersMade = [];
+	// === ADD MISC STATS ===
 
-	//the names of the counters in 'countersMade'
-	let countersMadeNames = [];
+	//loop through all 'miscStats' entries in the database and add their names
+	mpdb._all.miscStats._index.forEach(key => {counterBehaviour.misc[key] = new trackerCore_CounterBehaviour(`misc.${key}`, 'origin');});
 
-	//create the 'bonusStars' counters
-	for (const key in bonusStars) {
-		//skip if counter can't be tracked
-		if (bonusStars[key]['cantBeTracked'] === true)
-			continue;
 
-		//get the current counter name
-		let currentCounterName = 'bonusStars.' + key;
 
-		//get details
-		const details = bonusStars[key]['details'];
+	// === ADD BONUS STARS ===
 
-		//whether the counter should be inverted or not
-		if (bonusStars[key]['invert'] === true) {
-			var invert = true;
-		} else {
-			var invert = false;
-		}
+	//get a list of all bonus stars
+	const bonusStarList = dbparsing_getBonusStarList('_all');
 
-		//current bonus star type
-		const bonusStarType = bonusStars[key]['bonusStarType'];
-
-		//=== get which counters it should be combined/linked with ===
-
-		//which counters it combines
-		let combines = [];
-
-		//this gets the counters it should be combined with based on which 'bonusStarType' it is
-		switch (bonusStarType) {
-			case 'space':
-				//check if 'spacesAllowed' is set to all (which is the default value so it can either be undefined or null)
-				if (typeof details['spacesAllowed'] === 'undefined' || typeof details['spacesAllowed'] === 'null') {
-					//TODO: add all spaces to 'combines'
-				} else {
-					details['spacesAllowed'].forEach(item => combines.push('spaces.' + item));
-				}
-				break;
-
-			case 'coin':
-				//check which 'coinStarType' it is so the correct counter can be linked
-				switch (details['coinStarType']) {
-					case 'highest':
-						combines.push('misc.highestCoinCount');
-						break;
-					case 'total':
-						combines.push('misc.totalCoinCount');
-						break;
-				}
-				break;
-
-			case 'minigame':
-				//check which 'minigameStarType' it is so the correct counter can be linked
-				switch (details['minigameStarType']) {
-					case 'win':
-						combines.push('misc.minigameWins');
-						break;
-					case 'coin':
-						combines.push('misc.minigameCoins');
-						break;
-				}
-				//TODO: add support for 'details.whatCounts' (can be either 'onlyRegularMinigames', 'allMinigames', 'duelOnly')
-				break;
-
-			case 'distance':
-				combines.push('misc.distanceWalked');
-				break;
-
-			case 'shop':
-				combines.push('misc.coinsSpentInShop');
-				break;
-
-			case 'item':
-				//check if 'itemsAllowed' is set to all (which is the default value so it can either be undefined or null)
-				if (typeof details['itemsAllowed'] === 'undefined' || typeof details['itemsAllowed'] === 'null') {
-					//TODO: add all items to 'combines'
-				} else {
-					details['itemsAllowed'].forEach(item => combines.push('item.' + item));
-				}
-				break;
-
-			case 'collect':
-				//check what should be collected so the correct counter can be linked
-				switch (details['collectWhat']) {
-					case 'miniZtar':
-						combines.push('misc.miniZtarsCollected');
-						break;
-					case 'balloon':
-						combines.push('misc.balloonsCollected');
-						break;
-					case 'starBalloon':
-						combines.push('misc.starBalloonsCollected');
-						break;
-				}
-				break;
-
-			case 'ally':
-				//check which 'allyStarType' it is so the correct counter can be linked
-				switch (details['allyStarType']) {
-					case 'most':
-						combines.push('misc.allyAmount');
-						break;
-					case 'time':
-						combines.push('misc.allyTimeSpent');
-						break;
-				}
-				break;
-
-			case 'stomp':
-				//check which 'stompStarType' it is so the correct counter can be linked
-				switch (details['stompStarType']) {
-					case 'stompOthers':
-						combines.push('misc.stompedOthers');
-						break;
-					case 'getStompedOn':
-						combines.push('misc.getStompedOn');
-						break;
-				}
-				break;
-		}
-
-		//=== check if this exact counter has already been made ===
-			//if yes, then link it
-
-		//the current counter thats being made
-		const currentCounterMade = `${bonusStarType}-${combines.join('&')}`;
-
-		//check if the counter has already been made
-		const countersMadeIndex = countersMade.indexOf(currentCounterMade);
-		if (countersMadeIndex !== -1) {
-
-			//get the name of the duplicate counter so the current one can be linked to that one
-			const duplicateCounter = `bonusStars.${countersMadeNames[countersMadeIndex]}`;
-			combines = [duplicateCounter];
-		}
-
-		//=== check whether the counter should be a 'standalone', 'linked' or 'combined' and also do that ===
-
-		//create a stand-alone counter if it shouldn't be combined with any
-		if (combines.length <= 0) {
-			trackerCore_status.counters.behaviour.bonusStars[key] = new trackerCore_Counter('standalone');
-
-			//push this to the list of counters made
-			countersMade.push(currentCounterMade);
-			countersMadeNames.push(key);
-
-		//if the bonus star only tracks a single thing then simply link it to said counter by using 'linkTo'
-		} else if (combines.length === 1) {
-			//get the counter it's gonna be linked to
-			const linkedCounter = trackerCore_getCounter(combines[0]);
-
-			//check if the counter it links to even exists -- if not then don't link
-			if (linkedCounter !== undefined) {
-				//create the counter
-				trackerCore_status.counters.behaviour.bonusStars[key] = new trackerCore_Counter('linked', combines[0]);
-
-				//add the bonus star to either 'highlightHighest' or 'highlightLowest'
-				if (invert === true) {
-					linkedCounter['status']['highlightLowest'] .push(currentCounterName);
-				} else {
-					linkedCounter['status']['highlightHighest'].push(currentCounterName);
-				}
-			} else {
-				//if the linked counter can't be found then simply create a new, unique counter
-				trackerCore_status.counters.behaviour.bonusStars[key] = new trackerCore_Counter('standalone');
+	//this serves as a lookup table for which bonus star types require which counter
+		//those with a second object inside them are based on the 'details' properties
+	const linkToList = {
+		coin: {
+			coinStarType: {
+				highest: 'misc.highestCoinCount',
+				total: 'misc.totalCoinCount'
 			}
-
-		//list every counter that 'currentCounterName' combines
-		} else if (combines.length > 1) {
-			//create the counter
-			trackerCore_status.counters.behaviour.bonusStars[key] = new trackerCore_Counter('combination');
-
-			//get the counter
-			const currentCounter = trackerCore_getCounter(currentCounterName);
-
-			for (const key in combines) {
-				//get counter that should be combined
-				const combinedCounter = trackerCore_getCounter(combines[key]);
-
-				//skip if the combined counter doesn't exist
-				if (combinedCounter === undefined) {
-					continue;
-				}
-
-				//add the combined counter to the current
-				currentCounter['relations']['combinesCounters'].push(combines[key]);
-
-				//add current counter to the combined one
-				combinedCounter['relations']['addToCombination'].push('bonusStars.' + key);
+		},
+		minigame: {
+			minigameStarType: {
+				win: 'misc.minigameWins',
+				coin: 'misc.minigameCoins'
 			}
-
-			//push this to the list of counters made
-			countersMade.push(currentCounterMade);
-			countersMadeNames.push(key);
+		},
+		distance: 'misc.distanceWalked',
+		shop: 'misc.coinsSpentInShop',
+		collect: {
+			collectWhat: {
+				miniZtar: 'misc.miniZtarsCollected',
+				balloon: 'misc.balloonsCollected',
+				starBalloon: 'misc.starBalloonsCollected'
+			}
+		},
+		ally: {
+			allyStarType: {
+				most: 'misc.allyAmount',
+				time: 'misc.allyTimeSpent'
+			}
+		},
+		stomp: {
+			stompStarType: {
+				stompOthers: 'misc.stompOthers',
+				getStompedOn: 'misc.getStompedOn'
+			}
 		}
 	}
+
+	//loop through all bonus stars
+	for (key in bonusStarList) {
+		//quick access
+		const item = bonusStarList[key];
+
+		//cancel if it can't be tracked
+		if (item.cantBeTracked === true) {
+			continue;
+		}
+
+		//temporary variables for saving properties that 'trackerCore_CounterBehaviour();' requires
+			//see said function for more info
+		let counterRelationType;
+		let counterRelations = {};
+
+		//fill in 'counterRelations' and it's type
+		switch (item.bonusStarType) {
+
+			//COLLECTION
+				//these will be a collection of various counters
+				//meaning, we have to get a list of all counters it should have by checking the 'details' property
+			case 'space':
+			case 'item':
+				counterRelationType = 'collection';
+				counterRelations.collectionChildren = [];
+
+				//The rest hasn't been finished yet since spaces and items haven't been added as counters
+				//so we just stop here until it can be properly finished
+				break;
+
+				//get a list of all spaces/items
+				const counterList = mpdb._all[item.bonusStarType + 's'];
+
+				//get a list of all spaces/items allowed by checking the 'spacesAllowed'/'itemsAllowed' property
+				const allowed = item.details[item.bonusStarType + 'sAllowed'];
+
+				//add the counters it should be a collection of with a set of 'if ... else' blocks
+					//TODO: Not added yet since space counters don't even exist yet
+
+				//add all spaces
+				if (allowed === 'all' || allowed === undefined) {
+					//add all spaces - I think?
+
+				//if it's a string then add just that
+				} else if (typeof allowed === 'String') {
+					//add this single space
+						//could also put it in an array first and let the next if block handle it
+						//but that wouldn't exactly be efficient
+						//also, the database is not allowed to be edited so there's also that I guess
+
+				//if it's an array then add everything mentioned
+				} else if (Array.isArray(allowed) === true) {
+					//add all spaces specified
+
+				//if it's none of these then complain and set the counter to 'origin' so it at least still works
+				} else {
+					console.warn(`[MPO] boot_setupCounterObject() found a invalid '${item.bonusStarType + 'sAllowed'}' object: `, allowed, ` - setting the counter to 'origin' - bonus star object: `, item);
+					counterRelationType = 'origin';
+				}
+				break;
+
+			// LINKED BASED ON DETAILS
+				//these will be linked to a single counter, but which one it is depends on the 'details' property
+			case 'coin':
+			case 'minigame':
+			case 'collect':
+			case 'ally':
+			case 'stomp':
+				counterRelationType = 'linked';
+
+				//get the 'linkToList' entry of the bonusStar
+				const itemListEntry = linkToList[item.bonusStarType];
+
+				//get the name of the 'details' property
+				const detailName = Object.keys(itemListEntry)[0];
+
+				//get the counter that the bonus star should use based on what 'details' value was found
+				counterRelations.linkTo = itemListEntry[detailName][ item.details[detailName] ];
+				break;
+
+			//LINKED
+				//these bonus star types always use the same counter
+			case 'distance':
+			case 'shop':
+				counterRelationType = 'linked';
+
+				//get the counter based on the bonus star
+					//there's no variations of these bonus stars so we don't have to check the 'details' property
+				counterRelations.linkTo = linkToList[item.bonusStarType];
+				break;
+
+			default:
+				break;
+		}
+
+		//add the counter
+		counterBehaviour.bonusStars[key] = new trackerCore_CounterBehaviour(`bonusStars.${key}`, counterRelationType, counterRelations);
+	}
+
+
+
+	// === ADD SPACES ===
+
+	//TODO: Add spaces
 }

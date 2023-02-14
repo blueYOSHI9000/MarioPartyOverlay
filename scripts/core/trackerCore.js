@@ -52,21 +52,25 @@
 						This is a counter. This can be a bonus star, a space or something else.
 						Could be 'runningStar', 'blueSpace', 'distanceWalked' or any other counter.
 
-						- counterRelation [String]
+						- counterRelationType [String]
 							Defines how the counter works. Can be one of the following:
-								- standalone: The counter is a stand-alone counter, it's not dependant on any other counter.
-								- combination: This counter is a combination of others. The "Unlucky Star" for example is awarded to the person that landed on the most red AND bowser spaces.
-								- linked: This counter is linked to another counter. This means this counter doesn't track stats on it's own, it simply links to another counter instead.
+								- origin: The counter saves stats completely on its own, they originate from here.
+								- collection: The counter is a collection of others. Stats are saved on here but changes on the other counters will also be applied here.
+								- linked: The counter is linked to another. Stats are saved on both and will always be the same.
 
-						> relations [Object]
-							The relations to other counters. Depends a lot on what 'counterRelation' is.
+						> counterRelations [Object]
+							The relations to other counters. Depends a lot on what 'counterRelationType' is.
 
-							- linkTo [String]
-								The counter it should be linked to. Only needed if 'counterRelation' is 'linked'.
-							- combinesCounters [Array]
-								List of counters this combines. Only needed if 'counterRelation' is 'combination'.
-							- addToCombination [Array]
-								List of counters this is part of.
+							- linkedFrom [Array]
+								A list of all counters that are linked to this.
+
+							- linkTo [String/undefined]
+								Only used if 'counterRelationType' is 'linked'. Will be undefined if it's a different type.
+
+							- collectionChildren [Array/undefined]
+								Only used if 'counterRelationType' is 'collection'. Will be undefined if it's a different type.
+								A list of all counters that are part of this collection.
+								The counter this one is linked to.
 
 		> profiles [Object]
 			This is a list of all profiles.
@@ -401,10 +405,10 @@ Object.defineProperty(trackerCore_status.profiles, 'globalProfile', {
  * 			Is in the format of 'bonusStars.runningStar'.
  *
  * 	Returns [Object/null]:
- * 		The object from 'trackerCore_status' as a reference.
+ * 		The object from 'trackerCore_status' as a reference. Will not verify whether the counter is valid.
  * 		If the counter can't be found then it will simply return 'null'.
  */
-function trackerCore_getCounter (counterName) {
+function trackerCore_getCounterBehaviour (counterName) {
 	//get and return the counter
 	return trackerCore_status.counters.behaviour.fetchProperty(counterName);
 }
@@ -705,6 +709,59 @@ function trackerCore_saveSavefiles () {
 	localStorage.setItem('globalProfile'      , JSON.stringify(trackerCore_status.profiles.globalProfile  ));
 	localStorage.setItem('profilesCreated'    , JSON.stringify(trackerCore_status.profiles.profilesCreated));
 	localStorage.setItem('currentSavefileSlot', JSON.stringify(trackerCore_status.savefiles.currentSlot   ));
+}
+
+/**	Finds and returns the linked counter.
+ *
+ * 	Arguments:
+ * 		linkedCounter [String]
+ * 			The counter it should find the origin of.
+ * 			In the format of 'misc.distanceWalked'.
+ *
+ * 	Returns [String]:
+ * 		The name of the original counter (would be either of type 'origin' or 'collection').
+ * 		If a counter couldn't be found (or is invalid) then it will simply return either the last safe one or the 'linkedCounter' argument (even if it ends up being of type 'linked').
+ */
+function trackerCore_findLinkedCounter (linkedCounter) {
+	//complain and return if it isn't a string
+	if (typeof linkedCounter !== 'string') {
+		console.warn(`[MPO] trackerCore_findLinkedCounter() received a non-string value as 'linkedCounter': `, linkedCounter, ` - Will return said value.`);
+		return linkedCounter;
+	}
+
+	//will save the final counter
+	let finalCounter = linkedCounter;
+
+	//saves the counter that's currently being iterated over
+	let counterName = linkedCounter;
+	let behaviour = trackerCore_getCounterBehaviour(counterName);
+
+	//if this one is already invalid/doesn't exist then complain and return
+	if (behaviour instanceof trackerCore_CounterBehaviour === false) {
+		console.warn(`[MPO] trackerCore_findLinkedCounter() found a invalid value where counter "${linkedCounter}" should be (has to be a trackerCore_CounterBehaviour object): `, behaviour);
+		return linkedCounter;
+	}
+
+	//if type is 'linked' then find the next one, then do the same check again until it finds a counter that isn't 'linked'
+	while (behaviour.counterRelationType === 'linked') {
+
+		//get the name & behaviour of the linked counter
+		counterName = behaviour.counterRelations?.linkTo;
+		behaviour = trackerCore_getCounterBehaviour(counterName);
+
+		//if the counter doesn't exist then complain and return the last valid one
+		if (behaviour instanceof trackerCore_CounterBehaviour === false) {
+			console.warn(`[MPO] trackerCore_findLinkedCounter() tried to find the linked counter for "${linkedCounter}" but found a invalid value where counter "${counterName}" should be (has to be a trackerCore_CounterBehaviour object): `, behaviour, ` - Continuing with the last valid counter.`);
+			return finalCounter;
+		}
+
+		//save the current counter since that one is valid
+			//after this the while loop checks again whether this one is 'linked' or not
+		finalCounter = counterName;
+	}
+
+	//return the found counter
+	return finalCounter;
 }
 
 // === CONSTRUCTORS ===
@@ -1264,71 +1321,152 @@ function trackerCore_Player (specifics={}) {
 	}
 }
 
-/**	This creates a 'trackerCore_Counter' object.
- *
- * 	This should be called like this: "var testo = new trackerCore_Counter();"
+/**	This creates a 'trackerCore_CounterBehaviour' object.
  *
  * 	Args:
- * 		counterRelation [String] <'standalone'>
- * 			The 'counterRelation' of the counter. See "The Counter Object" documentation at the top of this file.
+ * 		counterRelationType [String] <'origin'>
+ * 			What kinda relation it should have with the other counters. See "The Counter Object" documentation at the top of this file.
  *
- * 		relation [String/Array]
- * 			If 'counterRelation' is 'linked' then this should be counter it's linked to.
- * 			If 'counterRelation' is 'combination' then this should be an array of all counters it combines.
- * 			If 'counterRelation' is something else then this can be ignored.
+ * 		counterRelations [Object] <none>
+ * 			Which counters it has a relation to (can be ignored when 'counterRelationType' is 'origin').
+ * 			Can have the following properties:
+ *
+ * 				collectionChildren [Array] <none>
+ * 					Only used if the type is 'collection'.
+ * 					List of all counters this contains.
+ *
+ * 				linkTo [String]
+ * 					The counter it should be linked to. Has to exist if type is 'linked' but can be ignored for anything else.
  *
  * 	Constructs:
- * 		Constructs a 'trackerCore_Counter' object.
+ * 		Constructs a 'trackerCore_CounterBehaviour' object.
  */
-function trackerCore_Counter (counterRelation, relation) {
-	//check to make sure 'counterRelation' is valid
-		//>if not, log it and convert the counter to a stand-alone
-	switch (counterRelation) {
-		case 'standalone':
-		case 'combination':
-		case 'linked':
-			break;
-		default:
-			console.error('[MPO] trackerCore_Counter received an invalid \'counterRelation\' argument. Converting counter to a stand-alone instead.');
-			counterRelation = 'standalone';
-			break;
+function trackerCore_CounterBehaviour (newCounterName, counterRelationType='origin', counterRelations={collectionChildren: []}) {
+	//make sure the name is valid
+		//since we can't do much without a name we just setup the bare minimum so the site doesn't break completely
+	if (typeof newCounterName !== 'string') {
+		console.error(`[MPO] trackerCore_CounterBehaviour() received a non-string value as 'newCounterName': `, newCounterName, ` - Setting up a dummy counter now.`);
+		this.counterRelationType = 'origin';
+		this.counterRelations = {linkedFrom: []};
+		return;
 	}
 
-	this.counterRelation = counterRelation;
-
-	this.relations = {};
-	switch (counterRelation) {
-		case 'linked':
-			//check if 'relation' is a string
-				//> if yes, use it
-				//> if no, log it and convert the counter to a stand-alone
-			if (typeof relation === 'string') {
-				this.relations.linkTo = relation;
-			} else {
-				console.error('[MPO] trackerCore_Counter received an invalid \'relation\' argument. Converting counter to a stand-alone instead.');
-				this.counterRelation = 'standalone';
-			}
-			break;
-		case 'combination':
-			//if 'relation' is an array then apply it, if 'relation' is undefined then use an empty array - otherwise convert the counter to stand-alone
-			if (Array.isArray(relation)) {
-				this.relations.combination = relation;
-			} else if (relation === undefined) {
-				this.relations.combination = [];
-			} else {
-				console.error('[MPO] trackerCore_Counter received an invalid \'relation\' argument. Converting counter to a stand-alone instead.');
-				this.counterRelation = 'standalone';
-			}
-			break;
+	//make sure 'counterRelationType' is valid
+	if (['origin', 'collection', 'linked'].indexOf(counterRelationType) === -1) {
+		console.warn(`[MPO] trackerCore_CounterBehaviour() tried setting up "${newCounterName}" but received a invalid value as 'counterRelationType': `, counterRelationType, ` - Has to be 'origin', 'collection' or 'linked'. Continuing with 'origin'`);
+		counterRelationType = 'origin';
 	}
-	this.relations.addToCombination = [];
 
-	//only add the following if counter isn't linked
-	if (counterRelation !== 'linked') {
-		this.status = {
-			displayed: [],
-			highlightHighest: [],
-			highlightLowest : []
+	//make sure 'counterRelations' is valid
+	if (typeof counterRelations !== 'object') {
+		console.warn(`[MPO] trackerCore_CounterBehaviour() tried setting up "${newCounterName}" but received a non-object as 'counterRelations': `, counterRelations, ` - Continuing with zero relations, there may be more error logs because of this.`);
+		counterRelations = {};
+	}
+
+	//set a default 'counterRelations' to be filled in later
+	this.counterRelations = {
+		linkedFrom: []
+	};
+
+
+	//verify 'collectionChildren'
+	if (counterRelationType === 'collection') {
+		this.counterRelations.collectionChildren = [];
+
+		//if it's not an array then complain and switch to 'origin'
+		if (Array.isArray(counterRelations.collectionChildren) === false) {
+			console.warn(`[MPO] trackerCore_CounterBehaviour() tried setting up "${newCounterName}" but received a invalid value as 'counterRelations.collectionChildren (has to be an array': `, counterRelations.collectionChildren, ` - Counter will be switched to 'origin'.`);
+			counterRelationType = 'origin';
+
+		//if it's an array:
+		} else {
+
+			//quick access
+			const children = counterRelations.collectionChildren;
+
+			//go through all of them to make sure they're good
+			for (const childKey of children) {
+
+				//skip this if it's not a string
+				if (typeof childKey !== 'string') {
+					console.warn(`[MPO] trackerCore_CounterBehaviour() tried setting up "${newCounterName}" but found a non-string while validating 'counterRelations.collectionChildren' (will be ignored): `, childKey, ` - If all entered counters are correct, check all counters linked to them. This function automatically checks all counters linked to the ones entered in 'collectionChildren' and adds them to said array.`);
+					continue;
+				}
+
+				//get the original counter it links to
+					//this will find either a 'origin' or a 'collection', since we can't link it to a 'linked' counter
+				const originKey = trackerCore_findLinkedCounter(childKey);
+				const originCounter = trackerCore_getCounterBehaviour(originKey);
+
+				//skip this if it's not valid
+				if (originCounter instanceof trackerCore_CounterBehaviour === false) {
+					console.warn(`[MPO] trackerCore_CounterBehaviour() tried setting up "${newCounterName}" but found a invalid counter while validating 'counterRelations.collectionChildren' (will be ignored): `, originCounter, ` (name: "${originKey}") - If all entered counters are correct, check all counters linked to them. This function automatically checks all counters linked to the ones entered in 'collectionChildren' and adds them to said array.`);
+					continue;
+				}
+
+				//if the counter is another collection then validate all of its children by pushing it to this for loop
+					//basically, this for loop iterates over 'collectionChildren' in order to check whether the given counters are valid or not
+					//so if we find new counters that have to be validated we just push it to 'collectionChildren'
+					//JS doesn't care if the array it's iterating over changes, it just keeps going until it reached the end so new elements will still be iterated over
+				switch (originCounter.counterRelationType) {
+
+					//apply the 'origin' counter since that's the end point
+					case 'origin':
+						this.counterRelations.collectionChildren.push(originKey);
+						originCounter.counterRelations.linkedFrom.push(newCounterName);
+						break;
+
+					//if it's linked to another counter then add that one (if it wasn't already added)
+					case 'linked':
+						if (children.indexOf(originCounter.counterRelations.linkTo) === -1) {
+							children.push(originCounter.counterRelations.linkTo);
+						}
+						break;
+
+					//if it's a collection then add all of it's children
+					case 'collection':
+						//loop through it's children and add all of them to the array to iterate over
+						for (const item of originCounter.counterRelations.collectionChildren) {
+
+							//but only if it wasn't already added
+							if (children.indexOf(originCounter.counterRelations.linkTo) === -1) {
+								children.push(item);
+							}
+						}
+						break;
+				}
+			}
 		}
 	}
+
+	//verify 'linkTo'
+	if (counterRelationType === 'linked') {
+
+		//if it's not a string then complain and switch to 'origin'
+		if (typeof counterRelations.linkTo !== 'string') {
+			console.warn(`[MPO] trackerCore_CounterBehaviour() tried setting up "${newCounterName}" but received a invalid value as 'counterRelations.linkTo' (has to be a string): `, counterRelations.linkTo, ` - Counter will be switched to 'origin'.`);
+			counterRelationType = 'origin';
+
+		//if it's a string:
+		} else {
+			//get the original counter it links to
+				//this will find either a 'origin' or a 'collection', since we can't link it to a 'linked' counter
+			const originKey = trackerCore_findLinkedCounter(counterRelations.linkTo);
+			const originCounter = trackerCore_getCounterBehaviour(originKey);
+
+			//if the counter actually exists and is a valid Counter object then use it
+			if (originCounter instanceof trackerCore_CounterBehaviour) {
+				this.counterRelations.linkTo = originKey;
+				originCounter.counterRelations.linkedFrom.push(newCounterName);
+
+			//if the counter is invalid then complain and switch to 'origin'
+			} else {
+				console.warn(`[MPO] trackerCore_CounterBehaviour() tried setting up "${newCounterName}" but could not find the origin of the argument 'counterRelations.linkTo': `, counterRelations.linkTo, ` - Following origin was found (which is invalid): `, originKey, ` - Will switch to 'origin'.`);
+				counterRelationType = 'origin';
+			}
+		}
+	}
+
+	//set type
+	this.counterRelationType = counterRelationType;
 }

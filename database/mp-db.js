@@ -2237,6 +2237,152 @@ const mpdb = {
 					stompStarType: 'getStompedOn'
 				}
 			}
+		},
+		miscStats: {
+			_index: ['highestCoinCount', 'totalCoinCount', 'minigameWins', 'minigameCoins', 'distanceWalked', 'coinsSpentInShop', 'miniZtarsCollected', 'balloonsCollected', 'starBalloonsCollected', 'allyAmount', 'allyTimeSpent', 'stompOthers', 'getStompedOn'],
+			highestCoinCount: {
+				metadata: {
+					fullName: 'highestCoinCount',
+					icon: [
+						{
+							filePath: 'icons/misc/old/coin.png',
+							iconTheme: 'old'
+						}
+					]
+				}
+			},
+			totalCoinCount: {
+				metadata: {
+					fullName: 'totalCoinCount',
+					icon: [
+						{
+							filePath: 'icons/misc/old/coin.png',
+							iconTheme: 'old'
+						}
+					]
+				}
+			},
+			minigameWins: {
+				metadata: {
+					fullName: 'minigameWins',
+					icon: [
+						{
+							filePath: 'icons/bonusStars/old/minigameStar.png',
+							iconTheme: 'old'
+						}
+					]
+				}
+			},
+			minigameCoins: {
+				metadata: {
+					fullName: 'minigameCoins',
+					icon: [
+						{
+							filePath: 'icons/bonusStars/old/minigameStar.png',
+							iconTheme: 'old'
+						}
+					]
+				}
+			},
+			distanceWalked: {
+				metadata: {
+					fullName: 'distanceWalked',
+					icon: [
+						{
+							filePath: 'icons/bonusStars/old/runningStar.png',
+							iconTheme: 'old'
+						}
+					]
+				}
+			},
+			coinsSpentInShop: {
+				metadata: {
+					fullName: 'coinsSpentInShop',
+					icon: [
+						{
+							filePath: 'icons/bonusStars/old/shoppingStar.png',
+							iconTheme: 'old'
+						}
+					]
+				}
+			},
+			miniZtarsCollected: {
+				metadata: {
+					fullName: 'miniZtarsCollected',
+					icon: [
+						{
+							filePath: 'icons/bonusStars/old/minusStar.png',
+							iconTheme: 'old'
+						}
+					]
+				}
+			},
+			balloonsCollected: {
+				metadata: {
+					fullName: 'balloonsCollected',
+					icon: [
+						{
+							filePath: 'icons/bonusStars/old/balloonStar.png',
+							iconTheme: 'old'
+						}
+					]
+				}
+			},
+			starBalloonsCollected: {
+				metadata: {
+					fullName: 'starBalloonsCollected',
+					icon: [
+						{
+							filePath: 'icons/bonusStars/old/almostStar.png',
+							iconTheme: 'old'
+						}
+					]
+				}
+			},
+			allyAmount: {
+				metadata: {
+					fullName: 'allyAmount',
+					icon: [
+						{
+							filePath: 'icons/bonusStars/old/allyStar.png',
+							iconTheme: 'old'
+						}
+					]
+				}
+			},
+			allyTimeSpent: {
+				metadata: {
+					fullName: 'allyTimeSpent',
+					icon: [
+						{
+							filePath: 'icons/bonusStars/old/buddyStar.png',
+							iconTheme: 'old'
+						}
+					]
+				}
+			},
+			stompOthers: {
+				metadata: {
+					fullName: 'stompOthers',
+					icon: [
+						{
+							filePath: 'icons/bonusStars/old/stompyStar.png',
+							iconTheme: 'old'
+						}
+					]
+				}
+			},
+			getStompedOn: {
+				metadata: {
+					fullName: 'getStompedOn',
+					icon: [
+						{
+							filePath: 'icons/bonusStars/old/doormatStar.png',
+							iconTheme: 'old'
+						}
+					]
+				}
+			}
 		}
 	},
 	mp1: {

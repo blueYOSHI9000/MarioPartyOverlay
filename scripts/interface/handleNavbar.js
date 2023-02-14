@@ -200,6 +200,9 @@ function handleNavbar_createSavefileModal () {
 	//function to construct the modal
 	var constructModal = function (elem) {
 
+		//replace 'elem' with a new <span> that serves as a container for everything
+			//also makes sure that scrolling works properly
+			//the actual 'elem' can be replaced since this new <span> contains everything - the old one isn't needed
 		elem = cElem('span', elem, {style: 'display: block; max-height: 500px; padding-right: 5px; overflow-y: auto;'});
 
 		//create a button that automatically creates a new profile and closes this modal
@@ -319,6 +322,84 @@ function handleNavbar_createSavefileModal () {
 			//add some distance between each individual savefile
 			cElem('br', savefileContainer);
 			cElem('br', savefileContainer);
+		}
+	}
+
+	//actually create the modal
+	modal_createModal(constructModal);
+}
+
+/** Opens the modal for managing counters.
+ */
+function handleNavbar_createCounterModal () {
+	//function to construct the modal
+	var constructModal = function (elem) {
+
+		//replace 'elem' with a new <span> that serves as a container for everything
+			//also makes sure that scrolling works properly
+			//the actual 'elem' can be replaced since this new <span> contains everything - the old one isn't needed
+		elem = cElem('span', elem, {style: 'display: block; max-height: 500px; width: 400px; padding-right: 5px; overflow-y: auto;'});
+
+		//loop through all categories
+		for (const categoryKey in trackerCore_status.counters.behaviour) {
+
+			//the DOM container for the category
+			const categoryContainer = cElem('span', elem, {
+				class: 'navbar_categoryContainer',
+				style: 'border-top: 2px black solid; border-bottom: 2px black solid; padding: 3px 0 3px 0; margin: 0 0 6px 0; display: block;'
+			});
+
+			//add a category title
+			cElem('span', categoryContainer, {style: "font-family: 'mp9'; font-size: 18px; border-bottom: 2px solid black; margin: 5px 0 5px 3px;"})
+				.textContent = categoryKey;
+
+			//loop through every counter and add it
+			for (const counterKey in trackerCore_status.counters.behaviour[categoryKey]) {
+
+				//get the 'CounterStatus' object
+				const counterStatus = trackerCore_getSavefile().perCounterStatus[categoryKey][counterKey];
+
+				//the DOM container for the counter
+				const counterContainer = cElem('span', categoryContainer, {
+					class: 'navbar_counterContainer',
+					style: 'display: block; margin-left: 7px; margin-top: 4px; padding-left: 3px; border-left: 2px solid black;'
+				});
+
+				//add the counter image
+				cElem('img', counterContainer, {src: dbparsing_getIcon(`${categoryKey}.${counterKey}`), style: 'height: 25px;'});
+
+				//add the counter name
+					//try and find a full name in the database - if it doesn't exist then just use the 'counterKey' for it
+				cElem('span', counterContainer, {style: "font-family: 'mp9'; font-size: 15px; margin-left: 3px;"})
+					.textContent = mpdb[updatesTracker_getGame()][categoryKey]?.[counterKey]?.metadata?.fullName ?? counterKey;
+
+				cElem('br', counterContainer);
+
+				//'active' checkbox
+				inputfield_createField('checkbox', counterContainer, {
+					defaultValue: counterStatus.active,
+					beforeText: 'Active: ',
+					onchange: () => {}
+				});
+
+				cElem('br', counterContainer);
+
+				//'highlightHighest' checkbox
+				inputfield_createField('checkbox', counterContainer, {
+					defaultValue: counterStatus.highlightHighest,
+					beforeText: 'Highlight highest stat: ',
+					onchange: () => {}
+				});
+
+				cElem('br', counterContainer);
+
+				//'highlightLowest' checkbox
+				inputfield_createField('checkbox', counterContainer, {
+					defaultValue: counterStatus.highlightLowest,
+					beforeText: 'Highlight lowest stat: ',
+					onchange: () => {}
+				});
+			}
 		}
 	}
 

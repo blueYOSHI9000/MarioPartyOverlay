@@ -93,6 +93,7 @@ Also, don't rely on this too much, it will be changed drastically whenever it's 
 	## Variables inside _info
 		- dbVersion [Number]
 			- The database version as a single number. Each change to the database format itself has to increase the number by 1. Changes to the info that the database holds don't have to increase the number.
+			- Note: this only really applies once the site is actually properly published
 
 # Checkpoints
 	- checkpoints are defined inside the 'checkpoints' oddity
@@ -248,6 +249,10 @@ Also, don't rely on this too much, it will be changed drastically whenever it's 
 				- unknown: If the source of the image, or rather how it was captured, is unknown. Should be avoided whenever possible.
 		- source [String] <none>
 			- Where the image/video came from, can be a full sentence. Can include an URL in it (and should wherever possible) but doesn't have to be one. If it's from an MPO contributor it can be the name of them, preferably the github name if possible (or simply "MPO contributor"/"Anonymous" if they'd like to be anonymous).
+
+# miscStats
+	A property in '_all' that lists all stats that aren't bound to any space, item, bonus star, etc.
+	Temporary, will be renamed and maybe even completely moved/replaced.
 
 # Path incompatibility
 	- This is a list of things that would block path support from being used in MPO. Mainly stuff like when a player has to select a space which currently isn't really possible.
@@ -1679,7 +1684,7 @@ Also, don't rely on this too much, it will be changed drastically whenever it's 
 
 # Bonus Stars
 	- Inside each game this object is found. It lists all bonus stars and their default behaviour.
-		- In case some modes or boards have bonus stars that work differently then the 'bonusStars' oddity can be used to overwrite them.
+		- In case some modes or boards have bonus stars that work differently than the 'bonusStars' oddity can be used to overwrite them.
 	- In addition to each game, '_all' also has this object to list all bonus stars in the entire series.
 		- Generally, the behaviour that's present in most games should be used. Though this isn't a fixed rule.
 	- This object always has a '_index' array at the beginning that lists all entries as strings.
@@ -1706,7 +1711,8 @@ Also, don't rely on this too much, it will be changed drastically whenever it's 
 			- Contains details about the bonus star. Depends entirely on what 'bonusStarType' is.
 
 		### 'space' details
-			- spacesAllowed [Array] <all>
+			- spacesAllowed [Array/String] <all>
+				- If it's just a single space then it can be a string instead of an array.
 				- List of all space names that should count. Defaults to allowing all spaces.
 				- A "Happening Star" would only list the ?-Space in here so only those are counted.
 
@@ -1749,7 +1755,7 @@ Also, don't rely on this too much, it will be changed drastically whenever it's 
 				- How the bonus star should work. Can be one of the following:
 					- most: Whoever has the most allies at the end wins this.
 					- time: Whoever spent the most time with allies, fuck knows whether thats turns or actual time or whatever.
-					- buddy: Fuck knows how you get it, you just do.
+					- buddy: Fuck knows how you get it, you just do (or rather, you don't).
 
 		### 'stomp' details
 			- stompStarType [String]

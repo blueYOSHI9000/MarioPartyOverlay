@@ -87,6 +87,10 @@ function buildSite_buildNavbar (docFrag) {
 		.textContent = 'All';
 
 	//create the 'action' button for the tracker
+	cElem('span', navbarBase, {style: 'color: white;cursor: pointer;', class: 'navbar_counter'})
+		.textContent = 'C';
+
+	//create the 'action' button for the tracker
 	cElem('span', navbarBase, {class: 'navbar_trackerAction'})
 		.textContent = '+';
 
