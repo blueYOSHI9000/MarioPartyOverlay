@@ -87,6 +87,17 @@ function changeGame (game, keepHash) {
 		case 'mpit':
 			getElem('noBonusError').style.visibility = 'visible';
 			break;
+		case 'mps':
+			showGames.push('happening');
+			showGames.push('minigame');
+			showGames.push('coin');
+			showGames.push('red');
+			showGames.push('running');
+			showGames.push('slow');
+			showGames.push('shopping');
+			showGames.push('item');
+			showGames.push('bowser');
+			break;
 		default:
 			nodelist = document.querySelectorAll('.bonusStarContainer');
 			for (let num = 0; num < nodelist.length; num++) {

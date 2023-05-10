@@ -170,6 +170,11 @@
 				<input type="radio" name="gameSelector" id="smp" value="smp" onchange="changeGame('smp')" autocomplete="off">
 				<label class="charSelectorLabel smp gameLabel" for="smp" tabindex="0"> </label>
 			</span>
+
+			<span class="gameSelector">
+				<input type="radio" name="gameSelector" id="mps" value="mps" onchange="changeGame('mps')" autocomplete="off">
+				<label class="charSelectorLabel mps gameLabel" for="mps" tabindex="0"> </label>
+			</span>
 		</div>
 
 		<p class="error" id="noBonusError" style="visibility: hidden; text-align: center;">The selected game does not use Bonus Stars. Select "All" to show all games.</p>
@@ -179,7 +184,7 @@
 				<img class="bonusStarImg" src="img/bonus/happening.png">
 
 				<h3> <span title="Mario Party 1-5" class="sub-title">Happening</span>
-					<span class="note"> <span title="Mario Party 1-5" class="sub-all sub-mp1 sub-mp2 sub-mp3 sub-mp4 sub-mp5"> / Happening</span> <span title="Mario Party 6" class="sub-mp6"> / Event</span> <span title="Mario Party 7" class="sub-mp7"> / Action</span> <span title="Mario Party 8, DS" class="sub-mp8 sub-mpds"> / Green</span> <span title="Super Mario Party" class="sub-smp"> / Eventful</span> </span>
+					<span class="note"> <span title="Mario Party 1-5" class="sub-all sub-mp1 sub-mp2 sub-mp3 sub-mp4 sub-mp5"> / Happening</span> <span title="Mario Party 6" class="sub-mp6"> / Event</span> <span title="Mario Party 7" class="sub-mp7"> / Action</span> <span title="Mario Party 8, DS" class="sub-mp8 sub-mpds"> / Green</span> <span title="Super Mario Party, Mario Party Superstars" class="sub-smp sub-mps"> / Eventful</span> </span>
 					<a title="Permanent link" href="#happening">¶</a> </h3>
 
 				<img src="img/mp1.png"		alt="MP 1"				title="Mario Party 1 - Happening Star">
@@ -191,16 +196,17 @@
 				<img src="img/mp7.png"		alt="MP 7"				title="Mario Party 7 - Action Star">
 				<img src="img/mp8.png"		alt="MP 8"				title="Mario Party 8 - Green Star">
 				<img src="img/mpds.png"		alt="MP DS"				title="Mario Party DS - Green Star">
-				<img src="img/smp.png"		alt="Super MP"			title="Super Mario Party - Eventful Star"> <br>
+				<img src="img/smp.png"		alt="Super MP"			title="Super Mario Party - Eventful Star">
+				<img src="img/mps.png"		alt="MP Superstars"		title="Mario Party Superstars - Eventful Star"> <br>
 
-				<p>This is given to whoever landed on the most Happening spaces.</p>
+				<p>This is given to whoever landed on the most Happening spaces (called Event spaces in later games).</p>
 			</span>
 
 			<span class="bonusStarContainer" id="minigame">
 				<img class="bonusStarImg" src="img/bonus/minigame.png">
 
 				<h3> <span title="Mario Party 1-10, DS, The Top 100, Super Mario Party" class="sub-title">Minigame</span>
-					<span class="note"> <span title="Mario Party 1-10, DS, The Top 100, Super Mario Party" class="sub-all sub-mp1 sub-mp2 sub-mp3 sub-mp4 sub-mp5 sub-mp6 sub-mp7 sub-mp8 sub-mp9 sub-mp10 sub-mpds sub-mptt100 sub-smp"> / Minigame</span> <span title="Mario Party Star Rush" class="sub-mpsr"> / Champion</span> </span>
+					<span class="note"> <span title="Mario Party 1-10, DS, The Top 100, Super Mario Party, Mario Party Superstars" class="sub-all sub-mp1 sub-mp2 sub-mp3 sub-mp4 sub-mp5 sub-mp6 sub-mp7 sub-mp8 sub-mp9 sub-mp10 sub-mpds sub-mptt100 sub-smp sub-mps"> / Minigame</span> <span title="Mario Party Star Rush" class="sub-mpsr"> / Champion</span> </span>
 					<a title="Permanent link" href="#minigame">¶</a> </h3>
 
 				<img src="img/mp1.png"		alt="MP 1"				title="Mario Party 1 - Minigame Star">
@@ -216,18 +222,19 @@
 				<img src="img/mpds.png"		alt="MP DS"				title="Mario Party DS - Minigame Star">
 				<img src="img/mpsr.png"		alt="MP Star Rush"		title="Mario Party Star Rush - Champion Star">
 				<img src="img/mptt100.png"	alt="MP The Top 100"	title="Mario Party The Top 100 - Minigame Star">
-				<img src="img/smp.png"		alt="Super MP"			title="Super Mario Party - Minigame Star"> <br>
+				<img src="img/smp.png"		alt="Super MP"			title="Super Mario Party - Minigame Star">
+				<img src="img/mps.png"		alt="MP Superstars"		title="Mario Party Superstars - Minigame Star"> <br>
 
 				<p>This is given to whoever earned the most coins/mini-stars in minigames. <br>
 				Prior to MP5 coins earned in battles, duels, Game Guy and Donkey Kong minigames didn't count. <br>
-				In MPDS wins count instead of coins.</p>
+				In MPDS & MPS wins count instead of coins.</p>
 			</span>
 
 			<span class="bonusStarContainer" id="coin">
 				<img class="bonusStarImg" src="img/bonus/coins.png">
 
 				<h3> <span title="Mario Party 1-5" class="sub-title">Coin</span>
-					<span class="note"> <span title="Mario Party 1-5" class="sub-all sub-mp1 sub-mp2 sub-mp3 sub-mp4 sub-mp5"> / Coin</span> <span title="Super Mario Party" class="sub-smp"> / Rich</span> </span>
+					<span class="note"> <span title="Mario Party 1-5" class="sub-all sub-mp1 sub-mp2 sub-mp3 sub-mp4 sub-mp5"> / Coin</span> <span title="Super Mario Party, Mario Party Superstars" class="sub-smp sub-mps"> / Rich</span> </span>
 					<a title="Permanent link" href="#coin">¶</a> </h3>
 
 				<img src="img/mp1.png"		alt="MP 1"				title="Mario Party 1 - Coin Star">
@@ -235,7 +242,8 @@
 				<img src="img/mp3.png"		alt="MP 3"				title="Mario Party 3 - Coin Star">
 				<img src="img/mp4.png"		alt="MP 4"				title="Mario Party 4 - Coin Star">
 				<img src="img/mp5.png"		alt="MP 5"				title="Mario Party 5 - Coin Star">
-				<img src="img/smp.png"		alt="Super MP"			title="Super Mario Party - Rich Star"> <br>
+				<img src="img/smp.png"		alt="Super MP"			title="Super Mario Party - Rich Star">
+				<img src="img/mps.png"		alt="MP Superstars"		title="Mario Party Superstars - Rich Star"> <br>
 
 				<p>This is given to whoever reached the highest coin count during the game. <br>
 				SMP might give it to whoever collected the most coins instead (unconfirmed).</p>
@@ -245,21 +253,34 @@
 				<img class="bonusStarImg" src="img/bonus/redspace.png">
 
 				<h3> <span title="Mario Party 7, 8" class="sub-title">Red</span>
-					<span class="note"> <span title="Mario Party 7, 8" class="sub-all sub-mp7 sub-mp8"> / Red</span> <span title="Super Mario Party" class="sub-smp"> / Unlucky</span> </span>
+					<span class="note"> <span title="Mario Party 7, 8" class="sub-all sub-mp7 sub-mp8"> / Red</span> <span title="Super Mario Party, Mario Party Superstars" class="sub-smp sub-mps"> / Unlucky</span> </span>
 					<a title="Permanent link" href="#red">¶</a> </h3>
 
 				<img src="img/mp7.png"		alt="MP 7"				title="Mario Party 7 - Red Star">
 				<img src="img/mp8.png"		alt="MP 8"				title="Mario Party 8 - Red Star">
-				<img src="img/smp.png"		alt="Super MP"			title="Super Mario Party - Unlucky Star"> <br>
+				<img src="img/smp.png"		alt="Super MP"			title="Super Mario Party - Unlucky Star">
+				<img src="img/mps.png"		alt="MP Superstars"		title="Mario Party Superstars - Unlucky Star"> <br>
 
 				<p>This is given to whoever landed on the most red/bad luck spaces.</p>
+			</span>
+
+			<span class="bonusStarContainer" id="bowser">
+				<img class="bonusStarImg" src="img/bonus/bowserspace.png">
+
+				<h3> <span title="Mario Party Superstars" class="sub-title">Bowser Space</span>
+					<!--span class="note"> <span title="Mario Party Superstars" class="sub-all sub-mps"> / Bowser Space</span> </span-->
+					<a title="Permanent link" href="#doormat">¶</a> </h3>
+
+				<img src="img/mps.png"		alt="MP Superstars"		title="Mario Party Superstars - Bowser Space Star"> <br>
+
+				<p>	This is given tho whoever landed on the most bowser spaces.</p>
 			</span>
 
 			<span class="bonusStarContainer" id="running">
 				<img class="bonusStarImg" src="img/bonus/running.png">
 
 				<h3> <span title="Mario Party 7, 8, DS, The Top 100" class="sub-title">Running</span>
-					<span class="note"> <span title="Mario Party 7, 8, DS, The Top 100" class="sub-all sub-mp7 sub-mp8 sub-mpds sub-mptt100"> / Running</span> <span title="Mario Party 9, 10" class="sub-mp9 sub-mp10"> / Far</span> <span title="Mario Party Star Rush, Super Mario Party" class="sub-mpsr sub-smp"> / Sightseer</span> </span>
+					<span class="note"> <span title="Mario Party 7, 8, DS, The Top 100" class="sub-all sub-mp7 sub-mp8 sub-mpds sub-mptt100"> / Running</span> <span title="Mario Party 9, 10" class="sub-mp9 sub-mp10"> / Far</span> <span title="Mario Party Star Rush, Super Mario Party, Mario Party Superstars" class="sub-mpsr sub-smp sub-mps"> / Sightseer</span> </span>
 					<a title="Permanent link" href="#running">¶</a> </h3>
 
 				<img src="img/mp7.png"		alt="MP 7"				title="Mario Party 7 - Running Star">
@@ -269,7 +290,8 @@
 				<img src="img/mpds.png"		alt="MP DS"				title="Mario Party DS - Running Star">
 				<img src="img/mpsr.png"		alt="MP Star Rush"		title="Mario Party Star Rush - Sightseer Star">
 				<img src="img/mptt100.png"	alt="MP The Top 100"	title="Mario Party The Top 100 - Running Star">
-				<img src="img/smp.png"		alt="Super MP"			title="Super Mario Party - Sightseer Star"> <br>
+				<img src="img/smp.png"		alt="Super MP"			title="Super Mario Party - Sightseer Star">
+				<img src="img/mps.png"		alt="MP Superstars"		title="Mario Party Superstars - Sightseer Star"> <br>
 
 				<p>This is given to whoever walked the furthest (only the distance counts, not the numbers from the dice! Some events stop you immediately without being able to finish walking).</p>
 			</span>
@@ -278,14 +300,15 @@
 				<img class="bonusStarImg" src="img/bonus/running.png">
 
 				<h3> <span title="Mario Party 9, 10" class="sub-title">Slow</span>
-					<span class="note"> <span title="Mario Party 9, 10" class="sub-all sub-mp9 sub-mp10"> / Slow</span> <span title="Mario Party Star Rush, Super Mario Party" class="sub-mpsr sub-smp"> / Slowpoke</span> <span title="Mario Party The Top 100" class="sub-mptt100"> / Easygoing</span> </span>
+					<span class="note"> <span title="Mario Party 9, 10" class="sub-all sub-mp9 sub-mp10"> / Slow</span> <span title="Mario Party Star Rush, Super Mario Party, Mario Party Superstars" class="sub-mpsr sub-smp sub-mps"> / Slowpoke</span> <span title="Mario Party The Top 100" class="sub-mptt100"> / Easygoing</span> </span>
 					<a title="Permanent link" href="#slow">¶</a> </h3>
 
 				<img src="img/mp9.png"		alt="MP 9"				title="Mario Party 9 - Slow Star">
 				<img src="img/mp10.png"		alt="MP 10"				title="Mario Party 10 - Slow Star">
 				<img src="img/mpsr.png"		alt="MP Star Rush"		title="Mario Party Star Rush - Slowpoke Star">
 				<img src="img/mptt100.png"	alt="MP The Top 100"	title="Mario Party The Top 100 - Easygoing Star">
-				<img src="img/smp.png"		alt="Super MP"			title="Super Mario Party - Slowpoke Star"> <br>
+				<img src="img/smp.png"		alt="Super MP"			title="Super Mario Party - Slowpoke Star">
+				<img src="img/mps.png"		alt="MP Superstars"		title="Mario Party Superstars - Slowpoke Star"> <br>
 
 				<p>This is given to whoever walked the least (similar to the running star, only the distance counts).</p>
 			</span>
@@ -293,11 +316,13 @@
 			<span class="bonusStarContainer" id="shopping">
 				<img class="bonusStarImg" src="img/bonus/shopping.png">
 
-				<h3> <span title="Mario Party 7" class="sub-title">Shopping</span>
-					<!--span class="note"> <span title="Mario Party 7" class="sub-all sub-mp6 sub-mp7"> / Shopping</span> </span-->
+				<h3> <span title="Mario Party 6, 7, Superstars" class="sub-title">Shopping</span>
+					<!--span class="note"> <span title="Mario Party 6, 7, Superstars" class="sub-all sub-mp6 sub-mp7 sub-mps"> / Shopping</span> </span-->
 					<a title="Permanent link" href="#shopping">¶</a> </h3>
 
-				<img src="img/mp7.png"		alt="MP 7"				title="Mario Party 7 - Shopping Star"> <br>
+				<img src="img/mp6.png"		alt="MP 6"				title="Mario Party 6 - Shopping Star">
+				<img src="img/mp7.png"		alt="MP 7"				title="Mario Party 7 - Shopping Star">
+				<img src="img/mps.png"		alt="MP Superstars"		title="Mario Party Superstars - Shopping Star"> <br>
 
 				<p>This is given to whoever spent the most coins in a shop.</p>
 			</span>
@@ -305,8 +330,8 @@
 			<span class="bonusStarContainer" id="item">
 				<img class="bonusStarImg" src="img/bonus/item.png">
 
-				<h3> <span title="Mario Party DS, Star Rush, The Top 100, Super Mario Party" class="sub-title">Item</span>
-					<span class="note"> <span title="Mario Party DS, Star Rush, The Top 100, Super Mario Party" class="sub-all sub-mpds sub-mpsr sub-tt100 sub-smp"> / Item</span> <span title="Mario Party 6, 7" class="sub-mp6 sub-mp7"> / Orb</span> <span title="Mario Party 8" class="sub-mp8"> / Candy</span> <span title="Mario Party 9" class="sub-mp9"> / Dice Block</span> </span>
+				<h3> <span title="Mario Party DS, Star Rush, The Top 100, Super Mario Party, Mario Party Superstars" class="sub-title">Item</span>
+					<span class="note"> <span title="Mario Party DS, Star Rush, The Top 100, Super Mario Party, Mario Party Superstars" class="sub-all sub-mpds sub-mpsr sub-tt100 sub-smp sub-mps"> / Item</span> <span title="Mario Party 6, 7" class="sub-mp6 sub-mp7"> / Orb</span> <span title="Mario Party 8" class="sub-mp8"> / Candy</span> <span title="Mario Party 9" class="sub-mp9"> / Dice Block</span> </span>
 					<a title="Permanent link" href="#item">¶</a> </h3>
 
 				<img src="img/mp6.png"		alt="MP 6"				title="Mario Party 6 - Orb Star">
@@ -316,7 +341,8 @@
 				<img src="img/mpds.png"		alt="MP DS"				title="Mario Party DS - Item Star">
 				<img src="img/mpsr.png"		alt="MP Star Rush"		title="Mario Party Star Rush - Item Star">
 				<img src="img/mptt100.png"	alt="MP The Top 100"	title="Mario Party The Top 100 - Item Star">
-				<img src="img/smp.png"		alt="Super MP"			title="Super Mario Party - Item Star"> <br>
+				<img src="img/smp.png"		alt="Super MP"			title="Super Mario Party - Item Star">
+				<img src="img/mps.png"		alt="MP Superstars"		title="Mario Party Superstars - Item Star"> <br>
 
 				<p>This is given to whoever used the most items, orbs or candy. <br>
 				MP9 counts special dice blocks instead.</p>

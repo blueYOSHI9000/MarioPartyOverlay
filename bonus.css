@@ -267,7 +267,7 @@ input {
 }
 .mp10 {
 	background-image:url(img/mp10.png);
-	width: 40px;
+	width: 35px;
 }
 .mpa {
 	background-image:url(img/mpa.png);
@@ -292,4 +292,8 @@ input {
 .smp {
 	background-image:url(img/smp.png);
 	width: 51px;
+}
+.mps {
+	background-image:url(img/mps.png);
+	width: 27px;
 }
