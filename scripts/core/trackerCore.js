@@ -101,7 +101,7 @@
 		|				Value has to be a positive number that's below 9007199254740991. If the value is invalid it will simply be ignored without logging it.
 
 		|	- remove [Function]
-		|		Removes a profile.
+		|		Removes a profile. Updates the 'length' property if needed.
 
 		|		Arguments:
 		|			profileSlot [Number/String]
@@ -255,7 +255,6 @@ var trackerCore_status = {
 	}
 };
 
-//TODO: compile the following into a function to reduce duplicate code
 
 //set the 'currentSlot' property for the 'savefiles' array
 	//this has to be done this way if we don't want it to be iterable
@@ -294,9 +293,6 @@ Object.defineProperty(trackerCore_status.profiles, 'add', {
 			return;
 		}
 
-		//used for the 'for' loop, chances are if it fails 20 times then 200 won't change much - most probably don't even have 20 profiles
-		let maxAttempts = 20;
-
 		//if a slot was given then put the profile in that slot without increasing 'profilesCreated'
 		if (Number.isSafeInteger(slot) === true) {
 			if (this[slot] !== undefined) {
@@ -318,46 +314,51 @@ Object.defineProperty(trackerCore_status.profiles, 'add', {
 			if (typeof this.profilesCreated !== 'number' || Number.isSafeInteger(this.profilesCreated + 1) === false || this.profilesCreated < 0) {
 				console.warn(`[MPO] trackerCore_status.profiles.add() got a invalid 'profilesCreated' number. Either something fucked up or you created 9007199254740992 profiles which is one too many. Will be replaced with 1. Value: `, this.profilesCreated);
 				this.profilesCreated = 0;
-
-				//since it overflowed back to one it should try up to 100 times because chances are that profiles with lower numbers already exist which would cause the risk of overwriting a profile
-				maxAttempts = 100;
 			}
 
-			//try multiple times if a profile already exists with this key
-			for (let attempt = 0; attempt < maxAttempts; attempt++) {
-
-				//increase 'profilesCreated' by one and directly assign it's new value to 'key' for quick access
-				const key = ++this.profilesCreated;
-
-				//check to make sure an existing property isn't overwritten
-					//then add the object, update 'length' and return since everythings done
-
-					//if the property already exists then the loop will restart
-				if (this[key] === undefined) {
-					this[key] = obj;
-					this.length++;
-					return;
+			//try and find a valid ID
+				//this simply loops through all profiles and checks if there's an empty gap between two, if it found a gap then it uses that slot
+				//if the loop finished without finding an empty gap then it simply uses the next slot after the last profile
+			let uniqueID = 0;
+			for (let profileKey in this) {
+				if (profileKey > uniqueID) {
+					break;
 				}
+				uniqueID++;
 			}
+
+			//useless failsafe
+			if (uniqueID >= Number.MAX_SAFE_INTEGER) {
+				console.error(`[MPO] trackerCore_status.profiles.add() failed to add a profile because the profile ID reached the maximal possible integer, implying there's ${Number.MAX_SAFE_INTEGER} different profiles saved. If you're a user then please contact me because you likely didn't create that many profiles and you found a bug; or if you did create that many profiles then why. Why would you create ${Number.MAX_SAFE_INTEGER} profiles. You've reached a limit that shouldn't be reachable. | Profile meant to be added: `);
+				console.error(obj);
+				return;
+			}
+
+			//check to make sure an existing property isn't overwritten
+				//then add the object, update 'length' and return since everythings done
+				//if the property already exists then the loop will restart
+			if (this[uniqueID] === undefined) {
+				this[uniqueID] = obj;
+				this.length++;
+				return;
+			}
+
 		}
 
-		//if a profile couldn't be created then error and force it
-		console.error(`[MPO] trackerCore_status.profiles.add() failed to add a profile ${maxAttempts} times. This likely happened because a property already existed with the same name (and that ${maxAttempts}x). Profile will be forcibly added. Name: `, this.profilesCreated, ` - Existing property that will be overwritten: `, this[this.profilesCreated]);
-
-		this[this.profilesCreated] = obj;
+		//if a profile couldn't be created then error
+		console.error(`[MPO] trackerCore_status.profiles.add() failed to add following profile (will be discarded): `, obj);
 	},
 	enumerable: false,
 	writable: false
 });
 Object.defineProperty(trackerCore_status.profiles, 'remove', {
 	value: function (profileSlot) {
-		//if 'profileSlot' is a string then convert it
+		//convert 'profileSlot' to a number if possible
 		if (typeof profileSlot === 'string') {
 			profileSlot = Number.parseInt(profileSlot, 10);
 
-			//if it's NaN then complain and return
 			if (Number.isNaN(profileSlot) !== false) {
-				console.warn(`[MPO] trackerCore_status.profiles.remove() received a string that doesn't consist of just a number. (123 and '123' is allowed but 'hi123' isn't). Value: `, profileSlot);
+				console.warn(`[MPO] trackerCore_status.profiles.remove() received a string that doesn't consist of just a number. (123 and '123' is allowed but 'hi123' isn't).`);
 				return;
 			}
 
@@ -745,6 +746,7 @@ function trackerCore_findLinkedCounter (linkedCounter) {
 	}
 
 	//if type is 'linked' then find the next one, then do the same check again until it finds a counter that isn't 'linked'
+		//TODO: could this result in an infinite loop?
 	while (behaviour.counterRelationType === 'linked') {
 
 		//get the name & behaviour of the linked counter

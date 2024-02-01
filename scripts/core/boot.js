@@ -90,7 +90,7 @@ const boot_scriptsToLoad = [
 	//interface files (anything that's related to the HTML side of things)
 
 		//self-contained "libraries" of sort
-			//(these files should only rely on 'helpers.js' and nothing else, they do nothing that's specific to MPO either so anyone can use it in their own project)
+			//(these files should only rely on 'helpers.js' and each other, they do nothing that's specific to MPO either so anyone can use it in their own project)
 			'scripts/interface/inputfield.js', //this handles user-input, like creating a checkbox or a button
 			'scripts/interface/interaction.js', //this handles dragging/resizing stuff (mainly modals)
 			'scripts/interface/modal.js', //this creates modals, kinda like opening a new window but all done within the site itself with HTML
@@ -210,8 +210,8 @@ function boot_preStartup () {
  */
 function boot_finishStartup () {
 
-	//setup the 'trackerCore_status' object
-	setTimeout(boot_setupCounterObject, 0);
+	//fill in the 'trackerCore_status' object (with all the different bonus stars, spaces, etc)
+	setTimeout(boot_fillInCounterObject, 0);
 
 	//load localStorage
 	setTimeout(boot_loadLocalStorage, 0);
@@ -365,8 +365,8 @@ function boot_loadLocalStorage () {
 /**	Sets up the 'trackerCore_status.counters.behaviour' object completely.
  *
  * 	See 'core/trackerCore.js' for full documentation on what the variable does.
-*/
-function boot_setupCounterObject () {
+ */
+function boot_fillInCounterObject () {
 	//quick access
 	const counterBehaviour = trackerCore_status.counters.behaviour;
 

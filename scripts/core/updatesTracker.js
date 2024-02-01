@@ -376,8 +376,8 @@ function updatesTracker_getAmount () {
 function updatesTracker_setAmount (newAmount) {
 	//make sure 'newAmount' is valid
 		//if it's not, complain and return
-	if (newAmount !== null && (isNaN(newAmount) || newAmount < 0 || newAmount > 999)) {
-		console.warn(`[MPO] updatedTracker_changeAmount() received a invalid argument: `, newAmount);
+	if (newAmount !== null && (Number.isSafeInteger(newAmount) === false || newAmount < 0 || newAmount > 999)) {
+		console.warn(`[MPO] updatesTracker_changeAmount() received a invalid argument: `, newAmount);
 		return false;
 	}
 
