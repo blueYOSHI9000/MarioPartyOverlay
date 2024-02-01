@@ -6,24 +6,40 @@
  * 	Simply loops through + > - > = > *repeat*.
  */
 function handleNavbar_changeAction () {
+	const curAmount = updatesTracker_getAmount();
+
 	//get the current action and then simply set it to the next one in line ('add' > 'sub' > 'set' > repeat)
 	switch (updatesTracker_getAction()) {
 
 		case 'add':
 			updatesTracker_setAction('sub');
+
+			//null and 0 should only be used in 'set'
+			if (curAmount === null || curAmount < 1) {
+				updatesTracker_setAmount(1);
+			}
 			break;
 
 		case 'sub':
 			updatesTracker_setAction('set');
+			updatesTracker_setAmount(null);
 			break;
 
 		case 'set':
 			updatesTracker_setAction('add');
+
+			if (curAmount === null || curAmount < 1) {
+				updatesTracker_setAmount(1);
+			}
 			break;
 
 		//failsafe
 		default:
 			updatesTracker_setAction('add');
+
+			if (curAmount === null || curAmount < 1) {
+				updatesTracker_setAmount(1);
+			}
 			break;
 	}
 }
@@ -36,40 +52,8 @@ function handleNavbar_changeAction () {
 function handleNavbar_changeAmount () {
 	//if the action is 'set' then create a modal that asks the user what amount it should be
 	if (updatesTracker_getAction() === 'set') {
-		//this will create the actual modal
-		var constructModal = function (elem) {
-			//get the unique modalID
-			const modalID = elem.parentNode.getAttribute('data-modalid');
-
-			//create a input-field form
-			const form = inputfield_createField('form', elem);
-
-			//create a number input-field to store the new amount
-			inputfield_createField('number', elem, {
-				formsAdd: form,
-				tag: 'value'
-			});
-
-			//create a button that submits the value
-			inputfield_createField('button', elem, {
-				formsAdd: form,
-				onchange: (value, fieldObj) => {
-					//this gets the actual value that's needed
-						//it first gets the value of the form (which is a object)
-						//it then gets the 'value' property of the object which is what the user entered
-					const actualValue = inputfield_getValue(fieldObj.belongsToForm[0]).value;
-
-					//set the amount
-					updatesTracker_setAmount(actualValue);
-
-					//and immediately close the modal
-					modal_closeModal(modalID);
-				}
-			})
-		}
-
-		//actually create the modal
-		modal_createModal(constructModal);
+		//ask about the amount in a modal
+		handleNavbar_askForAmountModal((amount) => {updatesTracker_setAmount(amount);}, true);
 
 	//otherwise simply loop around with 1 > 5 > 10 > repeat
 	} else {
@@ -88,17 +72,82 @@ function handleNavbar_changeAmount () {
 				break;
 
 			//failsafe
+				//Just set it to next bigger number between 1, 5 or 10
+				//or reset to 1 if it's bigger or something else entirely
 			default:
-				updatesTracker_setAmount(1);
+				const curAmount = updatesTracker_getAmount();
+
+				if (curAmount < 1) {
+					updatesTracker_setAmount(1);
+
+				} else if (curAmount < 5) {
+					updatesTracker_setAmount(5);
+
+				} else if (curAmount < 10) {
+					updatesTracker_setAmount(10);
+
+				} else {
+					updatesTracker_setAmount(1);
+				}
 				break;
 
 		}
 	}
 }
 
+/** Creates a modal that asks the user to enter a specific amount.
+ *
+ * 	Args:
+ * 		callback [Function]
+ * 			This function will be called once the user clicks on "confirm".
+ * 			Uses the result as an argument [Number/null]. null will only be possible if 'allowNull' is true.
+ *
+ * 		allowNull [Boolean] <false>
+ * 			Whether null should be allowed as a value. If true it will create a seperate checkbox to ask for this.
+ */
+function handleNavbar_askForAmountModal (callback, allowNull=false) {
+	var constructModal = function (elem) {
+		//get the unique modalID
+		const modalID = elem.parentNode.getAttribute('data-modalid');
+
+		const numField = cElem('input', elem, {type: 'number', value: '1', min: '0', max: '999'});
+
+		if (allowNull === true) {
+			cElem('br', elem);
+			cElem('span', elem)
+				.innerText = 'Ask for every counter: ';
+
+			//has to be var because fuck this language, if I access a property on this later it immediately crashes, can't even do a "if === undefined" or something on it without creating an extra 'if' and honestly, this is the best solution for a contender of the dumbest problem in human history
+			var nullCheckbox = cElem('input', elem, {type: 'checkbox', value: false});
+			nullCheckbox.onchange = () => {
+					if (nullCheckbox.checked === true) {
+						numField.disabled = true;
+					} else {
+						numField.disabled = false;
+					}
+				};
+		}
+
+		cElem('br', elem);
+		const confirmButton = cElem('button', elem);
+		confirmButton.innerText = 'Confirm';
+		confirmButton.onclick = () => {
+			modal_closeModal(modalID);
+
+			if (nullCheckbox?.checked === true) {
+				callback(null);
+			} else {
+				callback(parseInt(numField.value));
+			}
+		};
+	}
+
+	modal_createModal(constructModal);
+}
+
 /**	Updates the visuals of the "Action" display on the navbar.
  */
-function handleNavbar_updateAction () {
+function handleNavbar_updateActionDisplay () {
 	//set it to a symbol depending on what the action is
 	switch (updatesTracker_getAction()) {
 
@@ -116,7 +165,7 @@ function handleNavbar_updateAction () {
 
 		//failsafe
 		default:
-			console.error(`[MPO] handleNavbar_updateAction() found a invalid action "${updatesTracker_getAction()}".`);
+			console.error(`[MPO] handleNavbar_updateActionDisplay() found a invalid action "${updatesTracker_getAction()}".`);
 			document.querySelector('.navbar_trackerAction').textContent = '?';
 			break;
 	}
@@ -125,7 +174,13 @@ function handleNavbar_updateAction () {
 /**	Updates the visuals of the "Amount" display on the navbar.
  */
 function handleNavbar_updateAmount () {
-	document.querySelector('.navbar_trackerAmount').textContent = updatesTracker_getAmount();
+	let amount = updatesTracker_getAmount();
+
+	if (amount === null) {
+		amount = '?';
+	}
+
+	document.querySelector('.navbar_trackerAmount').textContent = amount;
 }
 
 /**	Creates the modal for selecting a character.

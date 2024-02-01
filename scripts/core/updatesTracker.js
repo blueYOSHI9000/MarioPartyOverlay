@@ -61,9 +61,15 @@ let updatesTracker_isLinkedUpdate = false;
  *			If not specified it simply takes the default amount that's displayed in the navbar.
  */
 function updatesTracker_updateCounter (counterName, player, action=updatesTracker_getAction(), amount=updatesTracker_getAmount()) {
-	//complain and return if it's not a number
 	if (typeof amount !== 'number') {
-		console.warn(`[MPO] updatesTracker_getStat() received a non-number as 'amount': `, amount);
+
+		//generate a more useful error since null can be an intended value
+		if (amount === null) {
+			console.warn(`[MPO] updatesTracker_updateCounter() received ${null} as a value, no counter will be updated as ${null} should never be given to this function, despite being an intended 'amount' value.`);
+		}
+
+		//generic warn as all other values are completely unintended
+		console.warn(`[MPO] updatesTracker_updateCounter() received a non-number as 'amount': `, amount);
 		return 0;
 	}
 
@@ -342,7 +348,7 @@ function updatesTracker_setAction (newAction) {
 	}
 
 	//update the navbar display
-	handleNavbar_updateAction();
+	handleNavbar_updateActionDisplay();
 
 	return true;
 }
@@ -359,9 +365,10 @@ function updatesTracker_getAmount () {
 /**	Sets the default amount for the tracker to use.
  *
  * 	Args:
- * 		newAmount [Number]
+ * 		newAmount [Number/null]
  * 			The new amount.
  * 			Has to be more than 0 and less than 1000 (anything from 1 to 999, including them, is good).
+ * 			null is a unique value but allowed.
  *
  * 	Return [Boolean]:
  * 		'true' if it was successfully updated, 'false' if something went wrong.
@@ -369,8 +376,8 @@ function updatesTracker_getAmount () {
 function updatesTracker_setAmount (newAmount) {
 	//make sure 'newAmount' is valid
 		//if it's not, complain and return
-	if (newAmount === NaN || newAmount < 1 || newAmount > 999) {
-		console.warn(`[MPO] updatedTracker_changeAmount() received a invalid argument: "${newAmount}".`);
+	if (newAmount !== null && (isNaN(newAmount) || newAmount < 0 || newAmount > 999)) {
+		console.warn(`[MPO] updatedTracker_changeAmount() received a invalid argument: `, newAmount);
 		return false;
 	}
 

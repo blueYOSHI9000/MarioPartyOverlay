@@ -111,3 +111,29 @@ function trackerInterface_changeCounterColor (newColor) {
 		item.style.color = newColor;
 	}
 }
+
+/** Handles a click on a counter by the user.
+ *
+ * 	Mostly because this logic would be too much for 'listeners_pointerDown'.
+ * 	Really only needed to handle a null amount properly.
+ *
+ * 	Args:
+ * 		counterName [String]
+ * 			Name of the counter clicked on.
+ *
+ * 		player [Number]
+ * 			Name of the player  clicked on.
+ */
+function trackerInterface_clickOnCounter (counterName, player) {
+	if (updatesTracker_getAmount() === null) {
+		//ask about the amount in a modal (and disallow null)
+			//'setTimeout' is needed because 'listeners_pointerDown' would immediately close the modal again. Temp fix.
+		setTimeout(() => {
+			handleNavbar_askForAmountModal((amount) => {updatesTracker_updateCounter(counterName, player, updatesTracker_getAction(), amount);}, false);
+		}, 0);
+
+	} else {
+		//action and amount will be gotten by the function automatically
+		updatesTracker_updateCounter(counterName, player)
+	}
+}

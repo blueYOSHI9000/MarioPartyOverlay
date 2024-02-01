@@ -16,19 +16,21 @@
 	The following is a documentation of the object with every single property in it:
 
 	> trackerCore_status [Object]
-		Saves everything related to tracking like list of players, list of counters, etc.
+		Saves everything related to tracking like the list of players, list of counters, etc.
 
 		> controls [Object]
 			Saves the controls of the tracker. Whether it should add or subtract, by how much and all that.
 
 			- action [String]
 				What action should be used when clicking on a counter. Can be one of the following:
-					- add: Adds the value to the counter.
-					- sub: Subtracts the value from the counter (can't go below 0).
-					- set: Sets the counter to the specified value.
+					- add: Adds the amount to the counter.
+					- sub: Subtracts the amount from the counter (amount can't go below 0).
+					- set: Sets the counter to the specified amount.
 
-			- amount [Number]
-				By how much the counter should be modified.
+			- amount [Number/null]
+				By how much the counter should be modified. Can be anything from 0 to 999 (inclusive).
+				Note that despite these limits, 'updatesTracker_updateCounter()' does accept any number, even bigger ones and negative ones.
+				If this is null then it's handled by the interface and every change to a counter without a specified value will be rejected as there's no default value to use.
 
 		> counters [Object]
 			Lists everything related to counters.
@@ -41,7 +43,7 @@
 				Will appear in 'for' loops. Is technically just a getter.
 
 			> behaviour
-				This takes information from the database to define how the counters should work. This is fixed information which will be set once MPO boots up and won't ever be changed again.
+				This takes information from the database to define how the counters should work. This is fixed information which will be set while MPO boots up and won't ever be changed again while it's running.
 
 				> *category* [Object]
 					Lists all the counters that are part of this category.
@@ -74,7 +76,7 @@
 
 		> profiles [Object]
 			This is a list of all profiles.
-			This is kinda a "Pseudo Array" in the sense that each item can be accessed with a number, however they aren't in order (a 1 & 2 & 4 might exist but not a 3). A "for of" loop isn't possible and Array function don't exist either (use '.add()' and '.remove()' instead).
+			This is kinda a "Pseudo Array" in the sense that each item can be accessed with a number, however they aren't in order (a 1 & 2 & 4 might exist but not a 3). A "for of" loop isn't possible and Array functions don't exist either (use '.add()' and '.remove()' instead).
 
 		|	- length [Number]
 		|		How many profiles there are.
@@ -112,11 +114,11 @@
 
 		|		> settings [Object]
 		|			All settings for this profile.
-		|			See 'settings' under  under 'savefiles' > '*array item*' below for more details.
+		|			See 'settings' under 'savefiles' > '*array item*' below for more details.
 
 		|		> perCounterStatus [Object]
 		|			This includes options for each counter individually.
-		|			See 'perCounterStatus' under  under 'savefiles' > '*array item*' below for more details.
+		|			See 'perCounterStatus' under 'savefiles' > '*array item*' below for more details.
 
 		|	> *array item* [Object]
 		|		This is one profile.
@@ -137,11 +139,11 @@
 
 		|		> settings [Object]
 		|			All settings for this profile.
-		|			See 'settings' under  under 'savefiles' > '*array item*' below for more details.
+		|			See 'settings' under 'savefiles' > '*array item*' below for more details.
 
 		|		> perCounterStatus [Object]
 		|			This includes options for each counter individually.
-		|			See 'perCounterStatus' under  under 'savefiles' > '*array item*' below for more details.
+		|			See 'perCounterStatus' under 'savefiles' > '*array item*' below for more details.
 
 		> savefiles [Array of Objects]
 			This is a list of all savefiles.
