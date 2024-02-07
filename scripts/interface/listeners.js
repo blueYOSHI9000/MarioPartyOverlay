@@ -1,6 +1,65 @@
 // Copyright 2021 MarioPartyOverlay AUTHORS
 // SPDX-License-Identifier: Apache-2.0
 
+//NOTE: This file is mostly self-contained and can be copy-pasted to other projects pretty easily. You just have to keep 'interaction.js' & 'modal.js' and then clear all the arrays in 'listeners_pointerEventList'.
+
+/**	Which functions to call on which event.
+ *
+ * 	Object structure:
+ *
+ * 		> down [Object]
+ * 			Functions in here are called when the user clicks on something.
+ * 			Other events are currently not in here since they wouldn't be used anyway (at least right now).
+ *
+ * 			> *class name* [Array]
+ * 				The name of the CSS Class that the user clicked on.
+ * 				Found inside 'listeners_fillInPointerEventList'.
+ *
+ * 				- 0 [Function]
+ * 					The function to be called when the class is clicked on.
+ *
+ * 				- *subsequent array items* [null/String]
+ * 					The arguments for calling the function.
+ * 					null means it uses the HTML Element clicked on.
+ * 					A string means it uses the attribute with that name from the HTML Element.
+ * 					Arguments unrelated to the element can't be used, though a pointer-function is possible.
+ *
+ * 		> move, up, cancel [---]
+ * 			Currently not a thing since they wouldn't be used anyway. If needed it has to be done manually in their respective functions (in this same JS file).
+ *
+ *
+ */
+let listeners_pointerEventList = {
+	down: {}
+}
+
+/** Fills in the 'listeners_pointerEventList' variable. Called during startup by 'boot_finishStartup()'.
+ */
+function listeners_fillInPointerEventList () {
+	//complain if  'listeners_pointerEventList.down' isn't already empty
+	if (Object.keys(listeners_pointerEventList.down).length > 0) {
+		console.warn(`[MPO] listeners_fillInPointerEventList() found already existing values in 'listeners_pointerEventList.down': `, listeners_pointerEventList.down, ` - Listed values may or may not be replaced. Values for the 'pointerEventList' should be added in 'listeners_fillInPointerEventList()' instead.`);
+	}
+
+	Object.assign(listeners_pointerEventList.down, {
+		//a counter
+		'tracker_counter'      : [trackerInterface_clickOnCounter,     'data-counter', 'data-player'],
+
+		//navbar entries (in order)
+		'navbar_player'        : [handleNavbar_createCharacterModal],
+		//'navbar_game'
+		'navbar_counter'       : [handleNavbar_createCounterModal],
+		'navbar_trackerAction' : [handleNavbar_changeAction],
+		'navbar_trackerAmount' : [handleNavbar_changeAmount],
+		'navbar_saveTracker'   : [trackerCore_saveSavefiles],
+		'navbar_selectSavefile': [handleNavbar_createSavefileModal],
+
+		//inputfield stuff
+		'inputfield_callUpdate': [inputfield_executedAfterFieldChange, null],
+		'inputfield_label'     : [inputfield_executedAfterLabelPress,  null]
+	});
+}
+
 /**	Adds all the event listeners needed for MPO to work.
  */
 function listeners_addListeners () {
@@ -128,8 +187,8 @@ function listeners_pointerDown (e) {
 		if (firstLoop === true) {
 
 			//loop through all classes and check if something has to be executed depending on the class
-			for (const item of elem.classList) {
-				switch (item) {
+			for (const cssClass of elem.classList) {
+				switch (cssClass) {
 
 				}
 			}
@@ -140,8 +199,45 @@ function listeners_pointerDown (e) {
 		*/
 
 		//loop through all classes and check if something has to be executed depending on the class
-		for (const item of elem.classList) {
-			switch (item) {
+		for (const cssClass of elem.classList) {
+
+			if (Array.isArray(listeners_pointerEventList.down[cssClass]) === true) {
+
+				//will be pushed to 'functionsToExecute'
+				let toExecuteArr = [];
+
+				//first item will be the function to call, rest will be the arguments for it
+				for (const item of listeners_pointerEventList.down[cssClass]) {
+
+					//on the first loop, verify the function
+					if (toExecuteArr.length === 0) {
+						if (typeof item === 'function') {
+							toExecuteArr.push(item);
+
+						} else {
+							console.error(`[MPO] listeners_pointerDown() found a non-function in 'listeners_pointerEventList.down.${cssClass}': `, item);
+							break;
+						}
+						continue;
+					}
+
+					//add the correct values to 'toExecuteArr' according to how 'listeners_pointerEventList' works (see top of file)
+					if (item === null) {
+						toExecuteArr.push(elem);
+					} else if (typeof item === 'string') {
+						toExecuteArr.push(elem.getAttribute(item));
+
+					//warn if it's something else; though we can continue, it's likely just gonna print more warnings but it might work at least ¯\_(ツ)_/¯
+					} else {
+						console.warn(`[MPO] listeners_pointerDown() found a invalid item in 'listeners_pointerEventList.down.${cssClass}': `, item, ` - Has to be either ${null} or a String.`);
+					}
+				}
+
+				functionsToExecute.push(toExecuteArr);
+			}
+
+			//some other, more unique cases are handled here
+			switch (cssClass) {
 
 				//a drag handle
 				case 'interaction_dragHandle':
@@ -192,56 +288,6 @@ function listeners_pointerDown (e) {
 						}
 					}
 					break;
-
-				//a counter
-				case 'tracker_counter':
-					trackerInterface_clickOnCounter(elem.getAttribute('data-counter'), parseInt(elem.getAttribute('data-player')));
-					break;
-
-				//the navbar entry for updating players
-				case 'navbar_player':
-					functionsToExecute.push(handleNavbar_createCharacterModal);
-					break;
-
-				//the navbar entry for updating players
-				case 'navbar_player':
-					//functionsToExecute.push(handleNavbar_createGameModal);
-					break;
-
-				//the navbar entry for changing the action
-				case 'navbar_trackerAction':
-					functionsToExecute.push(handleNavbar_changeAction);
-					break;
-
-				//the navbar entry for changing the amount
-				case 'navbar_trackerAmount':
-					functionsToExecute.push(handleNavbar_changeAmount);
-					break;
-
-				//the navbar entry for saving the tracker stats
-				case 'navbar_saveTracker':
-					functionsToExecute.push(trackerCore_saveSavefiles);
-					break;
-
-				//the navbar entry for selecting the savefile
-				case 'navbar_selectSavefile':
-					functionsToExecute.push(handleNavbar_createSavefileModal);
-					break;
-
-				//the navbar entry for changing counters
-				case 'navbar_counter':
-					functionsToExecute.push(handleNavbar_createCounterModal);
-					break;
-
-				//any input field element that should be updated when clicked on
-				case 'inputfield_callUpdate':
-					inputfield_executedAfterFieldChange(elem);
-					break;
-
-				//input-field labels
-				case 'inputfield_label':
-					inputfield_executedAfterLabelPress(elem);
-					break;
 			}
 		}
 
@@ -256,11 +302,13 @@ function listeners_pointerDown (e) {
 	//go through the list of function to execute and execute them all
 	for (const item of functionsToExecute) {
 
-		//check if it's actually a function, if not complain
-		if (typeof item === 'function') {
-			item();
+		if (Array.isArray(item) === true) {
+
+			//call the first array item, while using all others as an argument
+				//won't check whether it's actually a function since that's already been checked within this same function
+			item[0](...item.slice(1));
 		} else {
-			console.warn(`[MPO] A non-function has been added to the 'functionsToExecute' array inside 'listeners_pointerDown()': "${item}".`);
+			console.warn(`[MPO] A non-array has been added to the 'functionsToExecute' array inside 'listeners_pointerDown()': `, item);
 		}
 	}
 }

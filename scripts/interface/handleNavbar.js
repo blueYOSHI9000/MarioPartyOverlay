@@ -35,6 +35,7 @@ function handleNavbar_changeAction () {
 
 		//failsafe
 		default:
+			console.error(`[MPO] handleNavbar_changeAction() found an invalid action "${updatesTracker_getAction()}".`);
 			updatesTracker_setAction('add');
 
 			if (curAmount === null || curAmount < 1) {
@@ -165,8 +166,8 @@ function handleNavbar_updateActionDisplay () {
 
 		//failsafe
 		default:
-			console.error(`[MPO] handleNavbar_updateActionDisplay() found a invalid action "${updatesTracker_getAction()}".`);
-			document.querySelector('.navbar_trackerAction').textContent = '?';
+			console.error(`[MPO] handleNavbar_updateActionDisplay() found an invalid action "${updatesTracker_getAction()}".`);
+			updatesTracker_setAction('add');
 			break;
 	}
 }

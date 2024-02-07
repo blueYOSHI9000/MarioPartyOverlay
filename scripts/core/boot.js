@@ -210,6 +210,9 @@ function boot_preStartup () {
  */
 function boot_finishStartup () {
 
+	//fill in all listener events
+	listeners_fillInPointerEventList();
+
 	//fill in the 'trackerCore_status' object (with all the different bonus stars, spaces, etc)
 	setTimeout(boot_fillInCounterObject, 0);
 

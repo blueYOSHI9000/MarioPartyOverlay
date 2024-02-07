@@ -121,16 +121,17 @@ function trackerInterface_changeCounterColor (newColor) {
  * 		counterName [String]
  * 			Name of the counter clicked on.
  *
- * 		player [Number]
- * 			Name of the player  clicked on.
+ * 		player [Number/String]
+ * 			Name of the player  clicked on. Can be a number in String form.
  */
 function trackerInterface_clickOnCounter (counterName, player) {
+	//convert to number
+	player = +player;
+
+	//if the amount is '?' (meaning, "ask the user")
 	if (updatesTracker_getAmount() === null) {
 		//ask about the amount in a modal (and disallow null)
-			//'setTimeout' is needed because 'listeners_pointerDown' would immediately close the modal again. Temp fix.
-		setTimeout(() => {
-			handleNavbar_askForAmountModal((amount) => {updatesTracker_updateCounter(counterName, player, updatesTracker_getAction(), amount);}, false);
-		}, 0);
+		handleNavbar_askForAmountModal((amount) => {updatesTracker_updateCounter(counterName, player, updatesTracker_getAction(), amount);}, false);
 
 	} else {
 		//action and amount will be gotten by the function automatically
