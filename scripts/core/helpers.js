@@ -536,6 +536,9 @@ Object.defineProperty(NonSequentialArray.prototype, 'add', {
 		if (Number.isSafeInteger(slot) === true) {
 			if (this[slot] !== undefined) {
 				console.warn(`[helpers.js] NonSequentialArray.add() found an item already existing in the following slot: `, slot, ` - The already existing item will be overwritten with the new one since the 'slot' was specifically given as an argument. Old item that will be overwritten: `, this[slot]);
+			} else {
+				//increase 'length' only if there wasn't already something in this slot
+				this.length++;
 			}
 			this[slot] = item;
 			return this;

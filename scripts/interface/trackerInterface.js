@@ -71,8 +71,7 @@ function trackerInterface_updateVisuals () {
 			for (statKey in trackerCore_status.counters.behaviour[pieceKey]) {
 
 				//update the counter
-					//add one to 'playerKey' because 'playerKey' starts at 0
-				trackerInterface_updateCounter(`${pieceKey}.${statKey}`, Number(playerKey) + 1);
+				trackerInterface_updateCounter(`${pieceKey}.${statKey}`, Number(playerKey));
 
 				foundSomething = true;
 			}

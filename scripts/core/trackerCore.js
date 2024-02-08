@@ -164,15 +164,16 @@
 		|		- game [String]
 		|			The current game in the format of 'mp1', 'mp8', 'mptt100', etc. Can also be '_all' for "no game in particular".
 
-		|		> players [Array of Objects]
+		|		> players [NonSequentialArray of Objects]
 		|			A list of all players. Saves everything related to those players.
+		|			See 'NonSequentialArray' in helpers.js for more info.
 
 		|			- playerAmount [Number]
 		|				The amount of players present (includes COM).
 		|				This is a non-enumerable array item.
 
 		|			> *array item* [Object]
-		|				Each array item is one player. Player 1 is [0], Player 2 is [1], etc.
+		|				Each array item is one player. Starts at 1 (Player 1 is [1], Player 2 is [2], etc - [0] does not exist)
 
 		|				- name [String/null]
 		|					The name of the player. Can be null in case no player name has been entered.
@@ -952,7 +953,7 @@ function trackerCore_Savefile (specifics={}) {
 
 
 	//create an empty array which will then be filled in
-	this.players = [];
+	this.players = new NonSequentialArray();
 
 	//set the 'playerAmount' property of the array
 	Object.defineProperty(this.players, 'playerAmount', {
@@ -969,30 +970,31 @@ function trackerCore_Savefile (specifics={}) {
 		set: (newValue) => {return;}
 	});
 
-	//if players are specified then create a 'trackerCore_Player()' object for each player specified (everything is handled inside that function so no need to get our hands dirty here)
-	if (Array.isArray(specifics.players) === true) {
+	//if players are specified then create a 'trackerCore_Player()' object for each player specified
+	if (specifics.players instanceof NonSequentialArray) {
 		for (const item of specifics.players) {
-			this.players.push(new trackerCore_Player(item));
+			//specify which slot to use to skip 0
+			this.players.add(new trackerCore_Player(item), this.players.length + 1);
 		}
 
 	//else, if no players are specified then use the defaults
 	} else {
-		this.players.push(new trackerCore_Player({
+		this.players.add(new trackerCore_Player({
 			character: 'mario',
 			com: false
-		}));
-		this.players.push(new trackerCore_Player({
+		}), 1);
+		this.players.add(new trackerCore_Player({
 			character: 'luigi',
 			com: true
-		}));
-		this.players.push(new trackerCore_Player({
+		}), 2);
+		this.players.add(new trackerCore_Player({
 			character: 'yoshi',
 			com: true
-		}));
-		this.players.push(new trackerCore_Player({
+		}), 3);
+		this.players.add(new trackerCore_Player({
 			character: 'peach',
 			com: true
-		}));
+		}), 4);
 	}
 
 

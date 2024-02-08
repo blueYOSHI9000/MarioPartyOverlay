@@ -24,7 +24,7 @@
  *
  * 		updatesTracker_getAction()
  * 		updatesTracker_setAction()
- * 			Get and set the default action (+/-/= or 'add'/'sub'/'set').
+ * 			Get and set the default action ('add'/'sub'/'set' or +/-/= as used on the display).
  *
  * 		updatesTracker_getAmount()
  * 		updatesTracker_setAmount()
@@ -93,7 +93,7 @@ function updatesTracker_updateCounter (counterName, player, action=updatesTracke
 		//also, if this happens then chances are 'behaviour' doesn't exist and trying to access its properties will crash
 		//we could use the ?. feature to access properties but the time spent doing that probably isn't worth it for a issue that occurs this rarely (hopefully?) - again, see best/worst case
 	if (behaviour instanceof trackerCore_CounterBehaviour === false) {
-		console.error(`[MPO] updatesTracker_updateCounter() could not find the counter specified in 'counterName': `, counterName, ` - Will continue anyway, expect more errors. - player: "${player}" | action: "${action}" | amount: ${amount}`);
+		console.error(`[MPO] updatesTracker_updateCounter() could not find the counter specified in 'counterName': `, counterName, ` - Will continue anyway, expect more errors. - player: `, player, ` | action: `, action, ` | amount: `, amount);
 	}
 
 	//get current/old stat
@@ -207,16 +207,24 @@ function updatesTracker_getStat (counterName, player) {
 	}
 	*/
 
+	//get the player
+	let playerObj = trackerCore_getSavefile().players[player];
+
+	if (playerObj === undefined) {
+		console.error(`[MPO] updatesTracker_getStat() received an invalid player number that doesn't exist: `, player, ` - counterName: `, counterName, ` - Errors after this are likely caused by this.`);
+		return null;
+	}
+
 	//get the actual stat
-	let stat = trackerCore_getSavefile().players[player - 1].stats.fetchProperty(counterName);
+	let stat = playerObj.stats.fetchProperty(counterName);
 
 	//if stat doesn't exist yet then set it to 0
 	stat ??= 0;
 
 	//use a failsafe in case the stat isn't valid
 	if (typeof stat !== 'number' && stat !== null) {
-		console.error(`[MPO] updatesTracker_getStat() found a invalid stat for counter "${counterName}" and player "${player}": "${stat}".`);
-		stat = null;
+		console.error(`[MPO] updatesTracker_getStat() found a invalid stat for counter `, counterName, ` and player `, player, `: `, stat, ` - Errors after this are likely caused by this.`);
+		return null;
 	}
 
 	return stat;
@@ -249,7 +257,7 @@ function updatesTracker_setStat (counterName, player, value) {
 	}
 
 	//set the stat and save the response (Boolean of whether it was successful or not)
-	let result = trackerCore_getSavefile().players[player - 1].stats.fetchProperty(counterName, {setTo: value});
+	let result = trackerCore_getSavefile().players[player].stats.fetchProperty(counterName, {setTo: value});
 
 	return result;
 }
@@ -270,9 +278,14 @@ function updatesTracker_getCharacter (player) {
 		return null;
 	}
 
-	//use 'player - 1' since it's an array starting at 0
-		//if the character couldn't be found (is undefined) then it will simply return 'null'
-	return trackerCore_getSavefile().players[player - 1]?.character ?? null;
+	let playerObj = trackerCore_getSavefile().players[player];
+
+	if (playerObj === undefined) {
+		console.warn(`[MPO] updatesTracker_setCharacter() received an invalid player number: `, player);
+		return null;
+	}
+
+	return playerObj.character ?? null;
 }
 
 /**	Change the character of a single player.
@@ -285,8 +298,13 @@ function updatesTracker_getCharacter (player) {
  * 			The name of the character as listed in the database.
  */
 function updatesTracker_setCharacter (player, charName) {
-	//update 'trackerCore_status'
-	trackerCore_getSavefile()['players'][player - 1]['character'] = charName;
+	let playerObj = trackerCore_getSavefile().players[player];
+
+	if (playerObj === undefined) {
+		console.warn(`[MPO] updatesTracker_setCharacter() received an invalid player number: `, player, ` - charName: `, charName);
+		return;
+	}
+	playerObj.character = charName;
 
 	//update the visual
 	trackerInterface_updateCharacter(player);
