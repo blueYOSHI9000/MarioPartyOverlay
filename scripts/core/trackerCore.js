@@ -74,21 +74,17 @@
 								A list of all counters that are part of this collection.
 								The counter this one is linked to.
 
-		> profiles [Object]
+		> profiles [NonSequentialArray]
 			This is a list of all profiles.
-			This is kinda a "Pseudo Array" in the sense that each item can be accessed with a number, however they aren't in order (a 1 & 2 & 4 might exist but not a 3). A "for of" loop isn't possible and Array functions don't exist either (use '.add()' and '.remove()' instead).
+			This is kinda a "Pseudo Array" in the sense that each item can be accessed with a number, however they aren't in order (a 1 & 2 & 4 might exist but not a 3).
+			See 'helpers.js' for more info, but tl;dr: Doesn't have array functions (use '.add()' & '.remove()' instead) but can be enumerated & iterated over.
 
 		|	- length [Number]
 		|		How many profiles there are.
 		|		Listed here because it's done by MPO manually.
 
-		|	- profilesCreated [Number]
-		|		How many profiles have been created.
-		|		Is saved permanently in localStorage.
-		|		Is not necessarily 100% accurate, mainly because it's just used to give profiles a unique ID, not as a statistic.
-
 		|	- add [Function]
-		|		Adds a new profile to the list. Mainly there to update the 'length' and 'profilesCreated' properties.
+		|		Adds a new profile to the list. Mainly there to find a unique ID and to update the 'length' property.
 		|		Will not verify the actual profile itself!
 
 		|		Arguments:
@@ -244,7 +240,7 @@ var trackerCore_status = {
 		action: 'add',
 		amount: 1
 	},
-	profiles : {},
+	profiles : new NonSequentialArray(),
 	savefiles: [],
 	counters: {
 		behaviour: {
@@ -273,112 +269,6 @@ Object.defineProperty(trackerCore_status.savefiles, 'current', {
 	set (value) {
 		return;
 	}
-});
-
-Object.defineProperty(trackerCore_status.profiles, 'length', {
-	value: 0,
-	enumerable: false,
-	writable: true
-});
-Object.defineProperty(trackerCore_status.profiles, 'profilesCreated', {
-	value: 0,
-	enumerable: false,
-	writable: true
-});
-Object.defineProperty(trackerCore_status.profiles, 'add', {
-	value: function (obj, slot) {
-		//if 'obj' isn't an object then complain and return
-		if (typeof obj !== 'object') {
-			console.warn(`[MPO] [MPO] trackerCore_status.profiles.add() received a non-object as 'obj': `, obj);
-			return;
-		}
-
-		//if a slot was given then put the profile in that slot without increasing 'profilesCreated'
-		if (Number.isSafeInteger(slot) === true) {
-			if (this[slot] !== undefined) {
-				console.warn(`[MPO] trackerCore_status.profiles.add() found a profile already existing in the following slot: `, slot, ` - The already existing profile will be overwritten with the new one since the 'slot' was specifically given as an argument. Old profile that will be overwritten: `, this[slot]);
-			}
-			this[slot] = obj;
-
-		//if no slot was given or it's invalid then get the slot from the 'profilesCreated' property
-		} else {
-			//check to make sure that 'profilesCreated' is actually valid and add a failsafe in case it "overflows"
-				//'Number.isSafeInteger()' is used to make sure that the number isn't too big, the '+ 1' is used since the number will be increased before being used anyway, so the check wouldn't be accurate without this
-				//NaN isn't considered to be "safe", so we don't need a seperate check for this
-				//'typeof' is used to make sure it is a number, which '.isSafeInteger()' already does but if it's an object then '{} + 1' results in 1 which ain't good
-				//and finally make sure the number isn't negative
-				//half of this isn't even needed but not having overflow protection is stupid even if it's humanly impossible to reach it
-				//also, these checks can't all be done at bootup because of the overflow protection - and if someones stupid enough to consider that then they're also stupid enough to create 3 checks even if 2 of them could be done at bootup
-
-				//if the number is invalid then complain and reset it back to 0 (which will be increased to 1)
-			if (typeof this.profilesCreated !== 'number' || Number.isSafeInteger(this.profilesCreated + 1) === false || this.profilesCreated < 0) {
-				console.warn(`[MPO] trackerCore_status.profiles.add() got a invalid 'profilesCreated' number. Either something fucked up or you created 9007199254740992 profiles which is one too many. Will be replaced with 1. Value: `, this.profilesCreated);
-				this.profilesCreated = 0;
-			}
-
-			//try and find a valid ID
-				//this simply loops through all profiles and checks if there's an empty gap between two, if it found a gap then it uses that slot
-				//if the loop finished without finding an empty gap then it simply uses the next slot after the last profile
-			let uniqueID = 0;
-			for (let profileKey in this) {
-				if (profileKey > uniqueID) {
-					break;
-				}
-				uniqueID++;
-			}
-
-			//useless failsafe
-			if (uniqueID >= Number.MAX_SAFE_INTEGER) {
-				console.error(`[MPO] trackerCore_status.profiles.add() failed to add a profile because the profile ID reached the maximal possible integer, implying there's ${Number.MAX_SAFE_INTEGER} different profiles saved. If you're a user then please contact me because you likely didn't create that many profiles and you found a bug; or if you did create that many profiles then why. Why would you create ${Number.MAX_SAFE_INTEGER} profiles. You've reached a limit that shouldn't be reachable. | Profile meant to be added: `);
-				console.error(obj);
-				return;
-			}
-
-			//check to make sure an existing property isn't overwritten
-				//then add the object, update 'length' and return since everythings done
-				//if the property already exists then the loop will restart
-			if (this[uniqueID] === undefined) {
-				this[uniqueID] = obj;
-				this.length++;
-				return;
-			}
-
-		}
-
-		//if a profile couldn't be created then error
-		console.error(`[MPO] trackerCore_status.profiles.add() failed to add following profile (will be discarded): `, obj);
-	},
-	enumerable: false,
-	writable: false
-});
-Object.defineProperty(trackerCore_status.profiles, 'remove', {
-	value: function (profileSlot) {
-		//convert 'profileSlot' to a number if possible
-		if (typeof profileSlot === 'string') {
-			profileSlot = Number.parseInt(profileSlot, 10);
-
-			if (Number.isNaN(profileSlot) !== false) {
-				console.warn(`[MPO] trackerCore_status.profiles.remove() received a string that doesn't consist of just a number. (123 and '123' is allowed but 'hi123' isn't).`);
-				return;
-			}
-
-		//if it's neither a string nor a number then complain and return
-		} else if (typeof profileSlot !== 'number') {
-			console.warn(`[MPO] trackerCore_status.profiles.remove() received a non-number as 'profileSlot': `, profileSlot);
-			return;
-		}
-
-		//if a profile already existed then decrease the 'length' property
-		if (typeof this[profileSlot] === 'object') {
-			this.length--;
-		}
-
-		//and delete it
-			//if this property doesn't even exist then it can't be deleted but it not existing is already good, so no complaining
-		delete this[profileSlot];
-	},
-	enumerable: false,
-	writable: true
 });
 
 //create a redirect to the 'perCounterStatus' of the current savefile
@@ -710,7 +600,6 @@ function trackerCore_saveSavefiles () {
 
 	//set these properties manually since they're not enumerable
 	localStorage.setItem('globalProfile'      , JSON.stringify(trackerCore_status.profiles.globalProfile  ));
-	localStorage.setItem('profilesCreated'    , JSON.stringify(trackerCore_status.profiles.profilesCreated));
 	localStorage.setItem('currentSavefileSlot', JSON.stringify(trackerCore_status.savefiles.currentSlot   ));
 }
 

@@ -198,13 +198,13 @@ function cElem (type, parent, attributes) {
 Object.defineProperty(Object.prototype, 'fetchProperty', {value: function (path, specifics={}) {
 	//complain and return if 'specifics' isn't an object
 	if (typeof specifics !== 'object') {
-		console.warn(`[MPO] Object.fetchProperty() received a non-object as 'specifics': "${specifics}".`);
+		console.warn(`[helpers.js] Object.fetchProperty() received a non-object as 'specifics': "${specifics}".`);
 		return null;
 	}
 
 	//complain and return undefined if 'path' isn't a string
 	if (typeof path !== 'string') {
-		console.warn(`[MPO] Object.fetchProperty() received a non-string for 'path': "${path}".`);
+		console.warn(`[helpers.js] Object.fetchProperty() received a non-string for 'path': "${path}".`);
 		return null;
 	}
 
@@ -222,7 +222,7 @@ Object.defineProperty(Object.prototype, 'fetchProperty', {value: function (path,
 
 		//complain and return 'null' if it couldn't finish looping through
 		if (typeof item !== 'object') {
-			console.warn(`[MPO] Object.fetchProperty() couldn't finish looping through the 'path' specified as it found a non-object with name "${key}": "${item}".`);
+			console.warn(`[helpers.js] Object.fetchProperty() couldn't finish looping through the 'path' specified as it found a non-object with name "${key}": "${item}".`);
 			return null;
 		}
 
@@ -246,7 +246,7 @@ Object.defineProperty(Object.prototype, 'fetchProperty', {value: function (path,
 
 	//complain and return false if it couldn't be set
 	if (specifics.setToUndefined === true || specifics.setTo !== undefined) {
-		console.warn(`[MPO] Object.fetchProperty() could not set the value. Path specified: "${path}".`);
+		console.warn(`[helpers.js] Object.fetchProperty() could not set the value. Path specified: "${path}".`);
 		return false;
 	}
 
@@ -293,7 +293,7 @@ Object.defineProperty(Object.prototype, 'fetchProperty', {value: function (path,
 Object.defineProperty(Object.prototype, 'fillIn', {value: function (defaultObj, specifics={}) {
 	//complain and return if 'specifics' isn't an object
 	if (typeof specifics !== 'object') {
-		console.warn(`[MPO] Object.fillIn() received a non-object as 'specifics': "${specifics}".`);
+		console.warn(`[helpers.js] Object.fillIn() received a non-object as 'specifics': "${specifics}".`);
 		return null;
 	}
 
@@ -303,13 +303,13 @@ Object.defineProperty(Object.prototype, 'fillIn', {value: function (defaultObj, 
 	//complain and return if it's not a object
 	if (typeof obj !== 'object') {
 		//complain differently depending on whether 'objToOverwrite' was used or not
-		console.warn(`[MPO] Object.fillIn() ${(specifics.objToOverwrite !== undefined) ? "received a non-object as the 'objToOverwrite' argument:" : "was called on a non-object without a valid 'objToOverwrite' argument:"} "${obj}".`);
+		console.warn(`[helpers.js] Object.fillIn() ${(specifics.objToOverwrite !== undefined) ? "received a non-object as the 'objToOverwrite' argument:" : "was called on a non-object without a valid 'objToOverwrite' argument:"} "${obj}".`);
 		return null;
 	}
 
 	//complain and return if 'defaultObj' is not a object
 	if (typeof defaultObj !== 'object') {
-		console.warn(`[MPO] Object.fillIn() received a non-object as the 'defaultObj': "${defaultObj}".`);
+		console.warn(`[helpers.js] Object.fillIn() received a non-object as the 'defaultObj': "${defaultObj}".`);
 		return null;
 	}
 
@@ -340,7 +340,7 @@ Object.defineProperty(Object.prototype, 'fillIn', {value: function (defaultObj, 
 
 		//complain if 'ignoreKeys' was specified but not valid
 		if (specifics.ignoreKeys !== undefined) {
-			console.warn(`[MPO] Object.fillIn() received a non-array as 'ignoreKeys': "${specifics.ignoreKeys}".`);
+			console.warn(`[helpers.js] Object.fillIn() received a non-array as 'ignoreKeys': "${specifics.ignoreKeys}".`);
 		}
 
 		//loop through 'defaultObj'
@@ -377,7 +377,7 @@ Object.defineProperty(Object.prototype, 'fillIn', {value: function (defaultObj, 
 Object.defineProperty(Array.prototype, 'removeEachIf', {value: function (expr) {
 	//return and complain if 'expr' isn't a function
 	if (typeof expr !== 'function') {
-		console.warn(`[MPO] Array.removeItemIf() received a non-function for 'expr': "${expr}".`);
+		console.warn(`[helpers.js] Array.removeItemIf() received a non-function for 'expr': "${expr}".`);
 		return;
 	}
 
@@ -460,6 +460,179 @@ function isIterable (obj) {
 		//see:     https://stackoverflow.com/questions/18884249/checking-whether-something-is-iterable
 		//or this: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols
 	return typeof obj[Symbol.iterator] === 'function';
+}
+
+/**	An Array-alternative that can skip numbers.
+ *
+ * 	An object that stores stuff with only numbers being allowed as an index.
+ * 	Can use 'for ... of' & 'for ... in' (is enumerable & iterable).
+ * 	Has a 'length' property.
+ * 	Does NOT have Array functions on it.
+ *
+ * 	Args:
+ * 		*any* [*Any*]
+ * 			All arguments will be added to the resulting NS-Array in order starting at 0, same as 'new Array()' (essentially just calls '.add()' on every argument with no slot given).
+ * 			Does NOT convert an array to this. If you want to convert an array to this, use 'new NonSequentialArray(...arr)' where 'arr' is your array.
+ *
+ * 	Constructs:
+ * 		length [Number]
+ * 			The amount of items in it.
+ * 			Not enumerable (jsut like the Array counterpart).
+ *
+ * 		add [Function]
+ * 			Adds an item to the NS-Array. See below this function for docs.
+ *
+ * 		remove [Function]
+ * 			Removes a function from the NS-Array. See below this function for docs.
+ */
+function NonSequentialArray () {
+	if (!new.target) {
+		console.error(`[helpers.js] NonSequentialArray() is a constructor and can not be called without the 'new' prefix.`);
+		return;
+	}
+
+	//do length, but not enumerable
+	Object.defineProperty(this, 'length', {
+		value: 0,
+		enumerable: false,
+		writable: true
+	});
+
+	//add all arguments to the resulting NS-Array
+	for (const args of arguments) {
+		this.add(args);
+	}
+
+	//everything else is done below this function ('.add()' and '.remove()')
+}
+
+/**	NonSequentialArray.add() - Adds an item to the NS-Array.
+ *
+ * 	Args:
+ * 		item [*Any*]
+ * 			The item to be added.
+ *
+ * 		slot [Number/String] <*next possible*>
+ * 			The slot/index it should use. Can be a number in a string.
+ * 			If an item already exists in the specified slot then IT WILL BE OVERWRITTEN. It's recommended to not specify a specific slot because of this.
+ * 			If left empty it will simply use the next available slot. If Slot 1, 2, 4 & 5 are used, then it will use 3; if 1, 2 & 3 are used then it will use 4.
+ *
+ * 	Returns [NonSequentialArray]:
+ * 		The NS-Array it was called on, even when the function failed. Useful for chaining.
+ */
+Object.defineProperty(NonSequentialArray.prototype, 'add', {
+	value: function (item, slot) {
+		//convert 'slot' to a number if possible
+		if (typeof slot === 'string') {
+			slot = +slot;
+
+			if (Number.isNaN(slot) !== false) {
+				console.warn(`[helpers.js] NonSequentialArray.add() received a string that doesn't consist of just a number. (123 and '123' is allowed but 'hi123' isn't).`);
+				return this;
+			}
+		}
+
+		//if a slot was given then put the value in that slot without increasing 'length'
+		if (Number.isSafeInteger(slot) === true) {
+			if (this[slot] !== undefined) {
+				console.warn(`[helpers.js] NonSequentialArray.add() found an item already existing in the following slot: `, slot, ` - The already existing item will be overwritten with the new one since the 'slot' was specifically given as an argument. Old item that will be overwritten: `, this[slot]);
+			}
+			this[slot] = item;
+			return this;
+
+		//if no slot was given or it's invalid then find a valid ID and use that
+		} else {
+
+			//try and find a valid ID
+				//this simply loops through all items and checks if there's an empty gap between two, if it found a gap then it uses that slot
+				//if the loop finished without finding an empty gap then it simply uses the next slot after the last item
+			let uniqueID = 0;
+			for (let index in this) {
+				if (index > uniqueID) {
+					break;
+				}
+				uniqueID++;
+			}
+
+			//useless failsafe
+				//the -1 is important because the comparison was >=
+				//yes, this unreachable error message HAS to be accurate
+			if (uniqueID >= Number.MAX_SAFE_INTEGER) {
+				console.error(`[helpers.js] NonSequentialArray.add() failed to add an item because there's over ${Number.MAX_SAFE_INTEGER - 1} entries in it. How's the end of the universe? Item meant to be added: `, item);
+				return;
+			}
+
+			//check to make sure an existing property isn't overwritten
+				//then add the new item, update 'length' and return since everythings done
+				//if the property already exists then the loop will restart
+			if (this[uniqueID] === undefined) {
+				this[uniqueID] = item;
+				this.length++;
+				return;
+			}
+
+		}
+
+		//if an item couldn't be created then error
+		console.error(`[helpers.js] NonSequentialArray.add() failed to add following item (will be discarded): `, item);
+	},
+	enumerable: false,
+	writable: false
+});
+
+/**	NonSequentialArray.removes() - Removes an item from the NS-Array.
+ *
+ * 	Args:
+ * 		slot [Number/String]
+ * 			The slot/index of the item to be removed.
+ * 			Will not log a warn when an item didn't even exist in that slot.
+ *
+ * 	Returns [NonSequentialArray]:
+ * 		The NS-Array it was called on, even when the function failed. Useful for chaining.
+ */
+Object.defineProperty(NonSequentialArray.prototype, 'remove', {
+	value: function (slot) {
+		//convert 'slot' to a number if possible
+		if (typeof slot === 'string') {
+			slot = +slot;
+
+			if (Number.isNaN(slot) !== false) {
+				console.warn(`[helpers.js] NonSequentialArray.remove() received a string that doesn't consist of just a number. (123 and '123' is allowed but 'hi123' isn't).`);
+				return this;
+			}
+
+		//if it's neither a string nor a number then complain and return
+		} else if (typeof slot !== 'number') {
+			console.warn(`[helpers.js] NonSequentialArray.remove() received a non-number as 'slot': `, slot);
+			return this;
+		}
+
+		//if an item already existed then decrease the 'length' property
+		if (typeof this[slot] === 'object') {
+			this.length--;
+		}
+
+		//and delete it
+			//if this property doesn't even exist then it can't be deleted but it not existing is already good
+		delete this[slot];
+	},
+	enumerable: false,
+	writable: true
+});
+
+/**	Iterator of NonSequentialArray. Useful for 'for ... of' loops.
+ *
+ * 	Gets list of values with 'Object.values()' (faster than 'Object.keys()', I'm not kidding), then loops until it reaches the last entry and returns instead of yielding (HAS to be done on the last item, NOT afterwards).
+ */
+NonSequentialArray.prototype[Symbol.iterator] =  function* () {
+	arr = Object.values(this);
+	last = arr.length;
+	i = 0;
+	while (true) {
+		if (i !== last)
+			yield arr[i++];
+		return arr[i];
+	}
 }
 
 /**	=== PERFORMANCE TESTING ===
