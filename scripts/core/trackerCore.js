@@ -830,9 +830,10 @@ function trackerCore_Profile (specifics={}) {
  * 					To which profile it belongs to.
  * 					Can be null in which case it's just listed at the bottom without a profile.
  *
- * 				players [Array] <4 players; P1 is human, rest computers; characters are 'mario', 'luigi', 'yoshi', 'peach' in that order; all players are unnamed>
+ * 				players [Object] <4 players; P1 is human, rest computers; characters are 'mario', 'luigi', 'yoshi', 'peach' in that order; all players are unnamed>
  *					A list of all players.
- * 					Array consists of objects. See the arguments of 'trackerCore_Player()' to see what each object should contain.
+ * 					Should be a pseudo-array or even a NonSequentialArray (see helpers.js).
+ * 					Any non-NonSequentialArray will be converted to one (meaning all non-numbered properties will be deleted.
  *
  * 				game [String] <'_all'>
  * 					*See documentation
@@ -910,7 +911,7 @@ function trackerCore_Savefile (specifics={}) {
 
 	//...if not, then complain
 	} else if (specifics.settingsType !== undefined) {
-		console.warn(`[MPO] trackerCore_Profile() received a invalid value for 'settingsType' (check documentation in 'trackerCore.js'): `, specifics.settingsType);
+		console.warn(`[MPO] trackerCore_Savefile() received a invalid value for 'settingsType' (check documentation in 'trackerCore.js'): `, specifics.settingsType);
 	}
 
 	//and the same with 'perCounterStatusType'
@@ -918,7 +919,7 @@ function trackerCore_Savefile (specifics={}) {
 		this.inheritanceTypes.perCounterStatusType = specifics.perCounterStatusType;
 
 	} else if (specifics.perCounterStatusType !== undefined) {
-		console.warn(`[MPO] trackerCore_Profile() received a invalid value for 'perCounterStatusType' (check documentation in 'trackerCore.js'): `, specifics.perCounterStatusType);
+		console.warn(`[MPO] trackerCore_Savefile() received a invalid value for 'perCounterStatusType' (check documentation in 'trackerCore.js'): `, specifics.perCounterStatusType);
 	}
 
 
@@ -971,14 +972,18 @@ function trackerCore_Savefile (specifics={}) {
 	});
 
 	//if players are specified then create a 'trackerCore_Player()' object for each player specified
-	if (specifics.players instanceof NonSequentialArray) {
-		for (const item of specifics.players) {
+	if (typeof specifics.players === 'object') {
+		for (const key in specifics.players) {
 			//specify which slot to use to skip 0
-			this.players.add(new trackerCore_Player(item), this.players.length + 1);
+			this.players.add(new trackerCore_Player(specifics.players[key]), this.players.length + 1);
 		}
 
 	//else, if no players are specified then use the defaults
 	} else {
+		if (specifics.players !== undefined) {
+			console.warn(`[MPO] trackerCore_Savefile() received a invalid 'specifics.players' argument: `, specifics.players, ` - Has to be an Array or a NonSequentialArray.${(specifics._premade) ? ` - 'specifics._premade' was specified, the value may be from there.` : ''}`);
+		}
+
 		this.players.add(new trackerCore_Player({
 			character: 'mario',
 			com: false

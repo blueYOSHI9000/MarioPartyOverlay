@@ -468,11 +468,13 @@ function isIterable (obj) {
  * 	Can use 'for ... of' & 'for ... in' (is enumerable & iterable).
  * 	Has a 'length' property.
  * 	Does NOT have Array functions on it.
+ * 	WARNING: Will be converted to an object when using 'JSON.stringify()' on it. When storing and parsing this in JSON then you will have to manually detect what's supposed to be a NS-Array and whats supposed to be an actual object. Use 'NonSequentialArray.convertFrom()' to convert an object to a NS-Array. See it's doc below, it may drop some properties.
  *
  * 	Args:
  * 		*any* [*Any*]
  * 			All arguments will be added to the resulting NS-Array in order starting at 0, same as 'new Array()' (essentially just calls '.add()' on every argument with no slot given).
  * 			Does NOT convert an array to this. If you want to convert an array to this, use 'new NonSequentialArray(...arr)' where 'arr' is your array.
+ * 			Or alternatively use 'NonSequentialArray.convertFrom()' to convert any object to an NS-Array (though the above is faster for arrays). See it's doc below, it may drop some properties.
  *
  * 	Constructs:
  * 		length [Number]
@@ -484,6 +486,9 @@ function isIterable (obj) {
  *
  * 		remove [Function]
  * 			Removes a function from the NS-Array. See below this function for docs.
+ *
+ * 		convertFrom [Function]
+ * 			Not meant to be used on an NS-Array. Can convert an object or array to a NS-Array. See below this function for docs.
  */
 function NonSequentialArray () {
 	if (!new.target) {
@@ -623,6 +628,45 @@ Object.defineProperty(NonSequentialArray.prototype, 'remove', {
 	writable: true
 });
 
+/**	NonSequentialArray.convertFrom() - Converts an object or an Array to a NS-Array. Should be called via 'NonSequentialArray.convertFrom()' and NOT on a NS-Array. Same thing as 'Array.isArray()'.
+ *
+ * 	Args:
+ * 		input [Object/Array]
+ * 			The object/array to be converted.
+ * 			NOTE: All keys that are not a just a number will be ignored and dropped. The property '1' is allowed, the property '1abc' is not and will be ignored. Will be logged to console.
+ *
+ * 	Returns [NonSequentialArray]:
+ * 		An NS-Array containing the specified values.
+ */
+Object.defineProperty(NonSequentialArray.prototype, 'convertFrom', {
+	value: function (input) {
+		if (typeof input !== 'object') {
+			console.warn(`[helpers.js] NonSequentialArray.convertFrom() received a non-object as 'input': `, input, ` - returning empty NonSequentialArray now.`);
+			return new NonSequentialArray();
+		}
+
+		let NSA = new NonSequentialArray();
+
+		for (let key in input) {
+			//Note that we convert the string to a number here but still pass the string over to 'NonSequentialArray.add()' without converting that one
+				//That's because some dumbass could name a property '+Infinity'.
+				//Note that calling a property just 'Infinity' or even '-Infinity' does not make one an idiot as you can convert those to a number and still be able to access the property, HOWEVER that does not apply to '+Infinity'. You cannot access that property with a number, and because of that converting 'key' to a number could break everything.
+				//Be mindful of Patrick Star the programmer, don't wanna ruin his day.
+				//and also because 'NonSequentialArray.add()' converts it a number anyway (though this could have sped things up a bit, but again, could break everything for an idiot)
+			if (Number.isNaN(+key)) {
+				console.warn(`[helpers.js] NonSequentialArray.convertFrom() received a non-number as a key in 'input'. It's value will be ignored. - input: `, input);
+				continue;
+			}
+
+			NSA.add(input[key], key);
+		}
+
+		return NSA;
+	},
+	enumerable: false,
+	writable: true
+});
+
 /**	Iterator of NonSequentialArray. Useful for 'for ... of' loops.
  *
  * 	Gets list of values with 'Object.values()' (faster than 'Object.keys()', I'm not kidding), then loops until it reaches the last entry and returns instead of yielding (HAS to be done on the last item, NOT afterwards).
@@ -632,8 +676,10 @@ NonSequentialArray.prototype[Symbol.iterator] =  function* () {
 	last = arr.length;
 	i = 0;
 	while (true) {
-		if (i !== last)
+		if (i !== last) {
 			yield arr[i++];
+			continue;
+		}
 		return arr[i];
 	}
 }

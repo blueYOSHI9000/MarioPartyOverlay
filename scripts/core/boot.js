@@ -316,13 +316,15 @@ function boot_loadLocalStorage () {
 	//if a 'currentSavefileSlot' property exists then use it
 	if (ls.currentSavefileSlot !== undefined) {
 		//parse the data (since it's just a number a 'JSON.parse()' isn't needed)
-		const parsedCurrentSavefileSlot = Number(ls.currentSlot);
+		const parsedCurrentSavefileSlot = Number(ls.currentSavefileSlot);
 
 		//if it's a proper number then apply it (an 'else' isn't needed since it's already at 0)
 		if (Number.isSafeInteger(parsedCurrentSavefileSlot) === true) {
 			trackerCore_status.savefiles.currentSlot = parsedCurrentSavefileSlot;
 		}
 	}
+	//we do NOT have to load the savefile now because the entire rest of the website will be built around this savefile already being selected.
+		//the point of "loading savefiles" is to change the website according to the new savefile, but anything that could be changed isn't even there yet
 
 	//load savefiles if present
 	if (ls.savefiles !== undefined) {
