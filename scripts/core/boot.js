@@ -91,7 +91,6 @@ const boot_scriptsToLoad = [
 
 		//self-contained "libraries" of sort
 			//(these files should only rely on 'helpers.js' and each other, they do nothing that's specific to MPO either so anyone can use it in their own project)
-			'scripts/interface/inputfield.js', //this handles user-input, like creating a checkbox or a button
 			'scripts/interface/interaction.js', //this handles dragging/resizing stuff (mainly modals)
 			'scripts/interface/modal.js', //this creates modals, kinda like opening a new window but all done within the site itself with HTML
 
@@ -149,7 +148,6 @@ const boot_stylesToLoad = [
 	'styles/navbar.css',
 	'styles/settings.css',
 	'styles/tracker.css',
-	'styles/inputfield.css',
 	'styles/interaction.css'
 ];
 

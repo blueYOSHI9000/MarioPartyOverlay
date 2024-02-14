@@ -142,3 +142,32 @@ body {
      */
     height: unset !important;
 }
+
+.imgButton {
+	/**	Give them a fixed size. 80px mainly because it's neither too big nor too small.
+	 */
+	height: 80px;
+	width: 80px;
+
+	/**	Give them a transparent look and a less transparent one when hovering so it feels like a button. Exact transparency level is a WIP.
+	 */
+	opacity: .5;
+}
+.imgButton:hover {
+	opacity: .7;
+}
+.imgButton:active {
+	opacity: .9;
+}
+
+/**	This selects all selected image-buttons.
+ */
+.imgButton.imgButtonSelected {
+	/**	Make them fully visible.
+	 */
+	opacity: 1;
+
+	/**	Give it a yellow outline.
+	 */
+	filter: drop-shadow(0px 0px 6px #fff82b);
+}

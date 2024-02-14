@@ -76,34 +76,38 @@ function commonInterface_createCounterList (parent, player) {
  * 		Use 'inputfield_getValue(elem)' with this element as it's argument to get the character selected.
  */
 function commonInterface_createCharacterSelection (parent, game=updatesTracker_getGame()) {
+	parent = cElem('span', parent, {
+		class: 'commonInterface_highlightCurrentPlayer'
+	});
+
 	//get all characters
 	const characters = dbparsing_getCharacterList(game);
 
-	let fieldOptions = [];
+	for (const name in characters) {
 
-	//loop through all characters
-	for (const key in characters) {
-		const item = characters[key];
+		const imgSrc = dbparsing_getIcon(`characters.${name}`, game);
 
-		//get image source
-		const imgSrc = dbparsing_getIcon(`characters.${key}`, game);
+		const fullName = characters[name].metadata.fullName;
 
-		//get character name
-		const fullName = item['metadata']['fullName'];
-
-		fieldOptions.push({
-			name: fullName,
-			value: key,
-			src: imgSrc
+		cElem('img', parent, {
+			src: imgSrc,
+			class: 'charSelectButton imgButton',
+			title: fullName,
+			'data-charname': name
 		});
 	}
 
-	//create the character selection
-	return inputfield_createField('radio-image', parent, {
-		options: fieldOptions,
-		cssClass: 'commonInterface_characterSelection',
-		tag: 'character'
-	});
+	const playerList = trackerCore_getSavefile().players;
+
+	for (const playerNum in playerList) {
+		let targetElem = parent.querySelector(`[data-charname="${playerList[playerNum].character}"]`);
+
+		if (targetElem instanceof HTMLElement) {
+			targetElem.classList.add(`player${playerNum}`);
+		}
+	}
+
+	commonInterface_updatePlayerSelection(null, parent);
 }
 
 /**	Creates a player selection.
@@ -119,30 +123,76 @@ function commonInterface_createCharacterSelection (parent, game=updatesTracker_g
  * 		Use 'inputfield_getValue(elem)' with this element as it's argument to get the player selected.
  */
 function commonInterface_createPlayerSelection (parent) {
-	return inputfield_createField('radio-image', parent, {
-		options: [
-			{
-				name: 'Player 1',
-				value: '1',
-				src: 'images/icons/misc/old/mp9/p1.png'
-			},
-			{
-				name: 'Player 2',
-				value: '2',
-				src: 'images/icons/misc/old/mp9/p2.png'
-			},
-			{
-				name: 'Player 3',
-				value: '3',
-				src: 'images/icons/misc/old/mp9/p3.png'
-			},
-			{
-				name: 'Player 4',
-				value: '4',
-				src: 'images/icons/misc/old/mp9/p4.png'
-			}
-		],
-		cssClass: 'commonInterface_playerSelection',
-		tag: 'player'
+	parent = cElem('span', parent, {
+		class: 'commonInterface_highlightCurrentPlayer'
 	});
+
+	const playerList = trackerCore_getSavefile().players;
+
+	for (const playerNum in playerList) {
+
+		cElem('img', parent, {
+			src: `images/icons/misc/old/mp9/p${playerNum}.png`,
+			class: `playerSelectButton player${playerNum} imgButton`,
+			title: playerList[playerNum].name ?? `Player ${playerNum}`,
+			'data-player': playerNum
+		});
+	}
+
+	commonInterface_updatePlayerSelection(null, parent);
+}
+
+let commonInterface_currentPlayerSelected = 1;
+
+/**	Highlights the currently selected player on various selections like the character select modal.
+ *
+ * 	Loops through all HTML elements with the 'commonInterface_highlightCurrentPlayer' CSS class (on all that can be found via 'document.querySelector()' anyway), unless specified otherwise.
+ * 	Adds the 'imgButtonSelected' class on all elements that have the corresponding 'player#' CSS class (as in 'player1', 'player2', etc).
+ * 	This will update ALL elements with the CSS class, meaning they will always be synchronized.
+ *
+ * 	Note that "currently selected player" means the player you want to update currently, see the character modal for reference. The tracker at its core doesn't have a "currently selected player".
+ *
+ * 	Args:
+ * 		playerNum [Number/String/null] <last player selected>
+ * 			The player that should be selected.
+ * 			If this is null or undefined then it will simply use the player last selected (stored in 'commonInterface_currentPlayerSelected').
+ *
+ * 		specifics [Object]
+ * 			Consists of the following:
+ *
+ * 				onlyElem [HTMLElement] <all with class 'commonInterface_highlightCurrentPlayer'>
+ * 					If used, the function will only update this element.
+ */
+function commonInterface_updatePlayerSelection (playerNum=commonInterface_currentPlayerSelected, onlyElem) {
+	if (typeof playerNum === 'string') {
+		playerNum = Number(playerNum);
+	}
+
+	if (Number.isSafeInteger(playerNum) === true) {
+		commonInterface_currentPlayerSelected = playerNum;
+	} else {
+		if (playerNum !== null) {
+			console.warn(`[MPO] commonInterface_updatePlayerSelection() received an invalid 'playerNum' (has to be either a number or null): `, playerNum);
+		}
+		playerNum = commonInterface_currentPlayerSelected;
+	}
+
+	//create a list of all elements to loop through
+		//if 'onlyElem' was specified (and is valid) then create an array with just that
+		//otherwise actually fetch a list of all elements needed
+	let list = (onlyElem instanceof HTMLElement) ? [onlyElem] : document.querySelectorAll('.commonInterface_highlightCurrentPlayer');
+
+	for (const container of list) {
+		container.setAttribute('data-currentplayer', playerNum);
+
+		//remove 'imgButtonSelected'
+		for (const imgElem of container.querySelectorAll('.imgButtonSelected')) {
+			imgElem.classList.remove('imgButtonSelected');
+		}
+
+		//add 'imgButtonSelected'
+		for (const imgElem of container.querySelectorAll(`.player${playerNum}`)) {
+			imgElem.classList.add('imgButtonSelected');
+		}
+	}
 }

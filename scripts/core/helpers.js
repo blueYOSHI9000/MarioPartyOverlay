@@ -128,6 +128,7 @@ function loadScripts (scripts, onload) {
  *
  *		attributes [Object]
  *			A list of attributes the element should have. {src: "scripts/boot.js"} would give the element a 'src="scripts/boot.js"' attribute.
+ * 			NOTE: All attributes are added with '.setAttribute()' except functions which are added directly. This means all non-functions will be converted to a string by the browser.
  *
  *	Returns [DOM Element/Boolean]:
  *		The DOM Element that was created.
@@ -147,7 +148,7 @@ function cElem (type, parent, attributes) {
 		//but only return if the element has to be appended (if it doesn't have to be appended then 'parent' isn't needed anyway)
 
 		//note that we only check whether '.appendChild()' exists because that's all we need it for
-	if (typeof parent.appendChild !== 'function' && appendElem === true) {
+	if (typeof parent?.appendChild !== 'function' && appendElem === true) {
 		console.warn('[helpers.js] cElem couldn\'t get parent.');
 		return null;
 	}
@@ -156,9 +157,14 @@ function cElem (type, parent, attributes) {
 	var elem = document.createElement(type);
 
 	//apply all attributes
+		//apply them differently if its a function
 	if (typeof attributes === 'object') {
 		for (let key in attributes) {
-			elem.setAttribute(key, attributes[key]);
+			if (typeof attributes[key] === 'function') {
+				elem[key] = attributes[key];
+			} else {
+				elem.setAttribute(key, attributes[key]);
+			}
 		}
 	}
 

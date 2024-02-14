@@ -43,20 +43,21 @@ function listeners_fillInPointerEventList () {
 
 	Object.assign(listeners_pointerEventList.down, {
 		//a counter
-		'tracker_counter'      : [trackerInterface_clickOnCounter,     'data-counter', 'data-player'],
+		        'tracker_counter'       : [trackerInterface_clickOnCounter      ,'data-counter', 'data-player'],
 
 		//navbar entries (in order)
-		'navbar_player'        : [handleNavbar_createCharacterModal],
-		//'navbar_game'
-		'navbar_counter'       : [handleNavbar_createCounterModal],
-		'navbar_trackerAction' : [handleNavbar_changeAction],
-		'navbar_trackerAmount' : [handleNavbar_changeAmount],
-		'navbar_saveTracker'   : [trackerCore_saveSavefiles],
-		'navbar_selectSavefile': [handleNavbar_createSavefileModal],
+		         'navbar_player'        : [handleNavbar_createCharacterModal    ],
+		//       'navbar_game'
+		         'navbar_counter'       : [handleNavbar_createCounterModal      ],
+		         'navbar_trackerAction' : [handleNavbar_changeAction            ],
+		         'navbar_trackerAmount' : [handleNavbar_changeAmount            ],
+		         'navbar_saveTracker'   : [trackerCore_saveSavefiles            ],
+		         'navbar_selectSavefile': [handleNavbar_createSavefileModal     ],
 
-		//inputfield stuff
-		'inputfield_callUpdate': [inputfield_executedAfterFieldChange, null],
-		'inputfield_label'     : [inputfield_executedAfterLabelPress,  null]
+		         'playerSelectButton'   : [commonInterface_updatePlayerSelection, 'data-player'],
+		         'charSelectButton'     : [handleNavbar_changeCharacterFromModal, 'data-charname'],
+
+		          'modal_pinHandle'     : [modal_togglePin                      , 'data-linkedtomodal']
 	});
 }
 

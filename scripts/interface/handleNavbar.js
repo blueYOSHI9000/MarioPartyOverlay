@@ -189,22 +189,13 @@ function handleNavbar_updateAmount () {
 function handleNavbar_createCharacterModal () {
 	//this will create the inside of the modal
 	const constructModal = function (main) {
-		//create a form
-		var form = inputfield_createField('form', main, {
-			onchange: handleNavbar_changeCharacterFromModal,
-			autoAddToForm: true
-		});
+		//creates the "P1", "P2", etc
+		commonInterface_createPlayerSelection(main);
 
-		//create a player selection
-		commonInterface_createPlayerSelection(form);
-
-		//line-break
-		cElem('br', form);
+		cElem('br', main);
 
 		//create a character selection
-		const charSelection = commonInterface_createCharacterSelection(form);
-
-		inputfield_setValue(charSelection, updatesTracker_getCharacter(1));
+		const charSelection = commonInterface_createCharacterSelection(main);
 	}
 
 	//create the actual modal
@@ -216,23 +207,15 @@ function handleNavbar_createCharacterModal () {
 
 /**	Called when changing the character from the character-selection modal.
  *
- * 	Should only be called by an input-field's 'onchange' function.
+ * 	Simply calls 'updatesTracker_setCharacter()'. Used to be more here, could probably be removed.
  *
  * 	Args:
- * 		value [*any*]
- * 			The value it gets from the input-field.
- *
- * 		fieldObj [Object]
- * 			The field-object.
+ * 		char [String]
+ * 			The name of the character as used in the database.
  */
-function handleNavbar_changeCharacterFromModal (value, fieldObj) {
-	//return if 'player' has been updated
-	if (fieldObj.propertyChanged === 'player') {
-		return;
-	}
-
+function handleNavbar_changeCharacterFromModal (char) {
 	//change the character
-	updatesTracker_setCharacter(Number(value.player), value.character);
+	updatesTracker_setCharacter(commonInterface_currentPlayerSelected, char);
 }
 
 //WIP - doesn't currently do anything
@@ -301,10 +284,11 @@ function handleNavbar_createSavefileModal () {
 			profileContainerList[key] = profileContainer;
 
 			//profile name
-			inputfield_createField('text', profileContainer, {
-				defaultValue: profileObj.name,
-				HTMLAttributes: {class: 'navbar_profileName'},
-				onchange: (val) => {trackerCore_status.profiles[key].name = val;}
+			cElem('input', profileContainer, {
+				type: 'text',
+				class: 'navbar_profileName',
+				value: profileObj.name,
+				onchange: (eventObj) => {trackerCore_status.profiles[key].name = eventObj.target.value;}
 			});
 
 			//add button to create a new savefile in this profile
@@ -432,29 +416,38 @@ function handleNavbar_createCounterModal () {
 				cElem('br', counterContainer);
 
 				//'active' checkbox
-				inputfield_createField('checkbox', counterContainer, {
-					defaultValue: counterStatus.active,
-					beforeText: 'Active: ',
-					onchange: () => {}
-				});
+
+				let label = cElem('label', counterContainer);
+				label.innerText = 'Active: ';
+
+				cElem('input', label, {
+					type: 'checkbox',
+					onchange: () => {}//WIP
+				})
+					.checked = counterStatus.active;
+
 
 				cElem('br', counterContainer);
 
-				//'highlightHighest' checkbox
-				inputfield_createField('checkbox', counterContainer, {
-					defaultValue: counterStatus.highlightHighest,
-					beforeText: 'Highlight highest stat: ',
-					onchange: () => {}
-				});
+				label = cElem('label', counterContainer);
+				label.innerText = 'Highlight highest stat: ';
+
+				cElem('input', label, {
+					type: 'checkbox',
+					onchange: () => {}//WIP
+				})
+					.checked = counterStatus.highlightHighest;
 
 				cElem('br', counterContainer);
 
-				//'highlightLowest' checkbox
-				inputfield_createField('checkbox', counterContainer, {
-					defaultValue: counterStatus.highlightLowest,
-					beforeText: 'Highlight lowest stat: ',
-					onchange: () => {}
-				});
+				label = cElem('label', counterContainer);
+				label.innerText = 'Highlight lowest stat: ';
+
+				cElem('input', label, {
+					type: 'checkbox',
+					onchange: () => {}//WIP
+				})
+					.checked = counterStatus.highlightLowest;
 			}
 		}
 	}

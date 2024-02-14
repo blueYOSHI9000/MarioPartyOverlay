@@ -45,6 +45,23 @@ function trackerInterface_updateCharacter (player) {
 		//replace the image source
 		item.src = src;
 	}
+
+	//Update all character selections
+
+	//first, remove the player from the previous character (by just removing the player everywhere, because its easier lol, and doesn't make a difference anyway)
+	let elemList = document.querySelectorAll(`.charSelectButton.player${player}`);
+	for (const elem of elemList) {
+		elem.classList.remove(`player${player}`);
+		elem.classList.remove('.imgButtonSelected');
+	}
+
+	//and then re-add the player on the new character
+	elemList = document.querySelectorAll(`.charSelectButton[data-charname="${charName}"]`);
+	for (const elem of elemList) {
+		elem.classList.add(`player${player}`);
+	}
+
+	commonInterface_updatePlayerSelection(player, {onlyOnePlayer: true})
 }
 
 /**	This updates all visuals to be in-line with what is actually saved in 'trackerCore_status'.

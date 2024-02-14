@@ -40,7 +40,7 @@
  * 			Simply provide the DOM Element it should be appended to.
  *
  * 			If embedding is used then the 'openOnTop', 'draggable' and 'resizeable' attributes will all be set to false.
- * 			Additionally the 'autoPin' attribute will be set to true.
+ * 			Additionally the 'startPinned' attribute will be set to true and 'pinnable' to false.
  * 			Note that this is subject to change (a feature to un-embed and re-embed might be added at some point).
  *			The "subject to change" thing is especially important for 'resizeable' since it might be possible in the future to resize embedded modals (at least the bottom right edge).
  *
@@ -50,25 +50,25 @@
  * 			If true the modal will open on top of all others.
  * 			If false it opens at the very bottom.
  *
- * 		autoPin [Boolean] <false>
+ * 		pinnable [Boolean] <true>
+ * 			If true the user can manually pin & unpin the modal.
+ *
+ * 		startPinned [Boolean] <false>
  * 			If true the modal will be pinned automatically.
  * 			If false the modal won't be pinned automatically.
  * 			See 'pinned' in the 'status' section below.
  *
  * 		collapsable [Boolean] <true>
- * 			If true the modal can be collapsed.
- * 			Note that the modal can always be collapsed manually, this only affects whether the user can collapse it by themselves.
+ * 			If true the user can manually collapse & expand the modal.
  *
  * 		startCollapsed [Boolean] <false>
  * 			If the modal should be collapsed after creation.
  *
  * 		draggable [Boolean] <true>
- * 			If true the modal can be moved around by the user.
- * 			Note that the modal can always be moved manually, this only affects whether the user can move it by themselves.
+ * 			If true the user can manually drag the modal around.
  *
  * 		resizeable [Boolean] <true>
- * 			If true the modal can be resized by the user.
- * 			Note that the modal can always be resized manually, this only affects whether the user can resize it by themselves.
+ * 			If true the user can manually resize the modal.
  *
  * 	=== MODAL STATUS ===
  *
@@ -107,7 +107,8 @@ const modal_defaultAttributes = {
 	embedTo:     null ,
 
 	openOnTop:   true ,
-	autoPin:     false,
+	pinnable   : true ,
+	startPinned: false,
 	collapsable: true ,
 	draggable:   true ,
 	resizeable:  true
@@ -181,7 +182,8 @@ function modal_ModalObject (specifics={}) {
 	//force some attributes if the modal should be embedded
 	if (isDOMElement(attributes.embedTo) === true) {
 		attributes.openOnTop  = false;
-		attributes.autoPin    = true ;
+		attributes.pinnable   = false;
+		attributes.startPinned= true ;
 		attributes.draggable  = false;
 		attributes.resizeable = false;
 
@@ -199,7 +201,8 @@ function modal_ModalObject (specifics={}) {
 	attributes.testModal      = Boolean(attributes.testModal     );
 
 	attributes.openOnTop      = Boolean(attributes.openOnTop     );
-	attributes.autoPin        = Boolean(attributes.autoPin       );
+	attributes.pinnable       = Boolean(attributes.pinnable      )
+	attributes.startPinned    = Boolean(attributes.startPinned   );
 	attributes.collapsable    = Boolean(attributes.collapsable   );
 	attributes.startCollapsed = Boolean(attributes.startCollapsed);
 	attributes.draggable      = Boolean(attributes.draggable     );
@@ -267,12 +270,12 @@ function modal_ModalObject (specifics={}) {
 
 	//create the 'pinned' status
 		//but convert it to a boolean first just to be sure
-	status.pinned = Boolean(attributes.autoPin);
+	status.pinned = Boolean(attributes.startPinned);
 }
 
 /** Creates a new modal window (or simply 'modal').
  *
- * 	Use this to create a test-modal: "modal_createModal(null, {testModal: true, autoPin: true, group: 'testo'});"
+ * 	Use this to create a test-modal: "modal_createModal(null, {testModal: true, startPinned: true, group: 'testo'});"
  *
  * 	Note that this will NOT check whether attributes are the correct type. If a string is provided for a attribute that requires a boolean then it WILL fail.
  *
@@ -331,6 +334,12 @@ function modal_createModal (constructModal, attributes={}) {
 	if (attributes.collapsable === true) {
 		cElem('span', menuBar, {class: 'modal_collapseHandle', 'data-linkedtomodal': modalObj.id})
 			.textContent = 'COLLAPSE/EXPAND!';
+	}
+
+	//add the pinnable element to the menu bar if needed
+	if (attributes.pinnable === true) {
+		cElem('span', menuBar, {class: 'modal_pinHandle', 'data-linkedtomodal': modalObj.id})
+			.textContent = 'UN-/PIN ME!';
 	}
 
 	//create the main body
@@ -610,17 +619,19 @@ function modal_closeThisModal (elem) {
 
 /**	Collapses and expands the modal.
  *
+ * 	Will bypass the 'collapsable' attribute of the modal.
+ *
  * 	Args:
  * 		modal [Number/String/DOM Element]
  * 			The modal.
- * 			Can be it's unique ID (can be either a number or string, so 6 and '6' are both fine).
+ * 			Can be its unique ID (can be either a number or string, so 6 and "6" are both fine).
  * 			Can also be the container DOM element (the one with the '.modal_container' class).
  *
  * 		action [String] <'toggle'>
  * 			What action should be done. Can be one of the following:
  * 				- 'collapse': Collapses the modal.
- * 				- 'expand': Expands the modal ('uncollapse' also works).
- * 				- 'toggle': Toggles the state of the modal. If it was expanded then it will be collapsed, if it was collapsed then it will be expanded.
+ * 				- 'expand'  : Expands the modal ('uncollapse' also works).
+ * 				- 'toggle'  : Toggles the state of the modal. If it was expanded then it will be collapsed, and vice versa.
  * 			On default or with a invalid 'action' argument it will simply pick 'toggle'.
  */
 function modal_toggleCollapse (modal, action='toggle') {
@@ -661,6 +672,86 @@ function modal_toggleCollapse (modal, action='toggle') {
 			elem.classList.toggle('modal_collapsed');
 			return;
 	}
+}
+
+/**	Pins and unpins the modal.
+ *
+ * 	Will bypass the 'pinnable' attribute of the modal.
+ *
+ * 	Args:
+ * 		modal [Number/String/DOM Element]
+ * 			The modal.
+ * 			Can be its unique ID (can be either a number or string, so 6 and "6" are both fine).
+ * 			Can also be the container DOM element (the one with the '.modal_container' class).
+ *
+ * 		action [String] <'toggle'>
+ * 			What action should be done. Can be one of the following:
+ * 				- 'pin'   : Pins the modal.
+ * 				- 'unpin' : Unpins the modal.
+ * 				- 'toggle': Toggles the state of the modal. If it was pinned then it will be unpinned, and vice versa.
+ * 			On default or with a invalid 'action' argument it will simply pick 'toggle'.
+ *
+ * 	Returns [Boolean]:
+ * 		Whether it successfully updated the modal. Failures will also be logged to console.
+ */
+function modal_togglePin (modal, action='toggle') {
+	//check if HTML Element
+	if (modal instanceof HTMLElement) {
+		const attr = Number(modal.getAttribute('data-modalid'));
+
+		if (Number.isSafeInteger(attr) !== true) {
+			console.warn(`[MPO] modal_togglePin() received a valid HTMLElement as 'modal', however it does not have a 'data-modalid' so it's likely not the HTML Element of the modal: `, modal, ` - Quitting now.`);
+			return false;
+		}
+		modal = attr;
+
+	//if string then convert
+	} else if (typeof modal === 'string') {
+		modal = Number(modal);
+
+		if (Number.isSafeInteger(modal) !== true) {
+			console.warn(`[MPO] modal_togglePin() received a string as 'modal' that could not be converted to a number. Quitting now.`);
+			return false;
+		}
+
+	//if not number either then complain
+	} else if (typeof modal !== 'number') {
+		console.warn(`[MPO] modal_togglePin() received a invalid 'modal' argument (has to be a number, a string or a HTML Element): `, modal, ` - Quitting now.`);
+		return false;
+	}
+
+
+	let modalObj = modal_openModals[modal];
+
+	if (typeof modalObj?.status !== 'object') {
+		console.warn(`[MPO] modal_togglePin() received a invalid modal ID as 'modal' (or if an HTML Element was given then it's 'data-modalid' attribute): `, modal, ` - That or the 'modal_openModals' entry (or its 'status' property) was invalid: `, modalObj, ` - Quitting now.`);
+		return false;
+	}
+
+	//actually pin or unpin the modal
+	switch (action) {
+
+		case 'pin':
+			modalObj.status.pinned = true;
+			break;
+
+		case 'unpin':
+			modalObj.status.pinned = false;
+			break;
+
+		case 'toggle':
+			//see below comment
+			let nonDefault = true;
+		default:
+			//complain if it got in here on accident
+			if (nonDefault !== true) {
+				console.warn(`[MPO] modal_toggleCollapse() received a invalid 'action' argument: "${action}". It will default to using 'toggle'.`);
+			}
+
+			modalObj.status.pinned = !modalObj.status.pinned;
+	}
+
+	return true;
 }
 
 /**	Gets the HTML element of the modal.

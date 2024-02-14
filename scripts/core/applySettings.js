@@ -67,26 +67,17 @@ function applySettings_updateSetting (settingName, newValue, specifics={}) {
 		console.warn(`[MPO] applySettings_updateSetting() received a invalid value as 'newValue': `, newValue);
 		return false;
 	}
+	if (applySettings_validateSetting(settingName, newValue) !== true) {
+		console.warn(`[MPO] applySettings_updateSetting() received a invalid 'newValue' (as validated by 'applySettings_validateSetting()'): `, newValue, ` - setting: `, settingName);
+		return false;
+	}
 
 	//use a switch case to determine how to set the value
 		//if a setting ever uses something other than a input-field then place it in here so it can be set properly
 	switch (settingName) {
 
-		//this is for updating a input-field
 		default:
-			//get the input-field
-			const elem = applySettings_getElement(settingName);
-
-			//update the input-field
-			if (isDOMElement(elem) === true) {
-				let fieldResult = inputfield_setValue(elem, newValue);
-
-				//complain and return if it failed
-				if (fieldResult === false) {
-					console.warn(`[MPO] applySettings_updateSetting() couldn't update the setting "${settingName}" as 'inputfield_setValue()' failed.`);
-					return false;
-				}
-			}
+			document.getElementById('tracker_counterTextColor').value = newValue;
 	}
 
 	//set the 'settings' object to the new value
@@ -338,9 +329,7 @@ function applySettings_validateSetting (setting, value) {
 
 		//validate a color value
 		case 'tracker_counterTextColor':
-			return inputfield_validateValue(value, {
-				fieldType: 'color'
-			});
+			return CSS.supports('color', value);
 
 		//complain and return if the setting doesn't exist
 		default:
@@ -441,7 +430,10 @@ function applySettings_getElement (settingName) {
  * 			Basically, if this is a string it uses that.
  * 			If it's a object it uses it's 'tag' property.
  */
-function applySettings_onChangeCall (newValue, settingName) {
+function applySettings_onChangeCall (eventObj) {
+	const settingName = eventObj.target.getAttribute('data-settingstag');
+	const newValue    = eventObj.target.value;
+
 	//if 'settingName' is an object then replace it with it's own 'tag' property
 		//basically, this gets the tag of a input-field if a 'FieldObject' is passed
 	if (typeof settingName === 'object') {
