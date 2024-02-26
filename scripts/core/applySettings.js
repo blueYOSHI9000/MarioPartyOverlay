@@ -10,15 +10,8 @@ var applySettings_defaultSettings = {
 
 	To add a new setting, the following things have to be done:
 		- Add the interface for it in 'buildSite_buildSettings()' (found in 'interface/buildSite.js').
-
-			> If a input-field is used the following attributes should be used:
-				- `onchange: applySettings_onChangeCall`: so it actually applies the value whenever the user changes it.
-				- `tag: 'tracker_counterTextColor'`: this needs to be the name of the setting! Used to identify which setting actually got updated.
-				- `HTMLAttributes: {'data-settingstag': 'tracker_counterTextColor'}`: again, needs to be the name of the setting. Used to find the setting whenever it has to be updated.
-
-			> If something other than a input-field is used:
-				- Make sure the 'onchange' event calls 'applySettings_onChangeCall()' with the correct arguments (current value first, name of setting second).
-				- Add the new setting to the switch inside 'applySettings_updateSetting()' so the setting can be updated properly.
+		- Make sure the 'onchange' event calls 'applySettings_onChangeCall()'.
+		- Add the new setting to the switch inside 'applySettings_updateSetting()' so the setting can be updated properly.
 
 		- Add the new setting to 'applySettings_validateSetting()' so it can be validated properly (note that the function isn't allowed to access the DOM Element).
 		- Add the default value in 'applySettings_defaultSettings' (right above this comment).
@@ -420,15 +413,8 @@ function applySettings_getElement (settingName) {
  * 	Only here to call 'applySettings_applySetting()' and 'trackerCore_saveSavefiles()'.
  *
  * 	Args:
- * 		newValue [*any*]
- * 			The new value that should be used.
- *
- * 		settingName [String/Object]
- * 			The name of the setting that has been updated.
- * 			You can also pass the 'FieldObject' from an input-field and it will automatically get it's tag.
- *
- * 			Basically, if this is a string it uses that.
- * 			If it's a object it uses it's 'tag' property.
+ * 		eventObj [Event]
+ * 			Just call it via '.onchange = applySettings_onChangeCall'. The onchange event automatically uses an Event object as its first argument.
  */
 function applySettings_onChangeCall (eventObj) {
 	const settingName = eventObj.target.getAttribute('data-settingstag');

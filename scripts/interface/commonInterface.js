@@ -142,6 +142,7 @@ function commonInterface_createPlayerSelection (parent) {
 	commonInterface_updatePlayerSelection(null, parent);
 }
 
+//needed for 'commonInterface_updatePlayerSelection()'
 let commonInterface_currentPlayerSelected = 1;
 
 /**	Highlights the currently selected player on various selections like the character select modal.

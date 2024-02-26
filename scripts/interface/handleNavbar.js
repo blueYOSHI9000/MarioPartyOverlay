@@ -393,6 +393,13 @@ function handleNavbar_createCounterModal () {
 			cElem('span', categoryContainer, {style: "font-family: 'mp9'; font-size: 18px; border-bottom: 2px solid black; margin: 5px 0 5px 3px;"})
 				.textContent = categoryKey;
 
+
+			cElem('br', categoryContainer);
+
+			handleNavbar_createCounterStatusOptions(categoryContainer, trackerCore_getSavefile().perCounterStatus[categoryKey]._category);
+
+			cElem('br', categoryContainer);
+
 			//loop through every counter and add it
 			for (const counterKey in trackerCore_status.counters.behaviour[categoryKey]) {
 
@@ -415,43 +422,71 @@ function handleNavbar_createCounterModal () {
 
 				cElem('br', counterContainer);
 
-				//'active' checkbox
-
-				let label = cElem('label', counterContainer);
-				label.innerText = 'Active: ';
-
-				cElem('input', label, {
-					type: 'checkbox',
-					onchange: () => {}//WIP
-				})
-					.checked = counterStatus.active;
-
-
-				cElem('br', counterContainer);
-
-				label = cElem('label', counterContainer);
-				label.innerText = 'Highlight highest stat: ';
-
-				cElem('input', label, {
-					type: 'checkbox',
-					onchange: () => {}//WIP
-				})
-					.checked = counterStatus.highlightHighest;
-
-				cElem('br', counterContainer);
-
-				label = cElem('label', counterContainer);
-				label.innerText = 'Highlight lowest stat: ';
-
-				cElem('input', label, {
-					type: 'checkbox',
-					onchange: () => {}//WIP
-				})
-					.checked = counterStatus.highlightLowest;
+				handleNavbar_createCounterStatusOptions(counterContainer, counterStatus);
 			}
 		}
 	}
 
 	//actually create the modal
 	modal_createModal(constructModal);
+}
+
+/**	Creates options for changing per-counter-status.
+ *
+ * 	Currently only displays options and doesn't allow you to change them.
+ *
+ * 	Args:
+ * 		parent [HTML Element]
+ * 			Where the list should be created in. Does not create a container for it.
+ *
+ * 		counterStatus [trackerCore_CounterStatus]
+ * 			The counter-status object to display.
+ */
+function handleNavbar_createCounterStatusOptions (parent, counterStatus) {
+	if (parent instanceof HTMLElement === false) {
+		console.warn(`[MPO] handleNavbar_createCounterStatusOptions() received a non-HTML Element as 'parent': `, parent, ' - Will return without doing anything.');
+		return;
+	}
+
+	if (counterStatus instanceof trackerCore_CounterStatus === false) {
+		console.warn(`[MPO] handleNavbar_createCounterStatusOptions() received a invalid value as 'counterStatus' (has to be a 'trackerCore_CounterStatus' object): `, counterStatus, ' - Will return without doing anything.');
+		return;
+	}
+
+
+	//'displayed'
+
+	let label = cElem('label', parent);
+	label.innerText = 'Displayed: ';
+
+	cElem('input', label, {
+		type: 'checkbox',
+		onchange: () => {}//WIP
+	})
+		.checked = counterStatus?._default?.displayed ?? false;
+
+
+	//'highlighted'
+
+	cElem('br', parent);
+
+	label = cElem('label', parent);
+	label.innerText = 'Highlight highest stat: ';
+
+	cElem('input', label, {
+		type: 'checkbox',
+		onchange: () => {}//WIP
+	})
+		.checked = counterStatus?._default?.highlighted.highest ?? false;
+
+	cElem('br', parent);
+
+	label = cElem('label', parent);
+	label.innerText = 'Highlight lowest stat: ';
+
+	cElem('input', label, {
+		type: 'checkbox',
+		onchange: () => {}//WIP
+	})
+		.checked = counterStatus?._default?.highlighted.lowest ?? false;
 }

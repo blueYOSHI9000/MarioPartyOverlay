@@ -211,24 +211,35 @@
 		|		> settings [Object]
 		|			All settings for this savefile. Depends heavily on 'inheritanceTypes.settingsType', sometimes this property may even be ignored.
 
-		|		> perCounterStatus [Object]
+		|		> perCounterStatus [PerCounterStatus Object]
 		|			This includes options for each counter individually. Depends heavily on 'inheritanceTypes.perCounterStatusType', sometimes this property may even be ignored.
 
 		|			> 'bonusStars'/'spaces'/'misc'/etc [Object]
 		|				Lists all the counters that are part of this category.
-		|				See below in 'counters' for a full explanation.
 
-		|				> 'runningStar'/'blueSpace'/'distanceWalked'/etc [Object]
+		|				> _category [CounterStatus object]
+		|					Includes options that target all counters within this category.
+		|					See property below for all properties this includes.
+		|					Values from individual counters below will take priority over this.
+		|					If a value here is undefined and is also undefined on the counter below then it will simply be off (as in, not displayed and not highlighted).
+
+		|				> 'runningStar'/'blueSpace'/'distanceWalked'/etc [CounterStatus object]
 		|					A counter. This includes options targeted at this specific counter.
+		|					If a value here is undefined then it has no specific options for this counter and instead will use options from the category the counter is in.
 
-		|					- active [Boolean]
-		|						Whether this counter is activated or not.
+		|					- displayed [Boolean/undefined]
+		|						Whether this counter is displayed or not.
 
-		|					- highlightHighest [Boolean]
-		|						If the highest number should be highlighted.
+		|					- highlighted [Highlighted object / undefined]
+		|						Whether a counter should be highlighted or not, and how.
+		|						Includes following properties if this is a 'Highlighted' object:
 
-		|					- highlightLowest [Boolean]
-		|						If the lowest number should be highlighted.
+		|							- highest [Boolean]
+		|								The highest score among the players will be highlighted.
+		|								Can't be undefined.
+
+		|							- lowest [Boolean]
+		|								Same as 'highest' but the lowest score will be highlighted.
  */
 
 //TODO: Replace this with a more dynamic approach
@@ -658,6 +669,8 @@ function trackerCore_findLinkedCounter (linkedCounter) {
 	return finalCounter;
 }
 
+
+
 // === CONSTRUCTORS ===
 
 /**	This sets up a 'Profile' object which contains one profile. Big surprise. (See documentation under 'trackerCore_status' > 'profiles')
@@ -1049,6 +1062,13 @@ function trackerCore_PerCounterStatus (premade={}) {
 		//create the category
 		this[categoryKey] = {};
 
+		//create the '_cetagory' CounterStatus object
+		if (typeof premade[categoryKey]._category === 'object') {
+			this[categoryKey]._category = new trackerCore_CounterStatus(premade[categoryKey]._category);
+		} else {
+			this[categoryKey]._category = new trackerCore_CounterStatus();
+		}
+
 		//the following loops through all counters
 			//first, check if this category was already specified in 'premade'
 			//then create a 'trackerCore_CounterStatus()' object for every counter - if the category did exist in 'premade' then take values from there, if not then use defaults
@@ -1091,24 +1111,29 @@ function trackerCore_PerCounterStatus (premade={}) {
  * 		specifics [Object]
  * 			Contains the following properties:
  *
- * 				active [Boolean] <true>
- * 					Whether the counter is enabled or not.
+ * 				_default [Object] <undefined on all>
+ * 					Contains following properties:
  *
- * 				highlightHighest [Boolean] <true>
- * 					Whether the highest stat should be highlighted.
+ * 						displayed [Boolean/undefined] <undefined>
+ * 							Whether the counter is displayed or not.
+ * 							undefined means "nothing specified here", which causes MPO to just look elsewhere for the value. //TODO: better explanation
  *
- * 				highlightLowest [Boolean] <false>
- * 					Whether the lowest stat should be highlighted.
+ * 						highlighted [trackerCore_Highlighted / Object / undefined] <*highest highlighted*>
+ * 							Whether the highest stat should be highlighted.
+ * 							undefined means the same as it does on 'displayed'.
+ * 							Can use a generic object instead of a trackerCore_Highlighted object, however its values WON'T be verified so worst case it uses default values instead of undefined.
+ *
+ * 				*game* [Object] <undefined on all>
+ * 					Name is '_all', 'mp1', 'mptt100' or any other game.
+ * 					Includes same properties as '_default' above.
  *
  * 	Constructs:
- * 		active [Boolean]
- * 			Whether the counter is enabled or not.
+ * 		displayed [Boolean/undefined]
+ * 			Whether the counter is displayed or not.
  *
- * 		highlightHighest [Boolean]
- * 			Whether the highest stat should be highlighted.
- *
- * 		highlightLowest [Boolean]
- * 			Whether the lowest stat should be highlighted.
+ * 		highlighted [trackerCore_Highlighted/undefined]
+ * 			Whether and how the counter should be highlighted.
+ * 			See 'trackerCore_Highlighted()' for more details.
  */
 function trackerCore_CounterStatus (specifics={}) {
 	//complain and use defaults if 'specifics' is invalid
@@ -1117,15 +1142,108 @@ function trackerCore_CounterStatus (specifics={}) {
 		specifics = {};
 	}
 
-	//set 'active'
-		//use the provided value if available, otherwise true
-	this.active = (typeof specifics.active === 'boolean') ? specifics.active : true;
+	//create a list of all game names (with '_default') and then iterate over it
+		//don't iterate over all 'specifics' properties in case theres invalid properties in there, this way we can sanitize it
 
-	//set 'highlightHighest'
-	this.highlightHighest = (typeof specifics.highlightHighest === 'boolean') ? specifics.highlightHighest : true;
+		//TODO: '_all' might be added to the '_index' property in the database at some point
+	const gameList = ['_default', '_all', ...mpdb._index];
+	for (const game of gameList) {
 
-	//set 'highlightLowest'
-	this.highlightLowest  = (typeof specifics.highlightLowest  === 'boolean') ? specifics.highlightLowest  : false;
+		if (typeof specifics[game] !== 'object') {
+			//only complain if its not undefined (since thats allowed)
+			if (specifics[game] !== undefined) {
+				console.warn(`[MPO] trackerCore_CounterStatus() received an non-object as 'specifics.${game}': `, specifics.game);
+			}
+			continue;
+
+		//an empty object can just be ignored
+			//it can be intentional (especially when just passing over parsed CounterStatus objects that just didn't have anything in them anymore)
+		} else if (Object.keys(specifics[game]).length === 0) {
+			continue;
+		}
+
+		this[game] = {};
+
+		let value;
+
+
+
+		// === displayed ===
+
+		value = specifics[game].displayed;
+
+		if (typeof value === 'boolean') {
+			this[game].displayed = value;
+
+		//if invalid then complain
+			//undefined obviously won't have to be set
+			//the browser does actually know the difference between an intentional undefined and a value simply not having been defined yet but for efficiency we won't set it anyway
+			//no clue if that saves any memory or speed though but eh ¯\_(ツ)_/¯
+		} else if (value !== undefined) {
+			console.warn(`[MPO] trackerCore_CounterStatus() received a invalid 'displayed' property from 'specifics.${game}' (has to be either ${undefined} or a boolean): `, value, ' - Will be replaced with undefined.');
+		}
+
+
+
+		// === highlighted ===
+
+		value = specifics[game].highlighted;
+
+		if (value instanceof trackerCore_Highlighted) {
+			this[game].highlighted = value;
+
+		} else if (typeof value === 'object') {
+			this[game].highlighted = new trackerCore_Highlighted(value);
+
+		//if invalid then complain
+			//see 'displayed' above for full reasoning
+		} else if (value !== undefined) {
+			console.warn(`[MPO] trackerCore_CounterStatus() received a invalid 'highlighted' property from 'specifics.${game}' (has to be either ${undefined}, a boolean or a 'trackerCore_Highlighted' object): `, value, ' - Will be replaced with undefined.');
+		}
+	}
+}
+
+/**	This creates an object for saving how a counter should be highlighted (if at all)
+ *
+ * 	Arguments:
+ * 		specifics [Object]
+ * 			Contains the following properties:
+ *
+ * 				highest [Boolean] <true>
+ * 					Whether or not the highest score should be highlighted.
+ *
+ * 				lowest [Boolean] <true>
+ * 					Same as above but for the lowest score.
+ *
+ * 	Constructs:
+ * 		highest [Boolean]
+ * 			Whether or not the highest score should be highlighted.
+ *
+ * 		lowest [Boolean]
+ * 			Same as above but for the lowest score.
+ */
+function trackerCore_Highlighted (specifics={}) {
+	//complain and use defaults if 'specifics' is invalid
+	if (typeof specifics !== 'object') {
+		console.warn(`[MPO] trackerCore_Highlighted() received a non-object as 'specifics': "${specifics}".`);
+		specifics = {};
+	}
+
+	//default values
+	this.highest = true ;
+	this.lowest  = false;
+
+	if (typeof specifics.highest === 'boolean') {
+		this.highest = specifics.highest;
+	} else if (specifics.highest !== undefined) {
+		console.warn(`[MPO] trackerCore_Highlighted() received a non-boolean as 'highest': `, specifics.highest, ` - Will use ${this.highest} instead.`);
+	}
+
+	if (typeof specifics.lowest === 'boolean') {
+		this.lowest = specifics.lowest;
+	} else if (specifics.lowest !== undefined) {
+		console.warn(`[MPO] trackerCore_Highlighted() received a non-boolean as 'lowest': `, specifics.lowest, ` - Will use ${this.lowest} instead.`);
+	}
 }
 
 /**	This creates a player object for 'trackerCore_status'.
