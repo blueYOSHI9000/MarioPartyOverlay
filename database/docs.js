@@ -1688,6 +1688,8 @@ Also, don't rely on this too much, it will be changed drastically whenever it's 
 	- In addition to each game, '_all' also has this object to list all bonus stars in the entire series.
 		- Generally, the behaviour that's present in most games should be used. Though this isn't a fixed rule.
 	- This object always has a '_index' array at the beginning that lists all entries as strings.
+	- In order to track stats some counters may need to be added to accomodate some bonus stars like "Minigame Star".
+		- Generally, one would be needed for every single possibility (as in, one per bonus star and if present, one per details option) unless that can be combined with other database entries (like "Happening Star" which could simply depend on the counter for "landed on Happening Space").
 
 	## Variables inside bonus stars
 		- metadata [Object]

@@ -56,23 +56,53 @@
 
 						- counterRelationType [String]
 							Defines how the counter works. Can be one of the following:
-								- origin: The counter saves stats completely on its own, they originate from here.
-								- collection: The counter is a collection of others. Stats are saved on here but changes on the other counters will also be applied here.
-								- linked: The counter is linked to another. Stats are saved on both and will always be the same.
+								- 'origin':
+									Stats originate from here. It is a standalone counter that just tracks stats all on its own.
+
+								- 'collection':
+									A collection of other counters. Stats are stored on here but changes on the other counters will also be applied here.
+
+								- 'linked':
+									Linked to another counter. No stats are stored on here, it simply redirects all calls to another counter.
+									Linked Counters will always be dead-ends; they can't be part of collections and can't be linked to. Attempts to do so are simply redirected to the counter linked.
+
+								- 'switchlink':
+									Switches between different links. Stats are stored on here.
+									Has a list of counters it can be linked to. Depending on factors like which game or board is selected it switches between one of those links.
+									When linked to one of those counters it behaves as a sort of "one-way link" towards this counter.
+									Can also be linked to nothing (null) in which case it behaves like an origin.
+									This is the only relation-type that can change its behaviour while the site is running.
+									This can both be part of a collection and be linked to.
+
+									Basically, 'bonusStars.minigameStar' would have a list of ['misc.minigameCoins', 'misc.minigameWins', null].
+									Only one counter can be linked at a time. So if MPDS is selected then 'misc.minigameWins' would be linked.
+									Meaning, if 'misc.minigameWins' is updated then it will send that update to this counter ('bonusStars.minigameStar'). If this counter is updated it will only update itself, that's the "one-way link" part of it.
+									Then, if the user changes the game to MP6 it will now link to 'misc.minigameCoins'. Following will happen when you update these counters:
+									Update 'misc.minigameCoins' -> update this counter ('bonusStars.minigameStar')
+									Update 'bonusStars.minigameStar' -> no other counters are updated (again, it's a one-way)
+									Update 'misc.minigameWins' -> no other counters are updated because this one is no longer linked
+									And finally, if the game is changed to '_all' then it will be linked to null, which means "don't link at all", so it will simply run on its own without getting affected by any other counters.
 
 						> counterRelations [Object]
 							The relations to other counters. Depends a lot on what 'counterRelationType' is.
 
-							- linkedFrom [Array]
-								A list of all counters that are linked to this.
+								- updateFollowing [Array] <undefined>
+									A list of all counters that should be updated whenever this counter gets changed.
+									Will mostly consist of collections and switchlinks.
+									This property is found on all types (incl. 'switchlink') except 'linked' as those can't be linked to.
 
-							- linkTo [String/undefined]
-								Only used if 'counterRelationType' is 'linked'. Will be undefined if it's a different type.
+								- collectionChildren [Array] <undefined>
+									A list of all children of this collection.
+									Only found on 'collection' type counters.
 
-							- collectionChildren [Array/undefined]
-								Only used if 'counterRelationType' is 'collection'. Will be undefined if it's a different type.
-								A list of all counters that are part of this collection.
-								The counter this one is linked to.
+								- linkTo [String/null] <undefined>
+									The counter this is linked to.
+									Only found on 'linked' & 'switchlink' type counters. In the latters case this is the currently linked counter.
+									null is only allowed on 'switchlink' type counters.
+
+								- switchlist [Array] <undefined>
+									A list of all counters this can be linked to.
+									Only found on 'switchlink' type counters.
 
 		> profiles [NonSequentialArray]
 			This is a list of all profiles.
@@ -623,7 +653,7 @@ function trackerCore_saveSavefiles () {
  * 			In the format of 'misc.distanceWalked'.
  *
  * 	Returns [String]:
- * 		The name of the original counter (would be either of type 'origin' or 'collection').
+ * 		The name of the original counter (would be either of type 'origin', 'collection' or 'switchlink').
  * 		If a counter couldn't be found (or is invalid) then it will simply return either the last safe one or the 'linkedCounter' argument (even if it ends up being of type 'linked').
  */
 function trackerCore_findLinkedCounter (linkedCounter) {
@@ -1365,29 +1395,27 @@ function trackerCore_CounterBehaviour (newCounterName, counterRelationType='orig
 	if (typeof newCounterName !== 'string') {
 		console.error(`[MPO] trackerCore_CounterBehaviour() received a non-string value as 'newCounterName': `, newCounterName, ` - Setting up a dummy counter now.`);
 		this.counterRelationType = 'origin';
-		this.counterRelations = {linkedFrom: []};
+		this.counterRelations = {updateFollowing: []};
 		return;
 	}
 
 	//make sure 'counterRelationType' is valid
-	if (['origin', 'collection', 'linked'].indexOf(counterRelationType) === -1) {
-		console.warn(`[MPO] trackerCore_CounterBehaviour() tried setting up "${newCounterName}" but received a invalid value as 'counterRelationType': `, counterRelationType, ` - Has to be 'origin', 'collection' or 'linked'. Continuing with 'origin'`);
+	if (['origin', 'collection', 'linked', 'switchlink'].indexOf(counterRelationType) === -1) {
+		console.warn(`[MPO] trackerCore_CounterBehaviour() tried setting up "${newCounterName}" but received a invalid value as 'counterRelationType': `, counterRelationType, ` - Has to be 'origin', 'collection', 'linked' or 'switchlink'. Continuing with 'origin'`);
 		counterRelationType = 'origin';
 	}
 
-	//make sure 'counterRelations' is valid
 	if (typeof counterRelations !== 'object') {
 		console.warn(`[MPO] trackerCore_CounterBehaviour() tried setting up "${newCounterName}" but received a non-object as 'counterRelations': `, counterRelations, ` - Continuing with zero relations, there may be more error logs because of this.`);
 		counterRelations = {};
 	}
 
 	//set a default 'counterRelations' to be filled in later
-	this.counterRelations = {
-		linkedFrom: []
-	};
+	this.counterRelations = {};
 
 
 	//verify 'collectionChildren'
+
 	if (counterRelationType === 'collection') {
 		this.counterRelations.collectionChildren = [];
 
@@ -1396,16 +1424,11 @@ function trackerCore_CounterBehaviour (newCounterName, counterRelationType='orig
 			console.warn(`[MPO] trackerCore_CounterBehaviour() tried setting up "${newCounterName}" but received a invalid value as 'counterRelations.collectionChildren (has to be an array': `, counterRelations.collectionChildren, ` - Counter will be switched to 'origin'.`);
 			counterRelationType = 'origin';
 
-		//if it's an array:
 		} else {
-
-			//quick access
 			const children = counterRelations.collectionChildren;
 
-			//go through all of them to make sure they're good
 			for (const childKey of children) {
 
-				//skip this if it's not a string
 				if (typeof childKey !== 'string') {
 					console.warn(`[MPO] trackerCore_CounterBehaviour() tried setting up "${newCounterName}" but found a non-string while validating 'counterRelations.collectionChildren' (will be ignored): `, childKey, ` - If all entered counters are correct, check all counters linked to them. This function automatically checks all counters linked to the ones entered in 'collectionChildren' and adds them to said array.`);
 					continue;
@@ -1416,13 +1439,12 @@ function trackerCore_CounterBehaviour (newCounterName, counterRelationType='orig
 				const originKey = trackerCore_findLinkedCounter(childKey);
 				const originCounter = trackerCore_getCounterBehaviour(originKey);
 
-				//skip this if it's not valid
 				if (originCounter instanceof trackerCore_CounterBehaviour === false) {
 					console.warn(`[MPO] trackerCore_CounterBehaviour() tried setting up "${newCounterName}" but found a invalid counter while validating 'counterRelations.collectionChildren' (will be ignored): `, originCounter, ` (name: "${originKey}") - If all entered counters are correct, check all counters linked to them. This function automatically checks all counters linked to the ones entered in 'collectionChildren' and adds them to said array.`);
 					continue;
 				}
 
-				//if the counter is another collection then validate all of its children by pushing it to this for loop
+				//if the counter is another collection then validate all of its children by pushing it to this for loop we're currently in
 					//basically, this for loop iterates over 'collectionChildren' in order to check whether the given counters are valid or not
 					//so if we find new counters that have to be validated we just push it to 'collectionChildren'
 					//JS doesn't care if the array it's iterating over changes, it just keeps going until it reached the end so new elements will still be iterated over
@@ -1431,7 +1453,7 @@ function trackerCore_CounterBehaviour (newCounterName, counterRelationType='orig
 					//apply the 'origin' counter since that's the end point
 					case 'origin':
 						this.counterRelations.collectionChildren.push(originKey);
-						originCounter.counterRelations.linkedFrom.push(newCounterName);
+						originCounter.counterRelations.updateFollowing.push(newCounterName);
 						break;
 
 					//if it's linked to another counter then add that one (if it wasn't already added)
@@ -1457,15 +1479,18 @@ function trackerCore_CounterBehaviour (newCounterName, counterRelationType='orig
 		}
 	}
 
-	//verify 'linkTo'
-	if (counterRelationType === 'linked') {
 
-		//if it's not a string then complain and switch to 'origin'
-		if (typeof counterRelations.linkTo !== 'string') {
+	//verify 'linkTo'
+
+	if (counterRelationType === 'linked' || counterRelationType === 'switchlink') {
+
+		if (counterRelationType === 'switchlink' && counterRelations.linkTo === null) {
+			this.counterRelations.linkTo = null;
+
+		} else if (typeof counterRelations.linkTo !== 'string') {
 			console.warn(`[MPO] trackerCore_CounterBehaviour() tried setting up "${newCounterName}" but received a invalid value as 'counterRelations.linkTo' (has to be a string): `, counterRelations.linkTo, ` - Counter will be switched to 'origin'.`);
 			counterRelationType = 'origin';
 
-		//if it's a string:
 		} else {
 			//get the original counter it links to
 				//this will find either a 'origin' or a 'collection', since we can't link it to a 'linked' counter
@@ -1475,14 +1500,60 @@ function trackerCore_CounterBehaviour (newCounterName, counterRelationType='orig
 			//if the counter actually exists and is a valid Counter object then use it
 			if (originCounter instanceof trackerCore_CounterBehaviour) {
 				this.counterRelations.linkTo = originKey;
-				originCounter.counterRelations.linkedFrom.push(newCounterName);
+				originCounter.counterRelations.updateFollowing.push(newCounterName);
 
-			//if the counter is invalid then complain and switch to 'origin'
 			} else {
 				console.warn(`[MPO] trackerCore_CounterBehaviour() tried setting up "${newCounterName}" but could not find the origin of the argument 'counterRelations.linkTo': `, counterRelations.linkTo, ` - Following origin was found (which is invalid): `, originKey, ` - Will switch to 'origin'.`);
 				counterRelationType = 'origin';
 			}
 		}
+	}
+
+
+	//verify 'switchlist'
+
+	if (counterRelationType === 'switchlink') {
+		if (Array.isArray(counterRelations.switchlist) !== true) {
+			console.warn(`[MPO] trackerCore_CounterBehaviour() tried setting up "${newCounterName}" but received a non-array as 'counterRelations.switchlist': `, counterRelations.switchlist, ` - Counter will be switched to 'origin'.`);
+			counterRelationType = 'origin';
+
+		} else {
+			this.counterRelations.switchlist = [];
+
+			for (const item of counterRelations.switchlist) {
+
+				//ignore duplicates
+				if (this.counterRelations.switchlist.indexOf(item) !== -1) {
+					console.warn(`[MPO] trackerCore_CounterBehaviour() tried setting up "${newCounterName}" but noticed a duplicate ${item} inside 'counterRelations.switchlist', only one is needed. switchlist: `, counterRelations.switchlist);
+					continue;
+				}
+
+				if (item === null) {
+					this.counterRelations.switchlist.push(null);
+
+				} else if (typeof item === 'string') {
+					//get the original counter it links to
+						//this will find either a 'origin' or a 'collection', since we can't link it to a 'linked' counter
+					const originKey = trackerCore_findLinkedCounter(item);
+					const originCounter = trackerCore_getCounterBehaviour(originKey);
+
+					if (originCounter instanceof trackerCore_CounterBehaviour) {
+						this.counterRelations.switchlist.push(originKey);
+
+					} else {
+						console.warn(`[MPO] trackerCore_CounterBehaviour() tried setting up "${newCounterName}" but noticed an invalid counter in 'counterRelations.switchlist' that doesn't exist: `, item, ` - Will be ignored.`);
+					}
+
+				} else {
+					console.warn(`[MPO] trackerCore_CounterBehaviour() tried setting up "${newCounterName}" but received an invalid entry in 'counterRelations.switchlist' (has to be either ${null} or a string): `, item, ` - Will be ignored.`);
+				}
+			}
+		}
+	}
+
+
+	if (counterRelationType !== 'linked') {
+		this.counterRelations.updateFollowing = [];
 	}
 
 	//set type

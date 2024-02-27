@@ -31,12 +31,10 @@
  * 			Get and set the default amount (likely 1/5/10 but can be pretty much anything).
  */
 
-//needed in 'updatesTracker_updateCounter()', see comments inside the function
-	//has to be a global variable since it should be kept between function calls
-	//could just be an argument, though 'updatesTracker_updateCounter()' shouldn't be too complicated since it's a core piece of MPO
-	//you should be able to understand it without knowing too much about the inner workings of MPO
-	//so not listing it as an argument makes the function on the outside easier to understand and doesn't make the inside much more complicated (since it is just one variable)
-let updatesTracker_isLinkedUpdate = false;
+//this tracks the call-chain from 'updatesTracker_updateCounter()'
+	//mostly because that functions calls itself to update all 'counterRelations.updateFollowing' counters
+	//this is needed so it doesn't try and update the same counter multiple times - and also to stop it from doing an infinite loop
+let updatesTracker_callChain = [];
 
 /**	Updates a counter with new stats.
  *
@@ -61,6 +59,11 @@ let updatesTracker_isLinkedUpdate = false;
  *			If not specified it simply takes the default amount that's displayed in the navbar.
  */
 function updatesTracker_updateCounter (counterName, player, action=updatesTracker_getAction(), amount=updatesTracker_getAmount()) {
+	//if this counter has already been called right now then don't update it a second time
+	if (updatesTracker_callChain.indexOf(counterName) !== -1) {
+		return;
+	}
+
 	if (typeof amount !== 'number') {
 
 		//generate a more useful error since null can be an intended value
@@ -73,19 +76,23 @@ function updatesTracker_updateCounter (counterName, player, action=updatesTracke
 		return 0;
 	}
 
+	//if 'updatesTracker_callChain' is empty then the call-chain should be emptied again after this function
+	const firstCall = (updatesTracker_callChain.length === 0) ? true : false;
+
 	//get the counter behaviour
 	let behaviour = trackerCore_getCounterBehaviour(counterName);
 
-	//get the original counter if this one is linked
-		//if 'isLinkedUpdate' is true then skip this since the whole purpose of this call is to update a linked counter
-	if (updatesTracker_isLinkedUpdate !== true && behaviour?.counterRelationType === 'linked') {
+	//get original counter if it's linked
+		//should still get added to the call chain since the call chain will be used to udpate all counters visually at the end
+	if (behaviour?.counterRelationType === 'linked') {
+		updatesTracker_callChain.push(counterName);
+		counterName = behaviour.counterRelations?.linkTo;
+		behaviour = trackerCore_getCounterBehaviour(behaviour.counterRelations?.linkTo);
 
-		//get the linked counter and use that instead
-			//we won't check if that one is 'linked' since that takes too much time and that check is already done when assigning types so in theory this one should never be 'linked' anyway
-		counterName = behaviour.counterRelations.linkTo;
-
-		//update the behaviour object
-		behaviour = trackerCore_getCounterBehaviour(counterName);
+		//if this counter has already been called right now then don't update it a second time
+		if (updatesTracker_callChain.indexOf(counterName) !== -1) {
+			return;
+		}
 	}
 
 	//if the counter doesn't exist then complain
@@ -95,6 +102,9 @@ function updatesTracker_updateCounter (counterName, player, action=updatesTracke
 	if (behaviour instanceof trackerCore_CounterBehaviour === false) {
 		console.error(`[MPO] updatesTracker_updateCounter() could not find the counter specified in 'counterName': `, counterName, ` - Will continue anyway, expect more errors. - player: `, player, ` | action: `, action, ` | amount: `, amount);
 	}
+
+
+	// === CALCULATE STAT ===
 
 	//get current/old stat
 		//if the 'updatesTracker_getStat' is falsy (NaN, null) then simply set it to 0 instead (note that 0 is also considered "falsy" but that doesn't matter here since we set it to 0 anyway)
@@ -140,33 +150,49 @@ function updatesTracker_updateCounter (counterName, player, action=updatesTracke
 		newStat = 0;
 	}
 
+	const difference = newStat - oldStat;
+
+
+	// === UPDATE STAT ===
+
+	//add this counter to the list
+	updatesTracker_callChain.push(counterName);
+
 	//set the new stat
 	updatesTracker_setStat(counterName, player, newStat);
 
-	//update the UI
-	trackerInterface_updateCounter(counterName, player);
 
+	// === UPDATE RELATED COUNTERS ===
 
+	const updateFollowing = behaviour.counterRelations.updateFollowing;
 
-	// === UPDATE LINKED COUNTERS ===
+	if (Array.isArray(updateFollowing) !== true) {
+		console.warn(`[MPO] updatesTracker_updateCounter() found a invalid 'counterRelations.updateFollowing' for counter "${counterName}" (has to be an Array since it can't be a linked counter): `, updateFollowing);
 
-	//only update linked counters if this isn't already in the process of doing so
-	if (updatesTracker_isLinkedUpdate !== true) {
+	} else {
 
-		//we'll set this to true since we're in the process of updating all counters linked to this one
-			//once we call 'updatesTracker_updateCounter()' below it skips looking for linked counters since this is true
-			//this is important to prevent a possible infinite loop if counter A linked to B which linked back to A - because of this variable it just stops at B
-			//technically speaking the infinite loop is impossible anyway since MPO doesn't allow linking to anything that's already linked
-			//but an infinite loop wouldn't just crash, it freezes the entire site making it unusable - so it's best we use a failsafe anyway
-		updatesTracker_isLinkedUpdate = true;
-
-		//loop through all listed counters and update them
-		for (const linkedFromKey of behaviour.counterRelations.linkedFrom) {
-			updatesTracker_updateCounter(linkedFromKey, player, action, amount);
+		//failsafe
+		if (firstCall === true) {
+			setTimeout(() => {updatesTracker_callChain = [];}, 0);
 		}
 
-		//and reset this for next time
-		updatesTracker_isLinkedUpdate = false;
+		//update every related counter
+			//but using the difference, which only makes a change when the counter is at 1 and a change of -5 is done, because the actual change done would just be -1 (since a counter can't go below 0), this way every counter is updated the same way
+			//Note: the second time this is done it might change the amount since may, again, not fulfill the initial amount fully
+
+		for (const name of updateFollowing) {
+			updatesTracker_updateCounter(name, player, 'add', difference);
+		}
+	}
+
+	//if this is the first call then update the visuals of every single counter used and empty the call-chain
+	if (firstCall === true) {
+		for (const name of updatesTracker_callChain) {
+			//update the UI
+			trackerInterface_updateCounter(name, player);
+		}
+
+		updatesTracker_callChain = [];
 	}
 }
 
@@ -193,19 +219,9 @@ function updatesTracker_getStat (counterName, player) {
 		return 0;
 	}
 
-	/* //currently not needed since every counter saves stats on their own so whether you get the stat on the 'linked' counter or on the actual 'origin' counter does not matter -- however, when the 'origin' counter has been updated but all counters linked to it haven't yet, there's a difference between the two and some functions need to access the real value while that happens
-		//tl;dr: My system is fucked and I'll fix it at some point. Promise. Not pinky promise though, that's too much.
-
-	//get the original counter if this one is linked
-		//first get the counterBehaviour, then check its type
-	let behaviour = trackerCore_getCounterBehaviour(counterName);
-	if (behaviour?.counterRelationType === 'linked') {
-
-		//get the linked counter and use that instead
-			//we won't check if that one is 'linked' since that takes too much time and that check is already done when assigning types so in theory this one should never be 'linked' anyway
-		counterName = behaviour.counterRelations?.linkTo;
-	}
-	*/
+	//get the original counterName (if this is already the original then we'll get this one back anyway)
+		//this is because linked counters don't store any stats
+	counterName = trackerCore_findLinkedCounter(counterName);
 
 	//get the player
 	let playerObj = trackerCore_getSavefile().players[player];
@@ -255,6 +271,10 @@ function updatesTracker_setStat (counterName, player, value) {
 	if (typeof value !== 'number') {
 		return false;
 	}
+
+	//get the original counterName (if this is already the original then we'll get this one back anyway)
+		//this is because linked counters don't store any stats
+	counterName = trackerCore_findLinkedCounter(counterName);
 
 	//set the stat and save the response (Boolean of whether it was successful or not)
 	let result = trackerCore_getSavefile().players[player].stats.fetchProperty(counterName, {setTo: value});

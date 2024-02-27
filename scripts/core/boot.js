@@ -384,12 +384,21 @@ function boot_fillInCounterObject () {
 
 	// === ADD BONUS STARS ===
 
+	//Note about how this works:
+		//Since Bonus Stars aren't based on clearly defined stats that should be tracked we don't track the bonus stars on their own, instead we link them to another clearly defined counter.
+		//Most of those are either spaces (like "Happening Star" tracks "Happening" spaces) or 'misc' counters that were created for the sole purpose of being clearly defined stats for bonus stars.
+		//And with "clearly defined" I mean bonus stars like "Minigame Star" which can be either "Total coins earned in minigames" or "Total amount of minigames won" depending on the game. This would create a mess when switching games, as such we instead track the two stats seperately.
+
+		//This should explain most of what we're doing here, we check the database what the bonus star is about and then assign the bonus star accordingly. Unfortunately this requires a lot of hard-coded solutions (currently at least).
+
 	//get a list of all bonus stars
 	const bonusStarList = dbparsing_getBonusStarList('_all');
 
-	//this serves as a lookup table for which bonus star types require which counter
-		//those with a second object inside them are based on the 'details' properties
-	const linkToList = {
+	//this serves as a lookup table for which 'bonusStarType' in the database corresponds to which 'misc' counter
+		//this is just for 'misc' counters since all others can be found easily
+
+	const miscLinkToList = {
+		//spaces: //just gets linked to individual spaces which the database already specifies
 		coin: {
 			coinStarType: {
 				highest: 'misc.highestCoinCount',
@@ -401,9 +410,11 @@ function boot_fillInCounterObject () {
 				win: 'misc.minigameWins',
 				coin: 'misc.minigameCoins'
 			}
+			//whatCounts: //TODO: not currently implemented
 		},
 		distance: 'misc.distanceWalked',
 		shop: 'misc.coinsSpentInShop',
+		//item: //just gets linked to individual items which the database already specifies
 		collect: {
 			collectWhat: {
 				miniZtar: 'misc.miniZtarsCollected',
@@ -426,12 +437,11 @@ function boot_fillInCounterObject () {
 	}
 
 	//loop through all bonus stars
-	for (key in bonusStarList) {
-		//quick access
-		const item = bonusStarList[key];
+	for (bonusStarName in bonusStarList) {
+		const bonusStar = bonusStarList[bonusStarName];
 
 		//cancel if it can't be tracked
-		if (item.cantBeTracked === true) {
+		if (bonusStar.cantBeTracked === true) {
 			continue;
 		}
 
@@ -441,7 +451,7 @@ function boot_fillInCounterObject () {
 		let counterRelations = {};
 
 		//fill in 'counterRelations' and it's type
-		switch (item.bonusStarType) {
+		switch (bonusStar.bonusStarType) {
 
 			//COLLECTION
 				//these will be a collection of various counters
@@ -456,10 +466,10 @@ function boot_fillInCounterObject () {
 				break;
 
 				//get a list of all spaces/items
-				const counterList = mpdb._all[item.bonusStarType + 's'];
+				const counterList = mpdb._all[bonusStar.bonusStarType + 's'];
 
 				//get a list of all spaces/items allowed by checking the 'spacesAllowed'/'itemsAllowed' property
-				const allowed = item.details[item.bonusStarType + 'sAllowed'];
+				const allowed = bonusStar.details[bonusStar.bonusStarType + 'sAllowed'];
 
 				//add the counters it should be a collection of with a set of 'if ... else' blocks
 					//TODO: Not added yet since space counters don't even exist yet
@@ -481,28 +491,26 @@ function boot_fillInCounterObject () {
 
 				//if it's none of these then complain and set the counter to 'origin' so it at least still works
 				} else {
-					console.warn(`[MPO] boot_setupCounterObject() found a invalid '${item.bonusStarType + 'sAllowed'}' object: `, allowed, ` - setting the counter to 'origin' - bonus star object: `, item);
+					console.warn(`[MPO] boot_setupCounterObject() found a invalid '${bonusStar.bonusStarType + 'sAllowed'}' object: `, allowed, ` - setting the counter to 'origin' - bonus star object: `, bonusStar);
 					counterRelationType = 'origin';
 				}
 				break;
 
 			// LINKED BASED ON DETAILS
 				//these will be linked to a single counter, but which one it is depends on the 'details' property
-			case 'coin':
-			case 'minigame':
 			case 'collect':
 			case 'ally':
 			case 'stomp':
 				counterRelationType = 'linked';
 
-				//get the 'linkToList' entry of the bonusStar
-				const itemListEntry = linkToList[item.bonusStarType];
+				//get the 'miscLinkToList' entry of the bonusStar
+				const itemListEntry = miscLinkToList[bonusStar.bonusStarType];
 
 				//get the name of the 'details' property
 				const detailName = Object.keys(itemListEntry)[0];
 
 				//get the counter that the bonus star should use based on what 'details' value was found
-				counterRelations.linkTo = itemListEntry[detailName][ item.details[detailName] ];
+				counterRelations.linkTo = itemListEntry[detailName][ bonusStar.details[detailName] ];
 				break;
 
 			//LINKED
@@ -513,15 +521,43 @@ function boot_fillInCounterObject () {
 
 				//get the counter based on the bonus star
 					//there's no variations of these bonus stars so we don't have to check the 'details' property
-				counterRelations.linkTo = linkToList[item.bonusStarType];
+				counterRelations.linkTo = miscLinkToList[bonusStar.bonusStarType];
 				break;
 
+			//SWITCHLINK
+				//these aren't always trackign the same stat and may track different things depending on different games
+			case 'coin':
+				counterRelationType = 'switchlink';
+
+				counterRelations.switchlist = [null];
+				counterRelations.linkTo = null;
+
+				for (const key in miscLinkToList.coin.coinStarType) {
+					counterRelations.switchlist.push(miscLinkToList.coin.coinStarType[key]);
+				}
+				break;
+
+			case 'minigame':
+				counterRelationType = 'switchlink';
+
+				counterRelations.switchlist = [null];
+				counterRelations.linkTo = null;
+
+				for (const key in miscLinkToList.minigame.minigameStarType) {
+					counterRelations.switchlist.push(miscLinkToList.minigame.minigameStarType[key]);
+				}
+				break;
+
+
+
 			default:
+				console.warn(`[MPO] boot_fillInCounterObject() found a Bonus Star that wasn't implemented yet: `, bonusStarName, ` - If that's an actual bonus star then please add a custom implementation for it here. - Bonus Star will continue as an origin counter.`);
+				counterRelationType = 'origin';
 				break;
 		}
 
 		//add the counter
-		counterBehaviour.bonusStars[key] = new trackerCore_CounterBehaviour(`bonusStars.${key}`, counterRelationType, counterRelations);
+		counterBehaviour.bonusStars[bonusStarName] = new trackerCore_CounterBehaviour(`bonusStars.${bonusStarName}`, counterRelationType, counterRelations);
 	}
 
 
