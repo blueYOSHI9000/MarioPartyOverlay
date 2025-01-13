@@ -132,7 +132,10 @@ function changeCounterIcons () {
 				}
 			}
 		}
-		if (curGame != 'all') {
+		if (curGame === 'mptt100') {
+			getElem('coinStar').src = 'img/' + curGame + '/rich.png';
+			document.querySelector('.coinStarC .coinsOnOff').style.backgroundImage = 'url(img/mptt100/rich.png)';
+		} else if (curGame != 'all') {
 			getElem('coinStar').src = 'img/' + curGame + '/coins.png';
 		} else {
 			getElem('coinStar').src = 'img/coins.png';
@@ -155,11 +158,8 @@ function changeCounterIcons () {
 				}
 			}
 		}
-		if (curGame != 'all') {
-			getElem('coinStar').src = 'img/' + curGame + '/coins.png';
-		} else {
-			getElem('coinStar').src = 'img/coins.png';
-		}
+
+		getElem('coinStar').src = 'img/coins.png';
 	}
 }
 
@@ -342,7 +342,7 @@ function changeGame (game) {
 		case 'mptt100':
 			showCounters.push(document.querySelectorAll('.mptt100C'));
 
-			hideCounters.push(document.querySelectorAll('.coinStarC'));
+			showCounters.push(document.querySelectorAll('.coinStarC'));
 			hideCounters.push(document.querySelectorAll('.happeningC'));
 
 			showCounters.push(document.querySelectorAll('.coinC'));
@@ -526,22 +526,55 @@ function changeGame (game) {
 			editInner('stompyOnOffText', 'Stompy:');
 			editInner('doormatOnOffText', 'Doormat:');
 			break;
+		case 'mps':
+			editInner('happeningOnOffText', 'Eventful:');
+			editInner('minigameOnOffText', 'Minigame:');
+			editInner('coinStarOnOffText', 'Rich:');
+
+			editInner('redSpaceOnOffText', 'Unlucky:');
+			editInner('bowserSpaceOnOffText', 'Bowser Space:');
+			editInner('runningOnOffText', 'Sightseer:');
+			editInner('slowOnOffText', 'Slowpoke:');
+
+			editInner('shoppingOnOffText', 'Shopping:');
+			editInner('itemOnOffText', 'Item:');
+
+			editInner('starsOnOffText', 'Stars:');
+			editInner('coinsOnOffText', 'Coins:');
+			break;
+		case 'smpj':
+			editInner('happeningOnOffText', 'Eventful:');
+			editInner('minigameOnOffText', 'Minigame:');
+			editInner('coinStarOnOffText', 'Rich:');
+
+			editInner('redSpaceOnOffText', 'Misfortune:');
+			editInner('bowserSpaceOnOffText', 'Bowser Space:');
+			editInner('runningOnOffText', 'Sightseer:');
+			editInner('slowOnOffText', 'Slowpoke:');
+
+			editInner('shoppingOnOffText', 'Shopping:');
+			editInner('itemOnOffText', 'Item:');
+
+			editInner('starsOnOffText', 'Stars:');
+			editInner('coinsOnOffText', 'Coins:');
+			break;
 		default:
-			editInner('happeningOnOffText', 'Happening (1-8, DS, SMP):');
-			editInner('minigameOnOffText', 'Minigame (1-10, DS, SMP):');
-			editInner('coinStarOnOffText', 'Coin Star (1-5, SMP):');
+			editInner('happeningOnOffText', 'Happening (1-8, DS, SMP-SMPJ):');
+			editInner('minigameOnOffText', 'Minigame (1-10, DS, SMP-SMPJ):');
+			editInner('coinStarOnOffText', 'Coin Star (1-5, SMP-SMPJ):');
 
-			editInner('redSpaceOnOffText', 'Red (7, 8, SMP):');
-			editInner('runningOnOffText', 'Running (7-10, DS-SMP):');
-			editInner('slowOnOffText', 'Slow (9, 10, SR-SMP):');
+			editInner('redSpaceOnOffText', 'Red (7, 8, SMP-SMPJ):');
+			editInner('bowserSpaceOnOffText', 'Bowser Space (MPS & SMPJ):');
+			editInner('runningOnOffText', 'Running (7-10, DS-SMPJ):');
+			editInner('slowOnOffText', 'Slow (9, 10, SR-SMPJ):');
 
-			editInner('shoppingOnOffText', 'Shopping (7, 8):');
-			editInner('itemOnOffText', 'Item (6-9, DS-SMP):');
+			editInner('shoppingOnOffText', 'Shopping (7, 8, MPS, SMPJ):');
+			editInner('itemOnOffText', 'Item (6-8, DS-SMPJ):');
 			editInner('unusedOnOffText', 'Unused (SR & TT100):');
 
 			editInner('friendSpaceOnOffText', 'Friendship (DS):');
 			editInner('hexOnOffText', 'Hex (DS):');
-			editInner('balloonOnOffText', 'Balloon (SR, TT100):');
+			editInner('balloonOnOffText', 'Balloon (SR & TT100):');
 
 			editInner('spinSpaceOnOffText', 'Spin (9):');
 			editInner('minusOnOffText', 'Minus (9, 10):');

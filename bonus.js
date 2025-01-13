@@ -62,6 +62,7 @@ function changeGame (game, keepHash) {
 			showGames.push('wanderer');
 			showGames.push('buddy');
 		case 'mptt100':
+			showGames.push('coin');
 			showGames.push('minigame');
 			showGames.push('running');
 			showGames.push('slow');
@@ -130,6 +131,17 @@ function changeGame (game, keepHash) {
 			}
 			def.style.display = 'none';
 		}
+	}
+
+	//update icons to games style
+	var bonusStarImgArr = document.getElementsByClassName('bonusStarImg');
+	for (let num = 0; num < bonusStarImgArr.length; num++) {
+		bonusStarImgArr[num].src = 'img/' + game + '/' + bonusStarImgArr[num].getAttribute('data-imgname') + '.png';
+	}
+	if (game === 'mptt100') {
+		document.querySelector('#coin .bonusStarImg').src = 'img/mptt100/rich.png';
+		document.querySelector('#slow .bonusStarImg').src = 'img/mptt100/slow.png';
+		document.querySelector('#unused .bonusStarImg').src = 'img/mptt100/unused.png';
 	}
 }
 

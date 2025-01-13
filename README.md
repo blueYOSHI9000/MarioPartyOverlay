@@ -58,7 +58,7 @@ Mostly notes for myself in the future, or to someone who's dedicated enough to t
 - Add Game & Bonus Stars to 'counterNameList' at the top of `boot.js`
 - Add Counters to 'counterNameList' at the top of `boot.js`
 - Add Counters to the 'counters' array at the top of `boot.js`
-- Add Game & Bonus Stars to 'changeGame' in `characters.js`
+- Add Game & Bonus Stars to 'changeGame' in `characters.js`, remember there's two sections to update, one with the 'showCounters' and one with the descriptions
 
 ### Credit
 - Remember to credit everyone whose sprites were used
