@@ -596,8 +596,8 @@ noscript > span {
 .nvGamesSelected {
 	cursor: default !important;
 	background: none !important;
--webkit-filter: grayscale(100%);
-		filter: grayscale(100%);
+-webkit-filter: grayscale(100%) drop-shadow(0px 0px 10px #fff82b);
+		filter: grayscale(100%) drop-shadow(0px 0px 10px #fff82b);
 }
 
 #closeNavbar {
@@ -1383,6 +1383,9 @@ noscript > span {
 .rosalina {
 	background-image:url(img/mpsrIcons/rosalina.png);
 }
+.pauline {
+	background-image:url(img/mpsrIcons/pauline.png);
+}
 .daisy {
 	background-image:url(img/mpsrIcons/daisy.png);
 }
@@ -1437,6 +1440,9 @@ noscript > span {
 .shyguy {
 	background-image:url(img/mpsrIcons/shyguy.png);
 }
+.ninji {
+	background-image:url(img/mpsrIcons/ninji.png);
+}
 .hammerbro {
 	background-image:url(img/mpsrIcons/hammerbro.png);
 }
@@ -1475,6 +1481,9 @@ noscript > span {
 }
 .redSpaceOnOff {
 	background-image:url(img/redspace.png);
+}
+.bowserSpaceOnOff {
+	background-image:url(img/bowserspace.png);
 }
 .runningOnOff {
 	background-image:url(img/running.png);
@@ -1603,6 +1612,14 @@ noscript > span {
 	background-image:url(img/smp.png);
 	width: 51px;
 }
+.mps {
+	background-image:url(img/mps.png);
+	width: 27px;
+}
+.smpj {
+	background-image:url(img/smpj.png);
+	width: 18px;
+}
 
 @media screen and (max-width: 800px) {
 	#settingsSelectionSpan { display: none; }
@@ -1610,16 +1627,18 @@ noscript > span {
 	#gameSelectorDiv { font-size: 2.3vw; }
 	#gameSelectorDiv .inputContainer { visibility: hidden; /*height: 1.7vw; width: 1.7vw;*/ }
 	/*.settingsSelection { font-size: 3.4vw; }*/
-	.gameLabel { font-size: 2.3vw; height: 3.2vw; width: 3.2vw }
+	.gameLabel { font-size: 2.3vw; height: 2.6vw; width: 2.6vw }
 	#mp1 { margin-left: 3vw; }
 	.mp1 { width: 2.3vw; margin-left: 3vw; }
-	.mp10 { width: 5.3vw; }
-	.mpa { width: 7.8vw; }
+	.mp10 { width: 5.0vw; }
+	.mpa { width: 7.5vw; }
 	.mpds { width: 6.4vw; }
 	.mpit { width: 4vw; }
 	.mpsr { width: 6.2vw; }
 	.mptt100 { width: 6.2vw; }
 	.smp { width: 6.6vw; }
+	.mps { width: 3.5vw; }
+	.smpj { width: 2vw; }
 }
 
 /* == Themes == (Previews are 40x19px) */

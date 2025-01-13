@@ -277,6 +277,8 @@ function changeGame (game) {
 	hideCounters.push(document.querySelectorAll('.mpsrC'));
 	hideCounters.push(document.querySelectorAll('.mptt100C'));
 	hideCounters.push(document.querySelectorAll('.smpC'));
+	hideCounters.push(document.querySelectorAll('.mpsC'));
+	hideCounters.push(document.querySelectorAll('.smpjC'));
 
 	for (let num = 0; num < charList[game].length; num++) {
 		showChars.push(document.querySelectorAll('.' + charList[game][num] + 'Span'));
@@ -352,6 +354,11 @@ function changeGame (game) {
 			showCounters.push(document.querySelectorAll('.happeningC'));
 			showCounters.push(document.querySelectorAll('.coinC'));
 			break;
+		case 'mps':
+		case 'smpj':
+			showCounters.push(document.querySelectorAll('.mpsC'));
+			showCounters.push(document.querySelectorAll('.smpjC'));
+			break;
 		case 'mpa':
 		case 'mpit':
 		case 'all':
@@ -363,6 +370,8 @@ function changeGame (game) {
 			showCounters.push(document.querySelectorAll('.mpDSC'));
 			showCounters.push(document.querySelectorAll('.mpsrC'));
 			showCounters.push(document.querySelectorAll('.smpC'));
+			showCounters.push(document.querySelectorAll('.mpsC'));
+			showCounters.push(document.querySelectorAll('.smpjC'));
 
 			showCounters.push(document.querySelectorAll('.coinStarC'));
 			showCounters.push(document.querySelectorAll('.happeningC'));

@@ -32,6 +32,12 @@ body {
 	overflow: auto;
 }
 
+.textImg {
+	height: 20px;
+	position: relative;
+	top: 3px;
+}
+
 /* == Scrollbar == */
 ::-webkit-scrollbar {
 	width: 10px;
@@ -296,4 +302,8 @@ input {
 .mps {
 	background-image:url(img/mps.png);
 	width: 27px;
+}
+.smpj {
+	background-image:url(img/smpj.png);
+	width: 18px;
 }

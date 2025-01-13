@@ -12,6 +12,7 @@ var defS = {
 	happening: [0, 0, 0, 0],
 	minigame: [0, 0, 0, 0],
 	redSpace: [0, 0, 0, 0],
+	bowserSpace: [0, 0, 0, 0],
 	running: [0, 0, 0, 0],
 	shopping: [0, 0, 0, 0],
 	item: [0, 0, 0, 0],
@@ -43,6 +44,7 @@ var defC = {
 	happeningOnOff: true,
 	minigameOnOff: true,
 	redSpaceOnOff: false,
+	bowserSpaceOnOff: false,
 	runningOnOff: false,
 	slowOnOff: false,
 	shoppingOnOff: false,
@@ -295,6 +297,19 @@ function createSlot (slot, update, noorder) {
 
 	if (slots.max > 20) {
 		getElem('savefileError').style.display = 'unset';
+	}
+
+	//add all items to the slot that weren't there yet
+		//mostly useful in case new counters get added in an update, this adds them all to previous savefiles that didn't have them yet
+	for (name in defS) {
+		if (slots[selS][name] === undefined) {
+			slots[selS][name] = defS[name];
+		}
+	}
+	for (name in defC) {
+		if (slots[selC][name] === undefined) {
+			slots[selC][name] = defC[name];
+		}
 	}
 
 	if (cookiesOn === false)

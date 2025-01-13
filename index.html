@@ -84,7 +84,7 @@
 				<img src="img/mp1/peach.png" character="peach" onclick="nvChangeChar(this)" onerror="imgError(this)"> <br>
 				<img src="img/mp1/yoshi.png" character="yoshi" onclick="nvChangeChar(this)" onerror="imgError(this)">
 				<img src="img/mp1/wario.png" character="wario" onclick="nvChangeChar(this)" onerror="imgError(this)">
-				<img src="img/mp1/dk.png" character="dk" onclick="nvChangeChar(this)" onerror="imgError(this)">
+				<img src="img/mp1/dk.png"    character="dk"    onclick="nvChangeChar(this)" onerror="imgError(this)">
 			</div>
 			<img src="img/p1.png" class="nvCharPlayer" id="nvCharPlayer1">
 			<img src="img/p2.png" class="nvCharPlayer" id="nvCharPlayer2">
@@ -116,6 +116,8 @@
 					<img src="img/mpsr.png" id="nvmpsr" onclick="nvChangeGame('mpsr')">
 					<img src="img/mptt100.png" id="nvmptt100" onclick="nvChangeGame('mptt100')">
 					<img src="img/smp.png" id="nvsmp" onclick="nvChangeGame('smp')">
+					<img src="img/mps.png" id="nvmps" onclick="nvChangeGame('mps')">
+					<img src="img/smpj.png" id="nvsmpj" onclick="nvChangeGame('smpj')">
 				</div>
 			</div>
 		</div>
@@ -578,6 +580,18 @@
 						<input type="radio" name="gameSelector" id="smp" value="smp" newdesign="false" onchange="callOnBoth('changeGame', ['smp'])">
 						<label class="charSelectorLabel smp gameLabel" for="smp"> </label>
 					</span>
+					<span class="flexAuto"></span>
+
+					<span class="nowrap">
+						<input type="radio" name="gameSelector" id="mps" value="mps" newdesign="false" onchange="callOnBoth('changeGame', ['mps'])">
+						<label class="charSelectorLabel mps gameLabel" for="mps"> </label>
+					</span>
+					<span class="flexAuto"></span>
+
+					<span class="nowrap">
+						<input type="radio" name="gameSelector" id="smpj" value="smpj" newdesign="false" onchange="callOnBoth('changeGame', ['smpj'])">
+						<label class="charSelectorLabel smpj gameLabel" for="smpj"> </label>
+					</span>
 				</div>
 			</div>
 			<div id="settingsHeaderBorder" class="border"></div>
@@ -799,39 +813,53 @@
 					<span id="counterError" class="error" style="display: none;">The selected game doesn't have bonus stars.</span> <br>
 
 					<div class="counterSelection">
-						<span class="happeningC relative"> <label for="happeningOnOff" id="happeningOnOffText" class="counterOnOffText">Happening (1-8, DS, SMP):</label> <input type="checkbox" id="happeningOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['happening'])" checked> <label for="happeningOnOff" class="charSelectorLabel counterOnOff happeningOnOff"></label> </span>
+						<span class="happeningC relative"> <label for="happeningOnOff" id="happeningOnOffText" class="counterOnOffText">Happening (1-8, DS, SMP-SMPJ):</label> <input type="checkbox" id="happeningOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['happening'])" checked> <label for="happeningOnOff" class="charSelectorLabel counterOnOff happeningOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="minigameC relative"> <label for="minigameOnOff" id="minigameOnOffText" class="counterOnOffText">Minigame (1-10, DS, SMP):</label> <input type="checkbox" name="minigame" id="minigameOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['minigame'])" checked> <label for="minigameOnOff" class="charSelectorLabel counterOnOff minigameOnOff"></label> </span>
+						<span class="minigameC relative"> <label for="minigameOnOff" id="minigameOnOffText" class="counterOnOffText">Minigame (1-10, DS, SMP-SMPJ):</label> <input type="checkbox" name="minigame" id="minigameOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['minigame'])" checked> <label for="minigameOnOff" class="charSelectorLabel counterOnOff minigameOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="coinStarC relative"> <label for="coinStarOnOff" id="coinStarOnOffText" class="counterOnOffText">Coin Star (1-5, SMP):</label> <input type="checkbox" id="coinStarOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['coinStar'])" checked> <label for="coinStarOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </span>
+						<span class="coinStarC relative"> <label for="coinStarOnOff" id="coinStarOnOffText" class="counterOnOffText">Coin Star (1-5, SMP-SMPJ):</label> <input type="checkbox" id="coinStarOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['coinStar'])" checked> <label for="coinStarOnOff" class="charSelectorLabel counterOnOff coinsOnOff"></label> </span>
 					</div>
-					<div class="counterSelection mp7C mp8C mp9C mp10C mpDSC mpsrC mptt100C smpC">
-						<span class="mp7C mp8C smpC relative"> <label for="redSpaceOnOff" id="redSpaceOnOffText" class="counterOnOffText">Red (7, 8, SMP):</label> <input type="checkbox" id="redSpaceOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['redSpace'])"> <label for="redSpaceOnOff" class="charSelectorLabel counterOnOff redSpaceOnOff"></label> </span>
-						<span class="flexAuto"></span>
-						<span class="mp7C mp8C mp9C mp10C mpDSC mpsrC mptt100C smpC relative"> <label for="runningOnOff" id="runningOnOffText" class="counterOnOffText">Running (7-10, DS-SMP):</label> <input type="checkbox" id="runningOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['running'])"> <label for="runningOnOff" class="charSelectorLabel counterOnOff runningOnOff"></label> </span>
-						<span class="flexAuto"></span>
-						<span class="mp9C mp10C mpsrC mptt100C smpC relative"> <label for="slowOnOff" id="slowOnOffText" class="counterOnOffText">Slow (9, 10, SR-SMP):</label> <input type="checkbox" id="slowOnOff" class="counterOnOffInput" onchange="editValueOnBoth(this.id, this.checked);callOnBoth('slowStar')"> <label for="slowOnOff" class="charSelectorLabel counterOnOff runningOnOff"></label> </span>
-					</div>
-					<div class="counterSelection mp6C mp7C mp8C mp9C mpDSC mpsrC mptt100C smpC">
-						<span class="mp7C mp8C relative"> <label for="shoppingOnOff" id="shoppingOnOffText" class="counterOnOffText">Shopping (7, 8):</label> <input type="checkbox" id="shoppingOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['shopping'])"> <label for="shoppingOnOff" class="charSelectorLabel counterOnOff shoppingOnOff"></label> </span>
-						<span class="flexAuto"></span>
-						<span class="relative"> <label for="itemOnOff" id="itemOnOffText" class="counterOnOffText">Item (6-8, DS-SMP):</label> <input type="checkbox" id="itemOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['item'])"> <label for="itemOnOff" class="charSelectorLabel counterOnOff itemOnOff"></label> </span>
+					<div class="counterSelection mp6C mp7C mp8C mp9C mpDSC mpsrC mptt100C smpC mpsC smpjC">
+						<span class="relative"> <label for="itemOnOff" id="itemOnOffText" class="counterOnOffText">Item (6-8, DS-SMPJ):</label> <input type="checkbox" id="itemOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['item'])"> <label for="itemOnOff" class="charSelectorLabel counterOnOff itemOnOff"></label> </span>
 						<span class="flexAuto"></span>
 						<span class="mpsrC mptt100C relative"> <label for="unusedOnOff" id="unusedOnOffText" class="counterOnOffText">Unused (SR & TT100):</label> <input type="checkbox" id="unusedOnOff" class="counterOnOffInput" onchange="editValueOnBoth(this.id, this.checked);callOnBoth('unusedStar')"> <label for="unusedOnOff" class="charSelectorLabel counterOnOff itemOnOff"></label> </span>
+						<span class="flexAuto"></span>
+						<span class="mp7C mp8C mpsC smpjC relative"> <label for="shoppingOnOff" id="shoppingOnOffText" class="counterOnOffText">Shopping (7, 8, MPS, SMPJ):</label> <input type="checkbox" id="shoppingOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['shopping'])"> <label for="shoppingOnOff" class="charSelectorLabel counterOnOff shoppingOnOff"></label> </span>
+					</div>
+					<div class="counterSelection mp7C mp8C mp9C mp10C mpDSC mpsrC mptt100C smpC mpsC smpjC">
+						<span class="mp7C mp8C mp9C mp10C mpDSC mpsrC mptt100C smpC mpsC smpjC relative"> <label for="runningOnOff" id="runningOnOffText" class="counterOnOffText">Running (7-10, DS-SMPJ):</label> <input type="checkbox" id="runningOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['running'])"> <label for="runningOnOff" class="charSelectorLabel counterOnOff runningOnOff"></label> </span>
+						<span class="flexAuto"></span>
+						<span class="mp9C mp10C mpsrC mptt100C smpC mpsC smpjC relative"> <label for="slowOnOff" id="slowOnOffText" class="counterOnOffText">Slow (9, 10, SR-SMPJ):</label> <input type="checkbox" id="slowOnOff" class="counterOnOffInput" onchange="editValueOnBoth(this.id, this.checked);callOnBoth('slowStar')"> <label for="slowOnOff" class="charSelectorLabel counterOnOff runningOnOff"></label> </span>
+						<span class="flexAuto"></span>
+						<span></span>
+					</div>
+					<div class="counterSelection mp7C mp8C mp9C mp10C mpDSC mpsrC mptt100C smpC mpsC smpjC">
+						<span class="mp7C mp8C smpC mpsC smpjC relative"> <label for="redSpaceOnOff" id="redSpaceOnOffText" class="counterOnOffText">Red (7, 8, SMP-SMPJ):</label> <input type="checkbox" id="redSpaceOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['redSpace'])"> <label for="redSpaceOnOff" class="charSelectorLabel counterOnOff redSpaceOnOff"></label> </span>
+						<span class="flexAuto"></span>
+						<span class="mpsC smpjC relative"> <label for="bowserSpaceOnOff" id="bowserSpaceOnOffText" class="counterOnOffText">Bowser Space (MPS & SMPJ):</label> <input type="checkbox" id="bowserSpaceOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['bowserSpace'])"> <label for="bowserSpaceOnOff" class="charSelectorLabel counterOnOff bowserSpaceOnOff"></label> </span>
+						<span class="flexAuto"></span>
+						<span></span>
 					</div>
 					<div class="counterSelection mpDSC">
 						<span class="mpDSC relative"> <label for="friendSpaceOnOff" id="friendSpaceOnOffText" class="counterOnOffText">Friendship (DS):</label> <input type="checkbox" id="friendSpaceOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['friendSpace'])"> <label for="friendSpaceOnOff" class="charSelectorLabel counterOnOff friendSpaceOnOff"></label> </span>
 						<span class="flexAuto"></span>
 						<span class="mpDSC relative"> <label for="hexOnOff" id="hexOnOffText" class="counterOnOffText">Hex (DS):</label> <input type="checkbox" id="hexOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['hex'])"> <label for="hexOnOff" class="charSelectorLabel counterOnOff hexOnOff"></label> </span>
 						<span class="flexAuto"></span>
-						<span class="mpsrC mptt100C relative"> <label for="balloonOnOff" id="balloonOnOffText" class="counterOnOffText">Balloon (SR, TT100):</label> <input type="checkbox" id="balloonOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['balloon'])"> <label for="balloonOnOff" class="charSelectorLabel counterOnOff balloonOnOff"></label> </span>
+						<span></span>
 					</div>
-					<div class="counterSelection mp9C mp10C mpsrC mptt100C">
+					<div class="counterSelection mp9C mp10C">
 						<span class="mp9C relative"> <label for="spinSpaceOnOff" id="spinSpaceOnOffText" class="counterOnOffText">Spin (9):</label> <input type="checkbox" id="spinSpaceOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['spinSpace'])"> <label for="spinSpaceOnOff" class="charSelectorLabel counterOnOff spinSpaceOnOff"></label> </span>
 						<span class="flexAuto"></span>
 						<span class="mp9C mp10C relative"> <label for="minusOnOff" id="minusOnOffText" class="counterOnOffText">Minus (9, 10):</label> <input type="checkbox" id="minusOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['minus'])"> <label for="minusOnOff" class="charSelectorLabel counterOnOff minusOnOff"></label> </span>
 						<span class="flexAuto"></span>
+						<span></span>
+					</div>
+					<div class="counterSelection mpsrC mptt100C">
+						<span class="mpsrC mptt100C relative"> <label for="balloonOnOff" id="balloonOnOffText" class="counterOnOffText">Balloon (SR & TT100):</label> <input type="checkbox" id="balloonOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['balloon'])"> <label for="balloonOnOff" class="charSelectorLabel counterOnOff balloonOnOff"></label> </span>
+						<span class="flexAuto"></span>
 						<span class="mpsrC mptt100C relative"> <label for="almostOnOff" id="almostOnOffText" class="counterOnOffText">Almost (SR & TT100):</label> <input type="checkbox" id="almostOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['almost'])"> <label for="almostOnOff" class="charSelectorLabel counterOnOff almostOnOff"></label> </span>
+						<span class="flexAuto"></span>
+						<span></span>
 					</div>
 					<div class="counterSelection mpsrC">
 						<span class="relative"> <label for="lonerOnOff" id="lonerOnOffText" class="counterOnOffText">Loner (SR):</label> <input type="checkbox" id="lonerOnOff" class="counterOnOffInput" onchange="callOnBoth('displayOnOff', ['loner'])"> <label for="lonerOnOff" class="charSelectorLabel counterOnOff lonerOnOff"></label> </span>
@@ -1106,7 +1134,7 @@
 					<span style="line-height: 27px;"> Created by <a href="https://wetdry.world/@blueYOSHMIN">blueYOSHMIN</a> with contributions from <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors">others</a>. <br> <br>
 
 					All Mario Party related icons were created by or inspired from officially published media by Nintendo. <br>
-					Mario Party related icons (re)created, edited or ripped by <a href="https://www.spriters-resource.com/submitter/Anonymous/">Anonymous</a>, <a href="https://www.mariowiki.com/User:Arend">Arend</a>, <a href="https://www.spriters-resource.com/submitter/xX-CamTro-Xx/">CamTro</a>, <a href="https://www.spriters-resource.com/submitter/FieryExplosion/">FieryExplosion</a>, <a href="https://www.spriters-resource.com/submitter/Kimimaru/">Kimimaru</a>, <a href="https://www.spriters-resource.com/submitter/larsenv/">larsenv</a>, <a href="https://www.spriters-resource.com/submitter/Mario+Gamer/">Mario Gamer</a>, <a href="https://mariopartylegacy.com/">Mario Party Legacy</a>,  <a href="https://www.spriters-resource.com/submitter/Random+Talking+Bush/">Random Talking Bush</a>, RicoDexter and <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors">MPO contributors</a>. <br> <br>
+					Mario Party related icons (re)created, edited or ripped by <a href="https://www.spriters-resource.com/submitter/Anonymous/">Anonymous</a>, <a href="https://www.mariowiki.com/User:Arend">Arend</a>, <a href="https://www.spriters-resource.com/submitter/blueberrymuffin/">blueberrymuffin</a>, <a href="https://www.spriters-resource.com/submitter/xX-CamTro-Xx/">CamTro</a>, <a href="https://www.spriters-resource.com/submitter/DogToon64/">DogToon64</a>, <a href="https://www.spriters-resource.com/submitter/FieryExplosion/">FieryExplosion</a>, <a href="https://www.spriters-resource.com/submitter/Kimimaru/">Kimimaru</a>, <a href="https://www.spriters-resource.com/submitter/larsenv/">larsenv</a>, <a href="https://www.spriters-resource.com/submitter/Mario+Gamer/">Mario Gamer</a>, <a href="https://mariopartylegacy.com/">Mario Party Legacy</a>, <a href="https://www.mariowiki.com/User:Mechawave">Mechawave</a>, <a href="https://www.spriters-resource.com/submitter/Random+Talking+Bush/">Random Talking Bush</a>, RicoDexter and <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors">MPO contributors</a>. <br> <br>
 
 					Bonus Star information found by <a href="https://www.giantbomb.com/bonus-stars/3015-3011/">Giant Bomb</a>, <a href="https://www.mariowiki.com/Bonus_Star">the independent Super Mario Wiki</a>, <a href="https://mario.fandom.com/wiki/Bonus_Stars">MarioWiki (Fandom)</a> and <a href="https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors">MPO contributors</a>. <br> <br>
 

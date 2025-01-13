@@ -15,7 +15,9 @@ var charList = {
 		mpsr: ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'toad', 'toadette', 'wario', 'waluigi', 'dk', 'diddy'],
 		mptt100: ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'wario', 'waluigi'],
 		smp: ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'wario', 'waluigi', 'dk', 'diddy', 'bowser', 'bowserjr', 'pompom', 'goomba', 'koopa', 'drybones', 'monty', 'boo', 'shyguy', 'hammerbro'],
-		all: ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'toad', 'toadette', 'wario', 'waluigi', 'dk', 'diddy', 'birdo', 'bowser', 'bowserjr', 'koopakid', 'pompom', 'goomba', 'koopa', 'drybones', 'monty', 'boo', 'spike', 'blooper', 'shyguy', 'hammerbro', 'kamek']
+		mps: ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'wario', 'waluigi', 'dk', 'birdo'],
+		smpj: ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'pauline', 'toad', 'toadette', 'wario', 'waluigi', 'dk', 'birdo', 'bowser', 'bowserjr', 'goomba', 'koopa', 'monty', 'boo', 'spike', 'shyguy', 'ninji'],
+		all: ['mario', 'luigi', 'yoshi', 'peach', 'daisy', 'rosalina', 'pauline', 'toad', 'toadette', 'wario', 'waluigi', 'dk', 'diddy', 'birdo', 'bowser', 'bowserjr', 'koopakid', 'pompom', 'goomba', 'koopa', 'drybones', 'monty', 'boo', 'spike', 'blooper', 'shyguy', 'ninji', 'hammerbro', 'kamek']
 	}
 
 var counterNameList = {
@@ -71,13 +73,13 @@ var counterNameList = {
 		slow: 'Slow',
 		item: 'Dice Block',
 		spinSpace: 'Spin',
-		minus: 'Minus',
+		minus: 'Minus'
 	},
 	mp10: {
 		minigame: 'Minigame',
 		running: 'Far',
 		slow: 'Slow',
-		minus: 'Minus',
+		minus: 'Minus'
 	},
 	mpds: {
 		happening: 'Green',
@@ -85,7 +87,7 @@ var counterNameList = {
 		running: 'Running',
 		item: 'Item',
 		friendSpace: 'Friendship',
-		hex: 'Hex',
+		hex: 'Hex'
 	},
 	mpsr: {
 		minigame: 'Champion',
@@ -97,7 +99,7 @@ var counterNameList = {
 		almost: 'Almost',
 		loner: 'Loner',
 		duel: 'Duel',
-		wanderer: 'Wanderer',
+		wanderer: 'Wanderer'
 	},
 	mpsr: {
 		minigame: 'Minigame',
@@ -106,7 +108,7 @@ var counterNameList = {
 		item: 'Item',
 		unused: 'Unused',
 		balloon: 'Balloon',
-		almost: 'So-close',
+		almost: 'So-close'
 	},
 	smp: {
 		happening: 'Eventful',
@@ -118,13 +120,24 @@ var counterNameList = {
 		item: 'Item',
 		ally: 'Ally',
 		stompy: 'Stompy',
-		doormat: 'Doormat',
+		doormat: 'Doormat'
+	},
+	mps: {
+		happening: 'Eventful',
+		minigame: 'Minigame',
+		coinStar: 'Rich',
+		redSpace: 'Unlucky',
+		bowserSpace: 'Bowser Space',
+		running: 'Sightseer',
+		slow: 'Slowpoke',
+		shopping: 'Shopping',
+		item: 'Item'
 	}
 }
 
 var assistVer = 0; //assist version for slots, increased if variables are added/changed etc
 
-var counters = ['stars', 'coins', 'happening', 'minigame', 'redSpace', 'running', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'loner', 'almost', 'duel', 'wanderer', 'ally', 'stompy', 'doormat'];
+var counters = ['stars', 'coins', 'happening', 'minigame', 'redSpace', 'bowserSpace', 'running', 'shopping', 'item', 'friendSpace', 'hex', 'balloon', 'spinSpace', 'minus', 'loner', 'almost', 'duel', 'wanderer', 'ally', 'stompy', 'doormat'];
 var countersUp = [];
 for (let num = 0; num < counters.length; num++) {
 	countersUp.push(counters[num].charAt(0).toUpperCase() + counters[num].slice(1));
@@ -292,11 +305,11 @@ function prepareMPO () {
 
 	//parse the 'ls' part of a string, it would include a savefile in it though it's currently unused due to the string being too long
 	//add a reminder in case cookies arent active since this wouldn't show up at all
-	var str = getUrl('ls');
+	/*var str = getUrl('ls');
 	if (str != false) {
 		window.history.replaceState({}, document.title, "/" + location.host + location.pathname);
 		parseFile(atob(str));
-	}
+	}*/
 
 	//load settings
 	if (localStorage.getItem('settings') != null) {
@@ -366,6 +379,14 @@ function prepareMPO () {
 	if (localStorage.getItem('currentStats') != null) {
 		currentStats = JSON.parse(localStorage.getItem('currentStats'));
 
+		//add all items to the slot that weren't there yet
+			//mostly useful in case new counters get added in an update, this adds them all to previous savefiles that didn't have them yet
+		for (name in defS) {
+			if (currentStats[name] === undefined) {
+				currentStats[name] = defS[name];
+			}
+		}
+
 		editInner('curTurnText', currentStats.curTurn);
 		editInner('maxTurnText', currentStats.maxTurn);
 
@@ -395,8 +416,10 @@ function prepareMPO () {
 	closeSettings();
 
 	//rules are added here as otherwise the transition would play each time the site is reloaded - timeout is needed as otherwise the rules already apply
-	setTimeout(function  () {var sheet = window.document.styleSheets[0];
-		sheet.insertRule('#settings {-webkit-transition: visibility .3s, opacity .3s; -moz-transition: visibility .3s, opacity .3s; transition: visibility .3s, opacity .3s;}', sheet.cssRules.length);
+	setTimeout(function  () {
+		//Don't use window.document.styleSheets[0].sheet.insertRule() because Chrome cries about it locally, apparently some ""Security Issue"" or something, dunno.
+		var cssElem = cElem('style', document.getElementsByTagName('HEAD')[0]);
+		cssElem.innerHTML = '#settings {-webkit-transition: visibility .3s, opacity .3s; -moz-transition: visibility .3s, opacity .3s; transition: visibility .3s, opacity .3s;}';
 	}, 50);
 
 	getElem('savefileCookieError').style.display = 'none';
@@ -487,8 +510,9 @@ function prepareMPOBackup () {
 		updateNavbar(3);
 		updateNavbar(4);
 
-		var sheet = window.document.styleSheets[0];
-		sheet.insertRule('#settings {-webkit-transition: visibility .3s, opacity .3s; -moz-transition: visibility .3s, opacity .3s; transition: visibility .3s, opacity .3s;}', sheet.cssRules.length);
+		//Don't use window.document.styleSheets[0].sheet.insertRule() because Chrome cries about it locally, apparently some ""Security Issue"" or something, dunno.
+		var cssElem = cElem('style', document.getElementsByTagName('HEAD')[0]);
+		cssElem.innerHTML = '#settings {-webkit-transition: visibility .3s, opacity .3s; -moz-transition: visibility .3s, opacity .3s; transition: visibility .3s, opacity .3s;}';
 
 		if (popout != true) {
 			callDisplayOnOff();
@@ -502,7 +526,7 @@ function prepareMPOBackup () {
 		}
 
 		//clear parameters
-		window.history.replaceState(null, null, window.location.pathname + '?p=1');
+		window.history.replaceState(null, null, window.location.pathname);
 	}
 	startup = false;
 }

@@ -520,50 +520,54 @@ function windowOnClick (event) {
 /*
 * Checks if Ctrl & Shift is pressed.
 */
-function ctrlPressed (e, ctrl, shift, key) {
+function ctrlPressed (e, ctrl, shift, key, ignoreDisplay) {
 	if (getValue('useHotkeys') != true) {
 		return;
 	}
 	if (ctrl || shift || key) {
-		ctrl = stringToBoolean(ctrl);
-		shift = stringToBoolean(shift);
+		ctrl = Boolean(ctrl);
+		shift = Boolean(shift);
 	} else {
-		ctrl = e.ctrlKey;
-		shift = e.shiftKey;
-		key = e.key;
+		ctrl = e?.ctrlKey;
+		shift = e?.shiftKey;
+		key = e?.key;
 	}
-	if (popout == true && ((e.key == 'Control' && ctrlKeyVar === false) || (e.key == 'Shift' && shiftKeyVar === false))) {
+	if (popout == true && ((key == 'Control' && ctrlKeyVar === false) || (key == 'Shift' && shiftKeyVar === false))) {
 		sendMessage('ctrlPressed+x+' + ctrl + '+' + shift + '+' + key);
 	}
 	if (ctrl && ctrlKeyVar == false) {
 		ctrlKeyVar = true;
-		getElem('nvCtrlHeld').style.display = 'inline-block';
-		switchAction();
-	} else if (shift && shiftKeyVar == false) {
-		shiftKeyVar = true;
-		getElem('nvShiftHeld').style.display = 'inline-block';
-		updateAmount();
-	} else {
-		switch (key) {
-			case '1':
-				globalActions.ogAmount = 1;
-				updateAmount();
-				break;
-			case '5':
-				globalActions.ogAmount = 5;
-				updateAmount();
-				break;
-			case '0':
-				globalActions.ogAmount = 10;
-				updateAmount();
-				break;
-			case 'Escape':
-				if (popout != true) {
-					closeSettings();
-				}
-				closeNavbar();
-				break;
+		if (ignoreDisplay === true) {
+			//getElem('nvCtrlHeld').style.display = 'inline-block';
 		}
+		switchAction(false, ignoreDisplay);
+	}
+	if (shift && shiftKeyVar == false) {
+		shiftKeyVar = true;
+		if (ignoreDisplay === true) {
+			//getElem('nvShiftHeld').style.display = 'inline-block';
+		}
+		updateAmount(ignoreDisplay);
+	}
+	switch (key) {
+		case '1':
+			globalActions.ogAmount = 1;
+			updateAmount();
+			break;
+		case '5':
+			globalActions.ogAmount = 5;
+			updateAmount();
+			break;
+		case '0':
+			globalActions.ogAmount = 10;
+			updateAmount();
+			break;
+		case 'Escape':
+			if (popout != true) {
+				closeSettings();
+			}
+			closeNavbar();
+			break;
 	}
 }
 
@@ -573,22 +577,26 @@ function ctrlPressed (e, ctrl, shift, key) {
 * @param {object} e Event.
 * @param {string} key The key that got released, overrides event.
 * @param {boolean} force Force runs it if true.
+* @param {boolean} ctrl If ctrl got released.
+* @param {boolean} shift If shift got released.
+* @param {boolean} ignoreDisplay If true it won't update the display.
 */
-function ctrlReleased (e, key, force) {
+function ctrlReleased (e, key, force, ctrl, shift, ignoreDisplay) {
 	if (getValue('useHotkeys') != true && force != true) {
 		return;
 	}
 	if (key) {} else {
-		key = e.key;
+		key = e?.key;
 	}
 	if (popout === true) {
-		sendMessage('ctrlReleased+x+' + key + '+' + force);
+		sendMessage('ctrlReleased+x+' + key + '+' + force + '+' + ctrl + '+' + shift);
 	}
-	if (key === 'Control' && ctrlKeyVar === true) {
+	if ((key === 'Control' || ctrl === true) && ctrlKeyVar === true) {
 		ctrlKeyVar = false;
 		getElem('nvCtrlHeld').style.display = 'none';
-		switchAction();
-	} else if (key === 'Shift' && shiftKeyVar === true) {
+		switchAction(false, ignoreDisplay);
+	}
+	if ((key === 'Shift' || shift === true) && shiftKeyVar === true) {
 		shiftKeyVar = false;
 		getElem('nvShiftHeld').style.display = 'none';
 		globalActions.amount = globalActions.ogAmount;
@@ -598,8 +606,15 @@ function ctrlReleased (e, key, force) {
 
 var ctrlKeyVar = false;
 var shiftKeyVar = false;
-window.onkeydown = ctrlPressed;
-window.onkeyup = ctrlReleased;
+addEventListener("keydown", ctrlPressed);
+addEventListener("keyup", ctrlReleased);
+//window.onkeydown = ctrlPressed;
+//window.onkeyup = ctrlReleased;
+
+document.addEventListener("click", (e) => {
+	ctrlPressed(null, e.ctrlKey, e.shiftKey, null, true);
+	window.setTimeout(() => {ctrlReleased(null, null, false, e.ctrlKey, e.shiftKey, true);}, 0);
+}, true);
 
 var assistLoaded = false;
 var shortcutLoadType = 0; //0 = continue/setup game | 1 = force setup start | 2 = quick start ---- wat
@@ -1207,7 +1222,7 @@ function writeLocalStorage(o) {
 function sendMessage (text) {
 	if (popoutActivated == true && popout == false) {
 		mpoSettings.postMessage(text, '*');
-	} else {
+	} else if (mpoMain !== undefined) {
 		mpoMain.postMessage(text, '*');
 	}
 	//console.log('[MPO] Message sent: ' + text);

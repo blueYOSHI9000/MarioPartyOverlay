@@ -152,8 +152,9 @@ function showNavBar (elem) {
 * Switches the action between addition and subtraction.
 *
 * @param {boolean} og Switch the og variable instead of the global one.
+* @param {boolean} ignoreDisplay If true it won't update the display.
 */
-function switchAction (og) {
+function switchAction (og, ignoreDisplay) {
 	if (og === true) {
 		og = 'ogAction';
 	} else {
@@ -166,10 +167,10 @@ function switchAction (og) {
 		globalActions[og] = 'p';
 	}
 
-	if (og != true) {
+	if (og != true && ignoreDisplay != true) {
 		if (globalActions.action === 'm') {
 			editInner('nvActionIcon', '-');
-			editInner('nvActionText', 'Sub.');
+			editInner('nvActionText', 'Sub');
 		} else {
 			editInner('nvActionIcon', '+');
 			editInner('nvActionText', 'Add');
@@ -179,8 +180,10 @@ function switchAction (og) {
 
 /*
 * Changes the amount when shift is pressed;
+*
+* @param {boolean} ignoreDisplay If true it won't update the display.
 */
-function updateAmount () {
+function updateAmount (ignoreDisplay) {
 	if (shiftKeyVar === true) {
 		switch (globalActions.ogAmount) {
 			case 1:
@@ -196,7 +199,9 @@ function updateAmount () {
 	} else {
 		globalActions.amount = globalActions.ogAmount;
 	}
-	editInner('nvAmountText', globalActions.amount);
+	if (ignoreDisplay !== true) {
+		editInner('nvAmountText', globalActions.amount);
+	}
 }
 
 /*
@@ -554,13 +559,53 @@ function updateNvChar () { //actually use this now
 			addNvChar('drybones');
 			addNvChar('pompom');
 			break;
+		case 'mps':
+			addNvChar('mario');
+			addNvChar('luigi');
+			addNvChar('peach');
+			addNvChar('daisy');
+			addNvChar('wario');
+			cElem('br', 'nvCharList');
+			addNvChar('waluigi');
+			addNvChar('yoshi');
+			addNvChar('rosalina');
+			addNvChar('dk');
+			addNvChar('birdo');
+			break;
+		case 'smpj':
+			addNvChar('mario');
+			addNvChar('luigi');
+			addNvChar('peach');
+			addNvChar('daisy');
+			addNvChar('wario');
+			addNvChar('waluigi');
+			addNvChar('yoshi');
+			addNvChar('toadette');
+			addNvChar('toad');
+			addNvChar('rosalina');
+			addNvChar('pauline');
+			cElem('br', 'nvCharList');
+			addNvChar('dk');
+			addNvChar('birdo');
+			addNvChar('bowser');
+			addNvChar('goomba');
+			addNvChar('shyguy');
+			addNvChar('koopa');
+			addNvChar('monty');
+			addNvChar('bowserjr');
+			addNvChar('boo');
+			addNvChar('spike');
+			addNvChar('ninji');
+			break;
 		case 'all':
+		default:
 			addNvChar('mario');
 			addNvChar('luigi');
 			addNvChar('yoshi');
 			addNvChar('peach');
 			addNvChar('daisy');
 			addNvChar('rosalina');
+			addNvChar('pauline');
 			cElem('br', 'nvCharList');
 			addNvChar('toad');
 			addNvChar('toadette');
@@ -585,6 +630,7 @@ function updateNvChar () { //actually use this now
 			addNvChar('spike');
 			addNvChar('blooper');
 			addNvChar('shyguy');
+			addNvChar('ninji');
 			addNvChar('hammerbro');
 			addNvChar('kamek');
 			break;

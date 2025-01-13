@@ -88,6 +88,7 @@ function changeGame (game, keepHash) {
 			getElem('noBonusError').style.visibility = 'visible';
 			break;
 		case 'mps':
+		case 'smpj':
 			showGames.push('happening');
 			showGames.push('minigame');
 			showGames.push('coin');
