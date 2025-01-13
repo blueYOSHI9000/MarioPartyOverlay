@@ -15,10 +15,16 @@ Settings can be found by clicking on the gear and then "Open Settings" (or by cl
 
 A more extensive (and likely up-to-date) introduction can by found by clicking on the gear and then "Credits".
 
+## The new Mario Party hasn't been added yet, what do?
+Scream at me somewhere I see it, whether it's on [Mastodon](https://wetdry.world/@blueYOSHMIN), [Bluesky](https://bsky.app/profile/yoshmin.com), by creating a Github issue or anywhere else you find me. I'm infinitely more likely to support a newly released game by knowing someone's actually still using this lmao.
+
+## Rewrite
+There is "currently" a rewrite of this in progress. I said "currently" because I'm not exactly working on it much lmao, so don't expect it anytime soon. Doesn't mean the current version is unusable though, because the biggest reason for it is that the codebase is trash, the site itself does still work fine. You can check out the rewrite progress on the rewrite branch here.
+
 ## Credits
 **All characters, products and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them. Mario Party is a registered trademark of Nintendo.**
 
-Created by [blueYOSHI](https://www.twitter.com/yoshisrc) with contributions from [others](https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors)
+Created by [blueYOSHI](https://wetdry.world/@blueYOSHMIN) with contributions from [others](https://github.com/blueYOSHI9000/MarioPartyOverlay/graphs/contributors)
 
 Icons, libraries and other things are done by various people, visit the website to view the full list ([direct link to credits](https://blueyoshi9000.github.io/MarioPartyOverlay/?credits=1))
 
