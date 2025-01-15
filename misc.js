@@ -537,15 +537,15 @@ function ctrlPressed (e, ctrl, shift, key, ignoreDisplay) {
 	}
 	if (ctrl && ctrlKeyVar == false) {
 		ctrlKeyVar = true;
-		if (ignoreDisplay === true) {
-			//getElem('nvCtrlHeld').style.display = 'inline-block';
+		if (ignoreDisplay !== true) {
+			getElem('nvCtrlHeld').style.display = 'inline-block';
 		}
 		switchAction(false, ignoreDisplay);
 	}
 	if (shift && shiftKeyVar == false) {
 		shiftKeyVar = true;
-		if (ignoreDisplay === true) {
-			//getElem('nvShiftHeld').style.display = 'inline-block';
+		if (ignoreDisplay !== true) {
+			getElem('nvShiftHeld').style.display = 'inline-block';
 		}
 		updateAmount(ignoreDisplay);
 	}
@@ -612,6 +612,8 @@ addEventListener("keyup", ctrlReleased);
 //window.onkeyup = ctrlReleased;
 
 document.addEventListener("click", (e) => {
+	if (ctrlKeyVar || shiftKeyVar)
+		return;
 	ctrlPressed(null, e.ctrlKey, e.shiftKey, null, true);
 	window.setTimeout(() => {ctrlReleased(null, null, false, e.ctrlKey, e.shiftKey, true);}, 0);
 }, true);

@@ -81,6 +81,7 @@ var counterNameList = {
 		slow: 'Slow',
 		minus: 'Minus'
 	},
+	mpa: {},
 	mpds: {
 		happening: 'Green',
 		minigame: 'Minigame',
@@ -89,6 +90,7 @@ var counterNameList = {
 		friendSpace: 'Friendship',
 		hex: 'Hex'
 	},
+	mpit: {},
 	mpsr: {
 		minigame: 'Champion',
 		running: 'Sightseer',
@@ -101,7 +103,7 @@ var counterNameList = {
 		duel: 'Duel',
 		wanderer: 'Wanderer'
 	},
-	mpsr: {
+	mptt100: {
 		minigame: 'Minigame',
 		running: 'Running',
 		slow: 'Easygoing',
